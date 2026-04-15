@@ -125,6 +125,28 @@ curl -X POST "https://YOUR_DOMAIN/telegram/set-webhook" \
   -d '{"webhook_url":"https://YOUR_DOMAIN/event","secret_token":"your_random_secret"}'
 ```
 
+### D) Manual deploy fallback when GitHub auto-deploy is unreliable
+
+If GitHub webhook delivery is not working reliably yet, you can trigger the configured Coolify webhook manually from the repo:
+
+Windows PowerShell:
+
+```powershell
+.\scripts\trigger_coolify_deploy_webhook.ps1 `
+  -WebhookUrl "https://YOUR_COOLIFY_DOMAIN/webhooks/source/github/events/manual" `
+  -WebhookSecret "YOUR_WEBHOOK_SECRET"
+```
+
+Debian / bash:
+
+```bash
+./scripts/trigger_coolify_deploy_webhook.sh \
+  "https://YOUR_COOLIFY_DOMAIN/webhooks/source/github/events/manual" \
+  "YOUR_WEBHOOK_SECRET"
+```
+
+Both helpers infer repository and commit data from local git when possible and send a GitHub-style `push` event payload to Coolify.
+
 ---
 
 ## 4) Operational Notes
