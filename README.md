@@ -25,6 +25,12 @@ cp .env.example .env
 - `TELEGRAM_WEBHOOK_SECRET` (recommended)
 - `DATABASE_URL`
 
+Generate webhook secret automatically:
+
+```powershell
+.\scripts\generate_telegram_webhook_secret.ps1 -UpdateEnv
+```
+
 3. Start with Docker:
 
 ```bash

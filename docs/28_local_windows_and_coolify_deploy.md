@@ -41,6 +41,12 @@ TELEGRAM_BOT_TOKEN=...
 TELEGRAM_WEBHOOK_SECRET=your_random_secret
 ```
 
+You can generate and set secret automatically:
+
+```powershell
+.\scripts\generate_telegram_webhook_secret.ps1 -UpdateEnv
+```
+
 ### Run tests
 
 ```powershell
@@ -99,6 +105,12 @@ Then send a message to your bot in Telegram.
 
 ### C) Set production Telegram webhook
 
+Generate production secret on Debian:
+
+```bash
+./scripts/generate_telegram_webhook_secret.sh 32 .env true
+```
+
 After deploy:
 
 ```bash
@@ -120,4 +132,3 @@ curl -X POST "https://YOUR_DOMAIN/telegram/set-webhook" \
 - In production, `OPENAI_API_KEY` and `TELEGRAM_BOT_TOKEN` are required.
 - Telegram webhook requests are validated by `X-Telegram-Bot-Api-Secret-Token` when `TELEGRAM_WEBHOOK_SECRET` is set.
 - No GitHub automation is required; deployment is handled by Coolify directly from the repo.
-
