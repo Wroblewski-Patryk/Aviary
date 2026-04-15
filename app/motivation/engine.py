@@ -1,9 +1,15 @@
-from app.core.contracts import ContextOutput, Event, MotivationOutput
+from app.core.contracts import ContextOutput, Event, MotivationOutput, PerceptionOutput
 from app.utils.language import normalize_for_matching
 
 
 class MotivationEngine:
-    def run(self, event: Event, context: ContextOutput) -> MotivationOutput:
+    def run(
+        self,
+        event: Event,
+        context: ContextOutput,
+        perception: PerceptionOutput,
+        theta: dict | None = None,
+    ) -> MotivationOutput:
         text = str(event.payload.get("text", "")).strip()
         lowered = normalize_for_matching(text)
 
@@ -97,6 +103,7 @@ class MotivationEngine:
         has_analysis_signal = has_question or any(keyword in lowered for keyword in analysis_keywords)
         has_execution_signal = any(lowered.startswith(keyword) for keyword in execution_keywords)
         has_positive_signal = any(keyword in lowered for keyword in positive_keywords)
+        is_brief_turn = len(lowered.split()) <= 4
 
         importance = 0.45
         importance += 0.15 if has_question else 0.0
@@ -121,12 +128,27 @@ class MotivationEngine:
         arousal += 0.2 if has_emotional_signal else 0.0
         arousal += 0.1 if has_question else 0.0
 
+        theta_mode = None
+        if not has_emotional_signal and not has_execution_signal and not has_analysis_signal:
+            theta_mode = self._theta_mode(theta)
+
         if has_emotional_signal:
             mode = "support"
         elif has_execution_signal:
             mode = "execute"
         elif has_analysis_signal:
             mode = "analyze"
+        elif theta_mode and (
+            perception.intent == "request_help"
+            or (perception.topic == "general" and is_brief_turn and not has_positive_signal)
+        ):
+            mode = theta_mode
+            importance += 0.05
+            if theta_mode == "execute":
+                urgency += 0.08
+                arousal += 0.05
+            elif theta_mode == "support":
+                valence = min(valence, -0.05)
         else:
             mode = "respond"
 
@@ -140,3 +162,17 @@ class MotivationEngine:
 
     def _clamp(self, value: float) -> float:
         return max(0.0, min(1.0, round(value, 2)))
+
+    def _theta_mode(self, theta: dict | None) -> str | None:
+        if not theta:
+            return None
+
+        candidates = {
+            "support": float(theta.get("support_bias", 0.0) or 0.0),
+            "analyze": float(theta.get("analysis_bias", 0.0) or 0.0),
+            "execute": float(theta.get("execution_bias", 0.0) or 0.0),
+        }
+        mode, bias = max(candidates.items(), key=lambda item: item[1])
+        if bias < 0.58:
+            return None
+        return mode

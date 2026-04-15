@@ -112,3 +112,30 @@ def test_planning_agent_adds_telegram_delivery_step_when_needed() -> None:
     assert result.goal == "Move the requested task toward execution with the smallest concrete next step."
     assert result.steps[-1] == "send_telegram_message"
     assert result.needs_action is True
+
+
+def test_planning_agent_adds_theta_reasoning_step_for_generic_turn() -> None:
+    result = PlanningAgent().run(
+        event=_event(text="help me"),
+        context=_context(),
+        motivation=MotivationOutput(
+            importance=0.5,
+            urgency=0.2,
+            valence=0.05,
+            arousal=0.3,
+            mode="respond",
+        ),
+        role=RoleOutput(selected="advisor", confidence=0.6),
+        theta={
+            "support_bias": 0.14,
+            "analysis_bias": 0.71,
+            "execution_bias": 0.15,
+        },
+    )
+
+    assert result.steps == [
+        "interpret_event",
+        "review_context",
+        "favor_structured_reasoning",
+        "prepare_response",
+    ]

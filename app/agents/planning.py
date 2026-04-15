@@ -9,6 +9,7 @@ class PlanningAgent:
         motivation: MotivationOutput,
         role: RoleOutput,
         user_preferences: dict | None = None,
+        theta: dict | None = None,
     ) -> PlanOutput:
         goal = "Provide a clear and useful response to the user event."
         steps = ["interpret_event", "review_context"]
@@ -44,9 +45,37 @@ class PlanningAgent:
             prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
             steps.insert(prepare_index, "format_response_as_bullets")
 
+        theta_step = self._theta_plan_step(theta=theta, steps=steps)
+        if theta_step is not None and theta_step not in steps:
+            prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
+            steps.insert(prepare_index, theta_step)
+
         return PlanOutput(
             goal=goal,
             steps=steps,
             needs_action=needs_action,
             needs_response=needs_response,
         )
+
+    def _theta_plan_step(self, theta: dict | None, steps: list[str]) -> str | None:
+        if not theta:
+            return None
+
+        candidates = {
+            "maintain_supportive_stance": float(theta.get("support_bias", 0.0) or 0.0),
+            "favor_structured_reasoning": float(theta.get("analysis_bias", 0.0) or 0.0),
+            "favor_concrete_next_step": float(theta.get("execution_bias", 0.0) or 0.0),
+        }
+        step, bias = max(candidates.items(), key=lambda item: item[1])
+        if bias < 0.58:
+            return None
+
+        if step == "maintain_supportive_stance" and (
+            "acknowledge_emotion" in steps or "reduce_pressure" in steps
+        ):
+            return None
+        if step == "favor_structured_reasoning" and "break_down_problem" in steps:
+            return None
+        if step == "favor_concrete_next_step" and "propose_execution_step" in steps:
+            return None
+        return step

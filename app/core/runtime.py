@@ -56,7 +56,12 @@ class RuntimeOrchestrator:
             recent_memory=memory,
             conclusions=user_conclusions,
         )
-        motivation = self.motivation_engine.run(event=event, context=context)
+        motivation = self.motivation_engine.run(
+            event=event,
+            context=context,
+            perception=perception,
+            theta=user_theta,
+        )
         role = self.role_agent.run(
             event=event,
             perception=perception,
@@ -70,6 +75,7 @@ class RuntimeOrchestrator:
             motivation=motivation,
             role=role,
             user_preferences=user_preferences,
+            theta=user_theta,
         )
         expression = await self.expression_agent.run(
             event=event,

@@ -354,3 +354,42 @@ async def test_runtime_pipeline_uses_theta_bias_when_no_preferred_role_exists() 
 
     assert result.role.selected == "analyst"
     assert result.reflection_triggered is True
+
+
+async def test_runtime_pipeline_uses_theta_bias_for_motivation_and_planning_on_brief_turn() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    memory.user_theta = {
+        "support_bias": 0.14,
+        "analysis_bias": 0.71,
+        "execution_bias": 0.15,
+    }
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+
+    event = Event(
+        event_id="evt-7",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "help me"},
+        meta=EventMeta(user_id="u-1", trace_id="t-7"),
+    )
+
+    result = await runtime.run(event)
+
+    assert result.motivation.mode == "analyze"
+    assert result.role.selected == "analyst"
+    assert "break_down_problem" in result.plan.steps or "favor_structured_reasoning" in result.plan.steps
+    assert result.reflection_triggered is True
