@@ -133,6 +133,12 @@ These are small but real issues observed after the production rollout and smoke 
   - decide whether to store a preferred user language in memory or profile state
   - expand beyond keyword heuristics if real traffic shows mixed-language or multilingual false positives
 
+### 4. UTF-8 Smoke Test Reliability
+
+- current production behavior is fine, but a manual PowerShell smoke request on Windows mangled Polish diacritics in the submitted payload during verification on 2026-04-15
+- next improvement:
+  - harden local verification snippets and helper scripts so production smoke tests preserve UTF-8 payloads end to end
+
 ## Tasks Waiting For Coolify / VPS Access
 
 These tasks do not block local development, but they do require actual infrastructure access.
