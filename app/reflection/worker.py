@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime, timedelta, timezone
 from collections.abc import Sequence
 
 from app.core.logging import get_logger
@@ -6,11 +7,17 @@ from app.memory.repository import MemoryRepository
 
 
 class ReflectionWorker:
-    def __init__(self, memory_repository: MemoryRepository, queue_size: int = 100):
+    def __init__(
+        self,
+        memory_repository: MemoryRepository,
+        queue_size: int = 100,
+        max_attempts: int = 3,
+    ):
         self.memory_repository = memory_repository
         self.queue: asyncio.Queue[dict | None] = asyncio.Queue(maxsize=queue_size)
         self._task: asyncio.Task | None = None
         self._queued_task_ids: set[int] = set()
+        self.max_attempts = max_attempts
         self.logger = get_logger("aion.reflection")
 
     async def start(self) -> None:
@@ -115,7 +122,7 @@ class ReflectionWorker:
         pending_tasks = await self.memory_repository.get_pending_reflection_tasks(limit=max(limit, capacity))
         scheduled = 0
         for task in pending_tasks:
-            if self._schedule_task(task):
+            if self._is_task_ready(task) and self._schedule_task(task):
                 scheduled += 1
             if self._queue_capacity() <= 0:
                 break
@@ -138,6 +145,30 @@ class ReflectionWorker:
         if self.queue.maxsize <= 0:
             return 100
         return max(0, self.queue.maxsize - self.queue.qsize())
+
+    def _is_task_ready(self, task: dict) -> bool:
+        status = str(task.get("status", "pending"))
+        attempts = int(task.get("attempts", 0) or 0)
+
+        if status in {"pending", "processing"}:
+            return attempts < self.max_attempts
+
+        if status != "failed" or attempts >= self.max_attempts:
+            return False
+
+        updated_at = task.get("updated_at")
+        if not isinstance(updated_at, datetime):
+            return True
+
+        retry_after = updated_at + timedelta(seconds=self._retry_backoff_seconds(attempts))
+        return retry_after <= datetime.now(timezone.utc)
+
+    def _retry_backoff_seconds(self, attempts: int) -> int:
+        backoff_steps = (5, 30, 120)
+        if attempts <= 0:
+            return 0
+        index = min(attempts - 1, len(backoff_steps) - 1)
+        return backoff_steps[index]
 
     def _derive_conclusions(self, recent_memory: Sequence[dict]) -> list[dict]:
         if not recent_memory:

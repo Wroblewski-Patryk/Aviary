@@ -325,7 +325,7 @@ class MemoryRepository:
         async with self.session_factory() as session:
             statement = (
                 select(AionReflectionTask)
-                .where(AionReflectionTask.status.in_(("pending", "processing")))
+                .where(AionReflectionTask.status.in_(("pending", "processing", "failed")))
                 .order_by(AionReflectionTask.id.asc())
                 .limit(limit)
             )

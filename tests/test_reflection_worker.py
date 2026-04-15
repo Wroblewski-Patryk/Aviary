@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime, timedelta, timezone
 
 from app.reflection.worker import ReflectionWorker
 
@@ -41,7 +42,7 @@ class FakeMemoryRepository:
         return [
             task
             for task in self.pending_tasks
-            if task["status"] in {"pending", "processing"}
+            if task["status"] in {"pending", "processing", "failed"}
         ][:limit]
 
     async def mark_reflection_task_processing(self, task_id: int) -> dict:
@@ -241,3 +242,76 @@ async def test_reflection_worker_recovers_pending_tasks_on_start() -> None:
             "execution_bias": 0.33,
         }
     ]
+
+
+async def test_reflection_worker_retries_failed_task_after_backoff_window() -> None:
+    repository = FakeMemoryRepository(
+        recent_memory=[
+            {"summary": "role=analyst; action=success; expression=One."},
+            {"summary": "role=analyst; action=success; expression=Two."},
+            {"summary": "role=executor; action=success; expression=Three."},
+        ]
+    )
+    repository.pending_tasks = [
+        {
+            "id": 9,
+            "user_id": "u-1",
+            "event_id": "evt-failed-old",
+            "status": "failed",
+            "attempts": 1,
+            "last_error": "temporary issue",
+            "updated_at": datetime.now(timezone.utc) - timedelta(seconds=8),
+        }
+    ]
+    worker = ReflectionWorker(memory_repository=repository, queue_size=5)
+
+    await worker.start()
+    await asyncio.sleep(0.05)
+    await worker.stop()
+
+    assert repository.processing_marks == [9]
+    assert repository.completed_marks == [9]
+    assert repository.failed_marks == []
+
+
+async def test_reflection_worker_skips_failed_task_before_backoff_window() -> None:
+    repository = FakeMemoryRepository(recent_memory=[])
+    repository.pending_tasks = [
+        {
+            "id": 10,
+            "user_id": "u-1",
+            "event_id": "evt-failed-fresh",
+            "status": "failed",
+            "attempts": 1,
+            "last_error": "temporary issue",
+            "updated_at": datetime.now(timezone.utc),
+        }
+    ]
+    worker = ReflectionWorker(memory_repository=repository, queue_size=5)
+
+    scheduled = await worker._schedule_pending_tasks(limit=5)
+
+    assert scheduled == 0
+    assert repository.processing_marks == []
+    assert repository.completed_marks == []
+
+
+async def test_reflection_worker_stops_retrying_after_max_attempts() -> None:
+    repository = FakeMemoryRepository(recent_memory=[])
+    repository.pending_tasks = [
+        {
+            "id": 11,
+            "user_id": "u-1",
+            "event_id": "evt-failed-max",
+            "status": "failed",
+            "attempts": 3,
+            "last_error": "permanent issue",
+            "updated_at": datetime.now(timezone.utc) - timedelta(minutes=10),
+        }
+    ]
+    worker = ReflectionWorker(memory_repository=repository, queue_size=5, max_attempts=3)
+
+    scheduled = await worker._schedule_pending_tasks(limit=5)
+
+    assert scheduled == 0
+    assert repository.processing_marks == []
