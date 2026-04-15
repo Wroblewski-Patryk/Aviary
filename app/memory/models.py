@@ -68,3 +68,23 @@ class AionConclusion(Base):
         nullable=False,
         default=lambda: datetime.now(timezone.utc),
     )
+
+
+class AionTheta(Base):
+    __tablename__ = "aion_theta"
+
+    user_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    support_bias: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    analysis_bias: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    execution_bias: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )

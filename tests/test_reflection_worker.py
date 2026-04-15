@@ -5,12 +5,17 @@ class FakeMemoryRepository:
     def __init__(self, recent_memory: list[dict]):
         self.recent_memory = recent_memory
         self.conclusion_updates: list[dict] = []
+        self.theta_updates: list[dict] = []
 
     async def get_recent_for_user(self, user_id: str, limit: int = 8) -> list[dict]:
         return self.recent_memory[:limit]
 
     async def upsert_conclusion(self, **kwargs) -> dict:
         self.conclusion_updates.append(kwargs)
+        return kwargs
+
+    async def upsert_theta(self, **kwargs) -> dict:
+        self.theta_updates.append(kwargs)
         return kwargs
 
 
@@ -41,6 +46,7 @@ async def test_reflection_worker_consolidates_explicit_preference_update_in_back
             "supporting_event_id": "evt-1",
         }
     ]
+    assert repository.theta_updates == []
 
 
 async def test_reflection_worker_infers_preferred_role_from_repeated_role_usage() -> None:
@@ -65,6 +71,14 @@ async def test_reflection_worker_infers_preferred_role_from_repeated_role_usage(
         "source": "background_reflection",
         "supporting_event_id": "evt-role",
     } in repository.conclusion_updates
+    assert repository.theta_updates == [
+        {
+            "user_id": "u-1",
+            "support_bias": 0.0,
+            "analysis_bias": 0.0,
+            "execution_bias": 1.0,
+        }
+    ]
 
 
 async def test_reflection_worker_infers_concise_style_from_repeated_short_successful_outputs() -> None:
@@ -98,3 +112,28 @@ async def test_reflection_worker_skips_when_recent_memory_has_no_consistent_sign
 
     assert result is False
     assert repository.conclusion_updates == []
+    assert repository.theta_updates == []
+
+
+async def test_reflection_worker_updates_theta_from_mixed_recent_roles() -> None:
+    repository = FakeMemoryRepository(
+        recent_memory=[
+            {"summary": "role=analyst; action=success; expression=One."},
+            {"summary": "role=analyst; action=success; expression=Two."},
+            {"summary": "role=executor; action=success; expression=Three."},
+            {"summary": "role=friend; action=success; expression=Four."},
+        ]
+    )
+    worker = ReflectionWorker(memory_repository=repository)
+
+    result = await worker.reflect_user(user_id="u-1", event_id="evt-theta")
+
+    assert result is True
+    assert repository.theta_updates == [
+        {
+            "user_id": "u-1",
+            "support_bias": 0.25,
+            "analysis_bias": 0.5,
+            "execution_bias": 0.25,
+        }
+    ]

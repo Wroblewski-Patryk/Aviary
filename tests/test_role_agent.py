@@ -103,3 +103,25 @@ def test_role_agent_does_not_override_explicit_executor_signal_with_preference()
     )
 
     assert result.selected == "executor"
+
+
+def test_role_agent_uses_theta_bias_when_no_preferred_role_exists() -> None:
+    result = RoleAgent().run(
+        event=_event("Can you help me with this?"),
+        perception=_perception("question", "general", "request_help"),
+        context=_context(),
+        theta={"support_bias": 0.12, "analysis_bias": 0.68, "execution_bias": 0.2},
+    )
+
+    assert result.selected == "analyst"
+
+
+def test_role_agent_keeps_explicit_emotional_signal_over_theta_bias() -> None:
+    result = RoleAgent().run(
+        event=_event("I feel stressed and need help"),
+        perception=_perception("statement", "general", "share_information"),
+        context=_context(),
+        theta={"support_bias": 0.1, "analysis_bias": 0.75, "execution_bias": 0.15},
+    )
+
+    assert result.selected == "friend"

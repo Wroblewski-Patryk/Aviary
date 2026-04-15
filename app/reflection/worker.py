@@ -36,9 +36,11 @@ class ReflectionWorker:
     async def reflect_user(self, user_id: str, event_id: str) -> bool:
         recent_memory = await self.memory_repository.get_recent_for_user(user_id=user_id, limit=8)
         conclusions = self._derive_conclusions(recent_memory)
+        theta = self._derive_theta(recent_memory)
         if not conclusions:
             self.logger.info("reflection_noop user_id=%s event_id=%s", user_id, event_id)
-            return False
+            if theta is None:
+                return False
 
         for conclusion in conclusions:
             await self.memory_repository.upsert_conclusion(
@@ -57,6 +59,21 @@ class ReflectionWorker:
                 conclusion["content"],
                 conclusion["confidence"],
                 conclusion["source"],
+            )
+        if theta is not None:
+            await self.memory_repository.upsert_theta(
+                user_id=user_id,
+                support_bias=theta["support_bias"],
+                analysis_bias=theta["analysis_bias"],
+                execution_bias=theta["execution_bias"],
+            )
+            self.logger.info(
+                "reflection_theta_updated user_id=%s event_id=%s support=%.2f analysis=%.2f execution=%.2f",
+                user_id,
+                event_id,
+                theta["support_bias"],
+                theta["analysis_bias"],
+                theta["execution_bias"],
             )
         return True
 
@@ -169,6 +186,40 @@ class ReflectionWorker:
             "content": preferred_role,
             "confidence": 0.76,
             "source": "background_reflection",
+        }
+
+    def _derive_theta(self, recent_memory: Sequence[dict]) -> dict | None:
+        if len(recent_memory) < 3:
+            return None
+
+        role_map = {
+            "friend": "support_bias",
+            "analyst": "analysis_bias",
+            "executor": "execution_bias",
+        }
+        totals = {
+            "support_bias": 0,
+            "analysis_bias": 0,
+            "execution_bias": 0,
+        }
+        counted = 0
+
+        for memory_item in recent_memory:
+            fields = self._extract_fields(str(memory_item.get("summary", "")))
+            role = fields.get("role", "").strip().lower()
+            key = role_map.get(role)
+            if key is None:
+                continue
+            totals[key] += 1
+            counted += 1
+
+        if counted < 3:
+            return None
+
+        return {
+            "support_bias": round(totals["support_bias"] / counted, 2),
+            "analysis_bias": round(totals["analysis_bias"] / counted, 2),
+            "execution_bias": round(totals["execution_bias"] / counted, 2),
         }
 
     def _extract_fields(self, raw_summary: str) -> dict[str, str]:

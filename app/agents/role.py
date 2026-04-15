@@ -11,6 +11,7 @@ class RoleAgent:
         perception: PerceptionOutput,
         context: ContextOutput,
         user_preferences: dict | None = None,
+        theta: dict | None = None,
     ) -> RoleOutput:
         text = str(event.payload.get("text", "")).strip()
         lowered = normalize_for_matching(text)
@@ -86,6 +87,13 @@ class RoleAgent:
             if perception.topic == "general":
                 return RoleOutput(selected=preferred_role, confidence=0.68)
 
+        theta_role = self._theta_role(theta)
+        if theta_role is not None:
+            if perception.event_type == "question" or perception.intent == "request_help":
+                return RoleOutput(selected=theta_role, confidence=0.69)
+            if perception.topic == "general":
+                return RoleOutput(selected=theta_role, confidence=0.64)
+
         if perception.event_type == "question" or perception.intent == "request_help":
             return RoleOutput(selected="mentor", confidence=0.71)
 
@@ -93,3 +101,20 @@ class RoleAgent:
             return RoleOutput(selected="advisor", confidence=0.7)
 
         return RoleOutput(selected="advisor", confidence=0.6)
+
+    def _theta_role(self, theta: dict | None) -> str | None:
+        if not theta:
+            return None
+
+        support_bias = float(theta.get("support_bias", 0.0) or 0.0)
+        analysis_bias = float(theta.get("analysis_bias", 0.0) or 0.0)
+        execution_bias = float(theta.get("execution_bias", 0.0) or 0.0)
+        candidates = {
+            "friend": support_bias,
+            "analyst": analysis_bias,
+            "executor": execution_bias,
+        }
+        role, bias = max(candidates.items(), key=lambda item: item[1])
+        if bias < 0.58:
+            return None
+        return role

@@ -31,7 +31,7 @@ The current repo already works as an MVP slice, but several architecture-level d
 ### 4. Role Selection
 
 - Current repo fact:
-  - runtime role now uses lightweight heuristic selection (`friend`, `analyst`, `executor`, `mentor`, `advisor`) and can use a reflected `preferred_role` as a tie-breaker for more ambiguous turns.
+  - runtime role now uses lightweight heuristic selection (`friend`, `analyst`, `executor`, `mentor`, `advisor`), can use a reflected `preferred_role` as a tie-breaker for more ambiguous turns, and can also fall back to lightweight reflected theta bias when explicit heuristics do not decide the turn.
 - Decision needed:
   - when should role selection move from heuristics into a richer module with user-state, memory, and goal-aware logic?
 
@@ -83,5 +83,13 @@ The current repo already works as an MVP slice, but several architecture-level d
 - Current repo fact:
   - stable `response_style` conclusions now influence context, planning, and expression.
   - stable `preferred_role` conclusions can now influence role selection on ambiguous turns.
+  - reflected theta now provides a softer runtime bias toward support, analysis, or execution behavior without hard-overriding explicit signals.
 - Decision needed:
   - which preference types should remain expression-only, and which should be allowed to shape higher-level planning or role selection as the architecture grows?
+
+### 11. Theta Scope And Durability
+
+- Current repo fact:
+  - reflection now updates a lightweight `aion_theta` state from repeated recent role patterns, and role selection can use that state as a soft bias on ambiguous turns.
+- Decision needed:
+  - should theta stay as a lightweight behavioral bias derived from recent runtime patterns, or evolve into a broader long-term identity state with stronger influence over planning, motivation, and proactive behavior?

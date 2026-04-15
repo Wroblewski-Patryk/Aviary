@@ -164,7 +164,15 @@ These are small but real issues observed after the production rollout and smoke 
 - next improvement:
   - move beyond explicit `preference_update` markers and infer stable conclusions from repeated behavioral patterns
   - decide whether in-process reflection is enough for MVP or whether reflection should become a durable queued worker before more complex jobs exist
-  - decide when reflection should touch only `aion_conclusion` versus richer future artifacts like goals, theta, or stronger role heuristics
+  - decide when reflection should stay limited to `aion_conclusion` plus lightweight `aion_theta`, versus growing into richer future artifacts like goals or stronger role heuristics
+
+### 9. Theta Runtime Bias
+
+- current repo behavior now stores lightweight theta state in `aion_theta`; reflection derives soft `support`, `analysis`, and `execution` biases from repeated recent role usage, and ambiguous role selection can use theta after explicit heuristics and `preferred_role`
+- next improvement:
+  - decide whether theta should start influencing motivation and planning, or remain role-scoped until more evidence exists
+  - decide whether theta should stay recency-driven or accumulate over a longer user history
+  - decide when theta deserves richer provenance and decay rules instead of simple overwrite updates
 
 ### 5. UTF-8 Smoke Test Reliability
 

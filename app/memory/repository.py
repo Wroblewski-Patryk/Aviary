@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
-from app.memory.models import AionConclusion, AionMemory, AionProfile, Base
+from app.memory.models import AionConclusion, AionMemory, AionProfile, AionTheta, Base
 
 
 class MemoryRepository:
@@ -80,6 +80,21 @@ class MemoryRepository:
             "preferred_language": row.preferred_language,
             "language_confidence": row.language_confidence,
             "language_source": row.language_source,
+            "updated_at": row.updated_at,
+        }
+
+    async def get_user_theta(self, user_id: str) -> dict | None:
+        async with self.session_factory() as session:
+            row = await session.get(AionTheta, user_id)
+
+        if row is None:
+            return None
+
+        return {
+            "user_id": row.user_id,
+            "support_bias": row.support_bias,
+            "analysis_bias": row.analysis_bias,
+            "execution_bias": row.execution_bias,
             "updated_at": row.updated_at,
         }
 
@@ -241,6 +256,39 @@ class MemoryRepository:
             "confidence": row.confidence,
             "source": row.source,
             "supporting_event_id": row.supporting_event_id,
+            "updated_at": row.updated_at,
+        }
+
+    async def upsert_theta(
+        self,
+        user_id: str,
+        support_bias: float,
+        analysis_bias: float,
+        execution_bias: float,
+    ) -> dict:
+        async with self.session_factory() as session:
+            row = await session.get(AionTheta, user_id)
+            if row is None:
+                row = AionTheta(
+                    user_id=user_id,
+                    support_bias=support_bias,
+                    analysis_bias=analysis_bias,
+                    execution_bias=execution_bias,
+                )
+                session.add(row)
+            else:
+                row.support_bias = support_bias
+                row.analysis_bias = analysis_bias
+                row.execution_bias = execution_bias
+
+            await session.commit()
+            await session.refresh(row)
+
+        return {
+            "user_id": row.user_id,
+            "support_bias": row.support_bias,
+            "analysis_bias": row.analysis_bias,
+            "execution_bias": row.execution_bias,
             "updated_at": row.updated_at,
         }
 

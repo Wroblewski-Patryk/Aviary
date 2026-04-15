@@ -19,6 +19,7 @@ class FakeMemoryRepository:
         self.conclusion_updates: list[dict] = []
         self.user_preferences: dict = {}
         self.user_conclusions: list[dict] = []
+        self.user_theta: dict | None = None
 
     async def get_recent_for_user(self, user_id: str, limit: int = 5) -> list[dict]:
         return self.recent_memory[:limit]
@@ -31,6 +32,9 @@ class FakeMemoryRepository:
 
     async def get_user_conclusions(self, user_id: str, limit: int = 3) -> list[dict]:
         return self.user_conclusions[:limit]
+
+    async def get_user_theta(self, user_id: str) -> dict | None:
+        return self.user_theta
 
     async def write_episode(self, **kwargs) -> dict:
         return {
@@ -47,6 +51,10 @@ class FakeMemoryRepository:
 
     async def upsert_conclusion(self, **kwargs) -> dict:
         self.conclusion_updates.append(kwargs)
+        return kwargs
+
+    async def upsert_theta(self, **kwargs) -> dict:
+        self.user_theta = kwargs
         return kwargs
 
 
@@ -303,6 +311,43 @@ async def test_runtime_pipeline_uses_preferred_role_from_semantic_memory_for_amb
         timestamp=datetime.now(timezone.utc),
         payload={"text": "Can you help me with this?"},
         meta=EventMeta(user_id="u-1", trace_id="t-5"),
+    )
+
+    result = await runtime.run(event)
+
+    assert result.role.selected == "analyst"
+    assert result.reflection_triggered is True
+
+
+async def test_runtime_pipeline_uses_theta_bias_when_no_preferred_role_exists() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    memory.user_theta = {
+        "support_bias": 0.12,
+        "analysis_bias": 0.67,
+        "execution_bias": 0.21,
+    }
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+
+    event = Event(
+        event_id="evt-6",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "Can you help me with this?"},
+        meta=EventMeta(user_id="u-1", trace_id="t-6"),
     )
 
     result = await runtime.run(event)
