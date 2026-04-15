@@ -18,6 +18,7 @@ class FakeMemoryRepository:
         self.profile_updates: list[dict] = []
         self.conclusion_updates: list[dict] = []
         self.user_preferences: dict = {}
+        self.user_conclusions: list[dict] = []
 
     async def get_recent_for_user(self, user_id: str, limit: int = 5) -> list[dict]:
         return self.recent_memory[:limit]
@@ -27,6 +28,9 @@ class FakeMemoryRepository:
 
     async def get_user_runtime_preferences(self, user_id: str) -> dict:
         return self.user_preferences
+
+    async def get_user_conclusions(self, user_id: str, limit: int = 3) -> list[dict]:
+        return self.user_conclusions[:limit]
 
     async def write_episode(self, **kwargs) -> dict:
         return {
@@ -178,6 +182,9 @@ async def test_runtime_pipeline_uses_user_profile_language_for_ambiguous_turn_wi
 async def test_runtime_pipeline_applies_structured_response_preference_from_conclusion_memory() -> None:
     memory = FakeMemoryRepository(recent_memory=[])
     memory.user_preferences = {"response_style": "structured", "response_style_source": "explicit_request"}
+    memory.user_conclusions = [
+        {"kind": "response_style", "content": "structured", "confidence": 0.95, "source": "explicit_request"}
+    ]
     action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
     openai = FakeOpenAIClient()
     runtime = RuntimeOrchestrator(
@@ -204,3 +211,4 @@ async def test_runtime_pipeline_applies_structured_response_preference_from_conc
 
     assert result.expression.message == "Mocked OpenAI reply"
     assert openai.calls[0]["response_style"] == "structured"
+    assert "Stable user preferences: prefers structured responses." in result.context.summary

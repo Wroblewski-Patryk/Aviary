@@ -135,12 +135,13 @@ These are small but real issues observed after the production rollout and smoke 
 
 ### 4. Memory Retrieval Ranking
 
-- current repo behavior stores lightweight `memory_kind` and `memory_topics` markers, perception emits lightweight `topic_tags`, and retrieval prefers memories tagged with the same response language as the current turn before ranking them by mode match, topical overlap, importance, and recency
+- current repo behavior stores lightweight `memory_kind` and `memory_topics` markers, perception emits lightweight `topic_tags`, retrieval prefers memories tagged with the same response language as the current turn before ranking them by mode match, topical overlap, importance, and recency, and context now also adds stable semantic preference conclusions when they are available
 - next improvement:
   - decide whether lightweight in-summary metadata is enough for MVP, or whether `memory_kind` and topic fields should become explicit columns before retrieval grows further
   - decide whether `topic_tags` should stay heuristic or become a richer perception artifact with explicit entities/intents
   - consider splitting "conversation continuity" memory from "semantic recall" memory more formally once retrieval grows beyond the latest five rows
   - watch production behavior around short acknowledgements versus specific requests, so continuity memory helps only when it adds signal instead of noise
+  - decide when semantic conclusions should be ranked or filtered by topical relevance instead of being injected as always-on stable preferences
 
 ### 6. Lightweight Profile Memory
 
@@ -151,11 +152,11 @@ These are small but real issues observed after the production rollout and smoke 
 
 ### 7. Semantic Conclusion Memory
 
-- current repo behavior now keeps a first lightweight `aion_conclusion` record for explicit `response_style` preferences such as `concise` or `structured`, and the expression layer uses that preference in both fallback generation and OpenAI prompting
+- current repo behavior now keeps a first lightweight `aion_conclusion` record for explicit `response_style` preferences such as `concise` or `structured`, the expression layer uses that preference in both fallback generation and OpenAI prompting, and context retrieval includes those stable preferences in the runtime summary
 - next improvement:
   - widen conclusion memory beyond explicit requests into repeated-pattern learning once there is enough traffic signal
   - decide whether conclusions should start carrying supporting memory ids and richer provenance before the subconscious loop exists
-  - consider feeding stable semantic preferences back into planning/context, not only expression
+  - consider feeding stable semantic preferences into planning or role selection, not only context and expression
 
 ### 5. UTF-8 Smoke Test Reliability
 

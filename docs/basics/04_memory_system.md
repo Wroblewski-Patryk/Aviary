@@ -113,6 +113,7 @@ Current MVP status:
 - episodic memory is stored in PostgreSQL
 - lightweight identity-linked preferences are stored in `aion_profile`
 - first semantic preference conclusions are stored in `aion_conclusion`
+- runtime retrieval now combines recent episodes with stable semantic preferences during context construction
 - vector retrieval is still planned, not live
 
 ---

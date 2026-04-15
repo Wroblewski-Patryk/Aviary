@@ -3,6 +3,7 @@ from app.core.contracts import ContextOutput, Event, PerceptionOutput
 
 class ContextAgent:
     GENERIC_TAGS = {"general"}
+    SUPPORTED_CONCLUSION_KINDS = {"response_style"}
     STOPWORDS = {
         "a",
         "an",
@@ -75,6 +76,47 @@ class ContextAgent:
             seen.add(cleaned)
             related_tags.append(tag)
         return related_tags
+
+    def _summarize_conclusions(self, conclusions: list[dict] | None) -> str:
+        if not conclusions:
+            return ""
+
+        summarized: list[str] = []
+        seen: set[str] = set()
+        for conclusion in conclusions:
+            kind = str(conclusion.get("kind", "")).strip().lower()
+            if kind not in self.SUPPORTED_CONCLUSION_KINDS:
+                continue
+            confidence = float(conclusion.get("confidence", 0.0))
+            if confidence < 0.7:
+                continue
+
+            content = str(conclusion.get("content", "")).strip().lower()
+            if not content:
+                continue
+
+            summary = self._summarize_conclusion(kind=kind, content=content)
+            if not summary or summary in seen:
+                continue
+
+            seen.add(summary)
+            summarized.append(summary)
+            if len(summarized) >= 2:
+                break
+
+        if not summarized:
+            return ""
+
+        return " Stable user preferences: " + " | ".join(summarized) + "."
+
+    def _summarize_conclusion(self, kind: str, content: str) -> str:
+        if kind != "response_style":
+            return ""
+        if content == "concise":
+            return "prefers concise responses"
+        if content == "structured":
+            return "prefers structured responses"
+        return ""
 
     def _extract_fields(self, raw_summary: str) -> dict[str, str]:
         fields: dict[str, str] = {}
@@ -244,8 +286,15 @@ class ContextAgent:
 
         return selected
 
-    def run(self, event: Event, perception: PerceptionOutput, recent_memory: list[dict]) -> ContextOutput:
+    def run(
+        self,
+        event: Event,
+        perception: PerceptionOutput,
+        recent_memory: list[dict],
+        conclusions: list[dict] | None = None,
+    ) -> ContextOutput:
         text = str(event.payload.get("text", "")).strip()
+        conclusion_hint = self._summarize_conclusions(conclusions)
         memory_hint = ""
         if recent_memory:
             current_tokens = self._current_topic_tokens(event=event, perception=perception)
@@ -264,7 +313,7 @@ class ContextAgent:
             if memory_summaries:
                 memory_hint = " Relevant recent memory: " + " | ".join(memory_summaries) + "."
 
-        summary = f"User said: '{text}' with detected intent '{perception.intent}'." + memory_hint
+        summary = f"User said: '{text}' with detected intent '{perception.intent}'." + conclusion_hint + memory_hint
         risk_level = 0.1 if text else 0.4
 
         return ContextOutput(

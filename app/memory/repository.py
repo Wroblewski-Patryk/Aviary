@@ -106,6 +106,30 @@ class MemoryRepository:
             "response_style_updated_at": row.updated_at,
         }
 
+    async def get_user_conclusions(self, user_id: str, limit: int = 3) -> list[dict]:
+        async with self.session_factory() as session:
+            statement = (
+                select(AionConclusion)
+                .where(AionConclusion.user_id == user_id)
+                .order_by(AionConclusion.updated_at.desc(), AionConclusion.id.desc())
+                .limit(limit)
+            )
+            result = await session.execute(statement)
+            rows = result.scalars().all()
+
+        return [
+            {
+                "id": row.id,
+                "kind": row.kind,
+                "content": row.content,
+                "confidence": row.confidence,
+                "source": row.source,
+                "supporting_event_id": row.supporting_event_id,
+                "updated_at": row.updated_at,
+            }
+            for row in rows
+        ]
+
     async def upsert_user_profile_language(
         self,
         user_id: str,

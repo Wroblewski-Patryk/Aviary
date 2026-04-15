@@ -36,6 +36,42 @@ def test_context_summary_stays_simple_without_recent_memory() -> None:
     assert result.related_tags == ["general", "language:en"]
 
 
+def test_context_summary_includes_stable_user_preferences_from_conclusions() -> None:
+    result = ContextAgent().run(
+        event=_event("how should we proceed"),
+        perception=_perception(),
+        recent_memory=[],
+        conclusions=[
+            {
+                "kind": "response_style",
+                "content": "concise",
+                "confidence": 0.95,
+                "source": "explicit_request",
+            }
+        ],
+    )
+
+    assert "Stable user preferences: prefers concise responses." in result.summary
+
+
+def test_context_ignores_low_confidence_conclusions() -> None:
+    result = ContextAgent().run(
+        event=_event("how should we proceed"),
+        perception=_perception(),
+        recent_memory=[],
+        conclusions=[
+            {
+                "kind": "response_style",
+                "content": "concise",
+                "confidence": 0.5,
+                "source": "weak_signal",
+            }
+        ],
+    )
+
+    assert "Stable user preferences:" not in result.summary
+
+
 def test_context_related_tags_are_deduplicated_preserving_order() -> None:
     perception = PerceptionOutput(
         event_type="statement",
