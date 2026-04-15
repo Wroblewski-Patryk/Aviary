@@ -122,7 +122,9 @@ These are small but real issues observed after the production rollout and smoke 
 
 - current production behavior required a manual Coolify redeploy after pushing `main`
 - next improvement:
-  - verify whether GitHub webhook delivery, Coolify auto-deploy settings, or branch wiring is preventing reliable automatic deploys
+  - verify GitHub repository webhook presence and recent deliveries
+  - confirm the configured secret on GitHub matches the Coolify secret `codex-webhook-2026`
+  - note: a manually sent, correctly signed GitHub-style `push` event to the Coolify endpoint successfully queued a deployment on 2026-04-15, so the remaining issue appears to be on the GitHub webhook configuration or delivery side
 
 ## Tasks Waiting For Coolify / VPS Access
 
