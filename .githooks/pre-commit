@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+set -eu
+
+if [ "${SKIP_LOCAL_GATES:-0}" = "1" ]; then
+  echo "[pre-commit] SKIP_LOCAL_GATES=1 -> skipping local quality gates"
+  exit 0
+fi
+
+PYTHON_BIN=""
+
+if [ -x "./.venv/Scripts/python.exe" ]; then
+  PYTHON_BIN="./.venv/Scripts/python.exe"
+elif [ -x "./.venv/bin/python" ]; then
+  PYTHON_BIN="./.venv/bin/python"
+elif command -v python >/dev/null 2>&1; then
+  PYTHON_BIN="python"
+fi
+
+echo "[pre-commit] running Personality quality gates"
+
+if [ -n "$PYTHON_BIN" ] && [ -f "pyproject.toml" ]; then
+  "$PYTHON_BIN" -m pytest -q
+else
+  echo "[pre-commit] python or pyproject.toml not found, skipping pytest gate"
+fi
+
+echo "[pre-commit] quality gates passed"
