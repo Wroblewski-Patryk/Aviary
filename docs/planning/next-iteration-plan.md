@@ -164,6 +164,7 @@ These are small but real issues observed after the production rollout and smoke 
 
 - current repo behavior now has a lightweight reflection worker backed by durable `aion_reflection_task` rows; it runs after episode persistence, updates semantic conclusions asynchronously, recovers pending work on startup, retries failed jobs with bounded backoff, and sets `reflection_triggered=true` when the task is durably persisted and queued
 - current repo behavior also exposes lightweight queue observability through `GET /health`, including worker status plus pending, failed, retryable, exhausted, and stuck-task counts
+- current repo behavior now also returns per-stage `stage_timings_ms` in `POST /event`, so conscious-loop latency can be inspected stage by stage during runtime verification
 - next improvement:
   - move beyond explicit `preference_update` markers and infer stable conclusions from repeated behavioral patterns
   - decide whether the current app-local durable queue is enough for MVP or whether reflection should move into a separate worker process before more complex jobs exist

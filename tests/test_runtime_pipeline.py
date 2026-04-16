@@ -162,6 +162,20 @@ async def test_runtime_pipeline_api_source() -> None:
     assert "memory_topics=general,hello" in result.memory_record.summary
     assert "response_language=en" in result.memory_record.summary
     assert result.reflection_triggered is True
+    assert set(result.stage_timings_ms) == {
+        "memory_load",
+        "perception",
+        "context",
+        "motivation",
+        "role",
+        "planning",
+        "expression",
+        "action",
+        "memory_persist",
+        "reflection_enqueue",
+        "total",
+    }
+    assert result.stage_timings_ms["total"] == result.duration_ms
     assert reflection.calls == [{"user_id": "u-1", "event_id": "evt-1"}]
     assert memory.profile_updates == []
     assert openai.calls[0]["response_style"] == ""

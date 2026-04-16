@@ -40,8 +40,10 @@ class RuntimeOrchestrator:
 
     async def run(self, event: Event) -> RuntimeResult:
         started = perf_counter()
+        stage_timings_ms: dict[str, int] = {}
         self.logger.info("start event_id=%s trace_id=%s", event.event_id, event.meta.trace_id)
 
+        stage_started = perf_counter()
         memory, user_profile, user_preferences, user_conclusions, user_theta = await asyncio.gather(
             self.memory_repository.get_recent_for_user(user_id=event.meta.user_id, limit=5),
             self.memory_repository.get_user_profile(user_id=event.meta.user_id),
@@ -49,13 +51,22 @@ class RuntimeOrchestrator:
             self.memory_repository.get_user_conclusions(user_id=event.meta.user_id, limit=3),
             self.memory_repository.get_user_theta(user_id=event.meta.user_id),
         )
+        stage_timings_ms["memory_load"] = int((perf_counter() - stage_started) * 1000)
+
+        stage_started = perf_counter()
         perception = self.perception_agent.run(event, recent_memory=memory, user_profile=user_profile)
+        stage_timings_ms["perception"] = int((perf_counter() - stage_started) * 1000)
+
+        stage_started = perf_counter()
         context = self.context_agent.run(
             event=event,
             perception=perception,
             recent_memory=memory,
             conclusions=user_conclusions,
         )
+        stage_timings_ms["context"] = int((perf_counter() - stage_started) * 1000)
+
+        stage_started = perf_counter()
         motivation = self.motivation_engine.run(
             event=event,
             context=context,
@@ -63,6 +74,9 @@ class RuntimeOrchestrator:
             user_preferences=user_preferences,
             theta=user_theta,
         )
+        stage_timings_ms["motivation"] = int((perf_counter() - stage_started) * 1000)
+
+        stage_started = perf_counter()
         role = self.role_agent.run(
             event=event,
             perception=perception,
@@ -70,6 +84,9 @@ class RuntimeOrchestrator:
             user_preferences=user_preferences,
             theta=user_theta,
         )
+        stage_timings_ms["role"] = int((perf_counter() - stage_started) * 1000)
+
+        stage_started = perf_counter()
         plan = self.planning_agent.run(
             event=event,
             context=context,
@@ -78,6 +95,9 @@ class RuntimeOrchestrator:
             user_preferences=user_preferences,
             theta=user_theta,
         )
+        stage_timings_ms["planning"] = int((perf_counter() - stage_started) * 1000)
+
+        stage_started = perf_counter()
         expression = await self.expression_agent.run(
             event=event,
             perception=perception,
@@ -88,11 +108,18 @@ class RuntimeOrchestrator:
             user_preferences=user_preferences,
             theta=user_theta,
         )
+        stage_timings_ms["expression"] = int((perf_counter() - stage_started) * 1000)
+
+        stage_started = perf_counter()
         action_result = await self.action_executor.execute(plan=plan, event=event, expression=expression)
+        stage_timings_ms["action"] = int((perf_counter() - stage_started) * 1000)
 
         memory_record = None
         reflection_triggered = False
+        stage_timings_ms["memory_persist"] = 0
+        stage_timings_ms["reflection_enqueue"] = 0
         try:
+            stage_started = perf_counter()
             memory_record = await self.action_executor.persist_episode(
                 event=event,
                 perception=perception,
@@ -103,21 +130,28 @@ class RuntimeOrchestrator:
                 action_result=action_result,
                 expression=expression,
             )
+            stage_timings_ms["memory_persist"] = int((perf_counter() - stage_started) * 1000)
             if self.reflection_worker is not None:
+                stage_started = perf_counter()
                 reflection_triggered = await self.reflection_worker.enqueue(
                     user_id=event.meta.user_id,
                     event_id=event.event_id,
                 )
+                stage_timings_ms["reflection_enqueue"] = int((perf_counter() - stage_started) * 1000)
         except Exception as exc:  # pragma: no cover - defensive path
+            if stage_timings_ms["memory_persist"] == 0:
+                stage_timings_ms["memory_persist"] = int((perf_counter() - stage_started) * 1000)
             self.logger.exception("memory_persist_failed event_id=%s error=%s", event.event_id, exc)
 
         duration_ms = int((perf_counter() - started) * 1000)
+        stage_timings_ms["total"] = duration_ms
         self.logger.info(
-            "end event_id=%s trace_id=%s status=%s duration_ms=%s",
+            "end event_id=%s trace_id=%s status=%s duration_ms=%s stage_timings_ms=%s",
             event.event_id,
             event.meta.trace_id,
             action_result.status,
             duration_ms,
+            stage_timings_ms,
         )
 
         return RuntimeResult(
@@ -131,5 +165,6 @@ class RuntimeOrchestrator:
             expression=expression,
             memory_record=memory_record,
             reflection_triggered=reflection_triggered,
+            stage_timings_ms=stage_timings_ms,
             duration_ms=duration_ms,
         )

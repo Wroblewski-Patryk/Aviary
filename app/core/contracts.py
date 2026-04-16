@@ -89,4 +89,5 @@ class RuntimeResult(BaseModel):
     expression: ExpressionOutput
     memory_record: MemoryRecord | None = None
     reflection_triggered: bool = False
+    stage_timings_ms: dict[str, int] = Field(default_factory=dict)
     duration_ms: int

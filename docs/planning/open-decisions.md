@@ -26,7 +26,7 @@ The current repo already works as an MVP slice, but several architecture-level d
 ### 3. Public API Shape
 
 - Current repo fact:
-  - `POST /event` returns the full serialized runtime result.
+  - `POST /event` returns the full serialized runtime result, including per-stage `stage_timings_ms` for the conscious loop.
 - Decision needed:
   - should this remain a debugging-friendly internal API, or should a smaller stable public response contract be introduced?
 

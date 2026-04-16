@@ -218,6 +218,11 @@ System should track:
 - errors  
 - model usage  
 
+Current MVP status:
+
+- runtime already carries `event_id` and `trace_id`
+- `POST /event` now also returns per-stage `stage_timings_ms` for the conscious loop, so runtime latency can be inspected without parsing logs only
+
 Without observability, debugging becomes impossible.
 
 ---

@@ -78,6 +78,19 @@ class FakeRuntime:
                 importance=0.7,
             ),
             reflection_triggered=False,
+            stage_timings_ms={
+                "memory_load": 1,
+                "perception": 0,
+                "context": 0,
+                "motivation": 0,
+                "role": 0,
+                "planning": 0,
+                "expression": 2,
+                "action": 0,
+                "memory_persist": 1,
+                "reflection_enqueue": 0,
+                "total": 12,
+            },
             duration_ms=12,
         )
 
@@ -195,6 +208,8 @@ def test_event_endpoint_returns_runtime_result_and_normalizes_event() -> None:
     assert body["perception"]["language"] == "en"
     assert body["perception"]["language_source"] == "keyword_signal"
     assert body["reflection_triggered"] is False
+    assert body["stage_timings_ms"]["memory_load"] == 1
+    assert body["stage_timings_ms"]["total"] == 12
     assert body["event"]["source"] == "api"
     assert runtime.last_event is not None
     assert runtime.last_event.payload["text"] == "hello from api"
