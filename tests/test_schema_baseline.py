@@ -32,3 +32,9 @@ def test_schema_baseline_preserves_named_unique_constraints() -> None:
 
     assert "uq_aion_conclusion_user_kind" in conclusion_constraints
     assert "uq_aion_reflection_task_event_id" in reflection_constraints
+
+
+def test_schema_baseline_tracks_structured_memory_payload_column() -> None:
+    memory_columns = Base.metadata.tables["aion_memory"].columns
+
+    assert "payload" in memory_columns

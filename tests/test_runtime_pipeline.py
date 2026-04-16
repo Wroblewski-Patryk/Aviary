@@ -76,6 +76,7 @@ class FakeMemoryRepository:
             "event_id": kwargs["event_id"],
             "timestamp": kwargs["event_timestamp"],
             "summary": kwargs["summary"],
+            "payload": kwargs["payload"],
             "importance": kwargs["importance"],
         }
 
@@ -262,9 +263,10 @@ async def test_runtime_pipeline_api_source() -> None:
     assert result.expression.message == "Mocked OpenAI reply"
     assert result.expression.language == "en"
     assert result.memory_record is not None
-    assert "memory_kind=continuity" in result.memory_record.summary
-    assert "memory_topics=general,hello" in result.memory_record.summary
-    assert "response_language=en" in result.memory_record.summary
+    assert "User said 'hello'." in result.memory_record.summary
+    assert result.memory_record.payload["memory_kind"] == "continuity"
+    assert result.memory_record.payload["memory_topics"] == ["general", "hello"]
+    assert result.memory_record.payload["response_language"] == "en"
     assert result.reflection_triggered is True
     assert set(result.stage_timings_ms) == {
         "memory_load",

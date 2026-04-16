@@ -1220,3 +1220,38 @@ def test_context_prefers_continuity_memory_for_short_follow_up() -> None:
 
     assert "Please provide the necessary deployment details to proceed." in result.summary
     assert "Let's verify the production deploy steps" not in result.summary
+
+
+def test_context_reads_structured_memory_payload_before_legacy_summary() -> None:
+    event = Event(
+        event_id="evt-structured-memory",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "deploy the fix to production now"},
+        meta=EventMeta(user_id="u-1", trace_id="t-structured-memory"),
+    )
+    recent_memory = [
+        {
+            "id": 31,
+            "event_id": "evt-structured-prev",
+            "summary": "Readable summary only.",
+            "payload": {
+                "payload_version": 1,
+                "event": "deploy the fix to production",
+                "memory_kind": "semantic",
+                "memory_topics": ["deploy", "fix", "production"],
+                "response_language": "en",
+                "context": "semantic context",
+                "plan_goal": "reply",
+                "action": "success",
+                "expression": "Let's verify the production deploy steps",
+            },
+            "importance": 0.72,
+            "event_timestamp": datetime.now(timezone.utc),
+        }
+    ]
+
+    result = ContextAgent().run(event=event, perception=_perception(), recent_memory=recent_memory)
+
+    assert "Let's verify the production deploy steps" in result.summary

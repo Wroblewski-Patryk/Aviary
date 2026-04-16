@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from collections.abc import Sequence
 
 from app.core.logging import get_logger
+from app.memory.episodic import extract_episode_fields
 from app.memory.repository import MemoryRepository
 
 
@@ -315,7 +316,7 @@ class ReflectionWorker:
         task_in_progress_updates = 0
 
         for memory_item in recent_memory:
-            fields = self._extract_fields(str(memory_item.get("summary", "")))
+            fields = self._extract_memory_fields(memory_item)
             preference_update = fields.get("preference_update", "")
             if preference_update.startswith("response_style:"):
                 explicit_updates.append(preference_update.split(":", 1)[1].strip().lower())
@@ -1317,7 +1318,7 @@ class ReflectionWorker:
 
         stagnation_signals = 0
         for memory_item in recent_memory:
-            fields = self._extract_fields(str(memory_item.get("summary", "")))
+            fields = self._extract_memory_fields(memory_item)
             if fields.get("action", "").strip().lower() != "success":
                 continue
             if fields.get("task_status_update", "").strip():
@@ -1389,7 +1390,7 @@ class ReflectionWorker:
         counted = 0
 
         for memory_item in recent_memory:
-            fields = self._extract_fields(str(memory_item.get("summary", "")))
+            fields = self._extract_memory_fields(memory_item)
             role = fields.get("role", "").strip().lower()
             key = role_map.get(role)
             if key is None:
@@ -1415,7 +1416,7 @@ class ReflectionWorker:
         sample_size = 0
 
         for memory_item in recent_memory:
-            fields = self._extract_fields(str(memory_item.get("summary", "")))
+            fields = self._extract_memory_fields(memory_item)
             role = fields.get("role", "").strip().lower()
             motivation = fields.get("motivation", "").strip().lower()
             plan_steps = {
@@ -1465,13 +1466,10 @@ class ReflectionWorker:
         return None
 
     def _extract_fields(self, raw_summary: str) -> dict[str, str]:
-        fields: dict[str, str] = {}
-        for part in " ".join(raw_summary.split()).split(";"):
-            if "=" not in part:
-                continue
-            key, value = part.split("=", 1)
-            fields[key.strip()] = value.strip()
-        return fields
+        return extract_episode_fields({"summary": raw_summary})
+
+    def _extract_memory_fields(self, memory_item: dict) -> dict[str, str]:
+        return extract_episode_fields(memory_item)
 
     def _looks_structured(self, expression: str) -> bool:
         return expression.startswith("- ") or "\n1." in expression or "### " in expression

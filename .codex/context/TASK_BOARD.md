@@ -1,10 +1,84 @@
 # TASK_BOARD
 
-Last updated: 2026-04-16
+Last updated: 2026-04-17
 
 ## READY
 
+- [ ] PRJ-009 Normalize motivation mode contract to the documented set
+  - Status: READY
+  - Group: Motivation And Runtime Contract Alignment
+  - Owner: Backend Builder
+  - Depends on: none
+  - Priority: P1
+  - Files:
+    - `app/motivation/engine.py`
+    - `app/agents/planning.py`
+    - `app/expression/generator.py`
+    - `app/core/contracts.py`
+  - Done when:
+    - emotional-turn behavior no longer depends on undocumented `support`
+    - supportive behavior still remains visible through documented runtime contracts
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_motivation_engine.py tests/test_planning_agent.py tests/test_expression_agent.py tests/test_runtime_pipeline.py`
+
+- [ ] PRJ-014 Add a reusable stage-level structured logging scaffold
+  - Status: READY
+  - Group: Observability And Runtime Honesty
+  - Owner: Backend Builder
+  - Depends on: none
+  - Priority: P2
+  - Files:
+    - `app/core/runtime.py`
+    - `app/core/logging.py`
+  - Done when:
+    - each runtime stage logs success/failure with `event_id`, `trace_id`, stage, and duration
+    - stage logs include short summaries instead of raw payload dumps
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py`
+
 ## BACKLOG
+
+- [ ] PRJ-010 Add explicit emotional-turn contract tests after motivation normalization
+  - Status: BACKLOG
+  - Group: Motivation And Runtime Contract Alignment
+  - Owner: QA/Test
+  - Depends on: PRJ-009
+  - Priority: P1
+
+- [ ] PRJ-011 Extract shared goal/task selection helpers
+  - Status: BACKLOG
+  - Group: Shared Signal Engine Extraction
+  - Owner: Backend Builder
+  - Depends on: none
+  - Priority: P1
+
+- [ ] PRJ-012 Extract shared goal-progress and milestone-history signal helpers
+  - Status: BACKLOG
+  - Group: Shared Signal Engine Extraction
+  - Owner: Backend Builder
+  - Depends on: PRJ-011
+  - Priority: P1
+
+- [ ] PRJ-013 Split oversized heuristic modules after helper extraction
+  - Status: BACKLOG
+  - Group: Shared Signal Engine Extraction
+  - Owner: Backend Builder
+  - Depends on: PRJ-011, PRJ-012
+  - Priority: P2
+
+- [ ] PRJ-015 Tighten the event normalization and public API boundary
+  - Status: BACKLOG
+  - Group: Observability And Runtime Honesty
+  - Owner: Planner
+  - Depends on: none
+  - Priority: P2
+
+- [ ] PRJ-016 Move startup toward migration-first schema ownership
+  - Status: BACKLOG
+  - Group: Observability And Runtime Honesty
+  - Owner: DB/Migrations
+  - Depends on: none
+  - Priority: P2
 
 ## IN_PROGRESS
 
@@ -75,3 +149,35 @@ Last updated: 2026-04-16
     - deployment smoke steps are explicit
     - webhook or manual-release fallback is documented
     - release verification is repeatable
+
+- [x] PRJ-006 Introduce structured episodic memory payload alongside the human-readable summary
+  - Status: DONE
+  - Group: Runtime Contract Foundation
+  - Owner: Backend Builder
+  - Depends on: none
+  - Priority: P1
+  - Done when:
+    - episodic memory rows keep a typed machine-readable payload
+    - the human-readable summary remains available
+    - old rows are not broken
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_action_executor.py tests/test_memory_repository.py tests/test_schema_baseline.py`
+    - `.\.venv\Scripts\python -m alembic upgrade head --sql`
+
+- [x] PRJ-007 Move context and reflection to payload-first episodic-memory readers
+  - Status: DONE
+  - Group: Runtime Contract Foundation
+  - Owner: Backend Builder
+  - Depends on: PRJ-006
+  - Priority: P1
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_context_agent.py tests/test_reflection_worker.py tests/test_runtime_pipeline.py`
+
+- [x] PRJ-008 Lock the episodic memory contract with regression coverage
+  - Status: DONE
+  - Group: Runtime Contract Foundation
+  - Owner: QA/Test
+  - Depends on: PRJ-006, PRJ-007
+  - Priority: P1
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_action_executor.py tests/test_memory_repository.py tests/test_context_agent.py tests/test_reflection_worker.py tests/test_runtime_pipeline.py tests/test_schema_baseline.py`

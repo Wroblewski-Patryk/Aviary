@@ -1,13 +1,13 @@
 # PROJECT_STATE
 
-Last updated: 2026-04-16
+Last updated: 2026-04-17
 
 ## Product Snapshot
 
 - Name: Personality / AION
 - Goal: build a memory-aware AI runtime that receives events, reasons through a structured pipeline, replies through API or Telegram, and learns lightweight user preferences over time
 - Commercial model: TBD
-- Current phase: MVP-plus runtime refinement
+- Current phase: contract hardening and runtime simplification
 
 ## Confirmed Decisions
 
@@ -19,6 +19,9 @@ Last updated: 2026-04-16
 - 2026-04-16: the repo now has a formal Alembic baseline for the current schema, while startup `create_tables()` remains as a temporary MVP bootstrap path.
 - 2026-04-17: `POST /event` now returns a smaller public response contract by default, while the full internal `RuntimeResult` is exposed only through an explicit `debug=true` API path.
 - 2026-04-17: the repo now has a repeatable release smoke helper for health plus event verification, including an optional UTF-8 payload check and optional debug response validation.
+- 2026-04-17: repo analysis confirmed that the main remaining risks are semistructured episodic-memory contracts, motivation-mode drift versus `docs/basics`, duplicated signal logic, missing stage-level structured logging, and the temporary migration/bootstrap dual path.
+- 2026-04-17: the next execution roadmap was regrouped into small task batches under `docs/planning/next-iteration-plan.md` and `.codex/context/TASK_BOARD.md`, with parallel-ready lanes for memory contracts, motivation alignment, and logging.
+- 2026-04-17: episodic memory rows now persist a typed JSON payload alongside a human-readable summary, and both context retrieval and reflection now read payload-first with legacy summary fallback.
 
 ## Technical Baseline
 
@@ -42,15 +45,18 @@ Last updated: 2026-04-16
 
 ## Current Focus
 
-- Main active objective: keep growing memory, preference, role, and reflection behavior without losing runtime honesty, docs alignment, or deterministic test coverage
-- Current runtime emphasis: lightweight goal and milestone management now includes phase, arc, pressure, dependency, due, due-window, risk, and completion signals, still without a heavyweight milestone engine
+- Main active objective: harden the runtime contracts that future behavior depends on before adding more heuristics
+- Current runtime emphasis: align motivation behavior with documented contracts, reduce duplicated signal logic across stages, and improve structured observability
 - Top blockers:
+  - runtime currently emits an undocumented `support` motivation mode even though `docs/basics/16_agent_contracts.md` defines a smaller shared mode set
+  - goal and milestone signal logic is duplicated across context, motivation, planning, and reflection
+  - stage-level structured logging is still missing even though stage timings already exist
   - startup is still on a temporary dual-path schema model: Alembic baseline plus startup `create_tables()`
-  - deployment automation and release confidence still need hardening
 - Success criteria for this phase:
-  - runtime changes remain test-covered
-  - docs and code describe the same system
-  - reflection and preference behavior stay observable and bounded
+  - shared motivation modes match `docs/basics/16_agent_contracts.md`
+  - shared goal and milestone signals have one clear implementation owner
+  - runtime stage decisions are observable through structured logs
+  - docs, task board, and code stay synchronized after each slice
 
 ## Working Agreements
 

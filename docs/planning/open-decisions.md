@@ -51,8 +51,9 @@ The current repo already works as an MVP slice, but several architecture-level d
 
 - Current repo fact:
   - only the latest five user memory rows are loaded.
-  - persisted episodes now include lightweight `memory_kind` and `memory_topics` metadata inside the stored summary.
+  - persisted episodes now keep lightweight structured runtime fields in a typed payload, while still keeping a readable summary.
   - perception now emits lightweight `topic_tags`, and memory persistence reuses them before falling back to raw lexical tokens.
+  - context and reflection now read episodic memory payload-first and fall back to old summary-only rows only when needed.
   - context now prefers memories tagged with the same response language as the current turn before falling back to untagged older context.
   - within that pool, context now distinguishes between `continuity` and `semantic` memory and prefers topically overlapping memories before falling back to lower-signal items.
   - for more specific requests, context now skips unrelated memory entirely instead of forcing a weak fallback; ambiguous short follow-ups can still reuse continuity memory.

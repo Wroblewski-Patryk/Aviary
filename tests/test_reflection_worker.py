@@ -169,6 +169,41 @@ async def test_reflection_worker_consolidates_explicit_preference_update_in_back
     assert repository.theta_updates == []
 
 
+async def test_reflection_worker_reads_structured_episode_payload_before_legacy_summary() -> None:
+    repository = FakeMemoryRepository(
+        recent_memory=[
+            {
+                "summary": "Readable summary only.",
+                "payload": {
+                    "payload_version": 1,
+                    "event": "Reply in bullet points from now on.",
+                    "memory_kind": "semantic",
+                    "memory_topics": ["reply", "bullet", "points"],
+                    "response_language": "en",
+                    "preference_update": "response_style:structured",
+                    "action": "success",
+                    "expression": "- first\\n- second",
+                },
+            }
+        ]
+    )
+    worker = ReflectionWorker(memory_repository=repository)
+
+    result = await worker.reflect_user(user_id="u-1", event_id="evt-structured-payload")
+
+    assert result is True
+    assert repository.conclusion_updates == [
+        {
+            "user_id": "u-1",
+            "kind": "response_style",
+            "content": "structured",
+            "confidence": 0.98,
+            "source": "background_reflection",
+            "supporting_event_id": "evt-structured-payload",
+        }
+    ]
+
+
 async def test_reflection_worker_infers_preferred_role_from_repeated_role_usage() -> None:
     repository = FakeMemoryRepository(
         recent_memory=[

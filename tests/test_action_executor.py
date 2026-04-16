@@ -21,13 +21,16 @@ class FakeMemoryRepository:
         self.active_goals: list[dict] = []
         self.active_tasks: list[dict] = []
         self.task_status_updates: list[dict] = []
+        self.written_episodes: list[dict] = []
 
     async def write_episode(self, **kwargs) -> dict:
+        self.written_episodes.append(kwargs)
         return {
             "id": 1,
             "event_id": kwargs["event_id"],
             "timestamp": kwargs["event_timestamp"],
             "summary": kwargs["summary"],
+            "payload": kwargs["payload"],
             "importance": kwargs["importance"],
         }
 
@@ -134,12 +137,14 @@ async def test_persist_episode_marks_specific_request_as_semantic_memory() -> No
         expression=_expression(),
     )
 
-    assert "memory_kind=semantic" in record.summary
-    assert "memory_topics=general,deploy,production,fix" in record.summary
-    assert "preference_update=" in record.summary
-    assert "motivation=respond" in record.summary
-    assert "role=executor" in record.summary
-    assert "plan_steps=reply" in record.summary
+    assert "User said 'deploy the fix to production now'." in record.summary
+    assert record.payload["memory_kind"] == "semantic"
+    assert record.payload["memory_topics"] == ["general", "deploy", "production", "fix"]
+    assert record.payload["preference_update"] == ""
+    assert record.payload["motivation"] == "respond"
+    assert record.payload["role"] == "executor"
+    assert record.payload["plan_steps"] == ["reply"]
+    assert memory_repository.written_episodes[0]["payload"] == record.payload
     assert memory_repository.profile_updates == [
         {
             "user_id": "u-1",
@@ -165,12 +170,13 @@ async def test_persist_episode_marks_short_follow_up_as_continuity_memory() -> N
         expression=_expression(),
     )
 
-    assert "memory_kind=continuity" in record.summary
-    assert "memory_topics=general" in record.summary
-    assert "preference_update=" in record.summary
-    assert "motivation=respond" in record.summary
-    assert "role=advisor" in record.summary
-    assert "plan_steps=reply" in record.summary
+    assert "User said 'ok'." in record.summary
+    assert record.payload["memory_kind"] == "continuity"
+    assert record.payload["memory_topics"] == ["general"]
+    assert record.payload["preference_update"] == ""
+    assert record.payload["motivation"] == "respond"
+    assert record.payload["role"] == "advisor"
+    assert record.payload["plan_steps"] == ["reply"]
     assert memory_repository.profile_updates == [
         {
             "user_id": "u-1",
@@ -214,7 +220,7 @@ async def test_persist_episode_marks_explicit_response_style_preference_for_refl
         expression=_expression(),
     )
 
-    assert "preference_update=response_style:concise" in record.summary
+    assert record.payload["preference_update"] == "response_style:concise"
 
 
 async def test_persist_episode_marks_explicit_collaboration_preference_for_reflection() -> None:
@@ -232,7 +238,7 @@ async def test_persist_episode_marks_explicit_collaboration_preference_for_refle
         expression=_expression(),
     )
 
-    assert "collaboration_update=guided" in record.summary
+    assert record.payload["collaboration_update"] == "guided"
 
 
 async def test_persist_episode_upserts_explicit_goal_signal() -> None:
@@ -250,7 +256,7 @@ async def test_persist_episode_upserts_explicit_goal_signal() -> None:
         expression=_expression(),
     )
 
-    assert "goal_update=ship the MVP this week" in record.summary
+    assert record.payload["goal_update"] == "ship the MVP this week"
     assert memory_repository.goal_updates[0]["name"] == "ship the MVP this week"
     assert memory_repository.goal_updates[0]["priority"] == "high"
 
@@ -281,7 +287,7 @@ async def test_persist_episode_upserts_task_signal_and_links_matching_goal() -> 
         expression=_expression(),
     )
 
-    assert "task_update=ship the MVP deployment blocker" in record.summary
+    assert record.payload["task_update"] == "ship the MVP deployment blocker"
     assert memory_repository.task_updates[0]["name"] == "ship the MVP deployment blocker"
     assert memory_repository.task_updates[0]["goal_id"] == 7
     assert memory_repository.task_updates[0]["status"] == "blocked"
@@ -313,5 +319,5 @@ async def test_persist_episode_updates_matching_task_status_from_explicit_progre
         expression=_expression(),
     )
 
-    assert "task_status_update=fix deployment blocker:done" in record.summary
+    assert record.payload["task_status_update"] == "fix deployment blocker:done"
     assert memory_repository.task_status_updates == [{"task_id": 5, "status": "done"}]

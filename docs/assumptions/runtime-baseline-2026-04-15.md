@@ -26,7 +26,7 @@ Its job is to preserve repo truth, especially where the long-form architecture d
   - `GET /health`
   - `POST /event`
   - `POST /telegram/set-webhook`
-- `POST /event` returns the full serialized `RuntimeResult`, including identity, goals/tasks/milestones, history snapshots, `reflection_triggered`, `stage_timings_ms`, and `duration_ms`.
+- `POST /event` now returns a compact public response by default (`event_id`, `trace_id`, `source`, `reply`, and compact runtime metadata), while the full serialized `RuntimeResult` remains available only through `POST /event?debug=true`.
 - Reflection is real and durable:
   - `aion_reflection_task` persists queued work
   - the worker retries failed jobs with bounded backoff
@@ -61,6 +61,9 @@ Its job is to preserve repo truth, especially where the long-form architecture d
 - Database bootstrap still relies on startup `create_all` behavior instead of formal migrations.
 - LangGraph, vector retrieval, a separate reflection worker process, richer relation systems, and proactive loops are still planned, not implemented.
 - Goal and milestone management is now real, but it is still a lightweight semantic layer rather than a full milestone engine with explicit dependency graphs or migration-backed lifecycle rules.
+- Episodic memory now persists a typed JSON payload alongside a human-readable `aion_memory.summary`, and both context retrieval and background reflection prefer that payload while still falling back to legacy summary-only rows.
+- The documented shared motivation contract in `docs/basics/16_agent_contracts.md` still lists `respond|ignore|analyze|execute|clarify`, while the current runtime also emits `support` for emotional turns and several downstream stages consume that extra mode.
+- Logging currently exposes runtime start/end, reflection updates, and per-stage timings, but it still does not provide the consistent stage-level input/output summaries described in `docs/basics/17_logging_and_debugging.md`.
 
 ## Recommended Promotion Targets
 

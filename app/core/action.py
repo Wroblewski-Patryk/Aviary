@@ -10,6 +10,7 @@ from app.core.contracts import (
     RoleOutput,
 )
 from app.integrations.telegram.client import TelegramClient
+from app.memory.episodic import build_episode_summary
 from app.memory.repository import MemoryRepository
 from app.utils.goal_task_signals import detect_goal_signal, detect_task_signal, detect_task_status_signal
 from app.utils.preferences import detect_collaboration_preference, detect_response_style_preference
@@ -117,25 +118,26 @@ class ActionExecutor:
                 if updated_task is not None:
                     task_status_update = f"{updated_task['name']}:{updated_task['status']}"
 
-        summary = (
-            f"event={event.payload.get('text', '')}; "
-            f"memory_kind={memory_kind}; "
-            f"memory_topics={','.join(memory_topics)}; "
-            f"response_language={expression.language}; "
-            f"preference_update={preference_update}; "
-            f"collaboration_update={collaboration_update}; "
-            f"goal_update={goal_update}; "
-            f"task_update={task_update}; "
-            f"task_status_update={task_status_update}; "
-            f"context={context.summary}; "
-            f"motivation={motivation.mode}; "
-            f"role={role.selected}; "
-            f"plan_goal={plan.goal}; "
-            f"plan_steps={','.join(plan.steps)}; "
-            f"action={action_result.status}; "
-            f"expression={expression.message}"
-        )
-        summary = summary[:1000]
+        payload = {
+            "payload_version": 1,
+            "event": str(event.payload.get("text", "")),
+            "memory_kind": memory_kind,
+            "memory_topics": memory_topics,
+            "response_language": expression.language,
+            "preference_update": preference_update,
+            "collaboration_update": collaboration_update,
+            "goal_update": goal_update,
+            "task_update": task_update,
+            "task_status_update": task_status_update,
+            "context": context.summary,
+            "motivation": motivation.mode,
+            "role": role.selected,
+            "plan_goal": plan.goal,
+            "plan_steps": plan.steps,
+            "action": action_result.status,
+            "expression": expression.message,
+        }
+        summary = build_episode_summary(payload, max_length=1000)
 
         stored = await self.memory_repository.write_episode(
             event_id=event.event_id,
@@ -144,6 +146,7 @@ class ActionExecutor:
             user_id=event.meta.user_id,
             event_timestamp=event.timestamp,
             summary=summary,
+            payload=payload,
             importance=motivation.importance,
         )
 
@@ -160,6 +163,7 @@ class ActionExecutor:
             event_id=stored["event_id"],
             timestamp=stored["timestamp"],
             summary=stored["summary"],
+            payload=stored.get("payload", {}),
             importance=stored["importance"],
         )
 

@@ -142,6 +142,7 @@ class MemoryRecord(BaseModel):
     event_id: str
     timestamp: datetime
     summary: str
+    payload: dict[str, Any] = Field(default_factory=dict)
     importance: float
 
 

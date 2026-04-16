@@ -38,6 +38,7 @@ class MemoryRepository:
         user_id: str,
         event_timestamp: datetime,
         summary: str,
+        payload: dict | None,
         importance: float,
     ) -> dict:
         async with self.session_factory() as session:
@@ -48,19 +49,14 @@ class MemoryRepository:
                 user_id=user_id,
                 event_timestamp=event_timestamp,
                 summary=summary,
+                payload=payload,
                 importance=importance,
             )
             session.add(row)
             await session.commit()
             await session.refresh(row)
 
-        return {
-            "id": row.id,
-            "event_id": row.event_id,
-            "timestamp": row.event_timestamp,
-            "summary": row.summary,
-            "importance": row.importance,
-        }
+        return self._serialize_memory(row)
 
     async def get_recent_for_user(self, user_id: str, limit: int = 5) -> list[dict]:
         async with self.session_factory() as session:
@@ -75,10 +71,7 @@ class MemoryRepository:
 
         return [
             {
-                "id": row.id,
-                "event_id": row.event_id,
-                "summary": row.summary,
-                "importance": row.importance,
+                **self._serialize_memory(row),
                 "event_timestamp": row.event_timestamp,
             }
             for row in rows
@@ -997,6 +990,16 @@ class MemoryRepository:
             "last_error": row.last_error,
             "updated_at": row.updated_at,
             "created_at": row.created_at,
+        }
+
+    def _serialize_memory(self, row: AionMemory) -> dict:
+        return {
+            "id": row.id,
+            "event_id": row.event_id,
+            "timestamp": row.event_timestamp,
+            "summary": row.summary,
+            "payload": row.payload or {},
+            "importance": row.importance,
         }
 
     def _serialize_goal(self, row: AionGoal) -> dict:

@@ -3,8 +3,60 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from app.memory.models import AionConclusion, AionGoal, AionGoalMilestone, AionGoalMilestoneHistory, AionGoalProgress, AionReflectionTask, AionTask
+from app.memory.models import (
+    AionConclusion,
+    AionGoal,
+    AionGoalMilestone,
+    AionGoalMilestoneHistory,
+    AionGoalProgress,
+    AionMemory,
+    AionReflectionTask,
+    AionTask,
+)
 from app.memory.repository import MemoryRepository
+
+
+async def test_memory_repository_persists_structured_episode_payload(tmp_path) -> None:
+    database_path = tmp_path / "memory-episodic-payload.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    written = await repository.write_episode(
+        event_id="evt-1",
+        trace_id="trace-1",
+        source="api",
+        user_id="u-1",
+        event_timestamp=datetime.now(timezone.utc),
+        summary="User said 'deploy the fix now'.",
+        payload={
+            "payload_version": 1,
+            "event": "deploy the fix now",
+            "memory_kind": "semantic",
+            "memory_topics": ["deploy", "fix"],
+            "response_language": "en",
+            "plan_steps": ["reply"],
+            "action": "success",
+            "expression": "Let's deploy it.",
+        },
+        importance=0.81,
+    )
+
+    recent = await repository.get_recent_for_user(user_id="u-1", limit=5)
+
+    assert written["payload"]["memory_kind"] == "semantic"
+    assert written["payload"]["memory_topics"] == ["deploy", "fix"]
+    assert recent[0]["payload"]["plan_steps"] == ["reply"]
+
+    async with session_factory() as session:
+        row = await session.get(AionMemory, int(written["id"]))
+
+    assert row is not None
+    assert row.payload is not None
+    assert row.payload["response_language"] == "en"
+
+    await engine.dispose()
 
 
 async def test_memory_repository_reports_reflection_task_stats(tmp_path) -> None:

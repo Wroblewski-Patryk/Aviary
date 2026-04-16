@@ -1,4 +1,5 @@
 from app.core.contracts import ContextOutput, Event, IdentityOutput, PerceptionOutput
+from app.memory.episodic import extract_episode_fields
 
 
 class ContextAgent:
@@ -337,13 +338,7 @@ class ContextAgent:
         return ""
 
     def _extract_fields(self, raw_summary: str) -> dict[str, str]:
-        fields: dict[str, str] = {}
-        for part in self._normalize_text(raw_summary).split(";"):
-            if "=" not in part:
-                continue
-            key, value = part.split("=", 1)
-            fields[key.strip()] = value.strip()
-        return fields
+        return extract_episode_fields({"summary": raw_summary})
 
     def _clip_text(self, value: str, max_length: int) -> str:
         text = self._normalize_text(value)
@@ -363,11 +358,11 @@ class ContextAgent:
         return truncated.rstrip(" ,;:-") + "..."
 
     def _summarize_memory_item(self, memory_item: dict) -> str:
+        fields = extract_episode_fields(memory_item)
         raw_summary = self._normalize_text(memory_item.get("summary", ""))
-        if not raw_summary:
+        if not raw_summary and not fields:
             return ""
 
-        fields = self._extract_fields(raw_summary)
         event_text = fields.get("event")
         expression = fields.get("expression")
         if event_text and expression:
@@ -377,20 +372,20 @@ class ContextAgent:
         elif event_text:
             summary = f"user said '{self._clip_text(event_text, 72)}'"
         else:
-            summary = self._clip_text(raw_summary, 140)
+            summary = self._clip_text(raw_summary or str(memory_item.get("payload", "")), 140)
 
         return summary
 
     def _memory_language(self, memory_item: dict) -> str | None:
-        fields = self._extract_fields(str(memory_item.get("summary", "")))
+        fields = extract_episode_fields(memory_item)
         return fields.get("response_language") or fields.get("language")
 
     def _memory_kind(self, memory_item: dict) -> str | None:
-        fields = self._extract_fields(str(memory_item.get("summary", "")))
+        fields = extract_episode_fields(memory_item)
         return fields.get("memory_kind")
 
     def _memory_topics(self, memory_item: dict) -> set[str]:
-        fields = self._extract_fields(str(memory_item.get("summary", "")))
+        fields = extract_episode_fields(memory_item)
         topics = fields.get("memory_topics", "")
         if not topics:
             return set()
@@ -401,7 +396,7 @@ class ContextAgent:
         }
 
     def _memory_fingerprint(self, memory_item: dict) -> str:
-        fields = self._extract_fields(str(memory_item.get("summary", "")))
+        fields = extract_episode_fields(memory_item)
         event_text = fields.get("event")
         if event_text:
             return f"event:{self._canonical_text(event_text)}"
@@ -419,7 +414,7 @@ class ContextAgent:
         preferred_language: str,
         current_mode: str,
     ) -> tuple[float, float, int, float]:
-        fields = self._extract_fields(str(memory_item.get("summary", "")))
+        fields = extract_episode_fields(memory_item)
         memory_language = self._memory_language(memory_item)
         memory_kind = self._memory_kind(memory_item)
         event_text = fields.get("event", "")
