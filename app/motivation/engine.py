@@ -109,6 +109,7 @@ class MotivationEngine:
         is_brief_turn = len(lowered.split()) <= 4
         collaboration_preference = str((user_preferences or {}).get("collaboration_preference", "")).strip().lower()
         goal_execution_state = str((user_preferences or {}).get("goal_execution_state", "")).strip().lower()
+        goal_progress_score = float((user_preferences or {}).get("goal_progress_score", 0.0) or 0.0)
         related_goal_priority = self._related_goal_priority(text=text, goals=active_goals or [])
         blocked_task_match = self._has_related_blocked_task(text=text, tasks=active_tasks or [])
 
@@ -131,6 +132,7 @@ class MotivationEngine:
             if goal_execution_state == "progressing"
             else 0.0
         )
+        importance += 0.04 if 0 < goal_progress_score < 0.35 else 0.03 if goal_progress_score >= 0.75 else 0.0
 
         urgency = 0.2
         urgency += 0.45 if has_urgent_signal else 0.0
@@ -147,6 +149,7 @@ class MotivationEngine:
             if goal_execution_state == "stagnating"
             else 0.0
         )
+        urgency += 0.03 if 0 < goal_progress_score < 0.35 else 0.04 if goal_progress_score >= 0.75 else 0.0
 
         if has_emotional_signal:
             valence = -0.45

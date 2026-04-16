@@ -298,6 +298,13 @@ class ReflectionWorker:
         )
         if goal_execution_state is not None:
             conclusions.append(goal_execution_state)
+        goal_progress_score = self._derive_goal_progress_score(
+            active_goals=active_goals or [],
+            active_tasks=active_tasks or [],
+            task_done_updates=task_done_updates,
+        )
+        if goal_progress_score is not None:
+            conclusions.append(goal_progress_score)
 
         deduped: list[dict] = []
         seen: set[tuple[str, str]] = set()
@@ -378,6 +385,38 @@ class ReflectionWorker:
             }
 
         return None
+
+    def _derive_goal_progress_score(
+        self,
+        *,
+        active_goals: Sequence[dict],
+        active_tasks: Sequence[dict],
+        task_done_updates: int,
+    ) -> dict | None:
+        if not active_goals:
+            return None
+
+        signal_count = len(active_tasks) + task_done_updates
+        if signal_count <= 0:
+            return None
+
+        weighted_progress = float(task_done_updates)
+        for task in active_tasks:
+            status = str(task.get("status", "")).strip().lower()
+            weighted_progress += {
+                "blocked": 0.1,
+                "todo": 0.3,
+                "in_progress": 0.65,
+            }.get(status, 0.0)
+
+        score = min(0.99, max(0.0, round(weighted_progress / signal_count, 2)))
+        confidence = 0.74 if signal_count >= 2 else 0.7
+        return {
+            "kind": "goal_progress_score",
+            "content": f"{score:.2f}",
+            "confidence": confidence,
+            "source": "background_reflection",
+        }
 
     def _goal_stagnation_signal_count(self, recent_memory: Sequence[dict]) -> int:
         planning_heavy_steps = {

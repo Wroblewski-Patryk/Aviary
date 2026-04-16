@@ -378,6 +378,35 @@ async def test_reflection_worker_infers_advancing_goal_execution_state_from_in_p
     } in repository.conclusion_updates
 
 
+async def test_reflection_worker_derives_goal_progress_score_from_task_mix() -> None:
+    repository = FakeMemoryRepository(
+        recent_memory=[
+            {"summary": "task_status_update=fix deployment blocker:done; action=success; expression=One."},
+            {"summary": "goal_update=ship the MVP this week; action=success; expression=Two."},
+        ]
+    )
+    repository.active_goals = [
+        {"id": 1, "name": "ship the MVP this week", "priority": "high", "status": "active", "goal_type": "operational"}
+    ]
+    repository.active_tasks = [
+        {"id": 3, "goal_id": 1, "name": "finalize rollout checklist", "priority": "medium", "status": "in_progress"},
+        {"id": 4, "goal_id": 1, "name": "prepare release notes", "priority": "medium", "status": "todo"},
+    ]
+    worker = ReflectionWorker(memory_repository=repository)
+
+    result = await worker.reflect_user(user_id="u-1", event_id="evt-goal-progress-score")
+
+    assert result is True
+    assert {
+        "user_id": "u-1",
+        "kind": "goal_progress_score",
+        "content": "0.65",
+        "confidence": 0.74,
+        "source": "background_reflection",
+        "supporting_event_id": "evt-goal-progress-score",
+    } in repository.conclusion_updates
+
+
 async def test_reflection_worker_infers_stagnating_goal_execution_state_from_repeated_planning_without_progress() -> None:
     repository = FakeMemoryRepository(
         recent_memory=[

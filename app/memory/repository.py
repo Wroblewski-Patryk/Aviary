@@ -330,6 +330,14 @@ class MemoryRepository:
                 preferences["goal_execution_state_confidence"] = row.confidence
                 preferences["goal_execution_state_source"] = row.source
                 preferences["goal_execution_state_updated_at"] = row.updated_at
+            elif row.kind == "goal_progress_score":
+                try:
+                    preferences["goal_progress_score"] = float(row.content)
+                except ValueError:
+                    continue
+                preferences["goal_progress_score_confidence"] = row.confidence
+                preferences["goal_progress_score_source"] = row.source
+                preferences["goal_progress_score_updated_at"] = row.updated_at
 
         return preferences
 
@@ -666,7 +674,7 @@ class MemoryRepository:
             return True
         if source == "explicit_request":
             return True
-        if kind in {"goal_execution_state"}:
+        if kind in {"goal_execution_state", "goal_progress_score"}:
             return True
         return next_confidence >= current_confidence
 

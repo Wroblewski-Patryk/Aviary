@@ -201,6 +201,24 @@ def test_context_summary_includes_advancing_goal_execution_state_from_conclusion
     assert "Stable user preferences: current goal work is actively advancing." in result.summary
 
 
+def test_context_summary_includes_goal_progress_score_from_conclusions() -> None:
+    result = ContextAgent().run(
+        event=_event("how should we proceed"),
+        perception=_perception(),
+        recent_memory=[],
+        conclusions=[
+            {
+                "kind": "goal_progress_score",
+                "content": "0.82",
+                "confidence": 0.74,
+                "source": "background_reflection",
+            }
+        ],
+    )
+
+    assert "Stable user preferences: goal completion is entering the final stretch." in result.summary
+
+
 def test_context_ignores_low_confidence_conclusions() -> None:
     result = ContextAgent().run(
         event=_event("how should we proceed"),

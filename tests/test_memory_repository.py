@@ -206,3 +206,32 @@ async def test_memory_repository_allows_dynamic_goal_execution_state_transition(
     assert updated["supporting_event_id"] == "evt-progressing"
 
     await engine.dispose()
+
+
+async def test_memory_repository_exposes_goal_progress_score_in_runtime_preferences(tmp_path) -> None:
+    database_path = tmp_path / "memory-goal-progress-score.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    async with session_factory() as session:
+        session.add(
+            AionConclusion(
+                user_id="u-1",
+                kind="goal_progress_score",
+                content="0.84",
+                confidence=0.74,
+                source="background_reflection",
+                supporting_event_id="evt-goal-progress-score",
+            )
+        )
+        await session.commit()
+
+    preferences = await repository.get_user_runtime_preferences(user_id="u-1")
+
+    assert preferences["goal_progress_score"] == 0.84
+    assert preferences["goal_progress_score_confidence"] == 0.74
+    assert preferences["goal_progress_score_source"] == "background_reflection"
+
+    await engine.dispose()

@@ -18,6 +18,7 @@ class PlanningAgent:
         response_style = str((user_preferences or {}).get("response_style", "")).strip().lower()
         collaboration_preference = str((user_preferences or {}).get("collaboration_preference", "")).strip().lower()
         goal_execution_state = str((user_preferences or {}).get("goal_execution_state", "")).strip().lower()
+        goal_progress_score = float((user_preferences or {}).get("goal_progress_score", 0.0) or 0.0)
 
         if motivation.mode == "clarify":
             goal = "Ask for the missing information needed to help."
@@ -89,6 +90,11 @@ class PlanningAgent:
         if goal_state_step is not None and goal_state_step not in steps:
             prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
             steps.insert(prepare_index, goal_state_step)
+
+        goal_progress_step = self._goal_progress_step(goal_progress_score=goal_progress_score, steps=steps)
+        if goal_progress_step is not None and goal_progress_step not in steps:
+            prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
+            steps.insert(prepare_index, goal_progress_step)
 
         return PlanOutput(
             goal=goal,
@@ -226,6 +232,19 @@ class PlanningAgent:
             if "advance_active_task" in steps or "preserve_goal_momentum" in steps:
                 return None
             return "preserve_goal_momentum"
+        return None
+
+    def _goal_progress_step(self, goal_progress_score: float, steps: list[str]) -> str | None:
+        if goal_progress_score <= 0.0:
+            return None
+        if goal_progress_score < 0.35:
+            if "increase_goal_progress" in steps or "restart_goal_progress" in steps:
+                return None
+            return "increase_goal_progress"
+        if goal_progress_score >= 0.75:
+            if "push_goal_to_completion" in steps or "continue_goal_execution" in steps:
+                return None
+            return "push_goal_to_completion"
         return None
 
     def _apply_active_goal(self, goal: str, relevant_goal: dict) -> str:

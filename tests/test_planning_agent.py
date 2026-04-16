@@ -371,3 +371,61 @@ def test_planning_agent_adds_continue_goal_execution_step_from_advancing_state()
 
     assert "align_with_active_goal" in result.steps
     assert "continue_goal_execution" in result.steps
+
+
+def test_planning_agent_adds_increase_goal_progress_step_for_early_progress_score() -> None:
+    result = PlanningAgent().run(
+        event=_event(text="What should I do next for the MVP?"),
+        context=_context(),
+        motivation=MotivationOutput(
+            importance=0.74,
+            urgency=0.23,
+            valence=0.05,
+            arousal=0.4,
+            mode="analyze",
+        ),
+        role=RoleOutput(selected="analyst", confidence=0.8),
+        user_preferences={"goal_progress_score": 0.22},
+        active_goals=[
+            {
+                "id": 11,
+                "name": "ship the MVP this week",
+                "description": "User-declared goal: ship the MVP this week",
+                "priority": "high",
+                "status": "active",
+                "goal_type": "operational",
+            }
+        ],
+    )
+
+    assert "align_with_active_goal" in result.steps
+    assert "increase_goal_progress" in result.steps
+
+
+def test_planning_agent_adds_push_goal_to_completion_step_for_high_progress_score() -> None:
+    result = PlanningAgent().run(
+        event=_event(text="What should I do next for the MVP?"),
+        context=_context(),
+        motivation=MotivationOutput(
+            importance=0.73,
+            urgency=0.24,
+            valence=0.05,
+            arousal=0.4,
+            mode="analyze",
+        ),
+        role=RoleOutput(selected="analyst", confidence=0.8),
+        user_preferences={"goal_progress_score": 0.84},
+        active_goals=[
+            {
+                "id": 11,
+                "name": "ship the MVP this week",
+                "description": "User-declared goal: ship the MVP this week",
+                "priority": "high",
+                "status": "active",
+                "goal_type": "operational",
+            }
+        ],
+    )
+
+    assert "align_with_active_goal" in result.steps
+    assert "push_goal_to_completion" in result.steps

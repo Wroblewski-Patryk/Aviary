@@ -594,6 +594,7 @@ Current MVP status:
 - runtime now refreshes active goal/task state after Action-layer writes, so the returned result reflects the latest operational state
 - background reflection can now derive a lightweight `goal_execution_state` such as `blocked`, `recovering`, `advancing`, or `progressing` from active goals, active tasks, and recent task status updates
 - background reflection can now also detect an early `stagnating` pattern when the system keeps planning around an active goal without seeing recent operational traction
+- background reflection can now also estimate a lightweight `goal_progress_score` from the active task mix, so runtime can distinguish an early-stage goal from one that is close to completion
 - that reflected goal state can now shape context, motivation, and planning even when the current turn does not restate the full blocker details
 
 Together, they turn cognition into progress.

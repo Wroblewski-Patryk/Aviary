@@ -922,3 +922,62 @@ async def test_runtime_pipeline_uses_advancing_goal_execution_state_to_continue_
     assert "align_with_active_goal" in result.plan.steps
     assert "continue_goal_execution" in result.plan.steps
     assert result.reflection_triggered is True
+
+
+async def test_runtime_pipeline_uses_goal_progress_score_to_push_goal_to_completion() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    memory.user_preferences = {
+        "goal_progress_score": 0.84,
+        "goal_progress_score_confidence": 0.74,
+    }
+    memory.user_conclusions = [
+        {
+            "kind": "goal_progress_score",
+            "content": "0.84",
+            "confidence": 0.74,
+            "source": "background_reflection",
+        }
+    ]
+    memory.active_goals = [
+        {
+            "id": 11,
+            "user_id": "u-1",
+            "name": "ship the MVP this week",
+            "description": "User-declared goal: ship the MVP this week",
+            "priority": "high",
+            "status": "active",
+            "goal_type": "operational",
+        }
+    ]
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+
+    event = Event(
+        event_id="evt-14",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "What should I do next for the MVP?"},
+        meta=EventMeta(user_id="u-1", trace_id="t-14"),
+    )
+
+    result = await runtime.run(event)
+
+    assert "Stable user preferences: goal completion is entering the final stretch." in result.context.summary
+    assert result.motivation.mode == "analyze"
+    assert result.motivation.importance >= 0.73
+    assert "align_with_active_goal" in result.plan.steps
+    assert "push_goal_to_completion" in result.plan.steps
+    assert result.reflection_triggered is True
