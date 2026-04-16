@@ -370,6 +370,12 @@ class ReflectionWorker:
         )
         if goal_progress_arc is not None:
             conclusions.append(goal_progress_arc)
+        goal_milestone_transition = self._derive_goal_milestone_transition(
+            current_goal_progress_score=goal_progress_score,
+            previous_goal_progress_score=previous_goal_progress_score,
+        )
+        if goal_milestone_transition is not None:
+            conclusions.append(goal_milestone_transition)
 
         deduped: list[dict] = []
         seen: set[tuple[str, str]] = set()
@@ -589,6 +595,51 @@ class ReflectionWorker:
                 "kind": "goal_progress_arc",
                 "content": "holding_pattern",
                 "confidence": 0.71,
+                "source": "background_reflection",
+            }
+        return None
+
+    def _derive_goal_milestone_transition(
+        self,
+        *,
+        current_goal_progress_score: dict | None,
+        previous_goal_progress_score: float | None,
+    ) -> dict | None:
+        current_score = self._coerce_progress_score(
+            current_goal_progress_score.get("content") if current_goal_progress_score else None
+        )
+        if current_score is None or previous_goal_progress_score is None:
+            return None
+
+        previous_score = round(previous_goal_progress_score, 2)
+        current_score = round(current_score, 2)
+
+        if previous_score >= 0.75 and current_score < 0.75:
+            return {
+                "kind": "goal_milestone_transition",
+                "content": "slipped_from_completion_window",
+                "confidence": 0.78,
+                "source": "background_reflection",
+            }
+        if previous_score < 0.75 and current_score >= 0.75:
+            return {
+                "kind": "goal_milestone_transition",
+                "content": "entered_completion_window",
+                "confidence": 0.77,
+                "source": "background_reflection",
+            }
+        if previous_score >= 0.35 and current_score < 0.35:
+            return {
+                "kind": "goal_milestone_transition",
+                "content": "dropped_back_to_early_stage",
+                "confidence": 0.76,
+                "source": "background_reflection",
+            }
+        if previous_score < 0.35 and current_score >= 0.35:
+            return {
+                "kind": "goal_milestone_transition",
+                "content": "entered_execution_phase",
+                "confidence": 0.74,
                 "source": "background_reflection",
             }
         return None

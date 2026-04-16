@@ -255,6 +255,24 @@ def test_context_summary_includes_goal_progress_arc_from_conclusions() -> None:
     assert "Stable user preferences: goal recovery is gaining traction." in result.summary
 
 
+def test_context_summary_includes_goal_milestone_transition_from_conclusions() -> None:
+    result = ContextAgent().run(
+        event=_event("how should we close this out"),
+        perception=_perception(),
+        recent_memory=[],
+        conclusions=[
+            {
+                "kind": "goal_milestone_transition",
+                "content": "entered_completion_window",
+                "confidence": 0.77,
+                "source": "background_reflection",
+            }
+        ],
+    )
+
+    assert "Stable user preferences: goal has entered the completion window." in result.summary
+
+
 def test_context_summary_includes_recent_goal_progress_history() -> None:
     result = ContextAgent().run(
         event=_event("how should we proceed for the MVP"),

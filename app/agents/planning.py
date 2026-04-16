@@ -22,6 +22,7 @@ class PlanningAgent:
         goal_progress_score = float((user_preferences or {}).get("goal_progress_score", 0.0) or 0.0)
         goal_progress_trend = str((user_preferences or {}).get("goal_progress_trend", "")).strip().lower()
         goal_progress_arc = str((user_preferences or {}).get("goal_progress_arc", "")).strip().lower()
+        goal_milestone_transition = str((user_preferences or {}).get("goal_milestone_transition", "")).strip().lower()
         goal_history_signal = self._goal_history_signal(goal_progress_history or [])
 
         if motivation.mode == "clarify":
@@ -117,6 +118,14 @@ class PlanningAgent:
         if goal_progress_arc_step is not None and goal_progress_arc_step not in steps:
             prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
             steps.insert(prepare_index, goal_progress_arc_step)
+
+        goal_milestone_transition_step = self._goal_milestone_transition_step(
+            goal_milestone_transition=goal_milestone_transition,
+            steps=steps,
+        )
+        if goal_milestone_transition_step is not None and goal_milestone_transition_step not in steps:
+            prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
+            steps.insert(prepare_index, goal_milestone_transition_step)
 
         return PlanOutput(
             goal=goal,
@@ -337,6 +346,25 @@ class PlanningAgent:
             if "sustain_goal_holding_pattern" in steps or "maintain_goal_consistency" in steps:
                 return None
             return "sustain_goal_holding_pattern"
+        return None
+
+    def _goal_milestone_transition_step(self, goal_milestone_transition: str, steps: list[str]) -> str | None:
+        if goal_milestone_transition == "entered_execution_phase":
+            if "convert_goal_into_execution" in steps or "continue_goal_execution" in steps:
+                return None
+            return "convert_goal_into_execution"
+        if goal_milestone_transition == "entered_completion_window":
+            if "close_goal_completion_window" in steps or "push_goal_to_completion" in steps:
+                return None
+            return "close_goal_completion_window"
+        if goal_milestone_transition == "slipped_from_completion_window":
+            if "restore_completion_window" in steps or "rescue_goal_progress_arc" in steps:
+                return None
+            return "restore_completion_window"
+        if goal_milestone_transition == "dropped_back_to_early_stage":
+            if "rebuild_goal_foundation" in steps or "restart_goal_progress" in steps:
+                return None
+            return "rebuild_goal_foundation"
         return None
 
     def _apply_active_goal(self, goal: str, relevant_goal: dict) -> str:

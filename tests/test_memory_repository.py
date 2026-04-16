@@ -266,6 +266,66 @@ async def test_memory_repository_exposes_goal_progress_trend_in_runtime_preferen
     await engine.dispose()
 
 
+async def test_memory_repository_exposes_goal_milestone_transition_in_runtime_preferences(tmp_path) -> None:
+    database_path = tmp_path / "memory-goal-milestone-transition.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    async with session_factory() as session:
+        session.add(
+            AionConclusion(
+                user_id="u-1",
+                kind="goal_milestone_transition",
+                content="entered_completion_window",
+                confidence=0.77,
+                source="background_reflection",
+                supporting_event_id="evt-goal-milestone-transition",
+            )
+        )
+        await session.commit()
+
+    preferences = await repository.get_user_runtime_preferences(user_id="u-1")
+
+    assert preferences["goal_milestone_transition"] == "entered_completion_window"
+    assert preferences["goal_milestone_transition_confidence"] == 0.77
+    assert preferences["goal_milestone_transition_source"] == "background_reflection"
+
+    await engine.dispose()
+
+
+async def test_memory_repository_allows_dynamic_goal_milestone_transition_updates(tmp_path) -> None:
+    database_path = tmp_path / "memory-goal-milestone-dynamic.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    await repository.upsert_conclusion(
+        user_id="u-1",
+        kind="goal_milestone_transition",
+        content="entered_completion_window",
+        confidence=0.77,
+        source="background_reflection",
+        supporting_event_id="evt-entered-completion",
+    )
+    updated = await repository.upsert_conclusion(
+        user_id="u-1",
+        kind="goal_milestone_transition",
+        content="slipped_from_completion_window",
+        confidence=0.78,
+        source="background_reflection",
+        supporting_event_id="evt-slipped-completion",
+    )
+
+    assert updated["content"] == "slipped_from_completion_window"
+    assert updated["confidence"] == 0.78
+    assert updated["supporting_event_id"] == "evt-slipped-completion"
+
+    await engine.dispose()
+
+
 async def test_memory_repository_exposes_goal_progress_arc_in_runtime_preferences(tmp_path) -> None:
     database_path = tmp_path / "memory-goal-progress-arc.db"
     engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")

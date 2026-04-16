@@ -418,6 +418,11 @@ class MemoryRepository:
                 preferences["goal_progress_arc_confidence"] = row.confidence
                 preferences["goal_progress_arc_source"] = row.source
                 preferences["goal_progress_arc_updated_at"] = row.updated_at
+            elif row.kind == "goal_milestone_transition":
+                preferences["goal_milestone_transition"] = row.content
+                preferences["goal_milestone_transition_confidence"] = row.confidence
+                preferences["goal_milestone_transition_source"] = row.source
+                preferences["goal_milestone_transition_updated_at"] = row.updated_at
 
         return preferences
 
@@ -754,7 +759,13 @@ class MemoryRepository:
             return True
         if source == "explicit_request":
             return True
-        if kind in {"goal_execution_state", "goal_progress_score", "goal_progress_trend", "goal_progress_arc"}:
+        if kind in {
+            "goal_execution_state",
+            "goal_progress_score",
+            "goal_progress_trend",
+            "goal_progress_arc",
+            "goal_milestone_transition",
+        }:
             return True
         return next_confidence >= current_confidence
 
