@@ -9,6 +9,7 @@ class ContextAgent:
         "goal_execution_state",
         "goal_progress_score",
         "goal_progress_trend",
+        "goal_progress_arc",
     }
     STOPWORDS = {
         "a",
@@ -152,6 +153,8 @@ class ContextAgent:
                 return self._summarize_goal_progress_score(content)
             if kind == "goal_progress_trend":
                 return self._summarize_goal_progress_trend(content)
+            if kind == "goal_progress_arc":
+                return self._summarize_goal_progress_arc(content)
             return ""
         if content == "concise":
             return "prefers concise responses"
@@ -178,6 +181,19 @@ class ContextAgent:
             return "goal progress trend is slipping"
         if content == "steady":
             return "goal progress trend is staying steady"
+        return ""
+
+    def _summarize_goal_progress_arc(self, content: str) -> str:
+        if content == "recovery_gaining_traction":
+            return "goal recovery is gaining traction"
+        if content == "breakthrough_momentum":
+            return "goal progress has entered a breakthrough phase"
+        if content == "unstable_progress":
+            return "goal progress has become unstable"
+        if content == "falling_behind":
+            return "goal is falling behind its recent baseline"
+        if content == "holding_pattern":
+            return "goal progress is holding in a steady pattern"
         return ""
 
     def _extract_fields(self, raw_summary: str) -> dict[str, str]:

@@ -71,6 +71,7 @@ class ReflectionWorker:
             active_goals=active_goals,
             active_tasks=active_tasks,
             previous_goal_progress_score=previous_goal_progress_score,
+            recent_goal_progress=recent_goal_progress,
         )
         theta = self._derive_theta(recent_memory)
         if not conclusions:
@@ -242,6 +243,7 @@ class ReflectionWorker:
         active_goals: Sequence[dict] | None = None,
         active_tasks: Sequence[dict] | None = None,
         previous_goal_progress_score: float | None = None,
+        recent_goal_progress: Sequence[dict] | None = None,
     ) -> list[dict]:
         if not recent_memory:
             recent_memory = []
@@ -360,6 +362,14 @@ class ReflectionWorker:
         )
         if goal_progress_trend is not None:
             conclusions.append(goal_progress_trend)
+        goal_progress_arc = self._derive_goal_progress_arc(
+            recent_goal_progress=recent_goal_progress or [],
+            current_goal_progress_score=goal_progress_score,
+            goal_execution_state=goal_execution_state,
+            goal_progress_trend=goal_progress_trend,
+        )
+        if goal_progress_arc is not None:
+            conclusions.append(goal_progress_arc)
 
         deduped: list[dict] = []
         seen: set[tuple[str, str]] = set()
@@ -505,6 +515,80 @@ class ReflectionWorker:
                 "kind": "goal_progress_trend",
                 "content": "steady",
                 "confidence": 0.7,
+                "source": "background_reflection",
+            }
+        return None
+
+    def _derive_goal_progress_arc(
+        self,
+        *,
+        recent_goal_progress: Sequence[dict],
+        current_goal_progress_score: dict | None,
+        goal_execution_state: dict | None,
+        goal_progress_trend: dict | None,
+    ) -> dict | None:
+        current_score = self._coerce_progress_score(
+            current_goal_progress_score.get("content") if current_goal_progress_score else None
+        )
+        if current_score is None:
+            return None
+
+        ordered_history = list(reversed(recent_goal_progress))
+        scores: list[float] = []
+        states: list[str] = []
+        for item in ordered_history:
+            score = self._coerce_progress_score(item.get("score"))
+            if score is None:
+                continue
+            scores.append(score)
+            states.append(str(item.get("execution_state", "")).strip().lower())
+
+        scores.append(current_score)
+        states.append(str(goal_execution_state.get("content", "")).strip().lower() if goal_execution_state is not None else "")
+
+        if len(scores) < 2:
+            return None
+
+        start = round(scores[0], 2)
+        end = round(scores[-1], 2)
+        delta = round(end - start, 2)
+        span = round(max(scores) - min(scores), 2)
+        trend = str(goal_progress_trend.get("content", "")).strip().lower() if goal_progress_trend is not None else ""
+        has_recovery_state = any(state in {"blocked", "recovering"} for state in states)
+
+        if has_recovery_state and trend == "improving" and end >= 0.5:
+            return {
+                "kind": "goal_progress_arc",
+                "content": "recovery_gaining_traction",
+                "confidence": 0.76,
+                "source": "background_reflection",
+            }
+        if trend == "improving" and delta >= 0.35 and end >= 0.75:
+            return {
+                "kind": "goal_progress_arc",
+                "content": "breakthrough_momentum",
+                "confidence": 0.77,
+                "source": "background_reflection",
+            }
+        if span >= 0.35 and abs(delta) < 0.15:
+            return {
+                "kind": "goal_progress_arc",
+                "content": "unstable_progress",
+                "confidence": 0.74,
+                "source": "background_reflection",
+            }
+        if trend == "slipping" and delta <= -0.2 and end <= 0.35:
+            return {
+                "kind": "goal_progress_arc",
+                "content": "falling_behind",
+                "confidence": 0.78,
+                "source": "background_reflection",
+            }
+        if trend == "steady" and start >= 0.45 and end >= 0.45:
+            return {
+                "kind": "goal_progress_arc",
+                "content": "holding_pattern",
+                "confidence": 0.71,
                 "source": "background_reflection",
             }
         return None

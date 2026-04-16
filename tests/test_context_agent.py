@@ -237,6 +237,24 @@ def test_context_summary_includes_goal_progress_trend_from_conclusions() -> None
     assert "Stable user preferences: goal progress trend is slipping." in result.summary
 
 
+def test_context_summary_includes_goal_progress_arc_from_conclusions() -> None:
+    result = ContextAgent().run(
+        event=_event("how should we proceed"),
+        perception=_perception(),
+        recent_memory=[],
+        conclusions=[
+            {
+                "kind": "goal_progress_arc",
+                "content": "recovery_gaining_traction",
+                "confidence": 0.76,
+                "source": "background_reflection",
+            }
+        ],
+    )
+
+    assert "Stable user preferences: goal recovery is gaining traction." in result.summary
+
+
 def test_context_summary_includes_recent_goal_progress_history() -> None:
     result = ContextAgent().run(
         event=_event("how should we proceed for the MVP"),

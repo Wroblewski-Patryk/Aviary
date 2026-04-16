@@ -370,7 +370,7 @@ class MemoryRepository:
                     AionConclusion.user_id == user_id,
                 )
                 .order_by(AionConclusion.updated_at.desc(), AionConclusion.id.desc())
-                .limit(6)
+                .limit(12)
             )
             result = await session.execute(statement)
             rows = result.scalars().all()
@@ -413,6 +413,11 @@ class MemoryRepository:
                 preferences["goal_progress_trend_confidence"] = row.confidence
                 preferences["goal_progress_trend_source"] = row.source
                 preferences["goal_progress_trend_updated_at"] = row.updated_at
+            elif row.kind == "goal_progress_arc":
+                preferences["goal_progress_arc"] = row.content
+                preferences["goal_progress_arc_confidence"] = row.confidence
+                preferences["goal_progress_arc_source"] = row.source
+                preferences["goal_progress_arc_updated_at"] = row.updated_at
 
         return preferences
 
@@ -749,7 +754,7 @@ class MemoryRepository:
             return True
         if source == "explicit_request":
             return True
-        if kind in {"goal_execution_state", "goal_progress_score", "goal_progress_trend"}:
+        if kind in {"goal_execution_state", "goal_progress_score", "goal_progress_trend", "goal_progress_arc"}:
             return True
         return next_confidence >= current_confidence
 

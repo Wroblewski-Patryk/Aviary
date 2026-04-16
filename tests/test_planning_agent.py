@@ -491,3 +491,32 @@ def test_planning_agent_adds_protect_goal_trajectory_step_for_lift_history() -> 
 
     assert "align_with_active_goal" in result.steps
     assert "protect_goal_trajectory" in result.steps
+
+
+def test_planning_agent_adds_consolidate_goal_recovery_step_for_progress_arc() -> None:
+    result = PlanningAgent().run(
+        event=_event(text="What should I do next for the MVP?"),
+        context=_context(),
+        motivation=MotivationOutput(
+            importance=0.79,
+            urgency=0.25,
+            valence=0.05,
+            arousal=0.4,
+            mode="analyze",
+        ),
+        role=RoleOutput(selected="analyst", confidence=0.8),
+        user_preferences={"goal_progress_arc": "recovery_gaining_traction"},
+        active_goals=[
+            {
+                "id": 11,
+                "name": "ship the MVP this week",
+                "description": "User-declared goal: ship the MVP this week",
+                "priority": "high",
+                "status": "active",
+                "goal_type": "operational",
+            }
+        ],
+    )
+
+    assert "align_with_active_goal" in result.steps
+    assert "consolidate_goal_recovery" in result.steps

@@ -447,6 +447,9 @@ async def test_reflection_worker_derives_improving_goal_progress_trend_against_p
     repository.active_goals = [
         {"id": 1, "name": "ship the MVP this week", "priority": "high", "status": "active", "goal_type": "operational"}
     ]
+    repository.goal_progress_history = [
+        {"id": 1, "goal_id": 1, "score": 0.31, "execution_state": "blocked"}
+    ]
     repository.active_tasks = [
         {"id": 3, "goal_id": 1, "name": "finalize rollout checklist", "priority": "medium", "status": "in_progress"},
         {"id": 4, "goal_id": 1, "name": "prepare release notes", "priority": "medium", "status": "todo"},
@@ -461,6 +464,14 @@ async def test_reflection_worker_derives_improving_goal_progress_trend_against_p
         "kind": "goal_progress_trend",
         "content": "improving",
         "confidence": 0.73,
+        "source": "background_reflection",
+        "supporting_event_id": "evt-goal-progress-improving",
+    } in repository.conclusion_updates
+    assert {
+        "user_id": "u-1",
+        "kind": "goal_progress_arc",
+        "content": "recovery_gaining_traction",
+        "confidence": 0.76,
         "source": "background_reflection",
         "supporting_event_id": "evt-goal-progress-improving",
     } in repository.conclusion_updates
@@ -522,6 +533,39 @@ async def test_reflection_worker_derives_steady_goal_progress_trend_for_small_ch
         "confidence": 0.7,
         "source": "background_reflection",
         "supporting_event_id": "evt-goal-progress-steady",
+    } in repository.conclusion_updates
+
+
+async def test_reflection_worker_derives_unstable_goal_progress_arc_from_whiplash_history() -> None:
+    repository = FakeMemoryRepository(
+        recent_memory=[
+            {"summary": "goal_update=ship the MVP this week; action=success; expression=One."},
+            {"summary": "task_update=fix deployment blocker; action=success; expression=Two."},
+        ]
+    )
+    repository.active_goals = [
+        {"id": 1, "name": "ship the MVP this week", "priority": "high", "status": "active", "goal_type": "operational"}
+    ]
+    repository.active_tasks = [
+        {"id": 3, "goal_id": 1, "name": "finalize rollout checklist", "priority": "medium", "status": "in_progress"},
+    ]
+    repository.goal_progress_history = [
+        {"id": 3, "goal_id": 1, "score": 0.64, "execution_state": "advancing"},
+        {"id": 2, "goal_id": 1, "score": 0.19, "execution_state": "blocked"},
+        {"id": 1, "goal_id": 1, "score": 0.58, "execution_state": "recovering"},
+    ]
+    worker = ReflectionWorker(memory_repository=repository)
+
+    result = await worker.reflect_user(user_id="u-1", event_id="evt-goal-progress-unstable")
+
+    assert result is True
+    assert {
+        "user_id": "u-1",
+        "kind": "goal_progress_arc",
+        "content": "unstable_progress",
+        "confidence": 0.74,
+        "source": "background_reflection",
+        "supporting_event_id": "evt-goal-progress-unstable",
     } in repository.conclusion_updates
 
 

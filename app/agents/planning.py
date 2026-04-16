@@ -21,6 +21,7 @@ class PlanningAgent:
         goal_execution_state = str((user_preferences or {}).get("goal_execution_state", "")).strip().lower()
         goal_progress_score = float((user_preferences or {}).get("goal_progress_score", 0.0) or 0.0)
         goal_progress_trend = str((user_preferences or {}).get("goal_progress_trend", "")).strip().lower()
+        goal_progress_arc = str((user_preferences or {}).get("goal_progress_arc", "")).strip().lower()
         goal_history_signal = self._goal_history_signal(goal_progress_history or [])
 
         if motivation.mode == "clarify":
@@ -111,6 +112,11 @@ class PlanningAgent:
         if goal_history_step is not None and goal_history_step not in steps:
             prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
             steps.insert(prepare_index, goal_history_step)
+
+        goal_progress_arc_step = self._goal_progress_arc_step(goal_progress_arc=goal_progress_arc, steps=steps)
+        if goal_progress_arc_step is not None and goal_progress_arc_step not in steps:
+            prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
+            steps.insert(prepare_index, goal_progress_arc_step)
 
         return PlanOutput(
             goal=goal,
@@ -308,6 +314,29 @@ class PlanningAgent:
             if "stabilize_goal_trajectory" in steps or "stabilize_goal_recovery" in steps:
                 return None
             return "stabilize_goal_trajectory"
+        return None
+
+    def _goal_progress_arc_step(self, goal_progress_arc: str, steps: list[str]) -> str | None:
+        if goal_progress_arc == "recovery_gaining_traction":
+            if "consolidate_goal_recovery" in steps or "stabilize_goal_recovery" in steps:
+                return None
+            return "consolidate_goal_recovery"
+        if goal_progress_arc == "breakthrough_momentum":
+            if "capitalize_on_goal_breakthrough" in steps or "push_goal_to_completion" in steps:
+                return None
+            return "capitalize_on_goal_breakthrough"
+        if goal_progress_arc == "unstable_progress":
+            if "stabilize_goal_progress_arc" in steps or "stabilize_goal_trajectory" in steps:
+                return None
+            return "stabilize_goal_progress_arc"
+        if goal_progress_arc == "falling_behind":
+            if "rescue_goal_progress_arc" in steps or "correct_goal_drift" in steps or "rebuild_goal_trajectory" in steps:
+                return None
+            return "rescue_goal_progress_arc"
+        if goal_progress_arc == "holding_pattern":
+            if "sustain_goal_holding_pattern" in steps or "maintain_goal_consistency" in steps:
+                return None
+            return "sustain_goal_holding_pattern"
         return None
 
     def _apply_active_goal(self, goal: str, relevant_goal: dict) -> str:

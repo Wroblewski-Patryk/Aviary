@@ -266,6 +266,78 @@ async def test_memory_repository_exposes_goal_progress_trend_in_runtime_preferen
     await engine.dispose()
 
 
+async def test_memory_repository_exposes_goal_progress_arc_in_runtime_preferences(tmp_path) -> None:
+    database_path = tmp_path / "memory-goal-progress-arc.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    async with session_factory() as session:
+        session.add(
+            AionConclusion(
+                user_id="u-1",
+                kind="goal_progress_arc",
+                content="recovery_gaining_traction",
+                confidence=0.76,
+                source="background_reflection",
+                supporting_event_id="evt-goal-progress-arc",
+            )
+        )
+        await session.commit()
+
+    preferences = await repository.get_user_runtime_preferences(user_id="u-1")
+
+    assert preferences["goal_progress_arc"] == "recovery_gaining_traction"
+    assert preferences["goal_progress_arc_confidence"] == 0.76
+    assert preferences["goal_progress_arc_source"] == "background_reflection"
+
+    await engine.dispose()
+
+
+async def test_memory_repository_runtime_preferences_can_hold_more_than_six_kinds(tmp_path) -> None:
+    database_path = tmp_path / "memory-runtime-preferences-limit.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    rows = [
+        ("response_style", "structured", 0.95),
+        ("preferred_role", "analyst", 0.76),
+        ("collaboration_preference", "guided", 0.73),
+        ("goal_execution_state", "recovering", 0.77),
+        ("goal_progress_score", "0.61", 0.74),
+        ("goal_progress_trend", "improving", 0.73),
+        ("goal_progress_arc", "recovery_gaining_traction", 0.76),
+    ]
+    async with session_factory() as session:
+        for index, (kind, content, confidence) in enumerate(rows, start=1):
+            session.add(
+                AionConclusion(
+                    user_id="u-1",
+                    kind=kind,
+                    content=content,
+                    confidence=confidence,
+                    source="background_reflection",
+                    supporting_event_id=f"evt-{index}",
+                )
+            )
+        await session.commit()
+
+    preferences = await repository.get_user_runtime_preferences(user_id="u-1")
+
+    assert preferences["response_style"] == "structured"
+    assert preferences["preferred_role"] == "analyst"
+    assert preferences["collaboration_preference"] == "guided"
+    assert preferences["goal_execution_state"] == "recovering"
+    assert preferences["goal_progress_score"] == 0.61
+    assert preferences["goal_progress_trend"] == "improving"
+    assert preferences["goal_progress_arc"] == "recovery_gaining_traction"
+
+    await engine.dispose()
+
+
 async def test_memory_repository_appends_and_reads_goal_progress_history(tmp_path) -> None:
     database_path = tmp_path / "memory-goal-progress-history.db"
     engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")

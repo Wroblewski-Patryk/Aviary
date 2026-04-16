@@ -1132,3 +1132,61 @@ async def test_runtime_pipeline_uses_goal_progress_history_for_context_and_plann
     assert result.motivation.importance >= 0.75
     assert "align_with_active_goal" in result.plan.steps
     assert "protect_goal_trajectory" in result.plan.steps
+
+
+async def test_runtime_pipeline_uses_goal_progress_arc_across_context_motivation_and_plan() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    memory.user_preferences = {
+        "goal_progress_arc": "recovery_gaining_traction",
+        "goal_progress_arc_confidence": 0.76,
+    }
+    memory.user_conclusions = [
+        {
+            "kind": "goal_progress_arc",
+            "content": "recovery_gaining_traction",
+            "confidence": 0.76,
+            "source": "background_reflection",
+        }
+    ]
+    memory.active_goals = [
+        {
+            "id": 11,
+            "user_id": "u-1",
+            "name": "ship the MVP this week",
+            "description": "User-declared goal: ship the MVP this week",
+            "priority": "high",
+            "status": "active",
+            "goal_type": "operational",
+        }
+    ]
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+
+    event = Event(
+        event_id="evt-17",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "What should I do next for the MVP?"},
+        meta=EventMeta(user_id="u-1", trace_id="t-17"),
+    )
+
+    result = await runtime.run(event)
+
+    assert "goal recovery is gaining traction" in result.context.summary
+    assert result.motivation.mode == "analyze"
+    assert result.motivation.importance >= 0.76
+    assert "align_with_active_goal" in result.plan.steps
+    assert "consolidate_goal_recovery" in result.plan.steps
