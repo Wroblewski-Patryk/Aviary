@@ -480,6 +480,26 @@ class ContextAgent:
                 return filtered[:limit]
         return goal_progress_history[:limit]
 
+    def _select_goal_milestones(
+        self,
+        active_goal_milestones: list[dict],
+        selected_goals: list[dict],
+        limit: int = 2,
+    ) -> list[dict]:
+        if not active_goal_milestones:
+            return []
+
+        goal_ids = {int(goal["id"]) for goal in selected_goals if goal.get("id") is not None}
+        if goal_ids:
+            filtered = [
+                item
+                for item in active_goal_milestones
+                if int(item.get("goal_id", -1)) in goal_ids
+            ]
+            if filtered:
+                return filtered[:limit]
+        return active_goal_milestones[:limit]
+
     def _goal_history_hint(self, goal_progress_history: list[dict]) -> str:
         if len(goal_progress_history) < 2:
             return ""
@@ -517,6 +537,7 @@ class ContextAgent:
         identity: IdentityOutput | None = None,
         active_goals: list[dict] | None = None,
         active_tasks: list[dict] | None = None,
+        active_goal_milestones: list[dict] | None = None,
         goal_progress_history: list[dict] | None = None,
     ) -> ContextOutput:
         text = str(event.payload.get("text", "")).strip()
@@ -544,6 +565,19 @@ class ContextAgent:
             ]
             if task_parts:
                 task_hint = " Active tasks: " + " | ".join(task_parts) + "."
+        milestone_hint = ""
+        selected_milestones = self._select_goal_milestones(
+            active_goal_milestones or [],
+            selected_goals=selected_goals,
+        )
+        if selected_milestones:
+            milestone_parts = [
+                f"{str(item.get('name', '')).strip()} ({str(item.get('phase', '')).strip()})"
+                for item in selected_milestones
+                if item.get("name")
+            ]
+            if milestone_parts:
+                milestone_hint = " Active milestones: " + " | ".join(milestone_parts) + "."
         goal_history_hint = self._goal_history_hint(
             self._select_goal_progress_history(goal_progress_history or [], selected_goals=selected_goals)
         )
@@ -570,6 +604,7 @@ class ContextAgent:
             + identity_hint
             + goal_hint
             + task_hint
+            + milestone_hint
             + goal_history_hint
             + conclusion_hint
             + memory_hint

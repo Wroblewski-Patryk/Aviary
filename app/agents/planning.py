@@ -12,6 +12,7 @@ class PlanningAgent:
         theta: dict | None = None,
         active_goals: list[dict] | None = None,
         active_tasks: list[dict] | None = None,
+        active_goal_milestones: list[dict] | None = None,
         goal_progress_history: list[dict] | None = None,
     ) -> PlanOutput:
         goal = "Provide a clear and useful response to the user event."
@@ -81,6 +82,15 @@ class PlanningAgent:
             if "align_with_active_goal" not in steps:
                 prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
                 steps.insert(prepare_index, "align_with_active_goal")
+        relevant_milestone = self._select_relevant_milestone(
+            active_goal_milestones=active_goal_milestones or [],
+            relevant_goal_id=int(relevant_goal["id"]) if relevant_goal and relevant_goal.get("id") is not None else None,
+        )
+        if relevant_milestone is not None:
+            goal = self._apply_active_milestone(goal=goal, relevant_milestone=relevant_milestone)
+            if "align_with_active_milestone" not in steps:
+                prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
+                steps.insert(prepare_index, "align_with_active_milestone")
 
         relevant_task = self._select_relevant_task(
             event=event,
@@ -243,6 +253,15 @@ class PlanningAgent:
             return "unblock_active_task"
         return "advance_active_task"
 
+    def _select_relevant_milestone(self, active_goal_milestones: list[dict], relevant_goal_id: int | None) -> dict | None:
+        if not active_goal_milestones:
+            return None
+        if relevant_goal_id is not None:
+            linked = [item for item in active_goal_milestones if item.get("goal_id") == relevant_goal_id]
+            if linked:
+                return linked[0]
+        return active_goal_milestones[0]
+
     def _goal_execution_step(self, goal_execution_state: str, steps: list[str]) -> str | None:
         if goal_execution_state == "blocked":
             if "unblock_active_task" in steps or "recover_goal_progress" in steps:
@@ -400,6 +419,12 @@ class PlanningAgent:
         if not goal_name:
             return goal
         return f"{goal} Keep the response aligned with the active goal '{goal_name}'."
+
+    def _apply_active_milestone(self, goal: str, relevant_milestone: dict) -> str:
+        milestone_name = str(relevant_milestone.get("name", "")).strip()
+        if not milestone_name:
+            return goal
+        return f"{goal} Keep the response aligned with the active milestone '{milestone_name}'."
 
     def _text_tokens(self, value: str) -> set[str]:
         canonical = "".join(char if char.isalnum() or char.isspace() else " " for char in value.strip().lower())

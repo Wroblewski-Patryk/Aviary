@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from app.memory.models import AionConclusion, AionGoal, AionGoalProgress, AionReflectionTask, AionTask
+from app.memory.models import AionConclusion, AionGoal, AionGoalMilestone, AionGoalProgress, AionReflectionTask, AionTask
 from app.memory.repository import MemoryRepository
 
 
@@ -145,6 +145,48 @@ async def test_memory_repository_updates_task_status_and_removes_done_from_activ
     assert task_row is not None
     assert task_row.status == "done"
 
+    await engine.dispose()
+
+
+async def test_memory_repository_syncs_and_loads_active_goal_milestones(tmp_path) -> None:
+    database_path = tmp_path / "memory-goal-milestones.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    goal = await repository.upsert_active_goal(
+        user_id="u-1",
+        name="ship the MVP this week",
+        description="User-declared goal: ship the MVP this week",
+        priority="high",
+        goal_type="operational",
+    )
+
+    first = await repository.sync_goal_milestone(
+        user_id="u-1",
+        goal_id=int(goal["id"]),
+        phase="execution_phase",
+        source_event_id="evt-execution-phase",
+    )
+    second = await repository.sync_goal_milestone(
+        user_id="u-1",
+        goal_id=int(goal["id"]),
+        phase="completion_window",
+        source_event_id="evt-completion-window",
+    )
+
+    milestones = await repository.get_active_goal_milestones(user_id="u-1", goal_ids=[int(goal["id"])], limit=5)
+
+    assert first["phase"] == "execution_phase"
+    assert second["phase"] == "completion_window"
+    assert milestones[0]["phase"] == "completion_window"
+    assert milestones[0]["name"] == "Drive goal to closure"
+
+    async with session_factory() as session:
+        rows = (await session.execute(select(AionGoalMilestone).order_by(AionGoalMilestone.id.asc()))).scalars().all()
+
+    assert [row.status for row in rows] == ["completed", "active"]
     await engine.dispose()
 
 

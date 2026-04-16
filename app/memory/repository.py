@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 from app.memory.models import (
     AionConclusion,
     AionGoal,
+    AionGoalMilestone,
     AionGoalProgress,
     AionMemory,
     AionProfile,
@@ -19,6 +20,7 @@ from app.memory.models import (
 class MemoryRepository:
     ACTIVE_GOAL_STATUSES = ("active",)
     ACTIVE_TASK_STATUSES = ("todo", "in_progress", "blocked")
+    ACTIVE_MILESTONE_STATUSES = ("active",)
 
     def __init__(self, session_factory: async_sessionmaker[AsyncSession]):
         self.session_factory = session_factory
@@ -197,6 +199,41 @@ class MemoryRepository:
 
         return [self._serialize_goal_progress(row) for row in rows[:limit]]
 
+    async def get_active_goal_milestones(
+        self,
+        user_id: str,
+        *,
+        goal_ids: list[int] | None = None,
+        limit: int = 6,
+    ) -> list[dict]:
+        async with self.session_factory() as session:
+            statement = (
+                select(AionGoalMilestone)
+                .where(
+                    AionGoalMilestone.user_id == user_id,
+                    AionGoalMilestone.status.in_(self.ACTIVE_MILESTONE_STATUSES),
+                )
+                .order_by(AionGoalMilestone.updated_at.desc(), AionGoalMilestone.id.desc())
+                .limit(limit * 3)
+            )
+            result = await session.execute(statement)
+            rows = result.scalars().all()
+
+        goal_id_set = {goal_id for goal_id in (goal_ids or []) if goal_id is not None}
+        if goal_id_set:
+            rows = [row for row in rows if int(row.goal_id) in goal_id_set]
+
+        rows = sorted(
+            rows,
+            key=lambda row: (
+                self._goal_milestone_phase_rank(row.phase),
+                self._coerce_datetime(row.updated_at) or datetime.min.replace(tzinfo=timezone.utc),
+                row.id,
+            ),
+            reverse=True,
+        )
+        return [self._serialize_goal_milestone(row) for row in rows[:limit]]
+
     async def upsert_active_goal(
         self,
         *,
@@ -361,6 +398,56 @@ class MemoryRepository:
             await session.refresh(row)
 
         return self._serialize_goal_progress(row)
+
+    async def sync_goal_milestone(
+        self,
+        *,
+        user_id: str,
+        goal_id: int,
+        phase: str,
+        source_event_id: str | None = None,
+    ) -> dict:
+        milestone_name = self._goal_milestone_name(phase)
+        async with self.session_factory() as session:
+            statement = (
+                select(AionGoalMilestone)
+                .where(
+                    AionGoalMilestone.user_id == user_id,
+                    AionGoalMilestone.goal_id == goal_id,
+                )
+                .order_by(AionGoalMilestone.updated_at.desc(), AionGoalMilestone.id.desc())
+            )
+            result = await session.execute(statement)
+            rows = result.scalars().all()
+
+            active_rows = [row for row in rows if row.status == "active"]
+            same_phase_row = next((row for row in rows if row.phase == phase), None)
+
+            if same_phase_row is None:
+                row = AionGoalMilestone(
+                    user_id=user_id,
+                    goal_id=goal_id,
+                    name=milestone_name,
+                    phase=phase,
+                    status="active",
+                    source_event_id=source_event_id,
+                )
+                session.add(row)
+            else:
+                row = same_phase_row
+                row.name = milestone_name
+                row.status = "active"
+                row.source_event_id = source_event_id
+
+            for active_row in active_rows:
+                if active_row is row:
+                    continue
+                active_row.status = "completed"
+
+            await session.commit()
+            await session.refresh(row)
+
+        return self._serialize_goal_milestone(row)
 
     async def get_user_runtime_preferences(self, user_id: str) -> dict:
         async with self.session_factory() as session:
@@ -836,6 +923,19 @@ class MemoryRepository:
             "created_at": row.created_at,
         }
 
+    def _serialize_goal_milestone(self, row: AionGoalMilestone) -> dict:
+        return {
+            "id": row.id,
+            "user_id": row.user_id,
+            "goal_id": row.goal_id,
+            "name": row.name,
+            "phase": row.phase,
+            "status": row.status,
+            "source_event_id": row.source_event_id,
+            "created_at": row.created_at,
+            "updated_at": row.updated_at,
+        }
+
     def _goal_priority_rank(self, priority: str) -> int:
         return {
             "low": 1,
@@ -858,6 +958,14 @@ class MemoryRepository:
             "blocked": 3,
         }.get(status, 0)
 
+    def _goal_milestone_phase_rank(self, phase: str) -> int:
+        return {
+            "early_stage": 1,
+            "execution_phase": 2,
+            "recovery_phase": 3,
+            "completion_window": 4,
+        }.get(phase, 0)
+
     def _normalize_match_text(self, value: str) -> str:
         lowered = " ".join(value.strip().lower().split())
         return "".join(char if char.isalnum() or char.isspace() else " " for char in lowered).strip()
@@ -867,6 +975,14 @@ class MemoryRepository:
             return 0
         index = min(attempts - 1, len(retry_backoff_seconds) - 1)
         return retry_backoff_seconds[index]
+
+    def _goal_milestone_name(self, phase: str) -> str:
+        return {
+            "early_stage": "Establish goal foundation",
+            "execution_phase": "Sustain active execution",
+            "recovery_phase": "Stabilize goal recovery",
+            "completion_window": "Drive goal to closure",
+        }.get(phase, "Advance goal milestone")
 
     def _coerce_datetime(self, value: datetime | None) -> datetime | None:
         if value is None:

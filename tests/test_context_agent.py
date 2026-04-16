@@ -111,6 +111,35 @@ def test_context_summary_includes_relevant_active_goals_and_tasks() -> None:
     assert result.related_goals == ["ship the MVP this week"]
 
 
+def test_context_summary_includes_active_goal_milestones() -> None:
+    result = ContextAgent().run(
+        event=_event("can you help me finish the mvp"),
+        perception=_perception(),
+        recent_memory=[],
+        active_goals=[
+            {
+                "id": 1,
+                "name": "ship the MVP this week",
+                "description": "User-declared goal: ship the MVP this week",
+                "priority": "high",
+                "status": "active",
+                "goal_type": "operational",
+            }
+        ],
+        active_goal_milestones=[
+            {
+                "id": 3,
+                "goal_id": 1,
+                "name": "Drive goal to closure",
+                "phase": "completion_window",
+                "status": "active",
+            }
+        ],
+    )
+
+    assert "Active milestones: Drive goal to closure (completion_window)." in result.summary
+
+
 def test_context_summary_includes_collaboration_preference_from_conclusions() -> None:
     result = ContextAgent().run(
         event=_event("how should we proceed"),

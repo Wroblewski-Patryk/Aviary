@@ -22,6 +22,7 @@ class FakeMemoryRepository:
         self.user_theta: dict | None = None
         self.active_goals: list[dict] = []
         self.active_tasks: list[dict] = []
+        self.active_goal_milestones: list[dict] = []
         self.goal_progress_history: list[dict] = []
 
     async def get_recent_for_user(self, user_id: str, limit: int = 5) -> list[dict]:
@@ -49,6 +50,12 @@ class FakeMemoryRepository:
             rest = [task for task in active if task.get("goal_id") not in set(goal_ids)]
             return (goal_linked + rest)[:limit]
         return active[:limit]
+
+    async def get_active_goal_milestones(self, user_id: str, *, goal_ids: list[int] | None = None, limit: int = 6) -> list[dict]:
+        rows = [item for item in self.active_goal_milestones if item.get("status") == "active"]
+        if goal_ids:
+            rows = [row for row in rows if row.get("goal_id") in set(goal_ids)]
+        return rows[:limit]
 
     async def get_recent_goal_progress(self, user_id: str, *, goal_ids: list[int] | None = None, limit: int = 6) -> list[dict]:
         rows = self.goal_progress_history[:]
@@ -94,6 +101,26 @@ class FakeMemoryRepository:
             **kwargs,
         }
         self.active_tasks.append(payload)
+        return payload
+
+    async def sync_goal_milestone(self, **kwargs) -> dict:
+        payload = {
+            "id": len(self.active_goal_milestones) + 1,
+            "name": {
+                "early_stage": "Establish goal foundation",
+                "execution_phase": "Sustain active execution",
+                "recovery_phase": "Stabilize goal recovery",
+                "completion_window": "Drive goal to closure",
+            }.get(kwargs["phase"], "Advance goal milestone"),
+            "status": "active",
+            **kwargs,
+        }
+        self.active_goal_milestones = [
+            item
+            for item in self.active_goal_milestones
+            if not (item.get("goal_id") == kwargs["goal_id"] and item.get("status") == "active")
+        ]
+        self.active_goal_milestones.append(payload)
         return payload
 
     async def update_task_status(self, *, task_id: int, status: str) -> dict | None:
@@ -199,6 +226,7 @@ async def test_runtime_pipeline_api_source() -> None:
     assert result.identity.behavioral_style == ["direct", "supportive", "analytical"]
     assert result.active_goals == []
     assert result.active_tasks == []
+    assert result.active_goal_milestones == []
     assert "Identity stance: direct, supportive, analytical." in result.context.summary
     assert "previous hello" in result.context.summary
     assert "Earlier reply" in result.context.summary
@@ -218,6 +246,7 @@ async def test_runtime_pipeline_api_source() -> None:
     assert set(result.stage_timings_ms) == {
         "memory_load",
         "task_load",
+        "goal_milestone_load",
         "goal_progress_load",
         "identity_load",
         "perception",
@@ -265,6 +294,15 @@ async def test_runtime_pipeline_loads_active_goals_and_tasks_into_context_and_pl
             "status": "blocked",
         }
     ]
+    memory.active_goal_milestones = [
+        {
+            "id": 31,
+            "goal_id": 11,
+            "name": "Stabilize goal recovery",
+            "phase": "recovery_phase",
+            "status": "active",
+        }
+    ]
     action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
     openai = FakeOpenAIClient()
     reflection = FakeReflectionWorker()
@@ -293,10 +331,13 @@ async def test_runtime_pipeline_loads_active_goals_and_tasks_into_context_and_pl
 
     assert result.active_goals[0].name == "ship the MVP this week"
     assert result.active_tasks[0].name == "fix deployment blocker"
+    assert result.active_goal_milestones[0].name == "Stabilize goal recovery"
     assert "Active goals: ship the MVP this week." in result.context.summary
     assert "Active tasks: fix deployment blocker (blocked)." in result.context.summary
+    assert "Active milestones: Stabilize goal recovery (recovery_phase)." in result.context.summary
     assert result.context.related_goals == ["ship the MVP this week"]
     assert "align_with_active_goal" in result.plan.steps
+    assert "align_with_active_milestone" in result.plan.steps
     assert "unblock_active_task" in result.plan.steps
     assert result.motivation.importance >= 0.78
 

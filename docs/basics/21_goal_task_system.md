@@ -600,6 +600,7 @@ Current MVP status:
 - background reflection can now also compress those short histories into a semantic `goal_progress_arc`, so runtime can distinguish patterns like recovery gaining traction, unstable progress, breakthrough momentum, or falling behind
 - background reflection can now also maintain a lightweight `goal_milestone_state`, so later turns can still know whether the goal is in early setup, active execution, recovery, or the completion window even after the crossing turn is gone
 - background reflection can now also emit a lightweight `goal_milestone_transition` when reflected progress crosses meaningful thresholds such as active execution or the completion window
+- background reflection now also syncs lightweight `aion_goal_milestone` rows from that state, so runtime can surface an active milestone focus like `Drive goal to closure` or `Stabilize goal recovery`
 - that reflected goal state can now shape context, motivation, and planning even when the current turn does not restate the full blocker details
 
 Together, they turn cognition into progress.

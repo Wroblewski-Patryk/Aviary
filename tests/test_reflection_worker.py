@@ -19,6 +19,7 @@ class FakeMemoryRepository:
         self.failed_marks: list[dict] = []
         self.active_goals: list[dict] = []
         self.active_tasks: list[dict] = []
+        self.goal_milestones: list[dict] = []
 
     async def get_recent_for_user(self, user_id: str, limit: int = 8) -> list[dict]:
         return self.recent_memory[:limit]
@@ -51,6 +52,12 @@ class FakeMemoryRepository:
 
     async def get_active_tasks(self, user_id: str, limit: int = 8) -> list[dict]:
         return self.active_tasks[:limit]
+
+    async def sync_goal_milestone(self, **kwargs) -> dict:
+        payload = {"id": len(self.goal_milestones) + 1, "status": "active", **kwargs}
+        self.goal_milestones = [item for item in self.goal_milestones if not (item.get("goal_id") == kwargs["goal_id"] and item.get("status") == "active")]
+        self.goal_milestones.insert(0, payload)
+        return payload
 
     async def enqueue_reflection_task(self, user_id: str, event_id: str) -> dict:
         task = {
@@ -409,6 +416,8 @@ async def test_reflection_worker_infers_goal_milestone_recovery_phase() -> None:
         "source": "background_reflection",
         "supporting_event_id": "evt-goal-recovery-phase",
     } in repository.conclusion_updates
+    assert repository.goal_milestones[0]["goal_id"] == 1
+    assert repository.goal_milestones[0]["phase"] == "recovery_phase"
 
 
 async def test_reflection_worker_infers_progressing_goal_execution_state_from_done_update() -> None:

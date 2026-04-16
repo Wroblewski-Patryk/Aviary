@@ -98,6 +98,25 @@ class ReflectionWorker:
                 conclusion["source"],
             )
         if primary_goal is not None and primary_goal.get("id") is not None:
+            goal_milestone_state = next(
+                (item for item in conclusions if str(item.get("kind")) == "goal_milestone_state"),
+                None,
+            )
+            if goal_milestone_state is not None:
+                await self.memory_repository.sync_goal_milestone(
+                    user_id=user_id,
+                    goal_id=int(primary_goal["id"]),
+                    phase=str(goal_milestone_state["content"]),
+                    source_event_id=event_id,
+                )
+                self.logger.info(
+                    "reflection_goal_milestone_synced user_id=%s event_id=%s goal_id=%s phase=%s",
+                    user_id,
+                    event_id,
+                    primary_goal["id"],
+                    goal_milestone_state["content"],
+                )
+        if primary_goal is not None and primary_goal.get("id") is not None:
             goal_progress_score = next(
                 (item for item in conclusions if str(item.get("kind")) == "goal_progress_score"),
                 None,

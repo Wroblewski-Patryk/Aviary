@@ -228,6 +228,43 @@ def test_planning_agent_aligns_with_active_goal_and_blocked_task() -> None:
     assert "unblock_active_task" in result.steps
 
 
+def test_planning_agent_aligns_with_active_milestone() -> None:
+    result = PlanningAgent().run(
+        event=_event(text="What should I do next for the MVP?"),
+        context=_context(),
+        motivation=MotivationOutput(
+            importance=0.8,
+            urgency=0.35,
+            valence=0.05,
+            arousal=0.4,
+            mode="analyze",
+        ),
+        role=RoleOutput(selected="analyst", confidence=0.8),
+        active_goals=[
+            {
+                "id": 11,
+                "name": "ship the MVP this week",
+                "description": "User-declared goal: ship the MVP this week",
+                "priority": "high",
+                "status": "active",
+                "goal_type": "operational",
+            }
+        ],
+        active_goal_milestones=[
+            {
+                "id": 41,
+                "goal_id": 11,
+                "name": "Drive goal to closure",
+                "phase": "completion_window",
+                "status": "active",
+            }
+        ],
+    )
+
+    assert "Drive goal to closure" in result.goal
+    assert "align_with_active_milestone" in result.steps
+
+
 def test_planning_agent_adds_recover_goal_progress_step_from_reflected_blocked_state() -> None:
     result = PlanningAgent().run(
         event=_event(text="Can you help me move the MVP forward?"),

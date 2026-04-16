@@ -66,6 +66,14 @@ class RuntimeOrchestrator:
         stage_timings_ms["task_load"] = int((perf_counter() - stage_started) * 1000)
 
         stage_started = perf_counter()
+        active_goal_milestones = await self.memory_repository.get_active_goal_milestones(
+            user_id=event.meta.user_id,
+            goal_ids=[int(goal["id"]) for goal in active_goals if goal.get("id") is not None],
+            limit=5,
+        )
+        stage_timings_ms["goal_milestone_load"] = int((perf_counter() - stage_started) * 1000)
+
+        stage_started = perf_counter()
         goal_progress_history = await self.memory_repository.get_recent_goal_progress(
             user_id=event.meta.user_id,
             goal_ids=[int(goal["id"]) for goal in active_goals if goal.get("id") is not None],
@@ -94,6 +102,7 @@ class RuntimeOrchestrator:
             identity=identity,
             active_goals=active_goals,
             active_tasks=active_tasks,
+            active_goal_milestones=active_goal_milestones,
             goal_progress_history=goal_progress_history,
         )
         stage_timings_ms["context"] = int((perf_counter() - stage_started) * 1000)
@@ -131,6 +140,7 @@ class RuntimeOrchestrator:
             theta=user_theta,
             active_goals=active_goals,
             active_tasks=active_tasks,
+            active_goal_milestones=active_goal_milestones,
             goal_progress_history=goal_progress_history,
         )
         stage_timings_ms["planning"] = int((perf_counter() - stage_started) * 1000)
@@ -160,6 +170,7 @@ class RuntimeOrchestrator:
         stage_timings_ms["state_refresh"] = 0
         result_active_goals = active_goals
         result_active_tasks = active_tasks
+        result_active_goal_milestones = active_goal_milestones
         try:
             stage_started = perf_counter()
             memory_record = await self.action_executor.persist_episode(
@@ -188,8 +199,14 @@ class RuntimeOrchestrator:
                 goal_ids=[int(goal["id"]) for goal in refreshed_goals if goal.get("id") is not None],
                 limit=5,
             )
+            refreshed_milestones = await self.memory_repository.get_active_goal_milestones(
+                user_id=event.meta.user_id,
+                goal_ids=[int(goal["id"]) for goal in refreshed_goals if goal.get("id") is not None],
+                limit=5,
+            )
             result_active_goals = refreshed_goals
             result_active_tasks = refreshed_tasks
+            result_active_goal_milestones = refreshed_milestones
             stage_timings_ms["state_refresh"] = int((perf_counter() - stage_started) * 1000)
         except Exception as exc:  # pragma: no cover - defensive path
             if stage_timings_ms["memory_persist"] == 0:
@@ -212,6 +229,7 @@ class RuntimeOrchestrator:
             identity=identity,
             active_goals=result_active_goals,
             active_tasks=result_active_tasks,
+            active_goal_milestones=result_active_goal_milestones,
             goal_progress_history=goal_progress_history,
             perception=perception,
             context=context,
