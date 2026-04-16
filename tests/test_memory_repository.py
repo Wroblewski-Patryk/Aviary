@@ -235,3 +235,32 @@ async def test_memory_repository_exposes_goal_progress_score_in_runtime_preferen
     assert preferences["goal_progress_score_source"] == "background_reflection"
 
     await engine.dispose()
+
+
+async def test_memory_repository_exposes_goal_progress_trend_in_runtime_preferences(tmp_path) -> None:
+    database_path = tmp_path / "memory-goal-progress-trend.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    async with session_factory() as session:
+        session.add(
+            AionConclusion(
+                user_id="u-1",
+                kind="goal_progress_trend",
+                content="improving",
+                confidence=0.73,
+                source="background_reflection",
+                supporting_event_id="evt-goal-progress-trend",
+            )
+        )
+        await session.commit()
+
+    preferences = await repository.get_user_runtime_preferences(user_id="u-1")
+
+    assert preferences["goal_progress_trend"] == "improving"
+    assert preferences["goal_progress_trend_confidence"] == 0.73
+    assert preferences["goal_progress_trend_source"] == "background_reflection"
+
+    await engine.dispose()

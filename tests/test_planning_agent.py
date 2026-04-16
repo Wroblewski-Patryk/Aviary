@@ -429,3 +429,32 @@ def test_planning_agent_adds_push_goal_to_completion_step_for_high_progress_scor
 
     assert "align_with_active_goal" in result.steps
     assert "push_goal_to_completion" in result.steps
+
+
+def test_planning_agent_adds_correct_goal_drift_step_for_slipping_progress_trend() -> None:
+    result = PlanningAgent().run(
+        event=_event(text="What should I do next for the MVP?"),
+        context=_context(),
+        motivation=MotivationOutput(
+            importance=0.78,
+            urgency=0.27,
+            valence=0.05,
+            arousal=0.4,
+            mode="analyze",
+        ),
+        role=RoleOutput(selected="analyst", confidence=0.8),
+        user_preferences={"goal_progress_trend": "slipping"},
+        active_goals=[
+            {
+                "id": 11,
+                "name": "ship the MVP this week",
+                "description": "User-declared goal: ship the MVP this week",
+                "priority": "high",
+                "status": "active",
+                "goal_type": "operational",
+            }
+        ],
+    )
+
+    assert "align_with_active_goal" in result.steps
+    assert "correct_goal_drift" in result.steps

@@ -127,6 +127,7 @@ Current MVP status:
 - collaboration preference now influences role selection, motivation, planning, and expression, so the runtime can lean more guiding or more action-oriented even when the request itself is short or ambiguous
 - semantic conclusions can now also infer lightweight goal-execution momentum, including `blocked`, `recovering`, `advancing`, `progressing`, and an early `stagnating` pattern derived from active task state plus repeated plan-vs-execution patterns
 - reflection can now also derive a lightweight `goal_progress_score`, so runtime can tell not only whether the goal is moving, but also whether it is still early, mid-way, or entering the final stretch
+- reflection can now also derive a lightweight `goal_progress_trend`, so runtime can tell whether goal progress is improving, steady, or slipping compared with the previous reflected score
 - vector retrieval is still planned, not live
 
 ---

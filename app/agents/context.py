@@ -3,7 +3,13 @@ from app.core.contracts import ContextOutput, Event, IdentityOutput, PerceptionO
 
 class ContextAgent:
     GENERIC_TAGS = {"general"}
-    SUPPORTED_CONCLUSION_KINDS = {"response_style", "collaboration_preference", "goal_execution_state", "goal_progress_score"}
+    SUPPORTED_CONCLUSION_KINDS = {
+        "response_style",
+        "collaboration_preference",
+        "goal_execution_state",
+        "goal_progress_score",
+        "goal_progress_trend",
+    }
     STOPWORDS = {
         "a",
         "an",
@@ -144,6 +150,8 @@ class ContextAgent:
                     return "current goal seems to be stagnating without recent execution"
             if kind == "goal_progress_score":
                 return self._summarize_goal_progress_score(content)
+            if kind == "goal_progress_trend":
+                return self._summarize_goal_progress_trend(content)
             return ""
         if content == "concise":
             return "prefers concise responses"
@@ -162,6 +170,15 @@ class ContextAgent:
         if score >= 0.75:
             return "goal completion is entering the final stretch"
         return "goal completion is around the midpoint"
+
+    def _summarize_goal_progress_trend(self, content: str) -> str:
+        if content == "improving":
+            return "goal progress trend is improving"
+        if content == "slipping":
+            return "goal progress trend is slipping"
+        if content == "steady":
+            return "goal progress trend is staying steady"
+        return ""
 
     def _extract_fields(self, raw_summary: str) -> dict[str, str]:
         fields: dict[str, str] = {}

@@ -52,9 +52,16 @@ class ReflectionWorker:
 
     async def reflect_user(self, user_id: str, event_id: str) -> bool:
         recent_memory = await self.memory_repository.get_recent_for_user(user_id=user_id, limit=8)
+        runtime_preferences = await self.memory_repository.get_user_runtime_preferences(user_id=user_id)
         active_goals = await self.memory_repository.get_active_goals(user_id=user_id, limit=5)
         active_tasks = await self.memory_repository.get_active_tasks(user_id=user_id, limit=8)
-        conclusions = self._derive_conclusions(recent_memory, active_goals=active_goals, active_tasks=active_tasks)
+        previous_goal_progress_score = self._coerce_progress_score(runtime_preferences.get("goal_progress_score"))
+        conclusions = self._derive_conclusions(
+            recent_memory,
+            active_goals=active_goals,
+            active_tasks=active_tasks,
+            previous_goal_progress_score=previous_goal_progress_score,
+        )
         theta = self._derive_theta(recent_memory)
         if not conclusions:
             self.logger.info("reflection_noop user_id=%s event_id=%s", user_id, event_id)
@@ -193,6 +200,7 @@ class ReflectionWorker:
         *,
         active_goals: Sequence[dict] | None = None,
         active_tasks: Sequence[dict] | None = None,
+        previous_goal_progress_score: float | None = None,
     ) -> list[dict]:
         if not recent_memory:
             recent_memory = []
@@ -305,6 +313,12 @@ class ReflectionWorker:
         )
         if goal_progress_score is not None:
             conclusions.append(goal_progress_score)
+        goal_progress_trend = self._derive_goal_progress_trend(
+            current_goal_progress_score=goal_progress_score,
+            previous_goal_progress_score=previous_goal_progress_score,
+        )
+        if goal_progress_trend is not None:
+            conclusions.append(goal_progress_trend)
 
         deduped: list[dict] = []
         seen: set[tuple[str, str]] = set()
@@ -417,6 +431,42 @@ class ReflectionWorker:
             "confidence": confidence,
             "source": "background_reflection",
         }
+
+    def _derive_goal_progress_trend(
+        self,
+        *,
+        current_goal_progress_score: dict | None,
+        previous_goal_progress_score: float | None,
+    ) -> dict | None:
+        current_score = self._coerce_progress_score(
+            current_goal_progress_score.get("content") if current_goal_progress_score else None
+        )
+        if current_score is None or previous_goal_progress_score is None:
+            return None
+
+        delta = round(current_score - previous_goal_progress_score, 2)
+        if delta >= 0.12:
+            return {
+                "kind": "goal_progress_trend",
+                "content": "improving",
+                "confidence": 0.73,
+                "source": "background_reflection",
+            }
+        if delta <= -0.12:
+            return {
+                "kind": "goal_progress_trend",
+                "content": "slipping",
+                "confidence": 0.75,
+                "source": "background_reflection",
+            }
+        if abs(delta) <= 0.05 and current_score > 0.0:
+            return {
+                "kind": "goal_progress_trend",
+                "content": "steady",
+                "confidence": 0.7,
+                "source": "background_reflection",
+            }
+        return None
 
     def _goal_stagnation_signal_count(self, recent_memory: Sequence[dict]) -> int:
         planning_heavy_steps = {
@@ -582,3 +632,11 @@ class ReflectionWorker:
 
     def _looks_structured(self, expression: str) -> bool:
         return expression.startswith("- ") or "\n1." in expression or "### " in expression
+
+    def _coerce_progress_score(self, value: object) -> float | None:
+        if value is None:
+            return None
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return None

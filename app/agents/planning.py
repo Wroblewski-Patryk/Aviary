@@ -19,6 +19,7 @@ class PlanningAgent:
         collaboration_preference = str((user_preferences or {}).get("collaboration_preference", "")).strip().lower()
         goal_execution_state = str((user_preferences or {}).get("goal_execution_state", "")).strip().lower()
         goal_progress_score = float((user_preferences or {}).get("goal_progress_score", 0.0) or 0.0)
+        goal_progress_trend = str((user_preferences or {}).get("goal_progress_trend", "")).strip().lower()
 
         if motivation.mode == "clarify":
             goal = "Ask for the missing information needed to help."
@@ -95,6 +96,14 @@ class PlanningAgent:
         if goal_progress_step is not None and goal_progress_step not in steps:
             prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
             steps.insert(prepare_index, goal_progress_step)
+
+        goal_progress_trend_step = self._goal_progress_trend_step(
+            goal_progress_trend=goal_progress_trend,
+            steps=steps,
+        )
+        if goal_progress_trend_step is not None and goal_progress_trend_step not in steps:
+            prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
+            steps.insert(prepare_index, goal_progress_trend_step)
 
         return PlanOutput(
             goal=goal,
@@ -245,6 +254,29 @@ class PlanningAgent:
             if "push_goal_to_completion" in steps or "continue_goal_execution" in steps:
                 return None
             return "push_goal_to_completion"
+        return None
+
+    def _goal_progress_trend_step(self, goal_progress_trend: str, steps: list[str]) -> str | None:
+        if goal_progress_trend == "slipping":
+            if (
+                "correct_goal_drift" in steps
+                or "recover_goal_progress" in steps
+                or "restart_goal_progress" in steps
+            ):
+                return None
+            return "correct_goal_drift"
+        if goal_progress_trend == "improving":
+            if (
+                "reinforce_goal_progress" in steps
+                or "continue_goal_execution" in steps
+                or "push_goal_to_completion" in steps
+            ):
+                return None
+            return "reinforce_goal_progress"
+        if goal_progress_trend == "steady":
+            if "maintain_goal_consistency" in steps or "preserve_goal_momentum" in steps:
+                return None
+            return "maintain_goal_consistency"
         return None
 
     def _apply_active_goal(self, goal: str, relevant_goal: dict) -> str:

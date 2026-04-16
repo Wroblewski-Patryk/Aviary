@@ -9,6 +9,7 @@ class FakeMemoryRepository:
         self.recent_memory = recent_memory
         self.conclusion_updates: list[dict] = []
         self.theta_updates: list[dict] = []
+        self.runtime_preferences: dict = {}
         self.created_tasks: list[dict] = []
         self.pending_tasks: list[dict] = []
         self.processing_marks: list[int] = []
@@ -19,6 +20,9 @@ class FakeMemoryRepository:
 
     async def get_recent_for_user(self, user_id: str, limit: int = 8) -> list[dict]:
         return self.recent_memory[:limit]
+
+    async def get_user_runtime_preferences(self, user_id: str) -> dict:
+        return self.runtime_preferences
 
     async def upsert_conclusion(self, **kwargs) -> dict:
         self.conclusion_updates.append(kwargs)
@@ -404,6 +408,95 @@ async def test_reflection_worker_derives_goal_progress_score_from_task_mix() -> 
         "confidence": 0.74,
         "source": "background_reflection",
         "supporting_event_id": "evt-goal-progress-score",
+    } in repository.conclusion_updates
+
+
+async def test_reflection_worker_derives_improving_goal_progress_trend_against_previous_score() -> None:
+    repository = FakeMemoryRepository(
+        recent_memory=[
+            {"summary": "task_status_update=fix deployment blocker:done; action=success; expression=One."},
+            {"summary": "goal_update=ship the MVP this week; action=success; expression=Two."},
+        ]
+    )
+    repository.runtime_preferences = {"goal_progress_score": 0.31}
+    repository.active_goals = [
+        {"id": 1, "name": "ship the MVP this week", "priority": "high", "status": "active", "goal_type": "operational"}
+    ]
+    repository.active_tasks = [
+        {"id": 3, "goal_id": 1, "name": "finalize rollout checklist", "priority": "medium", "status": "in_progress"},
+        {"id": 4, "goal_id": 1, "name": "prepare release notes", "priority": "medium", "status": "todo"},
+    ]
+    worker = ReflectionWorker(memory_repository=repository)
+
+    result = await worker.reflect_user(user_id="u-1", event_id="evt-goal-progress-improving")
+
+    assert result is True
+    assert {
+        "user_id": "u-1",
+        "kind": "goal_progress_trend",
+        "content": "improving",
+        "confidence": 0.73,
+        "source": "background_reflection",
+        "supporting_event_id": "evt-goal-progress-improving",
+    } in repository.conclusion_updates
+
+
+async def test_reflection_worker_derives_slipping_goal_progress_trend_against_previous_score() -> None:
+    repository = FakeMemoryRepository(
+        recent_memory=[
+            {"summary": "goal_update=ship the MVP this week; action=success; expression=One."},
+            {"summary": "task_update=fix deployment blocker; action=success; expression=Two."},
+        ]
+    )
+    repository.runtime_preferences = {"goal_progress_score": 0.82}
+    repository.active_goals = [
+        {"id": 1, "name": "ship the MVP this week", "priority": "high", "status": "active", "goal_type": "operational"}
+    ]
+    repository.active_tasks = [
+        {"id": 2, "goal_id": 1, "name": "fix deployment blocker", "priority": "high", "status": "blocked"},
+        {"id": 3, "goal_id": 1, "name": "finalize rollout checklist", "priority": "medium", "status": "todo"},
+    ]
+    worker = ReflectionWorker(memory_repository=repository)
+
+    result = await worker.reflect_user(user_id="u-1", event_id="evt-goal-progress-slipping")
+
+    assert result is True
+    assert {
+        "user_id": "u-1",
+        "kind": "goal_progress_trend",
+        "content": "slipping",
+        "confidence": 0.75,
+        "source": "background_reflection",
+        "supporting_event_id": "evt-goal-progress-slipping",
+    } in repository.conclusion_updates
+
+
+async def test_reflection_worker_derives_steady_goal_progress_trend_for_small_change() -> None:
+    repository = FakeMemoryRepository(
+        recent_memory=[
+            {"summary": "task_status_update=finalize rollout checklist:in_progress; action=success; expression=One."},
+            {"summary": "goal_update=ship the MVP this week; action=success; expression=Two."},
+        ]
+    )
+    repository.runtime_preferences = {"goal_progress_score": 0.67}
+    repository.active_goals = [
+        {"id": 1, "name": "ship the MVP this week", "priority": "high", "status": "active", "goal_type": "operational"}
+    ]
+    repository.active_tasks = [
+        {"id": 4, "goal_id": 1, "name": "finalize rollout checklist", "priority": "medium", "status": "in_progress"}
+    ]
+    worker = ReflectionWorker(memory_repository=repository)
+
+    result = await worker.reflect_user(user_id="u-1", event_id="evt-goal-progress-steady")
+
+    assert result is True
+    assert {
+        "user_id": "u-1",
+        "kind": "goal_progress_trend",
+        "content": "steady",
+        "confidence": 0.7,
+        "source": "background_reflection",
+        "supporting_event_id": "evt-goal-progress-steady",
     } in repository.conclusion_updates
 
 
