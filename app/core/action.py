@@ -11,7 +11,7 @@ from app.core.contracts import (
 )
 from app.integrations.telegram.client import TelegramClient
 from app.memory.repository import MemoryRepository
-from app.utils.goal_task_signals import detect_goal_signal, detect_task_signal
+from app.utils.goal_task_signals import detect_goal_signal, detect_task_signal, detect_task_status_signal
 from app.utils.preferences import detect_collaboration_preference, detect_response_style_preference
 
 
@@ -68,6 +68,7 @@ class ActionExecutor:
         collaboration_preference = detect_collaboration_preference(str(event.payload.get("text", "")))
         goal_signal = detect_goal_signal(str(event.payload.get("text", "")))
         task_signal = detect_task_signal(str(event.payload.get("text", "")))
+        task_status_signal = detect_task_status_signal(str(event.payload.get("text", "")))
         preference_update = (
             f"response_style:{style_preference.style}"
             if style_preference is not None
@@ -80,6 +81,7 @@ class ActionExecutor:
         )
         goal_update = ""
         task_update = ""
+        task_status_update = ""
 
         if goal_signal is not None:
             stored_goal = await self.memory_repository.upsert_active_goal(
@@ -104,6 +106,17 @@ class ActionExecutor:
             )
             task_update = str(stored_task["name"])
 
+        if task_status_signal is not None:
+            active_tasks = await self.memory_repository.get_active_tasks(user_id=event.meta.user_id, limit=8)
+            matched_task = self._match_task_for_status(task_status_signal.task_hint, active_tasks)
+            if matched_task is not None:
+                updated_task = await self.memory_repository.update_task_status(
+                    task_id=int(matched_task["id"]),
+                    status=task_status_signal.status,
+                )
+                if updated_task is not None:
+                    task_status_update = f"{updated_task['name']}:{updated_task['status']}"
+
         summary = (
             f"event={event.payload.get('text', '')}; "
             f"memory_kind={memory_kind}; "
@@ -113,6 +126,7 @@ class ActionExecutor:
             f"collaboration_update={collaboration_update}; "
             f"goal_update={goal_update}; "
             f"task_update={task_update}; "
+            f"task_status_update={task_status_update}; "
             f"context={context.summary}; "
             f"motivation={motivation.mode}; "
             f"role={role.selected}; "
@@ -163,6 +177,21 @@ class ActionExecutor:
                 best_score = overlap
                 best_goal_id = int(goal_id)
         return best_goal_id
+
+    def _match_task_for_status(self, task_hint: str, active_tasks: list[dict]) -> dict | None:
+        hint_tokens = self._text_tokens(task_hint)
+        best_task: dict | None = None
+        best_score = 0
+        for task in active_tasks:
+            task_id = task.get("id")
+            if task_id is None:
+                continue
+            task_tokens = self._text_tokens(str(task.get("name", "")) + " " + str(task.get("description", "")))
+            overlap = len(hint_tokens.intersection(task_tokens))
+            if overlap > best_score:
+                best_score = overlap
+                best_task = task
+        return best_task if best_score > 0 else None
 
     def _memory_kind(self, event: Event, perception: PerceptionOutput) -> str:
         specific_topics = [

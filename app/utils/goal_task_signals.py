@@ -19,6 +19,12 @@ class TaskSignal:
     status: str
 
 
+@dataclass(frozen=True)
+class TaskStatusSignal:
+    status: str
+    task_hint: str
+
+
 def detect_goal_signal(text: str) -> GoalSignal | None:
     normalized = normalize_for_matching(text)
     if not normalized:
@@ -75,6 +81,80 @@ def detect_task_signal(text: str) -> TaskSignal | None:
                 priority=_task_priority(normalized),
                 status="blocked" if _looks_blocked(normalized) else "todo",
             )
+    return None
+
+
+def detect_task_status_signal(text: str) -> TaskStatusSignal | None:
+    normalized = normalize_for_matching(text)
+    if not normalized:
+        return None
+
+    done_prefixes = (
+        "i fixed ",
+        "fixed ",
+        "i finished ",
+        "i completed ",
+        "i resolved ",
+        "done with ",
+        "naprawilem ",
+        "naprawilam ",
+        "skonczylem ",
+        "skonczylam ",
+        "ukonczylem ",
+        "ukonczylam ",
+        "rozwiazalem ",
+        "rozwiazalam ",
+    )
+    done_suffixes = (
+        " is fixed",
+        " was fixed",
+        " is done",
+        " is completed",
+        " is resolved",
+        " naprawione",
+        " zrobione",
+        " skonczone",
+        " ukonczone",
+        " rozwiazane",
+    )
+    blocked_prefixes = (
+        "i am blocked on ",
+        "blocked on ",
+        "this is blocked by ",
+        "jestem zablokowany na ",
+        "jestem zablokowana na ",
+        "blokuje mnie ",
+    )
+    in_progress_prefixes = (
+        "i am working on ",
+        "working on ",
+        "i started ",
+        "zaczalem ",
+        "zaczelam ",
+        "pracuje nad ",
+    )
+    cancelled_prefixes = (
+        "i cancelled ",
+        "cancelled ",
+        "anulowalem ",
+        "anulowalam ",
+    )
+
+    for pattern in done_prefixes:
+        if normalized.startswith(pattern):
+            return TaskStatusSignal(status="done", task_hint=_clean_signal_text(text[len(pattern):], fallback=text))
+    for pattern in done_suffixes:
+        if normalized.endswith(pattern):
+            return TaskStatusSignal(status="done", task_hint=_clean_signal_text(text[: -len(pattern)], fallback=text))
+    for pattern in blocked_prefixes:
+        if normalized.startswith(pattern):
+            return TaskStatusSignal(status="blocked", task_hint=_clean_signal_text(text[len(pattern):], fallback=text))
+    for pattern in in_progress_prefixes:
+        if normalized.startswith(pattern):
+            return TaskStatusSignal(status="in_progress", task_hint=_clean_signal_text(text[len(pattern):], fallback=text))
+    for pattern in cancelled_prefixes:
+        if normalized.startswith(pattern):
+            return TaskStatusSignal(status="cancelled", task_hint=_clean_signal_text(text[len(pattern):], fallback=text))
     return None
 
 

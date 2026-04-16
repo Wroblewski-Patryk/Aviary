@@ -590,5 +590,7 @@ Current MVP status:
 - motivation can now care more when an event touches a higher-priority goal or a blocked active task
 - planning can now align with an active goal and suggest unblocking or advancing an active task
 - explicit user phrases such as `My goal is to ...` and `I need to ...` can now seed lightweight goals and tasks through the Action layer
+- explicit user progress phrases such as `I fixed ...` can now update matching task status
+- runtime now refreshes active goal/task state after Action-layer writes, so the returned result reflects the latest operational state
 
 Together, they turn cognition into progress.

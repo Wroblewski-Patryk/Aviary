@@ -19,6 +19,8 @@ class FakeMemoryRepository:
         self.goal_updates: list[dict] = []
         self.task_updates: list[dict] = []
         self.active_goals: list[dict] = []
+        self.active_tasks: list[dict] = []
+        self.task_status_updates: list[dict] = []
 
     async def write_episode(self, **kwargs) -> dict:
         return {
@@ -45,7 +47,20 @@ class FakeMemoryRepository:
     async def upsert_active_task(self, **kwargs) -> dict:
         payload = {"id": len(self.task_updates) + 1, **kwargs}
         self.task_updates.append(payload)
+        self.active_tasks.append(payload)
         return payload
+
+    async def get_active_tasks(self, user_id: str, limit: int = 5) -> list[dict]:
+        return self.active_tasks[:limit]
+
+    async def update_task_status(self, *, task_id: int, status: str) -> dict | None:
+        for task in self.active_tasks:
+            if int(task["id"]) == task_id:
+                task["status"] = status
+                payload = {"task_id": task_id, "status": status}
+                self.task_status_updates.append(payload)
+                return task
+        return None
 
 
 class FakeTelegramClient:
@@ -270,3 +285,33 @@ async def test_persist_episode_upserts_task_signal_and_links_matching_goal() -> 
     assert memory_repository.task_updates[0]["name"] == "ship the MVP deployment blocker"
     assert memory_repository.task_updates[0]["goal_id"] == 7
     assert memory_repository.task_updates[0]["status"] == "blocked"
+
+
+async def test_persist_episode_updates_matching_task_status_from_explicit_progress_signal() -> None:
+    memory_repository = FakeMemoryRepository()
+    memory_repository.active_tasks = [
+        {
+            "id": 5,
+            "user_id": "u-1",
+            "goal_id": None,
+            "name": "fix deployment blocker",
+            "description": "User-declared task: fix deployment blocker",
+            "priority": "high",
+            "status": "blocked",
+        }
+    ]
+    executor = ActionExecutor(memory_repository=memory_repository, telegram_client=FakeTelegramClient())
+
+    record = await executor.persist_episode(
+        event=_event("I fixed the deployment blocker."),
+        perception=_perception(["general", "deploy"]),
+        context=_context(),
+        motivation=_motivation(),
+        role=_role(),
+        plan=_plan(),
+        action_result=await executor.execute(_plan(), _event("I fixed the deployment blocker."), _expression()),
+        expression=_expression(),
+    )
+
+    assert "task_status_update=fix deployment blocker:done" in record.summary
+    assert memory_repository.task_status_updates == [{"task_id": 5, "status": "done"}]

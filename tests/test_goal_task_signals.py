@@ -1,4 +1,4 @@
-from app.utils.goal_task_signals import detect_goal_signal, detect_task_signal
+from app.utils.goal_task_signals import detect_goal_signal, detect_task_signal, detect_task_status_signal
 
 
 def test_detect_goal_signal_from_explicit_goal_phrase() -> None:
@@ -17,3 +17,11 @@ def test_detect_task_signal_from_explicit_task_phrase() -> None:
     assert signal.name == "fix the deployment blocker"
     assert signal.priority == "high"
     assert signal.status == "blocked"
+
+
+def test_detect_task_status_signal_from_done_phrase() -> None:
+    signal = detect_task_status_signal("I fixed the deployment blocker.")
+
+    assert signal is not None
+    assert signal.status == "done"
+    assert signal.task_hint == "the deployment blocker"

@@ -42,11 +42,12 @@ class FakeMemoryRepository:
         return self.active_goals[:limit]
 
     async def get_active_tasks(self, user_id: str, *, goal_ids: list[int] | None = None, limit: int = 5) -> list[dict]:
+        active = [task for task in self.active_tasks if task.get("status") in {"todo", "in_progress", "blocked"}]
         if goal_ids:
-            goal_linked = [task for task in self.active_tasks if task.get("goal_id") in set(goal_ids)]
-            rest = [task for task in self.active_tasks if task.get("goal_id") not in set(goal_ids)]
+            goal_linked = [task for task in active if task.get("goal_id") in set(goal_ids)]
+            rest = [task for task in active if task.get("goal_id") not in set(goal_ids)]
             return (goal_linked + rest)[:limit]
-        return self.active_tasks[:limit]
+        return active[:limit]
 
     async def write_episode(self, **kwargs) -> dict:
         return {
@@ -70,14 +71,30 @@ class FakeMemoryRepository:
         return kwargs
 
     async def upsert_active_goal(self, **kwargs) -> dict:
-        payload = {"id": len(self.active_goals) + 1, **kwargs}
+        payload = {
+            "id": len(self.active_goals) + 1,
+            "status": "active",
+            "goal_type": kwargs.get("goal_type", "tactical"),
+            **kwargs,
+        }
         self.active_goals.append(payload)
         return payload
 
     async def upsert_active_task(self, **kwargs) -> dict:
-        payload = {"id": len(self.active_tasks) + 1, **kwargs}
+        payload = {
+            "id": len(self.active_tasks) + 1,
+            "status": kwargs.get("status", "todo"),
+            **kwargs,
+        }
         self.active_tasks.append(payload)
         return payload
+
+    async def update_task_status(self, *, task_id: int, status: str) -> dict | None:
+        for task in self.active_tasks:
+            if int(task["id"]) == task_id:
+                task["status"] = status
+                return task
+        return None
 
 
 class FakeTelegramClient:
@@ -204,6 +221,7 @@ async def test_runtime_pipeline_api_source() -> None:
         "action",
         "memory_persist",
         "reflection_enqueue",
+        "state_refresh",
         "total",
     }
     assert result.stage_timings_ms["total"] == result.duration_ms
@@ -273,6 +291,63 @@ async def test_runtime_pipeline_loads_active_goals_and_tasks_into_context_and_pl
     assert "align_with_active_goal" in result.plan.steps
     assert "unblock_active_task" in result.plan.steps
     assert result.motivation.importance >= 0.78
+
+
+async def test_runtime_pipeline_returns_refreshed_goal_and_task_state_after_explicit_updates() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+
+    goal_event = Event(
+        event_id="evt-goal",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "My goal is to ship the MVP this week."},
+        meta=EventMeta(user_id="u-1", trace_id="t-goal"),
+    )
+    goal_result = await runtime.run(goal_event)
+
+    assert goal_result.active_goals[0].name == "ship the MVP this week"
+
+    task_event = Event(
+        event_id="evt-task",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "I need to fix the deployment blocker."},
+        meta=EventMeta(user_id="u-1", trace_id="t-task"),
+    )
+    task_result = await runtime.run(task_event)
+
+    assert task_result.active_tasks[0].name == "fix the deployment blocker"
+    assert task_result.active_tasks[0].status == "blocked"
+
+    done_event = Event(
+        event_id="evt-task-done",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "I fixed the deployment blocker."},
+        meta=EventMeta(user_id="u-1", trace_id="t-task-done"),
+    )
+    done_result = await runtime.run(done_event)
+
+    assert done_result.active_goals[0].name == "ship the MVP this week"
+    assert done_result.active_tasks == []
+    assert done_result.stage_timings_ms["state_refresh"] >= 0
 
 
 async def test_runtime_pipeline_uses_user_profile_language_for_ambiguous_turn_without_recent_memory() -> None:

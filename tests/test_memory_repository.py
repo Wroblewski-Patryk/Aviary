@@ -115,3 +115,34 @@ async def test_memory_repository_upserts_and_loads_active_goals_and_tasks(tmp_pa
     assert len(task_rows) == 1
 
     await engine.dispose()
+
+
+async def test_memory_repository_updates_task_status_and_removes_done_from_active_list(tmp_path) -> None:
+    database_path = tmp_path / "memory-task-status.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    task = await repository.upsert_active_task(
+        user_id="u-1",
+        name="fix deployment blocker",
+        description="User-declared task: fix deployment blocker",
+        priority="high",
+        status="blocked",
+    )
+
+    updated = await repository.update_task_status(task_id=int(task["id"]), status="done")
+    active_tasks = await repository.get_active_tasks(user_id="u-1", limit=5)
+
+    assert updated is not None
+    assert updated["status"] == "done"
+    assert active_tasks == []
+
+    async with session_factory() as session:
+        task_row = await session.get(AionTask, int(task["id"]))
+
+    assert task_row is not None
+    assert task_row.status == "done"
+
+    await engine.dispose()

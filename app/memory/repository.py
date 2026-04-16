@@ -281,6 +281,17 @@ class MemoryRepository:
 
         return self._serialize_task(row)
 
+    async def update_task_status(self, *, task_id: int, status: str) -> dict | None:
+        async with self.session_factory() as session:
+            row = await session.get(AionTask, task_id)
+            if row is None:
+                return None
+            row.status = status
+            await session.commit()
+            await session.refresh(row)
+
+        return self._serialize_task(row)
+
     async def get_user_runtime_preferences(self, user_id: str) -> dict:
         async with self.session_factory() as session:
             statement = (

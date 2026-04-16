@@ -146,6 +146,9 @@ class RuntimeOrchestrator:
         reflection_triggered = False
         stage_timings_ms["memory_persist"] = 0
         stage_timings_ms["reflection_enqueue"] = 0
+        stage_timings_ms["state_refresh"] = 0
+        result_active_goals = active_goals
+        result_active_tasks = active_tasks
         try:
             stage_started = perf_counter()
             memory_record = await self.action_executor.persist_episode(
@@ -166,6 +169,17 @@ class RuntimeOrchestrator:
                     event_id=event.event_id,
                 )
                 stage_timings_ms["reflection_enqueue"] = int((perf_counter() - stage_started) * 1000)
+
+            stage_started = perf_counter()
+            refreshed_goals = await self.memory_repository.get_active_goals(user_id=event.meta.user_id, limit=5)
+            refreshed_tasks = await self.memory_repository.get_active_tasks(
+                user_id=event.meta.user_id,
+                goal_ids=[int(goal["id"]) for goal in refreshed_goals if goal.get("id") is not None],
+                limit=5,
+            )
+            result_active_goals = refreshed_goals
+            result_active_tasks = refreshed_tasks
+            stage_timings_ms["state_refresh"] = int((perf_counter() - stage_started) * 1000)
         except Exception as exc:  # pragma: no cover - defensive path
             if stage_timings_ms["memory_persist"] == 0:
                 stage_timings_ms["memory_persist"] = int((perf_counter() - stage_started) * 1000)
@@ -185,8 +199,8 @@ class RuntimeOrchestrator:
         return RuntimeResult(
             event=event,
             identity=identity,
-            active_goals=active_goals,
-            active_tasks=active_tasks,
+            active_goals=result_active_goals,
+            active_tasks=result_active_tasks,
             perception=perception,
             context=context,
             motivation=motivation,

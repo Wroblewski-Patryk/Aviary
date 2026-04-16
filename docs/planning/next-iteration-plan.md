@@ -165,9 +165,10 @@ These are small but real issues observed after the production rollout and smoke 
 
 - current repo behavior now supports lightweight `aion_goal` and `aion_task` state, loads active goals/tasks before deeper planning, lets context surface them, lets motivation react to related high-priority goals and blocked tasks, and lets planning align with active goals plus unblock or advance active tasks
 - current repo behavior can also seed goals and tasks from explicit user phrases such as `My goal is to ...` and `I need to ...`
+- current repo behavior can now also update task status from explicit progress signals such as `I fixed ...`, and runtime refreshes returned goal/task state after Action-layer writes
 - next improvement:
   - decide when plans should start creating or updating tasks even without explicit user phrasing
-  - decide whether task status should begin updating automatically from successful action outcomes
+  - decide whether task status should begin updating automatically from successful action outcomes beyond explicit user progress signals
   - decide how far to push goal/task inference before a richer goal manager exists
 
 ### 8. Background Reflection Worker

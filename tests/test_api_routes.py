@@ -125,6 +125,7 @@ class FakeRuntime:
                 "action": 0,
                 "memory_persist": 1,
                 "reflection_enqueue": 0,
+                "state_refresh": 1,
                 "total": 12,
             },
             duration_ms=12,
