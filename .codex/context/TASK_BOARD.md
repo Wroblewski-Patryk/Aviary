@@ -15,7 +15,7 @@ Last updated: 2026-04-19
   - run relevant tests and validations
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
-- The current planned queue through `PRJ-026` is complete.
+- The current planned queue through `PRJ-027` is complete.
 - Next executable slices should be derived from:
   - `docs/planning/next-iteration-plan.md`
   - `docs/planning/open-decisions.md`
@@ -229,6 +229,17 @@ Last updated: 2026-04-19
     - `/health` now exposes `production_policy_enforcement` so operators can verify active enforcement posture
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_config.py tests/test_api_routes.py tests/test_main_runtime_policy.py`
+- [x] PRJ-027 Add lifespan-level fail-fast regression test for strict policy mode
+  - Status: DONE
+  - Group: Runtime Ops Visibility
+  - Owner: QA/Test
+  - Depends on: PRJ-026
+  - Priority: P3
+  - Result:
+    - startup strict-policy fail-fast behavior is now pinned at `lifespan` entry, not only in helper-level policy tests
+    - regression test confirms mismatch block happens before database initialization side effects
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_main_lifespan_policy.py tests/test_main_runtime_policy.py tests/test_config.py tests/test_api_routes.py`
 - [x] PRJ-011 Extract shared goal/task selection helpers
   - Status: DONE
   - Group: Shared Signal Engine Extraction

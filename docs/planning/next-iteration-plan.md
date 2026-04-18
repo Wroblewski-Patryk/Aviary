@@ -55,6 +55,7 @@ Completed on 2026-04-18:
 - `PRJ-024` added explicit startup warning visibility for production runs with schema compatibility mode enabled.
 - `PRJ-025` hardened production defaults for debug payload exposure, including explicit policy-source visibility in `/health`.
 - `PRJ-026` added production policy enforcement mode (`warn|strict`) so startup can either emit warnings or fail fast on production policy mismatches, with health visibility and regression coverage.
+- `PRJ-027` added a lifespan-level strict-policy regression test that verifies fail-fast startup happens before database initialization side effects.
 
 ## Highest-Risk Gaps
 
@@ -278,7 +279,7 @@ drift silently.
 
 ## Next Derived Slice
 
-All currently registered planned slices through `PRJ-026` are complete.
+All currently registered planned slices through `PRJ-027` are complete.
 The next smallest task should be derived from `docs/planning/open-decisions.md`
 when execution continues.
 
@@ -302,7 +303,7 @@ After those finished:
 
 ## Recommended Execution Order
 
-1. derive the next smallest useful slice from open decisions (`PRJ-026`)
+1. derive the next smallest useful slice from open decisions (`PRJ-028`)
 
 The queue should still be treated as intentionally open after those items.
 Additional small architecture-alignment slices may still be discovered while

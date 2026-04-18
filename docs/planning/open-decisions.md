@@ -24,6 +24,7 @@ The current repo already works as an MVP slice, but several architecture-level d
   - `GET /health` now exposes active non-secret runtime policy flags, including `startup_schema_mode` and `production_policy_enforcement`, so operators can verify migration policy posture on the live runtime.
   - startup now emits a production warning when `STARTUP_SCHEMA_MODE=create_tables` to keep compatibility mode visible in runtime logs.
   - startup can now run in strict production-policy mode (`PRODUCTION_POLICY_ENFORCEMENT=strict`) and hard-fail on policy mismatch instead of warning-only behavior.
+  - strict policy fail-fast behavior is pinned at lifespan entry by regression tests to prevent startup-order drift.
 - Decision needed:
   - when is it safe to remove the compatibility-only `create_tables()` path entirely and keep strict migration-only startup in every environment?
   - should production default to strict policy enforcement, or keep `warn` as the default while strict mode remains opt-in?
@@ -36,6 +37,7 @@ The current repo already works as an MVP slice, but several architecture-level d
   - `GET /health` now exposes `event_debug_enabled`, `event_debug_source`, and `production_policy_enforcement` so operators can verify effective policy, policy source, and enforcement mode.
   - startup now emits a production warning when `EVENT_DEBUG_ENABLED=true` so the policy remains visible even before handling requests.
   - startup can now hard-fail in production when debug payload exposure is enabled and strict enforcement mode is active.
+  - strict-mode hard-fail behavior is test-covered at startup lifecycle level, not only at helper-function level.
 - Decision needed:
   - should the full debug payload remain available on the same endpoint through `debug=true`, or should it move to a more clearly internal-only path before wider production use?
   - should the config default stay open for local-first debugging, or switch to
