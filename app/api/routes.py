@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query, Request
 
 from app.api.schemas import EventResponse, EventReplyResponse, EventRuntimeResponse, SetWebhookRequest
-from app.core.events import normalize_event
+from app.core.events import looks_like_telegram_update, normalize_event
 from app.core.runtime import RuntimeOrchestrator
 from app.integrations.telegram.client import TelegramClient
 from app.memory.repository import MemoryRepository
@@ -24,6 +24,13 @@ def _settings_from_request(request: Request):
     return request.app.state.settings
 
 
+def _event_debug_enabled(settings: Any) -> bool:
+    debug_toggle = getattr(settings, "is_event_debug_enabled", None)
+    if callable(debug_toggle):
+        return bool(debug_toggle())
+    return bool(getattr(settings, "event_debug_enabled", True))
+
+
 def _memory_repository_from_request(request: Request) -> MemoryRepository:
     return request.app.state.memory_repository  # type: ignore[return-value]
 
@@ -34,6 +41,7 @@ def _reflection_worker_from_request(request: Request) -> ReflectionWorker:
 
 @router.get("/health")
 async def health(request: Request) -> dict[str, Any]:
+    settings = _settings_from_request(request)
     reflection_worker = _reflection_worker_from_request(request)
     memory_repository = _memory_repository_from_request(request)
     reflection_snapshot = reflection_worker.snapshot()
@@ -49,6 +57,15 @@ async def health(request: Request) -> dict[str, Any]:
     )
     return {
         "status": "ok",
+        "runtime_policy": {
+            "startup_schema_mode": str(getattr(settings, "startup_schema_mode", "migrate")),
+            "event_debug_enabled": _event_debug_enabled(settings),
+            "event_debug_source": (
+                "explicit"
+                if getattr(settings, "event_debug_enabled", None) is not None
+                else "environment_default"
+            ),
+        },
         "reflection": {
             "healthy": reflection_healthy,
             "worker": reflection_snapshot,
@@ -64,11 +81,13 @@ async def event_endpoint(
     debug: bool = Query(default=False),
 ) -> dict[str, Any]:
     settings = _settings_from_request(request)
-    looks_like_telegram = isinstance(payload.get("message"), dict) or "update_id" in payload
+    looks_like_telegram = looks_like_telegram_update(payload)
     if looks_like_telegram and settings.telegram_webhook_secret:
         received_secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token")
         if received_secret != settings.telegram_webhook_secret:
             raise HTTPException(status_code=403, detail="Invalid Telegram webhook secret token.")
+    if debug and not _event_debug_enabled(settings):
+        raise HTTPException(status_code=403, detail="Debug payload is disabled for this environment.")
 
     event = normalize_event(payload)
     runtime = _runtime_from_request(request)

@@ -158,8 +158,21 @@ class FakeTelegramClient:
 
 
 class FakeSettings:
-    def __init__(self, telegram_webhook_secret: str | None = None):
+    def __init__(
+        self,
+        telegram_webhook_secret: str | None = None,
+        *,
+        event_debug_enabled: bool | None = True,
+        startup_schema_mode: str = "migrate",
+    ):
         self.telegram_webhook_secret = telegram_webhook_secret
+        self.event_debug_enabled = event_debug_enabled
+        self.startup_schema_mode = startup_schema_mode
+
+    def is_event_debug_enabled(self) -> bool:
+        if self.event_debug_enabled is not None:
+            return self.event_debug_enabled
+        return True
 
 
 class FakeMemoryRepository:
@@ -212,6 +225,8 @@ def _client(
     reflection_triggered: bool = False,
     reflection_stats: dict[str, int] | None = None,
     reflection_running: bool = True,
+    event_debug_enabled: bool | None = True,
+    startup_schema_mode: str = "migrate",
 ) -> tuple[TestClient, FakeRuntime, FakeTelegramClient]:
     app = FastAPI()
     app.include_router(router)
@@ -221,7 +236,11 @@ def _client(
     reflection_worker = FakeReflectionWorker(running=reflection_running)
     app.state.runtime = runtime
     app.state.telegram_client = telegram_client
-    app.state.settings = FakeSettings(telegram_webhook_secret=secret)
+    app.state.settings = FakeSettings(
+        telegram_webhook_secret=secret,
+        event_debug_enabled=event_debug_enabled,
+        startup_schema_mode=startup_schema_mode,
+    )
     app.state.memory_repository = memory_repository
     app.state.reflection_worker = reflection_worker
     return TestClient(app), runtime, telegram_client
@@ -235,6 +254,11 @@ def test_health_endpoint_returns_ok() -> None:
     assert response.status_code == 200
     assert response.json() == {
         "status": "ok",
+        "runtime_policy": {
+            "startup_schema_mode": "migrate",
+            "event_debug_enabled": True,
+            "event_debug_source": "explicit",
+        },
         "reflection": {
             "healthy": True,
             "worker": {
@@ -259,6 +283,32 @@ def test_health_endpoint_returns_ok() -> None:
             },
         },
     }
+
+
+def test_health_endpoint_exposes_runtime_policy_flags() -> None:
+    client, _, _ = _client(event_debug_enabled=False, startup_schema_mode="create_tables")
+
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "ok"
+    assert body["runtime_policy"] == {
+        "startup_schema_mode": "create_tables",
+        "event_debug_enabled": False,
+        "event_debug_source": "explicit",
+    }
+
+
+def test_health_endpoint_marks_event_debug_source_as_environment_default_when_unset() -> None:
+    client, _, _ = _client(event_debug_enabled=None)
+
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["runtime_policy"]["event_debug_enabled"] is True
+    assert body["runtime_policy"]["event_debug_source"] == "environment_default"
 
 
 def test_health_endpoint_marks_reflection_unhealthy_when_worker_not_running() -> None:
@@ -330,6 +380,29 @@ def test_event_endpoint_returns_public_response_and_normalizes_event() -> None:
     assert "debug" not in body
 
 
+def test_event_endpoint_enforces_api_boundary_for_source_and_payload_shape() -> None:
+    client, runtime, _ = _client()
+
+    response = client.post(
+        "/event",
+        json={
+            "text": "  hello   from \n api  ",
+            "source": "telegram",
+            "subsource": "user_message",
+            "payload": {"text": "payload text", "hidden": "value"},
+            "meta": {"user_id": "", "trace_id": ""},
+        },
+    )
+
+    assert response.status_code == 200
+    assert runtime.last_event is not None
+    assert runtime.last_event.source == "api"
+    assert runtime.last_event.subsource == "event_endpoint"
+    assert runtime.last_event.payload == {"text": "hello from api"}
+    assert runtime.last_event.meta.user_id == "anonymous"
+    assert runtime.last_event.meta.trace_id
+
+
 def test_event_endpoint_can_return_full_runtime_debug_payload_when_requested() -> None:
     client, runtime, _ = _client(reflection_triggered=True)
 
@@ -350,6 +423,37 @@ def test_event_endpoint_can_return_full_runtime_debug_payload_when_requested() -
     assert body["debug"]["event"]["source"] == "api"
     assert runtime.last_event is not None
     assert runtime.last_event.payload["text"] == "show debug runtime"
+
+
+def test_event_endpoint_rejects_debug_payload_when_debug_mode_is_disabled() -> None:
+    client, runtime, _ = _client(event_debug_enabled=False)
+
+    response = client.post("/event?debug=true", json={"text": "show debug runtime"})
+
+    assert response.status_code == 403
+    assert response.json()["detail"] == "Debug payload is disabled for this environment."
+    assert runtime.last_event is None
+
+
+def test_event_endpoint_contract_smoke_pins_public_shape_and_debug_gate() -> None:
+    client, _, _ = _client()
+
+    response = client.post("/event", json={"text": "contract smoke"})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert set(body.keys()) == {"event_id", "trace_id", "source", "reply", "runtime"}
+    assert set(body["reply"].keys()) == {"message", "language", "tone", "channel"}
+    assert set(body["runtime"].keys()) == {"role", "motivation_mode", "action_status", "reflection_triggered"}
+    assert "debug" not in body
+
+    debug_response = client.post("/event?debug=true", json={"text": "contract smoke debug"})
+
+    assert debug_response.status_code == 200
+    debug_body = debug_response.json()
+    assert "debug" in debug_body
+    assert "event" in debug_body["debug"]
+    assert "stage_timings_ms" in debug_body["debug"]
 
 
 def test_event_endpoint_exposes_reflection_trigger_when_runtime_queues_reflection() -> None:

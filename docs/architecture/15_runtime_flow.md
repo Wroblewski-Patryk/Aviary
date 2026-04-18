@@ -23,6 +23,7 @@ The intended architecture still treats the action boundary as:
 Current implementation note:
 
 - `expression` is currently produced just before `action`
+- runtime now builds an explicit `ActionDelivery` handoff (`message`, `tone`, `channel`, `language`, `chat_id`) from expression output and event routing data
 - `action` remains the only stage that performs side effects
 - this ordering exists so outbound integrations can reuse the already prepared channel-specific message
 
@@ -130,12 +131,19 @@ Expression prepares the user-visible reply:
 - channel
 - language
 
+Runtime then materializes an explicit delivery handoff for action:
+
+- delivery message and tone
+- delivery channel and language
+- optional channel target metadata (for example Telegram `chat_id`)
+
 It can use identity, role, motivation, preferences, and theta, and can optionally call OpenAI.
 
 ### 10. Action
 
 Only the action layer performs side effects. Today that includes:
 
+- consuming the explicit `ActionDelivery` handoff contract
 - Telegram send when applicable
 - persistence of episodic memory and lightweight runtime state changes
 - explicit goal/task updates triggered by user phrases
@@ -199,16 +207,31 @@ The runtime is intentionally debuggable.
 
 `POST /event` currently returns:
 
-- the full `RuntimeResult`
-- `reflection_triggered`
-- `stage_timings_ms`
-- `duration_ms`
+- a compact public response (`event_id`, `trace_id`, reply, compact runtime
+  status)
+- optional full internal runtime payload when `debug=true`
 
 `GET /health` currently returns:
 
 - app health status
 - reflection worker running status
 - durable queue counts such as pending, processing, failed, retryable, exhausted, and stuck
+
+## Stage Owners And Validation
+
+| Stage | Main code owner | Primary validation surface |
+| --- | --- | --- |
+| Event normalization | `app/core/events.py`, `app/api/routes.py` | `tests/test_event_normalization.py`, `tests/test_api_routes.py` |
+| State load and identity | `app/core/runtime.py`, `app/identity/service.py` | `tests/test_runtime_pipeline.py` |
+| Perception | `app/agents/perception.py` | `tests/test_perception_agent.py`, `tests/test_runtime_pipeline.py` |
+| Context | `app/agents/context.py` | `tests/test_context_agent.py`, `tests/test_runtime_pipeline.py` |
+| Motivation | `app/motivation/engine.py` | `tests/test_motivation_engine.py`, `tests/test_runtime_pipeline.py` |
+| Role | `app/agents/role.py` | `tests/test_role_agent.py`, `tests/test_runtime_pipeline.py` |
+| Planning | `app/agents/planning.py` | `tests/test_planning_agent.py`, `tests/test_runtime_pipeline.py` |
+| Expression | `app/expression/generator.py` | `tests/test_expression_agent.py`, `tests/test_runtime_pipeline.py` |
+| Action delivery and side effects | `app/core/runtime.py`, `app/core/action.py`, `app/integrations/delivery_router.py` | `tests/test_action_executor.py`, `tests/test_delivery_router.py`, `tests/test_runtime_pipeline.py`, `tests/test_api_routes.py` |
+| Memory persistence and refresh | `app/core/action.py`, `app/memory/repository.py`, `app/core/runtime.py` | `tests/test_action_executor.py`, `tests/test_memory_repository.py`, `tests/test_runtime_pipeline.py` |
+| Reflection enqueue and worker | `app/core/runtime.py`, `app/reflection/worker.py`, `app/memory/repository.py` | `tests/test_reflection_worker.py`, `tests/test_api_routes.py`, `tests/test_runtime_pipeline.py` |
 
 ## Runtime Invariants
 
@@ -225,7 +248,6 @@ The current implementation still aims to preserve these rules:
 
 The following are still architectural targets rather than implemented runtime facts:
 
-- formal migrations
 - vector retrieval
 - LangGraph or other external orchestration
 - a separate reflection worker service

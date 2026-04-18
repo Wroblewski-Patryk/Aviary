@@ -20,6 +20,9 @@
 - `OPENAI_API_KEY` if OpenAI replies should be enabled
 - `TELEGRAM_BOT_TOKEN` if Telegram delivery should be enabled
 - `TELEGRAM_WEBHOOK_SECRET` for webhook protection
+- `EVENT_DEBUG_ENABLED` (optional) to override debug payload exposure:
+  - default in local/non-production is enabled
+  - production default is disabled unless explicitly enabled
 
 3. Run tests:
 
@@ -51,9 +54,9 @@ Equivalent direct command:
 
 Important current behavior:
 
-- startup still calls `create_tables()` for MVP bootstrap safety
-- Alembic is now the formal path for schema evolution
-- until startup becomes migration-first, treat `create_tables()` as a compatibility bootstrap, not as the source of truth for future schema changes
+- startup defaults to migration-first schema ownership (`STARTUP_SCHEMA_MODE=migrate`)
+- Alembic is the formal path for schema evolution
+- compatibility bootstrap still exists behind `STARTUP_SCHEMA_MODE=create_tables` and should only be used for controlled fallback scenarios
 
 ## Useful Commands
 

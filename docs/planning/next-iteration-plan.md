@@ -9,9 +9,9 @@ The goal is to make the current AION runtime more correct, more inspectable, and
 
 ## Repo Analysis Snapshot
 
-Confirmed on 2026-04-17:
+Confirmed on 2026-04-19:
 
-- `.\.venv\Scripts\python -m pytest -q` passes with `246 passed`
+- `.\.venv\Scripts\python -m pytest -q` passes with `285 passed`
 - the live runtime already covers:
   - event normalization
   - state load
@@ -43,6 +43,17 @@ Completed on 2026-04-18:
 - `PRJ-011` extracted shared goal/task selection helpers used by context, planning, and motivation.
 - `PRJ-012` extracted shared goal-progress and milestone-history signal helpers and wired reflection to the shared milestone-arc signal owner.
 - `PRJ-013` completed the post-extraction module split by removing duplicated heuristic logic from oversized runtime modules while preserving behavior.
+- `PRJ-015` made API-boundary normalization explicit in runtime code and tests, including source/subsource hardening and normalized payload shaping.
+- `PRJ-016` moved startup to migration-first by default and kept `create_tables()` behind an explicit compatibility mode.
+- `PRJ-017` introduced an explicit `ActionDelivery` handoff contract between expression and action and pinned that boundary with runtime and action regression tests.
+- `PRJ-019` added explicit runtime stage ownership and architecture-to-code traceability across overview and canonical architecture contract docs.
+- `PRJ-018` moved delivery-channel dispatch behind an integration-level router so action consumes explicit handoff contracts without runtime-local delivery assumptions.
+- `PRJ-020` added contract-level runtime flow smoke tests that pin stage order, action-boundary behavior, public API response shape, and stage-log payload invariants.
+- `PRJ-021` added an explicit config gate for `/event?debug=true` payload exposure and test coverage for enabled/disabled debug paths.
+- `PRJ-022` exposed non-secret runtime policy flags in `/health` for operator traceability and synchronized API tests and ops docs.
+- `PRJ-023` added explicit startup warning visibility for production runs with debug payload exposure enabled.
+- `PRJ-024` added explicit startup warning visibility for production runs with schema compatibility mode enabled.
+- `PRJ-025` hardened production defaults for debug payload exposure, including explicit policy-source visibility in `/health`.
 
 ## Highest-Risk Gaps
 
@@ -113,17 +124,17 @@ Missing compared with basics:
 - richer cross-component summaries outside the orchestrator
 - broader adoption of the scaffold in non-runtime services where useful
 
-### 6. Database bootstrap still uses a temporary dual path
+### 6. Startup schema ownership still carries a compatibility fallback
 
 Current behavior:
 
-- Alembic baseline exists
-- startup still calls `create_tables()`
+- Alembic baseline exists and startup now defaults to migration-first behavior
+- `create_tables()` is now explicit compatibility fallback, enabled only through startup config
 
 Why it matters:
 
-- schema ownership is still split
-- runtime and deploy behavior can diverge
+- migration-first behavior is now explicit for normal runtime and deploy flows
+- compatibility fallback should stay intentional and eventually be removed
 
 ## Delivery Principle
 
@@ -188,30 +199,26 @@ This group makes the system easier to operate and safer to evolve.
     - runtime stages now emit structured `start/success/failure` logs with `event_id`, `trace_id`, stage name, duration, and short summaries
     - regression tests cover both the happy path and a `memory_persist` failure path
 
-- `PRJ-015` Tighten the event normalization and public API boundary.
-  - Files: `app/core/events.py`, `app/api/routes.py`, `app/api/schemas.py`, related tests
-  - Depends on: none
-  - Done when:
+- `PRJ-015` is complete.
+  - Result:
     - input normalization rules are explicit and test-covered
-    - the public `/event` contract stays small and intentional
+    - public `/event` boundary is intentionally small (`source=api`, `subsource=event_endpoint`, normalized payload)
     - debug behavior remains clearly internal
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_event_normalization.py tests/test_api_routes.py`
 
-- `PRJ-016` Move startup from temporary bootstrap toward migration-first behavior.
-  - Files: `app/main.py`, `app/memory/repository.py`, migration helpers/docs/tests as needed
-  - Depends on: none
-  - Done when:
+- `PRJ-016` is complete.
+  - Result:
     - migration-first ownership is explicit
-    - startup `create_tables()` is either removed or guarded behind a deliberate compatibility path
-    - deploy expectations are documented
+    - startup `create_tables()` is now guarded behind deliberate compatibility mode
+    - deployment and local-development expectations are documented
   - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_schema_baseline.py`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_schema_baseline.py tests/test_config.py`
     - `.\.venv\Scripts\python -m alembic upgrade head --sql`
 
 ## Post-Current Queue Expansion
 
-The current recommended execution order stays unchanged through `PRJ-016`.
+The current recommended execution queue through `PRJ-020` is complete.
 
 The groups below are intentionally appended after that queue so the repo keeps
 an explicit architecture-alignment backlog instead of implying that current
@@ -225,51 +232,54 @@ This group makes the documented action boundary more visible in code without
 forcing a risky broad rewrite first.
 
 - `PRJ-017` Make the expression-to-action handoff explicit and test-covered.
-  - Files: `app/core/runtime.py`, `app/action/`, `app/expression/`, related docs/tests
-  - Depends on: `PRJ-016`
-  - Done when:
-    - expression hands action a deliberate delivery contract rather than an
-      implicit payload shape
-    - the action boundary stays explicit in code and docs
-    - current user-facing behavior remains unchanged
+  - Result:
+    - runtime now builds an explicit `ActionDelivery` handoff from expression
+      output and event routing metadata
+    - action side effects consume that explicit contract for API/Telegram
+      delivery behavior
+    - user-facing behavior remains unchanged while stage coupling is reduced
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_action_executor.py tests/test_expression_agent.py`
 
 - `PRJ-018` Reduce expression/action integration coupling without changing behavior.
-  - Files: `app/action/`, `app/integrations/`, `app/core/runtime.py`, related tests
-  - Depends on: `PRJ-017`
-  - Done when:
-    - channel integrations consume the explicit contract instead of runtime-only
-      assumptions
-    - side effects still remain isolated inside action
-    - the runtime is easier to evolve toward stricter stage parity later
+  - Result:
+    - channel delivery now flows through integration-level `DeliveryRouter`
+      using explicit `ActionDelivery` contract fields
+    - side effects remain isolated inside action-triggered integration calls
+    - runtime behavior stayed equivalent for API and Telegram paths under
+      regression tests
   - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py tests/test_telegram_webhook.py`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py tests/test_action_executor.py tests/test_delivery_router.py`
 
 ## Group 6 - Architecture Traceability And Contract Tests
 
 This group makes the implemented architecture easier to audit and harder to let
 drift silently.
 
-- `PRJ-019` Add runtime stage ownership and architecture-to-code traceability.
-  - Files: `docs/overview.md`, `docs/architecture/02_architecture.md`, `docs/architecture/15_runtime_flow.md`, `docs/architecture/16_agent_contracts.md`, `.codex/context/PROJECT_STATE.md`
-  - Depends on: `PRJ-016`
-  - Done when:
-    - each documented stage names its code owner and main validation surface
-    - current-runtime differences remain explicit and searchable
-    - the repo truth can be audited faster during future refactors
+- `PRJ-019` is complete.
+  - Result:
+    - each documented runtime stage now has explicit code ownership and
+      validation mapping
+    - current-runtime contract differences are explicit across overview, runtime
+      flow, and contract docs
+    - architecture traceability now has a faster audit surface in canonical docs
   - Validation:
     - doc-only change, no automated validation required
 
-- `PRJ-020` Add contract-level runtime flow smoke tests for architecture invariants.
-  - Files: `tests/test_runtime_pipeline.py`, `tests/test_api_routes.py`, `tests/test_logging.py`, related helper fixtures
-  - Depends on: `PRJ-017`, `PRJ-019`
-  - Done when:
-    - tests pin documented stage presence, action-boundary rules, and traceable
-      runtime result/log invariants
-    - future architectural drift causes fast, obvious failures
+- `PRJ-020` is complete.
+  - Result:
+    - contract smoke tests now pin documented stage order and action-boundary
+      invariants in runtime pipeline tests
+    - API tests now pin compact public `/event` response shape and debug gating
+    - logging tests now pin `RuntimeStageLogger` payload and traceability fields
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py tests/test_logging.py`
+
+## Next Derived Slice
+
+All currently registered planned slices through `PRJ-025` are complete.
+The next smallest task should be derived from `docs/planning/open-decisions.md`
+when execution continues.
 
 ## Parallel-Ready Lanes
 
@@ -285,21 +295,13 @@ These tasks are intentionally chosen so different execution agents can work in p
 
 After those finished:
 
-- run `PRJ-015`
-- then run `PRJ-016`
-- then run `PRJ-017`
-- then run `PRJ-019`
-- then run `PRJ-018`
-- then run `PRJ-020`
+- derive the next smallest architecture-alignment task from
+  `docs/planning/open-decisions.md`
+- register that task in `.codex/context/TASK_BOARD.md` before implementation
 
 ## Recommended Execution Order
 
-1. `PRJ-015`
-2. `PRJ-016`
-3. `PRJ-017`
-4. `PRJ-019`
-5. `PRJ-018`
-6. `PRJ-020`
+1. derive the next smallest useful slice from open decisions (`PRJ-026`)
 
 The queue should still be treated as intentionally open after those items.
 Additional small architecture-alignment slices may still be discovered while

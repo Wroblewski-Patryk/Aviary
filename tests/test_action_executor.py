@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from app.core.action import ActionExecutor
 from app.core.contracts import (
+    ActionDelivery,
     ContextOutput,
     Event,
     EventMeta,
@@ -67,7 +68,11 @@ class FakeMemoryRepository:
 
 
 class FakeTelegramClient:
+    def __init__(self):
+        self.calls: list[dict[str, int | str]] = []
+
     async def send_message(self, chat_id: int | str, text: str) -> dict:
+        self.calls.append({"chat_id": chat_id, "text": text})
         return {"ok": True}
 
 
@@ -104,6 +109,10 @@ def _expression() -> ExpressionOutput:
     return ExpressionOutput(message="hello", tone="supportive", channel="api", language="en")
 
 
+def _delivery(*, channel: str = "api", chat_id: int | str | None = None) -> ActionDelivery:
+    return ActionDelivery(message="hello", tone="supportive", channel=channel, language="en", chat_id=chat_id)
+
+
 def _perception(topic_tags: list[str], language_source: str = "keyword_signal") -> PerceptionOutput:
     return PerceptionOutput(
         event_type="statement",
@@ -122,6 +131,43 @@ def _role(selected: str = "advisor") -> RoleOutput:
     return RoleOutput(selected=selected, confidence=0.8)
 
 
+async def test_execute_uses_api_delivery_contract_for_api_responses() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    executor = ActionExecutor(memory_repository=memory_repository, telegram_client=telegram_client)
+
+    result = await executor.execute(_plan(), _delivery(channel="api"))
+
+    assert result.status == "success"
+    assert result.actions == ["api_response"]
+    assert telegram_client.calls == []
+
+
+async def test_execute_uses_telegram_delivery_contract_for_telegram_responses() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    executor = ActionExecutor(memory_repository=memory_repository, telegram_client=telegram_client)
+
+    result = await executor.execute(_plan(), _delivery(channel="telegram", chat_id=123456))
+
+    assert result.status == "success"
+    assert result.actions == ["send_telegram_message"]
+    assert telegram_client.calls == [{"chat_id": 123456, "text": "hello"}]
+
+
+async def test_execute_fails_when_telegram_delivery_contract_has_no_chat_id() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    executor = ActionExecutor(memory_repository=memory_repository, telegram_client=telegram_client)
+
+    result = await executor.execute(_plan(), _delivery(channel="telegram"))
+
+    assert result.status == "fail"
+    assert result.actions == []
+    assert "chat_id is missing" in result.notes
+    assert telegram_client.calls == []
+
+
 async def test_persist_episode_marks_specific_request_as_semantic_memory() -> None:
     memory_repository = FakeMemoryRepository()
     executor = ActionExecutor(memory_repository=memory_repository, telegram_client=FakeTelegramClient())
@@ -133,7 +179,7 @@ async def test_persist_episode_marks_specific_request_as_semantic_memory() -> No
         motivation=_motivation(),
         role=_role("executor"),
         plan=_plan(),
-        action_result=await executor.execute(_plan(), _event("deploy the fix to production now"), _expression()),
+        action_result=await executor.execute(_plan(), _delivery()),
         expression=_expression(),
     )
 
@@ -166,7 +212,7 @@ async def test_persist_episode_marks_short_follow_up_as_continuity_memory() -> N
         motivation=_motivation(),
         role=_role(),
         plan=_plan(),
-        action_result=await executor.execute(_plan(), _event("ok"), _expression()),
+        action_result=await executor.execute(_plan(), _delivery()),
         expression=_expression(),
     )
 
@@ -198,7 +244,7 @@ async def test_persist_episode_skips_profile_update_for_derived_language_signal(
         motivation=_motivation(),
         role=_role(),
         plan=_plan(),
-        action_result=await executor.execute(_plan(), _event("ok"), _expression()),
+        action_result=await executor.execute(_plan(), _delivery()),
         expression=_expression(),
     )
 
@@ -216,7 +262,7 @@ async def test_persist_episode_marks_explicit_response_style_preference_for_refl
         motivation=_motivation(),
         role=_role(),
         plan=_plan(),
-        action_result=await executor.execute(_plan(), _event("Please answer briefly from now on."), _expression()),
+        action_result=await executor.execute(_plan(), _delivery()),
         expression=_expression(),
     )
 
@@ -234,7 +280,7 @@ async def test_persist_episode_marks_explicit_collaboration_preference_for_refle
         motivation=_motivation(),
         role=_role(),
         plan=_plan(),
-        action_result=await executor.execute(_plan(), _event("Can you walk me through this step by step?"), _expression()),
+        action_result=await executor.execute(_plan(), _delivery()),
         expression=_expression(),
     )
 
@@ -252,7 +298,7 @@ async def test_persist_episode_upserts_explicit_goal_signal() -> None:
         motivation=_motivation(),
         role=_role(),
         plan=_plan(),
-        action_result=await executor.execute(_plan(), _event("My goal is to ship the MVP this week."), _expression()),
+        action_result=await executor.execute(_plan(), _delivery()),
         expression=_expression(),
     )
 
@@ -283,7 +329,7 @@ async def test_persist_episode_upserts_task_signal_and_links_matching_goal() -> 
         motivation=_motivation(),
         role=_role(),
         plan=_plan(),
-        action_result=await executor.execute(_plan(), _event("I need to ship the MVP deployment blocker."), _expression()),
+        action_result=await executor.execute(_plan(), _delivery()),
         expression=_expression(),
     )
 
@@ -315,7 +361,7 @@ async def test_persist_episode_updates_matching_task_status_from_explicit_progre
         motivation=_motivation(),
         role=_role(),
         plan=_plan(),
-        action_result=await executor.execute(_plan(), _event("I fixed the deployment blocker."), _expression()),
+        action_result=await executor.execute(_plan(), _delivery()),
         expression=_expression(),
     )
 

@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -12,6 +13,8 @@ class Settings(BaseSettings):
     app_env: str = "development"
     app_port: int = 8000
     log_level: str = "INFO"
+    event_debug_enabled: bool | None = None
+    startup_schema_mode: Literal["migrate", "create_tables"] = "migrate"
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -36,6 +39,11 @@ class Settings(BaseSettings):
         if missing:
             joined = ", ".join(missing)
             raise ValueError(f"Missing required environment variables: {joined}")
+
+    def is_event_debug_enabled(self) -> bool:
+        if self.event_debug_enabled is not None:
+            return self.event_debug_enabled
+        return self.app_env.lower() != "production"
 
 
 @lru_cache(maxsize=1)

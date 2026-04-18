@@ -34,6 +34,21 @@ The foreground runtime currently passes structured state between stages. Dependi
 
 Not every stage receives every field.
 
+## Contract Ownership And Validation
+
+| Contract | Main code owner | Primary validation surface |
+| --- | --- | --- |
+| Event normalization (`Event`) | `app/core/events.py`, `app/api/routes.py` | `tests/test_event_normalization.py`, `tests/test_api_routes.py` |
+| Perception output | `app/agents/perception.py`, `app/core/contracts.py` | `tests/test_perception_agent.py`, `tests/test_runtime_pipeline.py` |
+| Context output | `app/agents/context.py`, `app/core/contracts.py` | `tests/test_context_agent.py`, `tests/test_runtime_pipeline.py` |
+| Motivation output | `app/motivation/engine.py`, `app/core/contracts.py` | `tests/test_motivation_engine.py`, `tests/test_runtime_pipeline.py` |
+| Role output | `app/agents/role.py`, `app/core/contracts.py` | `tests/test_role_agent.py`, `tests/test_runtime_pipeline.py` |
+| Plan output | `app/agents/planning.py`, `app/core/contracts.py` | `tests/test_planning_agent.py`, `tests/test_runtime_pipeline.py` |
+| Expression output | `app/expression/generator.py`, `app/core/contracts.py` | `tests/test_expression_agent.py`, `tests/test_runtime_pipeline.py` |
+| Action delivery and result | `app/core/runtime.py`, `app/core/action.py`, `app/integrations/delivery_router.py`, `app/core/contracts.py` | `tests/test_action_executor.py`, `tests/test_delivery_router.py`, `tests/test_runtime_pipeline.py`, `tests/test_api_routes.py` |
+| Memory record | `app/core/action.py`, `app/memory/repository.py`, `app/core/contracts.py` | `tests/test_action_executor.py`, `tests/test_memory_repository.py`, `tests/test_runtime_pipeline.py` |
+| Reflection durable contract | `app/reflection/worker.py`, `app/memory/repository.py` | `tests/test_reflection_worker.py`, `tests/test_api_routes.py` |
+
 ## Perception Agent
 
 ### Purpose
@@ -245,13 +260,28 @@ Prepare the user-visible reply before the action layer delivers it.
 
 Perform side effects and runtime persistence only after planning has been decided.
 
+### Expression-To-Action Handoff
+
+Runtime now creates an explicit `ActionDelivery` contract after expression:
+
+```json
+{
+  "delivery": {
+    "message": "...",
+    "tone": "...",
+    "channel": "api|telegram",
+    "language": "en",
+    "chat_id": "optional channel target"
+  }
+}
+```
+
 ### Input
 
 ```json
 {
   "plan": {},
-  "event": {},
-  "expression": {}
+  "delivery": {}
 }
 ```
 
@@ -343,29 +373,27 @@ Reflection currently persists lightweight updates such as:
 
 ## Runtime Result Contract
 
-`POST /event` currently returns the full `RuntimeResult`, which includes:
+`POST /event` now returns a compact public response by default:
 
 ```json
 {
-  "event": {},
-  "identity": {},
-  "active_goals": [],
-  "active_tasks": [],
-  "active_goal_milestones": [],
-  "goal_milestone_history": [],
-  "goal_progress_history": [],
-  "perception": {},
-  "context": {},
-  "motivation": {},
-  "role": {},
-  "plan": {},
-  "action_result": {},
-  "expression": {},
-  "memory_record": {},
-  "reflection_triggered": true,
-  "stage_timings_ms": {},
-  "duration_ms": 0
+  "event_id": "...",
+  "trace_id": "...",
+  "source": "api|telegram",
+  "reply": {
+    "message": "...",
+    "language": "en",
+    "tone": "...",
+    "channel": "api|telegram"
+  },
+  "runtime": {
+    "role": "...",
+    "motivation_mode": "respond|ignore|analyze|execute|clarify",
+    "action_status": "success|fail|noop",
+    "reflection_triggered": true
+  }
 }
 ```
 
-This is intentionally verbose today and is still treated as an internal debugging-friendly API contract rather than a final public DTO.
+`POST /event?debug=true` includes the full internal `RuntimeResult` payload for
+runtime debugging.

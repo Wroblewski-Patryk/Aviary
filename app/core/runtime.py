@@ -7,7 +7,7 @@ from app.agents.perception import PerceptionAgent
 from app.agents.planning import PlanningAgent
 from app.agents.role import RoleAgent
 from app.core.action import ActionExecutor
-from app.core.contracts import Event, RuntimeResult
+from app.core.contracts import ActionDelivery, Event, ExpressionOutput, RuntimeResult
 from app.core.logging import RuntimeLogContext, RuntimeStageLogger, get_logger
 from app.expression.generator import ExpressionAgent
 from app.identity.service import IdentityService
@@ -46,6 +46,18 @@ class RuntimeOrchestrator:
 
     def _present_label(self, value: object | None) -> str:
         return "yes" if value else "no"
+
+    def _build_action_delivery(self, *, event: Event, expression: ExpressionOutput) -> ActionDelivery:
+        channel = expression.channel if expression.channel in {"api", "telegram"} else "api"
+        raw_chat_id = event.payload.get("chat_id") if channel == "telegram" else None
+        chat_id = raw_chat_id if isinstance(raw_chat_id, (int, str)) else None
+        return ActionDelivery(
+            message=expression.message,
+            tone=expression.tone,
+            channel=channel,
+            language=expression.language,
+            chat_id=chat_id,
+        )
 
     def _run_stage(
         self,
@@ -407,15 +419,17 @@ class RuntimeOrchestrator:
                 f"message_len={len(result.message)}"
             ),
         )
+        action_delivery = self._build_action_delivery(event=event, expression=expression)
 
         action_result = await self._run_async_stage(
             stage_logger=stage_logger,
             stage_timings_ms=stage_timings_ms,
             stage="action",
             input_summary=(
-                f"needs_action={plan.needs_action} source={event.source} channel={expression.channel}"
+                f"needs_action={plan.needs_action} channel={action_delivery.channel} "
+                f"has_chat_id={self._present_label(action_delivery.chat_id)}"
             ),
-            operation=lambda: self.action_executor.execute(plan=plan, event=event, expression=expression),
+            operation=lambda: self.action_executor.execute(plan=plan, delivery=action_delivery),
             output_summary=lambda result: f"status={result.status} actions={len(result.actions)}",
         )
 

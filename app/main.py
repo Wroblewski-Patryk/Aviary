@@ -20,6 +20,34 @@ from app.motivation.engine import MotivationEngine
 from app.reflection.worker import ReflectionWorker
 
 
+def _log_runtime_policy_warnings(*, settings, logger) -> None:
+    environment = str(getattr(settings, "app_env", "")).strip().lower()
+    debug_toggle = getattr(settings, "is_event_debug_enabled", None)
+    if callable(debug_toggle):
+        event_debug_enabled = bool(debug_toggle())
+    else:
+        event_debug_enabled = bool(getattr(settings, "event_debug_enabled", True))
+    event_debug_source = (
+        "explicit"
+        if getattr(settings, "event_debug_enabled", None) is not None
+        else "environment_default"
+    )
+    startup_schema_mode = str(getattr(settings, "startup_schema_mode", "migrate")).strip().lower()
+    if environment == "production" and event_debug_enabled:
+        logger.warning(
+            "runtime_policy_warning env=%s event_debug_enabled=%s source=%s recommendation=disable_debug_payload_in_production",
+            settings.app_env,
+            event_debug_enabled,
+            event_debug_source,
+        )
+    if environment == "production" and startup_schema_mode == "create_tables":
+        logger.warning(
+            "runtime_policy_warning env=%s startup_schema_mode=%s recommendation=use_migration_first_startup_in_production",
+            settings.app_env,
+            startup_schema_mode,
+        )
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     settings = get_settings()
@@ -27,10 +55,21 @@ async def lifespan(app: FastAPI):
 
     setup_logging(settings.log_level)
     logger = get_logger("aion.app")
+    _log_runtime_policy_warnings(settings=settings, logger=logger)
 
     database = Database(settings.database_url)  # type: ignore[arg-type]
     memory_repository = MemoryRepository(database.session_factory)
-    await memory_repository.create_tables(database.engine)
+    if settings.startup_schema_mode == "create_tables":
+        await memory_repository.create_tables(database.engine)
+        logger.warning(
+            "schema_bootstrap mode=%s action=create_tables note=compatibility_path",
+            settings.startup_schema_mode,
+        )
+    else:
+        logger.info(
+            "schema_bootstrap mode=%s action=skip_create_tables note=expect_migrations",
+            settings.startup_schema_mode,
+        )
 
     telegram_client = TelegramClient(settings.telegram_bot_token)
     openai_client = OpenAIClient(

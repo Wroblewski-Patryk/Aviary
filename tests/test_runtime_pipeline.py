@@ -302,6 +302,95 @@ async def test_runtime_pipeline_api_source() -> None:
     assert "constructive support" in openai.calls[0]["identity_summary"]
 
 
+async def test_runtime_pipeline_builds_explicit_action_delivery_contract() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+
+    captured_delivery = None
+    original_execute = action.execute
+
+    async def capture_execute(plan, delivery):
+        nonlocal captured_delivery
+        captured_delivery = delivery
+        return await original_execute(plan, delivery)
+
+    action.execute = capture_execute  # type: ignore[method-assign]
+
+    event = Event(
+        event_id="evt-delivery-contract",
+        source="telegram",
+        subsource="user_message",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "hello from telegram", "chat_id": 777},
+        meta=EventMeta(user_id="u-1", trace_id="t-delivery-contract"),
+    )
+
+    result = await runtime.run(event)
+
+    assert result.action_result.status == "success"
+    assert result.action_result.actions == ["send_telegram_message"]
+    assert captured_delivery is not None
+    assert captured_delivery.channel == "telegram"
+    assert captured_delivery.chat_id == 777
+    assert captured_delivery.message == "Mocked OpenAI reply"
+    assert captured_delivery.language == "en"
+
+
+async def test_runtime_pipeline_contract_smoke_pins_stage_and_action_boundary_invariants() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+
+    event = Event(
+        event_id="evt-contract-smoke",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "Please summarize the current runtime contract."},
+        meta=EventMeta(user_id="u-1", trace_id="t-contract-smoke"),
+    )
+
+    result = await runtime.run(event)
+
+    stage_order = list(result.stage_timings_ms.keys())
+    assert stage_order.index("expression") < stage_order.index("action")
+    assert stage_order.index("action") < stage_order.index("memory_persist")
+    assert stage_order[-1] == "total"
+    assert result.event.event_id == event.event_id
+    assert result.event.meta.trace_id == event.meta.trace_id
+    assert result.action_result.status == "success"
+    assert result.action_result.actions == ["api_response"]
+    assert result.expression.channel == "api"
+    assert result.memory_record is not None
+    assert result.memory_record.event_id == event.event_id
+    assert result.reflection_triggered is True
+
+
 async def test_runtime_pipeline_emits_structured_stage_logs(caplog) -> None:
     memory = FakeMemoryRepository(recent_memory=[])
     action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())

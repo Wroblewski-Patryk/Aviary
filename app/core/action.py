@@ -1,4 +1,5 @@
 from app.core.contracts import (
+    ActionDelivery,
     ActionResult,
     ContextOutput,
     Event,
@@ -9,6 +10,7 @@ from app.core.contracts import (
     PlanOutput,
     RoleOutput,
 )
+from app.integrations.delivery_router import DeliveryRouter
 from app.integrations.telegram.client import TelegramClient
 from app.memory.episodic import build_episode_summary
 from app.memory.repository import MemoryRepository
@@ -22,35 +24,12 @@ class ActionExecutor:
 
     def __init__(self, memory_repository: MemoryRepository, telegram_client: TelegramClient):
         self.memory_repository = memory_repository
-        self.telegram_client = telegram_client
+        self.delivery_router = DeliveryRouter(telegram_client=telegram_client)
 
-    async def execute(self, plan: PlanOutput, event: Event, expression: ExpressionOutput) -> ActionResult:
+    async def execute(self, plan: PlanOutput, delivery: ActionDelivery) -> ActionResult:
         if not plan.needs_response:
             return ActionResult(status="noop", actions=[], notes="No response required.")
-
-        if event.source == "telegram":
-            chat_id = event.payload.get("chat_id")
-            if chat_id is None:
-                return ActionResult(
-                    status="fail",
-                    actions=[],
-                    notes="Telegram response requested but chat_id is missing.",
-                )
-
-            telegram_result = await self.telegram_client.send_message(chat_id=chat_id, text=expression.message)
-            if telegram_result.get("ok"):
-                return ActionResult(
-                    status="success",
-                    actions=["send_telegram_message"],
-                    notes="Telegram message sent.",
-                )
-            return ActionResult(
-                status="fail",
-                actions=["send_telegram_message"],
-                notes=f"Telegram API error: {telegram_result}",
-            )
-
-        return ActionResult(status="success", actions=["api_response"], notes="Response returned via API.")
+        return await self.delivery_router.deliver(delivery)
 
     async def persist_episode(
         self,

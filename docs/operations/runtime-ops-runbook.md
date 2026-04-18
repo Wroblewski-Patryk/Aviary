@@ -19,6 +19,20 @@ This runbook covers the currently implemented AION MVP service, not the full lon
   - `GET /health`
 - Docker compose stack includes health checks for Postgres and, in the Coolify variant, the app container.
 
+`GET /health` now includes a `runtime_policy` object with non-secret active
+runtime flags (for example `startup_schema_mode`, `event_debug_enabled`, and
+`event_debug_source`) so operators can verify active policy during incident
+triage and release smoke.
+
+On startup, production now emits an explicit warning when
+`EVENT_DEBUG_ENABLED=true`. Treat this warning as a release-hardening signal:
+disable debug payload exposure in production unless there is a short-lived,
+intentional incident-debug window.
+
+On startup, production also emits an explicit warning when
+`STARTUP_SCHEMA_MODE=create_tables`. Treat this as a temporary compatibility
+path warning: production should normally run migration-first startup mode.
+
 ## Required Environment Variables
 
 - `DATABASE_URL`
@@ -34,6 +48,9 @@ Production-only required in practice:
 Recommended when Telegram webhooks are enabled:
 
 - `TELEGRAM_WEBHOOK_SECRET`
+- `EVENT_DEBUG_ENABLED` to control whether `POST /event?debug=true` can expose
+  full internal runtime payloads (production default is disabled unless
+  explicitly enabled)
 
 ## Common Operator Flows
 
@@ -99,7 +116,7 @@ with a webhook URL and optional secret token.
 
 - there is no background queue or worker isolation yet
 - reflection is durable but still app-local, not isolated into a separate worker process yet
-- startup table creation still coexists with the new Alembic baseline during the current migration transition
+- startup now defaults to migration-first schema ownership; `create_tables()` remains only as a compatibility path behind `STARTUP_SCHEMA_MODE=create_tables`
 - runtime logging is present, but there is no external observability stack yet
 - proactive systems are still architectural intent, not live ops surfaces
 

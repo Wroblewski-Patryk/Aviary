@@ -1,6 +1,6 @@
 # PROJECT_STATE
 
-Last updated: 2026-04-18
+Last updated: 2026-04-19
 
 ## Product Snapshot
 
@@ -30,6 +30,23 @@ Last updated: 2026-04-18
   shared utility owners in `app/utils/goal_task_selection.py` and
   `app/utils/progress_signals.py`, and runtime heuristics consume those helpers
   across context, planning, motivation, and reflection.
+- 2026-04-18: event normalization now enforces an explicit API boundary
+  (`source=api`, `subsource=event_endpoint`, normalized `payload.text`) and
+  keeps debug details behind the explicit debug response path.
+- 2026-04-18: startup schema ownership now defaults to migration-first behavior,
+  while `create_tables()` remains only as an explicit compatibility mode.
+- 2026-04-18: runtime now passes an explicit `ActionDelivery` contract from
+  expression into action, keeping side effects inside action while reducing
+  implicit stage coupling.
+- 2026-04-18: action delivery now routes through an integration-level
+  dispatcher (`DeliveryRouter`) so channel dispatch logic is owned by
+  integrations while the action boundary remains explicit.
+- 2026-04-19: startup now emits an explicit production warning when
+  `EVENT_DEBUG_ENABLED=true`, so debug payload exposure policy is visible in
+  logs before serving requests.
+- 2026-04-19: debug payload exposure now uses environment-aware defaults:
+  enabled by default in non-production, disabled by default in production
+  unless explicitly enabled.
 
 ## Technical Baseline
 
@@ -82,19 +99,16 @@ Last updated: 2026-04-18
 
 ## Current Focus
 
-- Main active objective: harden runtime contracts that future behavior depends
-  on before adding more heuristics
-- Active execution queue remains `PRJ-015` through `PRJ-016`; later
-  architecture-alignment work is staged after that queue instead of mixed into
-  it
+- Main active objective: make stage boundaries and architecture traceability
+  explicit without regressing current runtime behavior
+- Active execution queue through `PRJ-025` is complete.
 - Top blockers:
-  - startup is still on a temporary dual-path schema model: Alembic baseline
-    plus startup `create_tables()`
-  - event normalization rules are still too implicit compared with the desired
-    public API boundary
+  - no next post-`PRJ-025` slice is registered yet; next task should be derived
+    from open decisions
 - Success criteria for this phase:
   - shared goal and milestone signals keep one clear implementation owner
   - runtime stage decisions are observable through structured logs
+  - event and startup contracts stay explicit and regression-covered
   - docs, task board, learning journal, and code stay synchronized after each
     slice
 
@@ -120,6 +134,35 @@ Last updated: 2026-04-18
   `Stage Boundary Alignment` and `Architecture Traceability And Contract Tests`
   groups so architecture-parity follow-up is visible without displacing the
   current execution order.
+- 2026-04-18: `PRJ-015` and `PRJ-016` are complete: API boundary normalization
+  is explicit and test-covered, and startup now defaults to migration-first with
+  an explicit compatibility toggle.
+- 2026-04-18: `PRJ-017` is complete: expression-to-action handoff now uses a
+  dedicated `ActionDelivery` contract and regression tests pin the API/Telegram
+  delivery path through that contract.
+- 2026-04-18: `PRJ-019` is complete: overview and architecture docs now map
+  runtime stages to code ownership and primary validation surfaces, with public
+  vs debug runtime contract boundaries made explicit.
+- 2026-04-18: `PRJ-018` is complete: action delivery dispatch moved to
+  integration ownership through `DeliveryRouter`, preserving API/Telegram
+  behavior while reducing action/integration coupling.
+- 2026-04-18: `PRJ-020` is complete: runtime flow now has contract-level smoke
+  tests across runtime pipeline, API response shape, and stage-level logging
+  payload invariants.
+- 2026-04-18: `PRJ-021` is complete: debug payload exposure for
+  `POST /event?debug=true` is now explicitly gated by config and covered by API
+  and config tests.
+- 2026-04-19: `PRJ-022` is complete: `/health` now exposes non-secret runtime
+  policy flags (`startup_schema_mode`, `event_debug_enabled`) for operator
+  traceability, with API tests and docs synchronized.
+- 2026-04-19: `PRJ-023` is complete: startup now warns when production runs with
+  debug payload exposure enabled, with targeted tests and docs synchronized.
+- 2026-04-19: `PRJ-024` is complete: startup now warns when production runs in
+  schema compatibility mode (`STARTUP_SCHEMA_MODE=create_tables`), with
+  targeted tests and docs synchronized.
+- 2026-04-19: `PRJ-025` is complete: debug payload policy now has production-safe
+  default behavior with explicit source visibility in `/health`, and tests/docs
+  are synchronized.
 
 ## Working Agreements
 

@@ -20,23 +20,34 @@ The current repo already works as an MVP slice, but several architecture-level d
 
 - Current repo fact:
   - the repo now has an Alembic baseline rooted in the current SQLAlchemy metadata, with an initial revision under `migrations/versions/`.
-  - startup still creates tables automatically on app boot through `MemoryRepository.create_tables()`.
+  - startup now defaults to migration-first behavior and skips `create_tables()` unless `STARTUP_SCHEMA_MODE=create_tables` is explicitly enabled.
+  - `GET /health` now exposes active non-secret runtime policy flags, including `startup_schema_mode`, so operators can verify migration policy on the live runtime.
+  - startup now emits a production warning when `STARTUP_SCHEMA_MODE=create_tables` to keep compatibility mode visible in runtime logs.
 - Decision needed:
-  - when should runtime and deployment move from this temporary dual path into a strict migration-first flow, and when is it safe to remove startup `create_tables()`?
+  - when is it safe to remove the compatibility-only `create_tables()` path entirely and keep strict migration-only startup in every environment?
+  - should production eventually hard-fail startup for this schema-policy
+    mismatch, or keep warning-only behavior?
 
 ### 3. Public API Shape
 
 - Current repo fact:
   - `POST /event` now returns a smaller public response by default: event identifiers, reply payload, and a compact runtime summary.
-  - the full serialized runtime result is now exposed only through the explicit debug path `POST /event?debug=true`.
+  - the full serialized runtime result is exposed through `POST /event?debug=true` and is guarded by explicit config (`EVENT_DEBUG_ENABLED`) with environment-aware defaults (enabled in non-production, disabled in production unless explicitly enabled).
+  - `GET /health` now exposes `event_debug_enabled` and `event_debug_source` so operators can verify both effective policy and whether it came from explicit config or environment default behavior.
+  - startup now emits a production warning when `EVENT_DEBUG_ENABLED=true` so the policy remains visible even before handling requests.
 - Decision needed:
   - should the full debug payload remain available on the same endpoint through `debug=true`, or should it move to a more clearly internal-only path before wider production use?
+  - should the config default stay open for local-first debugging, or switch to
+    disabled-by-default for production-hardening?
+  - should production eventually hard-fail startup for this policy mismatch, or
+    keep warning-only behavior?
 
 ### 3a. Expression vs Action Ordering
 
 - Current repo fact:
   - the intended architecture still describes `... -> action -> expression -> memory -> reflection`.
-  - the current orchestrator computes `expression` before `action`, then passes the prepared message into the action layer so integrations can reuse a ready channel-specific payload while side effects still remain inside action.
+  - the current orchestrator computes `expression` before `action`, then passes an explicit `ActionDelivery` handoff into the action layer.
+  - action now delegates channel delivery to integration-owned routing (`DeliveryRouter`), so integration dispatch consumes the explicit handoff while side effects still remain action-triggered.
 - Decision needed:
   - should runtime keep this expression-before-action implementation detail, or should action consume a lower-level response plan so final expression can move back after action in a stricter architecture-aligned pipeline?
 

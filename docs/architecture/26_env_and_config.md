@@ -96,6 +96,28 @@ Options:
 
 ---
 
+STARTUP_SCHEMA_MODE  
+Controls schema bootstrap strategy on app startup.
+
+Allowed values:
+
+- migrate (default)
+- create_tables (compatibility fallback)
+
+---
+
+EVENT_DEBUG_ENABLED  
+Controls whether `POST /event?debug=true` can return the full internal runtime
+payload.
+
+Default:
+
+- environment-aware default:
+  - non-production: enabled
+  - production: disabled unless explicitly set
+
+---
+
 REFLECTION_INTERVAL  
 Controls background loop frequency  
 

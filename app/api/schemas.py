@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from app.core.contracts import RuntimeResult
+from app.core.contracts import MotivationMode, RuntimeResult
 
 
 class EventReplyResponse(BaseModel):
@@ -12,7 +12,7 @@ class EventReplyResponse(BaseModel):
 
 class EventRuntimeResponse(BaseModel):
     role: str
-    motivation_mode: str
+    motivation_mode: MotivationMode
     action_status: str
     reflection_triggered: bool
 

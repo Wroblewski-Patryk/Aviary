@@ -140,6 +140,14 @@ class ExpressionOutput(BaseModel):
     language: str
 
 
+class ActionDelivery(BaseModel):
+    message: str
+    tone: str
+    channel: Literal["api", "telegram"]
+    language: str
+    chat_id: int | str | None = None
+
+
 class MemoryRecord(BaseModel):
     id: int | None = None
     event_id: str
