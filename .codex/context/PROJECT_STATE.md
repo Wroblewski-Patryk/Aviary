@@ -52,6 +52,8 @@ Last updated: 2026-04-19
   on startup.
 - 2026-04-19: startup strict-policy fail-fast behavior is now pinned with a
   lifespan-level regression test that verifies block-before-database-init.
+- 2026-04-19: startup strict-policy fail-fast lifecycle coverage now spans both
+  mismatch families (debug exposure and schema compatibility mode).
 
 ## Technical Baseline
 
@@ -106,9 +108,9 @@ Last updated: 2026-04-19
 
 - Main active objective: make stage boundaries and architecture traceability
   explicit without regressing current runtime behavior
-- Active execution queue through `PRJ-027` is complete.
+- Active execution queue through `PRJ-028` is complete.
 - Top blockers:
-  - no next post-`PRJ-027` slice is registered yet; next task should be derived
+  - no next post-`PRJ-028` slice is registered yet; next task should be derived
     from open decisions
 - Success criteria for this phase:
   - shared goal and milestone signals keep one clear implementation owner
@@ -174,6 +176,9 @@ Last updated: 2026-04-19
 - 2026-04-19: `PRJ-027` is complete: startup strict-policy behavior now has a
   lifespan-level fail-fast regression test that confirms policy mismatch blocks
   runtime before database initialization.
+- 2026-04-19: `PRJ-028` is complete: strict startup-policy lifecycle tests now
+  cover both debug and schema mismatch paths, confirming fail-fast behavior
+  before database initialization side effects.
 
 ## Working Agreements
 

@@ -15,7 +15,7 @@ Last updated: 2026-04-19
   - run relevant tests and validations
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
-- The current planned queue through `PRJ-027` is complete.
+- The current planned queue through `PRJ-028` is complete.
 - Next executable slices should be derived from:
   - `docs/planning/next-iteration-plan.md`
   - `docs/planning/open-decisions.md`
@@ -238,6 +238,18 @@ Last updated: 2026-04-19
   - Result:
     - startup strict-policy fail-fast behavior is now pinned at `lifespan` entry, not only in helper-level policy tests
     - regression test confirms mismatch block happens before database initialization side effects
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_main_lifespan_policy.py tests/test_main_runtime_policy.py tests/test_config.py tests/test_api_routes.py`
+- [x] PRJ-028 Add lifespan-level fail-fast regression coverage for strict schema mismatch
+  - Status: DONE
+  - Group: Runtime Ops Visibility
+  - Owner: QA/Test
+  - Depends on: PRJ-027
+  - Priority: P3
+  - Result:
+    - startup strict-policy fail-fast behavior is now lifecycle-covered for both mismatch families
+      (`EVENT_DEBUG_ENABLED=true` and `STARTUP_SCHEMA_MODE=create_tables`)
+    - regression tests confirm strict-mode mismatch blocks runtime before database initialization in both cases
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_main_lifespan_policy.py tests/test_main_runtime_policy.py tests/test_config.py tests/test_api_routes.py`
 - [x] PRJ-011 Extract shared goal/task selection helpers
