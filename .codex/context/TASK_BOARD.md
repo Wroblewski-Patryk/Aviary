@@ -18,32 +18,24 @@ Last updated: 2026-04-18
 
 ## READY
 
-- [ ] PRJ-014 Add a reusable stage-level structured logging scaffold
-  - Status: READY
-  - Group: Observability And Runtime Honesty
-  - Owner: Backend Builder
-  - Depends on: none
-  - Priority: P2
-  - Files:
-    - `app/core/runtime.py`
-    - `app/core/logging.py`
-  - Done when:
-    - each runtime stage logs success or failure with `event_id`, `trace_id`,
-      stage, and duration
-    - stage logs include short summaries instead of raw payload dumps
-    - related docs or project state mention the new observability surface if it
-      changes repo truth
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py`
-
-## BACKLOG
-
 - [ ] PRJ-011 Extract shared goal/task selection helpers
-  - Status: BACKLOG
+  - Status: READY
   - Group: Shared Signal Engine Extraction
   - Owner: Backend Builder
   - Depends on: none
   - Priority: P1
+  - Files:
+    - `app/agents/context.py`
+    - `app/agents/planning.py`
+    - `app/motivation/engine.py`
+    - `app/utils/`
+  - Done when:
+    - tokenization, priority ranking, task-status ranking, and related-goal selection no longer live in multiple copies
+    - behavior stays unchanged
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_context_agent.py tests/test_motivation_engine.py tests/test_planning_agent.py tests/test_runtime_pipeline.py`
+
+## BACKLOG
 
 - [ ] PRJ-012 Extract shared goal-progress and milestone-history signal helpers
   - Status: BACKLOG
@@ -89,3 +81,18 @@ Last updated: 2026-04-18
 
 - [x] PRJ-000 Establish Personality-specific agent workflow scaffolding
 - [x] PRJ-001..PRJ-010 Runtime contract, release-smoke, memory, and motivation alignment slices completed and captured in docs and tests
+- [x] PRJ-014 Add a reusable stage-level structured logging scaffold
+  - Status: DONE
+  - Group: Observability And Runtime Honesty
+  - Owner: Backend Builder
+  - Depends on: none
+  - Priority: P2
+  - Files:
+    - `app/core/runtime.py`
+    - `app/core/logging.py`
+  - Done when:
+    - each runtime stage logs success or failure with `event_id`, `trace_id`, stage, and duration
+    - stage logs include short summaries instead of raw payload dumps
+    - related docs or project state mention the new observability surface if it changes repo truth
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py`

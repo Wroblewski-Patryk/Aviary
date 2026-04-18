@@ -37,6 +37,10 @@ Completed on 2026-04-17:
 - `PRJ-009` normalized motivation to the documented shared mode set while keeping emotional support visible through role, valence, planning, and expression tone.
 - `PRJ-010` added explicit emotional-turn contract tests that describe supportive behavior through the documented runtime surfaces instead of an extra motivation mode.
 
+Completed on 2026-04-18:
+
+- `PRJ-014` added a reusable structured runtime-stage logging scaffold with `start/success/failure` logs, short summaries, and regression coverage for both success and failure paths.
+
 ## Highest-Risk Gaps
 
 ### 1. Episodic memory is still a machine-readable string contract
@@ -93,19 +97,19 @@ Why it matters:
 - the same concept can drift across stages
 - future changes will keep multiplying maintenance cost
 
-### 5. Logging is still below the `docs/basics/17_logging_and_debugging.md` target
+### 5. Logging still needs to grow beyond the new stage scaffold
 
 Current behavior:
 
 - runtime start/end logs exist
 - reflection logs exist
 - per-stage timing exists in the returned result
+- runtime stages now emit structured `start/success/failure` logs with short summaries
 
 Missing compared with basics:
 
-- consistent stage-level input/output summaries
-- consistent per-stage failure logging
-- a reusable structured logging scaffold
+- richer cross-component summaries outside the orchestrator
+- broader adoption of the scaffold in non-runtime services where useful
 
 ### 6. Database bootstrap still uses a temporary dual path
 
@@ -189,14 +193,10 @@ This group reduces drift and prepares the runtime for future behavior changes.
 
 This group makes the system easier to operate and safer to evolve.
 
-- `PRJ-014` Add a reusable stage-level structured logging scaffold to the runtime.
-  - Files: `app/core/runtime.py`, `app/core/logging.py`, stage modules only if minimal summaries are needed, related tests if added
-  - Depends on: none
-  - Done when:
-    - each stage emits start/end or success/failure logs with `event_id`, `trace_id`, stage name, and duration
-    - stage logs include short input/output summaries rather than raw payload dumps
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py`
+- `PRJ-014` is complete.
+  - Result:
+    - runtime stages now emit structured `start/success/failure` logs with `event_id`, `trace_id`, stage name, duration, and short summaries
+    - regression tests cover both the happy path and a `memory_persist` failure path
 
 - `PRJ-015` Tighten the event normalization and public API boundary.
   - Files: `app/core/events.py`, `app/api/routes.py`, `app/api/schemas.py`, related tests
@@ -223,29 +223,28 @@ This group makes the system easier to operate and safer to evolve.
 
 These tasks are intentionally chosen so different execution agents can work in parallel with minimal overlap:
 
-- Lane A: `PRJ-006`
-  - ownership: memory schema, repository, action persistence
-- Lane B: `PRJ-009`
-  - ownership: motivation/planning/expression contract alignment
-- Lane C: `PRJ-014`
-  - ownership: runtime logging scaffold
+- Completed lane examples:
+  - `PRJ-006`
+    - ownership: memory schema, repository, action persistence
+  - `PRJ-009`
+    - ownership: motivation/planning/expression contract alignment
+  - `PRJ-014`
+    - ownership: runtime logging scaffold
 
-After those finish:
+After those finished:
 
-- run `PRJ-007`
-- then run `PRJ-011` and `PRJ-015`
+- run `PRJ-011` and `PRJ-015`
 - then run `PRJ-012`
 - then run `PRJ-013`
 - finish with `PRJ-016`
 
 ## Recommended Execution Order
 
-1. `PRJ-014`
-2. `PRJ-011`
-3. `PRJ-015`
-4. `PRJ-012`
-5. `PRJ-013`
-6. `PRJ-016`
+1. `PRJ-011`
+2. `PRJ-015`
+3. `PRJ-012`
+4. `PRJ-013`
+5. `PRJ-016`
 
 ## Handoff Rules For Execution Agents
 

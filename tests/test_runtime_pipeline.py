@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timezone
 
 from app.agents.context import ContextAgent
@@ -154,6 +155,11 @@ class FakeMemoryRepository:
         return None
 
 
+class FailingWriteMemoryRepository(FakeMemoryRepository):
+    async def write_episode(self, **kwargs) -> dict:
+        raise RuntimeError("database unavailable")
+
+
 class FakeTelegramClient:
     async def send_message(self, chat_id: int | str, text: str) -> dict:
         return {"ok": True}
@@ -294,6 +300,118 @@ async def test_runtime_pipeline_api_source() -> None:
     assert openai.calls[0]["response_tone"] == "supportive"
     assert openai.calls[0]["collaboration_preference"] == ""
     assert "constructive support" in openai.calls[0]["identity_summary"]
+
+
+async def test_runtime_pipeline_emits_structured_stage_logs(caplog) -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+    caplog.set_level("INFO", logger="aion.runtime")
+
+    event = Event(
+        event_id="evt-log-success",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "hello"},
+        meta=EventMeta(user_id="u-1", trace_id="t-log-success"),
+    )
+
+    await runtime.run(event)
+
+    stage_logs = [
+        json.loads(record.getMessage())
+        for record in caplog.records
+        if record.name == "aion.runtime" and record.getMessage().startswith("{")
+    ]
+
+    assert {
+        (entry["stage"], entry["status"])
+        for entry in stage_logs
+        if entry.get("kind") == "runtime_stage"
+    } >= {
+        ("memory_load", "start"),
+        ("memory_load", "success"),
+        ("perception", "start"),
+        ("perception", "success"),
+        ("expression", "success"),
+        ("memory_persist", "success"),
+        ("state_refresh", "success"),
+    }
+    perception_success = next(
+        entry
+        for entry in stage_logs
+        if entry.get("kind") == "runtime_stage"
+        and entry["stage"] == "perception"
+        and entry["status"] == "success"
+    )
+    assert perception_success["event_id"] == "evt-log-success"
+    assert perception_success["trace_id"] == "t-log-success"
+    assert "topic=general" in perception_success["summary"]
+    assert perception_success["duration_ms"] >= 0
+
+
+async def test_runtime_pipeline_emits_stage_failure_log_for_memory_persist(caplog) -> None:
+    memory = FailingWriteMemoryRepository(recent_memory=[])
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+    caplog.set_level("INFO", logger="aion.runtime")
+
+    event = Event(
+        event_id="evt-log-failure",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "hello"},
+        meta=EventMeta(user_id="u-1", trace_id="t-log-failure"),
+    )
+
+    result = await runtime.run(event)
+
+    stage_logs = [
+        json.loads(record.getMessage())
+        for record in caplog.records
+        if record.name == "aion.runtime" and record.getMessage().startswith("{")
+    ]
+    memory_persist_failure = next(
+        entry
+        for entry in stage_logs
+        if entry.get("kind") == "runtime_stage"
+        and entry["stage"] == "memory_persist"
+        and entry["status"] == "failure"
+    )
+
+    assert result.memory_record is None
+    assert result.reflection_triggered is False
+    assert memory_persist_failure["event_id"] == "evt-log-failure"
+    assert memory_persist_failure["trace_id"] == "t-log-failure"
+    assert memory_persist_failure["error_type"] == "RuntimeError"
+    assert "database unavailable" in memory_persist_failure["error"]
+    assert memory_persist_failure["duration_ms"] >= 0
 
 
 async def test_runtime_pipeline_routes_emotional_turn_through_documented_contract() -> None:

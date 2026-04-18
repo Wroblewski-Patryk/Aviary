@@ -1,5 +1,6 @@
 import asyncio
 from time import perf_counter
+from typing import Awaitable, Callable, TypeVar
 
 from app.agents.context import ContextAgent
 from app.agents.perception import PerceptionAgent
@@ -7,12 +8,14 @@ from app.agents.planning import PlanningAgent
 from app.agents.role import RoleAgent
 from app.core.action import ActionExecutor
 from app.core.contracts import Event, RuntimeResult
-from app.core.logging import get_logger
+from app.core.logging import RuntimeLogContext, RuntimeStageLogger, get_logger
 from app.expression.generator import ExpressionAgent
 from app.identity.service import IdentityService
 from app.memory.repository import MemoryRepository
 from app.motivation.engine import MotivationEngine
 from app.reflection.worker import ReflectionWorker
+
+T = TypeVar("T")
 
 
 class RuntimeOrchestrator:
@@ -40,6 +43,59 @@ class RuntimeOrchestrator:
         self.reflection_worker = reflection_worker
         self.identity_service = identity_service or IdentityService()
         self.logger = get_logger("aion.runtime")
+
+    def _present_label(self, value: object | None) -> str:
+        return "yes" if value else "no"
+
+    def _run_stage(
+        self,
+        *,
+        stage_logger: RuntimeStageLogger,
+        stage_timings_ms: dict[str, int],
+        stage: str,
+        input_summary: str,
+        operation: Callable[[], T],
+        output_summary: Callable[[T], str],
+    ) -> T:
+        stage_logger.start(stage, summary=input_summary)
+        started = perf_counter()
+        try:
+            result = operation()
+        except Exception as exc:
+            duration_ms = int((perf_counter() - started) * 1000)
+            stage_timings_ms[stage] = duration_ms
+            stage_logger.failure(stage, duration_ms=duration_ms, error=exc, summary=input_summary)
+            raise
+
+        duration_ms = int((perf_counter() - started) * 1000)
+        stage_timings_ms[stage] = duration_ms
+        stage_logger.success(stage, duration_ms=duration_ms, summary=output_summary(result))
+        return result
+
+    async def _run_async_stage(
+        self,
+        *,
+        stage_logger: RuntimeStageLogger,
+        stage_timings_ms: dict[str, int],
+        stage: str,
+        input_summary: str,
+        operation: Callable[[], Awaitable[T]],
+        output_summary: Callable[[T], str],
+    ) -> T:
+        stage_logger.start(stage, summary=input_summary)
+        started = perf_counter()
+        try:
+            result = await operation()
+        except Exception as exc:
+            duration_ms = int((perf_counter() - started) * 1000)
+            stage_timings_ms[stage] = duration_ms
+            stage_logger.failure(stage, duration_ms=duration_ms, error=exc, summary=input_summary)
+            raise
+
+        duration_ms = int((perf_counter() - started) * 1000)
+        stage_timings_ms[stage] = duration_ms
+        stage_logger.success(stage, duration_ms=duration_ms, summary=output_summary(result))
+        return result
 
     def _goal_priority_rank(self, priority: str) -> int:
         return {
@@ -109,140 +165,259 @@ class RuntimeOrchestrator:
     async def run(self, event: Event) -> RuntimeResult:
         started = perf_counter()
         stage_timings_ms: dict[str, int] = {}
-        self.logger.info("start event_id=%s trace_id=%s", event.event_id, event.meta.trace_id)
-
-        stage_started = perf_counter()
-        memory, user_profile, user_preferences, user_conclusions, user_theta, active_goals = await asyncio.gather(
-            self.memory_repository.get_recent_for_user(user_id=event.meta.user_id, limit=5),
-            self.memory_repository.get_user_profile(user_id=event.meta.user_id),
-            self.memory_repository.get_user_runtime_preferences(user_id=event.meta.user_id),
-            self.memory_repository.get_user_conclusions(user_id=event.meta.user_id, limit=3),
-            self.memory_repository.get_user_theta(user_id=event.meta.user_id),
-            self.memory_repository.get_active_goals(user_id=event.meta.user_id, limit=5),
+        log_context = RuntimeLogContext(
+            event_id=event.event_id,
+            trace_id=event.meta.trace_id,
+            source=event.source,
         )
-        stage_timings_ms["memory_load"] = int((perf_counter() - stage_started) * 1000)
+        stage_logger = RuntimeStageLogger(self.logger, log_context)
+        self.logger.info("start event_id=%s trace_id=%s source=%s", event.event_id, event.meta.trace_id, event.source)
 
-        stage_started = perf_counter()
-        active_tasks = await self.memory_repository.get_active_tasks(
-            user_id=event.meta.user_id,
-            goal_ids=[int(goal["id"]) for goal in active_goals if goal.get("id") is not None],
-            limit=5,
-        )
-        stage_timings_ms["task_load"] = int((perf_counter() - stage_started) * 1000)
+        async def load_memory_bundle():
+            return await asyncio.gather(
+                self.memory_repository.get_recent_for_user(user_id=event.meta.user_id, limit=5),
+                self.memory_repository.get_user_profile(user_id=event.meta.user_id),
+                self.memory_repository.get_user_runtime_preferences(user_id=event.meta.user_id),
+                self.memory_repository.get_user_conclusions(user_id=event.meta.user_id, limit=3),
+                self.memory_repository.get_user_theta(user_id=event.meta.user_id),
+                self.memory_repository.get_active_goals(user_id=event.meta.user_id, limit=5),
+            )
 
-        stage_started = perf_counter()
-        active_goal_milestones = await self.memory_repository.get_active_goal_milestones(
-            user_id=event.meta.user_id,
-            goal_ids=[int(goal["id"]) for goal in active_goals if goal.get("id") is not None],
-            limit=5,
+        memory, user_profile, user_preferences, user_conclusions, user_theta, active_goals = await self._run_async_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="memory_load",
+            input_summary=f"user_id={event.meta.user_id}",
+            operation=load_memory_bundle,
+            output_summary=lambda result: (
+                "memory="
+                f"{len(result[0])} profile={self._present_label(result[1])} preferences={len(result[2])} "
+                f"conclusions={len(result[3])} theta={self._present_label(result[4])} goals={len(result[5])}"
+            ),
         )
-        stage_timings_ms["goal_milestone_load"] = int((perf_counter() - stage_started) * 1000)
+
+        goal_ids = [int(goal["id"]) for goal in active_goals if goal.get("id") is not None]
+        active_tasks = await self._run_async_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="task_load",
+            input_summary=f"goal_ids={len(goal_ids)}",
+            operation=lambda: self.memory_repository.get_active_tasks(
+                user_id=event.meta.user_id,
+                goal_ids=goal_ids,
+                limit=5,
+            ),
+            output_summary=lambda result: f"tasks={len(result)}",
+        )
+
+        raw_goal_milestones = await self._run_async_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="goal_milestone_load",
+            input_summary=f"goal_ids={len(goal_ids)}",
+            operation=lambda: self.memory_repository.get_active_goal_milestones(
+                user_id=event.meta.user_id,
+                goal_ids=goal_ids,
+                limit=5,
+            ),
+            output_summary=lambda result: f"milestones={len(result)}",
+        )
         active_goal_milestones = self._enrich_goal_milestones(
-            active_goal_milestones=active_goal_milestones,
+            active_goal_milestones=raw_goal_milestones,
             user_preferences=user_preferences,
             active_goals=active_goals,
         )
 
-        stage_started = perf_counter()
-        goal_milestone_history = await self.memory_repository.get_recent_goal_milestone_history(
-            user_id=event.meta.user_id,
-            goal_ids=[int(goal["id"]) for goal in active_goals if goal.get("id") is not None],
-            limit=6,
+        goal_milestone_history = await self._run_async_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="goal_milestone_history_load",
+            input_summary=f"goal_ids={len(goal_ids)}",
+            operation=lambda: self.memory_repository.get_recent_goal_milestone_history(
+                user_id=event.meta.user_id,
+                goal_ids=goal_ids,
+                limit=6,
+            ),
+            output_summary=lambda result: f"history={len(result)}",
         )
-        stage_timings_ms["goal_milestone_history_load"] = int((perf_counter() - stage_started) * 1000)
 
-        stage_started = perf_counter()
-        goal_progress_history = await self.memory_repository.get_recent_goal_progress(
-            user_id=event.meta.user_id,
-            goal_ids=[int(goal["id"]) for goal in active_goals if goal.get("id") is not None],
-            limit=6,
+        goal_progress_history = await self._run_async_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="goal_progress_load",
+            input_summary=f"goal_ids={len(goal_ids)}",
+            operation=lambda: self.memory_repository.get_recent_goal_progress(
+                user_id=event.meta.user_id,
+                goal_ids=goal_ids,
+                limit=6,
+            ),
+            output_summary=lambda result: f"history={len(result)}",
         )
-        stage_timings_ms["goal_progress_load"] = int((perf_counter() - stage_started) * 1000)
 
-        stage_started = perf_counter()
-        identity = self.identity_service.build(
-            user_profile=user_profile,
-            user_preferences=user_preferences,
-            user_theta=user_theta,
+        identity = self._run_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="identity_load",
+            input_summary=(
+                f"profile={self._present_label(user_profile)} preferences={len(user_preferences)} "
+                f"theta={self._present_label(user_theta)}"
+            ),
+            operation=lambda: self.identity_service.build(
+                user_profile=user_profile,
+                user_preferences=user_preferences,
+                user_theta=user_theta,
+            ),
+            output_summary=lambda result: (
+                f"preferred_language={result.preferred_language or 'none'} "
+                f"response_style={result.response_style or 'none'} "
+                f"collaboration={result.collaboration_preference or 'none'}"
+            ),
         )
-        stage_timings_ms["identity_load"] = int((perf_counter() - stage_started) * 1000)
 
-        stage_started = perf_counter()
-        perception = self.perception_agent.run(event, recent_memory=memory, user_profile=user_profile)
-        stage_timings_ms["perception"] = int((perf_counter() - stage_started) * 1000)
-
-        stage_started = perf_counter()
-        context = self.context_agent.run(
-            event=event,
-            perception=perception,
-            recent_memory=memory,
-            conclusions=user_conclusions,
-            identity=identity,
-            active_goals=active_goals,
-            active_tasks=active_tasks,
-            active_goal_milestones=active_goal_milestones,
-            goal_milestone_history=goal_milestone_history,
-            goal_progress_history=goal_progress_history,
+        text = str(event.payload.get("text", "")).strip()
+        perception = self._run_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="perception",
+            input_summary=(
+                f"text_len={len(text)} recent_memory={len(memory)} profile={self._present_label(user_profile)}"
+            ),
+            operation=lambda: self.perception_agent.run(event, recent_memory=memory, user_profile=user_profile),
+            output_summary=lambda result: (
+                f"topic={result.topic} intent={result.intent} language={result.language} "
+                f"ambiguity={result.ambiguity}"
+            ),
         )
-        stage_timings_ms["context"] = int((perf_counter() - stage_started) * 1000)
 
-        stage_started = perf_counter()
-        motivation = self.motivation_engine.run(
-            event=event,
-            context=context,
-            perception=perception,
-            user_preferences=user_preferences,
-            theta=user_theta,
-            active_goals=active_goals,
-            active_tasks=active_tasks,
-            goal_milestone_history=goal_milestone_history,
-            goal_progress_history=goal_progress_history,
+        context = self._run_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="context",
+            input_summary=(
+                f"memory={len(memory)} conclusions={len(user_conclusions)} goals={len(active_goals)} "
+                f"tasks={len(active_tasks)} milestones={len(active_goal_milestones)}"
+            ),
+            operation=lambda: self.context_agent.run(
+                event=event,
+                perception=perception,
+                recent_memory=memory,
+                conclusions=user_conclusions,
+                identity=identity,
+                active_goals=active_goals,
+                active_tasks=active_tasks,
+                active_goal_milestones=active_goal_milestones,
+                goal_milestone_history=goal_milestone_history,
+                goal_progress_history=goal_progress_history,
+            ),
+            output_summary=lambda result: (
+                f"related_goals={len(result.related_goals)} tags={len(result.related_tags)} "
+                f"risk={result.risk_level}"
+            ),
         )
-        stage_timings_ms["motivation"] = int((perf_counter() - stage_started) * 1000)
 
-        stage_started = perf_counter()
-        role = self.role_agent.run(
-            event=event,
-            perception=perception,
-            context=context,
-            user_preferences=user_preferences,
-            theta=user_theta,
+        motivation = self._run_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="motivation",
+            input_summary=(
+                f"intent={perception.intent} risk={context.risk_level} preferences={len(user_preferences)}"
+            ),
+            operation=lambda: self.motivation_engine.run(
+                event=event,
+                context=context,
+                perception=perception,
+                user_preferences=user_preferences,
+                theta=user_theta,
+                active_goals=active_goals,
+                active_tasks=active_tasks,
+                goal_milestone_history=goal_milestone_history,
+                goal_progress_history=goal_progress_history,
+            ),
+            output_summary=lambda result: (
+                f"mode={result.mode} importance={result.importance} urgency={result.urgency} "
+                f"valence={result.valence}"
+            ),
         )
-        stage_timings_ms["role"] = int((perf_counter() - stage_started) * 1000)
 
-        stage_started = perf_counter()
-        plan = self.planning_agent.run(
-            event=event,
-            context=context,
-            motivation=motivation,
-            role=role,
-            user_preferences=user_preferences,
-            theta=user_theta,
-            active_goals=active_goals,
-            active_tasks=active_tasks,
-            active_goal_milestones=active_goal_milestones,
-            goal_milestone_history=goal_milestone_history,
-            goal_progress_history=goal_progress_history,
+        role = self._run_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="role",
+            input_summary=(
+                f"topic={perception.topic} intent={perception.intent} preferences={len(user_preferences)}"
+            ),
+            operation=lambda: self.role_agent.run(
+                event=event,
+                perception=perception,
+                context=context,
+                user_preferences=user_preferences,
+                theta=user_theta,
+            ),
+            output_summary=lambda result: f"selected={result.selected} confidence={result.confidence}",
         )
-        stage_timings_ms["planning"] = int((perf_counter() - stage_started) * 1000)
 
-        stage_started = perf_counter()
-        expression = await self.expression_agent.run(
-            event=event,
-            perception=perception,
-            context=context,
-            plan=plan,
-            role=role,
-            motivation=motivation,
-            identity=identity,
-            user_preferences=user_preferences,
-            theta=user_theta,
+        plan = self._run_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="planning",
+            input_summary=(
+                f"mode={motivation.mode} role={role.selected} goals={len(active_goals)} "
+                f"tasks={len(active_tasks)}"
+            ),
+            operation=lambda: self.planning_agent.run(
+                event=event,
+                context=context,
+                motivation=motivation,
+                role=role,
+                user_preferences=user_preferences,
+                theta=user_theta,
+                active_goals=active_goals,
+                active_tasks=active_tasks,
+                active_goal_milestones=active_goal_milestones,
+                goal_milestone_history=goal_milestone_history,
+                goal_progress_history=goal_progress_history,
+            ),
+            output_summary=lambda result: (
+                f"steps={len(result.steps)} needs_action={result.needs_action} "
+                f"needs_response={result.needs_response}"
+            ),
         )
-        stage_timings_ms["expression"] = int((perf_counter() - stage_started) * 1000)
 
-        stage_started = perf_counter()
-        action_result = await self.action_executor.execute(plan=plan, event=event, expression=expression)
-        stage_timings_ms["action"] = int((perf_counter() - stage_started) * 1000)
+        expression = await self._run_async_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="expression",
+            input_summary=(
+                f"language={perception.language} mode={motivation.mode} role={role.selected} "
+                f"needs_response={plan.needs_response}"
+            ),
+            operation=lambda: self.expression_agent.run(
+                event=event,
+                perception=perception,
+                context=context,
+                plan=plan,
+                role=role,
+                motivation=motivation,
+                identity=identity,
+                user_preferences=user_preferences,
+                theta=user_theta,
+            ),
+            output_summary=lambda result: (
+                f"tone={result.tone} language={result.language} channel={result.channel} "
+                f"message_len={len(result.message)}"
+            ),
+        )
+
+        action_result = await self._run_async_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="action",
+            input_summary=(
+                f"needs_action={plan.needs_action} source={event.source} channel={expression.channel}"
+            ),
+            operation=lambda: self.action_executor.execute(plan=plan, event=event, expression=expression),
+            output_summary=lambda result: f"status={result.status} actions={len(result.actions)}",
+        )
 
         memory_record = None
         reflection_triggered = False
@@ -254,42 +429,73 @@ class RuntimeOrchestrator:
         result_active_goal_milestones = active_goal_milestones
         result_goal_milestone_history = goal_milestone_history
         try:
-            stage_started = perf_counter()
-            memory_record = await self.action_executor.persist_episode(
-                event=event,
-                perception=perception,
-                context=context,
-                motivation=motivation,
-                role=role,
-                plan=plan,
-                action_result=action_result,
-                expression=expression,
+            memory_record = await self._run_async_stage(
+                stage_logger=stage_logger,
+                stage_timings_ms=stage_timings_ms,
+                stage="memory_persist",
+                input_summary=(
+                    f"mode={motivation.mode} role={role.selected} action_status={action_result.status}"
+                ),
+                operation=lambda: self.action_executor.persist_episode(
+                    event=event,
+                    perception=perception,
+                    context=context,
+                    motivation=motivation,
+                    role=role,
+                    plan=plan,
+                    action_result=action_result,
+                    expression=expression,
+                ),
+                output_summary=lambda result: f"memory_id={result.id or 'none'} importance={result.importance}",
             )
-            stage_timings_ms["memory_persist"] = int((perf_counter() - stage_started) * 1000)
             if self.reflection_worker is not None:
-                stage_started = perf_counter()
-                reflection_triggered = await self.reflection_worker.enqueue(
-                    user_id=event.meta.user_id,
-                    event_id=event.event_id,
+                reflection_triggered = await self._run_async_stage(
+                    stage_logger=stage_logger,
+                    stage_timings_ms=stage_timings_ms,
+                    stage="reflection_enqueue",
+                    input_summary=f"worker={self._present_label(self.reflection_worker)}",
+                    operation=lambda: self.reflection_worker.enqueue(
+                        user_id=event.meta.user_id,
+                        event_id=event.event_id,
+                    ),
+                    output_summary=lambda result: f"triggered={result}",
                 )
-                stage_timings_ms["reflection_enqueue"] = int((perf_counter() - stage_started) * 1000)
 
-            stage_started = perf_counter()
-            refreshed_goals = await self.memory_repository.get_active_goals(user_id=event.meta.user_id, limit=5)
-            refreshed_tasks = await self.memory_repository.get_active_tasks(
-                user_id=event.meta.user_id,
-                goal_ids=[int(goal["id"]) for goal in refreshed_goals if goal.get("id") is not None],
-                limit=5,
-            )
-            refreshed_milestones = await self.memory_repository.get_active_goal_milestones(
-                user_id=event.meta.user_id,
-                goal_ids=[int(goal["id"]) for goal in refreshed_goals if goal.get("id") is not None],
-                limit=5,
-            )
-            refreshed_milestone_history = await self.memory_repository.get_recent_goal_milestone_history(
-                user_id=event.meta.user_id,
-                goal_ids=[int(goal["id"]) for goal in refreshed_goals if goal.get("id") is not None],
-                limit=6,
+            async def refresh_runtime_state():
+                refreshed_goals = await self.memory_repository.get_active_goals(user_id=event.meta.user_id, limit=5)
+                refreshed_goal_ids = [int(goal["id"]) for goal in refreshed_goals if goal.get("id") is not None]
+                refreshed_tasks = await self.memory_repository.get_active_tasks(
+                    user_id=event.meta.user_id,
+                    goal_ids=refreshed_goal_ids,
+                    limit=5,
+                )
+                refreshed_milestones = await self.memory_repository.get_active_goal_milestones(
+                    user_id=event.meta.user_id,
+                    goal_ids=refreshed_goal_ids,
+                    limit=5,
+                )
+                refreshed_milestone_history = await self.memory_repository.get_recent_goal_milestone_history(
+                    user_id=event.meta.user_id,
+                    goal_ids=refreshed_goal_ids,
+                    limit=6,
+                )
+                return (
+                    refreshed_goals,
+                    refreshed_tasks,
+                    refreshed_milestones,
+                    refreshed_milestone_history,
+                )
+
+            refreshed_goals, refreshed_tasks, refreshed_milestones, refreshed_milestone_history = await self._run_async_stage(
+                stage_logger=stage_logger,
+                stage_timings_ms=stage_timings_ms,
+                stage="state_refresh",
+                input_summary=f"user_id={event.meta.user_id}",
+                operation=refresh_runtime_state,
+                output_summary=lambda result: (
+                    f"goals={len(result[0])} tasks={len(result[1])} milestones={len(result[2])} "
+                    f"history={len(result[3])}"
+                ),
             )
             result_active_goals = refreshed_goals
             result_active_tasks = refreshed_tasks
@@ -299,11 +505,13 @@ class RuntimeOrchestrator:
                 active_goals=refreshed_goals,
             )
             result_goal_milestone_history = refreshed_milestone_history
-            stage_timings_ms["state_refresh"] = int((perf_counter() - stage_started) * 1000)
         except Exception as exc:  # pragma: no cover - defensive path
-            if stage_timings_ms["memory_persist"] == 0:
-                stage_timings_ms["memory_persist"] = int((perf_counter() - stage_started) * 1000)
-            self.logger.exception("memory_persist_failed event_id=%s error=%s", event.event_id, exc)
+            self.logger.warning(
+                "memory follow-up degraded event_id=%s trace_id=%s error_type=%s",
+                event.event_id,
+                event.meta.trace_id,
+                type(exc).__name__,
+            )
 
         duration_ms = int((perf_counter() - started) * 1000)
         stage_timings_ms["total"] = duration_ms

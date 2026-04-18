@@ -23,6 +23,9 @@ Last updated: 2026-04-18
   human-readable summary, with payload-first readers and legacy fallback.
 - 2026-04-17: motivation uses only the documented shared mode set
   (`respond|ignore|analyze|execute|clarify`).
+- 2026-04-18: runtime stages emit structured `start/success/failure` logs with
+  `event_id`, `trace_id`, stage name, duration, and short summaries through the
+  shared scaffold in `app/core/logging.py`.
 
 ## Technical Baseline
 
@@ -41,8 +44,8 @@ Last updated: 2026-04-18
   Telegram webhook verification
 - Environment files: `.env`, Docker Compose env wiring, deployment env values
   documented in runtime ops docs
-- Observability: stage timings exist; structured stage-level logging is the
-  next uplift target
+- Observability: stage timings and structured stage-level runtime logs both
+  exist
 - MCP / external tools: Playwright available locally for future browser-driven
   checks
 
@@ -80,8 +83,6 @@ Last updated: 2026-04-18
 - Top blockers:
   - goal and milestone signal logic is duplicated across context, motivation,
     planning, and reflection
-  - stage-level structured logging is still missing even though stage timings
-    already exist
   - startup is still on a temporary dual-path schema model: Alembic baseline
     plus startup `create_tables()`
 - Success criteria for this phase:
@@ -101,6 +102,9 @@ Last updated: 2026-04-18
 - 2026-04-18: agent workflow context was refreshed to align with the current
   template-era standard, including learning-journal support and corrected
   canonical doc paths.
+- 2026-04-18: runtime now emits structured stage-level logs for `memory_load`
+  through `state_refresh`, and regression tests cover both success and failure
+  logging paths.
 
 ## Working Agreements
 
