@@ -12,6 +12,7 @@ def test_startup_logs_warning_when_production_runs_with_debug_payload_enabled(ca
         app_env="production",
         event_debug_enabled=True,
         startup_schema_mode="migrate",
+        production_policy_enforcement="warn",
     )
 
     _log_runtime_policy_warnings(settings=settings, logger=logger)
@@ -30,6 +31,7 @@ def test_startup_skips_warning_when_debug_payload_is_disabled(caplog) -> None:
         app_env="production",
         event_debug_enabled=False,
         startup_schema_mode="migrate",
+        production_policy_enforcement="warn",
     )
 
     _log_runtime_policy_warnings(settings=settings, logger=logger)
@@ -47,6 +49,7 @@ def test_startup_skips_debug_warning_when_production_uses_environment_default_di
         app_env = "production"
         event_debug_enabled = None
         startup_schema_mode = "migrate"
+        production_policy_enforcement = "warn"
 
         @staticmethod
         def is_event_debug_enabled() -> bool:
@@ -66,6 +69,7 @@ def test_startup_logs_warning_when_production_runs_with_schema_compatibility_mod
         app_env="production",
         event_debug_enabled=False,
         startup_schema_mode="create_tables",
+        production_policy_enforcement="warn",
     )
 
     _log_runtime_policy_warnings(settings=settings, logger=logger)
@@ -83,9 +87,56 @@ def test_startup_skips_schema_compatibility_warning_outside_production(caplog) -
         app_env="development",
         event_debug_enabled=False,
         startup_schema_mode="create_tables",
+        production_policy_enforcement="warn",
     )
 
     _log_runtime_policy_warnings(settings=settings, logger=logger)
 
     messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
     assert not any("use_migration_first_startup_in_production" in message for message in messages)
+
+
+def test_startup_blocks_when_strict_enforcement_and_debug_payload_enabled_in_production(caplog) -> None:
+    logger_name = "aion.app"
+    caplog.set_level("WARNING", logger=logger_name)
+    logger = logging.getLogger(logger_name)
+    settings = SimpleNamespace(
+        app_env="production",
+        event_debug_enabled=True,
+        startup_schema_mode="migrate",
+        production_policy_enforcement="strict",
+    )
+
+    try:
+        _log_runtime_policy_warnings(settings=settings, logger=logger)
+    except RuntimeError as exc:
+        assert "event_debug_enabled=true" in str(exc)
+    else:  # pragma: no cover - defensive fallback
+        raise AssertionError("Expected strict production policy enforcement to block startup.")
+
+    messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
+    assert any("runtime_policy_block" in message for message in messages)
+    assert any("violations=event_debug_enabled=true" in message for message in messages)
+
+
+def test_startup_blocks_when_strict_enforcement_and_schema_compatibility_mode_in_production(caplog) -> None:
+    logger_name = "aion.app"
+    caplog.set_level("WARNING", logger=logger_name)
+    logger = logging.getLogger(logger_name)
+    settings = SimpleNamespace(
+        app_env="production",
+        event_debug_enabled=False,
+        startup_schema_mode="create_tables",
+        production_policy_enforcement="strict",
+    )
+
+    try:
+        _log_runtime_policy_warnings(settings=settings, logger=logger)
+    except RuntimeError as exc:
+        assert "startup_schema_mode=create_tables" in str(exc)
+    else:  # pragma: no cover - defensive fallback
+        raise AssertionError("Expected strict production policy enforcement to block startup.")
+
+    messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
+    assert any("runtime_policy_block" in message for message in messages)
+    assert any("violations=startup_schema_mode=create_tables" in message for message in messages)

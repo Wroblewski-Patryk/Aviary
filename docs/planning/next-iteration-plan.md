@@ -11,7 +11,7 @@ The goal is to make the current AION runtime more correct, more inspectable, and
 
 Confirmed on 2026-04-19:
 
-- `.\.venv\Scripts\python -m pytest -q` passes with `285 passed`
+- `.\.venv\Scripts\python -m pytest -q` passes with `293 passed`
 - the live runtime already covers:
   - event normalization
   - state load
@@ -54,6 +54,7 @@ Completed on 2026-04-18:
 - `PRJ-023` added explicit startup warning visibility for production runs with debug payload exposure enabled.
 - `PRJ-024` added explicit startup warning visibility for production runs with schema compatibility mode enabled.
 - `PRJ-025` hardened production defaults for debug payload exposure, including explicit policy-source visibility in `/health`.
+- `PRJ-026` added production policy enforcement mode (`warn|strict`) so startup can either emit warnings or fail fast on production policy mismatches, with health visibility and regression coverage.
 
 ## Highest-Risk Gaps
 
@@ -277,7 +278,7 @@ drift silently.
 
 ## Next Derived Slice
 
-All currently registered planned slices through `PRJ-025` are complete.
+All currently registered planned slices through `PRJ-026` are complete.
 The next smallest task should be derived from `docs/planning/open-decisions.md`
 when execution continues.
 

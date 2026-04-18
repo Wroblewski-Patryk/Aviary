@@ -164,10 +164,12 @@ class FakeSettings:
         *,
         event_debug_enabled: bool | None = True,
         startup_schema_mode: str = "migrate",
+        production_policy_enforcement: str = "warn",
     ):
         self.telegram_webhook_secret = telegram_webhook_secret
         self.event_debug_enabled = event_debug_enabled
         self.startup_schema_mode = startup_schema_mode
+        self.production_policy_enforcement = production_policy_enforcement
 
     def is_event_debug_enabled(self) -> bool:
         if self.event_debug_enabled is not None:
@@ -227,6 +229,7 @@ def _client(
     reflection_running: bool = True,
     event_debug_enabled: bool | None = True,
     startup_schema_mode: str = "migrate",
+    production_policy_enforcement: str = "warn",
 ) -> tuple[TestClient, FakeRuntime, FakeTelegramClient]:
     app = FastAPI()
     app.include_router(router)
@@ -240,6 +243,7 @@ def _client(
         telegram_webhook_secret=secret,
         event_debug_enabled=event_debug_enabled,
         startup_schema_mode=startup_schema_mode,
+        production_policy_enforcement=production_policy_enforcement,
     )
     app.state.memory_repository = memory_repository
     app.state.reflection_worker = reflection_worker
@@ -258,6 +262,7 @@ def test_health_endpoint_returns_ok() -> None:
             "startup_schema_mode": "migrate",
             "event_debug_enabled": True,
             "event_debug_source": "explicit",
+            "production_policy_enforcement": "warn",
         },
         "reflection": {
             "healthy": True,
@@ -286,7 +291,11 @@ def test_health_endpoint_returns_ok() -> None:
 
 
 def test_health_endpoint_exposes_runtime_policy_flags() -> None:
-    client, _, _ = _client(event_debug_enabled=False, startup_schema_mode="create_tables")
+    client, _, _ = _client(
+        event_debug_enabled=False,
+        startup_schema_mode="create_tables",
+        production_policy_enforcement="strict",
+    )
 
     response = client.get("/health")
 
@@ -297,6 +306,7 @@ def test_health_endpoint_exposes_runtime_policy_flags() -> None:
         "startup_schema_mode": "create_tables",
         "event_debug_enabled": False,
         "event_debug_source": "explicit",
+        "production_policy_enforcement": "strict",
     }
 
 
@@ -309,6 +319,7 @@ def test_health_endpoint_marks_event_debug_source_as_environment_default_when_un
     body = response.json()
     assert body["runtime_policy"]["event_debug_enabled"] is True
     assert body["runtime_policy"]["event_debug_source"] == "environment_default"
+    assert body["runtime_policy"]["production_policy_enforcement"] == "warn"
 
 
 def test_health_endpoint_marks_reflection_unhealthy_when_worker_not_running() -> None:

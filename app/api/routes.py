@@ -31,6 +31,13 @@ def _event_debug_enabled(settings: Any) -> bool:
     return bool(getattr(settings, "event_debug_enabled", True))
 
 
+def _production_policy_enforcement(settings: Any) -> str:
+    mode = str(getattr(settings, "production_policy_enforcement", "warn")).strip().lower()
+    if mode == "strict":
+        return "strict"
+    return "warn"
+
+
 def _memory_repository_from_request(request: Request) -> MemoryRepository:
     return request.app.state.memory_repository  # type: ignore[return-value]
 
@@ -65,6 +72,7 @@ async def health(request: Request) -> dict[str, Any]:
                 if getattr(settings, "event_debug_enabled", None) is not None
                 else "environment_default"
             ),
+            "production_policy_enforcement": _production_policy_enforcement(settings),
         },
         "reflection": {
             "healthy": reflection_healthy,

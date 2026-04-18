@@ -47,6 +47,9 @@ Last updated: 2026-04-19
 - 2026-04-19: debug payload exposure now uses environment-aware defaults:
   enabled by default in non-production, disabled by default in production
   unless explicitly enabled.
+- 2026-04-19: production runtime policy checks now support explicit enforcement
+  mode (`warn|strict`), so policy mismatches can be warning-only or fail-fast
+  on startup.
 
 ## Technical Baseline
 
@@ -101,9 +104,9 @@ Last updated: 2026-04-19
 
 - Main active objective: make stage boundaries and architecture traceability
   explicit without regressing current runtime behavior
-- Active execution queue through `PRJ-025` is complete.
+- Active execution queue through `PRJ-026` is complete.
 - Top blockers:
-  - no next post-`PRJ-025` slice is registered yet; next task should be derived
+  - no next post-`PRJ-026` slice is registered yet; next task should be derived
     from open decisions
 - Success criteria for this phase:
   - shared goal and milestone signals keep one clear implementation owner
@@ -163,6 +166,9 @@ Last updated: 2026-04-19
 - 2026-04-19: `PRJ-025` is complete: debug payload policy now has production-safe
   default behavior with explicit source visibility in `/health`, and tests/docs
   are synchronized.
+- 2026-04-19: `PRJ-026` is complete: production runtime-policy enforcement now
+  supports `warn|strict`, startup can fail fast on policy mismatches when
+  strict mode is active, and `/health` exposes the enforcement posture.
 
 ## Working Agreements
 

@@ -118,6 +118,23 @@ Default:
 
 ---
 
+PRODUCTION_POLICY_ENFORCEMENT
+Controls production startup behavior when runtime policy mismatches are detected
+(for example `EVENT_DEBUG_ENABLED=true` or
+`STARTUP_SCHEMA_MODE=create_tables`).
+
+Allowed values:
+
+- warn (default)
+- strict
+
+Behavior:
+
+- `warn`: emit startup warnings only
+- `strict`: block startup in production on policy mismatch
+
+---
+
 REFLECTION_INTERVAL  
 Controls background loop frequency  
 

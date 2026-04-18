@@ -33,6 +33,10 @@ On startup, production also emits an explicit warning when
 `STARTUP_SCHEMA_MODE=create_tables`. Treat this as a temporary compatibility
 path warning: production should normally run migration-first startup mode.
 
+`PRODUCTION_POLICY_ENFORCEMENT` controls whether these production-policy
+mismatches are warning-only (`warn`, default) or startup-blocking (`strict`).
+Use `strict` when production hardening requires fail-fast policy enforcement.
+
 ## Required Environment Variables
 
 - `DATABASE_URL`
@@ -51,6 +55,8 @@ Recommended when Telegram webhooks are enabled:
 - `EVENT_DEBUG_ENABLED` to control whether `POST /event?debug=true` can expose
   full internal runtime payloads (production default is disabled unless
   explicitly enabled)
+- `PRODUCTION_POLICY_ENFORCEMENT` (`warn|strict`) to decide whether production
+  policy mismatches remain warning-only or block startup
 
 ## Common Operator Flows
 

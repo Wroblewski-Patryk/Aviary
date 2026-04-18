@@ -15,7 +15,7 @@ Last updated: 2026-04-19
   - run relevant tests and validations
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
-- The current planned queue through `PRJ-025` is complete.
+- The current planned queue through `PRJ-026` is complete.
 - Next executable slices should be derived from:
   - `docs/planning/next-iteration-plan.md`
   - `docs/planning/open-decisions.md`
@@ -217,6 +217,18 @@ Last updated: 2026-04-19
       semantics
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_config.py tests/test_main_runtime_policy.py`
+- [x] PRJ-026 Add optional strict production policy enforcement for startup
+  - Status: DONE
+  - Group: Runtime Ops Visibility
+  - Owner: Backend Builder
+  - Depends on: PRJ-024, PRJ-025
+  - Priority: P3
+  - Result:
+    - startup runtime-policy checks now support `PRODUCTION_POLICY_ENFORCEMENT=warn|strict`
+    - production mismatch cases (`EVENT_DEBUG_ENABLED=true`, `STARTUP_SCHEMA_MODE=create_tables`) can now fail fast in strict mode
+    - `/health` now exposes `production_policy_enforcement` so operators can verify active enforcement posture
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_config.py tests/test_api_routes.py tests/test_main_runtime_policy.py`
 - [x] PRJ-011 Extract shared goal/task selection helpers
   - Status: DONE
   - Group: Shared Signal Engine Extraction

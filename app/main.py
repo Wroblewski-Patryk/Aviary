@@ -20,8 +20,16 @@ from app.motivation.engine import MotivationEngine
 from app.reflection.worker import ReflectionWorker
 
 
+def _production_policy_enforcement(settings) -> str:
+    mode = str(getattr(settings, "production_policy_enforcement", "warn")).strip().lower()
+    if mode == "strict":
+        return "strict"
+    return "warn"
+
+
 def _log_runtime_policy_warnings(*, settings, logger) -> None:
     environment = str(getattr(settings, "app_env", "")).strip().lower()
+    policy_enforcement = _production_policy_enforcement(settings)
     debug_toggle = getattr(settings, "is_event_debug_enabled", None)
     if callable(debug_toggle):
         event_debug_enabled = bool(debug_toggle())
@@ -33,7 +41,9 @@ def _log_runtime_policy_warnings(*, settings, logger) -> None:
         else "environment_default"
     )
     startup_schema_mode = str(getattr(settings, "startup_schema_mode", "migrate")).strip().lower()
+    violations: list[str] = []
     if environment == "production" and event_debug_enabled:
+        violations.append("event_debug_enabled=true")
         logger.warning(
             "runtime_policy_warning env=%s event_debug_enabled=%s source=%s recommendation=disable_debug_payload_in_production",
             settings.app_env,
@@ -41,10 +51,23 @@ def _log_runtime_policy_warnings(*, settings, logger) -> None:
             event_debug_source,
         )
     if environment == "production" and startup_schema_mode == "create_tables":
+        violations.append("startup_schema_mode=create_tables")
         logger.warning(
             "runtime_policy_warning env=%s startup_schema_mode=%s recommendation=use_migration_first_startup_in_production",
             settings.app_env,
             startup_schema_mode,
+        )
+    if environment == "production" and policy_enforcement == "strict" and violations:
+        violation_summary = ",".join(violations)
+        logger.error(
+            "runtime_policy_block env=%s enforcement=%s violations=%s",
+            settings.app_env,
+            policy_enforcement,
+            violation_summary,
+        )
+        raise RuntimeError(
+            "Production runtime policy strict-mode violation: "
+            f"{violation_summary}. Resolve policy mismatch or set PRODUCTION_POLICY_ENFORCEMENT=warn."
         )
 
 

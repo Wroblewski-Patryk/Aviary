@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     event_debug_enabled: bool | None = None
     startup_schema_mode: Literal["migrate", "create_tables"] = "migrate"
+    production_policy_enforcement: Literal["warn", "strict"] = "warn"
 
     model_config = SettingsConfigDict(
         env_file=".env",
