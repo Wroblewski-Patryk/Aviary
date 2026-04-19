@@ -119,6 +119,8 @@ Allowed values:
 - `production_policy_mismatch_count` for quick triage summary
 - `strict_startup_blocked` to indicate current strict-mode startup block state
 - `strict_rollout_ready` to indicate no strict-mode mismatches are present
+- `recommended_production_policy_enforcement` to guide rollout posture
+- `strict_rollout_hint` to provide a concise rollout action summary
 
 `REFLECTION_INTERVAL`
 

@@ -11,7 +11,7 @@ The goal is to make the current AION runtime more correct, more inspectable, and
 
 Confirmed on 2026-04-19:
 
-- `.\.venv\Scripts\python -m pytest -q` passes with `302 passed`
+- `.\.venv\Scripts\python -m pytest -q` passes with `305 passed`
 - the live runtime already covers:
   - event normalization
   - state load
@@ -59,6 +59,7 @@ Completed on 2026-04-18:
 - `PRJ-028` extended strict-policy lifespan regression coverage to schema compatibility mismatch (`STARTUP_SCHEMA_MODE=create_tables`) with the same block-before-side-effects guarantee.
 - `PRJ-029` unified runtime-policy mismatch detection under a shared helper and exposed mismatch preview (`production_policy_mismatches`) in `/health`.
 - `PRJ-030..PRJ-039` added strict-rollout readiness helpers and health contract fields (`production_policy_mismatch_count`, `strict_startup_blocked`, `strict_rollout_ready`), plus aligned startup/API tests and context/docs sync.
+- `PRJ-040..PRJ-045` added strict-rollout recommendation helpers and health contract fields (`recommended_production_policy_enforcement`, `strict_rollout_hint`), plus startup rollout hints and aligned startup/API/policy tests.
 
 ## Highest-Risk Gaps
 
@@ -282,7 +283,7 @@ drift silently.
 
 ## Next Derived Slice
 
-All currently registered planned slices through `PRJ-039` are complete.
+All currently registered planned slices through `PRJ-045` are complete.
 The next smallest task should be derived from `docs/planning/open-decisions.md`
 when execution continues.
 
@@ -306,7 +307,7 @@ After those finished:
 
 ## Recommended Execution Order
 
-1. derive the next smallest useful slice from open decisions (`PRJ-040`)
+1. derive the next smallest useful slice from open decisions (`PRJ-046`)
 
 The queue should still be treated as intentionally open after those items.
 Additional small architecture-alignment slices may still be discovered while

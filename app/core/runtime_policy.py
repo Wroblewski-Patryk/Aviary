@@ -53,17 +53,39 @@ def strict_rollout_ready(settings: Any) -> bool:
     return production_policy_mismatch_count(settings) == 0
 
 
+def recommended_production_policy_enforcement(settings: Any) -> Literal["warn", "strict"]:
+    if app_environment(settings) == "production" and strict_rollout_ready(settings):
+        return "strict"
+    return "warn"
+
+
+def strict_rollout_hint(settings: Any) -> Literal[
+    "not_applicable_non_production",
+    "resolve_mismatches_before_strict",
+    "can_enable_strict",
+]:
+    if app_environment(settings) != "production":
+        return "not_applicable_non_production"
+    if strict_rollout_ready(settings):
+        return "can_enable_strict"
+    return "resolve_mismatches_before_strict"
+
+
 def runtime_policy_snapshot(settings: Any) -> dict[str, Any]:
     mismatches = production_policy_mismatches(settings)
     enforcement = production_policy_enforcement(settings)
     mismatch_count = len(mismatches)
+    recommended_enforcement = recommended_production_policy_enforcement(settings)
+    rollout_hint = strict_rollout_hint(settings)
     return {
         "startup_schema_mode": startup_schema_mode(settings),
         "event_debug_enabled": event_debug_enabled(settings),
         "event_debug_source": event_debug_source(settings),
         "production_policy_enforcement": enforcement,
+        "recommended_production_policy_enforcement": recommended_enforcement,
         "production_policy_mismatches": mismatches,
         "production_policy_mismatch_count": mismatch_count,
         "strict_startup_blocked": enforcement == "strict" and mismatch_count > 0,
         "strict_rollout_ready": mismatch_count == 0,
+        "strict_rollout_hint": rollout_hint,
     }

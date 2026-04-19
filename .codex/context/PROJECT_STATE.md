@@ -60,6 +60,9 @@ Last updated: 2026-04-19
 - 2026-04-19: runtime policy now exposes strict-rollout readiness signals
   (`production_policy_mismatch_count`, `strict_startup_blocked`,
   `strict_rollout_ready`) through shared helpers reused by startup and `/health`.
+- 2026-04-19: runtime policy now also exposes strict-rollout recommendation
+  signals (`recommended_production_policy_enforcement`, `strict_rollout_hint`),
+  and startup emits an informational hint when production warn mode is strict-ready.
 - 2026-04-19: documentation now explicitly separates canonical architecture in
   `docs/architecture/` from transitional implementation reality in
   `docs/implementation/runtime-reality.md`, so human-oriented design intent can
@@ -118,9 +121,9 @@ Last updated: 2026-04-19
 
 - Main active objective: make stage boundaries and architecture traceability
   explicit without regressing current runtime behavior
-- Active execution queue through `PRJ-039` is complete.
+- Active execution queue through `PRJ-045` is complete.
 - Top blockers:
-  - no next post-`PRJ-039` slice is registered yet; next task should be derived
+  - no next post-`PRJ-045` slice is registered yet; next task should be derived
     from open decisions
 - Success criteria for this phase:
   - shared goal and milestone signals keep one clear implementation owner
@@ -198,6 +201,11 @@ Last updated: 2026-04-19
   (`production_policy_mismatch_count`, `strict_startup_blocked`,
   `strict_rollout_ready`), startup and health now share the same strict-block
   semantics, and regression coverage/docs/context were synchronized.
+- 2026-04-19: `PRJ-040..PRJ-045` are complete: runtime policy now includes
+  strict rollout recommendation helpers and `/health` contract fields
+  (`recommended_production_policy_enforcement`, `strict_rollout_hint`),
+  startup now logs strict-ready rollout hints in production warn mode, and
+  regression coverage/docs/context were synchronized.
 - 2026-04-19: architecture docs were realigned so `docs/architecture/` again
   describes the canonical cognitive flow, while runtime-delivery shortcuts,
   live storage names, and policy details were moved into

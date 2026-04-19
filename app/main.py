@@ -11,7 +11,12 @@ from app.core.action import ActionExecutor
 from app.core.config import get_settings
 from app.core.database import Database
 from app.core.logging import get_logger, setup_logging
-from app.core.runtime_policy import production_policy_mismatches, runtime_policy_snapshot, strict_startup_blocked
+from app.core.runtime_policy import (
+    app_environment,
+    production_policy_mismatches,
+    runtime_policy_snapshot,
+    strict_startup_blocked,
+)
 from app.core.runtime import RuntimeOrchestrator
 from app.expression.generator import ExpressionAgent
 from app.integrations.openai.client import OpenAIClient
@@ -48,6 +53,18 @@ def _log_runtime_policy_warnings(*, settings, logger) -> None:
         raise RuntimeError(
             "Production runtime policy strict-mode violation: "
             f"{violation_summary}. Resolve policy mismatch or set PRODUCTION_POLICY_ENFORCEMENT=warn."
+        )
+    if (
+        app_environment(settings) == "production"
+        and policy["production_policy_enforcement"] == "warn"
+        and policy["recommended_production_policy_enforcement"] == "strict"
+    ):
+        logger.info(
+            "runtime_policy_hint env=%s enforcement=%s recommended_enforcement=%s hint=%s",
+            settings.app_env,
+            policy["production_policy_enforcement"],
+            policy["recommended_production_policy_enforcement"],
+            policy["strict_rollout_hint"],
         )
 
 

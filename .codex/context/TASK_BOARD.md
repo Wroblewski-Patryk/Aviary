@@ -15,7 +15,7 @@ Last updated: 2026-04-19
   - run relevant tests and validations
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
-- The current planned queue through `PRJ-039` is complete.
+- The current planned queue through `PRJ-045` is complete.
 - Next executable slices should be derived from:
   - `docs/planning/next-iteration-plan.md`
   - `docs/planning/open-decisions.md`
@@ -377,6 +377,66 @@ Last updated: 2026-04-19
   - Priority: P3
   - Result:
     - planning, context, architecture, and ops docs now describe strict rollout readiness fields and current runtime truth
+  - Validation:
+    - doc-and-context sync plus regression evidence recorded in this slice
+- [x] PRJ-040 Add strict-rollout recommendation helper for production policy
+  - Status: DONE
+  - Group: Runtime Ops Visibility
+  - Owner: Backend Builder
+  - Depends on: PRJ-039
+  - Priority: P3
+  - Result:
+    - shared helper now derives `recommended_production_policy_enforcement` from environment and mismatch readiness
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py`
+- [x] PRJ-041 Add strict-rollout action hint helper
+  - Status: DONE
+  - Group: Runtime Ops Visibility
+  - Owner: Backend Builder
+  - Depends on: PRJ-040
+  - Priority: P3
+  - Result:
+    - shared helper now emits concise rollout hints (`not_applicable_non_production`, `resolve_mismatches_before_strict`, `can_enable_strict`)
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py`
+- [x] PRJ-042 Expose strict-rollout recommendation fields through runtime policy snapshot and `/health`
+  - Status: DONE
+  - Group: Runtime Ops Visibility
+  - Owner: Ops/Release
+  - Depends on: PRJ-041
+  - Priority: P3
+  - Result:
+    - `/health.runtime_policy` now includes `recommended_production_policy_enforcement` and `strict_rollout_hint`
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_policy.py`
+- [x] PRJ-043 Add startup informational hint for strict-rollout readiness in production warn mode
+  - Status: DONE
+  - Group: Runtime Ops Visibility
+  - Owner: Backend Builder
+  - Depends on: PRJ-042
+  - Priority: P3
+  - Result:
+    - startup now logs `runtime_policy_hint` when production is in `warn` mode and strict rollout is ready
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_main_runtime_policy.py`
+- [x] PRJ-044 Expand runtime-policy and startup/API regression coverage for recommendation hints
+  - Status: DONE
+  - Group: Runtime Ops Visibility
+  - Owner: QA/Test
+  - Depends on: PRJ-043
+  - Priority: P3
+  - Result:
+    - tests now pin recommendation/hint fields in snapshot and `/health`, plus startup info-hint behavior in production warn mode
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_main_runtime_policy.py`
+- [x] PRJ-045 Sync docs/context for strict-rollout recommendation contract
+  - Status: DONE
+  - Group: Runtime Ops Visibility
+  - Owner: Product Docs
+  - Depends on: PRJ-044
+  - Priority: P3
+  - Result:
+    - planning, context, architecture, and ops docs now describe strict-rollout recommendation and hint fields
   - Validation:
     - doc-and-context sync plus regression evidence recorded in this slice
 - [x] PRJ-011 Extract shared goal/task selection helpers

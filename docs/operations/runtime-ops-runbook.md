@@ -23,9 +23,11 @@ This runbook covers the currently implemented AION MVP service, not the full lon
 runtime flags (for example `startup_schema_mode`, `event_debug_enabled`, and
 `event_debug_source`) plus strict-rollout readiness signals
 (`production_policy_mismatches`, `production_policy_mismatch_count`,
-`strict_startup_blocked`, and `strict_rollout_ready`), so operators can verify
-active policy posture and detect strict-mode startup risks during incident
-triage and release smoke.
+`strict_startup_blocked`, and `strict_rollout_ready`) plus rollout guidance
+signals (`recommended_production_policy_enforcement`, `strict_rollout_hint`),
+so operators can verify active policy posture, detect strict-mode startup
+risks, and assess strict-rollout readiness during incident triage and release
+smoke.
 
 On startup, production now emits an explicit warning when
 `EVENT_DEBUG_ENABLED=true`. Treat this warning as a release-hardening signal:

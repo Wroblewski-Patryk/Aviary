@@ -267,10 +267,12 @@ def test_health_endpoint_returns_ok() -> None:
             "event_debug_enabled": True,
             "event_debug_source": "explicit",
             "production_policy_enforcement": "warn",
+            "recommended_production_policy_enforcement": "warn",
             "production_policy_mismatches": [],
             "production_policy_mismatch_count": 0,
             "strict_startup_blocked": False,
             "strict_rollout_ready": True,
+            "strict_rollout_hint": "not_applicable_non_production",
         },
         "reflection": {
             "healthy": True,
@@ -316,10 +318,12 @@ def test_health_endpoint_exposes_runtime_policy_flags() -> None:
         "event_debug_enabled": False,
         "event_debug_source": "explicit",
         "production_policy_enforcement": "strict",
+        "recommended_production_policy_enforcement": "warn",
         "production_policy_mismatches": ["startup_schema_mode=create_tables"],
         "production_policy_mismatch_count": 1,
         "strict_startup_blocked": True,
         "strict_rollout_ready": False,
+        "strict_rollout_hint": "resolve_mismatches_before_strict",
     }
 
 
@@ -333,10 +337,12 @@ def test_health_endpoint_marks_event_debug_source_as_environment_default_when_un
     assert body["runtime_policy"]["event_debug_enabled"] is True
     assert body["runtime_policy"]["event_debug_source"] == "environment_default"
     assert body["runtime_policy"]["production_policy_enforcement"] == "warn"
+    assert body["runtime_policy"]["recommended_production_policy_enforcement"] == "warn"
     assert body["runtime_policy"]["production_policy_mismatches"] == []
     assert body["runtime_policy"]["production_policy_mismatch_count"] == 0
     assert body["runtime_policy"]["strict_startup_blocked"] is False
     assert body["runtime_policy"]["strict_rollout_ready"] is True
+    assert body["runtime_policy"]["strict_rollout_hint"] == "not_applicable_non_production"
 
 
 def test_health_endpoint_exposes_all_production_policy_mismatches_when_present() -> None:
@@ -358,6 +364,26 @@ def test_health_endpoint_exposes_all_production_policy_mismatches_when_present()
     assert body["runtime_policy"]["production_policy_mismatch_count"] == 2
     assert body["runtime_policy"]["strict_startup_blocked"] is True
     assert body["runtime_policy"]["strict_rollout_ready"] is False
+    assert body["runtime_policy"]["recommended_production_policy_enforcement"] == "warn"
+    assert body["runtime_policy"]["strict_rollout_hint"] == "resolve_mismatches_before_strict"
+
+
+def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() -> None:
+    client, _, _ = _client(
+        app_env="production",
+        event_debug_enabled=False,
+        startup_schema_mode="migrate",
+        production_policy_enforcement="warn",
+    )
+
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["runtime_policy"]["production_policy_mismatches"] == []
+    assert body["runtime_policy"]["strict_rollout_ready"] is True
+    assert body["runtime_policy"]["recommended_production_policy_enforcement"] == "strict"
+    assert body["runtime_policy"]["strict_rollout_hint"] == "can_enable_strict"
 
 
 def test_health_endpoint_marks_reflection_unhealthy_when_worker_not_running() -> None:
