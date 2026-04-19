@@ -255,6 +255,10 @@ The current repo already works as an MVP slice, but several architecture-level d
   - embedding persistence scope is now explicit through
     `EMBEDDING_SOURCE_KINDS`, so runtime can limit which memory families
     (`episodic|semantic|affective|relation`) persist embedding records.
+  - source-coverage posture for current vector retrieval path is now explicit
+    through `semantic_embedding_source_coverage_state` and
+    `semantic_embedding_source_coverage_hint`, with startup warnings using the
+    same shared coverage-state semantics.
   - provider ownership, refresh cadence, and embedding model governance are
     still open.
 - Decision needed:

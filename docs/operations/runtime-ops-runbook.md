@@ -79,11 +79,18 @@ retrieval posture:
 - `semantic_embedding_warning_state`
 - `semantic_embedding_warning_hint`
 - `semantic_embedding_source_kinds`
+- `semantic_embedding_source_coverage_state`
+- `semantic_embedding_source_coverage_hint`
 
 When semantic vectors are enabled and a non-implemented provider is requested
 (for example `EMBEDDING_PROVIDER=openai` today), startup emits
 `embedding_strategy_warning` with requested/effective provider-model posture
 and deterministic fallback hint.
+
+When semantic vectors are enabled but embedding source coverage excludes both
+`semantic` and `affective`, startup emits `embedding_source_coverage_warning`
+so operators can see that vector retrieval path is configured without
+high-signal vector source families.
 
 On startup, production now emits an explicit warning when
 `EVENT_DEBUG_ENABLED=true`. Treat this warning as a release-hardening signal:

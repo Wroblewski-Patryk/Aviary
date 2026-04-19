@@ -195,6 +195,10 @@ Completed on 2026-04-18:
 - `PRJ-236` is complete: embedding source-family scope is now explicit through
   `EMBEDDING_SOURCE_KINDS`, runtime embedding writes respect enabled families,
   and `/health.memory_retrieval` exposes effective configured source kinds.
+- `PRJ-237` is complete: embedding source-coverage posture is now explicit in
+  `/health.memory_retrieval` and startup warning logs share the same
+  coverage-state semantics, reducing drift between operator diagnostics and
+  startup guardrail signals.
 
 ## Highest-Risk Gaps
 
@@ -885,7 +889,7 @@ implicit or uncontrolled side effects.
 
 ## Next Derived Slice
 
-The planning queue is complete through `PRJ-236`.
+The planning queue is complete through `PRJ-237`.
 There is currently no execution-ready PRJ slice in the board.
 Before the next implementation slice:
 

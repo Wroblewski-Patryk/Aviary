@@ -80,16 +80,15 @@ def _attention_snapshot_from_request(request: Request) -> dict[str, Any]:
 
 
 def _memory_retrieval_snapshot_from_settings(settings) -> dict[str, Any]:
-    snapshot = embedding_strategy_snapshot(
+    return embedding_strategy_snapshot(
         semantic_vector_enabled=bool(getattr(settings, "semantic_vector_enabled", True)),
         provider=str(getattr(settings, "embedding_provider", "deterministic")),
         model=str(getattr(settings, "embedding_model", "deterministic-v1")),
         dimensions=max(1, int(getattr(settings, "embedding_dimensions", 32))),
+        source_kinds=normalize_embedding_source_kinds(
+            str(getattr(settings, "embedding_source_kinds", "episodic,semantic,affective"))
+        ),
     )
-    snapshot["semantic_embedding_source_kinds"] = list(
-        normalize_embedding_source_kinds(str(getattr(settings, "embedding_source_kinds", "episodic,semantic,affective")))
-    )
-    return snapshot
 
 
 def _debug_query_compat_telemetry_from_request(request: Request) -> DebugQueryCompatTelemetry:

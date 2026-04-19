@@ -25,7 +25,7 @@ from app.core.runtime import RuntimeOrchestrator
 from app.expression.generator import ExpressionAgent
 from app.integrations.openai.client import OpenAIClient
 from app.integrations.telegram.client import TelegramClient
-from app.memory.embeddings import embedding_strategy_snapshot
+from app.memory.embeddings import embedding_strategy_snapshot, normalize_embedding_source_kinds
 from app.memory.repository import MemoryRepository
 from app.motivation.engine import MotivationEngine
 from app.reflection.worker import ReflectionWorker
@@ -97,11 +97,19 @@ def _log_runtime_policy_warnings(*, settings, logger) -> None:
 
 
 def _log_embedding_strategy_warnings(*, settings, logger) -> None:
+    source_kinds_getter = getattr(settings, "get_embedding_source_kinds", None)
+    if callable(source_kinds_getter):
+        source_kinds = tuple(source_kinds_getter())
+    else:
+        source_kinds = normalize_embedding_source_kinds(
+            str(getattr(settings, "embedding_source_kinds", "episodic,semantic,affective"))
+        )
     snapshot = embedding_strategy_snapshot(
         semantic_vector_enabled=bool(getattr(settings, "semantic_vector_enabled", True)),
         provider=str(getattr(settings, "embedding_provider", "deterministic")),
         model=str(getattr(settings, "embedding_model", "deterministic-v1")),
         dimensions=max(1, int(getattr(settings, "embedding_dimensions", 32))),
+        source_kinds=source_kinds,
     )
     if str(snapshot["semantic_embedding_warning_state"]) == "provider_fallback_active":
         logger.warning(
@@ -112,6 +120,17 @@ def _log_embedding_strategy_warnings(*, settings, logger) -> None:
             str(snapshot["semantic_embedding_model_requested"]),
             str(snapshot["semantic_embedding_model_effective"]),
             str(snapshot["semantic_embedding_provider_hint"]),
+        )
+    if str(snapshot["semantic_embedding_source_coverage_state"]) in {
+        "partial_for_current_retrieval_path",
+        "missing_for_current_retrieval_path",
+    }:
+        logger.warning(
+            "embedding_source_coverage_warning semantic_vector_enabled=%s source_kinds=%s coverage_state=%s hint=%s recommendation=enable_semantic_and_affective_sources_for_vector_hits",
+            bool(snapshot["semantic_vector_enabled"]),
+            ",".join(str(item) for item in snapshot["semantic_embedding_source_kinds"]),
+            str(snapshot["semantic_embedding_source_coverage_state"]),
+            str(snapshot["semantic_embedding_source_coverage_hint"]),
         )
 
 

@@ -15,7 +15,7 @@ Last updated: 2026-04-19
   - run relevant tests and validations
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
-- The planning queue is complete through `PRJ-236`.
+- The planning queue is complete through `PRJ-237`.
 - No `READY` PRJ slice is currently registered; derive the next smallest slice
   from `docs/planning/open-decisions.md` and sync it with the board before
   implementation.
@@ -48,6 +48,26 @@ Last updated: 2026-04-19
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-237 Add embedding source-coverage posture diagnostics and startup warning alignment
+  - Status: DONE
+  - Group: Embedding Strategy Posture
+  - Owner: Backend Builder + QA/Test + Product Docs
+  - Depends on: PRJ-236
+  - Priority: P2
+  - Result:
+    - shared embedding strategy helper now exposes source-coverage posture for
+      current vector retrieval path
+      (`semantic_embedding_source_coverage_state`,
+      `semantic_embedding_source_coverage_hint`)
+    - `/health.memory_retrieval` now exposes those source-coverage diagnostics
+      alongside provider/model/source configuration posture
+    - startup now emits `embedding_source_coverage_warning` when vectors are
+      enabled but semantic/affective source coverage is partial or missing,
+      using the same shared coverage-state semantics as health
+    - docs/context/planning are synchronized through `PRJ-237`
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_embedding_strategy.py tests/test_config.py tests/test_action_executor.py tests/test_memory_repository.py tests/test_api_routes.py tests/test_main_runtime_policy.py tests/test_main_lifespan_policy.py`
 
 - [x] PRJ-236 Add explicit embedding source-family scope configuration and runtime gating
   - Status: DONE

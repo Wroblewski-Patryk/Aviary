@@ -41,9 +41,30 @@ def embedding_strategy_snapshot(
     provider: str | None,
     model: str | None,
     dimensions: int,
+    source_kinds: tuple[str, ...] | None = None,
 ) -> dict[str, str | bool | int]:
     posture = resolve_embedding_posture(provider=provider, model=model)
+    if source_kinds is None:
+        normalized_source_kinds = normalize_embedding_source_kinds(None)
+    else:
+        normalized_source_kinds = normalize_embedding_source_kinds(",".join(source_kinds))
+    source_kind_set = set(normalized_source_kinds)
     provider_ready = posture["provider_requested"] == posture["provider_effective"]
+    semantic_ready = "semantic" in source_kind_set
+    affective_ready = "affective" in source_kind_set
+    if not semantic_vector_enabled:
+        source_coverage_state = "vectors_disabled"
+        source_coverage_hint = "not_applicable_vectors_disabled"
+    elif semantic_ready and affective_ready:
+        source_coverage_state = "full_for_current_retrieval_path"
+        source_coverage_hint = "semantic_and_affective_sources_enabled"
+    elif semantic_ready or affective_ready:
+        source_coverage_state = "partial_for_current_retrieval_path"
+        source_coverage_hint = "enable_missing_semantic_or_affective_source"
+    else:
+        source_coverage_state = "missing_for_current_retrieval_path"
+        source_coverage_hint = "enable_semantic_or_affective_source_for_vector_hits"
+
     if not semantic_vector_enabled:
         warning_state = "vectors_disabled"
         warning_hint = "enable_semantic_vectors_to_activate_embedding_strategy"
@@ -65,6 +86,9 @@ def embedding_strategy_snapshot(
         "semantic_embedding_model_requested": posture["model_requested"],
         "semantic_embedding_model_effective": posture["model_effective"],
         "semantic_embedding_dimensions": max(1, int(dimensions)),
+        "semantic_embedding_source_kinds": list(normalized_source_kinds),
+        "semantic_embedding_source_coverage_state": source_coverage_state,
+        "semantic_embedding_source_coverage_hint": source_coverage_hint,
         "semantic_embedding_warning_state": warning_state,
         "semantic_embedding_warning_hint": warning_hint,
     }

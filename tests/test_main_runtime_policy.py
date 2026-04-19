@@ -371,3 +371,39 @@ def test_startup_skips_embedding_strategy_warning_when_vectors_are_disabled(capl
 
     messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
     assert not any("embedding_strategy_warning" in message for message in messages)
+    assert not any("embedding_source_coverage_warning" in message for message in messages)
+
+
+def test_startup_logs_embedding_source_coverage_warning_when_semantic_and_affective_sources_are_missing(caplog) -> None:
+    logger_name = "aion.app"
+    caplog.set_level("WARNING", logger=logger_name)
+    logger = logging.getLogger(logger_name)
+    settings = SimpleNamespace(
+        semantic_vector_enabled=True,
+        embedding_provider="deterministic",
+        embedding_model="deterministic-v1",
+        embedding_source_kinds="episodic,relation",
+    )
+
+    _log_embedding_strategy_warnings(settings=settings, logger=logger)
+
+    messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
+    assert any("embedding_source_coverage_warning" in message for message in messages)
+    assert any("coverage_state=missing_for_current_retrieval_path" in message for message in messages)
+
+
+def test_startup_skips_embedding_source_coverage_warning_when_semantic_and_affective_sources_are_enabled(caplog) -> None:
+    logger_name = "aion.app"
+    caplog.set_level("WARNING", logger=logger_name)
+    logger = logging.getLogger(logger_name)
+    settings = SimpleNamespace(
+        semantic_vector_enabled=True,
+        embedding_provider="deterministic",
+        embedding_model="deterministic-v1",
+        embedding_source_kinds="episodic,semantic,affective",
+    )
+
+    _log_embedding_strategy_warnings(settings=settings, logger=logger)
+
+    messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
+    assert not any("embedding_source_coverage_warning" in message for message in messages)

@@ -11,6 +11,8 @@ def test_embedding_strategy_snapshot_marks_no_warning_when_deterministic_provide
 
     assert snapshot["semantic_embedding_provider_ready"] is True
     assert snapshot["semantic_embedding_posture"] == "ready"
+    assert snapshot["semantic_embedding_source_coverage_state"] == "full_for_current_retrieval_path"
+    assert snapshot["semantic_embedding_source_coverage_hint"] == "semantic_and_affective_sources_enabled"
     assert snapshot["semantic_embedding_warning_state"] == "no_warning"
     assert snapshot["semantic_embedding_warning_hint"] == "embedding_strategy_ready"
 
@@ -24,6 +26,8 @@ def test_embedding_strategy_snapshot_marks_vectors_disabled_warning_state() -> N
     )
 
     assert snapshot["semantic_retrieval_mode"] == "lexical_only"
+    assert snapshot["semantic_embedding_source_coverage_state"] == "vectors_disabled"
+    assert snapshot["semantic_embedding_source_coverage_hint"] == "not_applicable_vectors_disabled"
     assert snapshot["semantic_embedding_warning_state"] == "vectors_disabled"
     assert (
         snapshot["semantic_embedding_warning_hint"]
@@ -47,6 +51,23 @@ def test_embedding_strategy_snapshot_marks_provider_fallback_warning_state() -> 
     assert (
         snapshot["semantic_embedding_warning_hint"]
         == "provider_not_implemented_using_deterministic_fallback"
+    )
+
+
+def test_embedding_strategy_snapshot_marks_missing_source_coverage_when_semantic_and_affective_are_disabled() -> None:
+    snapshot = embedding_strategy_snapshot(
+        semantic_vector_enabled=True,
+        provider="deterministic",
+        model="deterministic-v1",
+        dimensions=32,
+        source_kinds=("episodic", "relation"),
+    )
+
+    assert snapshot["semantic_embedding_source_kinds"] == ["episodic", "relation"]
+    assert snapshot["semantic_embedding_source_coverage_state"] == "missing_for_current_retrieval_path"
+    assert (
+        snapshot["semantic_embedding_source_coverage_hint"]
+        == "enable_semantic_or_affective_source_for_vector_hits"
     )
 
 

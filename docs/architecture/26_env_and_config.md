@@ -270,6 +270,8 @@ Allowed values:
 - `semantic_embedding_warning_state`
 - `semantic_embedding_warning_hint`
 - `semantic_embedding_source_kinds`
+- `semantic_embedding_source_coverage_state`
+- `semantic_embedding_source_coverage_hint`
 
 Compatibility route `POST /event?debug=true` also emits:
 

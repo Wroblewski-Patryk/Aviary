@@ -450,6 +450,8 @@ def test_health_endpoint_returns_ok() -> None:
             "semantic_embedding_warning_state": "no_warning",
             "semantic_embedding_warning_hint": "embedding_strategy_ready",
             "semantic_embedding_source_kinds": ["episodic", "semantic", "affective"],
+            "semantic_embedding_source_coverage_state": "full_for_current_retrieval_path",
+            "semantic_embedding_source_coverage_hint": "semantic_and_affective_sources_enabled",
         },
         "scheduler": {
             "healthy": True,
@@ -538,6 +540,8 @@ def test_health_endpoint_exposes_lexical_only_memory_retrieval_mode_when_semanti
         "semantic_embedding_warning_state": "vectors_disabled",
         "semantic_embedding_warning_hint": "enable_semantic_vectors_to_activate_embedding_strategy",
         "semantic_embedding_source_kinds": ["episodic", "semantic", "affective"],
+        "semantic_embedding_source_coverage_state": "vectors_disabled",
+        "semantic_embedding_source_coverage_hint": "not_applicable_vectors_disabled",
     }
 
 
@@ -566,6 +570,8 @@ def test_health_endpoint_exposes_embedding_provider_fallback_posture_when_non_de
         "semantic_embedding_warning_state": "provider_fallback_active",
         "semantic_embedding_warning_hint": "provider_not_implemented_using_deterministic_fallback",
         "semantic_embedding_source_kinds": ["episodic", "semantic", "affective"],
+        "semantic_embedding_source_coverage_state": "full_for_current_retrieval_path",
+        "semantic_embedding_source_coverage_hint": "semantic_and_affective_sources_enabled",
     }
 
 
@@ -577,6 +583,11 @@ def test_health_endpoint_exposes_configured_embedding_source_kinds() -> None:
     assert response.status_code == 200
     body = response.json()
     assert body["memory_retrieval"]["semantic_embedding_source_kinds"] == ["episodic", "relation"]
+    assert body["memory_retrieval"]["semantic_embedding_source_coverage_state"] == "missing_for_current_retrieval_path"
+    assert (
+        body["memory_retrieval"]["semantic_embedding_source_coverage_hint"]
+        == "enable_semantic_or_affective_source_for_vector_hits"
+    )
 
 
 def test_health_endpoint_marks_scheduler_unhealthy_when_enabled_but_not_running() -> None:

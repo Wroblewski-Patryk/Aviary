@@ -182,6 +182,10 @@ Current limitation:
 - embedding persistence scope is now explicitly configurable through
   `EMBEDDING_SOURCE_KINDS` (`episodic|semantic|affective|relation`), and
   health exposes effective configured source families.
+- health also exposes source-coverage posture for current retrieval path
+  (`semantic_embedding_source_coverage_state`,
+  `semantic_embedding_source_coverage_hint`), and startup warning logs reuse
+  this shared coverage-state semantics.
 
 ### Event API behavior
 
