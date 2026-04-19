@@ -408,6 +408,37 @@ def test_startup_logs_embedding_model_governance_warning_when_deterministic_cust
     assert any("embedding_model_governance_warning" in message for message in messages)
     assert any("requested_model=deterministic-v2" in message for message in messages)
     assert any("governance_state=deterministic_custom_model_name" in message for message in messages)
+    assert any("governance_enforcement=warn" in message for message in messages)
+    assert any("governance_enforcement_state=warning_only" in message for message in messages)
+    assert not any("embedding_model_governance_block" in message for message in messages)
+
+
+def test_startup_blocks_deterministic_custom_model_when_governance_enforcement_is_strict(caplog) -> None:
+    logger_name = "aion.app"
+    caplog.set_level("WARNING", logger=logger_name)
+    logger = logging.getLogger(logger_name)
+    settings = SimpleNamespace(
+        semantic_vector_enabled=True,
+        embedding_provider="deterministic",
+        embedding_model="deterministic-v2",
+        embedding_model_governance_enforcement="strict",
+        embedding_source_kinds="episodic,semantic,affective",
+    )
+
+    try:
+        _log_embedding_strategy_warnings(settings=settings, logger=logger)
+    except RuntimeError as exc:
+        assert "Embedding model governance strict-mode violation" in str(exc)
+        assert "requested_model=deterministic-v2" in str(exc)
+        assert "effective_model=deterministic-v2" in str(exc)
+    else:  # pragma: no cover - defensive fallback
+        raise AssertionError("Expected strict model governance enforcement to block startup.")
+
+    messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
+    assert any("embedding_model_governance_warning" in message for message in messages)
+    assert any("governance_enforcement=strict" in message for message in messages)
+    assert any("governance_enforcement_state=blocked" in message for message in messages)
+    assert any("embedding_model_governance_block" in message for message in messages)
 
 
 def test_startup_skips_embedding_model_governance_warning_for_deterministic_baseline_model(caplog) -> None:

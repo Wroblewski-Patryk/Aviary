@@ -93,6 +93,9 @@ def _memory_retrieval_snapshot_from_settings(settings) -> dict[str, Any]:
         provider_ownership_enforcement=str(
             getattr(settings, "embedding_provider_ownership_enforcement", "warn")
         ),
+        model_governance_enforcement=str(
+            getattr(settings, "embedding_model_governance_enforcement", "warn")
+        ),
     )
 
 

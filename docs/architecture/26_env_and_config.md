@@ -212,6 +212,18 @@ Allowed values:
 
 Default: `warn`.
 
+`EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT`
+
+Controls whether deterministic custom-model-name governance posture is
+warning-only or startup-blocking.
+
+Allowed values:
+
+- `warn`
+- `strict`
+
+Default: `warn`.
+
 `PRODUCTION_DEBUG_TOKEN_REQUIRED`
 
 Controls whether production debug payload access requires a configured debug
@@ -302,6 +314,9 @@ Allowed values:
 - `semantic_embedding_model_effective`
 - `semantic_embedding_model_governance_state`
 - `semantic_embedding_model_governance_hint`
+- `semantic_embedding_model_governance_enforcement`
+- `semantic_embedding_model_governance_enforcement_state`
+- `semantic_embedding_model_governance_enforcement_hint`
 - `semantic_embedding_dimensions`
 - `semantic_embedding_warning_state`
 - `semantic_embedding_warning_hint`

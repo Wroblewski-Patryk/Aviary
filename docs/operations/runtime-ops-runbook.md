@@ -82,6 +82,9 @@ retrieval posture:
 - `semantic_embedding_model_effective`
 - `semantic_embedding_model_governance_state`
 - `semantic_embedding_model_governance_hint`
+- `semantic_embedding_model_governance_enforcement`
+- `semantic_embedding_model_governance_enforcement_state`
+- `semantic_embedding_model_governance_enforcement_hint`
 - `semantic_embedding_dimensions`
 - `semantic_embedding_warning_state`
 - `semantic_embedding_warning_hint`
@@ -107,6 +110,11 @@ When semantic vectors are enabled with `EMBEDDING_PROVIDER=deterministic` and a
 non-baseline model name is requested, startup emits
 `embedding_model_governance_warning` to indicate deterministic embedding
 behavior remains fixed even when model label changes.
+
+When deterministic custom-model-name governance posture is active and
+`EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT=strict`, startup emits
+`embedding_model_governance_block` and fails fast until model governance
+posture is aligned.
 
 When semantic vectors are enabled but embedding source coverage excludes both
 `semantic` and `affective`, startup emits `embedding_source_coverage_warning`
@@ -193,6 +201,9 @@ Recommended when Telegram webhooks are enabled:
 - `EMBEDDING_PROVIDER_OWNERSHIP_ENFORCEMENT` (`warn|strict`, default `warn`)
   to decide whether provider-ownership fallback remains warning-only or blocks
   startup
+- `EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT` (`warn|strict`, default `warn`) to
+  decide whether deterministic custom-model-name governance posture remains
+  warning-only or blocks startup
 - `PRODUCTION_DEBUG_TOKEN_REQUIRED` (`true|false`, default `true`) to require
   a configured debug token for production debug payload access when debug
   exposure is enabled

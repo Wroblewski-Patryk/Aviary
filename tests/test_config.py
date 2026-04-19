@@ -23,6 +23,7 @@ def test_settings_default_to_migration_first_startup_mode() -> None:
     assert settings.embedding_refresh_mode == "on_write"
     assert settings.embedding_refresh_interval_seconds == 21600
     assert settings.embedding_provider_ownership_enforcement == "warn"
+    assert settings.embedding_model_governance_enforcement == "warn"
     assert settings.reflection_runtime_mode == "in_process"
     assert settings.scheduler_enabled is False
     assert settings.reflection_interval == 900
@@ -188,6 +189,15 @@ def test_settings_allow_strict_embedding_provider_ownership_enforcement_mode() -
     assert settings.embedding_provider_ownership_enforcement == "strict"
 
 
+def test_settings_allow_strict_embedding_model_governance_enforcement_mode() -> None:
+    settings = Settings(
+        database_url="postgresql+asyncpg://u:p@localhost:5432/aion",
+        embedding_model_governance_enforcement="strict",
+    )
+
+    assert settings.embedding_model_governance_enforcement == "strict"
+
+
 def test_settings_allow_strict_production_policy_enforcement_mode() -> None:
     settings = Settings(
         database_url="postgresql+asyncpg://u:p@localhost:5432/aion",
@@ -241,6 +251,20 @@ def test_settings_reject_unknown_embedding_provider_ownership_enforcement_mode()
     else:  # pragma: no cover - defensive fallback
         raise AssertionError(
             "Expected Settings validation to reject unknown embedding provider ownership enforcement mode."
+        )
+
+
+def test_settings_reject_unknown_embedding_model_governance_enforcement_mode() -> None:
+    try:
+        Settings(
+            database_url="postgresql+asyncpg://u:p@localhost:5432/aion",
+            embedding_model_governance_enforcement="legacy",  # type: ignore[arg-type]
+        )
+    except ValidationError as exc:
+        assert "embedding_model_governance_enforcement" in str(exc)
+    else:  # pragma: no cover - defensive fallback
+        raise AssertionError(
+            "Expected Settings validation to reject unknown embedding model governance enforcement mode."
         )
 
 

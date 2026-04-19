@@ -208,6 +208,12 @@ Current limitation:
   `semantic_embedding_provider_ownership_enforcement_state`,
   `semantic_embedding_provider_ownership_enforcement_hint`), enabling strict
   startup block mode for unresolved fallback ownership posture.
+- model-governance enforcement posture is now explicit through
+  `EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT` and helper-owned diagnostics
+  (`semantic_embedding_model_governance_enforcement`,
+  `semantic_embedding_model_governance_enforcement_state`,
+  `semantic_embedding_model_governance_enforcement_hint`), enabling strict
+  startup block mode for deterministic custom-model-name governance posture.
 
 ### Event API behavior
 

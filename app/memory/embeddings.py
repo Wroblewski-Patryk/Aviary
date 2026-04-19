@@ -12,6 +12,8 @@ DEFAULT_EMBEDDING_REFRESH_MODE = "on_write"
 DEFAULT_EMBEDDING_REFRESH_INTERVAL_SECONDS = 21600
 EMBEDDING_PROVIDER_OWNERSHIP_ENFORCEMENT_MODES = ("warn", "strict")
 DEFAULT_EMBEDDING_PROVIDER_OWNERSHIP_ENFORCEMENT = "warn"
+EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT_MODES = ("warn", "strict")
+DEFAULT_EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT = "warn"
 
 
 def resolve_embedding_posture(
@@ -50,6 +52,7 @@ def embedding_strategy_snapshot(
     refresh_mode: str | None = None,
     refresh_interval_seconds: int | None = None,
     provider_ownership_enforcement: str | None = None,
+    model_governance_enforcement: str | None = None,
 ) -> dict[str, str | bool | int]:
     posture = resolve_embedding_posture(provider=provider, model=model)
     if source_kinds is None:
@@ -119,6 +122,9 @@ def embedding_strategy_snapshot(
     normalized_provider_ownership_enforcement = normalize_embedding_provider_ownership_enforcement(
         provider_ownership_enforcement
     )
+    normalized_model_governance_enforcement = normalize_embedding_model_governance_enforcement(
+        model_governance_enforcement
+    )
     if not semantic_vector_enabled:
         refresh_state = "vectors_disabled"
         refresh_hint = "not_applicable_vectors_disabled"
@@ -143,6 +149,20 @@ def embedding_strategy_snapshot(
         provider_ownership_enforcement_state = "not_applicable_no_fallback"
         provider_ownership_enforcement_hint = "no_provider_ownership_violation"
 
+    if model_governance_state == "deterministic_custom_model_name":
+        if normalized_model_governance_enforcement == "strict":
+            model_governance_enforcement_state = "blocked"
+            model_governance_enforcement_hint = "use_deterministic_v1_or_switch_to_effective_provider_model"
+        else:
+            model_governance_enforcement_state = "warning_only"
+            model_governance_enforcement_hint = "custom_model_name_allowed_in_warn_mode"
+    elif model_governance_state == "vectors_disabled":
+        model_governance_enforcement_state = "not_applicable_vectors_disabled"
+        model_governance_enforcement_hint = "not_applicable_vectors_disabled"
+    else:
+        model_governance_enforcement_state = "not_applicable_aligned"
+        model_governance_enforcement_hint = "no_model_governance_violation"
+
     return {
         "semantic_vector_enabled": semantic_vector_enabled,
         "semantic_retrieval_mode": "hybrid_vector_lexical" if semantic_vector_enabled else "lexical_only",
@@ -160,6 +180,9 @@ def embedding_strategy_snapshot(
         "semantic_embedding_model_effective": posture["model_effective"],
         "semantic_embedding_model_governance_state": model_governance_state,
         "semantic_embedding_model_governance_hint": model_governance_hint,
+        "semantic_embedding_model_governance_enforcement": normalized_model_governance_enforcement,
+        "semantic_embedding_model_governance_enforcement_state": model_governance_enforcement_state,
+        "semantic_embedding_model_governance_enforcement_hint": model_governance_enforcement_hint,
         "semantic_embedding_dimensions": max(1, int(dimensions)),
         "semantic_embedding_source_kinds": list(normalized_source_kinds),
         "semantic_embedding_source_coverage_state": source_coverage_state,
@@ -214,6 +237,13 @@ def normalize_embedding_provider_ownership_enforcement(value: str | None) -> str
     normalized = str(value or DEFAULT_EMBEDDING_PROVIDER_OWNERSHIP_ENFORCEMENT).strip().lower()
     if normalized not in EMBEDDING_PROVIDER_OWNERSHIP_ENFORCEMENT_MODES:
         return DEFAULT_EMBEDDING_PROVIDER_OWNERSHIP_ENFORCEMENT
+    return normalized
+
+
+def normalize_embedding_model_governance_enforcement(value: str | None) -> str:
+    normalized = str(value or DEFAULT_EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT).strip().lower()
+    if normalized not in EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT_MODES:
+        return DEFAULT_EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT
     return normalized
 
 

@@ -115,6 +115,9 @@ def _log_embedding_strategy_warnings(*, settings, logger) -> None:
         provider_ownership_enforcement=str(
             getattr(settings, "embedding_provider_ownership_enforcement", "warn")
         ),
+        model_governance_enforcement=str(
+            getattr(settings, "embedding_model_governance_enforcement", "warn")
+        ),
     )
     if str(snapshot["semantic_embedding_warning_state"]) == "provider_fallback_active":
         logger.warning(
@@ -149,13 +152,32 @@ def _log_embedding_strategy_warnings(*, settings, logger) -> None:
         )
     if str(snapshot["semantic_embedding_model_governance_state"]) == "deterministic_custom_model_name":
         logger.warning(
-            "embedding_model_governance_warning semantic_vector_enabled=%s provider=%s requested_model=%s effective_model=%s governance_state=%s hint=%s recommendation=use_deterministic_v1_or_implement_provider_backed_model_execution",
+            "embedding_model_governance_warning semantic_vector_enabled=%s provider=%s requested_model=%s effective_model=%s governance_state=%s governance_enforcement=%s governance_enforcement_state=%s governance_enforcement_hint=%s hint=%s recommendation=use_deterministic_v1_or_implement_provider_backed_model_execution",
             bool(snapshot["semantic_vector_enabled"]),
             str(snapshot["semantic_embedding_provider_effective"]),
             str(snapshot["semantic_embedding_model_requested"]),
             str(snapshot["semantic_embedding_model_effective"]),
             str(snapshot["semantic_embedding_model_governance_state"]),
+            str(snapshot["semantic_embedding_model_governance_enforcement"]),
+            str(snapshot["semantic_embedding_model_governance_enforcement_state"]),
+            str(snapshot["semantic_embedding_model_governance_enforcement_hint"]),
             str(snapshot["semantic_embedding_model_governance_hint"]),
+        )
+    if str(snapshot["semantic_embedding_model_governance_enforcement_state"]) == "blocked":
+        logger.error(
+            "embedding_model_governance_block semantic_vector_enabled=%s requested_model=%s effective_model=%s governance_enforcement=%s governance_enforcement_state=%s governance_enforcement_hint=%s",
+            bool(snapshot["semantic_vector_enabled"]),
+            str(snapshot["semantic_embedding_model_requested"]),
+            str(snapshot["semantic_embedding_model_effective"]),
+            str(snapshot["semantic_embedding_model_governance_enforcement"]),
+            str(snapshot["semantic_embedding_model_governance_enforcement_state"]),
+            str(snapshot["semantic_embedding_model_governance_enforcement_hint"]),
+        )
+        raise RuntimeError(
+            "Embedding model governance strict-mode violation: "
+            f"requested_model={snapshot['semantic_embedding_model_requested']} "
+            f"effective_model={snapshot['semantic_embedding_model_effective']}. "
+            "Resolve model governance mismatch or set EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT=warn."
         )
     if str(snapshot["semantic_embedding_source_coverage_state"]) in {
         "partial_for_current_retrieval_path",
@@ -288,7 +310,7 @@ async def lifespan(app: FastAPI):
     app.state.runtime = runtime
 
     logger.info(
-        "AION started env=%s port=%s openai_enabled=%s telegram_enabled=%s reflection_runtime_mode=%s scheduler_enabled=%s semantic_vector_enabled=%s embedding_provider=%s embedding_model=%s embedding_dimensions=%s embedding_refresh_mode=%s embedding_refresh_interval_seconds=%s embedding_provider_ownership_enforcement=%s",
+        "AION started env=%s port=%s openai_enabled=%s telegram_enabled=%s reflection_runtime_mode=%s scheduler_enabled=%s semantic_vector_enabled=%s embedding_provider=%s embedding_model=%s embedding_dimensions=%s embedding_refresh_mode=%s embedding_refresh_interval_seconds=%s embedding_provider_ownership_enforcement=%s embedding_model_governance_enforcement=%s",
         settings.app_env,
         settings.app_port,
         bool(settings.openai_api_key),
@@ -302,6 +324,7 @@ async def lifespan(app: FastAPI):
         str(getattr(settings, "embedding_refresh_mode", "on_write")),
         int(getattr(settings, "embedding_refresh_interval_seconds", 21600)),
         str(getattr(settings, "embedding_provider_ownership_enforcement", "warn")),
+        str(getattr(settings, "embedding_model_governance_enforcement", "warn")),
     )
     try:
         yield

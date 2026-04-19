@@ -52,6 +52,9 @@
 - `EMBEDDING_PROVIDER_OWNERSHIP_ENFORCEMENT` (optional, default `warn`) to
   decide whether provider-ownership fallback stays warning-only or blocks
   startup (`warn|strict`)
+- `EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT` (optional, default `warn`) to
+  decide whether deterministic custom-model-name governance posture stays
+  warning-only or blocks startup (`warn|strict`)
 - `PRODUCTION_DEBUG_TOKEN_REQUIRED` (optional, default `true`) to enforce
   debug-token configuration for production debug payload access
 - `ATTENTION_BURST_WINDOW_MS` (optional) to tune Telegram burst coalescing

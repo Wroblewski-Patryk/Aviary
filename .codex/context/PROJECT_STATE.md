@@ -181,6 +181,10 @@ Last updated: 2026-04-19
   through `EMBEDDING_PROVIDER_OWNERSHIP_ENFORCEMENT` (`warn|strict`) and shared
   enforcement diagnostics in `/health.memory_retrieval`; strict mode can now
   block startup when provider ownership fallback remains active.
+- 2026-04-19: embedding model-governance enforcement posture is now explicit
+  through `EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT` (`warn|strict`) and shared
+  enforcement diagnostics in `/health.memory_retrieval`; strict mode can now
+  block startup for deterministic custom-model-name governance violations.
 - 2026-04-19: relation memory is now a first-class subsystem (`aion_relation`)
   with scoped repository APIs; reflection derives relation updates and runtime
   stages now consume high-confidence relation cues across context, role,

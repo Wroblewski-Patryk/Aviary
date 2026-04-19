@@ -284,7 +284,14 @@ The current repo already works as an MVP slice, but several architecture-level d
     `semantic_embedding_provider_ownership_enforcement_state`,
     `semantic_embedding_provider_ownership_enforcement_hint`), including
     strict-mode startup block behavior for unresolved fallback ownership.
-  - model-governance enforcement policy is still open.
+  - model-governance enforcement posture is now explicit through
+    `EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT` (`warn|strict`) and shared
+    enforcement diagnostics
+    (`semantic_embedding_model_governance_enforcement`,
+    `semantic_embedding_model_governance_enforcement_state`,
+    `semantic_embedding_model_governance_enforcement_hint`), including
+    strict-mode startup block behavior for deterministic custom-model-name
+    governance posture.
 - Decision needed:
   - which embedding provider and refresh strategy should own semantic memory
     vectors?

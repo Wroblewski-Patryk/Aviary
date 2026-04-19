@@ -228,6 +228,13 @@ Completed on 2026-04-18:
   `semantic_embedding_provider_ownership_enforcement_state`,
   `semantic_embedding_provider_ownership_enforcement_hint`), including strict
   startup block behavior for unresolved provider fallback ownership.
+- `PRJ-243` is complete: embedding model-governance enforcement posture is now
+  explicit through runtime config
+  (`EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT`) and shared helper diagnostics
+  (`semantic_embedding_model_governance_enforcement`,
+  `semantic_embedding_model_governance_enforcement_state`,
+  `semantic_embedding_model_governance_enforcement_hint`), including strict
+  startup block behavior for deterministic custom-model-name governance posture.
 
 ## Highest-Risk Gaps
 
@@ -918,7 +925,7 @@ implicit or uncontrolled side effects.
 
 ## Next Derived Slice
 
-The planning queue is complete through `PRJ-242`.
+The planning queue is complete through `PRJ-243`.
 There is currently no execution-ready PRJ slice in the board.
 Before the next implementation slice:
 

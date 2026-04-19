@@ -31,6 +31,12 @@ def test_embedding_strategy_snapshot_marks_no_warning_when_deterministic_provide
         snapshot["semantic_embedding_model_governance_hint"]
         == "embedding_model_contract_aligned_with_provider"
     )
+    assert snapshot["semantic_embedding_model_governance_enforcement"] == "warn"
+    assert snapshot["semantic_embedding_model_governance_enforcement_state"] == "not_applicable_aligned"
+    assert (
+        snapshot["semantic_embedding_model_governance_enforcement_hint"]
+        == "no_model_governance_violation"
+    )
     assert snapshot["semantic_embedding_refresh_mode"] == "on_write"
     assert snapshot["semantic_embedding_refresh_interval_seconds"] == 21600
     assert snapshot["semantic_embedding_refresh_state"] == "on_write_refresh_active"
@@ -66,6 +72,15 @@ def test_embedding_strategy_snapshot_marks_vectors_disabled_warning_state() -> N
     )
     assert snapshot["semantic_embedding_model_governance_state"] == "vectors_disabled"
     assert snapshot["semantic_embedding_model_governance_hint"] == "not_applicable_vectors_disabled"
+    assert snapshot["semantic_embedding_model_governance_enforcement"] == "warn"
+    assert (
+        snapshot["semantic_embedding_model_governance_enforcement_state"]
+        == "not_applicable_vectors_disabled"
+    )
+    assert (
+        snapshot["semantic_embedding_model_governance_enforcement_hint"]
+        == "not_applicable_vectors_disabled"
+    )
     assert snapshot["semantic_embedding_refresh_state"] == "vectors_disabled"
     assert snapshot["semantic_embedding_refresh_hint"] == "not_applicable_vectors_disabled"
 
@@ -102,6 +117,12 @@ def test_embedding_strategy_snapshot_marks_provider_fallback_warning_state() -> 
     assert (
         snapshot["semantic_embedding_model_governance_hint"]
         == "effective_model_controlled_by_fallback_provider"
+    )
+    assert snapshot["semantic_embedding_model_governance_enforcement"] == "warn"
+    assert snapshot["semantic_embedding_model_governance_enforcement_state"] == "not_applicable_aligned"
+    assert (
+        snapshot["semantic_embedding_model_governance_enforcement_hint"]
+        == "no_model_governance_violation"
     )
 
 
@@ -153,6 +174,12 @@ def test_embedding_strategy_snapshot_marks_deterministic_custom_model_governance
         snapshot["semantic_embedding_model_governance_hint"]
         == "deterministic_provider_uses_fixed_embedding_behavior"
     )
+    assert snapshot["semantic_embedding_model_governance_enforcement"] == "warn"
+    assert snapshot["semantic_embedding_model_governance_enforcement_state"] == "warning_only"
+    assert (
+        snapshot["semantic_embedding_model_governance_enforcement_hint"]
+        == "custom_model_name_allowed_in_warn_mode"
+    )
 
 
 def test_embedding_strategy_snapshot_marks_provider_ownership_enforcement_blocked_in_strict_mode() -> None:
@@ -169,6 +196,23 @@ def test_embedding_strategy_snapshot_marks_provider_ownership_enforcement_blocke
     assert (
         snapshot["semantic_embedding_provider_ownership_enforcement_hint"]
         == "switch_to_effective_provider_owner_before_startup"
+    )
+
+
+def test_embedding_strategy_snapshot_marks_model_governance_enforcement_blocked_in_strict_mode() -> None:
+    snapshot = embedding_strategy_snapshot(
+        semantic_vector_enabled=True,
+        provider="deterministic",
+        model="deterministic-v2",
+        dimensions=32,
+        model_governance_enforcement="strict",
+    )
+
+    assert snapshot["semantic_embedding_model_governance_enforcement"] == "strict"
+    assert snapshot["semantic_embedding_model_governance_enforcement_state"] == "blocked"
+    assert (
+        snapshot["semantic_embedding_model_governance_enforcement_hint"]
+        == "use_deterministic_v1_or_switch_to_effective_provider_model"
     )
 
 

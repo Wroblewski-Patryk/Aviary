@@ -186,6 +186,7 @@ class FakeSettings:
         embedding_refresh_mode: str = "on_write",
         embedding_refresh_interval_seconds: int = 21600,
         embedding_provider_ownership_enforcement: str = "warn",
+        embedding_model_governance_enforcement: str = "warn",
         startup_schema_mode: str = "migrate",
         production_policy_enforcement: str = "warn",
         reflection_runtime_mode: str = "in_process",
@@ -209,6 +210,7 @@ class FakeSettings:
         self.embedding_refresh_mode = embedding_refresh_mode
         self.embedding_refresh_interval_seconds = embedding_refresh_interval_seconds
         self.embedding_provider_ownership_enforcement = embedding_provider_ownership_enforcement
+        self.embedding_model_governance_enforcement = embedding_model_governance_enforcement
         self.startup_schema_mode = startup_schema_mode
         self.production_policy_enforcement = production_policy_enforcement
         self.reflection_runtime_mode = reflection_runtime_mode
@@ -326,6 +328,7 @@ def _client(
     embedding_refresh_mode: str = "on_write",
     embedding_refresh_interval_seconds: int = 21600,
     embedding_provider_ownership_enforcement: str = "warn",
+    embedding_model_governance_enforcement: str = "warn",
     startup_schema_mode: str = "migrate",
     production_policy_enforcement: str = "warn",
     reflection_runtime_mode: str = "in_process",
@@ -367,6 +370,7 @@ def _client(
         embedding_refresh_mode=embedding_refresh_mode,
         embedding_refresh_interval_seconds=embedding_refresh_interval_seconds,
         embedding_provider_ownership_enforcement=embedding_provider_ownership_enforcement,
+        embedding_model_governance_enforcement=embedding_model_governance_enforcement,
         startup_schema_mode=startup_schema_mode,
         production_policy_enforcement=production_policy_enforcement,
         reflection_runtime_mode=reflection_runtime_mode,
@@ -465,6 +469,9 @@ def test_health_endpoint_returns_ok() -> None:
             "semantic_embedding_model_effective": "deterministic-v1",
             "semantic_embedding_model_governance_state": "model_contract_aligned",
             "semantic_embedding_model_governance_hint": "embedding_model_contract_aligned_with_provider",
+            "semantic_embedding_model_governance_enforcement": "warn",
+            "semantic_embedding_model_governance_enforcement_state": "not_applicable_aligned",
+            "semantic_embedding_model_governance_enforcement_hint": "no_model_governance_violation",
             "semantic_embedding_dimensions": 32,
             "semantic_embedding_warning_state": "no_warning",
             "semantic_embedding_warning_hint": "embedding_strategy_ready",
@@ -566,6 +573,9 @@ def test_health_endpoint_exposes_lexical_only_memory_retrieval_mode_when_semanti
         "semantic_embedding_model_effective": "deterministic-v1",
         "semantic_embedding_model_governance_state": "vectors_disabled",
         "semantic_embedding_model_governance_hint": "not_applicable_vectors_disabled",
+        "semantic_embedding_model_governance_enforcement": "warn",
+        "semantic_embedding_model_governance_enforcement_state": "not_applicable_vectors_disabled",
+        "semantic_embedding_model_governance_enforcement_hint": "not_applicable_vectors_disabled",
         "semantic_embedding_dimensions": 32,
         "semantic_embedding_warning_state": "vectors_disabled",
         "semantic_embedding_warning_hint": "enable_semantic_vectors_to_activate_embedding_strategy",
@@ -607,6 +617,9 @@ def test_health_endpoint_exposes_embedding_provider_fallback_posture_when_non_de
         "semantic_embedding_model_effective": "deterministic-v1",
         "semantic_embedding_model_governance_state": "provider_fallback_effective_model",
         "semantic_embedding_model_governance_hint": "effective_model_controlled_by_fallback_provider",
+        "semantic_embedding_model_governance_enforcement": "warn",
+        "semantic_embedding_model_governance_enforcement_state": "not_applicable_aligned",
+        "semantic_embedding_model_governance_enforcement_hint": "no_model_governance_violation",
         "semantic_embedding_dimensions": 1536,
         "semantic_embedding_warning_state": "provider_fallback_active",
         "semantic_embedding_warning_hint": "provider_not_implemented_using_deterministic_fallback",
@@ -650,6 +663,8 @@ def test_health_endpoint_exposes_embedding_model_governance_posture_for_determin
         body["memory_retrieval"]["semantic_embedding_model_governance_hint"]
         == "deterministic_provider_uses_fixed_embedding_behavior"
     )
+    assert body["memory_retrieval"]["semantic_embedding_model_governance_enforcement"] == "warn"
+    assert body["memory_retrieval"]["semantic_embedding_model_governance_enforcement_state"] == "warning_only"
 
 
 def test_health_endpoint_exposes_provider_ownership_enforcement_blocked_posture_in_strict_mode() -> None:
@@ -668,6 +683,25 @@ def test_health_endpoint_exposes_provider_ownership_enforcement_blocked_posture_
     assert (
         body["memory_retrieval"]["semantic_embedding_provider_ownership_enforcement_hint"]
         == "switch_to_effective_provider_owner_before_startup"
+    )
+
+
+def test_health_endpoint_exposes_model_governance_enforcement_blocked_posture_in_strict_mode() -> None:
+    client, _, _ = _client(
+        embedding_provider="deterministic",
+        embedding_model="deterministic-v2",
+        embedding_model_governance_enforcement="strict",
+    )
+
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["memory_retrieval"]["semantic_embedding_model_governance_enforcement"] == "strict"
+    assert body["memory_retrieval"]["semantic_embedding_model_governance_enforcement_state"] == "blocked"
+    assert (
+        body["memory_retrieval"]["semantic_embedding_model_governance_enforcement_hint"]
+        == "use_deterministic_v1_or_switch_to_effective_provider_model"
     )
 
 
