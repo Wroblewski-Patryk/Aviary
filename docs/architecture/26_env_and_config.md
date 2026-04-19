@@ -111,6 +111,12 @@ Allowed values:
 - warn
 - strict
 
+`GET /health` runtime policy visibility now includes:
+
+- effective policy flags
+- policy source markers (for debug defaults)
+- `production_policy_mismatches` preview list for strict-mode rollout safety
+
 `REFLECTION_INTERVAL`
 
 Controls background reflection cadence when such scheduling is enabled.

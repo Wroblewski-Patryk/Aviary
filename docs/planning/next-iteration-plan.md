@@ -11,7 +11,7 @@ The goal is to make the current AION runtime more correct, more inspectable, and
 
 Confirmed on 2026-04-19:
 
-- `.\.venv\Scripts\python -m pytest -q` passes with `295 passed`
+- `.\.venv\Scripts\python -m pytest -q` passes with `300 passed`
 - the live runtime already covers:
   - event normalization
   - state load
@@ -57,6 +57,7 @@ Completed on 2026-04-18:
 - `PRJ-026` added production policy enforcement mode (`warn|strict`) so startup can either emit warnings or fail fast on production policy mismatches, with health visibility and regression coverage.
 - `PRJ-027` added a lifespan-level strict-policy regression test that verifies fail-fast startup happens before database initialization side effects.
 - `PRJ-028` extended strict-policy lifespan regression coverage to schema compatibility mismatch (`STARTUP_SCHEMA_MODE=create_tables`) with the same block-before-side-effects guarantee.
+- `PRJ-029` unified runtime-policy mismatch detection under a shared helper and exposed mismatch preview (`production_policy_mismatches`) in `/health`.
 
 ## Highest-Risk Gaps
 
@@ -280,7 +281,7 @@ drift silently.
 
 ## Next Derived Slice
 
-All currently registered planned slices through `PRJ-028` are complete.
+All currently registered planned slices through `PRJ-029` are complete.
 The next smallest task should be derived from `docs/planning/open-decisions.md`
 when execution continues.
 
@@ -304,7 +305,7 @@ After those finished:
 
 ## Recommended Execution Order
 
-1. derive the next smallest useful slice from open decisions (`PRJ-029`)
+1. derive the next smallest useful slice from open decisions (`PRJ-030`)
 
 The queue should still be treated as intentionally open after those items.
 Additional small architecture-alignment slices may still be discovered while

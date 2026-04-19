@@ -15,7 +15,7 @@ Last updated: 2026-04-19
   - run relevant tests and validations
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
-- The current planned queue through `PRJ-028` is complete.
+- The current planned queue through `PRJ-029` is complete.
 - Next executable slices should be derived from:
   - `docs/planning/next-iteration-plan.md`
   - `docs/planning/open-decisions.md`
@@ -267,6 +267,18 @@ Last updated: 2026-04-19
     - regression tests confirm strict-mode mismatch blocks runtime before database initialization in both cases
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_main_lifespan_policy.py tests/test_main_runtime_policy.py tests/test_config.py tests/test_api_routes.py`
+- [x] PRJ-029 Unify runtime policy mismatch detection and expose mismatch preview in `/health`
+  - Status: DONE
+  - Group: Runtime Ops Visibility
+  - Owner: Backend Builder
+  - Depends on: PRJ-028
+  - Priority: P3
+  - Result:
+    - runtime policy resolution now has one shared owner (`app/core/runtime_policy.py`) reused by startup warning/block checks and `/health`
+    - `/health.runtime_policy` now includes `production_policy_mismatches` for operator-visible mismatch preview
+    - regression coverage now pins shared policy snapshot semantics plus startup and API consumers
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_main_runtime_policy.py tests/test_main_lifespan_policy.py tests/test_api_routes.py`
 - [x] PRJ-011 Extract shared goal/task selection helpers
   - Status: DONE
   - Group: Shared Signal Engine Extraction

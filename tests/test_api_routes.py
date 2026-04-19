@@ -162,11 +162,13 @@ class FakeSettings:
         self,
         telegram_webhook_secret: str | None = None,
         *,
+        app_env: str = "development",
         event_debug_enabled: bool | None = True,
         startup_schema_mode: str = "migrate",
         production_policy_enforcement: str = "warn",
     ):
         self.telegram_webhook_secret = telegram_webhook_secret
+        self.app_env = app_env
         self.event_debug_enabled = event_debug_enabled
         self.startup_schema_mode = startup_schema_mode
         self.production_policy_enforcement = production_policy_enforcement
@@ -224,6 +226,7 @@ class FakeReflectionWorker:
 def _client(
     secret: str | None = None,
     *,
+    app_env: str = "development",
     reflection_triggered: bool = False,
     reflection_stats: dict[str, int] | None = None,
     reflection_running: bool = True,
@@ -241,6 +244,7 @@ def _client(
     app.state.telegram_client = telegram_client
     app.state.settings = FakeSettings(
         telegram_webhook_secret=secret,
+        app_env=app_env,
         event_debug_enabled=event_debug_enabled,
         startup_schema_mode=startup_schema_mode,
         production_policy_enforcement=production_policy_enforcement,
@@ -263,6 +267,7 @@ def test_health_endpoint_returns_ok() -> None:
             "event_debug_enabled": True,
             "event_debug_source": "explicit",
             "production_policy_enforcement": "warn",
+            "production_policy_mismatches": [],
         },
         "reflection": {
             "healthy": True,
@@ -292,6 +297,7 @@ def test_health_endpoint_returns_ok() -> None:
 
 def test_health_endpoint_exposes_runtime_policy_flags() -> None:
     client, _, _ = _client(
+        app_env="production",
         event_debug_enabled=False,
         startup_schema_mode="create_tables",
         production_policy_enforcement="strict",
@@ -307,6 +313,7 @@ def test_health_endpoint_exposes_runtime_policy_flags() -> None:
         "event_debug_enabled": False,
         "event_debug_source": "explicit",
         "production_policy_enforcement": "strict",
+        "production_policy_mismatches": ["startup_schema_mode=create_tables"],
     }
 
 
@@ -320,6 +327,25 @@ def test_health_endpoint_marks_event_debug_source_as_environment_default_when_un
     assert body["runtime_policy"]["event_debug_enabled"] is True
     assert body["runtime_policy"]["event_debug_source"] == "environment_default"
     assert body["runtime_policy"]["production_policy_enforcement"] == "warn"
+    assert body["runtime_policy"]["production_policy_mismatches"] == []
+
+
+def test_health_endpoint_exposes_all_production_policy_mismatches_when_present() -> None:
+    client, _, _ = _client(
+        app_env="production",
+        event_debug_enabled=True,
+        startup_schema_mode="create_tables",
+        production_policy_enforcement="strict",
+    )
+
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["runtime_policy"]["production_policy_mismatches"] == [
+        "event_debug_enabled=true",
+        "startup_schema_mode=create_tables",
+    ]
 
 
 def test_health_endpoint_marks_reflection_unhealthy_when_worker_not_running() -> None:
