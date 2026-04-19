@@ -263,8 +263,11 @@ The current repo already works as an MVP slice, but several architecture-level d
     `EMBEDDING_REFRESH_MODE` (`on_write|manual`) and
     `EMBEDDING_REFRESH_INTERVAL_SECONDS`; `/health.memory_retrieval` now
     surfaces `semantic_embedding_refresh_mode` and
-    `semantic_embedding_refresh_interval_seconds`, and startup emits
-    `embedding_refresh_warning` when vectors are enabled in manual mode.
+    `semantic_embedding_refresh_interval_seconds`; shared helper-owned refresh
+    diagnostics (`semantic_embedding_refresh_state`,
+    `semantic_embedding_refresh_hint`) now align startup and health semantics,
+    and startup emits `embedding_refresh_warning` when vectors are enabled in
+    manual mode.
   - provider ownership and embedding model governance are still open.
 - Decision needed:
   - which embedding provider and refresh strategy should own semantic memory

@@ -428,6 +428,8 @@ def test_startup_logs_embedding_refresh_warning_when_manual_refresh_mode_is_enab
     assert any("embedding_refresh_warning" in message for message in messages)
     assert any("refresh_mode=manual" in message for message in messages)
     assert any("refresh_interval_seconds=7200" in message for message in messages)
+    assert any("refresh_state=manual_refresh_required" in message for message in messages)
+    assert any("hint=ensure_manual_refresh_process_is_defined" in message for message in messages)
 
 
 def test_startup_skips_embedding_refresh_warning_when_on_write_refresh_mode_is_enabled(caplog) -> None:

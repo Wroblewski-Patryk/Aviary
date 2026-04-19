@@ -205,6 +205,11 @@ Completed on 2026-04-18:
   (`semantic_embedding_refresh_mode`,
   `semantic_embedding_refresh_interval_seconds`), and startup warning coverage
   for manual refresh mode.
+- `PRJ-239` is complete: embedding refresh posture semantics are now owned by
+  the shared embedding strategy helper, including derived diagnostics
+  (`semantic_embedding_refresh_state`,
+  `semantic_embedding_refresh_hint`) reused by `/health.memory_retrieval` and
+  startup refresh warning flow.
 
 ## Highest-Risk Gaps
 
@@ -895,7 +900,7 @@ implicit or uncontrolled side effects.
 
 ## Next Derived Slice
 
-The planning queue is complete through `PRJ-238`.
+The planning queue is complete through `PRJ-239`.
 There is currently no execution-ready PRJ slice in the board.
 Before the next implementation slice:
 

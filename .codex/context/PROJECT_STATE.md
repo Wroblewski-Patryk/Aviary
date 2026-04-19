@@ -164,6 +164,11 @@ Last updated: 2026-04-19
   `EMBEDDING_REFRESH_INTERVAL_SECONDS`; `/health.memory_retrieval` exposes
   refresh posture fields and startup emits `embedding_refresh_warning` when
   vectors are enabled in manual mode.
+- 2026-04-19: embedding refresh posture semantics are now owned by the shared
+  embedding strategy helper, including derived refresh diagnostics
+  (`semantic_embedding_refresh_state`,
+  `semantic_embedding_refresh_hint`) reused by both `/health.memory_retrieval`
+  and startup warning flow.
 - 2026-04-19: relation memory is now a first-class subsystem (`aion_relation`)
   with scoped repository APIs; reflection derives relation updates and runtime
   stages now consume high-confidence relation cues across context, role,

@@ -7,6 +7,9 @@ DEFAULT_EMBEDDING_PROVIDER = "deterministic"
 DEFAULT_EMBEDDING_MODEL = "deterministic-v1"
 EMBEDDING_SOURCE_KIND_ORDER = ("episodic", "semantic", "affective", "relation")
 DEFAULT_EMBEDDING_SOURCE_KINDS = ("episodic", "semantic", "affective")
+EMBEDDING_REFRESH_MODES = ("on_write", "manual")
+DEFAULT_EMBEDDING_REFRESH_MODE = "on_write"
+DEFAULT_EMBEDDING_REFRESH_INTERVAL_SECONDS = 21600
 
 
 def resolve_embedding_posture(
@@ -42,6 +45,8 @@ def embedding_strategy_snapshot(
     model: str | None,
     dimensions: int,
     source_kinds: tuple[str, ...] | None = None,
+    refresh_mode: str | None = None,
+    refresh_interval_seconds: int | None = None,
 ) -> dict[str, str | bool | int]:
     posture = resolve_embedding_posture(provider=provider, model=model)
     if source_kinds is None:
@@ -75,6 +80,20 @@ def embedding_strategy_snapshot(
         warning_state = "provider_fallback_active"
         warning_hint = "provider_not_implemented_using_deterministic_fallback"
 
+    normalized_refresh_mode = normalize_embedding_refresh_mode(refresh_mode)
+    normalized_refresh_interval_seconds = normalize_embedding_refresh_interval_seconds(
+        refresh_interval_seconds
+    )
+    if not semantic_vector_enabled:
+        refresh_state = "vectors_disabled"
+        refresh_hint = "not_applicable_vectors_disabled"
+    elif normalized_refresh_mode == "manual":
+        refresh_state = "manual_refresh_required"
+        refresh_hint = "ensure_manual_refresh_process_is_defined"
+    else:
+        refresh_state = "on_write_refresh_active"
+        refresh_hint = "refresh_on_write_enabled"
+
     return {
         "semantic_vector_enabled": semantic_vector_enabled,
         "semantic_retrieval_mode": "hybrid_vector_lexical" if semantic_vector_enabled else "lexical_only",
@@ -91,6 +110,10 @@ def embedding_strategy_snapshot(
         "semantic_embedding_source_coverage_hint": source_coverage_hint,
         "semantic_embedding_warning_state": warning_state,
         "semantic_embedding_warning_hint": warning_hint,
+        "semantic_embedding_refresh_mode": normalized_refresh_mode,
+        "semantic_embedding_refresh_interval_seconds": normalized_refresh_interval_seconds,
+        "semantic_embedding_refresh_state": refresh_state,
+        "semantic_embedding_refresh_hint": refresh_hint,
     }
 
 
@@ -112,6 +135,23 @@ def normalize_embedding_source_kinds(value: str | None) -> tuple[str, ...]:
     requested_set = set(requested)
     ordered = tuple(item for item in EMBEDDING_SOURCE_KIND_ORDER if item in requested_set)
     return ordered or DEFAULT_EMBEDDING_SOURCE_KINDS
+
+
+def normalize_embedding_refresh_mode(value: str | None) -> str:
+    normalized = str(value or DEFAULT_EMBEDDING_REFRESH_MODE).strip().lower()
+    if normalized not in EMBEDDING_REFRESH_MODES:
+        return DEFAULT_EMBEDDING_REFRESH_MODE
+    return normalized
+
+
+def normalize_embedding_refresh_interval_seconds(value: int | None) -> int:
+    try:
+        interval = int(
+            DEFAULT_EMBEDDING_REFRESH_INTERVAL_SECONDS if value is None else value
+        )
+    except (TypeError, ValueError):
+        interval = DEFAULT_EMBEDDING_REFRESH_INTERVAL_SECONDS
+    return max(60, interval)
 
 
 def deterministic_embedding(text: str, *, dimensions: int = 32) -> list[float]:

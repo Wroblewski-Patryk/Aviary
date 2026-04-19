@@ -291,6 +291,8 @@ Allowed values:
 - `semantic_embedding_source_coverage_hint`
 - `semantic_embedding_refresh_mode`
 - `semantic_embedding_refresh_interval_seconds`
+- `semantic_embedding_refresh_state`
+- `semantic_embedding_refresh_hint`
 
 Compatibility route `POST /event?debug=true` also emits:
 

@@ -462,6 +462,8 @@ def test_health_endpoint_returns_ok() -> None:
             "semantic_embedding_source_coverage_hint": "semantic_and_affective_sources_enabled",
             "semantic_embedding_refresh_mode": "on_write",
             "semantic_embedding_refresh_interval_seconds": 21600,
+            "semantic_embedding_refresh_state": "on_write_refresh_active",
+            "semantic_embedding_refresh_hint": "refresh_on_write_enabled",
         },
         "scheduler": {
             "healthy": True,
@@ -554,6 +556,8 @@ def test_health_endpoint_exposes_lexical_only_memory_retrieval_mode_when_semanti
         "semantic_embedding_source_coverage_hint": "not_applicable_vectors_disabled",
         "semantic_embedding_refresh_mode": "on_write",
         "semantic_embedding_refresh_interval_seconds": 21600,
+        "semantic_embedding_refresh_state": "vectors_disabled",
+        "semantic_embedding_refresh_hint": "not_applicable_vectors_disabled",
     }
 
 
@@ -586,6 +590,8 @@ def test_health_endpoint_exposes_embedding_provider_fallback_posture_when_non_de
         "semantic_embedding_source_coverage_hint": "semantic_and_affective_sources_enabled",
         "semantic_embedding_refresh_mode": "on_write",
         "semantic_embedding_refresh_interval_seconds": 21600,
+        "semantic_embedding_refresh_state": "on_write_refresh_active",
+        "semantic_embedding_refresh_hint": "refresh_on_write_enabled",
     }
 
 
@@ -616,6 +622,11 @@ def test_health_endpoint_exposes_embedding_refresh_posture() -> None:
     body = response.json()
     assert body["memory_retrieval"]["semantic_embedding_refresh_mode"] == "manual"
     assert body["memory_retrieval"]["semantic_embedding_refresh_interval_seconds"] == 7200
+    assert body["memory_retrieval"]["semantic_embedding_refresh_state"] == "manual_refresh_required"
+    assert (
+        body["memory_retrieval"]["semantic_embedding_refresh_hint"]
+        == "ensure_manual_refresh_process_is_defined"
+    )
 
 
 def test_health_endpoint_marks_scheduler_unhealthy_when_enabled_but_not_running() -> None:

@@ -15,7 +15,7 @@ Last updated: 2026-04-19
   - run relevant tests and validations
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
-- The planning queue is complete through `PRJ-238`.
+- The planning queue is complete through `PRJ-239`.
 - No `READY` PRJ slice is currently registered; derive the next smallest slice
   from `docs/planning/open-decisions.md` and sync it with the board before
   implementation.
@@ -48,6 +48,24 @@ Last updated: 2026-04-19
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-239 Unify embedding refresh posture semantics in shared strategy helper
+  - Status: DONE
+  - Group: Embedding Strategy Posture
+  - Owner: Backend Builder + QA/Test + Product Docs
+  - Depends on: PRJ-238
+  - Priority: P2
+  - Result:
+    - shared embedding strategy helper now owns refresh posture fields
+      (`semantic_embedding_refresh_mode`,
+      `semantic_embedding_refresh_interval_seconds`) and derived refresh
+      diagnostics (`semantic_embedding_refresh_state`,
+      `semantic_embedding_refresh_hint`)
+    - `/health.memory_retrieval` and startup refresh warning flow now consume
+      one shared refresh-posture owner, reducing drift risk
+    - docs/context/planning are synchronized through `PRJ-239`
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_embedding_strategy.py tests/test_api_routes.py tests/test_main_runtime_policy.py`
 
 - [x] PRJ-238 Add explicit embedding refresh-cadence posture visibility and startup warning coverage
   - Status: DONE

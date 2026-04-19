@@ -83,6 +83,8 @@ retrieval posture:
 - `semantic_embedding_source_coverage_hint`
 - `semantic_embedding_refresh_mode`
 - `semantic_embedding_refresh_interval_seconds`
+- `semantic_embedding_refresh_state`
+- `semantic_embedding_refresh_hint`
 
 When semantic vectors are enabled and a non-implemented provider is requested
 (for example `EMBEDDING_PROVIDER=openai` today), startup emits

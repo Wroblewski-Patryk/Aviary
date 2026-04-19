@@ -190,6 +190,10 @@ Current limitation:
   `EMBEDDING_REFRESH_MODE` and `EMBEDDING_REFRESH_INTERVAL_SECONDS`, surfaced
   in `/health.memory_retrieval` and startup warning logs
   (`embedding_refresh_warning`) when vectors are enabled with manual mode.
+- refresh posture now also includes shared derived diagnostics
+  (`semantic_embedding_refresh_state`,
+  `semantic_embedding_refresh_hint`) so startup and health use one refresh
+  semantics owner.
 
 ### Event API behavior
 

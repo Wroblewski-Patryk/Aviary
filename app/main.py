@@ -110,6 +110,8 @@ def _log_embedding_strategy_warnings(*, settings, logger) -> None:
         model=str(getattr(settings, "embedding_model", "deterministic-v1")),
         dimensions=max(1, int(getattr(settings, "embedding_dimensions", 32))),
         source_kinds=source_kinds,
+        refresh_mode=str(getattr(settings, "embedding_refresh_mode", "on_write")),
+        refresh_interval_seconds=int(getattr(settings, "embedding_refresh_interval_seconds", 21600)),
     )
     if str(snapshot["semantic_embedding_warning_state"]) == "provider_fallback_active":
         logger.warning(
@@ -132,14 +134,14 @@ def _log_embedding_strategy_warnings(*, settings, logger) -> None:
             str(snapshot["semantic_embedding_source_coverage_state"]),
             str(snapshot["semantic_embedding_source_coverage_hint"]),
         )
-    refresh_mode = str(getattr(settings, "embedding_refresh_mode", "on_write")).strip().lower()
-    refresh_interval_seconds = max(60, int(getattr(settings, "embedding_refresh_interval_seconds", 21600)))
-    if bool(snapshot["semantic_vector_enabled"]) and refresh_mode == "manual":
+    if str(snapshot["semantic_embedding_refresh_state"]) == "manual_refresh_required":
         logger.warning(
-            "embedding_refresh_warning semantic_vector_enabled=%s refresh_mode=%s refresh_interval_seconds=%s recommendation=ensure_manual_refresh_process_is_defined",
+            "embedding_refresh_warning semantic_vector_enabled=%s refresh_mode=%s refresh_interval_seconds=%s refresh_state=%s hint=%s recommendation=ensure_manual_refresh_process_is_defined",
             bool(snapshot["semantic_vector_enabled"]),
-            refresh_mode,
-            refresh_interval_seconds,
+            str(snapshot["semantic_embedding_refresh_mode"]),
+            int(snapshot["semantic_embedding_refresh_interval_seconds"]),
+            str(snapshot["semantic_embedding_refresh_state"]),
+            str(snapshot["semantic_embedding_refresh_hint"]),
         )
 
 

@@ -15,6 +15,10 @@ def test_embedding_strategy_snapshot_marks_no_warning_when_deterministic_provide
     assert snapshot["semantic_embedding_source_coverage_hint"] == "semantic_and_affective_sources_enabled"
     assert snapshot["semantic_embedding_warning_state"] == "no_warning"
     assert snapshot["semantic_embedding_warning_hint"] == "embedding_strategy_ready"
+    assert snapshot["semantic_embedding_refresh_mode"] == "on_write"
+    assert snapshot["semantic_embedding_refresh_interval_seconds"] == 21600
+    assert snapshot["semantic_embedding_refresh_state"] == "on_write_refresh_active"
+    assert snapshot["semantic_embedding_refresh_hint"] == "refresh_on_write_enabled"
 
 
 def test_embedding_strategy_snapshot_marks_vectors_disabled_warning_state() -> None:
@@ -33,6 +37,8 @@ def test_embedding_strategy_snapshot_marks_vectors_disabled_warning_state() -> N
         snapshot["semantic_embedding_warning_hint"]
         == "enable_semantic_vectors_to_activate_embedding_strategy"
     )
+    assert snapshot["semantic_embedding_refresh_state"] == "vectors_disabled"
+    assert snapshot["semantic_embedding_refresh_hint"] == "not_applicable_vectors_disabled"
 
 
 def test_embedding_strategy_snapshot_marks_provider_fallback_warning_state() -> None:
@@ -69,6 +75,22 @@ def test_embedding_strategy_snapshot_marks_missing_source_coverage_when_semantic
         snapshot["semantic_embedding_source_coverage_hint"]
         == "enable_semantic_or_affective_source_for_vector_hits"
     )
+
+
+def test_embedding_strategy_snapshot_marks_manual_refresh_posture_when_manual_mode_is_requested() -> None:
+    snapshot = embedding_strategy_snapshot(
+        semantic_vector_enabled=True,
+        provider="deterministic",
+        model="deterministic-v1",
+        dimensions=32,
+        refresh_mode="manual",
+        refresh_interval_seconds=7200,
+    )
+
+    assert snapshot["semantic_embedding_refresh_mode"] == "manual"
+    assert snapshot["semantic_embedding_refresh_interval_seconds"] == 7200
+    assert snapshot["semantic_embedding_refresh_state"] == "manual_refresh_required"
+    assert snapshot["semantic_embedding_refresh_hint"] == "ensure_manual_refresh_process_is_defined"
 
 
 def test_normalize_embedding_source_kinds_returns_defaults_when_missing() -> None:
