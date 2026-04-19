@@ -2,6 +2,7 @@ import asyncio
 from time import perf_counter
 from typing import Awaitable, Callable, TypeVar
 
+from app.affective.assessor import AffectiveAssessor
 from app.agents.context import ContextAgent
 from app.agents.perception import PerceptionAgent
 from app.agents.planning import PlanningAgent
@@ -31,6 +32,7 @@ class RuntimeOrchestrator:
         memory_repository: MemoryRepository,
         reflection_worker: ReflectionWorker | None = None,
         identity_service: IdentityService | None = None,
+        affective_assessor: AffectiveAssessor | None = None,
     ):
         self.perception_agent = perception_agent
         self.context_agent = context_agent
@@ -42,6 +44,7 @@ class RuntimeOrchestrator:
         self.memory_repository = memory_repository
         self.reflection_worker = reflection_worker
         self.identity_service = identity_service or IdentityService()
+        self.affective_assessor = affective_assessor or AffectiveAssessor()
         self.logger = get_logger("aion.runtime")
 
     def _present_label(self, value: object | None) -> str:
@@ -300,7 +303,25 @@ class RuntimeOrchestrator:
                 f"affect={result.affective.affect_label} ambiguity={result.ambiguity}"
             ),
         )
-        affective = perception.affective
+        affective = await self._run_async_stage(
+            stage_logger=stage_logger,
+            stage_timings_ms=stage_timings_ms,
+            stage="affective_assessment",
+            input_summary=(
+                f"text_len={len(text)} language={perception.language} "
+                f"fallback={perception.affective.affect_label}"
+            ),
+            operation=lambda: self.affective_assessor.assess(
+                user_text=text,
+                response_language=perception.language,
+                fallback=perception.affective,
+            ),
+            output_summary=lambda result: (
+                f"label={result.affect_label} support={result.needs_support} "
+                f"source={result.source} confidence={result.confidence}"
+            ),
+        )
+        perception = perception.model_copy(update={"affective": affective})
 
         context = self._run_stage(
             stage_logger=stage_logger,

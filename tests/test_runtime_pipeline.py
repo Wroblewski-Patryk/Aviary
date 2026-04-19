@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, timezone
 
+from app.affective.assessor import AffectiveAssessor
 from app.agents.context import ContextAgent
 from app.agents.perception import PerceptionAgent
 from app.agents.planning import PlanningAgent
@@ -198,6 +199,24 @@ class FakeOpenAIClient:
         )
         return "Mocked OpenAI reply"
 
+    async def classify_affective_state(
+        self,
+        *,
+        user_text: str,
+        response_language: str,
+    ) -> dict | None:
+        return None
+
+
+class FakeAffectiveClassifierClient:
+    def __init__(self, payload: dict | None):
+        self.payload = payload
+        self.calls: list[dict[str, str]] = []
+
+    async def classify_affective_state(self, *, user_text: str, response_language: str) -> dict | None:
+        self.calls.append({"user_text": user_text, "response_language": response_language})
+        return self.payload
+
 
 class FakeReflectionWorker:
     def __init__(self, enqueue_result: bool = True):
@@ -263,7 +282,7 @@ async def test_runtime_pipeline_api_source() -> None:
     assert result.perception.language == "en"
     assert result.perception.language_source == "recent_memory"
     assert result.perception.affective.affect_label == "neutral"
-    assert result.perception.affective.source == "deterministic_placeholder"
+    assert result.perception.affective.source == "fallback"
     assert result.affective.affect_label == result.perception.affective.affect_label
     assert "general" in result.perception.topic_tags
     assert result.role.selected == "advisor"
@@ -285,6 +304,7 @@ async def test_runtime_pipeline_api_source() -> None:
         "goal_progress_load",
         "identity_load",
         "perception",
+        "affective_assessment",
         "context",
         "motivation",
         "role",
@@ -303,6 +323,56 @@ async def test_runtime_pipeline_api_source() -> None:
     assert openai.calls[0]["response_tone"] == "supportive"
     assert openai.calls[0]["collaboration_preference"] == ""
     assert "constructive support" in openai.calls[0]["identity_summary"]
+
+
+async def test_runtime_pipeline_uses_ai_assisted_affective_assessor_when_available() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    classifier = FakeAffectiveClassifierClient(
+        {
+            "affect_label": "support_distress",
+            "intensity": 0.81,
+            "needs_support": True,
+            "confidence": 0.77,
+            "evidence": ["overwhelmed", "anxious"],
+        }
+    )
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+        affective_assessor=AffectiveAssessor(classifier_client=classifier),
+    )
+
+    event = Event(
+        event_id="evt-affect-ai",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "I feel overwhelmed and anxious about this release"},
+        meta=EventMeta(user_id="u-1", trace_id="t-affect-ai"),
+    )
+
+    result = await runtime.run(event)
+
+    assert classifier.calls == [
+        {
+            "user_text": "I feel overwhelmed and anxious about this release",
+            "response_language": "en",
+        }
+    ]
+    assert result.affective.affect_label == "support_distress"
+    assert result.affective.source == "ai_classifier"
+    assert result.affective.needs_support is True
+    assert result.perception.affective.source == "ai_classifier"
 
 
 async def test_runtime_pipeline_builds_explicit_action_delivery_contract() -> None:
@@ -438,6 +508,7 @@ async def test_runtime_pipeline_emits_structured_stage_logs(caplog) -> None:
         ("memory_load", "success"),
         ("perception", "start"),
         ("perception", "success"),
+        ("affective_assessment", "success"),
         ("expression", "success"),
         ("memory_persist", "success"),
         ("state_refresh", "success"),
@@ -453,6 +524,14 @@ async def test_runtime_pipeline_emits_structured_stage_logs(caplog) -> None:
     assert perception_success["trace_id"] == "t-log-success"
     assert "topic=general" in perception_success["summary"]
     assert perception_success["duration_ms"] >= 0
+    affective_success = next(
+        entry
+        for entry in stage_logs
+        if entry.get("kind") == "runtime_stage"
+        and entry["stage"] == "affective_assessment"
+        and entry["status"] == "success"
+    )
+    assert "source=fallback" in affective_success["summary"]
 
 
 async def test_runtime_pipeline_emits_stage_failure_log_for_memory_persist(caplog) -> None:

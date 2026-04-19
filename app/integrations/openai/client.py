@@ -1,3 +1,6 @@
+import json
+from typing import Any
+
 from openai import AsyncOpenAI
 
 from app.core.logging import get_logger
@@ -67,3 +70,56 @@ class OpenAIClient:
             return text.strip()
 
         return None
+
+    async def classify_affective_state(
+        self,
+        *,
+        user_text: str,
+        response_language: str,
+    ) -> dict[str, Any] | None:
+        if not self.client:
+            return None
+
+        try:
+            response = await self.client.responses.create(
+                model=self.model,
+                input=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "Classify the affective state of the user message. "
+                            "Return only compact JSON with keys: "
+                            "affect_label, intensity, needs_support, confidence, evidence. "
+                            "Allowed affect_label values: neutral, support_distress, urgent_pressure, positive_engagement. "
+                            "intensity and confidence must be numbers between 0 and 1. "
+                            "needs_support must be true/false. "
+                            "evidence must be a short list of supporting phrases."
+                        ),
+                    },
+                    {
+                        "role": "user",
+                        "content": (
+                            f"Preferred response language context: {language_name(response_language)}.\n"
+                            f"User message: {user_text}"
+                        ),
+                    },
+                ],
+                max_output_tokens=120,
+            )
+        except Exception as exc:  # pragma: no cover - defensive network fallback
+            self.logger.warning("openai_affective_request_failed model=%s error=%s", self.model, exc)
+            return None
+
+        text = getattr(response, "output_text", None)
+        if not text:
+            return None
+
+        try:
+            payload = json.loads(text.strip())
+        except Exception as exc:  # pragma: no cover - defensive parse fallback
+            self.logger.warning("openai_affective_parse_failed model=%s error=%s", self.model, exc)
+            return None
+
+        if not isinstance(payload, dict):
+            return None
+        return payload

@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 
+from app.affective.assessor import AffectiveAssessor
 from fastapi import FastAPI
 
 from app.agents.context import ContextAgent
@@ -119,6 +120,7 @@ async def lifespan(app: FastAPI):
         action_executor=action_executor,
         memory_repository=memory_repository,
         reflection_worker=reflection_worker,
+        affective_assessor=AffectiveAssessor(classifier_client=openai_client),
     )
 
     app.state.settings = settings

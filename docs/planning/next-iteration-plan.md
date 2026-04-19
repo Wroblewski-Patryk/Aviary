@@ -11,7 +11,7 @@ The goal is to make the current AION runtime more correct, more inspectable, and
 
 Confirmed on 2026-04-19:
 
-- `.\.venv\Scripts\python -m pytest -q` passes with `317 passed`
+- `.\.venv\Scripts\python -m pytest -q` passes with `321 passed`
 - the live runtime already covers:
   - event normalization
   - state load
@@ -63,6 +63,7 @@ Completed on 2026-04-18:
 - `PRJ-046..PRJ-051` added optional debug-token-gated debug payload access (`EVENT_DEBUG_TOKEN`, `X-AION-Debug-Token`), policy visibility (`event_debug_token_required`), startup warning alignment, and regression/docs/context sync.
 - `PRJ-052` added API user-id header fallback (`X-AION-User-Id`) with explicit precedence over `meta.user_id`, reducing shared-anonymous language/profile drift for multi-user API traffic.
 - `PRJ-053` added a first-class affective assessment contract and runtime placeholder slot (`affect_label`, `intensity`, `needs_support`, `confidence`, `source`, `evidence`) emitted by perception for follow-up empathy slices.
+- `PRJ-054` added an AI-assisted affective assessor stage with deterministic fallback, including normalized LLM output handling and runtime log traceability of affective source (`ai_classifier|fallback`).
 
 ## Highest-Risk Gaps
 
@@ -457,7 +458,7 @@ signals such as theta, role preference, and collaboration preference.
 ## Next Derived Slice
 
 The planning queue is now extended through `PRJ-068`.
-The next execution-ready slice is `PRJ-054`, with later groups staying ordered
+The next execution-ready slice is `PRJ-055`, with later groups staying ordered
 behind it.
 
 ## Parallel-Ready Lanes
@@ -480,7 +481,7 @@ After those finished:
 
 ## Recommended Execution Order
 
-1. `PRJ-054..PRJ-056` Affective understanding and empathy
+1. `PRJ-055..PRJ-056` Affective understanding and empathy
 2. `PRJ-057..PRJ-061` Scoped memory and retrieval depth
 3. `PRJ-062..PRJ-064` Planning and action intent hardening
 4. `PRJ-065..PRJ-068` Adaptive signal governance and heuristic reduction

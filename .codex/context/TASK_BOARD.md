@@ -16,31 +16,29 @@ Last updated: 2026-04-19
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
 - The planning queue now extends through `PRJ-068`.
-- The next executable slice is `PRJ-054`.
+- The next executable slice is `PRJ-055`.
 - Additional architecture-alignment work should be appended after that queue so
   the backlog stays explicitly open for later discovery instead of pretending
   the plan is complete.
 
 ## READY
 
-- [ ] PRJ-054 Add an AI-assisted affective assessor with deterministic fallback
+- [ ] PRJ-055 Wire affective assessment through motivation, role, and expression
   - Status: READY
   - Group: Affective Understanding And Empathy
   - Owner: Backend Builder
-  - Depends on: PRJ-053
+  - Depends on: PRJ-054
   - Priority: P1
   - Result:
-    - perception or a dedicated affective module can call an LLM with strict
-      structured output for emotion/support detection
-    - deterministic fallback remains available for degraded or offline paths
-    - runtime logs expose whether affective classification came from AI or
-      fallback rules
+    - motivation, role, and expression consume the explicit affective contract
+      instead of re-deriving emotional state independently
+    - supportive behavior becomes traceable to one affective owner across
+      runtime stages
   - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_language_runtime.py tests/test_runtime_pipeline.py tests/test_expression_agent.py`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_motivation_engine.py tests/test_role_agent.py tests/test_expression_agent.py tests/test_runtime_pipeline.py`
 
 ## BACKLOG
 
-- [ ] PRJ-055 Wire affective assessment through motivation, role, and expression
 - [ ] PRJ-056 Add empathy-oriented evaluation fixtures and regression tests
 - [ ] PRJ-057 Introduce scoped conclusions for global, goal, and task context
 - [ ] PRJ-058 Refactor runtime consumers to use scoped reflection state
@@ -556,6 +554,22 @@ Last updated: 2026-04-19
       explicit affective contract before AI-assisted behavior slices
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_affective_contract.py tests/test_language_runtime.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+    - `.\.venv\Scripts\python -m pytest -q`
+- [x] PRJ-054 Add an AI-assisted affective assessor with deterministic fallback
+  - Status: DONE
+  - Group: Affective Understanding And Empathy
+  - Owner: Backend Builder
+  - Depends on: PRJ-053
+  - Priority: P1
+  - Result:
+    - runtime now runs a dedicated `AffectiveAssessor` stage that can consume
+      LLM classification and normalize it to the explicit affective contract
+    - deterministic fallback remains active when classifier client is missing,
+      unavailable, or returns invalid payload
+    - runtime stage logs now expose affective source (`ai_classifier` vs
+      `fallback`) for operator traceability
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_affective_assessor.py tests/test_language_runtime.py tests/test_runtime_pipeline.py tests/test_expression_agent.py`
     - `.\.venv\Scripts\python -m pytest -q`
 - [x] PRJ-011 Extract shared goal/task selection helpers
   - Status: DONE

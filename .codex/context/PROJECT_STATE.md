@@ -71,6 +71,9 @@ Last updated: 2026-04-19
 - 2026-04-19: runtime now carries a first-class affective contract slot
   (`affect_label`, `intensity`, `needs_support`, `confidence`, `source`,
   `evidence`) populated by deterministic perception placeholders.
+- 2026-04-19: runtime now includes an AI-assisted affective assessor stage with
+  deterministic fallback, so affective source can be traced as
+  `ai_classifier` or `fallback` in stage-level runtime logs.
 - 2026-04-19: documentation now explicitly separates canonical architecture in
   `docs/architecture/` from transitional implementation reality in
   `docs/implementation/runtime-reality.md`, so human-oriented design intent can
@@ -233,6 +236,9 @@ Last updated: 2026-04-19
   affective assessment fields, perception emits deterministic affective
   placeholders, runtime exposes top-level affective state, and
   architecture/planning/context docs plus regression tests were synchronized.
+- 2026-04-19: `PRJ-054` is complete: runtime now runs a dedicated affective
+  assessor stage that can normalize LLM classification and safely fall back
+  when unavailable or invalid, with regression tests and docs/context aligned.
 - 2026-04-19: architecture docs were realigned so `docs/architecture/` again
   describes the canonical cognitive flow, while runtime-delivery shortcuts,
   live storage names, and policy details were moved into

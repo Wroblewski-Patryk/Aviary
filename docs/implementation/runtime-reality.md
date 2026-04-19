@@ -71,7 +71,11 @@ The live runtime now carries an explicit affective contract slot per turn:
 
 Current implementation posture:
 
-- perception populates this slot with deterministic placeholder signals
+- perception emits deterministic placeholder signals as baseline
+- runtime runs a dedicated `affective_assessment` stage that can consume LLM
+  classification and normalize it to the shared contract
+- when LLM classification is unavailable or invalid, the stage falls back to
+  deterministic baseline signals and marks source as `fallback`
 - motivation, role, and expression still rely on existing heuristics for
   behavior decisions until the follow-up slices wire this slot through
 

@@ -74,12 +74,15 @@ The current repo already works as an MVP slice, but several architecture-level d
 - Current repo fact:
   - runtime now has a first-class affective contract slot
     (`affect_label`, `intensity`, `needs_support`, `confidence`, `source`,
-    `evidence`) populated by deterministic perception placeholders.
+    `evidence`) and a dedicated affective assessor stage.
+  - when available, the assessor can consume LLM classification and normalize
+    it to the shared contract; when unavailable or invalid, it falls back
+    deterministically.
   - motivation, role, and expression still detect emotion/support behavior
     through their own local heuristics and do not yet consume the shared slot.
 - Decision needed:
-  - should affective assessment remain heuristic for MVP, or move to an
-    AI-assisted structured classifier with deterministic fallback?
+  - should AI-assisted affective classification be enabled by default in all
+    non-production environments, or behind an explicit feature gate?
   - which affective outputs deserve first-class contract fields
     (`label|intensity|needs_support|confidence|source|evidence`)?
 
