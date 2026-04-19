@@ -15,21 +15,44 @@ Last updated: 2026-04-19
   - run relevant tests and validations
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
-- The current planned queue through `PRJ-052` is complete.
-- Next executable slices should be derived from:
-  - `docs/planning/next-iteration-plan.md`
-  - `docs/planning/open-decisions.md`
+- The planning queue now extends through `PRJ-068`.
+- The next executable slice is `PRJ-053`.
 - Additional architecture-alignment work should be appended after that queue so
   the backlog stays explicitly open for later discovery instead of pretending
   the plan is complete.
 
 ## READY
 
-- [ ] (none)
+- [ ] PRJ-053 Define the affective assessment contract and runtime placeholders
+  - Status: READY
+  - Group: Affective Understanding And Empathy
+  - Owner: Planner
+  - Depends on: PRJ-052
+  - Priority: P1
+  - Result:
+    - runtime contracts explicitly describe affective interpretation output
+    - runtime state gains a first-class affective slot
+    - docs, context, and tests align around one affective owner before behavior work starts
+  - Validation:
+    - targeted schema or contract tests for runtime models plus docs/context sync
 
 ## BACKLOG
 
-- [ ] (none)
+- [ ] PRJ-054 Add an AI-assisted affective assessor with deterministic fallback
+- [ ] PRJ-055 Wire affective assessment through motivation, role, and expression
+- [ ] PRJ-056 Add empathy-oriented evaluation fixtures and regression tests
+- [ ] PRJ-057 Introduce scoped conclusions for global, goal, and task context
+- [ ] PRJ-058 Refactor runtime consumers to use scoped reflection state
+- [ ] PRJ-059 Add an affective memory layer and reflection outputs
+- [ ] PRJ-060 Add retrieval ranking and compression beyond the latest-five load
+- [ ] PRJ-061 Formalize memory-layer contracts in docs and repository APIs
+- [ ] PRJ-062 Add explicit domain action intents to the planning and action contract
+- [ ] PRJ-063 Move durable domain writes from text parsing to explicit intents
+- [ ] PRJ-064 Add contract tests for planning-owned intent and action-owned execution
+- [ ] PRJ-065 Split reflection into smaller concern-owned modules
+- [ ] PRJ-066 Add anti-self-reinforcement rules for adaptive signals
+- [ ] PRJ-067 Audit and prune low-leverage milestone heuristics
+- [ ] PRJ-068 Add multi-goal-aware reflection and planning tests
 
 ## FUTURE
 

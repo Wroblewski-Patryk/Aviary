@@ -125,11 +125,17 @@ Last updated: 2026-04-19
 ## Current Focus
 
 - Main active objective: make stage boundaries and architecture traceability
-  explicit without regressing current runtime behavior
-- Active execution queue through `PRJ-052` is complete.
+  explicit without regressing current runtime behavior, then deepen the runtime
+  toward affective understanding, scoped memory, and stronger action intent
+  ownership
+- Active execution queue now extends through `PRJ-068`.
 - Top blockers:
-  - no next post-`PRJ-052` slice is registered yet; next task should be derived
-    from open decisions
+  - current runtime still lacks first-class affective assessment and affective
+    memory despite supportive behavior being present
+  - reflection still stores several operational conclusions globally per user,
+    which can leak one goal's state into another
+  - action still reparses user text for some durable writes instead of relying
+    on explicit typed intents from planning
 - Success criteria for this phase:
   - shared goal and milestone signals keep one clear implementation owner
   - runtime stage decisions are observable through structured logs
@@ -224,6 +230,9 @@ Last updated: 2026-04-19
   describes the canonical cognitive flow, while runtime-delivery shortcuts,
   live storage names, and policy details were moved into
   `docs/implementation/runtime-reality.md` and linked from the docs index.
+- 2026-04-19: planning docs and execution context were extended through
+  `PRJ-068`, adding grouped follow-up slices for affective understanding,
+  scoped memory, explicit action intents, and adaptive-signal governance.
 
 ## Working Agreements
 

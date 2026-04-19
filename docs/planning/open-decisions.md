@@ -69,6 +69,19 @@ The current repo already works as an MVP slice, but several architecture-level d
 - Decision needed:
   - when should role selection move from heuristics into a richer module with user-state, memory, and goal-aware logic?
 
+### 4a. Affective Assessment Strategy
+
+- Current repo fact:
+  - emotion and support-sensitive behavior are still detected mainly through
+    local keyword heuristics in perception, motivation, and role selection.
+  - supportive behavior exists, but affective interpretation is not yet a
+    first-class runtime contract.
+- Decision needed:
+  - should affective assessment remain heuristic for MVP, or move to an
+    AI-assisted structured classifier with deterministic fallback?
+  - which affective outputs deserve first-class contract fields
+    (`label|intensity|needs_support|confidence|source|evidence`)?
+
 ### 5. Memory Retrieval Depth
 
 - Current repo fact:
@@ -82,6 +95,28 @@ The current repo already works as an MVP slice, but several architecture-level d
   - context also now receives lightweight semantic conclusions and can include stable user preferences alongside episodic recall.
 - Decision needed:
   - when to add filtering, ranking, summarization, or episodic/semantic split memory?
+
+### 5b. Affective Memory Model
+
+- Current repo fact:
+  - the repo persists episodic memory, semantic conclusions, and lightweight
+    adaptive state, but it does not yet have a first-class affective memory
+    layer.
+- Decision needed:
+  - should affective memory be a separate persisted memory family, or an
+    orthogonal layer carried by episodic and semantic records?
+  - which affective signals should remain transient turn-state and which should
+    become durable long-term patterns?
+
+### 5c. Reflection Scope And Multi-Goal Leakage
+
+- Current repo fact:
+  - reflection currently persists many progress and milestone conclusions as
+    one latest value per `(user_id, kind)`, which can leak one active goal's
+    state into another goal's foreground turn.
+- Decision needed:
+  - which reflection outputs should be global per user, and which must become
+    goal-scoped or task-scoped before the runtime grows further?
 
 ### 5a. Goal And Task Scope
 
@@ -131,6 +166,31 @@ The current repo already works as an MVP slice, but several architecture-level d
 - reflected theta now provides a softer runtime bias toward support, analysis, or execution behavior without hard-overriding explicit signals, and that bias can now shape role selection, motivation mode, planning stance, and expression tone on ambiguous turns.
 - Decision needed:
   - which preference types should remain expression-only, and which should be allowed to shape higher-level planning or role selection as the architecture grows?
+
+### 10a. Action Intent Ownership
+
+- Current repo fact:
+  - action still reparses raw user text to infer some durable writes such as
+    goal, task, task-status, and preference updates.
+  - this keeps side effects inside action, but it weakens the architectural
+    rule that planning should own what domain changes are intended.
+- Decision needed:
+  - should durable domain writes move to explicit plan/action intents before
+    further behavioral complexity is added?
+  - which writes are safe to keep as local action inference, and which must
+    require explicit typed intent?
+
+### 10b. Adaptive Signal Governance
+
+- Current repo fact:
+  - reflected `preferred_role`, `theta`, and `collaboration_preference` can be
+    learned partly from earlier runtime decisions, which risks feedback loops.
+- Decision needed:
+  - what evidence threshold should be required before adaptive signals can
+    influence future role, motivation, planning, or expression?
+  - which adaptive signals are valuable enough to keep as first-class runtime
+    inputs, and which should remain descriptive-only until stronger evidence is
+    available?
 
 ### 11. Theta Scope And Durability
 

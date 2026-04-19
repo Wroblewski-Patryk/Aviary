@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This plan translates the 2026-04-17 repo analysis into an execution roadmap that brings the code closer to `docs/basics/` without rewriting `docs/basics/`.
+This plan translates the repo analysis into an execution roadmap that brings the code closer to `docs/architecture/` without rewriting the canonical architecture docs around temporary runtime shortcuts.
 
 The goal is not to add more features first.
 The goal is to make the current AION runtime more correct, more inspectable, and easier to extend without architectural drift.
@@ -74,7 +74,7 @@ Current behavior:
 
 Why it matters:
 
-- this removed a high-risk contract gap between runtime and `docs/basics/16_agent_contracts.md`
+- this removed a high-risk contract gap between runtime and `docs/architecture/16_agent_contracts.md`
 - the remaining memory-contract risk is mainly regression prevention, not missing structure
 
 ### 2. Motivation contract drift exists
@@ -146,8 +146,8 @@ Why it matters:
 
 ## Delivery Principle
 
-- Keep `docs/basics/` fixed as the architecture source.
-- Move code toward basics, not basics toward code.
+- Keep `docs/architecture/` fixed as the architecture source.
+- Move code toward architecture intent, not architecture intent toward temporary runtime shortcuts.
 - Stabilize contracts before adding richer behavior.
 - Prefer extraction and consolidation over adding more heuristics into already-large files.
 - Keep tasks small enough that an execution agent can finish them in one focused pass.
@@ -283,11 +283,181 @@ drift silently.
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py tests/test_logging.py`
 
+## Group 7 - Affective Understanding And Empathy
+
+This group replaces brittle emotional keyword ladders with an explicit affective
+assessment contract that can evolve toward AI-assisted classification while
+keeping deterministic fallback behavior.
+
+- `PRJ-053` Define the affective assessment contract and runtime placeholders.
+  - Result:
+    - runtime contracts explicitly describe affective interpretation output
+      (`affect_label`, `intensity`, `needs_support`, `confidence`,
+      `source`, `evidence`)
+    - runtime state and docs gain a first-class affective slot instead of
+      hiding emotion handling inside role and valence heuristics
+    - the next implementation slices can evolve affective logic without mixing
+      it into unrelated perception or motivation contracts
+  - Validation:
+    - doc-and-contract sync plus targeted schema tests for runtime models
+
+- `PRJ-054` Add an AI-assisted affective assessor with deterministic fallback.
+  - Result:
+    - perception or a dedicated affective module can call an LLM with strict
+      structured output for emotion/support detection
+    - deterministic keyword fallback remains available for offline or degraded
+      runtime paths
+    - runtime logs expose whether affective classification came from AI or
+      fallback rules
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_perception_agent.py tests/test_runtime_pipeline.py tests/test_expression_agent.py`
+
+- `PRJ-055` Wire affective assessment through motivation, role, and expression.
+  - Result:
+    - motivation, role, and expression consume the explicit affective contract
+      instead of re-deriving emotion separately
+    - supportive behavior becomes traceable from one affective owner instead of
+      repeated local heuristics
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_motivation_engine.py tests/test_role_agent.py tests/test_expression_agent.py tests/test_runtime_pipeline.py`
+
+- `PRJ-056` Add empathy-oriented evaluation fixtures and regression tests.
+  - Result:
+    - emotionally heavy, ambiguous, and mixed-intent turns have explicit
+      contract fixtures
+    - repo behavior is pinned around support quality, not only around internal
+      heuristic labels
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_expression_agent.py tests/test_motivation_engine.py`
+
+## Group 8 - Scoped Memory And Retrieval Depth
+
+This group makes memory richer and less misleading by separating memory layers,
+introducing affective memory, and removing the current user-global leakage of
+goal-specific reflection signals.
+
+- `PRJ-057` Introduce scoped conclusions for global, goal, and task context.
+  - Result:
+    - conclusions such as progress, milestone, and completion state are no
+      longer stored as one flat user-global bag
+    - repository APIs can query conclusions by scope instead of forcing one
+      latest value across all active goals
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_reflection_worker.py tests/test_runtime_pipeline.py`
+
+- `PRJ-058` Refactor runtime consumers to use scoped reflection state.
+  - Result:
+    - context, motivation, planning, and milestone enrichment consume
+      goal-scoped state when a goal is relevant
+    - unrelated goals stop leaking pressure, risk, or completion heuristics
+      into the current turn
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_context_agent.py tests/test_motivation_engine.py tests/test_planning_agent.py tests/test_runtime_pipeline.py`
+
+- `PRJ-059` Add an affective memory layer and reflection outputs.
+  - Result:
+    - episodes can persist lightweight affective tags or summaries
+    - reflection can derive slower-moving affective patterns such as recurring
+      stress, confidence recovery, or support sensitivity
+    - affective state becomes reusable across turns without overloading
+      `response_style` or generic conclusions
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_reflection_worker.py tests/test_runtime_pipeline.py`
+
+- `PRJ-060` Add retrieval ranking and compression beyond the latest-five load.
+  - Result:
+    - runtime retrieval can rank across recency, topical relevance, memory
+      layer, and affective relevance
+    - runtime stops depending on a fixed shallow fetch as the only memory depth
+      strategy
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_context_agent.py tests/test_runtime_pipeline.py`
+
+- `PRJ-061` Formalize memory-layer contracts in docs and repository APIs.
+  - Result:
+    - docs explicitly distinguish episodic, semantic, affective, and
+      operational memory views
+    - repository and runtime code share one vocabulary for retrieval and
+      persistence boundaries
+  - Validation:
+    - doc-and-context sync plus targeted repository contract tests
+
+## Group 9 - Planning And Action Intent Hardening
+
+This group restores the architectural rule that planning proposes domain
+changes and action executes explicit intents instead of reparsing user text
+inside the action layer.
+
+- `PRJ-062` Add explicit domain action intents to the planning and action contract.
+  - Result:
+    - plans can carry typed intents for goal creation, task creation, task
+      status update, preference update, or no-op
+    - action no longer needs to infer durable writes from raw user text alone
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
+
+- `PRJ-063` Move durable domain writes from text parsing to explicit intents.
+  - Result:
+    - `ActionExecutor` executes structured intents instead of re-running
+      keyword extraction over the original event text
+    - side effects follow the documented plan -> action ownership boundary
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_action_executor.py tests/test_runtime_pipeline.py tests/test_memory_repository.py`
+
+- `PRJ-064` Add contract tests for planning-owned intent and action-owned execution.
+  - Result:
+    - architectural regressions on domain side-effect ownership fail quickly
+    - runtime smoke tests prove that message delivery and durable writes both
+      happen only from explicit action inputs
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_action_executor.py tests/test_logging.py`
+
+## Group 10 - Adaptive Signal Governance And Heuristic Reduction
+
+This group reduces code growth by splitting oversized modules, pruning
+low-leverage heuristics, and adding anti-feedback-loop rules for adaptive
+signals such as theta, role preference, and collaboration preference.
+
+- `PRJ-065` Split reflection into smaller concern-owned modules.
+  - Result:
+    - reflection logic is separated into preference, progress, affective, and
+      adaptive-state concern owners
+    - `app/reflection/worker.py` stops being the single home for unrelated
+      inference logic
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_runtime_pipeline.py`
+
+- `PRJ-066` Add anti-self-reinforcement rules for adaptive signals.
+  - Result:
+    - `preferred_role`, `theta`, and `collaboration_preference` require
+      stronger evidence and outcome-aware updates
+    - the runtime stops learning mainly from its own previous guesses and
+      instead prefers user-visible signals or durable success evidence
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_role_agent.py tests/test_motivation_engine.py tests/test_expression_agent.py`
+
+- `PRJ-067` Audit and prune low-leverage milestone heuristics.
+  - Result:
+    - milestone arc/pressure/due-window heuristics are reviewed for actual
+      downstream effect
+    - low-value signals are removed, merged, or gated behind clearer evidence
+      thresholds
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_context_agent.py tests/test_motivation_engine.py tests/test_planning_agent.py`
+
+- `PRJ-068` Add multi-goal-aware reflection and planning tests.
+  - Result:
+    - regression coverage explicitly proves that one active goal does not leak
+      reflected state into another
+    - runtime behavior is pinned for users with more than one live objective
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_context_agent.py tests/test_planning_agent.py tests/test_runtime_pipeline.py`
+
 ## Next Derived Slice
 
-All currently registered planned slices through `PRJ-052` are complete.
-The next smallest task should be derived from `docs/planning/open-decisions.md`
-when execution continues.
+The planning queue is now extended through `PRJ-068`.
+The next execution-ready slice is `PRJ-053`, with later groups staying ordered
+behind it.
 
 ## Parallel-Ready Lanes
 
@@ -309,7 +479,11 @@ After those finished:
 
 ## Recommended Execution Order
 
-1. derive the next smallest useful slice from open decisions (`PRJ-053`)
+1. `PRJ-053` Define the affective assessment contract and runtime placeholders
+2. `PRJ-054..PRJ-056` Affective understanding and empathy
+3. `PRJ-057..PRJ-061` Scoped memory and retrieval depth
+4. `PRJ-062..PRJ-064` Planning and action intent hardening
+5. `PRJ-065..PRJ-068` Adaptive signal governance and heuristic reduction
 
 The queue should still be treated as intentionally open after those items.
 Additional small architecture-alignment slices may still be discovered while
