@@ -1577,3 +1577,67 @@ def test_planning_agent_respects_attention_gate_before_other_proactive_delivery_
     assert result.steps == ["evaluate_proactive_trigger", "assess_user_context", "respect_attention_gate"]
     assert result.needs_response is False
     assert result.needs_action is False
+
+
+def test_planning_agent_keeps_proactive_path_separate_from_proposal_handoff_and_connector_intents() -> None:
+    result = PlanningAgent().run(
+        event=_scheduler_event(
+            {
+                "text": "scheduler proactive tick please connect clickup and calendar",
+                "chat_id": 123456,
+                "proactive": {
+                    "trigger": "task_blocked",
+                    "importance": 0.88,
+                    "urgency": 0.9,
+                    "user_context": {
+                        "quiet_hours": False,
+                        "focus_mode": False,
+                        "recent_user_activity": "active",
+                        "recent_outbound_count": 0,
+                        "unanswered_proactive_count": 0,
+                    },
+                },
+            }
+        ),
+        context=_context(),
+        motivation=MotivationOutput(
+            importance=0.9,
+            urgency=0.9,
+            valence=-0.1,
+            arousal=0.8,
+            mode="execute",
+        ),
+        role=RoleOutput(selected="advisor", confidence=0.8),
+        user_preferences={"proactive_opt_in": True},
+        active_tasks=[{"id": 21, "name": "fix deploy blocker", "status": "blocked"}],
+        subconscious_proposals=[
+            {
+                "proposal_id": 901,
+                "proposal_type": "ask_user",
+                "summary": "Clarify blocker details.",
+                "payload": {"question_focus": "blocker"},
+                "confidence": 0.74,
+                "status": "pending",
+            },
+            {
+                "proposal_id": 902,
+                "proposal_type": "suggest_connector_expansion",
+                "summary": "Suggest clickup task sync connector expansion.",
+                "payload": {
+                    "connector_kind": "task_system",
+                    "provider_hint": "clickup",
+                    "requested_capability": "task_sync",
+                },
+                "confidence": 0.78,
+                "status": "pending",
+            },
+        ],
+    )
+
+    assert result.proactive_decision is not None
+    assert result.needs_response is True
+    assert result.needs_action is True
+    assert result.domain_intents[0].intent_type == "noop"
+    assert result.proposal_handoffs == []
+    assert result.accepted_proposals == []
+    assert result.connector_permission_gates == []

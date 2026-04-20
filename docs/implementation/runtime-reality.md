@@ -592,6 +592,10 @@ What is already live:
 - planning/action contracts now include connector permission-gate outputs plus
   typed calendar/task/drive connector intents without direct provider side
   effects
+- regression coverage now explicitly pins that proactive scheduler plans stay
+  separate from proposal handoff resolution and connector permission-gate intent
+  shaping, while API attention turn assembly and conscious proposal resolution
+  remain covered end to end
 
 Important non-live notes:
 
@@ -600,7 +604,7 @@ Important non-live notes:
 - conscious runtime remains the only owner of user-visible delivery and other
   external side effects
 
-This coordination model baseline is now implemented through `PRJ-092`.
+This coordination model baseline is now implemented through `PRJ-295`.
 
 ---
 

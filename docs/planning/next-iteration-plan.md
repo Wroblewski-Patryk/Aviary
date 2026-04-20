@@ -1286,7 +1286,7 @@ through one explicit conscious ownership path.
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_action_executor.py tests/test_planning_agent.py tests/test_api_routes.py tests/test_runtime_pipeline.py`
 
-- `PRJ-295` Add dual-loop execution-boundary regressions and sync docs/context.
+- `PRJ-295` is complete.
   - Result:
     - turn assembly, proposal handoff, proactive delivery, and permission-gated
       external intent flows are pinned end to end
@@ -1340,10 +1340,10 @@ not around temporary convenience defaults.
 ## Next Derived Slice
 
 The planning queue is complete through `PRJ-299`.
-`PRJ-295` is currently the execution-ready slice in the board.
+`PRJ-296` is currently the execution-ready slice in the board.
 Before the next implementation slice:
 
-- take `PRJ-295` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-296` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to that one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 

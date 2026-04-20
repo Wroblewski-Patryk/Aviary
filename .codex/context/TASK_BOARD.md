@@ -16,8 +16,8 @@ Last updated: 2026-04-20
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
 - The planning queue is complete through `PRJ-299`.
-- `PRJ-294` is complete; `PRJ-295` is currently `READY` and closes this lane
-  with end-to-end regressions plus docs/context sync.
+- `PRJ-295` is complete; `PRJ-296` is currently `READY` as the first
+  operational-hardening baseline slice.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -28,27 +28,8 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-295 Add dual-loop execution-boundary regressions and sync docs/context
-  - Status: READY
-  - Group: Attention And Proposal Execution Boundary
-  - Owner: QA/Test + Product Docs
-  - Depends on: PRJ-294
-  - Priority: P1
-  - Result:
-    - turn assembly, proposal handoff, proactive delivery, and permission-gated
-      external intent flows are pinned end to end
-    - docs and context now describe one coherent dual-loop execution model
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py tests/test_reflection_worker.py tests/test_action_executor.py tests/test_planning_agent.py`
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-296 Define the target production posture for migration-only startup, strict defaults, and the internal debug boundary
-  - Status: FUTURE
+  - Status: READY
   - Group: Operational Hardening And Release Truth
   - Owner: Planner + Ops/Release
   - Depends on: PRJ-295
@@ -62,6 +43,12 @@ Last updated: 2026-04-20
   - Validation:
     - doc-and-context sync plus targeted production-baseline review recorded in
       this slice
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
 
 - [ ] PRJ-297 Enforce migration-first and internal-debug posture through explicit runtime gates
   - Status: FUTURE
@@ -117,6 +104,19 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-295 Add dual-loop execution-boundary regressions and sync docs/context
+  - Status: DONE
+  - Group: Attention And Proposal Execution Boundary
+  - Owner: QA/Test + Product Docs
+  - Depends on: PRJ-294
+  - Priority: P1
+  - Result:
+    - turn assembly, proposal handoff, proactive delivery, and permission-gated
+      external intent flows are pinned end to end
+    - docs and context now describe one coherent dual-loop execution model
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py tests/test_reflection_worker.py tests/test_action_executor.py tests/test_planning_agent.py`
 
 - [x] PRJ-294 Route proactive outreach and connector permission gates through the shared attention/proposal boundary
   - Status: DONE

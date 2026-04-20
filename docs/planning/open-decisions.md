@@ -562,9 +562,10 @@ The current repo already works as an MVP slice, but several architecture-level d
 - Decision needed:
   - should reflection/maintenance scheduler cadence remain app-local, or move
     to a dedicated external scheduler/worker path?
-  - with `PRJ-294` complete, proactive outreach and connector permission-gate
-    outcomes now share one conscious execution boundary; decide whether this
-    boundary should move from in-process coordination to a dedicated durable
+  - with `PRJ-295` complete, end-to-end regressions now pin turn assembly,
+    proposal handoff, proactive delivery, and permission-gated connector intent
+    flows through one conscious execution boundary; decide whether this boundary
+    should move from in-process coordination to a dedicated durable
     attention-inbox owner in later rollout.
   - should scheduled reflection stay in-process first, or move directly toward
     dedicated worker execution?

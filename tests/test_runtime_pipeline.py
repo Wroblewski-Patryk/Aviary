@@ -3411,6 +3411,96 @@ async def test_runtime_pipeline_applies_adaptive_attention_limits_without_bypass
     assert result.action_result.status == "noop"
 
 
+async def test_runtime_pipeline_keeps_proactive_tick_separate_from_proposal_handoff_and_connector_permission_gates() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    memory.user_preferences = {"proactive_opt_in": True}
+    memory.active_tasks = [
+        {
+            "id": 11,
+            "goal_id": 7,
+            "name": "fix deployment blocker",
+            "description": "Deploy is blocked by failing migration",
+            "priority": "high",
+            "status": "blocked",
+        }
+    ]
+    memory.pending_subconscious_proposals = [
+        {
+            "proposal_id": 801,
+            "proposal_type": "ask_user",
+            "summary": "Ask user to confirm blocker details.",
+            "payload": {"question_focus": "blocker details"},
+            "confidence": 0.74,
+            "status": "pending",
+            "research_policy": "read_only",
+            "allowed_tools": ["memory_retrieval"],
+            "source_event_id": "evt-prop-801",
+        },
+        {
+            "proposal_id": 802,
+            "proposal_type": "suggest_connector_expansion",
+            "summary": "Suggest clickup task sync connector expansion.",
+            "payload": {
+                "connector_kind": "task_system",
+                "provider_hint": "clickup",
+                "requested_capability": "task_sync",
+            },
+            "confidence": 0.79,
+            "status": "pending",
+            "research_policy": "read_only",
+            "allowed_tools": [],
+            "source_event_id": "evt-prop-802",
+        },
+    ]
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=FakeOpenAIClient()),
+        action_executor=ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient()),
+        memory_repository=memory,
+        reflection_worker=FakeReflectionWorker(),
+    )
+
+    event = build_scheduler_event(
+        subsource="proactive_tick",
+        payload={
+            "text": "please connect clickup and calendar for this blocker",
+            "chat_id": 123456,
+            "proactive_trigger": "task_blocked",
+            "importance": 0.88,
+            "urgency": 0.9,
+            "user_context": {
+                "quiet_hours": False,
+                "focus_mode": False,
+                "recent_user_activity": "active",
+                "recent_outbound_count": 0,
+                "unanswered_proactive_count": 0,
+            },
+        },
+    )
+
+    result = await runtime.run(event)
+
+    assert result.plan.proactive_decision is not None
+    assert result.plan.needs_response is True
+    assert result.plan.needs_action is True
+    assert result.plan.domain_intents[0].intent_type == "noop"
+    assert result.plan.proposal_handoffs == []
+    assert result.plan.accepted_proposals == []
+    assert result.plan.connector_permission_gates == []
+    assert len(memory.resolved_subconscious_proposals) == 0
+    assert all(item["status"] == "pending" for item in memory.pending_subconscious_proposals)
+    assert result.memory_record is not None
+    assert result.memory_record.payload["connector_expansion_update"] == ""
+    assert result.memory_record.payload["calendar_connector_update"] == ""
+    assert result.memory_record.payload["task_connector_update"] == ""
+    assert result.memory_record.payload["drive_connector_update"] == ""
+    assert "proposal_handoff" not in result.stage_timings_ms
+
+
 async def test_runtime_pipeline_promotes_and_resolves_pending_subconscious_proposals() -> None:
     memory = FakeMemoryRepository(recent_memory=[])
     memory.pending_subconscious_proposals = [
