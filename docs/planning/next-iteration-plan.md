@@ -1300,7 +1300,7 @@ This group turns the remaining production and release posture questions into an
 explicit target baseline so the repo can be built toward the intended system,
 not around temporary convenience defaults.
 
-- `PRJ-296` Define the target production posture for migration-only startup, strict defaults, and the internal debug boundary.
+- `PRJ-296` is complete.
   - Result:
     - one target production baseline defines migration-only startup posture,
       strict policy defaults, and the intended internal-versus-public debug
@@ -1340,10 +1340,10 @@ not around temporary convenience defaults.
 ## Next Derived Slice
 
 The planning queue is complete through `PRJ-299`.
-`PRJ-296` is currently the execution-ready slice in the board.
+`PRJ-297` is currently the execution-ready slice in the board.
 Before the next implementation slice:
 
-- take `PRJ-296` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-297` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to that one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 

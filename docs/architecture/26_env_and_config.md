@@ -268,6 +268,21 @@ Allowed values:
 - warn
 - strict
 
+### Target Production Policy Baseline (PRJ-296)
+
+Target production posture is:
+
+- `STARTUP_SCHEMA_MODE=migrate`
+- `PRODUCTION_POLICY_ENFORCEMENT=strict`
+- `EVENT_DEBUG_ENABLED=false`
+- `EVENT_DEBUG_QUERY_COMPAT_ENABLED=false`
+- `PRODUCTION_DEBUG_TOKEN_REQUIRED=true`
+
+This target baseline defines release intent.
+Runtime default transitions and hard enforcement are handled by later execution
+slices (`PRJ-297+`); until then, `/health.runtime_policy` mismatch diagnostics
+remain the canonical drift signal.
+
 `GET /health` runtime policy visibility now includes:
 
 - effective policy flags
@@ -475,14 +490,14 @@ Example object:
     "url": "..."
   },
   "runtime": {
-    "env": "development",
+    "env": "production",
     "port": 8000,
     "log_level": "info"
   },
   "policy": {
     "startup_schema_mode": "migrate",
-    "event_debug_enabled": true,
-    "production_policy_enforcement": "warn"
+    "event_debug_enabled": false,
+    "production_policy_enforcement": "strict"
   }
 }
 ```

@@ -16,8 +16,8 @@ Last updated: 2026-04-20
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
 - The planning queue is complete through `PRJ-299`.
-- `PRJ-295` is complete; `PRJ-296` is currently `READY` as the first
-  operational-hardening baseline slice.
+- `PRJ-296` is complete; `PRJ-297` is currently `READY` as the first
+  implementation slice that enforces the production posture baseline.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -28,30 +28,8 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-296 Define the target production posture for migration-only startup, strict defaults, and the internal debug boundary
-  - Status: READY
-  - Group: Operational Hardening And Release Truth
-  - Owner: Planner + Ops/Release
-  - Depends on: PRJ-295
-  - Priority: P1
-  - Result:
-    - one target production baseline defines migration-only startup posture,
-      strict policy defaults, and the intended internal-versus-public debug
-      boundary
-    - later hardening slices can remove temporary rollout ambiguity instead of
-      creating more diagnostic layers
-  - Validation:
-    - doc-and-context sync plus targeted production-baseline review recorded in
-      this slice
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-297 Enforce migration-first and internal-debug posture through explicit runtime gates
-  - Status: FUTURE
+  - Status: READY
   - Group: Operational Hardening And Release Truth
   - Owner: Backend Builder
   - Depends on: PRJ-296
@@ -62,6 +40,12 @@ Last updated: 2026-04-20
     - startup and API policy posture move closer to the final deployment shape
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_config.py tests/test_runtime_policy.py tests/test_main_runtime_policy.py tests/test_api_routes.py tests/test_main_lifespan_policy.py`
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
 
 - [ ] PRJ-298 Finalize deployment and release truth for Coolify/manual fallback and smoke ownership
   - Status: FUTURE
@@ -104,6 +88,22 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-296 Define the target production posture for migration-only startup, strict defaults, and the internal debug boundary
+  - Status: DONE
+  - Group: Operational Hardening And Release Truth
+  - Owner: Planner + Ops/Release
+  - Depends on: PRJ-295
+  - Priority: P1
+  - Result:
+    - one target production baseline defines migration-only startup posture,
+      strict policy defaults, and the intended internal-versus-public debug
+      boundary
+    - later hardening slices can remove temporary rollout ambiguity instead of
+      creating more diagnostic layers
+  - Validation:
+    - doc-and-context sync plus targeted production-baseline review recorded in
+      this slice
 
 - [x] PRJ-295 Add dual-loop execution-boundary regressions and sync docs/context
   - Status: DONE

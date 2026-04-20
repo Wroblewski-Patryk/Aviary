@@ -68,9 +68,18 @@ The current repo already works as an MVP slice, but several architecture-level d
   - runtime-policy mismatch detection now uses one shared helper owner so startup and `/health` stay aligned.
   - startup and `/health` now share the same strict-block semantics through shared readiness helpers (`strict_startup_blocked`, `strict_rollout_ready`).
   - startup now emits an informational strict-rollout hint when production runs in `warn` mode and strict rollout is ready.
-- Decision needed:
-  - when is it safe to remove the compatibility-only `create_tables()` path entirely and keep strict migration-only startup in every environment?
-  - should production default to strict policy enforcement, or keep `warn` as the default while strict mode remains opt-in?
+- Decision (PRJ-296 target production baseline, 2026-04-20):
+  - target production startup posture is migration-only
+    (`STARTUP_SCHEMA_MODE=migrate`); `create_tables` remains a temporary
+    compatibility fallback path.
+  - target production policy posture is strict
+    (`PRODUCTION_POLICY_ENFORCEMENT=strict`) so mismatch conditions fail fast
+    instead of staying warning-only.
+  - release-readiness checks should treat non-empty
+    `runtime_policy.production_policy_mismatches` as baseline drift.
+- Remaining follow-up decision:
+  - when is it safe to remove the compatibility-only `create_tables()` path
+    entirely and keep migration-only startup in every environment?
 
 ### 3. Public API Shape
 
@@ -147,13 +156,21 @@ The current repo already works as an MVP slice, but several architecture-level d
     `event_debug_query_compat_enabled=true` when production debug exposure
     keeps compatibility query-debug route enabled.
   - strict-mode hard-fail behavior is test-covered at startup lifecycle level across both debug and schema mismatch paths, not only at helper-function level.
-- Decision needed:
-  - should the full debug payload remain available on the same endpoint through `debug=true`, or should it move to a more clearly internal-only path before wider production use?
-  - should production require `EVENT_DEBUG_TOKEN` whenever debug exposure is enabled, or keep token gating optional?
-  - should the config default stay open for local-first debugging, or switch to
-    disabled-by-default for production-hardening?
-  - should production default to strict policy enforcement for this mismatch, or
-    keep warning mode as the baseline?
+- Decision (PRJ-296 target production baseline, 2026-04-20):
+  - production public API posture stays compact on `POST /event`; full runtime
+    payload remains an internal diagnostics surface.
+  - production baseline keeps debug exposure disabled by default
+    (`EVENT_DEBUG_ENABLED=false`) and keeps compatibility query-debug route
+    disabled (`EVENT_DEBUG_QUERY_COMPAT_ENABLED=false`).
+  - when a temporary incident-debug window is explicitly enabled in production,
+    debug payload access must stay token-gated
+    (`EVENT_DEBUG_TOKEN` configured and
+    `PRODUCTION_DEBUG_TOKEN_REQUIRED=true`).
+  - strict production policy enforcement should treat debug-exposure mismatch
+    states as release-blocking drift.
+- Remaining follow-up decision:
+  - should the internal debug surface eventually move behind a dedicated admin
+    ingress instead of sharing the public API service endpoint?
 
 ### 3a. Expression vs Action Ordering
 

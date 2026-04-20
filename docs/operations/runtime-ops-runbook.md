@@ -222,6 +222,27 @@ Current debug-related mismatch examples include
 `event_debug_enabled=true`, `event_debug_query_compat_enabled=true`, and
 `event_debug_token_missing=true`.
 
+## Target Production Baseline (PRJ-296)
+
+Target release posture for production is:
+
+- `STARTUP_SCHEMA_MODE=migrate`
+- `PRODUCTION_POLICY_ENFORCEMENT=strict`
+- `EVENT_DEBUG_ENABLED=false`
+- `EVENT_DEBUG_QUERY_COMPAT_ENABLED=false`
+- `PRODUCTION_DEBUG_TOKEN_REQUIRED=true`
+
+If an incident requires temporary production debug exposure, keep
+`EVENT_DEBUG_TOKEN` configured, keep
+`PRODUCTION_DEBUG_TOKEN_REQUIRED=true`, and disable debug exposure immediately
+after the incident window.
+
+Operator release gate:
+
+- verify `/health.runtime_policy.production_policy_mismatches` is empty
+- verify `/health.runtime_policy.strict_startup_blocked=false`
+- verify `/health.runtime_policy.event_debug_query_compat_enabled=false`
+
 ## Required Environment Variables
 
 - `DATABASE_URL`
