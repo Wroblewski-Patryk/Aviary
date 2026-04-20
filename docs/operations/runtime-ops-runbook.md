@@ -275,6 +275,13 @@ Recommended when Telegram webhooks are enabled:
 - `EMBEDDING_SOURCE_ROLLOUT_ENFORCEMENT` (`warn|strict`, default `warn`) to
   decide whether pending source-rollout posture remains warning-only or blocks
   startup
+- production retrieval rollout baseline (`PRJ-284`):
+  - provider owner baseline stays deterministic until provider execution is
+    implemented
+  - refresh owner baseline is `on_write` during rollout (`manual` only as
+    explicit operator override)
+  - family rollout order is `episodic+semantic`, then `affective`, then
+    `relation`
 - `PRODUCTION_DEBUG_TOKEN_REQUIRED` (`true|false`, default `true`) to require
   a configured debug token for production debug payload access when debug
   exposure is enabled

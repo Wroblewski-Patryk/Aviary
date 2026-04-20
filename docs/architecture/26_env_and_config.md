@@ -236,6 +236,22 @@ Allowed values:
 
 Default: `warn`.
 
+### Production Retrieval Baseline (PRJ-284)
+
+The production retrieval baseline for rollout is:
+
+- provider ownership baseline:
+  - deterministic is the active effective owner until provider-backed
+    execution is implemented
+- refresh ownership baseline:
+  - `on_write` owns materialization during rollout; `manual` remains explicit
+    operator override
+- family rollout order:
+  - `episodic+semantic` baseline first, then `affective`, then `relation`
+- enforcement posture:
+  - keep source-rollout enforcement aligned with pending rollout phases, and
+    move to strict-only recommendation once relation rollout is complete
+
 `PRODUCTION_DEBUG_TOKEN_REQUIRED`
 
 Controls whether production debug payload access requires a configured debug

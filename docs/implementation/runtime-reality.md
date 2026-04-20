@@ -200,6 +200,15 @@ Hybrid retrieval surfaces are now also explicit:
   configured effective embedding model/dimensions plus requested/effective
   provider metadata and explicit `pending_vector_materialization` status
 
+Production retrieval baseline (`PRJ-284`, planning contract):
+
+- provider ownership: deterministic effective owner until provider execution is
+  implemented
+- refresh ownership: `on_write` during rollout, with `manual` as explicit
+  operator override
+- family rollout order: `episodic+semantic` first, then `affective`, then
+  `relation`
+
 Current limitation:
 
 - deterministic fallback embeddings are live; requested non-implemented

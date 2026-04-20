@@ -399,11 +399,11 @@ Last updated: 2026-04-20
   toward affective understanding, scoped memory, and stronger action intent
   ownership
 - Active `PRJ` execution queue is complete through `PRJ-299`; execution is
-  now moving from completed Group 17 foreground convergence into Group 18
-  background reflection topology.
-- `PRJ-284` is the current `READY` implementation slice after `PRJ-283`
-  pinned background-topology regressions and synchronized docs/context for
-  worker-mode handoff ownership.
+  now in Group 19 production memory retrieval rollout after completing Group 18
+  background reflection topology and baseline definition in `PRJ-284`.
+- `PRJ-285` is the current `READY` implementation slice for provider-owned
+  semantic and episodic vector materialization with explicit fallback and
+  refresh ownership.
 - Top blockers:
   - runtime currently emits connector intents and permission gates but does not
     yet execute provider-backed calendar/task/drive integrations
@@ -416,6 +416,10 @@ Last updated: 2026-04-20
 
 ## Recent Progress
 
+- 2026-04-20: `PRJ-284` is complete: production retrieval baseline is now
+  explicitly defined in canonical planning/architecture/runtime-reality/ops
+  docs for provider ownership, refresh ownership, and family rollout order
+  (`episodic+semantic -> affective -> relation`).
 - 2026-04-20: `PRJ-283` is complete: background-topology regressions now pin
   worker-mode handoff guarantees across `/health.reflection.topology`,
   scheduler runtime log posture, and reflection retry skip semantics for
@@ -824,8 +828,9 @@ Last updated: 2026-04-20
   reflection topology, production retrieval rollout, adaptive governance,
   dual-loop execution boundaries, and operational hardening.
 - 2026-04-20: foreground convergence group is now complete through `PRJ-279`;
-  background topology convergence is complete through `PRJ-283`; `PRJ-284` is
-  now the next `READY` slice for defining production retrieval baseline.
+  background topology convergence is complete through `PRJ-283`; production
+  retrieval baseline definition is complete through `PRJ-284`; `PRJ-285` is
+  now the next `READY` implementation slice.
 
 ## Working Agreements
 

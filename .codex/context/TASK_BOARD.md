@@ -16,8 +16,9 @@ Last updated: 2026-04-20
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
 - The planning queue is complete through `PRJ-299`.
-- `PRJ-284` is currently `READY` and starts the production-retrieval baseline
-  queue after background-topology convergence completed through `PRJ-283`.
+- `PRJ-284` is complete; `PRJ-285` is currently `READY` and starts
+  implementation for provider-owned semantic and episodic vector
+  materialization.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -28,25 +29,8 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-284 Define the production retrieval baseline for provider, refresh ownership, and family rollout order
-  - Status: READY
-  - Group: Production Memory Retrieval Rollout
-  - Owner: Planner + Backend Builder
-  - Depends on: PRJ-283
-  - Priority: P1
-  - Result:
-    - one target production baseline defines embedding provider, refresh
-      strategy, default vector posture, and memory-family rollout order
-    - retrieval work can implement toward a stable target instead of reopening
-      rollout strategy on each slice
-  - Validation:
-    - doc-and-context sync plus targeted retrieval-baseline review recorded in
-      this slice
-
-## BACKLOG
-
 - [ ] PRJ-285 Implement the provider-owned semantic and episodic vector materialization path
-  - Status: BACKLOG
+  - Status: READY
   - Group: Production Memory Retrieval Rollout
   - Owner: Backend Builder
   - Depends on: PRJ-284
@@ -57,6 +41,8 @@ Last updated: 2026-04-20
     - retrieval stops treating semantic vectors as mostly diagnostic shells
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_embedding_strategy.py tests/test_memory_repository.py tests/test_context_agent.py tests/test_runtime_pipeline.py`
+
+## BACKLOG
 
 - [ ] PRJ-286 Extend vector rollout to affective and relation families with explicit gating
   - Status: BACKLOG
@@ -267,6 +253,25 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-284 Define the production retrieval baseline for provider, refresh ownership, and family rollout order
+  - Status: DONE
+  - Group: Production Memory Retrieval Rollout
+  - Owner: Planner + Backend Builder
+  - Depends on: PRJ-283
+  - Priority: P1
+  - Result:
+    - one target production baseline now defines provider ownership, refresh
+      ownership, default vector posture, and family rollout order
+      (`episodic+semantic -> affective -> relation`)
+    - retrieval implementation slices can now converge on one stable baseline
+      instead of reopening rollout strategy each cycle
+  - Validation:
+    - doc-and-context sync plus targeted retrieval-baseline review recorded
+      across `docs/planning/open-decisions.md`,
+      `docs/architecture/26_env_and_config.md`,
+      `docs/implementation/runtime-reality.md`, and
+      `docs/operations/runtime-ops-runbook.md`
 
 - [x] PRJ-283 Add background-topology regressions and sync docs/context
   - Status: DONE

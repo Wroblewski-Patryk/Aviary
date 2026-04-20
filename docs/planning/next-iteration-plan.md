@@ -371,6 +371,10 @@ Completed on 2026-04-18:
 - `PRJ-283` is complete: regression coverage now pins background-topology
   handoff guarantees across health topology, scheduler log posture, and
   exhausted-retry skip semantics.
+- `PRJ-284` is complete: one production retrieval baseline now defines provider
+  ownership, refresh ownership, default vector posture, and family rollout
+  order (`episodic+semantic -> affective -> relation`) across planning,
+  architecture, runtime-reality, and operations docs.
 
 ## Highest-Risk Gaps
 
@@ -1150,7 +1154,7 @@ This group moves retrieval from "contracts plus diagnostics" toward a planned
 production baseline that is explicit about provider ownership, refresh
 semantics, and family-by-family rollout.
 
-- `PRJ-284` Define the production retrieval baseline for provider, refresh ownership, and family rollout order.
+- `PRJ-284` is complete.
   - Result:
     - the repo records one target production baseline for embedding provider,
       refresh strategy, default vector posture, and memory-family rollout order
@@ -1313,10 +1317,10 @@ not around temporary convenience defaults.
 ## Next Derived Slice
 
 The planning queue is complete through `PRJ-299`.
-`PRJ-284` is currently the execution-ready slice in the board.
+`PRJ-285` is currently the execution-ready slice in the board.
 Before the next implementation slice:
 
-- take `PRJ-284` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-285` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to that one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 

@@ -273,13 +273,18 @@ The current repo already works as an MVP slice, but several architecture-level d
     `memory_retrieval.semantic_vector_enabled` and
     `memory_retrieval.semantic_retrieval_mode`
     (`hybrid_vector_lexical|lexical_only`).
-  - runtime memory load now consumes hybrid retrieval diagnostics, but provider
-    embedding ownership and production retrieval posture are not finalized yet.
-- Decision needed:
-  - should provider-backed embeddings become default, or stay optional while
-    deterministic fallback remains baseline?
-  - should vector retrieval start as optional enrichment behind feature flags,
-    or become part of the default retrieval path once it exists?
+  - runtime memory load now consumes hybrid retrieval diagnostics with explicit
+    rollout posture in `/health`.
+- Decision (resolved in `PRJ-284`, 2026-04-20):
+  - keep `SEMANTIC_VECTOR_ENABLED=true` as the target production baseline,
+    while preserving explicit lexical-only behavior when vectors are disabled
+  - keep vector retrieval as the default runtime retrieval path for enabled
+    source families
+  - keep deterministic fallback explicit until provider-backed execution is
+    implemented and validated
+- Follow-up decision:
+  - decide when to switch default provider posture from deterministic baseline
+    to provider-owned execution after provider implementation lands
 
 ### 5e. Embedding Strategy
 
@@ -401,11 +406,24 @@ The current repo already works as an MVP slice, but several architecture-level d
     `semantic_embedding_refresh_alignment_state`,
     `semantic_embedding_refresh_alignment_hint`), and startup now emits
     `embedding_refresh_hint` when refresh posture deviates from recommendation.
-- Decision needed:
-  - which embedding provider and refresh strategy should own semantic memory
-    vectors?
-  - which memory families should be embedded first: episodic, semantic,
-    affective, relation, or all of them?
+- Decision (resolved in `PRJ-284`, 2026-04-20):
+  - provider ownership baseline:
+    - deterministic remains the effective production owner until requested
+      provider execution is implemented; fallback diagnostics stay explicit
+  - refresh ownership baseline:
+    - `on_write` is the rollout baseline owner for vector materialization;
+      `manual` stays an explicit operator override with documented process
+      expectations
+  - memory-family rollout order:
+    - phase 1: episodic + semantic materialization baseline
+    - phase 2: affective materialization rollout
+    - phase 3: relation materialization rollout and full-source completion
+  - enforcement rollout posture:
+    - keep source-rollout enforcement aligned to `warn` while relation is
+      pending; recommend `strict` after full rollout completion
+- Follow-up decision:
+  - once provider-backed execution exists, decide the production default timing
+    for moving from deterministic baseline owner to provider-owned execution
 
 ### 5a. Goal And Task Scope
 
