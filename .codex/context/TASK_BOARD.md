@@ -20,7 +20,7 @@ Last updated: 2026-04-21
   behavior-validation queue is complete through `PRJ-317`.
 - Runtime behavior-validation lane is now complete through `PRJ-317`
   (`PRJ-310..PRJ-317`).
-- Next architecture-to-code queue is now seeded through `PRJ-337`.
+- Next architecture-to-code queue is now seeded through `PRJ-342`.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -35,6 +35,23 @@ Last updated: 2026-04-21
   the plan is complete.
 
 ## READY
+
+- [ ] PRJ-338 Harden Telegram delivery failure boundary to prevent 500 runtime crashes
+  - Status: READY
+  - Group: Manual Runtime Reliability Fixes
+  - Owner: Backend Builder
+  - Depends on: PRJ-331
+  - Priority: P0
+  - Result:
+    - Telegram delivery failures (`4xx/5xx`, transport errors, timeout) are
+      handled as controlled `ActionResult(status=fail)` outcomes instead of
+      uncaught exceptions that return HTTP 500 from runtime endpoints
+    - action-boundary resilience keeps memory write and reflection enqueue
+      behavior deterministic for failed Telegram sends
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_delivery_router.py tests/test_action_executor.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+    - manual negative Telegram send smoke through `POST /internal/event/debug`
+      with invalid/unreachable `chat_id` confirms no endpoint 500
 
 - [ ] PRJ-332 Add relation lifecycle and trust-influence regressions
   - Status: READY
@@ -122,6 +139,74 @@ Last updated: 2026-04-21
   - Validation:
     - doc-and-context sync plus targeted planning-autonomy cross-doc review
       recorded in this slice
+
+- [ ] PRJ-339 Enforce structured affective-classifier output parsing and fallback diagnostics
+  - Status: FUTURE
+  - Group: Manual Runtime Reliability Fixes
+  - Owner: Backend Builder
+  - Depends on: PRJ-338
+  - Priority: P1
+  - Result:
+    - affective classifier prompt/client path requires deterministic structured
+      JSON output contract (or equivalent schema gate), reducing
+      `openai_affective_parse_failed` fallback churn
+    - fallback posture remains explicit with traceable error reasons and no
+      silent behavior drift in affect-sensitive turns
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_perception_agent.py tests/test_expression_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+    - targeted manual emotional-turn debug validation through
+      `POST /internal/event/debug` with `system_debug.perception.affective`
+      evidence notes
+
+- [ ] PRJ-340 Expand goal/task signal detection beyond prefix-only phrasing
+  - Status: FUTURE
+  - Group: Manual Runtime Reliability Fixes
+  - Owner: Backend Builder
+  - Depends on: PRJ-339
+  - Priority: P1
+  - Result:
+    - planning intent detection handles natural inline phrasing
+      (for example `utworz cel ...`, `dodaj zadanie ...`) in addition to strict
+      prefix forms (`cel:`, `zadanie:`)
+    - domain-intent extraction remains deterministic and keeps false-positive
+      guardrails across Polish and English patterns
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+    - targeted manual debug checks confirm `upsert_goal|upsert_task` intent
+      extraction for both strict-prefix and natural-phrase variants
+
+- [ ] PRJ-341 Add Telegram integration smoke workflow for webhook/listen mode switching
+  - Status: FUTURE
+  - Group: Manual Runtime Reliability Fixes
+  - Owner: QA/Test
+  - Depends on: PRJ-340
+  - Priority: P1
+  - Result:
+    - operator-facing smoke workflow now validates both Telegram modes:
+      webhook-driven ingress and temporary `deleteWebhook -> getUpdates`
+      listen diagnostics
+    - end-to-end evidence checklist includes real chat delivery preconditions
+      (`chat_id` availability, bot-start handshake) to reduce false-negative
+      Telegram delivery triage
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_event_normalization.py tests/test_delivery_router.py`
+    - runbook-aligned manual smoke evidence recorded for
+      `getWebhookInfo/getUpdates/setWebhook`
+
+- [ ] PRJ-342 Sync docs/context for manual runtime reliability fix lane
+  - Status: FUTURE
+  - Group: Manual Runtime Reliability Fixes
+  - Owner: Product Docs
+  - Depends on: PRJ-341
+  - Priority: P1
+  - Result:
+    - planning docs, runbook guidance, and context truth reflect the new
+      manual-runtime fix lane and updated Telegram reliability baseline
+    - queue and project-state continuity stay explicit after manual validation
+      findings
+  - Validation:
+    - doc-and-context sync across `.codex/context/`, `docs/planning/`, and
+      `docs/operations/` with targeted cross-reference checks
 
 ## IN_PROGRESS
 
