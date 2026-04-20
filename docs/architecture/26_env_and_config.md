@@ -427,6 +427,20 @@ Compatibility route `POST /event?debug=true` also emits:
 
 Controls background reflection cadence when such scheduling is enabled.
 
+`REFLECTION_RUNTIME_MODE`
+
+Controls who owns queued reflection dispatch:
+
+- `in_process`: app-local worker may dispatch immediately
+- `deferred`: foreground enqueue stays durable, dispatch is expected from an
+  external scheduler/worker driver
+
+Target deployment baseline (PRJ-301):
+
+- production default remains `REFLECTION_RUNTIME_MODE=in_process`
+- `deferred` is rollout-only until explicit external-dispatch readiness
+  criteria are satisfied
+
 `SCHEDULER_ENABLED`
 
 Enables or disables in-process scheduler cadence for reflection and maintenance

@@ -364,6 +364,24 @@ Current reflection runtime topology is explicit and mode-aware:
   foreground still enqueues tasks durably, while dispatch is expected from an
   external scheduler/worker driver
 
+Production deployment baseline (PRJ-301):
+
+- keep `REFLECTION_RUNTIME_MODE=in_process` as default production posture
+- treat `REFLECTION_RUNTIME_MODE=deferred` as opt-in rollout posture gated by
+  explicit readiness criteria
+
+Deferred readiness criteria (all required before production-default switch):
+
+1. external dispatcher ownership is explicit in runbook/release ownership
+2. `/health.reflection.topology.external_driver_expected=true` and
+   `queue_drain_owner=external_driver`
+3. deferred queue posture is stable (`pending` backlog does not show recurring
+   growth; `stuck_processing=0`; `exhausted_failed=0` during release windows)
+4. mode-consistent handoff is visible in scheduler/runtime logs
+   (`scheduler_tick_dispatch=false` with external dispatch expectation)
+5. release smoke + rollback procedures include reflection deployment readiness
+   checks for the selected mode
+
 Operator checks:
 
 - verify `/health.reflection` queue snapshot and worker-running posture

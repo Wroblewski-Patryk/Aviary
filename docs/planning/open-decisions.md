@@ -51,11 +51,25 @@ The current repo already works as an MVP slice, but several architecture-level d
     retry ownership are explicit for in-process and deferred operation.
   - `PRJ-283` now pins those ownership guarantees with regressions and keeps
     planning/context/ops docs aligned to the converged background topology.
-- Decision needed:
-  - should `in_process` remain the default runtime mode during convergence, or
-    should deployment posture move toward `deferred` + external dispatch once
-    production retrieval rollout work (`PRJ-284+`) starts depending on stable
-    background dispatch ownership?
+- Decision (PRJ-301 reflection deployment baseline, 2026-04-20):
+  - production deployment baseline remains
+    `REFLECTION_RUNTIME_MODE=in_process` for now, so reflection dispatch keeps
+    a local owner while post-convergence hardening continues.
+  - `REFLECTION_RUNTIME_MODE=deferred` is a controlled rollout posture, not a
+    default baseline.
+  - deferred rollout readiness requires all of:
+    - explicit external dispatch owner runbook and on-call ownership
+    - `/health.reflection.topology.external_driver_expected=true` and
+      `queue_drain_owner=external_driver`
+    - sustained queue stability in deferred posture (no recurring growth in
+      pending backlog and no persistent `stuck_processing`/`exhausted_failed`)
+    - scheduler/runtime logs proving mode-consistent dispatch handoff
+      (`scheduler_tick_dispatch=false` with external-driver expectation)
+    - release smoke and rollback steps updated to include reflection-mode
+      readiness checks
+- Remaining follow-up decision:
+  - once deferred readiness criteria are continuously satisfied, should
+    production default move from `in_process` to `deferred`?
 
 ### 2. Migration Strategy
 
@@ -604,16 +618,18 @@ The current repo already works as an MVP slice, but several architecture-level d
     interruption-cost guardrails and typed plan/motivation outputs.
   - proactive delivery now enforces baseline guardrails (user opt-in, outbound
     and unanswered throttle checks, delivery-target requirement) before outreach.
-- Decision needed:
-  - should reflection/maintenance scheduler cadence remain app-local, or move
-    to a dedicated external scheduler/worker path?
-  - with `PRJ-295` complete, end-to-end regressions now pin turn assembly,
-    proposal handoff, proactive delivery, and permission-gated connector intent
-    flows through one conscious execution boundary; decide whether this boundary
-    should move from in-process coordination to a dedicated durable
-    attention-inbox owner in later rollout.
-  - should scheduled reflection stay in-process first, or move directly toward
-    dedicated worker execution?
+- Decision (PRJ-301 scheduler/reflection baseline, 2026-04-20):
+  - scheduled reflection baseline stays in-process first
+    (`REFLECTION_RUNTIME_MODE=in_process`) with durable enqueue semantics.
+  - deferred reflection dispatch remains opt-in and requires the explicit
+    readiness criteria recorded in decision `1`.
+- Remaining follow-up decisions:
+  - should maintenance/proactive cadence stay app-local long term, or move to a
+    dedicated external scheduler path after reflection deferred rollout
+    stabilizes?
+  - with `PRJ-295` complete, should conscious attention boundary ownership
+    remain in-process coordination, or move to a dedicated durable
+    attention-inbox owner in later rollout?
 
 ### 12a. Attention Inbox And Turn Assembly
 

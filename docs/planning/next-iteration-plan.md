@@ -1350,27 +1350,27 @@ not around temporary convenience defaults.
     - doc-and-context sync plus targeted planning coherence review recorded in
       this slice
 
+- `PRJ-301` is complete.
+  - Result:
+    - production reflection deployment baseline is now explicit:
+      `REFLECTION_RUNTIME_MODE=in_process` remains default posture
+    - deferred reflection dispatch now has explicit external-readiness criteria
+      instead of implicit operator interpretation
+  - Validation:
+    - doc-and-context sync plus targeted reflection-topology contract review
+      recorded in this slice
+
 ## Next Derived Slice
 
 The post-convergence seed queue now extends through `PRJ-304`.
-`PRJ-301` is currently the execution-ready slice in the board.
+`PRJ-302` is currently the execution-ready slice in the board.
 Before the next implementation slice:
 
-- take `PRJ-301` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-302` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to that one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 
 Post-convergence seed queue:
-
-- `PRJ-301` Define production reflection runtime-mode deployment baseline and
-  explicit external-dispatch readiness criteria.
-  - Result:
-    - one production-target decision closes open-decision drift between
-      `in_process` and `deferred` reflection modes
-    - operators get explicit criteria for when deferred external dispatch is
-      allowed as the primary posture
-  - Validation:
-    - doc-and-context sync plus targeted reflection-topology contract review
 
 - `PRJ-302` Add explicit `/health.reflection` deployment-readiness summary for
   chosen runtime-mode baseline.

@@ -17,8 +17,8 @@ Last updated: 2026-04-20
   - sync task state, project state, and learning journal when needed
 - The convergence queue is complete through `PRJ-299`; post-convergence seed
   queue now extends through `PRJ-304`.
-- `PRJ-300` is complete; `PRJ-301` is currently `READY` to define the
-  production reflection runtime-mode deployment baseline.
+- `PRJ-301` is complete; `PRJ-302` is currently `READY` to expose explicit
+  reflection deployment-readiness summary in `/health`.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -29,20 +29,19 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-301 Define production reflection runtime-mode deployment baseline and external-dispatch readiness criteria
+- [ ] PRJ-302 Add explicit `/health.reflection` deployment-readiness summary for chosen runtime-mode baseline
   - Status: READY
   - Group: Reflection Deployment Baseline
-  - Owner: Planner + Ops/Release
-  - Depends on: PRJ-300
+  - Owner: Backend Builder + Ops/Release
+  - Depends on: PRJ-301
   - Priority: P1
   - Result:
-    - one production-target decision closes open-decision drift between
-      `in_process` and `deferred` reflection runtime modes
-    - external dispatch migration has explicit readiness criteria instead of
-      implicit operator judgment
+    - health contract exposes concise readiness posture for reflection mode
+      migration (`ready`, `blocking_signals`)
+    - deployment smoke can verify reflection-mode posture without log-only
+      inference
   - Validation:
-    - doc-and-context sync plus targeted reflection-topology contract review
-      recorded in this slice
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_scheduler_worker.py tests/test_reflection_worker.py`
 
 ## BACKLOG
 
@@ -65,6 +64,21 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-301 Define production reflection runtime-mode deployment baseline and external-dispatch readiness criteria
+  - Status: DONE
+  - Group: Reflection Deployment Baseline
+  - Owner: Planner + Ops/Release
+  - Depends on: PRJ-300
+  - Priority: P1
+  - Result:
+    - production baseline now keeps `REFLECTION_RUNTIME_MODE=in_process` as
+      default posture
+    - deferred reflection dispatch now has explicit rollout-readiness criteria
+      instead of implicit operator judgment
+  - Validation:
+    - doc-and-context sync plus targeted reflection-topology contract review
+      recorded in this slice
 
 - [x] PRJ-300 Derive and record the first post-convergence execution queue
   - Status: DONE

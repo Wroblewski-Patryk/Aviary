@@ -846,7 +846,7 @@ Last updated: 2026-04-20
 - 2026-04-20: foreground convergence group is now complete through `PRJ-279`;
   background topology convergence is complete through `PRJ-283`; production
   retrieval implementation is complete through `PRJ-287`; adaptive governance
-  policy baseline is complete through `PRJ-288`; `PRJ-301` is now the next
+  policy baseline is complete through `PRJ-288`; `PRJ-302` is now the next
   `READY` implementation slice.
 - 2026-04-20: `PRJ-288` is complete: architecture contracts now define explicit
   adaptive influence evidence gates, precedence, and tie-break guardrails for
@@ -950,6 +950,18 @@ Last updated: 2026-04-20
   `.codex/context/TASK_BOARD.md`,
   `.codex/context/PROJECT_STATE.md`, and
   `docs/planning/open-decisions.md`.
+- 2026-04-20: `PRJ-301` is complete: production reflection deployment baseline
+  now stays `REFLECTION_RUNTIME_MODE=in_process` by default, while deferred
+  dispatch is explicitly gated behind external-readiness criteria.
+- 2026-04-20: `PRJ-301` validation is recorded as doc-and-context sync plus
+  targeted reflection-topology contract review across
+  `docs/planning/open-decisions.md`,
+  `docs/planning/next-iteration-plan.md`,
+  `docs/operations/runtime-ops-runbook.md`,
+  `docs/architecture/26_env_and_config.md`,
+  `docs/implementation/runtime-reality.md`,
+  `.codex/context/TASK_BOARD.md`, and
+  `.codex/context/PROJECT_STATE.md`.
 
 ## Working Agreements
 

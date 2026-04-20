@@ -544,6 +544,13 @@ Current topology ownership split:
   - `deferred`: pending queue is expected to be drained by external
     scheduler/worker driver
 
+Deployment baseline update (`PRJ-301`):
+
+- production default remains `REFLECTION_RUNTIME_MODE=in_process`
+- deferred mode is treated as rollout posture with explicit
+  external-dispatch readiness criteria documented in
+  `docs/operations/runtime-ops-runbook.md`
+
 This is more advanced than a purely conceptual background loop, but still
 lighter than the long-term architecture could become.
 
