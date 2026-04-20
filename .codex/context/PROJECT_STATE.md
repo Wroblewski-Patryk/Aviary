@@ -1257,8 +1257,16 @@ Last updated: 2026-04-21
   `docs/planning/next-iteration-plan.md`,
   `.codex/context/TASK_BOARD.md`, and
   `.codex/context/PROJECT_STATE.md`.
-- 2026-04-21: `PRJ-334` is now the next `READY` slice, focused on bounded
-  inferred goal/task promotion rules in planning.
+- 2026-04-21: `PRJ-334` is complete: planning now promotes bounded inferred
+  goal/task intents from repeated blocker evidence when explicit declaration
+  patterns are absent, while preserving confidence/evidence gates and
+  duplicate guards against active planning state.
+- 2026-04-21: `PRJ-334` validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_memory_repository.py`
+  passed with `167 passed`.
+- 2026-04-21: `PRJ-335` is now the next `READY` slice, focused on expanding
+  typed domain intents for inferred planning state and controlled maintenance
+  writes.
 
 ## Working Agreements
 

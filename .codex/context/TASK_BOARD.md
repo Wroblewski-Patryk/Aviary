@@ -36,28 +36,8 @@ Last updated: 2026-04-21
 
 ## READY
 
-- [ ] PRJ-334 Add inferred goal/task promotion rules to planning
-  - Status: READY
-  - Group: Goal/Task Inference And Typed-Intent Expansion
-  - Owner: Backend Builder
-  - Depends on: PRJ-333
-  - Priority: P1
-  - Result:
-    - planning can propose bounded inferred goals/tasks from repeated evidence
-      instead of relying only on explicit user declarations
-    - internal planning growth becomes a deliberate coded behavior rather than a
-      future aspiration
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_memory_repository.py`
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-335 Expand typed domain intents for inferred planning state and controlled maintenance writes
-  - Status: FUTURE
+  - Status: READY
   - Group: Goal/Task Inference And Typed-Intent Expansion
   - Owner: Backend Builder
   - Depends on: PRJ-334
@@ -68,6 +48,12 @@ Last updated: 2026-04-21
     - action remains the sole owner of durable planning-state side effects
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
 
 - [ ] PRJ-336 Add regressions for inferred planning growth and no-duplicate/no-unsafe promotion behavior
   - Status: FUTURE
@@ -265,6 +251,22 @@ Last updated: 2026-04-21
       `docs/planning/next-iteration-plan.md`,
       `.codex/context/TASK_BOARD.md`, and
       `.codex/context/PROJECT_STATE.md`
+
+- [x] PRJ-334 Add inferred goal/task promotion rules to planning
+  - Status: DONE
+  - Group: Goal/Task Inference And Typed-Intent Expansion
+  - Owner: Backend Builder
+  - Depends on: PRJ-333
+  - Priority: P1
+  - Result:
+    - planning now supports bounded inferred goal/task promotion from repeated
+      blocker evidence when explicit declaration patterns are absent
+    - inferred promotion is confidence-bounded (motivation/evidence gates),
+      duplicate-aware against active state, and persisted through existing
+      planning-owned typed domain intent flow
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_memory_repository.py`
+      (`167 passed`)
 
 - [x] PRJ-330 Implement relation decay and confidence revalidation policy
   - Status: DONE

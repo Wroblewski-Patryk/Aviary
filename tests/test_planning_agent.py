@@ -15,6 +15,7 @@ from app.core.contracts import (
     UpdateResponseStyleDomainIntent,
     UpdateTaskStatusDomainIntent,
     UpsertGoalDomainIntent,
+    UpsertTaskDomainIntent,
 )
 
 
@@ -121,6 +122,67 @@ def test_planning_agent_emits_task_status_domain_intent() -> None:
     )
 
     assert any(isinstance(intent, UpdateTaskStatusDomainIntent) for intent in result.domain_intents)
+
+
+def test_planning_agent_infers_task_from_repeated_blocker_evidence() -> None:
+    result = PlanningAgent().run(
+        event=_event(text="Still blocked again by deployment migration errors in staging."),
+        context=_context(),
+        motivation=MotivationOutput(
+            importance=0.82,
+            urgency=0.79,
+            valence=-0.1,
+            arousal=0.62,
+            mode="execute",
+        ),
+        role=RoleOutput(selected="executor", confidence=0.84),
+        active_goals=[
+            {
+                "id": 7,
+                "name": "ship the MVP this week",
+                "description": "User-declared goal: ship the MVP this week",
+                "priority": "high",
+                "status": "active",
+                "goal_type": "operational",
+            }
+        ],
+        active_tasks=[],
+    )
+
+    inferred_task = next(
+        intent for intent in result.domain_intents if isinstance(intent, UpsertTaskDomainIntent)
+    )
+    assert inferred_task.description.startswith("Inferred task from repeated execution evidence:")
+    assert inferred_task.status == "blocked"
+    assert not any(isinstance(intent, UpsertGoalDomainIntent) for intent in result.domain_intents)
+
+
+def test_planning_agent_infers_goal_and_task_when_repeated_evidence_has_no_active_goal() -> None:
+    result = PlanningAgent().run(
+        event=_event(text="Again I am still blocked by deployment migration failures for the MVP release."),
+        context=_context(),
+        motivation=MotivationOutput(
+            importance=0.84,
+            urgency=0.76,
+            valence=-0.08,
+            arousal=0.58,
+            mode="execute",
+        ),
+        role=RoleOutput(selected="executor", confidence=0.82),
+        active_goals=[],
+        active_tasks=[],
+    )
+
+    inferred_goal = next(
+        intent for intent in result.domain_intents if isinstance(intent, UpsertGoalDomainIntent)
+    )
+    inferred_task = next(
+        intent for intent in result.domain_intents if isinstance(intent, UpsertTaskDomainIntent)
+    )
+    assert inferred_goal.description.startswith("Inferred goal from repeated execution evidence:")
+    assert inferred_goal.name.startswith("stabilize ")
+    assert inferred_task.description.startswith("Inferred task from repeated execution evidence:")
+    assert inferred_task.status == "blocked"
 
 
 def test_planning_agent_emits_preference_domain_intents_from_explicit_request() -> None:

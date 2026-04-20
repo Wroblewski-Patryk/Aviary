@@ -23,6 +23,7 @@ from app.core.contracts import (
 )
 from app.proactive.engine import ProactiveDecisionEngine, ProactiveDeliveryGuard
 from app.utils.goal_task_signals import detect_goal_signal, detect_task_signal, detect_task_status_signal
+from app.utils.language import normalize_for_matching
 from app.utils.preferences import detect_collaboration_preference, detect_response_style_preference
 from app.utils.goal_task_selection import (
     priority_rank as shared_priority_rank,
@@ -322,7 +323,13 @@ class PlanningAgent:
             prepare_index = steps.index("prepare_response") if "prepare_response" in steps else len(steps)
             steps.insert(prepare_index, step)
 
-        domain_intents = self._build_domain_action_intents(event_text)
+        domain_intents = self._build_domain_action_intents(
+            event_text=event_text,
+            context_summary=context.summary,
+            motivation=motivation,
+            active_goals=active_goals or [],
+            active_tasks=active_tasks or [],
+        )
         domain_intents.extend(self._build_connector_expansion_intents(accepted_proposals))
         connector_permission_gates = self._build_connector_permission_gates(domain_intents)
 
@@ -432,7 +439,15 @@ class PlanningAgent:
             proactive_delivery_guard=delivery_guard,
         )
 
-    def _build_domain_action_intents(self, event_text: str) -> list[DomainActionIntent]:
+    def _build_domain_action_intents(
+        self,
+        *,
+        event_text: str,
+        context_summary: str,
+        motivation: MotivationOutput,
+        active_goals: list[dict],
+        active_tasks: list[dict],
+    ) -> list[DomainActionIntent]:
         intents: list[DomainActionIntent] = []
         lowered_text = event_text.strip().lower()
 
@@ -497,9 +512,288 @@ class PlanningAgent:
         if connected_drive_intent is not None:
             intents.append(connected_drive_intent)
 
+        intents.extend(
+            self._build_inferred_goal_task_intents(
+                event_text=event_text,
+                context_summary=context_summary,
+                motivation=motivation,
+                active_goals=active_goals,
+                active_tasks=active_tasks,
+                existing_intents=intents,
+            )
+        )
+
         if not intents:
             return [NoopDomainIntent()]
         return intents
+
+    def _build_inferred_goal_task_intents(
+        self,
+        *,
+        event_text: str,
+        context_summary: str,
+        motivation: MotivationOutput,
+        active_goals: list[dict],
+        active_tasks: list[dict],
+        existing_intents: list[DomainActionIntent],
+    ) -> list[DomainActionIntent]:
+        if not self._can_infer_goal_task_promotion(
+            event_text=event_text,
+            context_summary=context_summary,
+            motivation=motivation,
+        ):
+            return []
+
+        has_goal_intent = any(isinstance(intent, UpsertGoalDomainIntent) for intent in existing_intents)
+        has_task_intent = any(isinstance(intent, UpsertTaskDomainIntent) for intent in existing_intents)
+        inferred_intents: list[DomainActionIntent] = []
+        normalized = normalize_for_matching(event_text)
+        inferred_task_name = self._infer_task_name_from_repeated_evidence(event_text)
+
+        if (
+            not has_task_intent
+            and inferred_task_name is not None
+            and not self._is_duplicate_task_candidate(inferred_task_name, active_tasks)
+        ):
+            inferred_intents.append(
+                UpsertTaskDomainIntent(
+                    name=inferred_task_name,
+                    description=f"Inferred task from repeated execution evidence: {inferred_task_name[:220]}",
+                    priority=self._inferred_priority(normalized, motivation),
+                    status=self._inferred_task_status(normalized),
+                )
+            )
+
+        if has_goal_intent:
+            return inferred_intents
+
+        inferred_goal_name = self._infer_goal_name_from_repeated_evidence(
+            event_text=event_text,
+            inferred_task_name=inferred_task_name,
+        )
+        if inferred_goal_name is None:
+            return inferred_intents
+        if self._is_duplicate_goal_candidate(inferred_goal_name, active_goals):
+            return inferred_intents
+
+        if active_goals:
+            return inferred_intents
+
+        inferred_intents.append(
+            UpsertGoalDomainIntent(
+                name=inferred_goal_name,
+                description=f"Inferred goal from repeated execution evidence: {inferred_goal_name[:220]}",
+                priority=self._inferred_priority(normalized, motivation),
+                goal_type=self._inferred_goal_type(normalized),
+            )
+        )
+        return inferred_intents
+
+    def _can_infer_goal_task_promotion(
+        self,
+        *,
+        event_text: str,
+        context_summary: str,
+        motivation: MotivationOutput,
+    ) -> bool:
+        if motivation.mode not in {"respond", "analyze", "execute"}:
+            return False
+        if motivation.importance < 0.62:
+            return False
+
+        normalized_event = normalize_for_matching(event_text)
+        normalized_context = normalize_for_matching(context_summary)
+        if not normalized_event:
+            return False
+
+        issue_markers = (
+            "blocked",
+            "blocker",
+            "stuck",
+            "failing",
+            "failed",
+            "error",
+            "issue",
+            "problem",
+            "cannot",
+            "cant",
+            "nie moge",
+            "nie mog",
+            "blokuje",
+            "awaria",
+            "blad",
+            "problem",
+        )
+        repeated_markers = (
+            "again",
+            "still",
+            "repeated",
+            "keeps",
+            "keep failing",
+            "nadal",
+            "znow",
+            "wciaz",
+            "ponownie",
+            "kolejny raz",
+            "powraca",
+            "repro",
+        )
+
+        has_issue = any(marker in normalized_event for marker in issue_markers)
+        if not has_issue:
+            return False
+        has_repeated = any(marker in normalized_event for marker in repeated_markers)
+        if not has_repeated and "relevant recent memory" not in normalized_context:
+            return False
+        return True
+
+    def _infer_task_name_from_repeated_evidence(self, event_text: str) -> str | None:
+        normalized = normalize_for_matching(event_text)
+        if not normalized:
+            return None
+
+        raw = str(event_text).strip()
+        extraction_markers = (
+            "blocked by ",
+            "blocked on ",
+            "stuck on ",
+            "stuck with ",
+            "failing on ",
+            "fails on ",
+            "nie moge przez ",
+            "blokuje mnie ",
+        )
+        lowered_raw = raw.lower()
+        extracted = ""
+        for marker in extraction_markers:
+            marker_index = lowered_raw.find(marker)
+            if marker_index == -1:
+                continue
+            extracted = raw[marker_index + len(marker):].strip()
+            break
+
+        token_source = normalize_for_matching(extracted) if extracted else normalized
+        removable_tokens = {
+            "again",
+            "still",
+            "blocked",
+            "blocker",
+            "stuck",
+            "failing",
+            "failed",
+            "issue",
+            "problem",
+            "error",
+            "errors",
+            "nadal",
+            "znow",
+            "wciaz",
+            "ponownie",
+            "kolejny",
+            "powraca",
+            "please",
+            "prosze",
+            "help",
+            "pomoz",
+        }
+        tokens = [
+            token
+            for token in token_source.split()
+            if len(token) >= 3 and token not in removable_tokens
+        ]
+        if len(tokens) < 2:
+            return None
+        candidate = " ".join(tokens[:8]).strip(" .,:;!-")
+        if len(candidate) < 8:
+            return None
+        return candidate[:160]
+
+    def _infer_goal_name_from_repeated_evidence(self, *, event_text: str, inferred_task_name: str | None) -> str | None:
+        normalized = normalize_for_matching(event_text)
+        if not normalized:
+            return None
+        if inferred_task_name:
+            return f"stabilize {inferred_task_name[:120]}"
+
+        focus_tokens = [
+            token
+            for token in normalized.split()
+            if len(token) >= 4
+            and token
+            not in {
+                "again",
+                "still",
+                "blocked",
+                "blocker",
+                "stuck",
+                "failing",
+                "error",
+                "problem",
+                "issue",
+                "nadal",
+                "znow",
+                "wciaz",
+                "ponownie",
+            }
+        ]
+        if len(focus_tokens) < 2:
+            return None
+        return f"stabilize {' '.join(focus_tokens[:5])}"[:160]
+
+    def _is_duplicate_goal_candidate(self, candidate_name: str, active_goals: list[dict]) -> bool:
+        candidate_tokens = self._text_tokens(candidate_name)
+        if not candidate_tokens:
+            return True
+        for goal in active_goals:
+            goal_name = str(goal.get("name", "")).strip()
+            goal_description = str(goal.get("description", "")).strip()
+            existing_tokens = self._text_tokens(f"{goal_name} {goal_description}")
+            if not existing_tokens:
+                continue
+            if self._token_overlap_ratio(candidate_tokens, existing_tokens) >= 0.6:
+                return True
+        return False
+
+    def _is_duplicate_task_candidate(self, candidate_name: str, active_tasks: list[dict]) -> bool:
+        candidate_tokens = self._text_tokens(candidate_name)
+        if not candidate_tokens:
+            return True
+        for task in active_tasks:
+            task_name = str(task.get("name", "")).strip()
+            task_description = str(task.get("description", "")).strip()
+            existing_tokens = self._text_tokens(f"{task_name} {task_description}")
+            if not existing_tokens:
+                continue
+            if self._token_overlap_ratio(candidate_tokens, existing_tokens) >= 0.6:
+                return True
+        return False
+
+    def _token_overlap_ratio(self, left: set[str], right: set[str]) -> float:
+        if not left or not right:
+            return 0.0
+        overlap = len(left.intersection(right))
+        baseline = max(1, min(len(left), len(right)))
+        return float(overlap) / float(baseline)
+
+    def _inferred_priority(self, normalized_text: str, motivation: MotivationOutput) -> str:
+        if any(
+            marker in normalized_text
+            for marker in ("urgent", "critical", "production", "pilne", "prod", "awaria")
+        ):
+            return "high"
+        if motivation.urgency >= 0.7 or motivation.importance >= 0.78:
+            return "high"
+        return "medium"
+
+    def _inferred_task_status(self, normalized_text: str) -> str:
+        if any(marker in normalized_text for marker in ("blocked", "blocker", "stuck", "failing", "blokuje", "awaria")):
+            return "blocked"
+        return "todo"
+
+    def _inferred_goal_type(self, normalized_text: str) -> str:
+        if any(marker in normalized_text for marker in ("today", "tomorrow", "this week", "dzis", "jutro", "w tym tygodniu")):
+            return "operational"
+        return "tactical"
 
     def _calendar_scheduling_intent(self, lowered_text: str) -> CalendarSchedulingIntentDomainIntent | None:
         if not any(keyword in lowered_text for keyword in ("calendar", "kalendarz", "meeting", "spotkanie", "schedule")):

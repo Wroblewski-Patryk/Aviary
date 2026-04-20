@@ -1748,6 +1748,43 @@ async def test_runtime_pipeline_returns_refreshed_goal_and_task_state_after_expl
     assert done_result.stage_timings_ms["state_refresh"] >= 0
 
 
+async def test_runtime_pipeline_persists_inferred_goal_and_task_promotions_from_repeated_blocker_evidence() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+
+    event = Event(
+        event_id="evt-inferred-goal-task",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "Again I am still blocked by deployment migration failures for the MVP release."},
+        meta=EventMeta(user_id="u-1", trace_id="t-inferred-goal-task"),
+    )
+
+    result = await runtime.run(event)
+
+    assert any(intent.intent_type == "upsert_goal" for intent in result.plan.domain_intents)
+    assert any(intent.intent_type == "upsert_task" for intent in result.plan.domain_intents)
+    assert result.active_goals
+    assert result.active_tasks
+    assert result.active_goals[0].description.startswith("Inferred goal from repeated execution evidence:")
+    assert result.active_tasks[0].description.startswith("Inferred task from repeated execution evidence:")
+    assert result.active_tasks[0].status == "blocked"
+
+
 async def test_runtime_pipeline_does_not_write_domain_state_without_planning_intents() -> None:
     class NoDomainWritePlanningAgent(PlanningAgent):
         def run(self, *args, **kwargs):  # type: ignore[override]
