@@ -39,6 +39,47 @@ runtime_policy = health.get("runtime_policy")
 if not isinstance(runtime_policy, dict):
     raise SystemExit("Health check failed: response is missing runtime_policy")
 
+expected_internal_debug_ingress_path = "/internal/event/debug"
+expected_shared_debug_ingress_path = "/event/debug"
+
+internal_debug_ingress_path = str(runtime_policy.get("event_debug_internal_ingress_path", "")).strip()
+if internal_debug_ingress_path != expected_internal_debug_ingress_path:
+    raise SystemExit(
+        "Health check failed: unexpected event_debug_internal_ingress_path "
+        f"{internal_debug_ingress_path!r}"
+    )
+
+shared_debug_ingress_path = str(runtime_policy.get("event_debug_shared_ingress_path", "")).strip()
+if shared_debug_ingress_path != expected_shared_debug_ingress_path:
+    raise SystemExit(
+        "Health check failed: unexpected event_debug_shared_ingress_path "
+        f"{shared_debug_ingress_path!r}"
+    )
+
+shared_debug_ingress_mode = str(runtime_policy.get("event_debug_shared_ingress_mode", "")).strip()
+if shared_debug_ingress_mode not in {"compatibility", "break_glass_only"}:
+    raise SystemExit(
+        "Health check failed: unexpected event_debug_shared_ingress_mode "
+        f"{shared_debug_ingress_mode!r}"
+    )
+
+shared_break_glass_required = bool(runtime_policy.get("event_debug_shared_ingress_break_glass_required"))
+expected_shared_break_glass_required = shared_debug_ingress_mode == "break_glass_only"
+if shared_break_glass_required != expected_shared_break_glass_required:
+    raise SystemExit("Health check failed: inconsistent shared ingress break-glass requirement")
+
+shared_ingress_posture = str(runtime_policy.get("event_debug_shared_ingress_posture", "")).strip()
+expected_shared_ingress_posture = (
+    "transitional_break_glass_only"
+    if expected_shared_break_glass_required
+    else "transitional_compatibility"
+)
+if shared_ingress_posture != expected_shared_ingress_posture:
+    raise SystemExit(
+        "Health check failed: inconsistent shared ingress posture "
+        f"{shared_ingress_posture!r}"
+    )
+
 release_readiness = health.get("release_readiness")
 if isinstance(release_readiness, dict) and "ready" in release_readiness:
     release_ready = bool(release_readiness.get("ready"))
@@ -169,6 +210,11 @@ summary = {
     "release_violations": release_violations,
     "reflection_deployment_ready": reflection_deployment_ready,
     "reflection_deployment_violations": reflection_deployment_violations,
+    "debug_internal_ingress_path": internal_debug_ingress_path,
+    "debug_shared_ingress_path": shared_debug_ingress_path,
+    "debug_shared_ingress_mode": shared_debug_ingress_mode,
+    "debug_shared_break_glass_required": shared_break_glass_required,
+    "debug_shared_ingress_posture": shared_ingress_posture,
     "debug_included": "debug" in result,
 }
 

@@ -36,24 +36,8 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-320 Add debug-ingress migration regressions and smoke coverage
-  - Status: READY
-  - Group: Internal Debug Ingress Migration
-  - Owner: QA/Test + Ops/Release
-  - Depends on: PRJ-319
-  - Priority: P1
-  - Result:
-    - API regressions and smoke checks pin internal-ingress ownership plus
-      shared-endpoint sunset behavior
-    - architecture drift around debug exposure fails quickly
-  - Validation:
-    - `.\scripts\run_release_smoke.ps1`
-    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_policy.py tests/test_main_runtime_policy.py`
-
-## BACKLOG
-
 - [ ] PRJ-321 Sync docs/context/runbook for internal debug ingress migration
-  - Status: BACKLOG
+  - Status: READY
   - Group: Internal Debug Ingress Migration
   - Owner: Product Docs + Ops/Release
   - Depends on: PRJ-320
@@ -66,6 +50,8 @@ Last updated: 2026-04-20
   - Validation:
     - doc-and-context sync plus targeted debug-ingress cross-doc review
       recorded in this slice
+
+## BACKLOG
 
 ## FUTURE
 
@@ -300,6 +286,21 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-320 Add debug-ingress migration regressions and smoke coverage
+  - Status: DONE
+  - Group: Internal Debug Ingress Migration
+  - Owner: QA/Test + Ops/Release
+  - Depends on: PRJ-319
+  - Priority: P1
+  - Result:
+    - API regressions now pin shared-ingress break-glass posture and health
+      migration visibility in addition to internal-ingress ownership
+    - release smoke scripts now fail fast when internal/shared debug-ingress
+      path or break-glass posture contracts drift from runtime policy baseline
+  - Validation:
+    - `.\scripts\run_release_smoke.ps1` (not run in this slice: no live target URL in this environment)
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_policy.py tests/test_main_runtime_policy.py`
 
 - [x] PRJ-319 Add break-glass override and shared-endpoint sunset posture for debug access
   - Status: DONE

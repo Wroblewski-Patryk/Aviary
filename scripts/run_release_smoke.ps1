@@ -80,6 +80,50 @@ if ($null -eq $runtimePolicy) {
     throw "Health check failed: response is missing runtime_policy."
 }
 
+$expectedInternalDebugIngressPath = "/internal/event/debug"
+$expectedSharedDebugIngressPath = "/event/debug"
+
+if (-not (Has-Property -Object $runtimePolicy -Name "event_debug_internal_ingress_path")) {
+    throw "Health check failed: runtime_policy is missing event_debug_internal_ingress_path."
+}
+if ([string]$runtimePolicy.event_debug_internal_ingress_path -ne $expectedInternalDebugIngressPath) {
+    throw "Health check failed: unexpected event_debug_internal_ingress_path '$($runtimePolicy.event_debug_internal_ingress_path)'."
+}
+if (-not (Has-Property -Object $runtimePolicy -Name "event_debug_shared_ingress_path")) {
+    throw "Health check failed: runtime_policy is missing event_debug_shared_ingress_path."
+}
+if ([string]$runtimePolicy.event_debug_shared_ingress_path -ne $expectedSharedDebugIngressPath) {
+    throw "Health check failed: unexpected event_debug_shared_ingress_path '$($runtimePolicy.event_debug_shared_ingress_path)'."
+}
+if (-not (Has-Property -Object $runtimePolicy -Name "event_debug_shared_ingress_mode")) {
+    throw "Health check failed: runtime_policy is missing event_debug_shared_ingress_mode."
+}
+$sharedIngressMode = [string]$runtimePolicy.event_debug_shared_ingress_mode
+if (@("compatibility", "break_glass_only") -notcontains $sharedIngressMode) {
+    throw "Health check failed: unexpected event_debug_shared_ingress_mode '$sharedIngressMode'."
+}
+if (-not (Has-Property -Object $runtimePolicy -Name "event_debug_shared_ingress_break_glass_required")) {
+    throw "Health check failed: runtime_policy is missing event_debug_shared_ingress_break_glass_required."
+}
+$sharedBreakGlassRequired = [bool]$runtimePolicy.event_debug_shared_ingress_break_glass_required
+$expectedSharedBreakGlassRequired = $sharedIngressMode -eq "break_glass_only"
+if ($sharedBreakGlassRequired -ne $expectedSharedBreakGlassRequired) {
+    throw "Health check failed: inconsistent shared ingress break-glass requirement."
+}
+if (-not (Has-Property -Object $runtimePolicy -Name "event_debug_shared_ingress_posture")) {
+    throw "Health check failed: runtime_policy is missing event_debug_shared_ingress_posture."
+}
+$sharedIngressPosture = [string]$runtimePolicy.event_debug_shared_ingress_posture
+$expectedSharedIngressPosture = if ($expectedSharedBreakGlassRequired) {
+    "transitional_break_glass_only"
+}
+else {
+    "transitional_compatibility"
+}
+if ($sharedIngressPosture -ne $expectedSharedIngressPosture) {
+    throw "Health check failed: inconsistent shared ingress posture '$sharedIngressPosture'."
+}
+
 $releaseReadiness = $health.release_readiness
 $releaseReadinessReady = $true
 $releaseReadinessViolations = @()
@@ -265,6 +309,11 @@ $summary = @{
     release_violations   = @($releaseReadinessViolations)
     reflection_deployment_ready      = $reflectionDeploymentReady
     reflection_deployment_violations = @($reflectionDeploymentBlockingSignals)
+    debug_internal_ingress_path      = [string]$runtimePolicy.event_debug_internal_ingress_path
+    debug_shared_ingress_path        = [string]$runtimePolicy.event_debug_shared_ingress_path
+    debug_shared_ingress_mode        = $sharedIngressMode
+    debug_shared_break_glass_required = $sharedBreakGlassRequired
+    debug_shared_ingress_posture     = $sharedIngressPosture
     debug_included       = [bool]$response.debug
 }
 

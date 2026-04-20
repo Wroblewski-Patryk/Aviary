@@ -1094,8 +1094,18 @@ Last updated: 2026-04-20
 - 2026-04-20: `PRJ-319` validation is green:
   `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_policy.py tests/test_main_runtime_policy.py tests/test_config.py`
   passed with `153 passed`.
-- 2026-04-20: `PRJ-320` is the next `READY` slice, focused on debug-ingress
-  migration regressions and smoke coverage.
+- 2026-04-20: `PRJ-320` is complete: regression coverage now pins
+  break-glass shared-ingress posture and health visibility for internal/shared
+  debug ingress migration semantics.
+- 2026-04-20: `PRJ-320` also extends release smoke scripts
+  (`scripts/run_release_smoke.ps1`, `scripts/run_release_smoke.sh`) with
+  explicit internal/shared debug-ingress contract checks
+  (path ownership, shared mode, break-glass requirement, posture consistency).
+- 2026-04-20: `PRJ-320` validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_policy.py tests/test_main_runtime_policy.py`
+  passed with `113 passed`.
+- 2026-04-20: `PRJ-321` is the next `READY` slice, focused on
+  docs/context/runbook synchronization for internal debug ingress migration.
 
 ## Working Agreements
 

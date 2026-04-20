@@ -1242,6 +1242,23 @@ def test_health_endpoint_exposes_runtime_policy_flags() -> None:
     }
 
 
+def test_health_endpoint_marks_break_glass_shared_ingress_posture_when_configured() -> None:
+    client, _, _ = _client(
+        event_debug_enabled=True,
+        event_debug_shared_ingress_mode="break_glass_only",
+    )
+
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["runtime_policy"]["event_debug_shared_ingress_mode"] == "break_glass_only"
+    assert body["runtime_policy"]["event_debug_shared_ingress_break_glass_required"] is True
+    assert body["runtime_policy"]["event_debug_shared_ingress_posture"] == "transitional_break_glass_only"
+    assert body["runtime_policy"]["event_debug_internal_ingress_path"] == "/internal/event/debug"
+    assert body["runtime_policy"]["event_debug_shared_ingress_path"] == "/event/debug"
+
+
 def test_health_endpoint_marks_event_debug_source_as_environment_default_when_unset() -> None:
     client, _, _ = _client(event_debug_enabled=None)
 
@@ -1709,6 +1726,12 @@ def test_event_debug_endpoint_allows_shared_ingress_with_break_glass_override_he
     )
 
     assert response.status_code == 200
+    assert (
+        response.headers["x-aion-debug-shared-compat"]
+        == "shared_debug_route_is_compatibility_use_internal_event_debug"
+    )
+    assert response.headers["x-aion-debug-shared-compat-deprecated"] == "true"
+    assert response.headers["link"] == "</internal/event/debug>; rel=\"alternate\""
     assert response.headers["x-aion-debug-shared-mode"] == "break_glass_only"
     assert response.headers["x-aion-debug-shared-posture"] == "transitional_break_glass_only"
     assert response.headers["x-aion-debug-shared-break-glass-used"] == "true"
