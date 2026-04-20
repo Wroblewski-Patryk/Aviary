@@ -104,6 +104,7 @@ class GraphStageAdapters:
             perception=perception,
             user_preferences=dict(user_preferences),
             theta=theta if isinstance(theta, dict) else None,
+            relations=list(state.relations),
             active_goals=list(state.active_goals),
             active_tasks=list(state.active_tasks),
             goal_milestone_history=list(state.goal_milestone_history),

@@ -6,6 +6,8 @@ RELATION_CONFIDENCE_MIN = 0.68
 ROLE_COLLABORATION_RELATION_CONFIDENCE_MIN = 0.70
 PREFERRED_ROLE_CONFIDENCE_MIN = 0.72
 THETA_DOMINANT_BIAS_MIN = 0.58
+PROACTIVE_ATTENTION_RECENT_OUTBOUND_LIMIT = 3
+PROACTIVE_ATTENTION_UNANSWERED_LIMIT = 2
 
 _THETA_BIAS_BY_CHANNEL = {
     "support": "support_bias",
@@ -91,3 +93,91 @@ def should_apply_motivation_adaptive_tie_break(
         is_brief_turn=is_brief_turn,
         has_positive_signal=has_positive_signal,
     )
+
+
+def proactive_signal_context(
+    *,
+    relations: Iterable[Mapping[str, object]],
+    theta: Mapping[str, object] | None,
+) -> dict[str, str | None]:
+    return {
+        "relation_collaboration": relation_value(
+            relations=relations,
+            relation_type="collaboration_dynamic",
+        ),
+        "relation_support_intensity": relation_value(
+            relations=relations,
+            relation_type="support_intensity_preference",
+        ),
+        "relation_delivery_reliability": relation_value(
+            relations=relations,
+            relation_type="delivery_reliability",
+        ),
+        "theta_channel": dominant_theta_channel(theta),
+    }
+
+
+def proactive_relevance_adjustment(
+    *,
+    trigger: str,
+    relations: Iterable[Mapping[str, object]],
+    theta: Mapping[str, object] | None,
+) -> float:
+    context = proactive_signal_context(relations=relations, theta=theta)
+    adjustment = 0.0
+
+    if context["relation_delivery_reliability"] == "high_trust":
+        adjustment += 0.06
+    elif context["relation_delivery_reliability"] == "medium_trust":
+        adjustment += 0.03
+
+    if context["relation_support_intensity"] == "high_support" and trigger in {"time_checkin", "relation_nudge"}:
+        adjustment += 0.05
+
+    if context["relation_collaboration"] == "hands_on" and trigger in {
+        "task_blocked",
+        "task_overdue",
+        "goal_deadline",
+        "goal_stagnation",
+    }:
+        adjustment += 0.04
+    elif context["relation_collaboration"] == "guided" and trigger in {
+        "time_checkin",
+        "memory_pattern",
+        "relation_nudge",
+    }:
+        adjustment += 0.03
+
+    theta_channel = context["theta_channel"]
+    if theta_channel == "execution" and trigger in {"task_blocked", "task_overdue", "goal_deadline"}:
+        adjustment += 0.03
+    elif theta_channel == "analysis" and trigger in {"goal_stagnation", "memory_pattern"}:
+        adjustment += 0.02
+    elif theta_channel == "support" and trigger in {"time_checkin", "relation_nudge"}:
+        adjustment += 0.02
+
+    return max(0.0, min(0.15, round(adjustment, 2)))
+
+
+def proactive_attention_limits(
+    *,
+    relations: Iterable[Mapping[str, object]],
+    theta: Mapping[str, object] | None,
+) -> dict[str, int | str | None]:
+    context = proactive_signal_context(relations=relations, theta=theta)
+    recent_outbound_limit = PROACTIVE_ATTENTION_RECENT_OUTBOUND_LIMIT
+    unanswered_limit = PROACTIVE_ATTENTION_UNANSWERED_LIMIT
+
+    if context["relation_delivery_reliability"] == "medium_trust":
+        recent_outbound_limit = min(recent_outbound_limit, 2)
+
+    if context["relation_support_intensity"] == "high_support" or context["theta_channel"] == "support":
+        unanswered_limit = min(unanswered_limit, 1)
+
+    return {
+        "recent_outbound_limit": recent_outbound_limit,
+        "unanswered_proactive_limit": unanswered_limit,
+        "relation_delivery_reliability": context["relation_delivery_reliability"],
+        "relation_support_intensity": context["relation_support_intensity"],
+        "theta_channel": context["theta_channel"],
+    }

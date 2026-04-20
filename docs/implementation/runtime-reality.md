@@ -408,9 +408,12 @@ Relation memory is now a first-class live subsystem:
 - runtime now loads high-confidence relations and passes relation cues into
   context, role, planning, and expression stage logic
 
-Current limitation:
+Current behavior:
 
-- proactive and scheduler-aware relation usage is still not implemented.
+- proactive relevance and scheduler attention gating now consume governed
+  relation/theta policy surfaces from `app/core/adaptive_policy.py`
+- adaptive relation/theta cues may tighten proactive posture, but attention and
+  anti-spam gate boundaries remain explicit owners
 
 ---
 
@@ -521,6 +524,8 @@ Current behavior:
 - foreground cognition stages now consume a shared policy owner
   (`app/core/adaptive_policy.py`) for relation thresholds, preferred-role
   evidence gating, theta dominance, and adaptive tie-break posture checks
+- proactive decision and scheduler attention gate now consume the same policy
+  owner for relation/theta cues through explicit helper surfaces
 
 Current topology ownership split:
 
@@ -572,7 +577,8 @@ What is already live:
 - subconscious research proposals now carry explicit read-only policy/tool
   bounds (`research_policy`, `allowed_tools`)
 - proactive scheduler events now pass through an explicit attention gate
-  (quiet-hours, cooldown, unanswered-backlog) before delivery planning
+  (quiet-hours, cooldown, unanswered-backlog with adaptive-only tightening
+  limits) before delivery planning
 - planning/action contracts now include connector permission-gate outputs plus
   typed calendar/task/drive connector intents without direct provider side
   effects

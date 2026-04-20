@@ -16,8 +16,8 @@ Last updated: 2026-04-20
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
 - The planning queue is complete through `PRJ-299`.
-- `PRJ-289` is complete; `PRJ-290` is currently `READY` and continues adaptive
-  governance rollout into proactive and attention surfaces.
+- `PRJ-290` is complete; `PRJ-291` is currently `READY` and closes adaptive
+  governance rollout with regression hardening and docs/context sync.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -28,27 +28,8 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-290 Extend proactive and attention logic to consume governed relation/theta signals
-  - Status: READY
-  - Group: Adaptive Cognition Governance
-  - Owner: Backend Builder
-  - Depends on: PRJ-289
-  - Priority: P1
-  - Result:
-    - proactive and attention behavior can use relation/theta context only
-      through explicit policy surfaces
-    - adaptive cues do not silently bypass attention or anti-spam guardrails
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_motivation_engine.py tests/test_action_executor.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-291 Add adaptive-governance regressions and sync docs/context
-  - Status: FUTURE
+  - Status: READY
   - Group: Adaptive Cognition Governance
   - Owner: QA/Test + Product Docs
   - Depends on: PRJ-290
@@ -59,6 +40,12 @@ Last updated: 2026-04-20
     - docs and context describe the same adaptive governance rules
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_role_agent.py tests/test_motivation_engine.py tests/test_planning_agent.py tests/test_runtime_pipeline.py`
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
 
 - [ ] PRJ-292 Define a durable proposal lifecycle and canonical turn-assembly ownership contract
   - Status: FUTURE

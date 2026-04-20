@@ -807,3 +807,70 @@ def test_motivation_engine_selects_execute_mode_for_high_signal_proactive_warnin
     assert result.mode == "execute"
     assert result.importance >= 0.86
     assert result.urgency >= 0.88
+
+
+def test_motivation_engine_proactive_decision_can_use_relation_and_theta_context() -> None:
+    baseline = MotivationEngine().run(
+        event=_scheduler_event(
+            {
+                "text": "scheduler proactive tick",
+                "proactive": {
+                    "trigger": "task_blocked",
+                    "importance": 0.52,
+                    "urgency": 0.43,
+                    "user_context": {
+                        "quiet_hours": False,
+                        "focus_mode": False,
+                        "recent_user_activity": "active",
+                        "recent_outbound_count": 2,
+                        "unanswered_proactive_count": 1,
+                    },
+                },
+            }
+        ),
+        context=_context(),
+        perception=_perception(),
+        active_tasks=[{"id": 11, "name": "fix deploy blocker", "status": "blocked"}],
+    )
+    adaptive = MotivationEngine().run(
+        event=_scheduler_event(
+            {
+                "text": "scheduler proactive tick",
+                "proactive": {
+                    "trigger": "task_blocked",
+                    "importance": 0.52,
+                    "urgency": 0.43,
+                    "user_context": {
+                        "quiet_hours": False,
+                        "focus_mode": False,
+                        "recent_user_activity": "active",
+                        "recent_outbound_count": 2,
+                        "unanswered_proactive_count": 1,
+                    },
+                },
+            }
+        ),
+        context=_context(),
+        perception=_perception(),
+        relations=[
+            {
+                "relation_type": "collaboration_dynamic",
+                "relation_value": "hands_on",
+                "confidence": 0.79,
+            },
+            {
+                "relation_type": "delivery_reliability",
+                "relation_value": "high_trust",
+                "confidence": 0.76,
+            },
+        ],
+        theta={
+            "support_bias": 0.12,
+            "analysis_bias": 0.2,
+            "execution_bias": 0.72,
+        },
+        active_tasks=[{"id": 11, "name": "fix deploy blocker", "status": "blocked"}],
+    )
+
+    assert baseline.mode == "ignore"
+    assert adaptive.mode == "execute"

@@ -474,17 +474,6 @@ class RuntimeOrchestrator:
         )
 
     async def run(self, event: Event) -> RuntimeResult:
-        attention_gate = evaluate_proactive_attention_gate(event)
-        if attention_gate is not None:
-            event = event.model_copy(
-                update={
-                    "payload": {
-                        **event.payload,
-                        "attention_gate": attention_gate,
-                    }
-                }
-            )
-
         started = perf_counter()
         stage_timings_ms: dict[str, int] = {}
         log_context = RuntimeLogContext(
@@ -608,6 +597,20 @@ class RuntimeOrchestrator:
                 f"pending_proposals={len(result[9])}"
             ),
         )
+        attention_gate = evaluate_proactive_attention_gate(
+            event,
+            relations=relations,
+            theta=user_theta if isinstance(user_theta, dict) else None,
+        )
+        if attention_gate is not None:
+            event = event.model_copy(
+                update={
+                    "payload": {
+                        **event.payload,
+                        "attention_gate": attention_gate,
+                    }
+                }
+            )
 
         goal_ids = [int(goal["id"]) for goal in active_goals if goal.get("id") is not None]
         active_tasks = await self._run_async_stage(

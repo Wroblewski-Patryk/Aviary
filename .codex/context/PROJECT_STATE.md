@@ -846,7 +846,7 @@ Last updated: 2026-04-20
 - 2026-04-20: foreground convergence group is now complete through `PRJ-279`;
   background topology convergence is complete through `PRJ-283`; production
   retrieval implementation is complete through `PRJ-287`; adaptive governance
-  policy baseline is complete through `PRJ-288`; `PRJ-289` is now the next
+  policy baseline is complete through `PRJ-288`; `PRJ-291` is now the next
   `READY` implementation slice.
 - 2026-04-20: `PRJ-288` is complete: architecture contracts now define explicit
   adaptive influence evidence gates, precedence, and tie-break guardrails for
@@ -861,6 +861,13 @@ Last updated: 2026-04-20
 - 2026-04-20: `PRJ-289` validation is green:
   `.\.venv\Scripts\python -m pytest -q tests/test_adaptive_policy.py tests/test_role_agent.py tests/test_motivation_engine.py tests/test_planning_agent.py tests/test_runtime_pipeline.py`
   passed with `156 passed`.
+- 2026-04-20: `PRJ-290` is complete: proactive decision and attention gating
+  now consume governed relation/theta policy surfaces from
+  `app/core/adaptive_policy.py`, and adaptive cues can tighten proactive
+  posture without bypassing attention or anti-spam guardrails.
+- 2026-04-20: `PRJ-290` validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_motivation_engine.py tests/test_action_executor.py tests/test_runtime_pipeline.py tests/test_api_routes.py tests/test_adaptive_policy.py`
+  passed with `176 passed`.
 
 ## Working Agreements
 

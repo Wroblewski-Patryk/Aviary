@@ -89,6 +89,8 @@ class PlanningAgent:
             event=event,
             context=context,
             user_preferences=user_preferences or {},
+            relations=relations or [],
+            theta=theta,
             active_goals=active_goals or [],
             active_tasks=active_tasks or [],
         )

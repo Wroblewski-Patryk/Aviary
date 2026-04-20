@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.core.adaptive_policy import proactive_relevance_adjustment
 from app.core.contracts import (
     ContextOutput,
     Event,
@@ -28,6 +29,8 @@ class ProactiveDecisionEngine:
         event: Event,
         context: ContextOutput,
         user_preferences: dict | None = None,
+        relations: list[dict] | None = None,
+        theta: dict | None = None,
         active_goals: list[dict] | None = None,
         active_tasks: list[dict] | None = None,
     ) -> ProactiveDecisionOutput | None:
@@ -50,6 +53,8 @@ class ProactiveDecisionEngine:
             trigger=trigger,
             context=context,
             user_preferences=user_preferences or {},
+            relations=relations or [],
+            theta=theta,
             active_goals=active_goals or [],
             active_tasks=active_tasks or [],
         )
@@ -91,6 +96,8 @@ class ProactiveDecisionEngine:
         trigger: str,
         context: ContextOutput,
         user_preferences: dict,
+        relations: list[dict],
+        theta: dict | None,
         active_goals: list[dict],
         active_tasks: list[dict],
     ) -> float:
@@ -109,6 +116,11 @@ class ProactiveDecisionEngine:
             affective_pattern = str(user_preferences.get("affective_support_pattern", "")).strip().lower()
             if affective_pattern:
                 relevance += 0.12
+        relevance += proactive_relevance_adjustment(
+            trigger=trigger,
+            relations=relations,
+            theta=theta,
+        )
         return self._clamp_unit(relevance)
 
     def _interruption_cost(self, *, user_context: dict) -> float:

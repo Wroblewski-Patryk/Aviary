@@ -3236,6 +3236,74 @@ async def test_runtime_pipeline_defers_proactive_tick_when_user_did_not_opt_in()
     assert result.action_result.status == "noop"
 
 
+async def test_runtime_pipeline_applies_adaptive_attention_limits_without_bypassing_guardrails() -> None:
+    memory = FakeHybridMemoryRepository(recent_memory=[])
+    memory.user_preferences = {"proactive_opt_in": True}
+    memory.user_theta = {
+        "support_bias": 0.71,
+        "analysis_bias": 0.14,
+        "execution_bias": 0.15,
+    }
+    memory.relations = [
+        {
+            "relation_type": "support_intensity_preference",
+            "relation_value": "high_support",
+            "confidence": 0.78,
+        }
+    ]
+    memory.active_tasks = [
+        {
+            "id": 11,
+            "goal_id": 7,
+            "name": "check in with blocked deploy task",
+            "description": "Deploy remains blocked",
+            "priority": "high",
+            "status": "blocked",
+        }
+    ]
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=FakeOpenAIClient()),
+        action_executor=ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient()),
+        memory_repository=memory,
+        reflection_worker=FakeReflectionWorker(),
+    )
+
+    event = build_scheduler_event(
+        subsource="proactive_tick",
+        payload={
+            "text": "supportive check-in",
+            "chat_id": 123456,
+            "proactive_trigger": "task_blocked",
+            "importance": 0.86,
+            "urgency": 0.82,
+            "user_context": {
+                "quiet_hours": False,
+                "focus_mode": False,
+                "recent_user_activity": "active",
+                "recent_outbound_count": 2,
+                "unanswered_proactive_count": 1,
+            },
+        },
+    )
+
+    result = await runtime.run(event)
+
+    assert result.plan.proactive_decision is not None
+    assert result.plan.proactive_decision.should_interrupt is True
+    assert result.event.payload["attention_gate"]["allowed"] is False
+    assert result.event.payload["attention_gate"]["reason"] == "attention_unanswered_backlog"
+    assert result.event.payload["attention_gate"]["unanswered_proactive_limit"] == 1
+    assert result.event.payload["attention_gate"]["theta_channel"] == "support"
+    assert "respect_attention_gate" in result.plan.steps
+    assert result.plan.needs_response is False
+    assert result.action_result.status == "noop"
+
+
 async def test_runtime_pipeline_promotes_and_resolves_pending_subconscious_proposals() -> None:
     memory = FakeMemoryRepository(recent_memory=[])
     memory.pending_subconscious_proposals = [

@@ -25,6 +25,7 @@ class MotivationEngine:
         perception: PerceptionOutput,
         user_preferences: dict | None = None,
         theta: dict | None = None,
+        relations: list[dict] | None = None,
         active_goals: list[dict] | None = None,
         active_tasks: list[dict] | None = None,
         goal_milestone_history: list[dict] | None = None,
@@ -40,6 +41,8 @@ class MotivationEngine:
             event=event,
             context=context,
             user_preferences=user_preferences or {},
+            relations=relations or [],
+            theta=theta,
             active_goals=active_goals or [],
             active_tasks=active_tasks or [],
         )

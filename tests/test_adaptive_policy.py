@@ -1,10 +1,14 @@
 from app.core.adaptive_policy import (
     PREFERRED_ROLE_CONFIDENCE_MIN,
+    PROACTIVE_ATTENTION_RECENT_OUTBOUND_LIMIT,
+    PROACTIVE_ATTENTION_UNANSWERED_LIMIT,
     RELATION_CONFIDENCE_MIN,
     ROLE_COLLABORATION_RELATION_CONFIDENCE_MIN,
     THETA_DOMINANT_BIAS_MIN,
     dominant_theta_channel,
     is_role_adaptive_tie_break_turn,
+    proactive_attention_limits,
+    proactive_relevance_adjustment,
     relation_value,
     should_apply_motivation_adaptive_tie_break,
     preferred_role_allowed,
@@ -127,3 +131,58 @@ def test_motivation_adaptive_tie_break_requires_ambiguous_turn_and_no_stronger_s
         )
         is False
     )
+
+
+def test_proactive_relevance_adjustment_uses_relation_and_theta_policy_context() -> None:
+    baseline = proactive_relevance_adjustment(
+        trigger="task_blocked",
+        relations=[],
+        theta=None,
+    )
+    adaptive = proactive_relevance_adjustment(
+        trigger="task_blocked",
+        relations=[
+            {
+                "relation_type": "collaboration_dynamic",
+                "relation_value": "hands_on",
+                "confidence": 0.79,
+            },
+            {
+                "relation_type": "delivery_reliability",
+                "relation_value": "high_trust",
+                "confidence": 0.74,
+            },
+        ],
+        theta={
+            "support_bias": 0.1,
+            "analysis_bias": 0.2,
+            "execution_bias": 0.72,
+        },
+    )
+
+    assert baseline == 0.0
+    assert adaptive >= 0.1
+
+
+def test_proactive_attention_limits_only_tighten_guardrails() -> None:
+    baseline = proactive_attention_limits(relations=[], theta=None)
+    adaptive = proactive_attention_limits(
+        relations=[
+            {
+                "relation_type": "support_intensity_preference",
+                "relation_value": "high_support",
+                "confidence": 0.76,
+            }
+        ],
+        theta={
+            "support_bias": 0.7,
+            "analysis_bias": 0.2,
+            "execution_bias": 0.1,
+        },
+    )
+
+    assert baseline["recent_outbound_limit"] == PROACTIVE_ATTENTION_RECENT_OUTBOUND_LIMIT
+    assert baseline["unanswered_proactive_limit"] == PROACTIVE_ATTENTION_UNANSWERED_LIMIT
+    assert adaptive["recent_outbound_limit"] <= PROACTIVE_ATTENTION_RECENT_OUTBOUND_LIMIT
+    assert adaptive["unanswered_proactive_limit"] <= PROACTIVE_ATTENTION_UNANSWERED_LIMIT
+    assert adaptive["unanswered_proactive_limit"] == 1
