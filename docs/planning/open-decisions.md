@@ -51,6 +51,9 @@ The current repo already works as an MVP slice, but several architecture-level d
     retry ownership are explicit for in-process and deferred operation.
   - `PRJ-283` now pins those ownership guarantees with regressions and keeps
     planning/context/ops docs aligned to the converged background topology.
+  - `/health.reflection` now exposes deployment-readiness posture
+    (`ready`, `blocking_signals`, baseline/selected runtime mode) so reflection
+    mode migration no longer depends on log-only interpretation.
 - Decision (PRJ-301 reflection deployment baseline, 2026-04-20):
   - production deployment baseline remains
     `REFLECTION_RUNTIME_MODE=in_process` for now, so reflection dispatch keeps

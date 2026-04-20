@@ -385,6 +385,11 @@ Deferred readiness criteria (all required before production-default switch):
 Operator checks:
 
 - verify `/health.reflection` queue snapshot and worker-running posture
+- verify `/health.reflection.deployment_readiness`:
+  - `ready`
+  - `blocking_signals`
+  - `baseline_runtime_mode`
+  - `selected_runtime_mode`
 - verify `/health.reflection.topology` handoff posture:
   - `queue_drain_owner`
   - `external_driver_expected`

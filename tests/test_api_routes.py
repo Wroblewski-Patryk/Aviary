@@ -556,6 +556,12 @@ def test_health_endpoint_returns_ok() -> None:
         "reflection": {
             "healthy": True,
             "runtime_mode": "in_process",
+            "deployment_readiness": {
+                "baseline_runtime_mode": "in_process",
+                "selected_runtime_mode": "in_process",
+                "ready": True,
+                "blocking_signals": [],
+            },
             "topology": {
                 "runtime_mode": "in_process",
                 "enqueue_owner": "runtime_followup",
@@ -608,6 +614,12 @@ def test_health_endpoint_allows_deferred_reflection_mode_without_running_worker(
     body = response.json()
     assert body["status"] == "ok"
     assert body["reflection"]["runtime_mode"] == "deferred"
+    assert body["reflection"]["deployment_readiness"] == {
+        "baseline_runtime_mode": "in_process",
+        "selected_runtime_mode": "deferred",
+        "ready": True,
+        "blocking_signals": [],
+    }
     assert body["reflection"]["topology"]["queue_drain_owner"] == "external_driver"
     assert body["reflection"]["topology"]["external_driver_expected"] is True
     assert body["reflection"]["topology"]["runtime_enqueue_dispatch"] is False
@@ -628,6 +640,8 @@ def test_health_endpoint_exposes_in_process_handoff_posture_when_worker_is_stopp
     body = response.json()
     assert body["status"] == "ok"
     assert body["reflection"]["runtime_mode"] == "in_process"
+    assert body["reflection"]["deployment_readiness"]["ready"] is False
+    assert "in_process_worker_not_running" in body["reflection"]["deployment_readiness"]["blocking_signals"]
     assert body["reflection"]["topology"]["queue_drain_owner"] == "in_process_worker"
     assert body["reflection"]["topology"]["external_driver_expected"] is False
     assert body["reflection"]["topology"]["runtime_enqueue_dispatch"] is False
@@ -1385,6 +1399,8 @@ def test_health_endpoint_marks_reflection_unhealthy_when_worker_not_running() ->
     body = response.json()
     assert body["status"] == "ok"
     assert body["reflection"]["healthy"] is False
+    assert body["reflection"]["deployment_readiness"]["ready"] is False
+    assert "in_process_worker_not_running" in body["reflection"]["deployment_readiness"]["blocking_signals"]
     assert body["reflection"]["worker"]["running"] is False
     assert body["reflection"]["tasks"]["exhausted_failed"] == 0
     assert body["reflection"]["tasks"]["stuck_processing"] == 0
@@ -1410,9 +1426,27 @@ def test_health_endpoint_marks_reflection_unhealthy_when_queue_is_stuck() -> Non
     body = response.json()
     assert body["status"] == "ok"
     assert body["reflection"]["healthy"] is False
+    assert body["reflection"]["deployment_readiness"]["ready"] is False
+    assert "reflection_stuck_processing_detected" in body["reflection"]["deployment_readiness"]["blocking_signals"]
+    assert "reflection_exhausted_failures_detected" in body["reflection"]["deployment_readiness"]["blocking_signals"]
     assert body["reflection"]["worker"]["running"] is True
     assert body["reflection"]["tasks"]["exhausted_failed"] == 1
     assert body["reflection"]["tasks"]["stuck_processing"] == 1
+
+
+def test_health_endpoint_marks_deferred_mode_not_ready_when_in_process_worker_is_running() -> None:
+    client, _, _ = _client(
+        reflection_running=True,
+        reflection_runtime_mode="deferred",
+    )
+
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["reflection"]["runtime_mode"] == "deferred"
+    assert body["reflection"]["deployment_readiness"]["ready"] is False
+    assert "deferred_in_process_worker_running" in body["reflection"]["deployment_readiness"]["blocking_signals"]
 
 
 def test_event_endpoint_returns_public_response_and_normalizes_event() -> None:

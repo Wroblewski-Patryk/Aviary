@@ -1360,27 +1360,26 @@ not around temporary convenience defaults.
     - doc-and-context sync plus targeted reflection-topology contract review
       recorded in this slice
 
+- `PRJ-302` is complete.
+  - Result:
+    - `/health.reflection` now includes deployment-readiness posture
+      (`ready`, `blocking_signals`, baseline/selected runtime mode)
+    - reflection mode migration can now be verified through health contract
+      signals instead of log-only interpretation
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_scheduler_worker.py tests/test_reflection_worker.py`
+
 ## Next Derived Slice
 
 The post-convergence seed queue now extends through `PRJ-304`.
-`PRJ-302` is currently the execution-ready slice in the board.
+`PRJ-303` is currently the execution-ready slice in the board.
 Before the next implementation slice:
 
-- take `PRJ-302` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-303` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to that one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 
 Post-convergence seed queue:
-
-- `PRJ-302` Add explicit `/health.reflection` deployment-readiness summary for
-  chosen runtime-mode baseline.
-  - Result:
-    - health contract exposes concise readiness posture for reflection mode
-      migration (`ready`, `blocking_signals`)
-    - deployment smoke can verify reflection-mode posture without log-only
-      inference
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_scheduler_worker.py tests/test_reflection_worker.py`
 
 - `PRJ-303` Add reflection deployment-readiness regressions and smoke script
   alignment.

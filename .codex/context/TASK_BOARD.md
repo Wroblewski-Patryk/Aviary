@@ -17,8 +17,8 @@ Last updated: 2026-04-20
   - sync task state, project state, and learning journal when needed
 - The convergence queue is complete through `PRJ-299`; post-convergence seed
   queue now extends through `PRJ-304`.
-- `PRJ-301` is complete; `PRJ-302` is currently `READY` to expose explicit
-  reflection deployment-readiness summary in `/health`.
+- `PRJ-302` is complete; `PRJ-303` is currently `READY` to pin readiness
+  regressions and align release smoke with reflection deployment posture.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -29,19 +29,19 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-302 Add explicit `/health.reflection` deployment-readiness summary for chosen runtime-mode baseline
+- [ ] PRJ-303 Add reflection deployment-readiness regressions and smoke script alignment
   - Status: READY
   - Group: Reflection Deployment Baseline
   - Owner: Backend Builder + Ops/Release
-  - Depends on: PRJ-301
+  - Depends on: PRJ-302
   - Priority: P1
   - Result:
-    - health contract exposes concise readiness posture for reflection mode
-      migration (`ready`, `blocking_signals`)
-    - deployment smoke can verify reflection-mode posture without log-only
-      inference
+    - regression coverage pins chosen reflection-mode readiness signals and
+      fallback behavior in release smoke tooling
+    - rollout no longer depends on undocumented manual interpretation of mixed
+      topology signals
   - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_scheduler_worker.py tests/test_reflection_worker.py`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_reflection_worker.py tests/test_scheduler_worker.py`
 
 ## BACKLOG
 
@@ -64,6 +64,20 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-302 Add explicit `/health.reflection` deployment-readiness summary for chosen runtime-mode baseline
+  - Status: DONE
+  - Group: Reflection Deployment Baseline
+  - Owner: Backend Builder + Ops/Release
+  - Depends on: PRJ-301
+  - Priority: P1
+  - Result:
+    - `/health.reflection` now exposes deployment-readiness posture
+      (`ready`, `blocking_signals`, baseline/selected runtime mode)
+    - reflection-mode migration can now be verified through health contract
+      signals instead of log-only interpretation
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_scheduler_contracts.py tests/test_scheduler_worker.py tests/test_reflection_worker.py`
 
 - [x] PRJ-301 Define production reflection runtime-mode deployment baseline and external-dispatch readiness criteria
   - Status: DONE

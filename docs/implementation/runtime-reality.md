@@ -512,6 +512,9 @@ Current behavior:
 - runtime mode is explicit (`in_process|deferred`)
 - failed tasks can be retried with bounded backoff
 - queue visibility is exposed through health reporting
+- `/health.reflection` now includes a deployment-readiness snapshot
+  (`ready`, `blocking_signals`, selected/baseline runtime mode) so reflection
+  mode posture no longer depends on log-only interpretation
 - reflection updates conclusions, theta, and lightweight goal-progress signals
 - reflection inference ownership is now split into concern modules:
   - `app/reflection/goal_conclusions.py`

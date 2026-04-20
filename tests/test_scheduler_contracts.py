@@ -3,6 +3,7 @@ from app.core.scheduler_contracts import (
     normalize_scheduler_payload,
     normalize_reflection_runtime_mode,
     normalize_scheduler_subsource,
+    reflection_deployment_readiness_snapshot,
     reflection_enqueue_dispatch_decision,
     reflection_topology_handoff_posture,
     reflection_scheduler_dispatch_decision,
@@ -142,3 +143,43 @@ def test_scheduler_contracts_expose_reflection_handoff_posture_for_external_driv
         "scheduler_tick_dispatch": True,
         "scheduler_tick_reason": "deferred_runtime",
     }
+
+
+def test_scheduler_contracts_reflection_deployment_readiness_is_ready_for_healthy_in_process_mode() -> None:
+    topology = reflection_topology_handoff_posture(
+        runtime_mode="in_process",
+        worker_running=True,
+    )
+
+    readiness = reflection_deployment_readiness_snapshot(
+        runtime_mode="in_process",
+        topology=topology,
+        worker_running=True,
+        task_stats={"stuck_processing": 0, "exhausted_failed": 0},
+    )
+
+    assert readiness == {
+        "baseline_runtime_mode": "in_process",
+        "selected_runtime_mode": "in_process",
+        "ready": True,
+        "blocking_signals": [],
+    }
+
+
+def test_scheduler_contracts_reflection_deployment_readiness_marks_deferred_mode_mismatch_when_worker_runs_locally() -> None:
+    topology = reflection_topology_handoff_posture(
+        runtime_mode="deferred",
+        worker_running=True,
+    )
+
+    readiness = reflection_deployment_readiness_snapshot(
+        runtime_mode="deferred",
+        topology=topology,
+        worker_running=True,
+        task_stats={"stuck_processing": 0, "exhausted_failed": 0},
+    )
+
+    assert readiness["baseline_runtime_mode"] == "in_process"
+    assert readiness["selected_runtime_mode"] == "deferred"
+    assert readiness["ready"] is False
+    assert "deferred_in_process_worker_running" in readiness["blocking_signals"]

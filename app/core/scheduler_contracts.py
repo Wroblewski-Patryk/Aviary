@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Any, Literal
 
 
@@ -8,6 +9,7 @@ ReflectionRuntimeMode = Literal["in_process", "deferred"]
 SCHEDULER_SOURCE = "scheduler"
 DEFAULT_SCHEDULER_SUBSOURCE: SchedulerSubsource = "reflection_tick"
 DEFAULT_REFLECTION_RUNTIME_MODE: ReflectionRuntimeMode = "in_process"
+REFLECTION_DEPLOYMENT_BASELINE_MODE: ReflectionRuntimeMode = "in_process"
 SCHEDULER_REFLECTION_TICK: SchedulerSubsource = "reflection_tick"
 SCHEDULER_MAINTENANCE_TICK: SchedulerSubsource = "maintenance_tick"
 SCHEDULER_PROACTIVE_TICK: SchedulerSubsource = "proactive_tick"
@@ -100,6 +102,58 @@ def reflection_topology_handoff_posture(*, runtime_mode: str | None, worker_runn
         "runtime_enqueue_reason": enqueue_reason,
         "scheduler_tick_dispatch": scheduler_dispatch,
         "scheduler_tick_reason": scheduler_reason,
+    }
+
+
+def _safe_non_negative_int(value: object) -> int:
+    try:
+        return max(0, int(value))
+    except (TypeError, ValueError):
+        return 0
+
+
+def reflection_deployment_readiness_snapshot(
+    *,
+    runtime_mode: str | None,
+    topology: Mapping[str, Any],
+    worker_running: bool,
+    task_stats: Mapping[str, Any],
+) -> dict[str, Any]:
+    selected_mode = normalize_reflection_runtime_mode(runtime_mode)
+    blocking_signals: list[str] = []
+
+    if selected_mode == "in_process":
+        if not worker_running:
+            blocking_signals.append("in_process_worker_not_running")
+        if topology.get("queue_drain_owner") != "in_process_worker":
+            blocking_signals.append("in_process_queue_drain_owner_mismatch")
+        if bool(topology.get("external_driver_expected")):
+            blocking_signals.append("in_process_external_driver_flag_mismatch")
+        if bool(topology.get("scheduler_tick_dispatch")):
+            blocking_signals.append("in_process_scheduler_dispatch_flag_mismatch")
+    else:
+        if worker_running:
+            blocking_signals.append("deferred_in_process_worker_running")
+        if topology.get("queue_drain_owner") != "external_driver":
+            blocking_signals.append("deferred_queue_drain_owner_mismatch")
+        if not bool(topology.get("external_driver_expected")):
+            blocking_signals.append("deferred_external_driver_expectation_missing")
+        if not bool(topology.get("scheduler_tick_dispatch")):
+            blocking_signals.append("deferred_scheduler_dispatch_flag_mismatch")
+
+    stuck_processing = _safe_non_negative_int(task_stats.get("stuck_processing"))
+    exhausted_failed = _safe_non_negative_int(task_stats.get("exhausted_failed"))
+
+    if stuck_processing > 0:
+        blocking_signals.append("reflection_stuck_processing_detected")
+    if exhausted_failed > 0:
+        blocking_signals.append("reflection_exhausted_failures_detected")
+
+    return {
+        "baseline_runtime_mode": REFLECTION_DEPLOYMENT_BASELINE_MODE,
+        "selected_runtime_mode": selected_mode,
+        "ready": len(blocking_signals) == 0,
+        "blocking_signals": blocking_signals,
     }
 
 
