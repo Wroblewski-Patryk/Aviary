@@ -15,10 +15,10 @@ Last updated: 2026-04-20
   - run relevant tests and validations
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
-- The planning queue is complete through `PRJ-299`; post-convergence execution
-  now starts with `PRJ-300`.
-- `PRJ-299` is complete; `PRJ-300` is currently `READY` to seed the first
-  post-convergence execution lane from remaining open decisions.
+- The convergence queue is complete through `PRJ-299`; post-convergence seed
+  queue now extends through `PRJ-304`.
+- `PRJ-300` is complete; `PRJ-301` is currently `READY` to define the
+  production reflection runtime-mode deployment baseline.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -29,20 +29,20 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-300 Derive and record the first post-convergence execution queue
+- [ ] PRJ-301 Define production reflection runtime-mode deployment baseline and external-dispatch readiness criteria
   - Status: READY
-  - Group: Post-Convergence Planning Baseline
-  - Owner: Planner + Product Docs
-  - Depends on: PRJ-299
+  - Group: Reflection Deployment Baseline
+  - Owner: Planner + Ops/Release
+  - Depends on: PRJ-300
   - Priority: P1
   - Result:
-    - first post-convergence queue is explicitly derived from remaining open
-      decisions and reflected in planning docs plus task board state
-    - execution does not stall after `PRJ-299` because the next lane is
-      already scoped into small reversible slices
+    - one production-target decision closes open-decision drift between
+      `in_process` and `deferred` reflection runtime modes
+    - external dispatch migration has explicit readiness criteria instead of
+      implicit operator judgment
   - Validation:
-    - doc-and-context sync plus targeted planning coherence review recorded in
-      this slice
+    - doc-and-context sync plus targeted reflection-topology contract review
+      recorded in this slice
 
 ## BACKLOG
 
@@ -65,6 +65,22 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-300 Derive and record the first post-convergence execution queue
+  - Status: DONE
+  - Group: Post-Convergence Planning Baseline
+  - Owner: Planner + Product Docs
+  - Depends on: PRJ-299
+  - Priority: P1
+  - Result:
+    - first post-convergence execution queue is now seeded through `PRJ-304`
+      from remaining open decisions and reflected in planning docs plus task
+      board state
+    - execution does not stall after `PRJ-299` because the next lane is
+      explicitly scoped into small reversible slices
+  - Validation:
+    - doc-and-context sync plus targeted planning coherence review recorded in
+      this slice
 
 - [x] PRJ-299 Add release-readiness regressions and sync docs/context/runbook
   - Status: DONE

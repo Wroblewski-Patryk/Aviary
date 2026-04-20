@@ -27,6 +27,8 @@ The current repo already works as an MVP slice, but several architecture-level d
     `12c`)
   - `PRJ-296..PRJ-299`: operational hardening and release truth (`2`, `3`,
     `6`, `7`)
+  - `PRJ-301..PRJ-304`: reflection deployment baseline and readiness rollout
+    (`1`, `12` follow-up)
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 

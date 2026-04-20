@@ -1339,21 +1339,68 @@ not around temporary convenience defaults.
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q`
 
+- `PRJ-300` is complete.
+  - Result:
+    - first post-convergence execution queue is now seeded through
+      `PRJ-304`, focused on reflection runtime-mode deployment posture and
+      external dispatch readiness decisions
+    - task board and planning docs now expose one explicit next lane instead of
+      stopping at the end of `PRJ-299`
+  - Validation:
+    - doc-and-context sync plus targeted planning coherence review recorded in
+      this slice
+
 ## Next Derived Slice
 
-The convergence queue is complete through `PRJ-299`.
-`PRJ-300` is currently the execution-ready slice in the board.
+The post-convergence seed queue now extends through `PRJ-304`.
+`PRJ-301` is currently the execution-ready slice in the board.
 Before the next implementation slice:
 
-- take `PRJ-300` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-301` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to that one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 
-`PRJ-300` candidate:
+Post-convergence seed queue:
 
-- derive and document the first post-convergence execution queue from remaining
-  open decisions (`1`, `3`, and related unresolved follow-ups) so the board has
-  an explicit next lane after `PRJ-299` closure.
+- `PRJ-301` Define production reflection runtime-mode deployment baseline and
+  explicit external-dispatch readiness criteria.
+  - Result:
+    - one production-target decision closes open-decision drift between
+      `in_process` and `deferred` reflection modes
+    - operators get explicit criteria for when deferred external dispatch is
+      allowed as the primary posture
+  - Validation:
+    - doc-and-context sync plus targeted reflection-topology contract review
+
+- `PRJ-302` Add explicit `/health.reflection` deployment-readiness summary for
+  chosen runtime-mode baseline.
+  - Result:
+    - health contract exposes concise readiness posture for reflection mode
+      migration (`ready`, `blocking_signals`)
+    - deployment smoke can verify reflection-mode posture without log-only
+      inference
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_scheduler_worker.py tests/test_reflection_worker.py`
+
+- `PRJ-303` Add reflection deployment-readiness regressions and smoke script
+  alignment.
+  - Result:
+    - regression coverage pins chosen reflection-mode readiness signals and
+      fallback behavior in release smoke tooling
+    - rollout no longer depends on undocumented manual interpretation of mixed
+      topology signals
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_reflection_worker.py tests/test_scheduler_worker.py`
+
+- `PRJ-304` Sync docs/context/runbook for reflection deployment baseline and
+  readiness contract.
+  - Result:
+    - planning, project state, and runbook truth stay synchronized after the
+      first post-convergence reflection lane
+    - release and rollback procedures include the new reflection readiness gate
+  - Validation:
+    - doc-and-context sync plus targeted ops-runbook review recorded in this
+      slice
 
 ## Parallel-Ready Lanes
 
