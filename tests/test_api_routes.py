@@ -23,6 +23,10 @@ from app.core.contracts import (
     PlanOutput,
     RoleOutput,
     RuntimeResult,
+    RuntimeSystemDebugEventView,
+    RuntimeSystemDebugMemoryBundle,
+    RuntimeSystemDebugOutput,
+    RuntimeSystemDebugPlanView,
     TaskRecordOutput,
 )
 
@@ -134,6 +138,67 @@ class FakeRuntime:
                 importance=0.7,
             ),
             reflection_triggered=self.reflection_triggered,
+            system_debug=RuntimeSystemDebugOutput(
+                event=RuntimeSystemDebugEventView(
+                    event_id=event.event_id,
+                    trace_id=event.meta.trace_id,
+                    source=event.source,
+                    subsource=event.subsource,
+                    timestamp=event.timestamp,
+                    user_id=event.meta.user_id,
+                    payload=dict(event.payload),
+                ),
+                perception=PerceptionOutput(
+                    event_type="statement",
+                    topic="general",
+                    topic_tags=["general"],
+                    intent="share_information",
+                    language="en",
+                    language_source="keyword_signal",
+                    language_confidence=0.8,
+                    ambiguity=0.1,
+                    initial_salience=0.5,
+                ),
+                memory_bundle=RuntimeSystemDebugMemoryBundle(
+                    episodic=[{"summary": "stored-summary", "importance": 0.7}],
+                    semantic=[{"kind": "response_style", "content": "concise"}],
+                    affective=[{"kind": "affective_support_pattern", "content": "supportive"}],
+                    relations=[{"relation_type": "collaboration_dynamic", "relation_value": "guided", "confidence": 0.8}],
+                    diagnostics={"episodic_lexical_hits": 1, "vector_hits": 0},
+                ),
+                context=ContextOutput(
+                    summary="context-summary",
+                    related_goals=[],
+                    related_tags=["general"],
+                    risk_level=0.1,
+                ),
+                motivation=MotivationOutput(
+                    importance=0.7,
+                    urgency=0.4,
+                    valence=0.1,
+                    arousal=0.5,
+                    mode="respond",
+                ),
+                role=RoleOutput(selected="advisor", confidence=0.6),
+                plan=RuntimeSystemDebugPlanView(
+                    goal="Provide a response.",
+                    steps=["reply"],
+                    needs_action=False,
+                    needs_response=True,
+                    domain_intents=[],
+                ),
+                expression=ExpressionOutput(
+                    message="Test reply",
+                    tone="supportive",
+                    channel="api",
+                    language="en",
+                ),
+                action_result=ActionResult(
+                    status="success",
+                    actions=["api_response"],
+                    notes="Response returned via API.",
+                ),
+            ),
             stage_timings_ms={
                 "memory_load": 1,
                 "task_load": 0,
@@ -1884,9 +1949,27 @@ def test_event_endpoint_contract_smoke_pins_public_shape_and_debug_gate() -> Non
     assert debug_response.status_code == 200
     debug_body = debug_response.json()
     assert "debug" in debug_body
+    assert "system_debug" in debug_body
     assert "event" in debug_body["debug"]
     assert "stage_timings_ms" in debug_body["debug"]
     assert debug_response.headers["x-aion-debug-compat"] == "query_debug_route_is_compatibility_use_post_event_debug"
+
+
+def test_event_debug_endpoint_exposes_system_debug_behavior_contract() -> None:
+    client, _, _ = _client()
+
+    debug_response = client.post("/event/debug", json={"text": "system debug contract"})
+
+    assert debug_response.status_code == 200
+    body = debug_response.json()
+    assert "system_debug" in body
+    system_debug = body["system_debug"]
+    assert system_debug["mode"] == "system_debug"
+    assert system_debug["event"]["event_id"] == body["event_id"]
+    assert system_debug["event"]["trace_id"] == body["trace_id"]
+    assert set(system_debug["memory_bundle"].keys()) == {"episodic", "semantic", "affective", "relations", "diagnostics"}
+    assert set(system_debug["plan"].keys()) == {"goal", "steps", "needs_action", "needs_response", "domain_intents"}
+    assert system_debug["action_result"]["status"] == "success"
 
 
 def test_event_endpoint_debug_payload_pins_foreground_boundary_stage_order() -> None:

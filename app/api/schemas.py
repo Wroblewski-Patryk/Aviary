@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from app.core.contracts import MotivationMode, RuntimeResult
+from app.core.contracts import MotivationMode, RuntimeResult, RuntimeSystemDebugOutput
 
 
 class EventReplyResponse(BaseModel):
@@ -32,6 +32,7 @@ class EventResponse(BaseModel):
     runtime: EventRuntimeResponse | None = None
     queue: EventQueueResponse | None = None
     debug: RuntimeResult | None = None
+    system_debug: RuntimeSystemDebugOutput | None = None
 
 
 class SetWebhookRequest(BaseModel):

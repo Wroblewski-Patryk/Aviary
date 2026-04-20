@@ -382,6 +382,45 @@ class SemanticRetrievalResult(BaseModel):
     diagnostics: dict[str, Any] = Field(default_factory=dict)
 
 
+class RuntimeSystemDebugEventView(BaseModel):
+    event_id: str
+    trace_id: str
+    source: str
+    subsource: str
+    timestamp: datetime
+    user_id: str
+    payload: dict[str, Any] = Field(default_factory=dict)
+
+
+class RuntimeSystemDebugMemoryBundle(BaseModel):
+    episodic: list[dict[str, Any]] = Field(default_factory=list)
+    semantic: list[dict[str, Any]] = Field(default_factory=list)
+    affective: list[dict[str, Any]] = Field(default_factory=list)
+    relations: list[dict[str, Any]] = Field(default_factory=list)
+    diagnostics: dict[str, Any] = Field(default_factory=dict)
+
+
+class RuntimeSystemDebugPlanView(BaseModel):
+    goal: str
+    steps: list[str] = Field(default_factory=list)
+    needs_action: bool
+    needs_response: bool
+    domain_intents: list[dict[str, Any]] = Field(default_factory=list)
+
+
+class RuntimeSystemDebugOutput(BaseModel):
+    mode: Literal["system_debug"] = "system_debug"
+    event: RuntimeSystemDebugEventView
+    perception: PerceptionOutput
+    memory_bundle: RuntimeSystemDebugMemoryBundle
+    context: ContextOutput
+    motivation: MotivationOutput
+    role: RoleOutput
+    plan: RuntimeSystemDebugPlanView
+    expression: ExpressionOutput
+    action_result: ActionResult
+
+
 class RuntimeResult(BaseModel):
     event: Event
     identity: IdentityOutput
@@ -400,5 +439,6 @@ class RuntimeResult(BaseModel):
     expression: ExpressionOutput
     memory_record: MemoryRecord | None = None
     reflection_triggered: bool = False
+    system_debug: RuntimeSystemDebugOutput | None = None
     stage_timings_ms: dict[str, int] = Field(default_factory=dict)
     duration_ms: int

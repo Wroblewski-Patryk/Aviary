@@ -9,7 +9,16 @@ from app.agents.planning import PlanningAgent
 from app.agents.role import RoleAgent
 from app.core.action import ActionExecutor
 from app.core.attention_gate import evaluate_proactive_attention_gate
-from app.core.contracts import ActionDelivery, Event, ExpressionOutput, RuntimeResult
+from app.core.contracts import (
+    ActionDelivery,
+    Event,
+    ExpressionOutput,
+    RuntimeResult,
+    RuntimeSystemDebugEventView,
+    RuntimeSystemDebugMemoryBundle,
+    RuntimeSystemDebugOutput,
+    RuntimeSystemDebugPlanView,
+)
 from app.core.graph_adapters import GraphStageAdapters
 from app.core.graph_state import GraphMemoryState, build_graph_state_seed, expression_to_action_delivery
 from app.core.logging import RuntimeLogContext, RuntimeStageLogger, get_logger
@@ -86,6 +95,56 @@ class RuntimeOrchestrator:
 
     def _build_action_delivery(self, *, event: Event, expression: ExpressionOutput) -> ActionDelivery:
         return expression_to_action_delivery(event=event, expression=expression)
+
+    def _build_system_debug_output(
+        self,
+        *,
+        event: Event,
+        perception,
+        memory: list[dict],
+        user_conclusions: list[dict],
+        affective_conclusions: list[dict],
+        relations: list[dict],
+        hybrid_diagnostics: dict[str, int],
+        context,
+        motivation,
+        role,
+        plan,
+        expression,
+        action_result,
+    ) -> RuntimeSystemDebugOutput:
+        semantic_conclusions = [item for item in user_conclusions if item not in affective_conclusions]
+        return RuntimeSystemDebugOutput(
+            event=RuntimeSystemDebugEventView(
+                event_id=event.event_id,
+                trace_id=event.meta.trace_id,
+                source=event.source,
+                subsource=event.subsource,
+                timestamp=event.timestamp,
+                user_id=event.meta.user_id,
+                payload=dict(event.payload),
+            ),
+            perception=perception,
+            memory_bundle=RuntimeSystemDebugMemoryBundle(
+                episodic=[dict(item) for item in memory],
+                semantic=[dict(item) for item in semantic_conclusions],
+                affective=[dict(item) for item in affective_conclusions],
+                relations=[dict(item) for item in relations],
+                diagnostics=dict(hybrid_diagnostics),
+            ),
+            context=context,
+            motivation=motivation,
+            role=role,
+            plan=RuntimeSystemDebugPlanView(
+                goal=plan.goal,
+                steps=list(plan.steps),
+                needs_action=plan.needs_action,
+                needs_response=plan.needs_response,
+                domain_intents=[intent.model_dump(mode="json") for intent in plan.domain_intents],
+            ),
+            expression=expression,
+            action_result=action_result,
+        )
 
     def _run_stage(
         self,
@@ -733,6 +792,21 @@ class RuntimeOrchestrator:
         assert expression is not None
         action_result = graph_state.action_result
         assert action_result is not None
+        system_debug = self._build_system_debug_output(
+            event=event,
+            perception=perception,
+            memory=memory,
+            user_conclusions=user_conclusions,
+            affective_conclusions=affective_conclusions,
+            relations=relations,
+            hybrid_diagnostics=hybrid_diagnostics,
+            context=context,
+            motivation=motivation,
+            role=role,
+            plan=plan,
+            expression=expression,
+            action_result=action_result,
+        )
 
         (
             memory_record,
@@ -788,6 +862,7 @@ class RuntimeOrchestrator:
             expression=expression,
             memory_record=memory_record,
             reflection_triggered=reflection_triggered,
+            system_debug=system_debug,
             stage_timings_ms=stage_timings_ms,
             duration_ms=duration_ms,
         )

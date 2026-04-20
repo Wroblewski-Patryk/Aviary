@@ -9,6 +9,12 @@ from app.agents.perception import PerceptionAgent
 from app.agents.planning import PlanningAgent
 from app.agents.role import RoleAgent
 from app.core.action import ActionExecutor
+from app.core.behavior_harness import (
+    BehaviorScenarioCheck,
+    BehaviorScenarioDefinition,
+    behavior_results_as_jsonable,
+    execute_behavior_scenarios,
+)
 from app.core.contracts import Event, EventMeta, NoopDomainIntent
 from app.core.events import build_scheduler_event
 from app.core.runtime import RuntimeOrchestrator
@@ -262,6 +268,22 @@ class FakeMemoryRepository:
         }
         self.reflection_tasks.append(task)
         return dict(task)
+
+
+class PersistingFakeMemoryRepository(FakeMemoryRepository):
+    async def write_episode(self, **kwargs) -> dict:
+        record = await super().write_episode(**kwargs)
+        self.recent_memory.insert(
+            0,
+            {
+                "event_id": record["event_id"],
+                "timestamp": record["timestamp"],
+                "summary": record["summary"],
+                "payload": dict(record["payload"]),
+                "importance": record["importance"],
+            },
+        )
+        return record
 
 
 class FailingWriteMemoryRepository(FakeMemoryRepository):
@@ -3698,3 +3720,291 @@ async def test_runtime_pipeline_emits_connector_permission_gates_and_connector_p
     assert result.memory_record.payload["calendar_connector_update"] == "create_event:mutate_with_confirmation:generic"
     assert result.memory_record.payload["task_connector_update"] == "create_task:mutate_with_confirmation:clickup"
     assert result.memory_record.payload["drive_connector_update"] == "upload_file:mutate_with_confirmation:google_drive"
+
+
+def _build_behavior_runtime(memory_repository: FakeMemoryRepository) -> RuntimeOrchestrator:
+    return RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=FakeOpenAIClient()),
+        action_executor=ActionExecutor(memory_repository=memory_repository, telegram_client=FakeTelegramClient()),
+        memory_repository=memory_repository,
+        reflection_worker=FakeReflectionWorker(),
+    )
+
+
+def _behavior_event(*, event_id: str, trace_id: str, text: str, user_id: str = "u-behavior") -> Event:
+    return Event(
+        event_id=event_id,
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": text},
+        meta=EventMeta(user_id=user_id, trace_id=trace_id),
+    )
+
+
+async def test_runtime_pipeline_exposes_system_debug_surface_for_behavior_validation() -> None:
+    memory = FakeHybridMemoryRepository(
+        recent_memory=[
+            {
+                "event_id": "evt-prev-1",
+                "summary": "event=review deployment risks; response_language=en; memory_topics=deployment,risks",
+                "payload": {"text": "review deployment risks"},
+                "importance": 0.8,
+            }
+        ]
+    )
+    memory.user_conclusions = [{"kind": "response_style", "content": "structured", "confidence": 0.82}]
+    memory.relations = [{"relation_type": "collaboration_dynamic", "relation_value": "guided", "confidence": 0.79}]
+    runtime = _build_behavior_runtime(memory)
+
+    result = await runtime.run(
+        _behavior_event(
+            event_id="evt-system-debug-1",
+            trace_id="t-system-debug-1",
+            text="Can you help with deployment risks?",
+        )
+    )
+
+    assert result.system_debug is not None
+    assert result.system_debug.mode == "system_debug"
+    assert result.system_debug.event.event_id == "evt-system-debug-1"
+    assert result.system_debug.event.trace_id == "t-system-debug-1"
+    assert result.system_debug.memory_bundle.episodic
+    assert "episodic_lexical_hits" in result.system_debug.memory_bundle.diagnostics
+    assert result.system_debug.plan.domain_intents
+    assert result.system_debug.action_result.status in {"success", "noop"}
+
+
+async def test_behavior_harness_outputs_structured_contract_results() -> None:
+    results = await execute_behavior_scenarios(
+        [
+            BehaviorScenarioDefinition(
+                test_id="T0.1",
+                run=lambda: BehaviorScenarioCheck(
+                    passed=True,
+                    reason="baseline_pass",
+                    trace_id="trace-baseline-pass",
+                    notes="structured output smoke",
+                ),
+            ),
+            BehaviorScenarioDefinition(
+                test_id="T0.2",
+                run=lambda: BehaviorScenarioCheck(
+                    passed=False,
+                    skip=True,
+                    reason="feature_not_implemented",
+                    trace_id="trace-baseline-skip",
+                    notes="intentional skip contract",
+                ),
+            ),
+        ]
+    )
+
+    jsonable = behavior_results_as_jsonable(results)
+    assert len(jsonable) == 2
+    assert set(jsonable[0].keys()) == {"test_id", "status", "reason", "trace_id", "notes"}
+    assert jsonable[0]["status"] == "pass"
+    assert jsonable[1]["status"] == "skip"
+    assert jsonable[1]["reason"] == "feature_not_implemented"
+
+
+async def test_runtime_behavior_memory_scenarios_cover_write_retrieve_influence_and_delayed_recall() -> None:
+    async def memory_behavior_scenario() -> BehaviorScenarioCheck:
+        memory = PersistingFakeMemoryRepository(recent_memory=[])
+        runtime = _build_behavior_runtime(memory)
+
+        first = await runtime.run(
+            _behavior_event(
+                event_id="evt-memory-write-1",
+                trace_id="t-memory-write-1",
+                text="Remember that deployment blocker is caused by migration mismatch.",
+            )
+        )
+        second = await runtime.run(
+            _behavior_event(
+                event_id="evt-memory-retrieve-1",
+                trace_id="t-memory-retrieve-1",
+                text="What is the blocker we already identified?",
+            )
+        )
+        if memory.recent_memory:
+            memory.recent_memory[0]["timestamp"] = datetime(2024, 1, 15, tzinfo=timezone.utc)
+        delayed = await runtime.run(
+            _behavior_event(
+                event_id="evt-memory-delayed-1",
+                trace_id="t-memory-delayed-1",
+                text="After a break, remind me what was blocking deploy.",
+            )
+        )
+        control_runtime = _build_behavior_runtime(FakeMemoryRepository(recent_memory=[]))
+        control = await control_runtime.run(
+            _behavior_event(
+                event_id="evt-memory-control-1",
+                trace_id="t-memory-control-1",
+                text="What is the blocker we already identified?",
+            )
+        )
+
+        checks = {
+            "write": first.memory_record is not None and len(memory.recent_memory) >= 1,
+            "retrieve": "Relevant recent memory:" in second.context.summary,
+            "influence": "Relevant recent memory:" in second.system_debug.context.summary
+            and "Relevant recent memory:" not in control.context.summary,
+            "delayed_recall": "Relevant recent memory:" in delayed.context.summary,
+        }
+        missing = [name for name, passed in checks.items() if not passed]
+        return BehaviorScenarioCheck(
+            passed=not missing,
+            reason="memory_write_retrieve_influence_delayed_recall"
+            if not missing
+            else "memory_behavior_missing:" + ",".join(missing),
+            trace_id=delayed.event.meta.trace_id,
+            notes=(
+                f"write={checks['write']};"
+                f"retrieve={checks['retrieve']};"
+                f"influence={checks['influence']};"
+                f"delayed_recall={checks['delayed_recall']}"
+            ),
+        )
+
+    results = await execute_behavior_scenarios(
+        [
+            BehaviorScenarioDefinition(
+                test_id="T2.1",
+                run=memory_behavior_scenario,
+            )
+        ]
+    )
+    assert len(results) == 1
+    assert results[0].status == "pass"
+
+
+async def test_runtime_behavior_continuity_scenario_covers_multi_session_personality_stability() -> None:
+    async def continuity_scenario() -> BehaviorScenarioCheck:
+        memory = PersistingFakeMemoryRepository(recent_memory=[])
+        runtime_session_one = _build_behavior_runtime(memory)
+
+        first = await runtime_session_one.run(
+            _behavior_event(
+                event_id="evt-continuity-1",
+                trace_id="t-continuity-1",
+                text="Status update for today.",
+            )
+        )
+        runtime_session_two = _build_behavior_runtime(memory)
+        second = await runtime_session_two.run(
+            _behavior_event(
+                event_id="evt-continuity-2",
+                trace_id="t-continuity-2",
+                text="Status update for today.",
+            )
+        )
+
+        checks = {
+            "identity_continuity": first.identity.mission == second.identity.mission
+            and first.identity.behavioral_style == second.identity.behavioral_style,
+            "tone_stability": first.expression.tone == second.expression.tone,
+            "language_stability": first.expression.language == second.expression.language,
+            "context_reuse": "Relevant recent memory:" in second.context.summary,
+        }
+        missing = [name for name, passed in checks.items() if not passed]
+        return BehaviorScenarioCheck(
+            passed=not missing,
+            reason="multi_session_continuity_and_personality_stability"
+            if not missing
+            else "continuity_behavior_missing:" + ",".join(missing),
+            trace_id=second.event.meta.trace_id,
+            notes=(
+                f"identity_continuity={checks['identity_continuity']};"
+                f"tone_stability={checks['tone_stability']};"
+                f"language_stability={checks['language_stability']};"
+                f"context_reuse={checks['context_reuse']}"
+            ),
+        )
+
+    results = await execute_behavior_scenarios(
+        [
+            BehaviorScenarioDefinition(
+                test_id="T10.1",
+                run=continuity_scenario,
+            )
+        ]
+    )
+    assert len(results) == 1
+    assert results[0].status == "pass"
+
+
+async def test_runtime_behavior_failure_scenarios_cover_contradiction_missing_data_and_noise() -> None:
+    async def contradiction_scenario() -> BehaviorScenarioCheck:
+        runtime = _build_behavior_runtime(FakeMemoryRepository(recent_memory=[]))
+        result = await runtime.run(
+            _behavior_event(
+                event_id="evt-failure-contradiction",
+                trace_id="t-failure-contradiction",
+                text="Do not answer me, but answer now with one action plan.",
+            )
+        )
+        passed = (
+            result.action_result.status in {"success", "noop"}
+            and result.system_debug is not None
+            and "User said:" in result.context.summary
+        )
+        return BehaviorScenarioCheck(
+            passed=passed,
+            reason="contradiction_input_stays_explainable" if passed else "contradiction_handling_regression",
+            trace_id=result.event.meta.trace_id,
+            notes=f"action_status={result.action_result.status};context_has_user_said={'User said:' in result.context.summary}",
+        )
+
+    async def missing_data_scenario() -> BehaviorScenarioCheck:
+        runtime = _build_behavior_runtime(FakeMemoryRepository(recent_memory=[]))
+        result = await runtime.run(
+            _behavior_event(
+                event_id="evt-failure-missing-data",
+                trace_id="t-failure-missing-data",
+                text="   ",
+            )
+        )
+        passed = bool(result.expression.message.strip()) and result.system_debug is not None
+        return BehaviorScenarioCheck(
+            passed=passed,
+            reason="missing_data_fallback_response" if passed else "missing_data_response_regression",
+            trace_id=result.event.meta.trace_id,
+            notes=f"message_present={bool(result.expression.message.strip())};motivation_mode={result.motivation.mode}",
+        )
+
+    async def noisy_input_scenario() -> BehaviorScenarioCheck:
+        runtime = _build_behavior_runtime(FakeMemoryRepository(recent_memory=[]))
+        result = await runtime.run(
+            _behavior_event(
+                event_id="evt-failure-noisy-input",
+                trace_id="t-failure-noisy-input",
+                text="!!! ??? ### random<>text<>12345 // ???",
+            )
+        )
+        passed = (
+            result.action_result.status in {"success", "noop"}
+            and len(result.stage_timings_ms) > 0
+            and result.system_debug is not None
+        )
+        return BehaviorScenarioCheck(
+            passed=passed,
+            reason="noisy_input_stays_controlled" if passed else "noisy_input_stability_regression",
+            trace_id=result.event.meta.trace_id,
+            notes=f"action_status={result.action_result.status};stage_count={len(result.stage_timings_ms)}",
+        )
+
+    results = await execute_behavior_scenarios(
+        [
+            BehaviorScenarioDefinition(test_id="T11.1", run=contradiction_scenario),
+            BehaviorScenarioDefinition(test_id="T11.2", run=missing_data_scenario),
+            BehaviorScenarioDefinition(test_id="T11.3", run=noisy_input_scenario),
+        ]
+    )
+    assert len(results) == 3
+    assert {result.status for result in results} == {"pass"}

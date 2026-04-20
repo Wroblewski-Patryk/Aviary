@@ -191,6 +191,7 @@ async def _handle_event_request(
             reflection_triggered=result.reflection_triggered,
         ),
         debug=result if include_debug else None,
+        system_debug=result.system_debug if include_debug else None,
     )
     return response.model_dump(mode="json", exclude_none=True)
 
