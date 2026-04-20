@@ -211,3 +211,29 @@ async def test_scheduler_worker_reflection_tick_logs_worker_mode_handoff_posture
     assert "queue_drain_owner=external_driver" in message
     assert "external_driver_expected=True" in message
     assert "retry_owner=durable_queue" in message
+
+
+async def test_scheduler_worker_reflection_tick_logs_in_process_handoff_posture_when_worker_stopped(caplog) -> None:
+    reflection_worker = FakeReflectionWorker(running=False)
+    repository = FakeMemoryRepository()
+    scheduler = SchedulerWorker(
+        memory_repository=repository,  # type: ignore[arg-type]
+        reflection_worker=reflection_worker,  # type: ignore[arg-type]
+        enabled=True,
+        reflection_runtime_mode="in_process",
+        reflection_interval_seconds=900,
+        maintenance_interval_seconds=3600,
+    )
+    caplog.set_level(logging.INFO, logger="aion.scheduler")
+
+    await scheduler.run_reflection_tick_once(reason="test_reflection")
+
+    message = next(
+        record.getMessage()
+        for record in caplog.records
+        if record.name == "aion.scheduler" and "scheduler_reflection_tick" in record.getMessage()
+    )
+    assert "runtime_mode=in_process" in message
+    assert "queue_drain_owner=in_process_worker" in message
+    assert "external_driver_expected=False" in message
+    assert "retry_owner=durable_queue" in message

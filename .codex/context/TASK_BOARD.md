@@ -16,9 +16,8 @@ Last updated: 2026-04-20
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
 - The planning queue is complete through `PRJ-299`.
-- `PRJ-283` is currently `READY` and continues implementation work for the
-  background-topology queue after `PRJ-282` landed health/logging handoff
-  posture coverage.
+- `PRJ-284` is currently `READY` and starts the production-retrieval baseline
+  queue after background-topology convergence completed through `PRJ-283`.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -29,24 +28,8 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-283 Add background-topology regressions and sync docs/context
-  - Status: READY
-  - Group: Background Reflection Topology
-  - Owner: QA/Test + Product Docs
-  - Depends on: PRJ-282
-  - Priority: P1
-  - Result:
-    - background execution ownership, retry posture, and worker-mode guarantees
-      are pinned by tests
-    - planning, project state, and operations docs stay aligned with the new
-      reflection topology contract
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_scheduler_worker.py tests/test_api_routes.py tests/test_main_lifespan_policy.py`
-
-## BACKLOG
-
 - [ ] PRJ-284 Define the production retrieval baseline for provider, refresh ownership, and family rollout order
-  - Status: BACKLOG
+  - Status: READY
   - Group: Production Memory Retrieval Rollout
   - Owner: Planner + Backend Builder
   - Depends on: PRJ-283
@@ -59,6 +42,8 @@ Last updated: 2026-04-20
   - Validation:
     - doc-and-context sync plus targeted retrieval-baseline review recorded in
       this slice
+
+## BACKLOG
 
 - [ ] PRJ-285 Implement the provider-owned semantic and episodic vector materialization path
   - Status: BACKLOG
@@ -282,6 +267,21 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-283 Add background-topology regressions and sync docs/context
+  - Status: DONE
+  - Group: Background Reflection Topology
+  - Owner: QA/Test + Product Docs
+  - Depends on: PRJ-282
+  - Priority: P1
+  - Result:
+    - regression coverage now pins worker-mode handoff behavior in
+      `in_process|deferred` operation across reflection retry posture,
+      scheduler runtime logs, and `/health.reflection.topology`
+    - planning, project state, and runtime-ops docs are synchronized to the
+      converged background-topology contract through `PRJ-283`
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_scheduler_worker.py tests/test_api_routes.py tests/test_main_lifespan_policy.py`
 
 - [x] PRJ-282 Add worker-mode health, queue-drain, and retry handoff contract
   - Status: DONE

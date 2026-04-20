@@ -612,6 +612,28 @@ def test_health_endpoint_allows_deferred_reflection_mode_without_running_worker(
     assert body["reflection"]["healthy"] is True
 
 
+def test_health_endpoint_exposes_in_process_handoff_posture_when_worker_is_stopped() -> None:
+    client, _, _ = _client(
+        reflection_running=False,
+        reflection_runtime_mode="in_process",
+    )
+
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "ok"
+    assert body["reflection"]["runtime_mode"] == "in_process"
+    assert body["reflection"]["topology"]["queue_drain_owner"] == "in_process_worker"
+    assert body["reflection"]["topology"]["external_driver_expected"] is False
+    assert body["reflection"]["topology"]["runtime_enqueue_dispatch"] is False
+    assert body["reflection"]["topology"]["runtime_enqueue_reason"] == "in_process_worker_not_running"
+    assert body["reflection"]["topology"]["scheduler_tick_dispatch"] is True
+    assert body["reflection"]["topology"]["scheduler_tick_reason"] == "in_process_worker_not_running"
+    assert body["reflection"]["worker"]["running"] is False
+    assert body["reflection"]["healthy"] is False
+
+
 def test_health_endpoint_exposes_lexical_only_memory_retrieval_mode_when_semantic_vectors_are_disabled() -> None:
     client, _, _ = _client(semantic_vector_enabled=False)
 

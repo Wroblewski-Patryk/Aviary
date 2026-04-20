@@ -47,10 +47,13 @@ The current repo already works as an MVP slice, but several architecture-level d
   - `PRJ-282` now exposes worker-mode handoff posture through
     `/health.reflection.topology` and scheduler runtime logs so queue-drain and
     retry ownership are explicit for in-process and deferred operation.
+  - `PRJ-283` now pins those ownership guarantees with regressions and keeps
+    planning/context/ops docs aligned to the converged background topology.
 - Decision needed:
   - should `in_process` remain the default runtime mode during convergence, or
     should deployment posture move toward `deferred` + external dispatch once
-    background-topology regression and docs-context sync (`PRJ-283`) lands?
+    production retrieval rollout work (`PRJ-284+`) starts depending on stable
+    background dispatch ownership?
 
 ### 2. Migration Strategy
 

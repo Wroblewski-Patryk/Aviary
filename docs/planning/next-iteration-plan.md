@@ -368,6 +368,9 @@ Completed on 2026-04-18:
 - `PRJ-282` is complete: `/health` and scheduler logs now expose explicit
   worker-mode handoff posture (`in_process|deferred`) for queue drain and retry
   ownership without changing reflection execution semantics.
+- `PRJ-283` is complete: regression coverage now pins background-topology
+  handoff guarantees across health topology, scheduler log posture, and
+  exhausted-retry skip semantics.
 
 ## Highest-Risk Gaps
 
@@ -1310,10 +1313,10 @@ not around temporary convenience defaults.
 ## Next Derived Slice
 
 The planning queue is complete through `PRJ-299`.
-`PRJ-283` is currently the execution-ready slice in the board.
+`PRJ-284` is currently the execution-ready slice in the board.
 Before the next implementation slice:
 
-- take `PRJ-283` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-284` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to that one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 

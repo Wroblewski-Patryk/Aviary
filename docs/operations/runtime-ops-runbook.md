@@ -313,6 +313,13 @@ Operator checks:
   `runtime_mode`, `queue_drain_owner`, and `retry_owner` for worker-mode
   triage
 
+Regression anchors:
+
+- `tests/test_api_routes.py` pins `/health.reflection.topology` handoff fields
+- `tests/test_scheduler_worker.py` pins scheduler worker-mode log posture
+- `tests/test_reflection_worker.py` pins exhausted-retry skip behavior in
+  drain-once processing
+
 Ownership invariants:
 
 - enqueue remains foreground-follow-up owned (`memory_persist` then

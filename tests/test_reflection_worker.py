@@ -1581,6 +1581,35 @@ async def test_reflection_worker_run_pending_once_processes_ready_tasks_without_
     assert repository.failed_marks == []
 
 
+async def test_reflection_worker_run_pending_once_skips_exhausted_retry_tasks() -> None:
+    repository = FakeMemoryRepository(recent_memory=[])
+    repository.pending_tasks = [
+        {
+            "id": 14,
+            "user_id": "u-1",
+            "event_id": "evt-exhausted-retry",
+            "status": "failed",
+            "attempts": 3,
+            "last_error": "permanent issue",
+            "updated_at": datetime.now(timezone.utc) - timedelta(minutes=12),
+        }
+    ]
+    worker = ReflectionWorker(memory_repository=repository, queue_size=5, max_attempts=3)
+
+    summary = await worker.run_pending_once(limit=5)
+
+    assert summary == {
+        "scanned": 1,
+        "processed": 0,
+        "completed": 0,
+        "failed": 0,
+        "skipped_not_ready": 1,
+    }
+    assert repository.processing_marks == []
+    assert repository.completed_marks == []
+    assert repository.failed_marks == []
+
+
 async def test_reflection_worker_recovers_pending_tasks_on_start() -> None:
     repository = FakeMemoryRepository(
         recent_memory=[
