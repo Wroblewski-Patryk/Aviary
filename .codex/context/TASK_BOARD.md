@@ -1,6 +1,6 @@
 # TASK_BOARD
 
-Last updated: 2026-04-20
+Last updated: 2026-04-21
 
 ## Agent Workflow Refresh (2026-04-18)
 
@@ -36,28 +36,8 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-329 Sync docs/context for identity, language, and profile boundary hardening
-  - Status: READY
-  - Group: Identity, Language, And Profile Boundary Hardening
-  - Owner: Product Docs
-  - Depends on: PRJ-328
-  - Priority: P1
-  - Result:
-    - canonical docs, implementation reality, and project context describe the
-      same identity continuity baseline
-    - future identity work can build on explicit ownership boundaries
-  - Validation:
-    - doc-and-context sync plus targeted identity-boundary cross-doc review
-      recorded in this slice
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-330 Implement relation decay and confidence revalidation policy
-  - Status: FUTURE
+  - Status: READY
   - Group: Relation Lifecycle And Trust Influence
   - Owner: Backend Builder
   - Depends on: PRJ-329
@@ -68,6 +48,12 @@ Last updated: 2026-04-20
     - relation memory becomes lifecycle-aware instead of purely additive
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_reflection_worker.py tests/test_runtime_pipeline.py`
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
 
 - [ ] PRJ-331 Extend planning, motivation, and proactive logic with governed trust signals
   - Status: FUTURE
@@ -176,6 +162,27 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-329 Sync docs/context for identity, language, and profile boundary hardening
+  - Status: DONE
+  - Group: Identity, Language, And Profile Boundary Hardening
+  - Owner: Product Docs
+  - Depends on: PRJ-328
+  - Priority: P1
+  - Result:
+    - canonical docs, implementation reality, planning notes, and project
+      context now describe the same identity continuity baseline
+    - identity ownership boundaries are now explicit across docs:
+      profile-language ownership in `aion_profile`, conclusion-owned
+      response/collaboration preferences, and request-scoped API identity
+      fallback precedence
+  - Validation:
+    - targeted identity-boundary cross-doc review recorded across
+      `docs/overview.md`, `docs/implementation/runtime-reality.md`,
+      `docs/planning/open-decisions.md`,
+      `docs/planning/next-iteration-plan.md`,
+      `.codex/context/TASK_BOARD.md`, and
+      `.codex/context/PROJECT_STATE.md`
 
 - [x] PRJ-328 Add identity and language continuity regressions across session and API fallback boundaries
   - Status: DONE

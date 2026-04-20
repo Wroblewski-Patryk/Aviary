@@ -29,6 +29,15 @@ Confirmed on 2026-04-19:
 
 ## Progress Update
 
+Completed on 2026-04-21:
+
+- `PRJ-329` is complete: canonical docs, runtime-reality notes, and context
+  records now share the same identity/language/profile continuity baseline
+  (explicit profile-versus-conclusion identity ownership, language continuity
+  precedence, and request-scoped API user-id fallback boundary).
+- queue progression is now synchronized so execution moves to `PRJ-330`
+  (relation decay and confidence revalidation policy).
+
 Completed on 2026-04-17:
 
 - `PRJ-006` introduced a structured episodic memory payload plus a readable summary and formal migration step.

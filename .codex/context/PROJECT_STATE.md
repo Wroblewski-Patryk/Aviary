@@ -1,6 +1,6 @@
 # PROJECT_STATE
 
-Last updated: 2026-04-20
+Last updated: 2026-04-21
 
 ## Product Snapshot
 
@@ -1180,8 +1180,24 @@ Last updated: 2026-04-20
 - 2026-04-20: `PRJ-328` validation is green:
   `.\.venv\Scripts\python -m pytest -q tests/test_language_runtime.py tests/test_api_routes.py tests/test_runtime_pipeline.py`
   passed with `141 passed`.
-- 2026-04-20: `PRJ-329` is the next `READY` slice, focused on syncing identity
-  and language boundary hardening outcomes across canonical docs and context.
+- 2026-04-21: `PRJ-329` is complete: canonical docs, runtime-reality notes,
+  planning notes, and project context now share one identity/language/profile
+  continuity baseline.
+- 2026-04-21: `PRJ-329` sync explicitly records profile-versus-conclusion
+  identity ownership (`aion_profile` language owner, conclusion-owned response
+  and collaboration preferences), language continuity precedence, and
+  request-scoped API identity fallback (`meta.user_id` ->
+  `X-AION-User-Id` -> `anonymous`).
+- 2026-04-21: `PRJ-329` validation is recorded as doc-and-context sync plus
+  targeted identity-boundary cross-doc review across
+  `docs/overview.md`,
+  `docs/implementation/runtime-reality.md`,
+  `docs/planning/open-decisions.md`,
+  `docs/planning/next-iteration-plan.md`,
+  `.codex/context/TASK_BOARD.md`, and
+  `.codex/context/PROJECT_STATE.md`.
+- 2026-04-21: `PRJ-330` is the next `READY` slice, focused on relation decay
+  and confidence revalidation policy.
 
 ## Working Agreements
 

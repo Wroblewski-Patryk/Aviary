@@ -36,7 +36,13 @@ Important current-runtime notes:
 - foreground stage execution from `perception` through `action` now runs through
   LangGraph while preserving current stage contracts
 - role selection is dynamic and can use heuristics, reflected preferences, and theta bias
-- language is chosen per event and can fall back to recent memory or profile state for ambiguous turns
+- identity continuity now keeps explicit owners: `aion_profile` is the durable
+  owner for preferred language, while response/collaboration preferences remain
+  conclusion-owned runtime inputs
+- language is chosen per event with explicit precedence (current-turn request or
+  signal first, then recent-memory/profile continuity for ambiguous turns)
+- API identity fallback is request-scoped (`meta.user_id` ->
+  `X-AION-User-Id` -> `anonymous`) to reduce cross-user language/profile drift
 - reflection runs through a durable Postgres-backed queue and updates conclusions, theta, and lightweight goal-manager signals in the background
 - `POST /event` returns a compact public response by default;
   `POST /internal/event/debug` is the primary internal debug ingress, while
@@ -66,8 +72,10 @@ This map is the fast architecture-to-code traceability surface for the live runt
 
 What is already live:
 
-- dynamic language-aware replies
-- lightweight identity snapshot
+- dynamic language-aware replies with continuity precedence across current turn,
+  recent memory, and profile
+- lightweight identity snapshot with explicit profile-versus-conclusion
+  ownership boundary
 - heuristic but state-aware role selection
 - semantic preference memory
 - semantic embedding contract plus pgvector-ready storage scaffolding

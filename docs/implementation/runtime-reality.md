@@ -126,6 +126,33 @@ The live runtime currently uses:
 - `execute`
 - `clarify`
 
+### Identity and language continuity boundary
+
+The live runtime now enforces explicit identity and language ownership:
+
+- `aion_profile.preferred_language` is the durable profile owner for language
+  continuity in identity loading
+- `response_style` and `collaboration_preference` are conclusion-owned runtime
+  preference inputs, not durable profile fields
+- relation fallback cues may shape stage-level tie-break behavior, but they do
+  not rewrite identity profile continuity fields
+
+Language decision precedence is now explicit:
+
+- explicit language request
+- language-specific diacritic signal
+- strong keyword signal
+- continuity resolution from recent memory and profile
+- weak keyword signal
+- default fallback (`en`)
+
+Continuity parsing now accepts structured episodic language hints from payload
+(`payload.response_language` and `payload.language`) plus summary fallback, but
+only for supported runtime language codes (`en|pl`).
+
+API identity fallback for language/profile continuity is request-scoped and
+explicit: `meta.user_id` -> `X-AION-User-Id` -> `anonymous`.
+
 ### Affective assessment slot
 
 The live runtime now carries an explicit affective contract slot per turn:

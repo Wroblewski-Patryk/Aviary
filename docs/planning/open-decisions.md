@@ -591,15 +591,29 @@ The current repo already works as an MVP slice, but several architecture-level d
 ### 8. Language Handling Strategy
 
 - Current repo fact:
-  - runtime now makes an explicit per-event language decision, propagates it through perception and expression, stores response-language hints in episodic memory for short follow-up turns, and keeps a lightweight `aion_profile` preferred language for ambiguous turns when recent memory is not enough.
-  - API callers can now provide `X-AION-User-Id` as a fallback identity key when `meta.user_id` is omitted, reducing accidental language/profile bleed caused by shared `anonymous` API traffic.
+  - runtime now makes an explicit per-event language decision and uses
+    precedence across current-turn signals, recent-memory continuity, and
+    profile continuity.
+  - continuity parsing now uses structured episodic payload hints
+    (`payload.response_language` and `payload.language`) plus summary fallback,
+    while ignoring unsupported language codes.
+  - API identity fallback is now explicit and request-scoped
+    (`meta.user_id` -> `X-AION-User-Id` -> `anonymous`), reducing accidental
+    language/profile bleed from shared anonymous traffic.
 - Decision needed:
   - should language handling stay heuristic-plus-profile for the MVP, or should it move to a richer user preference model and broader multilingual support once more channels are added?
 
 ### 9. Lightweight Profile Scope
 
 - Current repo fact:
-  - runtime now persists a lightweight language preference in `aion_profile`, keeps semantic preferences in `aion_conclusion`, and builds a lightweight runtime `IdentitySnapshot` from that state plus theta.
+  - runtime now persists lightweight language preference in `aion_profile`
+    while semantic response/collaboration preferences stay conclusion-owned in
+    `aion_conclusion`.
+  - identity loading now keeps that owner boundary explicit: relation fallback
+    cues may shape stage behavior but do not become durable profile identity
+    fields.
+  - runtime builds a lightweight `IdentitySnapshot` from profile language plus
+    conclusion/theta inputs without merging those ownership surfaces.
 - Decision needed:
   - should `aion_profile` remain limited to durable interaction preferences such as language, while `aion_conclusion` carries generalized learned preferences, or should those concerns merge into one wider identity-linked profile later?
 
