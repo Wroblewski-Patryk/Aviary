@@ -300,9 +300,18 @@ Current reflection runtime topology is explicit and mode-aware:
 Operator checks:
 
 - verify `/health.reflection` queue snapshot and worker-running posture
+- verify `/health.reflection.topology` handoff posture:
+  - `queue_drain_owner`
+  - `external_driver_expected`
+  - `runtime_enqueue_dispatch` / `runtime_enqueue_reason`
+  - `scheduler_tick_dispatch` / `scheduler_tick_reason`
+  - retry guardrails (`max_attempts`, `retry_backoff_seconds`)
 - verify `/health.scheduler` mode/cadence posture when scheduler is enabled
 - treat growing pending queue in deferred mode as external-dispatch signal
   rather than foreground failure
+- verify `aion.scheduler` `scheduler_reflection_tick` logs include
+  `runtime_mode`, `queue_drain_owner`, and `retry_owner` for worker-mode
+  triage
 
 Ownership invariants:
 

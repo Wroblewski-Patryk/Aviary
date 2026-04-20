@@ -10,6 +10,7 @@ from app.core.scheduler_contracts import (
     SCHEDULER_REFLECTION_TICK,
     clamp_scheduler_interval_seconds,
     normalize_reflection_runtime_mode,
+    reflection_topology_handoff_posture,
     reflection_scheduler_dispatch_decision,
 )
 from app.memory.repository import MemoryRepository
@@ -79,7 +80,12 @@ class SchedulerWorker:
 
     async def run_reflection_tick_once(self, *, reason: str = "cadence") -> dict[str, Any]:
         now = self._utcnow()
-        should_dispatch, dispatch_reason = self._should_dispatch_reflection()
+        reflection_topology = reflection_topology_handoff_posture(
+            runtime_mode=self.reflection_runtime_mode,
+            worker_running=self.reflection_worker.is_running(),
+        )
+        should_dispatch = bool(reflection_topology["scheduler_tick_dispatch"])
+        dispatch_reason = str(reflection_topology["scheduler_tick_reason"])
         if should_dispatch:
             drain_summary = await self.reflection_worker.run_pending_once(limit=self.reflection_batch_limit)
             summary = {
@@ -102,10 +108,14 @@ class SchedulerWorker:
         self._last_reflection_tick_at = now
         self._last_reflection_summary = summary
         self.logger.info(
-            "scheduler_reflection_tick executed=%s reason=%s trigger=%s processed=%s completed=%s failed=%s",
+            "scheduler_reflection_tick executed=%s reason=%s trigger=%s runtime_mode=%s queue_drain_owner=%s external_driver_expected=%s retry_owner=%s processed=%s completed=%s failed=%s",
             summary["executed"],
             summary["reason"],
             summary["trigger"],
+            reflection_topology["runtime_mode"],
+            reflection_topology["queue_drain_owner"],
+            reflection_topology["external_driver_expected"],
+            reflection_topology["retry_owner"],
             summary["processed"],
             summary["completed"],
             summary["failed"],

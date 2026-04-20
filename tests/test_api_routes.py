@@ -552,6 +552,22 @@ def test_health_endpoint_returns_ok() -> None:
         "reflection": {
             "healthy": True,
             "runtime_mode": "in_process",
+            "topology": {
+                "runtime_mode": "in_process",
+                "enqueue_owner": "runtime_followup",
+                "queue_backend": "durable_postgres_queue",
+                "queue_drain_owner": "in_process_worker",
+                "retry_owner": "durable_queue",
+                "external_driver_expected": False,
+                "worker_running": True,
+                "runtime_enqueue_dispatch": True,
+                "runtime_enqueue_reason": "in_process_worker_running",
+                "scheduler_tick_dispatch": False,
+                "scheduler_tick_reason": "in_process_worker_running",
+                "max_attempts": 3,
+                "retry_backoff_seconds": [5, 30, 120],
+                "stuck_processing_seconds": 180,
+            },
             "worker": {
                 "running": True,
                 "queue_size": 1,
@@ -588,6 +604,10 @@ def test_health_endpoint_allows_deferred_reflection_mode_without_running_worker(
     body = response.json()
     assert body["status"] == "ok"
     assert body["reflection"]["runtime_mode"] == "deferred"
+    assert body["reflection"]["topology"]["queue_drain_owner"] == "external_driver"
+    assert body["reflection"]["topology"]["external_driver_expected"] is True
+    assert body["reflection"]["topology"]["runtime_enqueue_dispatch"] is False
+    assert body["reflection"]["topology"]["scheduler_tick_dispatch"] is True
     assert body["reflection"]["worker"]["running"] is False
     assert body["reflection"]["healthy"] is True
 

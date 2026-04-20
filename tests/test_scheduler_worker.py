@@ -1,3 +1,5 @@
+import logging
+
 from app.workers.scheduler import SchedulerWorker
 
 
@@ -183,3 +185,29 @@ async def test_scheduler_worker_start_is_noop_when_scheduler_disabled() -> None:
 
     assert snapshot["enabled"] is False
     assert snapshot["running"] is False
+
+
+async def test_scheduler_worker_reflection_tick_logs_worker_mode_handoff_posture(caplog) -> None:
+    reflection_worker = FakeReflectionWorker(running=False)
+    repository = FakeMemoryRepository()
+    scheduler = SchedulerWorker(
+        memory_repository=repository,  # type: ignore[arg-type]
+        reflection_worker=reflection_worker,  # type: ignore[arg-type]
+        enabled=True,
+        reflection_runtime_mode="deferred",
+        reflection_interval_seconds=900,
+        maintenance_interval_seconds=3600,
+    )
+    caplog.set_level(logging.INFO, logger="aion.scheduler")
+
+    await scheduler.run_reflection_tick_once(reason="test_reflection")
+
+    message = next(
+        record.getMessage()
+        for record in caplog.records
+        if record.name == "aion.scheduler" and "scheduler_reflection_tick" in record.getMessage()
+    )
+    assert "runtime_mode=deferred" in message
+    assert "queue_drain_owner=external_driver" in message
+    assert "external_driver_expected=True" in message
+    assert "retry_owner=durable_queue" in message

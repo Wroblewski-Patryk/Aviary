@@ -365,6 +365,9 @@ Completed on 2026-04-18:
 - `PRJ-281` is complete: runtime and scheduler now consume one shared
   enqueue/dispatch boundary contract for reflection ownership, keeping durable
   enqueue semantics while making dispatch intent explicitly mode-aware.
+- `PRJ-282` is complete: `/health` and scheduler logs now expose explicit
+  worker-mode handoff posture (`in_process|deferred`) for queue drain and retry
+  ownership without changing reflection execution semantics.
 
 ## Highest-Risk Gaps
 
@@ -1307,10 +1310,10 @@ not around temporary convenience defaults.
 ## Next Derived Slice
 
 The planning queue is complete through `PRJ-299`.
-`PRJ-282` is currently the execution-ready slice in the board.
+`PRJ-283` is currently the execution-ready slice in the board.
 Before the next implementation slice:
 
-- take `PRJ-282` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-283` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to that one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 

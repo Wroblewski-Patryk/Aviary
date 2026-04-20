@@ -21,6 +21,7 @@ from app.core.runtime_policy import (
     runtime_policy_snapshot,
 )
 from app.core.runtime import RuntimeOrchestrator
+from app.core.scheduler_contracts import reflection_topology_handoff_posture
 from app.integrations.telegram.client import TelegramClient
 from app.memory.embeddings import embedding_strategy_snapshot, normalize_embedding_source_kinds
 from app.memory.repository import MemoryRepository
@@ -227,6 +228,13 @@ async def health(request: Request) -> dict[str, Any]:
         )
     )
     reflection_snapshot = reflection_worker.snapshot()
+    reflection_topology = reflection_topology_handoff_posture(
+        runtime_mode=reflection_runtime_mode,
+        worker_running=bool(reflection_snapshot["running"]),
+    )
+    reflection_topology["max_attempts"] = int(reflection_snapshot["max_attempts"])
+    reflection_topology["retry_backoff_seconds"] = list(reflection_snapshot["retry_backoff_seconds"])  # type: ignore[arg-type]
+    reflection_topology["stuck_processing_seconds"] = int(reflection_snapshot["stuck_processing_seconds"])
     reflection_stats = await memory_repository.get_reflection_task_stats(
         max_attempts=int(reflection_snapshot["max_attempts"]),
         stuck_after_seconds=int(reflection_snapshot["stuck_processing_seconds"]),
@@ -261,6 +269,7 @@ async def health(request: Request) -> dict[str, Any]:
         "reflection": {
             "healthy": reflection_healthy,
             "runtime_mode": reflection_runtime_mode,
+            "topology": reflection_topology,
             "worker": reflection_snapshot,
             "tasks": reflection_stats,
         },

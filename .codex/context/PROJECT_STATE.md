@@ -401,9 +401,9 @@ Last updated: 2026-04-20
 - Active `PRJ` execution queue is complete through `PRJ-299`; execution is
   now moving from completed Group 17 foreground convergence into Group 18
   background reflection topology.
-- `PRJ-282` is the current `READY` implementation slice after `PRJ-281`
-  extracted the shared reflection enqueue/dispatch boundary used by runtime and
-  scheduler ownership paths.
+- `PRJ-283` is the current `READY` implementation slice after `PRJ-282`
+  added worker-mode health/logging handoff posture across API health and
+  scheduler runtime logs.
 - Top blockers:
   - runtime currently emits connector intents and permission gates but does not
     yet execute provider-backed calendar/task/drive integrations
@@ -416,6 +416,10 @@ Last updated: 2026-04-20
 
 ## Recent Progress
 
+- 2026-04-20: `PRJ-282` is complete: `/health.reflection.topology` now exposes
+  explicit handoff ownership for enqueue/dispatch/queue-drain/retry posture,
+  and scheduler reflection tick logs now include mode-aware handoff fields for
+  in-process versus external-driver operation.
 - 2026-04-20: `PRJ-281` is complete: runtime and scheduler now share one
   reflection enqueue/dispatch boundary contract, with explicit mode-aware
   dispatch decisions (`in_process|deferred`) and regression coverage for the
@@ -816,9 +820,9 @@ Last updated: 2026-04-20
   reflection topology, production retrieval rollout, adaptive governance,
   dual-loop execution boundaries, and operational hardening.
 - 2026-04-20: foreground convergence group is now complete through `PRJ-279`;
-  background topology extraction is complete through `PRJ-281`; `PRJ-282` is
-  now the next `READY` slice for worker-mode health and queue-handoff contract
-  coverage.
+  background topology convergence is complete through `PRJ-282`; `PRJ-283` is
+  now the next `READY` slice for background-topology regressions and
+  docs/context sync.
 
 ## Working Agreements
 

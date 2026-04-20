@@ -16,9 +16,9 @@ Last updated: 2026-04-20
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
 - The planning queue is complete through `PRJ-299`.
-- `PRJ-282` is currently `READY` and continues implementation work for the
-  background-topology queue after `PRJ-281` extracted shared enqueue/dispatch
-  ownership boundaries.
+- `PRJ-283` is currently `READY` and continues implementation work for the
+  background-topology queue after `PRJ-282` landed health/logging handoff
+  posture coverage.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -29,24 +29,8 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-282 Add worker-mode health, queue-drain, and retry handoff contract
-  - Status: READY
-  - Group: Background Reflection Topology
-  - Owner: Backend Builder + Ops/Release
-  - Depends on: PRJ-281
-  - Priority: P1
-  - Result:
-    - `/health` and runtime logs expose worker-mode posture for in-process and
-      external-driver operation
-    - queue-drain and retry behavior can be safely handed to an external driver
-      without changing reflection semantics
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_api_routes.py tests/test_scheduler_worker.py tests/test_logging.py`
-
-## BACKLOG
-
 - [ ] PRJ-283 Add background-topology regressions and sync docs/context
-  - Status: BACKLOG
+  - Status: READY
   - Group: Background Reflection Topology
   - Owner: QA/Test + Product Docs
   - Depends on: PRJ-282
@@ -58,6 +42,8 @@ Last updated: 2026-04-20
       reflection topology contract
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_scheduler_worker.py tests/test_api_routes.py tests/test_main_lifespan_policy.py`
+
+## BACKLOG
 
 - [ ] PRJ-284 Define the production retrieval baseline for provider, refresh ownership, and family rollout order
   - Status: BACKLOG
@@ -296,6 +282,24 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-282 Add worker-mode health, queue-drain, and retry handoff contract
+  - Status: DONE
+  - Group: Background Reflection Topology
+  - Owner: Backend Builder + Ops/Release
+  - Depends on: PRJ-281
+  - Priority: P1
+  - Result:
+    - `/health.reflection.topology` now exposes explicit handoff posture for
+      in-process and deferred operation (`queue_drain_owner`,
+      `external_driver_expected`, enqueue/scheduler dispatch decisions, and
+      retry ownership metadata)
+    - scheduler reflection tick logs now emit mode-aware handoff fields so
+      queue-drain/retry ownership remains observable when external dispatch is
+      expected
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_api_routes.py tests/test_scheduler_worker.py tests/test_logging.py`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_scheduler_contracts.py`
 
 - [x] PRJ-281 Extract the reflection enqueue/dispatch boundary from app-local scheduler ownership
   - Status: DONE

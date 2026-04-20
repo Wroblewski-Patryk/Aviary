@@ -44,10 +44,13 @@ The current repo already works as an MVP slice, but several architecture-level d
     semantics, and operator-visible health posture boundaries.
   - `PRJ-281` now extracts a shared enqueue/dispatch boundary contract consumed
     by both runtime follow-up and scheduler tick ownership paths.
+  - `PRJ-282` now exposes worker-mode handoff posture through
+    `/health.reflection.topology` and scheduler runtime logs so queue-drain and
+    retry ownership are explicit for in-process and deferred operation.
 - Decision needed:
   - should `in_process` remain the default runtime mode during convergence, or
     should deployment posture move toward `deferred` + external dispatch once
-    worker-mode health and handoff convergence (`PRJ-282..PRJ-283`) lands?
+    background-topology regression and docs-context sync (`PRJ-283`) lands?
 
 ### 2. Migration Strategy
 

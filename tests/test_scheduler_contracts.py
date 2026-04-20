@@ -4,6 +4,7 @@ from app.core.scheduler_contracts import (
     normalize_reflection_runtime_mode,
     normalize_scheduler_subsource,
     reflection_enqueue_dispatch_decision,
+    reflection_topology_handoff_posture,
     reflection_scheduler_dispatch_decision,
     scheduler_cadence_rules,
 )
@@ -120,3 +121,24 @@ def test_scheduler_contracts_expose_shared_reflection_dispatch_boundary_rules() 
     )
     assert scheduler_dispatch is False
     assert scheduler_reason == "in_process_worker_running"
+
+
+def test_scheduler_contracts_expose_reflection_handoff_posture_for_external_driver_mode() -> None:
+    posture = reflection_topology_handoff_posture(
+        runtime_mode="deferred",
+        worker_running=False,
+    )
+
+    assert posture == {
+        "runtime_mode": "deferred",
+        "enqueue_owner": "runtime_followup",
+        "queue_backend": "durable_postgres_queue",
+        "queue_drain_owner": "external_driver",
+        "retry_owner": "durable_queue",
+        "external_driver_expected": True,
+        "worker_running": False,
+        "runtime_enqueue_dispatch": False,
+        "runtime_enqueue_reason": "deferred_runtime",
+        "scheduler_tick_dispatch": True,
+        "scheduler_tick_reason": "deferred_runtime",
+    }

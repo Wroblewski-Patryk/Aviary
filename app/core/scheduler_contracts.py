@@ -77,6 +77,32 @@ def reflection_scheduler_dispatch_decision(*, runtime_mode: str | None, worker_r
     return True, "in_process_worker_not_running"
 
 
+def reflection_topology_handoff_posture(*, runtime_mode: str | None, worker_running: bool) -> dict[str, Any]:
+    normalized_mode = normalize_reflection_runtime_mode(runtime_mode)
+    enqueue_dispatch, enqueue_reason = reflection_enqueue_dispatch_decision(
+        runtime_mode=normalized_mode,
+        worker_running=worker_running,
+    )
+    scheduler_dispatch, scheduler_reason = reflection_scheduler_dispatch_decision(
+        runtime_mode=normalized_mode,
+        worker_running=worker_running,
+    )
+    queue_drain_owner = "external_driver" if normalized_mode == "deferred" else "in_process_worker"
+    return {
+        "runtime_mode": normalized_mode,
+        "enqueue_owner": "runtime_followup",
+        "queue_backend": "durable_postgres_queue",
+        "queue_drain_owner": queue_drain_owner,
+        "retry_owner": "durable_queue",
+        "external_driver_expected": normalized_mode == "deferred",
+        "worker_running": worker_running,
+        "runtime_enqueue_dispatch": enqueue_dispatch,
+        "runtime_enqueue_reason": enqueue_reason,
+        "scheduler_tick_dispatch": scheduler_dispatch,
+        "scheduler_tick_reason": scheduler_reason,
+    }
+
+
 def scheduler_cadence_rules() -> dict[str, dict[str, int | bool]]:
     return {key: dict(value) for key, value in SCHEDULER_CADENCE_RULES.items()}
 
