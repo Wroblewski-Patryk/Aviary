@@ -36,27 +36,8 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-326 Refactor identity loading around explicit profile-versus-conclusion ownership
-  - Status: READY
-  - Group: Identity, Language, And Profile Boundary Hardening
-  - Owner: Backend Builder
-  - Depends on: PRJ-325
-  - Priority: P1
-  - Result:
-    - runtime identity loading uses one clear owner for durable profile fields
-      versus learned conclusions
-    - identity continuity stops relying on fuzzy fallback chains
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_language_runtime.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-327 Add richer language continuity policy across profile, memory, and current turn context
-  - Status: FUTURE
+  - Status: READY
   - Group: Identity, Language, And Profile Boundary Hardening
   - Owner: Backend Builder
   - Depends on: PRJ-326
@@ -68,6 +49,12 @@ Last updated: 2026-04-20
       heuristic-only
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_language_runtime.py tests/test_context_agent.py tests/test_expression_agent.py tests/test_runtime_pipeline.py`
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
 
 - [ ] PRJ-328 Add identity and language continuity regressions across session and API fallback boundaries
   - Status: FUTURE
@@ -216,6 +203,26 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-326 Refactor identity loading around explicit profile-versus-conclusion ownership
+  - Status: DONE
+  - Group: Identity, Language, And Profile Boundary Hardening
+  - Owner: Backend Builder
+  - Depends on: PRJ-325
+  - Priority: P1
+  - Result:
+    - runtime identity load now applies explicit owner boundaries:
+      `aion_profile` remains the durable owner for profile language while
+      identity response/collaboration preferences are conclusion-owned inputs
+      only
+    - relation fallback cues continue to support runtime planning/expression,
+      but identity continuity no longer inherits relation-derived
+      collaboration fallback as if it were a durable identity preference
+    - runtime pipeline regression coverage now pins this owner boundary so
+      profile-versus-conclusion identity continuity cannot silently drift
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_language_runtime.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+      (`136 passed`)
 
 - [x] PRJ-325 Sync docs/context/runbook for scheduler externalization and attention ownership
   - Status: DONE

@@ -285,6 +285,16 @@ class RuntimeOrchestrator:
             preferences.setdefault(f"relation_{relation_type}_confidence", confidence)
         return preferences
 
+    def _identity_conclusion_preferences(self, user_preferences: dict) -> dict:
+        identity_preferences: dict[str, str] = {}
+        response_style = str(user_preferences.get("response_style", "")).strip().lower()
+        collaboration_preference = str(user_preferences.get("collaboration_preference", "")).strip().lower()
+        if response_style:
+            identity_preferences["response_style"] = response_style
+        if collaboration_preference:
+            identity_preferences["collaboration_preference"] = collaboration_preference
+        return identity_preferences
+
     def _build_foreground_graph_state_seed(
         self,
         *,
@@ -565,7 +575,7 @@ class RuntimeOrchestrator:
                     "scope_key": scope_key,
                     "include_global": True,
                 }
-            user_preferences, fallback_conclusions = await asyncio.gather(
+            conclusion_preferences, fallback_conclusions = await asyncio.gather(
                 self.memory_repository.get_user_runtime_preferences(
                     user_id=event.meta.user_id,
                     **preference_kwargs,
@@ -584,9 +594,10 @@ class RuntimeOrchestrator:
                     include_global=bool(conclusion_kwargs.get("include_global", False)),
                     limit=6,
                 )
-            merged_user_preferences = dict(user_preferences)
+            runtime_user_preferences = dict(conclusion_preferences)
             for key, value in self._relation_preferences(relations).items():
-                merged_user_preferences.setdefault(key, value)
+                runtime_user_preferences.setdefault(key, value)
+            identity_preferences = self._identity_conclusion_preferences(conclusion_preferences)
             memory: list[dict]
             user_conclusions: list[dict]
             affective_conclusions: list[dict] = []
@@ -630,7 +641,8 @@ class RuntimeOrchestrator:
             return (
                 memory,
                 user_profile,
-                merged_user_preferences,
+                runtime_user_preferences,
+                identity_preferences,
                 user_conclusions,
                 affective_conclusions,
                 relations,
@@ -640,7 +652,7 @@ class RuntimeOrchestrator:
                 pending_subconscious_proposals,
             )
 
-        memory, user_profile, user_preferences, user_conclusions, affective_conclusions, relations, user_theta, active_goals, hybrid_diagnostics, pending_subconscious_proposals = await self._run_async_stage(
+        memory, user_profile, user_preferences, identity_preferences, user_conclusions, affective_conclusions, relations, user_theta, active_goals, hybrid_diagnostics, pending_subconscious_proposals = await self._run_async_stage(
             stage_logger=stage_logger,
             stage_timings_ms=stage_timings_ms,
             stage="memory_load",
@@ -648,12 +660,12 @@ class RuntimeOrchestrator:
             operation=load_memory_bundle,
             output_summary=lambda result: (
                 "memory="
-                f"{len(result[0])} profile={self._present_label(result[1])} preferences={len(result[2])} "
-                f"conclusions={len(result[3])} affective={len(result[4])} relations={len(result[5])} "
-                f"theta={self._present_label(result[6])} goals={len(result[7])} "
-                f"hybrid_vector_hits={result[8].get('vector_hits', 0)} "
-                f"hybrid_lexical_hits={result[8].get('episodic_lexical_hits', 0)} "
-                f"pending_proposals={len(result[9])}"
+                f"{len(result[0])} profile={self._present_label(result[1])} runtime_preferences={len(result[2])} "
+                f"identity_preferences={len(result[3])} conclusions={len(result[4])} affective={len(result[5])} "
+                f"relations={len(result[6])} theta={self._present_label(result[7])} goals={len(result[8])} "
+                f"hybrid_vector_hits={result[9].get('vector_hits', 0)} "
+                f"hybrid_lexical_hits={result[9].get('episodic_lexical_hits', 0)} "
+                f"pending_proposals={len(result[10])}"
             ),
         )
         attention_gate = evaluate_proactive_attention_gate(
@@ -734,12 +746,13 @@ class RuntimeOrchestrator:
             stage_timings_ms=stage_timings_ms,
             stage="identity_load",
             input_summary=(
-                f"profile={self._present_label(user_profile)} preferences={len(user_preferences)} "
+                f"profile_owner={self._present_label(user_profile)} "
+                f"conclusion_owner={len(identity_preferences)} "
                 f"theta={self._present_label(user_theta)}"
             ),
             operation=lambda: self.identity_service.build(
                 user_profile=user_profile,
-                user_preferences=user_preferences,
+                user_preferences=identity_preferences,
                 user_theta=user_theta,
             ),
             output_summary=lambda result: (

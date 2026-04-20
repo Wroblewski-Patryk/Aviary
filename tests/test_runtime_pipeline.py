@@ -2337,6 +2337,49 @@ async def test_runtime_pipeline_uses_guided_collaboration_preference_for_role_an
     assert openai.calls[0]["response_tone"] == "guiding"
 
 
+async def test_runtime_pipeline_identity_uses_conclusion_owner_not_relation_fallback_for_collaboration() -> None:
+    memory = FakeHybridMemoryRepository(recent_memory=[])
+    memory.relations = [
+        {
+            "relation_type": "collaboration_dynamic",
+            "relation_value": "guided",
+            "confidence": 0.81,
+            "source": "background_reflection",
+            "scope_type": "global",
+            "scope_key": "global",
+        }
+    ]
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+
+    event = Event(
+        event_id="evt-identity-owner-boundary",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "Can you help me with this?"},
+        meta=EventMeta(user_id="u-1", trace_id="t-identity-owner-boundary"),
+    )
+
+    result = await runtime.run(event)
+
+    assert result.identity.collaboration_preference is None
+    assert "Collaboration preference:" not in result.identity.summary
+    assert openai.calls[0]["collaboration_preference"] == "guided"
+
+
 async def test_runtime_pipeline_uses_reflected_goal_execution_state_across_context_motivation_and_plan() -> None:
     memory = FakeMemoryRepository(recent_memory=[])
     memory.user_preferences = {

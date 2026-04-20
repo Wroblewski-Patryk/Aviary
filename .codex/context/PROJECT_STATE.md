@@ -1152,8 +1152,19 @@ Last updated: 2026-04-20
   `docs/planning/next-iteration-plan.md`,
   `.codex/context/TASK_BOARD.md`, and
   `.codex/context/PROJECT_STATE.md`.
-- 2026-04-20: `PRJ-326` is the next `READY` slice, focused on identity loading
-  boundary hardening across profile-versus-conclusion ownership.
+- 2026-04-20: `PRJ-326` is complete: runtime identity loading now enforces an
+  explicit owner boundary where `aion_profile` remains the durable owner for
+  profile language, while identity response/collaboration preferences are
+  sourced from conclusion-owned runtime preference inputs only.
+- 2026-04-20: `PRJ-326` also keeps relation-derived collaboration fallback for
+  planning/expression tie-break behavior without leaking that fallback into
+  identity continuity fields.
+- 2026-04-20: `PRJ-326` validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_language_runtime.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+  passed with `136 passed`.
+- 2026-04-20: `PRJ-327` is the next `READY` slice, focused on richer language
+  continuity precedence across current turn, memory, and durable preference
+  state.
 
 ## Working Agreements
 
