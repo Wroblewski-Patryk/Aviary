@@ -98,6 +98,12 @@ Allowed values:
 - migrate
 - create_tables
 
+Target posture:
+
+- production baseline uses `migrate`
+- `create_tables` is a temporary compatibility path pending
+  `PRJ-306` removal guardrail satisfaction
+
 `EVENT_DEBUG_ENABLED`
 
 Controls whether debug runtime payloads may be exposed through the event API.
@@ -288,6 +294,17 @@ This target baseline defines release intent.
 Runtime now applies production-aware strict default enforcement for this
 baseline while keeping explicit `warn` override as a controlled escape hatch.
 `/health.runtime_policy` mismatch diagnostics remain the canonical drift signal.
+
+### `create_tables` Removal Criteria (PRJ-306)
+
+Compatibility `STARTUP_SCHEMA_MODE=create_tables` should be removed only after:
+
+- production and pre-production run migration-only startup with no active
+  exceptions
+- release windows show empty `runtime_policy.production_policy_mismatches`
+  for startup-schema posture in consecutive releases
+- migration smoke and release smoke are validated as the only bootstrap path
+- runbook rollback no longer depends on `create_tables` as a fallback
 
 `GET /health` runtime policy visibility now includes:
 

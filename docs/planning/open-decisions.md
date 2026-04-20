@@ -32,7 +32,7 @@ The current repo already works as an MVP slice, but several architecture-level d
   - `PRJ-306..PRJ-309`: post-reflection hardening decisions (`2` follow-up,
     `3` follow-up, `12` follow-up)
 - reflection deployment lane is now complete through `PRJ-304`; next queue
-  derivation now continues through `PRJ-309` from `PRJ-305`.
+  execution now continues through `PRJ-309` after `PRJ-306` closure.
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 
@@ -110,9 +110,28 @@ The current repo already works as an MVP slice, but several architecture-level d
     instead of staying warning-only.
   - release-readiness checks should treat non-empty
     `runtime_policy.production_policy_mismatches` as baseline drift.
+- Decision (PRJ-306 migration compatibility removal criteria, 2026-04-20):
+  - `create_tables` compatibility path can be removed only when all guardrails
+    are true:
+    - production and pre-production environments run with
+      `STARTUP_SCHEMA_MODE=migrate` and no approved exceptions
+    - release gates stay green with
+      `runtime_policy.production_policy_mismatches` empty across at least two
+      consecutive release windows
+    - no operational rollback/runbook step depends on `create_tables` as a
+      recovery path
+    - migration smoke (`alembic upgrade` + app startup + release smoke)
+      is validated as the sole bootstrap route for the same release windows
+  - removal rollout order is:
+    - freeze: disallow new `create_tables` usage outside local/test-only
+      contexts
+    - remove: delete compatibility startup branch and associated policy
+      mismatch path
+    - clean up: remove obsolete docs/config references and compatibility-only
+      tests
 - Remaining follow-up decision:
-  - when is it safe to remove the compatibility-only `create_tables()` path
-    entirely and keep migration-only startup in every environment?
+  - after guardrails are met, in which release window should the actual code
+    removal of `create_tables` be scheduled?
 
 ### 3. Public API Shape
 

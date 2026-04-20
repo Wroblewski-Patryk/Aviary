@@ -18,8 +18,8 @@ Last updated: 2026-04-20
 - The convergence queue is complete through `PRJ-299`; reflection lane is now
   complete through `PRJ-304`, and post-reflection hardening queue is seeded
   through `PRJ-309`.
-- `PRJ-305` is complete; `PRJ-306` is currently `READY` to define
-  `create_tables` removal criteria and migration guardrails.
+- `PRJ-306` is complete; `PRJ-307` is currently `READY` to define the internal
+  debug ingress boundary and migration posture.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -30,19 +30,19 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-306 Define criteria and migration guardrails for removing `create_tables` compatibility startup path
+- [ ] PRJ-307 Define target internal debug ingress boundary and migration posture away from shared public API service endpoint
   - Status: READY
   - Group: Post-Reflection Hardening Queue
-  - Owner: Planner + Ops/Release
-  - Depends on: PRJ-305
+  - Owner: Planner + Product Docs
+  - Depends on: PRJ-306
   - Priority: P1
   - Result:
-    - migration-strategy follow-up now has explicit removal criteria instead of
-      open-ended compatibility posture
-    - future runtime slices can remove bootstrap fallback without reopening
-      production baseline intent
+    - public-api follow-up decision now has explicit target-state ingress
+      contract and migration ownership boundaries
+    - debug-surface hardening can proceed without redefining runtime-policy
+      baselines each slice
   - Validation:
-    - doc-and-context sync plus targeted migration-strategy review recorded in
+    - doc-and-context sync plus targeted public-api boundary review recorded in
       this slice
 
 ## BACKLOG
@@ -66,6 +66,21 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-306 Define criteria and migration guardrails for removing `create_tables` compatibility startup path
+  - Status: DONE
+  - Group: Post-Reflection Hardening Queue
+  - Owner: Planner + Ops/Release
+  - Depends on: PRJ-305
+  - Priority: P1
+  - Result:
+    - migration-strategy follow-up now has explicit guardrails and removal
+      criteria for retiring `create_tables` compatibility startup path
+    - removal rollout order is codified to keep future implementation slices
+      reversible and auditable
+  - Validation:
+    - doc-and-context sync plus targeted migration-strategy review recorded in
+      this slice
 
 - [x] PRJ-305 Derive and record the next execution queue after reflection lane closure
   - Status: DONE

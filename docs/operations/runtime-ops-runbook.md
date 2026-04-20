@@ -248,6 +248,26 @@ Operator release gate:
 - verify `/health.runtime_policy.strict_startup_blocked=false`
 - verify `/health.runtime_policy.event_debug_query_compat_enabled=false`
 
+## `create_tables` Compatibility Removal Guardrails (PRJ-306)
+
+Before removing `STARTUP_SCHEMA_MODE=create_tables` support from runtime code,
+all of these must be true:
+
+1. production and pre-production operate migration-only (`STARTUP_SCHEMA_MODE=migrate`)
+2. no active runbook/rollback path depends on `create_tables`
+3. release gates remain green for consecutive release windows, including:
+   - `/health.runtime_policy.production_policy_mismatches` stays empty for
+     startup-schema posture
+   - release smoke passes without compatibility bootstrap fallback
+4. migration smoke (`alembic upgrade` + startup + release smoke) is the only
+   approved bootstrap path in release evidence
+
+Removal rollout order:
+
+1. freeze new compatibility usage (allow only local/test exceptions)
+2. remove compatibility startup branch from runtime code
+3. remove compatibility-only docs/config references and obsolete tests
+
 ## Deployment And Release Path (PRJ-298/PRJ-299)
 
 Primary deployment path:

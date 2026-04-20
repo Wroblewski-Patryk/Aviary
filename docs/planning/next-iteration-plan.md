@@ -1399,28 +1399,27 @@ not around temporary convenience defaults.
     - doc-and-context sync plus targeted planning coherence review recorded in
       this slice
 
+- `PRJ-306` is complete.
+  - Result:
+    - migration-strategy follow-up now has explicit guardrails and removal
+      criteria for retiring `create_tables` compatibility startup path
+    - removal rollout order is now codified (freeze usage -> remove code path
+      -> clean compatibility references/tests)
+  - Validation:
+    - doc-and-context sync plus targeted migration-strategy review recorded in
+      this slice
+
 ## Next Derived Slice
 
 The post-reflection queue is now seeded through `PRJ-309`.
-`PRJ-306` is currently the execution-ready slice in the board.
+`PRJ-307` is currently the execution-ready slice in the board.
 Before the next implementation slice:
 
-- take `PRJ-306` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-307` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to that one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 
 Post-reflection hardening queue:
-
-- `PRJ-306` Define criteria and migration guardrails for removing
-  `create_tables` compatibility startup path.
-  - Result:
-    - migration-strategy follow-up now has explicit removal criteria instead of
-      open-ended compatibility posture
-    - future runtime slices can remove bootstrap fallback without reopening
-      production baseline intent
-  - Validation:
-    - doc-and-context sync plus targeted migration-strategy review recorded in
-      this slice
 
 - `PRJ-307` Define target internal debug ingress boundary and migration posture
   away from shared public API service endpoint.
