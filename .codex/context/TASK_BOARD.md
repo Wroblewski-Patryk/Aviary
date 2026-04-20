@@ -17,8 +17,8 @@ Last updated: 2026-04-20
   - sync task state, project state, and learning journal when needed
 - The convergence queue is complete through `PRJ-299`; post-convergence seed
   queue now extends through `PRJ-304`.
-- `PRJ-303` is complete; `PRJ-304` is currently `READY` to finalize
-  docs/context/runbook synchronization for the reflection deployment lane.
+- `PRJ-304` is complete; `PRJ-305` is currently `READY` to derive the next
+  execution queue after reflection-lane closure.
 - Subsequent slices should follow the grouped execution order for foreground
   runtime convergence, background topology, production retrieval rollout,
   adaptive governance, dual-loop execution boundaries, and operational
@@ -29,19 +29,20 @@ Last updated: 2026-04-20
 
 ## READY
 
-- [ ] PRJ-304 Sync docs/context/runbook for reflection deployment baseline and readiness contract
+- [ ] PRJ-305 Derive and record the next execution queue after reflection lane closure
   - Status: READY
-  - Group: Reflection Deployment Baseline
-  - Owner: Product Docs + Ops/Release
-  - Depends on: PRJ-303
+  - Group: Post-Reflection Planning Baseline
+  - Owner: Planner + Product Docs
+  - Depends on: PRJ-304
   - Priority: P1
   - Result:
-    - planning, project state, and runbook truth stay synchronized after the
-      first post-convergence reflection lane
-    - release and rollback procedures include the reflection readiness gate
+    - first post-reflection queue is explicitly derived from remaining open
+      decisions and reflected in planning docs plus task board state
+    - execution continuity is preserved after `PRJ-304` without ad-hoc task
+      selection
   - Validation:
-    - doc-and-context sync plus targeted ops-runbook review recorded in this
-      slice
+    - doc-and-context sync plus targeted planning coherence review recorded in
+      this slice
 
 ## BACKLOG
 
@@ -64,6 +65,21 @@ Last updated: 2026-04-20
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-304 Sync docs/context/runbook for reflection deployment baseline and readiness contract
+  - Status: DONE
+  - Group: Reflection Deployment Baseline
+  - Owner: Product Docs + Ops/Release
+  - Depends on: PRJ-303
+  - Priority: P1
+  - Result:
+    - planning, project state, and runbook truth are now synchronized after the
+      post-convergence reflection implementation slices
+    - release and rollback guidance now consistently include the reflection
+      readiness gate
+  - Validation:
+    - doc-and-context sync plus targeted ops-runbook review recorded in this
+      slice
 
 - [x] PRJ-303 Add reflection deployment-readiness regressions and smoke script alignment
   - Status: DONE

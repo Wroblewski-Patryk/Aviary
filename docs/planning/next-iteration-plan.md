@@ -1379,26 +1379,37 @@ not around temporary convenience defaults.
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_reflection_worker.py tests/test_scheduler_worker.py tests/test_scheduler_contracts.py`
 
+- `PRJ-304` is complete.
+  - Result:
+    - reflection deployment baseline/readiness docs are now synchronized across
+      planning, runtime-reality, and ops runbook surfaces
+    - release and rollback guidance now consistently treats reflection
+      deployment-readiness blockers as release-gating signals
+  - Validation:
+    - doc-and-context sync plus targeted ops-runbook review recorded in this
+      slice
+
 ## Next Derived Slice
 
-The post-convergence seed queue now extends through `PRJ-304`.
-`PRJ-304` is currently the execution-ready slice in the board.
+The post-convergence reflection lane is complete through `PRJ-304`.
+`PRJ-305` is currently the execution-ready slice in the board.
 Before the next implementation slice:
 
-- take `PRJ-304` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-305` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to that one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 
-Post-convergence seed queue:
+Next post-reflection queue bootstrap:
 
-- `PRJ-304` Sync docs/context/runbook for reflection deployment baseline and
-  readiness contract.
+- `PRJ-305` Derive and record the next execution queue after reflection lane
+  closure.
   - Result:
-    - planning, project state, and runbook truth stay synchronized after the
-      first post-convergence reflection lane
-    - release and rollback procedures include the new reflection readiness gate
+    - first post-reflection queue is explicitly derived from remaining open
+      decisions and reflected in planning docs plus task board state
+    - execution continuity is preserved after `PRJ-304` without ad-hoc task
+      selection
   - Validation:
-    - doc-and-context sync plus targeted ops-runbook review recorded in this
+    - doc-and-context sync plus targeted planning coherence review recorded in
       slice
 
 ## Parallel-Ready Lanes

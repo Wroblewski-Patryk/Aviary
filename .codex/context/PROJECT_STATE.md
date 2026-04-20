@@ -846,7 +846,7 @@ Last updated: 2026-04-20
 - 2026-04-20: foreground convergence group is now complete through `PRJ-279`;
   background topology convergence is complete through `PRJ-283`; production
   retrieval implementation is complete through `PRJ-287`; adaptive governance
-  policy baseline is complete through `PRJ-288`; `PRJ-304` is now the next
+  policy baseline is complete through `PRJ-288`; `PRJ-305` is now the next
   `READY` implementation slice.
 - 2026-04-20: `PRJ-288` is complete: architecture contracts now define explicit
   adaptive influence evidence gates, precedence, and tie-break guardrails for
@@ -976,6 +976,17 @@ Last updated: 2026-04-20
 - 2026-04-20: `PRJ-303` validation is green:
   `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_reflection_worker.py tests/test_scheduler_worker.py tests/test_scheduler_contracts.py`
   passed with `120 passed`.
+- 2026-04-20: `PRJ-304` is complete: reflection deployment baseline/readiness
+  docs are now synchronized across planning, runtime-reality, and operations
+  runbook surfaces, including consistent release/rollback readiness gating.
+- 2026-04-20: `PRJ-304` validation is recorded as doc-and-context sync plus
+  targeted ops-runbook review across
+  `docs/operations/runtime-ops-runbook.md`,
+  `docs/implementation/runtime-reality.md`,
+  `docs/planning/open-decisions.md`,
+  `docs/planning/next-iteration-plan.md`,
+  `.codex/context/TASK_BOARD.md`, and
+  `.codex/context/PROJECT_STATE.md`.
 
 ## Working Agreements
 
