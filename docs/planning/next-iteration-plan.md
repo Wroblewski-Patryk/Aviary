@@ -35,8 +35,13 @@ Completed on 2026-04-21:
   records now share the same identity/language/profile continuity baseline
   (explicit profile-versus-conclusion identity ownership, language continuity
   precedence, and request-scoped API user-id fallback boundary).
-- queue progression is now synchronized so execution moves to `PRJ-330`
-  (relation decay and confidence revalidation policy).
+- `PRJ-330..PRJ-333` are complete: relation lifecycle is now explicit
+  (refresh, value-shift reset, age-aware revalidation, expiration), trust
+  influence now governs proactive/planning confidence posture through shared
+  policy owners, and relation-lifecycle regressions plus docs/context sync are
+  now in place.
+- queue progression is now synchronized so execution moves to `PRJ-334`
+  (goal/task inference and typed-intent expansion).
 
 Completed on 2026-04-17:
 
@@ -1742,10 +1747,10 @@ intent ownership and action-layer control.
 ## Next Derived Slice
 
 Runtime behavior-validation queue is now complete through `PRJ-317`.
-Next implementation queue is now seeded through `PRJ-337`.
+Next implementation queue is now seeded through `PRJ-342`.
 Before the next implementation slice:
 
-- take `PRJ-326` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-334` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 
@@ -1780,6 +1785,7 @@ Next architecture-to-code queue:
 - `PRJ-326..PRJ-329` Identity, language, and profile boundary hardening
 - `PRJ-330..PRJ-333` Relation lifecycle and trust influence
 - `PRJ-334..PRJ-337` Goal/task inference and typed-intent expansion
+- `PRJ-339..PRJ-342` Manual runtime reliability fixes
 
 ## Parallel-Ready Lanes
 
@@ -1820,6 +1826,7 @@ group locks the production and release baseline for the converged runtime.
 13. `PRJ-326..PRJ-329` Identity, language, and profile boundary hardening
 14. `PRJ-330..PRJ-333` Relation lifecycle and trust influence
 15. `PRJ-334..PRJ-337` Goal/task inference and typed-intent expansion
+16. `PRJ-339..PRJ-342` Manual runtime reliability fixes
 
 The queue should still be treated as intentionally open after those items.
 Additional small architecture-alignment slices may still be discovered while

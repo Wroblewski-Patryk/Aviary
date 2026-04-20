@@ -464,6 +464,15 @@ Relation memory is now a first-class live subsystem:
 
 Current behavior:
 
+- relation lifecycle is now explicit: repeated same-value observations refresh
+  confidence/evidence posture, value-shift observations reset evidence posture,
+  and stale signals weaken or expire through age-aware confidence revalidation
+- trust influence now extends beyond tie-break posture into proactive behavior:
+  `delivery_reliability` can shape interruption cost, proactive relevance,
+  outreach confidence posture, and delivery guard pressure through shared
+  adaptive policy owners
+- low-confidence relation cues remain descriptive-only and are filtered before
+  trust-sensitive planning/expression/proactive behavior paths can consume them
 - proactive relevance and scheduler attention gating now consume governed
   relation/theta policy surfaces from `app/core/adaptive_policy.py`
 - adaptive relation/theta cues may tighten proactive posture, but attention and

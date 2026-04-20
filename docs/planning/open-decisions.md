@@ -48,7 +48,7 @@ The current repo already works as an MVP slice, but several architecture-level d
 - reflection deployment lane is complete through `PRJ-304`, and
   post-reflection hardening decisions are now complete through `PRJ-309`.
 - runtime behavior-validation lane is now complete through `PRJ-317`.
-- next architecture-to-code queue is now seeded through `PRJ-337`.
+- next architecture-to-code queue is now seeded through `PRJ-342`.
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 
@@ -621,13 +621,25 @@ The current repo already works as an MVP slice, but several architecture-level d
 
 - Current repo fact:
   - runtime now persists scoped relation records (`aion_relation`) with
-    confidence/source/evidence fields and reflection-driven updates.
+    confidence/source/evidence/decay fields and reflection-driven updates.
   - runtime now loads high-confidence relations and applies relation cues in
     context, role, planning, and expression paths.
-- Decision needed:
-  - which additional behavior layers should relations influence next (for
-    example proactive delivery, interruption cost, and attention gating)?
-  - what decay/revalidation policy should govern stale relation records?
+- Decision (baseline resolved in `PRJ-330..PRJ-333`, 2026-04-21):
+  - relation lifecycle is now explicit:
+    - repeated same-value observations refresh confidence/evidence posture
+    - value-shift observations reset evidence/decay posture
+    - stale relation signals weaken via age-aware revalidation and expire when
+      confidence drops below expiration threshold
+  - trust influence is now explicit:
+    - delivery reliability cues now shape motivation/planning confidence
+      posture and proactive interruption/relevance behavior through shared
+      adaptive policy owners
+  - low-confidence relation cues remain descriptive-only and must not directly
+    drive trust-sensitive planning/expression/proactive behavior.
+- Follow-up decision:
+  - once goal/task inference rollout (`PRJ-334..PRJ-337`) stabilizes, decide
+    whether relation lifecycle should influence inferred planning promotion
+    thresholds or remain a separate adaptive channel.
 
 ### 10. Preference Influence Scope
 

@@ -81,7 +81,8 @@ What is already live:
 - semantic embedding contract plus pgvector-ready storage scaffolding
 - hybrid memory retrieval across episodic, semantic, and affective layers
 - relation persistence and reflection-driven relation updates
-- relation-aware context, role, planning, and expression behavior
+- relation lifecycle governance (refresh, value-shift reset, decay/revalidation,
+  expiration) with trust-aware proactive/planning/expression behavior
 - durable reflection with retry and health observability
 - lightweight goal, task, progress, and milestone management
 - migration-first startup by default with explicit compatibility fallback

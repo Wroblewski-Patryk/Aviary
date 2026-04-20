@@ -1245,8 +1245,20 @@ Last updated: 2026-04-21
 - 2026-04-21: `PRJ-332` validation is green:
   `.\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_reflection_worker.py tests/test_runtime_pipeline.py tests/test_expression_agent.py`
   passed with `175 passed`.
-- 2026-04-21: `PRJ-333` is now the next `READY` slice, focused on doc/context
-  synchronization for relation lifecycle and trust-influence behavior.
+- 2026-04-21: `PRJ-333` is complete: docs/planning/context now share one
+  relation lifecycle and trust-influence baseline, including relation refresh
+  vs value-shift reset posture, age-aware revalidation/expiration, and
+  low-confidence trust-signal guardrails.
+- 2026-04-21: `PRJ-333` validation is recorded as doc-and-context sync plus
+  targeted relation-lifecycle cross-doc review across
+  `docs/overview.md`,
+  `docs/implementation/runtime-reality.md`,
+  `docs/planning/open-decisions.md`,
+  `docs/planning/next-iteration-plan.md`,
+  `.codex/context/TASK_BOARD.md`, and
+  `.codex/context/PROJECT_STATE.md`.
+- 2026-04-21: `PRJ-334` is now the next `READY` slice, focused on bounded
+  inferred goal/task promotion rules in planning.
 
 ## Working Agreements
 

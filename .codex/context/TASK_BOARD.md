@@ -36,28 +36,8 @@ Last updated: 2026-04-21
 
 ## READY
 
-- [ ] PRJ-333 Sync docs/context for relation lifecycle and trust influence
-  - Status: READY
-  - Group: Relation Lifecycle And Trust Influence
-  - Owner: Product Docs
-  - Depends on: PRJ-332
-  - Priority: P1
-  - Result:
-    - docs, planning, and project state align on how relations evolve and where
-      they influence behavior
-    - future relational capability work starts from one explicit baseline
-  - Validation:
-    - doc-and-context sync plus targeted relation-lifecycle cross-doc review
-      recorded in this slice
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-334 Add inferred goal/task promotion rules to planning
-  - Status: FUTURE
+  - Status: READY
   - Group: Goal/Task Inference And Typed-Intent Expansion
   - Owner: Backend Builder
   - Depends on: PRJ-333
@@ -69,6 +49,12 @@ Last updated: 2026-04-21
       future aspiration
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_memory_repository.py`
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
 
 - [ ] PRJ-335 Expand typed domain intents for inferred planning state and controlled maintenance writes
   - Status: FUTURE
@@ -258,6 +244,27 @@ Last updated: 2026-04-21
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_reflection_worker.py tests/test_runtime_pipeline.py tests/test_expression_agent.py`
       (`175 passed`)
+
+- [x] PRJ-333 Sync docs/context for relation lifecycle and trust influence
+  - Status: DONE
+  - Group: Relation Lifecycle And Trust Influence
+  - Owner: Product Docs
+  - Depends on: PRJ-332
+  - Priority: P1
+  - Result:
+    - docs, planning notes, and context truth now align on relation lifecycle
+      behavior (refresh, value-shift reset, age-aware revalidation, expiration)
+      and governed trust influence boundaries
+    - relation rollout queue progression is synchronized so `PRJ-334` is the
+      next executable slice for inferred planning growth
+  - Validation:
+    - doc-and-context sync plus targeted relation-lifecycle cross-doc review
+      across `docs/overview.md`,
+      `docs/implementation/runtime-reality.md`,
+      `docs/planning/open-decisions.md`,
+      `docs/planning/next-iteration-plan.md`,
+      `.codex/context/TASK_BOARD.md`, and
+      `.codex/context/PROJECT_STATE.md`
 
 - [x] PRJ-330 Implement relation decay and confidence revalidation policy
   - Status: DONE
