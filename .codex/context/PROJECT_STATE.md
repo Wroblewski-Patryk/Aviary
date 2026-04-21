@@ -1435,8 +1435,20 @@ Last updated: 2026-04-21
 - 2026-04-21: `PRJ-351` artifact smoke is green:
   `.\.venv\Scripts\python .\scripts\run_behavior_validation.py --artifact-path artifacts/behavior_validation/prj351-report.json --gate-mode ci`
   passed with `6 passed`.
-- 2026-04-21: `PRJ-352` is now the next `READY` slice, focused on local
-  artifact gate-evaluation mode for CI consumers without rerunning pytest.
+- 2026-04-21: `PRJ-352` is complete: behavior-validation script now supports
+  local artifact-input gate evaluation mode for CI consumers without rerunning
+  pytest.
+- 2026-04-21: `PRJ-352` also hardens artifact-input parsing with UTF-8 BOM
+  tolerance so PowerShell-authored artifact payloads remain readable by gate
+  evaluation flows.
+- 2026-04-21: `PRJ-352` validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_main_runtime_policy.py tests/test_api_routes.py`
+  passed with `108 passed`.
+- 2026-04-21: `PRJ-352` artifact-input smoke is green:
+  `.\.venv\Scripts\python .\scripts\run_behavior_validation.py --artifact-input-path artifacts/behavior_validation/prj352-input.json --artifact-path artifacts/behavior_validation/prj352-output.json --gate-mode ci`
+  produced `gate_status=pass`.
+- 2026-04-21: `PRJ-353` is now the next `READY` slice, focused on additional
+  regressions for schema-version and artifact-input gate-evaluation semantics.
 
 ## Working Agreements
 

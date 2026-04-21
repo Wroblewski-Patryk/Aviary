@@ -13,6 +13,7 @@ ARTIFACT_PATH="artifacts/behavior_validation/report.json"
 PRINT_ARTIFACT_JSON="false"
 GATE_MODE="operator"
 CI_REQUIRE_TESTS="true"
+ARTIFACT_INPUT_PATH=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -36,6 +37,10 @@ while [[ $# -gt 0 ]]; do
       CI_REQUIRE_TESTS="false"
       shift
       ;;
+    --artifact-input-path)
+      ARTIFACT_INPUT_PATH="${2:-$ARTIFACT_INPUT_PATH}"
+      shift 2
+      ;;
     *)
       echo "Unknown argument: $1" >&2
       exit 1
@@ -54,6 +59,9 @@ ARGS=(
   "--artifact-path" "$ARTIFACT_PATH"
   "--gate-mode" "$GATE_MODE"
 )
+if [[ -n "$ARTIFACT_INPUT_PATH" ]]; then
+  ARGS+=("--artifact-input-path" "$ARTIFACT_INPUT_PATH")
+fi
 if [[ "$PRINT_ARTIFACT_JSON" == "true" ]]; then
   ARGS+=("--print-artifact-json")
 fi

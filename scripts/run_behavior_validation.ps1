@@ -3,7 +3,8 @@ param(
     [string]$ArtifactPath = "artifacts/behavior_validation/report.json",
     [switch]$PrintArtifactJson,
     [ValidateSet("operator", "ci")][string]$GateMode = "operator",
-    [bool]$CiRequireTests = $true
+    [bool]$CiRequireTests = $true,
+    [string]$ArtifactInputPath = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -14,6 +15,9 @@ $args = @(
     "--artifact-path", $ArtifactPath,
     "--gate-mode", $GateMode
 )
+if ($ArtifactInputPath) {
+    $args += @("--artifact-input-path", $ArtifactInputPath)
+}
 if ($CiRequireTests) {
     $args += "--ci-require-tests"
 }

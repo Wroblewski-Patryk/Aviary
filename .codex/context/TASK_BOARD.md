@@ -36,28 +36,8 @@ Last updated: 2026-04-21
 
 ## READY
 
-- [ ] PRJ-352 Add local artifact gate-evaluation mode for CI consumers without rerunning pytest
-  - Status: READY
-  - Group: Behavior Validation Artifact Governance
-  - Owner: Backend Builder
-  - Depends on: PRJ-351
-  - Priority: P1
-  - Result:
-    - behavior-validation script can evaluate an existing artifact in local
-      gate-check mode (`ci`) without invoking pytest again
-    - CI pipelines can split test execution and gate-evaluation stages while
-      preserving one gate contract owner
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_main_runtime_policy.py tests/test_api_routes.py`
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-353 Add regressions for schema-version and local artifact gate-evaluation semantics
-  - Status: FUTURE
+  - Status: READY
   - Group: Behavior Validation Artifact Governance
   - Owner: QA/Test
   - Depends on: PRJ-352
@@ -68,6 +48,12 @@ Last updated: 2026-04-21
     - fallback behavior for malformed artifacts is test-visible in CI gate mode
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_runtime_pipeline.py tests/test_api_routes.py tests/test_main_runtime_policy.py`
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
 
 - [ ] PRJ-354 Sync docs/context for behavior-validation artifact-governance lane
   - Status: FUTURE
@@ -98,6 +84,24 @@ Last updated: 2026-04-21
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-352 Add local artifact gate-evaluation mode for CI consumers without rerunning pytest
+  - Status: DONE
+  - Group: Behavior Validation Artifact Governance
+  - Owner: Backend Builder
+  - Depends on: PRJ-351
+  - Priority: P1
+  - Result:
+    - behavior-validation script now supports artifact-input evaluation mode so
+      CI gate checks can run on a pre-generated artifact without invoking
+      pytest
+    - artifact-input evaluation now tolerates UTF-8 BOM payloads (common from
+      PowerShell writes) and keeps gate semantics deterministic
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_main_runtime_policy.py tests/test_api_routes.py`
+      (`108 passed`)
+    - `.\.venv\Scripts\python .\scripts\run_behavior_validation.py --artifact-input-path artifacts/behavior_validation/prj352-input.json --artifact-path artifacts/behavior_validation/prj352-output.json --gate-mode ci`
+      (`gate_status=pass`)
 
 - [x] PRJ-351 Add artifact schema versioning and gate reason taxonomy for behavior-validation reports
   - Status: DONE

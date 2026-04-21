@@ -78,6 +78,7 @@ def test_main_includes_gate_payload_and_returns_ci_failure_on_gate_violation(
         lambda: Namespace(
             python_exe="python",
             artifact_path=str(artifact_path),
+            artifact_input_path=None,
             print_artifact_json=False,
             gate_mode="ci",
             ci_require_tests=True,
@@ -114,6 +115,7 @@ def test_main_includes_gate_payload_and_keeps_operator_mode_exit_code(
         lambda: Namespace(
             python_exe="python",
             artifact_path=str(artifact_path),
+            artifact_input_path=None,
             print_artifact_json=False,
             gate_mode="operator",
             ci_require_tests=True,
@@ -132,3 +134,80 @@ def test_main_includes_gate_payload_and_keeps_operator_mode_exit_code(
     assert payload["gate"]["violations"] == []
     assert payload["gate"]["violation_context"]["pytest_exit_code"] == 0
     assert payload["gate"]["ci_require_tests"] is True
+
+
+def test_main_evaluates_existing_artifact_without_running_pytest(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    artifact_path = tmp_path / "existing-artifact.json"
+    artifact_path.write_text(
+        MODULE.json.dumps(
+            {
+                "kind": "behavior_validation_artifact",
+                "summary": {
+                    "total": 5,
+                    "passed": 5,
+                    "failed": 0,
+                    "errors": 0,
+                    "skipped": 0,
+                    "exit_code": 0,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(
+        MODULE,
+        "_parse_args",
+        lambda: Namespace(
+            python_exe="python",
+            artifact_path=str(artifact_path),
+            artifact_input_path=str(artifact_path),
+            print_artifact_json=False,
+            gate_mode="ci",
+            ci_require_tests=True,
+        ),
+    )
+    monkeypatch.setattr(
+        MODULE,
+        "_run_behavior_pytest",
+        lambda **_: (_ for _ in ()).throw(AssertionError("pytest should not run in artifact-input mode")),
+    )
+
+    exit_code = MODULE.main()
+
+    payload = MODULE.json.loads(artifact_path.read_text(encoding="utf-8"))
+    assert exit_code == 0
+    assert payload["summary"]["total"] == 5
+    assert payload["gate"]["status"] == "pass"
+    assert payload["gate"]["violations"] == []
+
+
+def test_main_marks_ci_gate_failed_when_existing_artifact_summary_is_missing(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    artifact_path = tmp_path / "invalid-artifact.json"
+    artifact_path.write_text(MODULE.json.dumps({"kind": "behavior_validation_artifact"}), encoding="utf-8")
+
+    monkeypatch.setattr(
+        MODULE,
+        "_parse_args",
+        lambda: Namespace(
+            python_exe="python",
+            artifact_path=str(artifact_path),
+            artifact_input_path=str(artifact_path),
+            print_artifact_json=False,
+            gate_mode="ci",
+            ci_require_tests=True,
+        ),
+    )
+
+    exit_code = MODULE.main()
+
+    payload = MODULE.json.loads(artifact_path.read_text(encoding="utf-8"))
+    assert exit_code == 1
+    assert payload["gate"]["status"] == "fail"
+    assert payload["gate"]["violations"] == [MODULE.GATE_REASON_ARTIFACT_SUMMARY_MISSING]

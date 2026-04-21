@@ -29,6 +29,9 @@ GATE_REASON_FAILED_CASES_DETECTED = "failed_cases_detected"
 GATE_REASON_ERROR_CASES_DETECTED = "error_cases_detected"
 GATE_REASON_PYTEST_EXIT_CODE_NON_ZERO = "pytest_exit_code_non_zero"
 GATE_REASON_NO_BEHAVIOR_TESTS_COLLECTED = "no_behavior_validation_tests_collected"
+GATE_REASON_ARTIFACT_INPUT_UNREADABLE = "artifact_input_unreadable"
+GATE_REASON_ARTIFACT_SUMMARY_MISSING = "artifact_summary_missing"
+GATE_REASON_ARTIFACT_SUMMARY_INVALID = "artifact_summary_invalid"
 
 
 @dataclass(frozen=True)
@@ -50,8 +53,13 @@ def _parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--artifact-path",
-        default=str(DEFAULT_ARTIFACT_PATH),
+        default=None,
         help="Path for JSON artifact output.",
+    )
+    parser.add_argument(
+        "--artifact-input-path",
+        default=None,
+        help="Optional existing artifact path for local gate evaluation without running pytest.",
     )
     parser.add_argument(
         "--print-artifact-json",
@@ -199,26 +207,104 @@ def _evaluate_gate(
     return "pass", [], context
 
 
+def _load_artifact_payload(*, artifact_input_path: Path) -> tuple[dict[str, Any], list[str]]:
+    if not artifact_input_path.exists():
+        return {}, [GATE_REASON_ARTIFACT_INPUT_UNREADABLE]
+
+    try:
+        raw = json.loads(artifact_input_path.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return {}, [GATE_REASON_ARTIFACT_INPUT_UNREADABLE]
+
+    if not isinstance(raw, dict):
+        return {}, [GATE_REASON_ARTIFACT_INPUT_UNREADABLE]
+    return dict(raw), []
+
+
+def _coerce_artifact_summary(payload: dict[str, Any]) -> tuple[dict[str, int] | None, list[str]]:
+    raw_summary = payload.get("summary")
+    if not isinstance(raw_summary, dict):
+        return None, [GATE_REASON_ARTIFACT_SUMMARY_MISSING]
+
+    keys = ("total", "passed", "failed", "errors", "skipped", "exit_code")
+    summary: dict[str, int] = {}
+    try:
+        for key in keys:
+            summary[key] = int(raw_summary[key])
+    except (KeyError, TypeError, ValueError):
+        return None, [GATE_REASON_ARTIFACT_SUMMARY_INVALID]
+    return summary, []
+
+
 def main() -> int:
     args = _parse_args()
-    artifact_path = Path(args.artifact_path)
+    artifact_input_path = Path(args.artifact_input_path) if args.artifact_input_path else None
+    if args.artifact_path:
+        artifact_path = Path(args.artifact_path)
+    elif artifact_input_path is not None:
+        artifact_path = artifact_input_path
+    else:
+        artifact_path = DEFAULT_ARTIFACT_PATH
     artifact_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with tempfile.NamedTemporaryFile(prefix="aion_behavior_validation_", suffix=".xml", delete=False) as handle:
-        junit_path = Path(handle.name)
+    payload: dict[str, Any]
+    gate_status: str
+    gate_violations: list[str]
+    gate_context: dict[str, int]
 
-    exit_code, pytest_cmd = _run_behavior_pytest(
-        python_exe=str(args.python_exe),
-        junit_path=junit_path,
-    )
-    results = _parse_junit_results(junit_path=junit_path)
-    payload = _artifact_payload(exit_code=exit_code, pytest_cmd=pytest_cmd, results=results)
-    summary = payload["summary"]
-    gate_status, gate_violations, gate_context = _evaluate_gate(
-        gate_mode=str(args.gate_mode),
-        summary=summary,
-        ci_require_tests=bool(args.ci_require_tests),
-    )
+    if artifact_input_path is None:
+        with tempfile.NamedTemporaryFile(prefix="aion_behavior_validation_", suffix=".xml", delete=False) as handle:
+            junit_path = Path(handle.name)
+
+        exit_code, pytest_cmd = _run_behavior_pytest(
+            python_exe=str(args.python_exe),
+            junit_path=junit_path,
+        )
+        results = _parse_junit_results(junit_path=junit_path)
+        payload = _artifact_payload(exit_code=exit_code, pytest_cmd=pytest_cmd, results=results)
+        summary = payload["summary"]
+        gate_status, gate_violations, gate_context = _evaluate_gate(
+            gate_mode=str(args.gate_mode),
+            summary=summary,
+            ci_require_tests=bool(args.ci_require_tests),
+        )
+    else:
+        payload, read_violations = _load_artifact_payload(artifact_input_path=artifact_input_path)
+        summary, summary_violations = _coerce_artifact_summary(payload)
+        payload["kind"] = "behavior_validation_artifact"
+        payload["artifact_schema_version"] = ARTIFACT_SCHEMA_VERSION
+        payload["gate_reason_taxonomy_version"] = GATE_REASON_TAXONOMY_VERSION
+        payload["generated_at"] = datetime.now(timezone.utc).isoformat()
+
+        if summary is None:
+            summary = {
+                "total": 0,
+                "passed": 0,
+                "failed": 0,
+                "errors": 0,
+                "skipped": 0,
+                "exit_code": 1,
+            }
+            payload["summary"] = summary
+            gate_status = "fail"
+            gate_violations = [*read_violations, *summary_violations]
+            gate_context = {
+                "summary_total": 0,
+                "summary_failed": 0,
+                "summary_errors": 0,
+                "pytest_exit_code": 1,
+            }
+        else:
+            payload["summary"] = summary
+            gate_status, gate_violations, gate_context = _evaluate_gate(
+                gate_mode=str(args.gate_mode),
+                summary=summary,
+                ci_require_tests=bool(args.ci_require_tests),
+            )
+            if read_violations:
+                gate_status = "fail"
+                gate_violations = [*read_violations, *gate_violations]
+
     payload["gate"] = {
         "mode": str(args.gate_mode),
         "status": gate_status,
@@ -242,7 +328,7 @@ def main() -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
     if str(args.gate_mode) == "ci" and gate_status != "pass":
         return 1
-    return int(exit_code)
+    return int(summary["exit_code"])
 
 
 if __name__ == "__main__":
