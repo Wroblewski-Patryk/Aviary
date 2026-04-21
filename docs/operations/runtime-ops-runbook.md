@@ -640,6 +640,41 @@ Use the helper script or call:
 
 with a webhook URL and optional secret token.
 
+### Run Telegram Mode Smoke (Webhook + Temporary Listen Probe)
+
+Use the dedicated smoke helper to validate both Telegram delivery modes:
+
+- webhook mode visibility (`getWebhookInfo`)
+- temporary listen diagnostics (`deleteWebhook -> getUpdates`)
+- webhook restore (`setWebhook`)
+
+Windows PowerShell:
+
+```powershell
+.\scripts\run_telegram_mode_smoke.ps1 `
+  -ExpectedWebhookUrl "https://your-domain.tld/event" `
+  -RestoreWebhookUrl "https://your-domain.tld/event" `
+  -SecretToken "<telegram_webhook_secret>" `
+  -RequiredChatId "<chat_id>"
+```
+
+Debian / bash:
+
+```bash
+./scripts/run_telegram_mode_smoke.sh \
+  --expected-webhook-url "https://your-domain.tld/event" \
+  --restore-webhook-url "https://your-domain.tld/event" \
+  --secret-token "<telegram_webhook_secret>" \
+  --required-chat-id "<chat_id>"
+```
+
+Preconditions checklist (required for reliable Telegram delivery triage):
+
+1. Bot-start handshake is complete in target chat (`/start` was sent to the bot).
+2. `chat_id` is known and passed as `RequiredChatId` (or `--required-chat-id`) for strict validation.
+3. Bot token is configured (`TELEGRAM_BOT_TOKEN`) before running the smoke helper.
+4. If webhook secret validation is enabled, pass the same secret used by runtime webhook ingress.
+
 ## Known Operational Limits
 
 - there is no background queue or worker isolation yet

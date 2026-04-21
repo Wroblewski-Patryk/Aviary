@@ -1306,9 +1306,21 @@ Last updated: 2026-04-21
 - 2026-04-21: `PRJ-340` validation is green:
   `.\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py tests/test_goal_task_signals.py`
   passed with `204 passed`.
-- 2026-04-21: `PRJ-341` is now the next `READY` slice, focused on Telegram
-  integration smoke workflow coverage for webhook/listen mode switching and
-  manual runbook evidence.
+- 2026-04-21: `PRJ-341` is complete: operator-facing Telegram smoke workflow
+  now includes explicit webhook/listen mode switching probes
+  (`getWebhookInfo -> deleteWebhook -> getUpdates -> setWebhook`) across
+  PowerShell and bash scripts.
+- 2026-04-21: `PRJ-341` also adds runbook-level precondition checks for
+  reliable delivery triage (`/start` handshake, known `chat_id`, bot token,
+  webhook secret parity) to reduce false-negative Telegram diagnostics.
+- 2026-04-21: `PRJ-341` validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_event_normalization.py tests/test_delivery_router.py`
+  passed with `83 passed`.
+- 2026-04-21: `PRJ-341` live Telegram smoke execution is not recorded in this
+  workspace because runtime bot credentials are unavailable here; evidence
+  coverage is provided through shipped operator scripts and runbook checklist.
+- 2026-04-21: `PRJ-342` is now the next `READY` slice, focused on docs/context
+  synchronization for manual runtime reliability fixes.
 
 ## Working Agreements
 

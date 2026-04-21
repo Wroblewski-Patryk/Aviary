@@ -36,32 +36,8 @@ Last updated: 2026-04-21
 
 ## READY
 
-- [ ] PRJ-341 Add Telegram integration smoke workflow for webhook/listen mode switching
-  - Status: READY
-  - Group: Manual Runtime Reliability Fixes
-  - Owner: QA/Test
-  - Depends on: PRJ-340
-  - Priority: P1
-  - Result:
-    - operator-facing smoke workflow now validates both Telegram modes:
-      webhook-driven ingress and temporary `deleteWebhook -> getUpdates`
-      listen diagnostics
-    - end-to-end evidence checklist includes real chat delivery preconditions
-      (`chat_id` availability, bot-start handshake) to reduce false-negative
-      Telegram delivery triage
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_event_normalization.py tests/test_delivery_router.py`
-    - runbook-aligned manual smoke evidence recorded for
-      `getWebhookInfo/getUpdates/setWebhook`
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-342 Sync docs/context for manual runtime reliability fix lane
-  - Status: FUTURE
+  - Status: READY
   - Group: Manual Runtime Reliability Fixes
   - Owner: Product Docs
   - Depends on: PRJ-341
@@ -74,6 +50,14 @@ Last updated: 2026-04-21
   - Validation:
     - doc-and-context sync across `.codex/context/`, `docs/planning/`, and
       `docs/operations/` with targeted cross-reference checks
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
+
+- [ ] (none)
 
 ## IN_PROGRESS
 
@@ -88,6 +72,26 @@ Last updated: 2026-04-21
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-341 Add Telegram integration smoke workflow for webhook/listen mode switching
+  - Status: DONE
+  - Group: Manual Runtime Reliability Fixes
+  - Owner: QA/Test
+  - Depends on: PRJ-340
+  - Priority: P1
+  - Result:
+    - operator-facing Telegram smoke helpers now validate both modes in one
+      flow (`getWebhookInfo -> deleteWebhook -> getUpdates -> setWebhook`)
+      across PowerShell and bash paths
+    - runbook now includes explicit precondition checklist
+      (`chat_id` availability, bot-start handshake, token/secret posture)
+      to reduce false-negative delivery triage
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_event_normalization.py tests/test_delivery_router.py`
+      (`83 passed`)
+    - workspace execution did not include live Telegram API smoke because
+      runtime bot credentials are not available in this environment; workflow
+      scripts and runbook evidence checklist were added for operator execution.
 
 - [x] PRJ-340 Expand goal/task signal detection beyond prefix-only phrasing
   - Status: DONE
