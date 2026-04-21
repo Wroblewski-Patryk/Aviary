@@ -346,8 +346,16 @@ Release smoke ownership:
       `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
     - Debian/bash:
       `./scripts/run_behavior_validation.sh --gate-mode ci --artifact-path artifacts/behavior_validation/report.json`
+  - CI split-stage mode (evaluate pre-generated artifact only):
+    - Windows:
+      `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactInputPath artifacts/behavior_validation/report.json -ArtifactPath artifacts/behavior_validation/report.gate.json`
+    - Debian/bash:
+      `./scripts/run_behavior_validation.sh --gate-mode ci --artifact-input-path artifacts/behavior_validation/report.json --artifact-path artifacts/behavior_validation/report.gate.json`
   - required focus: internal `system_debug` surface plus scenario checks for
     memory influence, multi-session continuity, and failure-mode stability.
+  - artifact contract now includes explicit
+    `artifact_schema_version` + `gate_reason_taxonomy_version`, and gate output
+    includes `violation_context` for deterministic machine parsing.
 
 Rollback posture:
 

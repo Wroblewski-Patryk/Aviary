@@ -52,11 +52,13 @@ The current repo already works as an MVP slice, but several architecture-level d
   - `PRJ-347..PRJ-350`: behavior-validation CI-ingestion follow-up
     (`13`) - complete
   - `PRJ-351..PRJ-354`: behavior-validation artifact governance
-    (`13`) - queued
+    (`13`) - complete
+  - `PRJ-355..PRJ-358`: deployment-trigger SLO instrumentation
+    (`7`) - queued
 - reflection deployment lane is complete through `PRJ-304`, and
   post-reflection hardening decisions are now complete through `PRJ-309`.
 - runtime behavior-validation lane is now complete through `PRJ-317`.
-- next architecture-to-code queue is now seeded through `PRJ-354`.
+- next architecture-to-code queue is now seeded through `PRJ-358`.
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 
@@ -595,6 +597,9 @@ The current repo already works as an MVP slice, but several architecture-level d
 - Remaining follow-up decision:
   - what objective webhook-delivery SLO should allow manual fallback to become
     exception-only instead of routine fallback posture?
+  - implementation follow-up for this decision is now queued in
+    `PRJ-355..PRJ-358` (deployment-trigger evidence capture and
+    release-smoke verification posture).
 
 ### 8. Language Handling Strategy
 
@@ -888,7 +893,13 @@ The current repo already works as an MVP slice, but several architecture-level d
     one command family.
   - regression coverage now pins artifact gate semantics, including CI
     fail-fast behavior for empty test collection when required.
+- Decision (resolved in `PRJ-351..PRJ-354`, 2026-04-21):
+  - behavior-validation artifacts now include explicit schema-version and
+    gate-taxonomy metadata.
+  - CI consumers can evaluate existing artifacts locally without rerunning
+    pytest, while keeping one gate contract owner.
+  - malformed artifact-input paths are now regression-pinned for
+    `missing|summary_missing|summary_invalid` posture.
 - Remaining follow-up decision:
-  - behavior-validation artifact governance follow-up is now queued in
-    `PRJ-351..PRJ-354` to formalize schema-version posture and local
-    artifact-gate evaluation flow for CI consumers.
+  - should future CI governance enforce schema major-version compatibility as a
+    strict blocker or warning-only posture?

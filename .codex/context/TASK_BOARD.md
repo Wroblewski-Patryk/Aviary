@@ -36,21 +36,20 @@ Last updated: 2026-04-21
 
 ## READY
 
-- [ ] PRJ-354 Sync docs/context for behavior-validation artifact-governance lane
+- [ ] PRJ-355 Add deployment-trigger evidence capture script for Coolify webhook invocations
   - Status: READY
-  - Group: Behavior Validation Artifact Governance
-  - Owner: Product Docs
-  - Depends on: PRJ-353
+  - Group: Deployment Trigger SLO Instrumentation
+  - Owner: Ops/Release
+  - Depends on: PRJ-354
   - Priority: P1
   - Result:
-    - planning, ops, testing guidance, and context truth align on schema
-      versioning and artifact-only gate-evaluation posture
-    - next derived queue continuity remains explicit after artifact governance
-      rollout
+    - release operations can persist machine-readable Coolify webhook evidence
+      (request timestamp, response code/body, endpoint metadata) for SLO
+      tracking
+    - deployment-trigger evidence capture remains optional and does not block
+      current manual fallback posture
   - Validation:
-    - doc-and-context sync across `.codex/context/`, `docs/planning/`,
-      `docs/operations/`, and `docs/engineering/` with targeted
-      cross-reference checks
+    - `.\.venv\Scripts\python -m pytest -q tests/test_main_runtime_policy.py tests/test_api_routes.py`
 
 ## BACKLOG
 
@@ -58,7 +57,48 @@ Last updated: 2026-04-21
 
 ## FUTURE
 
-- [ ] (none)
+- [ ] PRJ-356 Add release-smoke support for optional deployment-trigger evidence verification
+  - Status: FUTURE
+  - Group: Deployment Trigger SLO Instrumentation
+  - Owner: Ops/Release
+  - Depends on: PRJ-355
+  - Priority: P1
+  - Result:
+    - release smoke can optionally verify deployment-trigger evidence freshness
+      and basic response posture
+    - operator flow remains backward-compatible when evidence verification is
+      not requested
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_main_runtime_policy.py`
+
+- [ ] PRJ-357 Add regressions for deployment-trigger evidence and release-smoke verification posture
+  - Status: FUTURE
+  - Group: Deployment Trigger SLO Instrumentation
+  - Owner: QA/Test
+  - Depends on: PRJ-356
+  - Priority: P1
+  - Result:
+    - regressions pin evidence file shape, failure handling, and optional
+      verification behavior in release-smoke scripts
+    - SLO instrumentation stays test-visible as deployment scripts evolve
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_main_runtime_policy.py`
+
+- [ ] PRJ-358 Sync docs/context for deployment-trigger SLO instrumentation lane
+  - Status: FUTURE
+  - Group: Deployment Trigger SLO Instrumentation
+  - Owner: Product Docs
+  - Depends on: PRJ-357
+  - Priority: P1
+  - Result:
+    - planning, ops runbook, and context truth align on deployment-trigger
+      evidence capture and optional release-smoke verification posture
+    - next derived queue continuity remains explicit after SLO instrumentation
+      rollout
+  - Validation:
+    - doc-and-context sync across `.codex/context/`, `docs/planning/`,
+      `docs/operations/`, and `docs/engineering/` with targeted
+      cross-reference checks
 
 ## IN_PROGRESS
 
@@ -73,6 +113,23 @@ Last updated: 2026-04-21
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-354 Sync docs/context for behavior-validation artifact-governance lane
+  - Status: DONE
+  - Group: Behavior Validation Artifact Governance
+  - Owner: Product Docs
+  - Depends on: PRJ-353
+  - Priority: P1
+  - Result:
+    - planning, ops, testing guidance, and context truth now align on artifact
+      schema versioning, reason taxonomy, and artifact-input gate evaluation
+      posture
+    - next derived queue continuity is now explicit through
+      `PRJ-355..PRJ-358` for deployment-trigger SLO instrumentation follow-up
+  - Validation:
+    - doc-and-context sync across `.codex/context/`, `docs/planning/`,
+      `docs/operations/`, and `docs/engineering/` with targeted
+      cross-reference checks
 
 - [x] PRJ-353 Add regressions for schema-version and local artifact gate-evaluation semantics
   - Status: DONE

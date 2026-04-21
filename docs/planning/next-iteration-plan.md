@@ -56,8 +56,11 @@ Completed on 2026-04-21:
 - `PRJ-347..PRJ-350` are complete: behavior-validation CI-ingestion now has a
   machine-readable artifact contract, explicit `operator|ci` gate posture, and
   regression coverage for gate semantics.
-- next derived queue is now seeded through `PRJ-354` for behavior-validation
-  artifact governance follow-up.
+- `PRJ-351..PRJ-354` are complete: artifact schema-version/taxonomy governance
+  is now explicit, artifact-input gate evaluation is available, and regression
+  coverage plus docs/context sync are complete for this lane.
+- next derived queue is now seeded through `PRJ-358` for deployment-trigger
+  SLO instrumentation follow-up.
 
 Completed on 2026-04-17:
 
@@ -1804,18 +1807,30 @@ Status update (2026-04-21): `PRJ-347..PRJ-350` are complete.
 This group hardens artifact lifecycle and CI consumption posture so release
 evidence can be validated consistently across operator and automation paths.
 
-- `PRJ-351` Add explicit artifact schema versioning and gate reason taxonomy.
-- `PRJ-352` Add local artifact gate-evaluation mode for CI consumers without rerunning pytest.
-- `PRJ-353` Add regressions for artifact schema-version and local gate-evaluation semantics.
-- `PRJ-354` Sync docs/context for behavior-validation artifact-governance lane.
+Status update (2026-04-21): `PRJ-351..PRJ-354` are complete.
+
+- `PRJ-351` Add explicit artifact schema versioning and gate reason taxonomy. (complete)
+- `PRJ-352` Add local artifact gate-evaluation mode for CI consumers without rerunning pytest. (complete)
+- `PRJ-353` Add regressions for artifact schema-version and local gate-evaluation semantics. (complete)
+- `PRJ-354` Sync docs/context for behavior-validation artifact-governance lane. (complete)
+
+## Group 34 - Deployment Trigger SLO Instrumentation
+
+This group turns deployment-trigger reliability from an anecdotal signal into
+explicit machine-readable evidence tied to release operations.
+
+- `PRJ-355` Add deployment-trigger evidence capture script for Coolify webhook invocations.
+- `PRJ-356` Add release-smoke support for optional deployment-trigger evidence verification.
+- `PRJ-357` Add regressions for deployment-trigger evidence and release-smoke verification posture.
+- `PRJ-358` Sync docs/context for deployment-trigger SLO instrumentation lane.
 
 ## Next Derived Slice
 
 Runtime behavior-validation queue is now complete through `PRJ-317`.
-Next implementation queue is now seeded through `PRJ-354`.
+Next implementation queue is now seeded through `PRJ-358`.
 Before the next implementation slice:
 
-- take `PRJ-351` directly from `.codex/context/TASK_BOARD.md`
+- take `PRJ-355` directly from `.codex/context/TASK_BOARD.md`
 - keep the implementation scope bounded to one reversible slice
 - preserve target-state architecture bias when resolving local runtime choices
 
@@ -1854,6 +1869,7 @@ Next architecture-to-code queue:
 - `PRJ-343..PRJ-346` Relation-aware inferred promotion governance
 - `PRJ-347..PRJ-350` Behavior-validation CI-ingestion follow-up
 - `PRJ-351..PRJ-354` Behavior-validation artifact governance
+- `PRJ-355..PRJ-358` Deployment-trigger SLO instrumentation
 
 ## Parallel-Ready Lanes
 
@@ -1898,10 +1914,11 @@ group locks the production and release baseline for the converged runtime.
 17. `PRJ-343..PRJ-346` Relation-aware inferred promotion governance
 18. `PRJ-347..PRJ-350` Behavior-validation CI-ingestion follow-up
 19. `PRJ-351..PRJ-354` Behavior-validation artifact governance
+20. `PRJ-355..PRJ-358` Deployment-trigger SLO instrumentation
 
 The queue should still be treated as intentionally open after those items.
 Additional small architecture-alignment slices may still be discovered while
-executing Groups 17 through 32.
+executing Groups 17 through 34.
 
 ## Handoff Rules For Execution Agents
 

@@ -34,6 +34,12 @@ CI gate behavior-validation command (artifact + fail-fast gate posture):
 .\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json
 ```
 
+Artifact-input gate evaluation command (CI split-stage, no pytest rerun):
+
+```powershell
+.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactInputPath artifacts/behavior_validation/report.json -ArtifactPath artifacts/behavior_validation/report.gate.json
+```
+
 ## Testing Layers For This Repo
 
 - Unit tests:
@@ -96,6 +102,12 @@ For meaningful repo changes, leave behind:
 - for CI-sensitive slices, behavior gate evidence from:
   - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
   - `./scripts/run_behavior_validation.sh --gate-mode ci --artifact-path artifacts/behavior_validation/report.json`
+  - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactInputPath artifacts/behavior_validation/report.json -ArtifactPath artifacts/behavior_validation/report.gate.json`
+  - `./scripts/run_behavior_validation.sh --gate-mode ci --artifact-input-path artifacts/behavior_validation/report.json --artifact-path artifacts/behavior_validation/report.gate.json`
+- artifact contract notes for CI parsers:
+  - `artifact_schema_version` identifies schema evolution
+  - `gate_reason_taxonomy_version` identifies reason-code taxonomy
+  - `gate.violation_context` carries machine-readable context for gate reasons
 
 Useful migration verification command:
 

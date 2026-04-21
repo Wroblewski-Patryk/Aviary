@@ -1453,8 +1453,22 @@ Last updated: 2026-04-21
 - 2026-04-21: `PRJ-353` validation is green:
   `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_runtime_pipeline.py tests/test_api_routes.py tests/test_main_runtime_policy.py`
   passed with `186 passed`.
-- 2026-04-21: `PRJ-354` is now the next `READY` slice, focused on docs/context
-  synchronization for behavior-validation artifact-governance posture.
+- 2026-04-21: `PRJ-354` is complete: planning, operations runbook, testing
+  guidance, and context truth now align on behavior-validation artifact
+  governance posture (schema versioning, taxonomy, and artifact-input
+  evaluation mode).
+- 2026-04-21: `PRJ-354` also seeds the next derived queue
+  (`PRJ-355..PRJ-358`) for deployment-trigger SLO instrumentation follow-up.
+- 2026-04-21: `PRJ-354` validation is recorded as doc-and-context sync plus
+  targeted cross-reference checks across
+  `docs/planning/next-iteration-plan.md`,
+  `docs/planning/open-decisions.md`,
+  `docs/operations/runtime-ops-runbook.md`,
+  `docs/engineering/testing.md`,
+  `.codex/context/TASK_BOARD.md`, and
+  `.codex/context/PROJECT_STATE.md`.
+- 2026-04-21: `PRJ-355` is now the next `READY` slice, focused on
+  deployment-trigger evidence capture for Coolify webhook operations.
 
 ## Working Agreements
 
