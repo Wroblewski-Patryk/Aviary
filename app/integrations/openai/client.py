@@ -8,6 +8,8 @@ from app.integrations.openai.prompting import OpenAIPromptBuilder
 
 
 class OpenAIClient:
+    AFFECTIVE_FALLBACK_REASON_FIELD = "_aion_affective_fallback_reason"
+
     def __init__(self, api_key: str | None, model: str):
         self.api_key = api_key
         self.model = model
@@ -84,14 +86,64 @@ class OpenAIClient:
 
         text = getattr(response, "output_text", None)
         if not text:
+            return self._affective_fallback_payload("openai_affective_empty_response")
+
+        payload = self._parse_affective_payload(text=text)
+        if payload is None:
+            return self._affective_fallback_payload("openai_affective_parse_failed")
+
+        validation_error = self._validate_affective_payload_schema(payload)
+        if validation_error is not None:
+            self.logger.warning(
+                "openai_affective_schema_invalid model=%s reason=%s payload_type=%s",
+                self.model,
+                validation_error,
+                type(payload).__name__,
+            )
+            return self._affective_fallback_payload(validation_error)
+        return payload
+
+    def _parse_affective_payload(self, *, text: str) -> dict[str, Any] | None:
+        candidate = str(text or "").strip()
+        if not candidate:
             return None
 
         try:
-            payload = json.loads(text.strip())
-        except Exception as exc:  # pragma: no cover - defensive parse fallback
-            self.logger.warning("openai_affective_parse_failed model=%s error=%s", self.model, exc)
-            return None
-
+            payload = json.loads(candidate)
+        except Exception:
+            start = candidate.find("{")
+            end = candidate.rfind("}")
+            if start == -1 or end == -1 or end <= start:
+                return None
+            try:
+                payload = json.loads(candidate[start : end + 1])
+            except Exception as exc:  # pragma: no cover - defensive parse fallback
+                self.logger.warning("openai_affective_parse_failed model=%s error=%s", self.model, exc)
+                return None
         if not isinstance(payload, dict):
             return None
         return payload
+
+    def _validate_affective_payload_schema(self, payload: dict[str, Any]) -> str | None:
+        required_keys = ("affect_label", "intensity", "needs_support", "confidence", "evidence")
+        missing = [key for key in required_keys if key not in payload]
+        if missing:
+            return "openai_affective_schema_missing_keys"
+
+        if not isinstance(payload.get("affect_label"), str):
+            return "openai_affective_schema_invalid_affect_label_type"
+        if not isinstance(payload.get("needs_support"), bool):
+            return "openai_affective_schema_invalid_needs_support_type"
+        if not isinstance(payload.get("evidence"), list):
+            return "openai_affective_schema_invalid_evidence_type"
+        if not self._is_numeric(payload.get("intensity")):
+            return "openai_affective_schema_invalid_intensity_type"
+        if not self._is_numeric(payload.get("confidence")):
+            return "openai_affective_schema_invalid_confidence_type"
+        return None
+
+    def _affective_fallback_payload(self, reason: str) -> dict[str, str]:
+        return {self.AFFECTIVE_FALLBACK_REASON_FIELD: reason}
+
+    def _is_numeric(self, value: Any) -> bool:
+        return isinstance(value, (int, float)) and not isinstance(value, bool)

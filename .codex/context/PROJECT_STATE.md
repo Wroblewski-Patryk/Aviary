@@ -1290,8 +1290,14 @@ Last updated: 2026-04-21
   `docs/planning/next-iteration-plan.md`,
   `.codex/context/TASK_BOARD.md`, and
   `.codex/context/PROJECT_STATE.md`.
-- 2026-04-21: `PRJ-339` is now the next `READY` slice, focused on
-  structured affective-classifier parsing and fallback diagnostics hardening.
+- 2026-04-21: `PRJ-339` is complete: affective classifier integration now uses
+  structured parse/schema gates plus explicit fallback diagnostics, and runtime
+  affective stage logs include fallback reason traces to avoid silent drift.
+- 2026-04-21: `PRJ-339` validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_affective_assessor.py tests/test_openai_client.py tests/test_affective_contract.py tests/test_expression_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+  passed with `165 passed`.
+- 2026-04-21: `PRJ-340` is now the next `READY` slice, focused on expanding
+  goal/task signal detection beyond prefix-only phrasing.
 
 ## Working Agreements
 

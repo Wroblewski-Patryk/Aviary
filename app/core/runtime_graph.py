@@ -146,10 +146,7 @@ class ForegroundLangGraphRunner:
                 f"fallback={perception.affective.affect_label}"
             ),
             operation=lambda: self.adapters.run_affective_assessment(graph_state),
-            output_summary=lambda result: (
-                f"label={result.affective.affect_label} support={result.affective.needs_support} "
-                f"source={result.affective.source} confidence={result.affective.confidence}"
-            ),
+            output_summary=lambda result: self._affective_output_summary(result.affective),
         )
         return {"graph_state": updated, "_runtime": runtime_ctx}
 
@@ -174,6 +171,25 @@ class ForegroundLangGraphRunner:
             ),
         )
         return {"graph_state": updated, "_runtime": runtime_ctx}
+
+    def _affective_output_summary(self, affective: Any) -> str:
+        summary = (
+            f"label={affective.affect_label} support={affective.needs_support} "
+            f"source={affective.source} confidence={affective.confidence}"
+        )
+        fallback_reason = self._affective_fallback_reason(affective)
+        if fallback_reason:
+            summary = f"{summary} fallback_reason={fallback_reason}"
+        return summary
+
+    def _affective_fallback_reason(self, affective: Any) -> str:
+        if str(getattr(affective, "source", "")).strip().lower() != "fallback":
+            return ""
+        for evidence in list(getattr(affective, "evidence", []) or []):
+            item = str(evidence).strip()
+            if item.startswith("fallback_reason:"):
+                return item.split(":", 1)[1][:64]
+        return ""
 
     def _motivation_node(self, state: dict[str, Any]) -> dict[str, Any]:
         runtime_ctx = self._runtime_ctx(state)

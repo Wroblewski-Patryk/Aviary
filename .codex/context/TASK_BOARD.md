@@ -36,32 +36,8 @@ Last updated: 2026-04-21
 
 ## READY
 
-- [ ] PRJ-339 Enforce structured affective-classifier output parsing and fallback diagnostics
-  - Status: READY
-  - Group: Manual Runtime Reliability Fixes
-  - Owner: Backend Builder
-  - Depends on: PRJ-338
-  - Priority: P1
-  - Result:
-    - affective classifier prompt/client path requires deterministic structured
-      JSON output contract (or equivalent schema gate), reducing
-      `openai_affective_parse_failed` fallback churn
-    - fallback posture remains explicit with traceable error reasons and no
-      silent behavior drift in affect-sensitive turns
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_perception_agent.py tests/test_expression_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
-    - targeted manual emotional-turn debug validation through
-      `POST /internal/event/debug` with `system_debug.perception.affective`
-      evidence notes
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-340 Expand goal/task signal detection beyond prefix-only phrasing
-  - Status: FUTURE
+  - Status: READY
   - Group: Manual Runtime Reliability Fixes
   - Owner: Backend Builder
   - Depends on: PRJ-339
@@ -76,6 +52,12 @@ Last updated: 2026-04-21
     - `.\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
     - targeted manual debug checks confirm `upsert_goal|upsert_task` intent
       extraction for both strict-prefix and natural-phrase variants
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
 
 - [ ] PRJ-341 Add Telegram integration smoke workflow for webhook/listen mode switching
   - Status: FUTURE
@@ -150,6 +132,23 @@ Last updated: 2026-04-21
     - App-lifespan manual smoke attempt through `POST /internal/event/debug`
       was blocked in this workspace by unresolved external DB host at startup;
       pitfall and guardrail were captured in `.codex/context/LEARNING_JOURNAL.md`.
+
+- [x] PRJ-339 Enforce structured affective-classifier output parsing and fallback diagnostics
+  - Status: DONE
+  - Group: Manual Runtime Reliability Fixes
+  - Owner: Backend Builder
+  - Depends on: PRJ-338
+  - Priority: P1
+  - Result:
+    - OpenAI affective classification now enforces a structured schema gate
+      (required keys/types) and emits deterministic fallback diagnostics when
+      parse/schema validation fails
+    - fallback posture now remains explicit and traceable through structured
+      fallback reason markers in affective evidence and runtime stage logs
+      (`fallback_reason=...`) instead of silent classifier drift
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_affective_assessor.py tests/test_openai_client.py tests/test_affective_contract.py tests/test_expression_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+      (`165 passed`)
 
 - [x] PRJ-331 Extend planning, motivation, and proactive logic with governed trust signals
   - Status: DONE

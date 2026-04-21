@@ -1223,6 +1223,58 @@ async def test_runtime_pipeline_emits_structured_stage_logs(caplog) -> None:
     assert "source=fallback" in affective_success["summary"]
 
 
+async def test_runtime_pipeline_emits_affective_fallback_reason_in_stage_logs(caplog) -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    classifier = FakeAffectiveClassifierClient(
+        {"_aion_affective_fallback_reason": "openai_affective_parse_failed"}
+    )
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+        affective_assessor=AffectiveAssessor(classifier_client=classifier),
+    )
+    caplog.set_level("INFO", logger="aion.runtime")
+
+    event = Event(
+        event_id="evt-affective-fallback-reason",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "I feel overwhelmed and anxious"},
+        meta=EventMeta(user_id="u-1", trace_id="t-affective-fallback-reason"),
+    )
+
+    result = await runtime.run(event)
+
+    assert result.affective.source == "fallback"
+    assert "fallback_reason:openai_affective_parse_failed" in result.affective.evidence
+
+    stage_logs = [
+        json.loads(record.getMessage())
+        for record in caplog.records
+        if record.name == "aion.runtime" and record.getMessage().startswith("{")
+    ]
+    affective_success = next(
+        entry
+        for entry in stage_logs
+        if entry.get("kind") == "runtime_stage"
+        and entry["stage"] == "affective_assessment"
+        and entry["status"] == "success"
+    )
+    assert "source=fallback" in affective_success["summary"]
+    assert "fallback_reason=openai_affective_parse_failed" in affective_success["summary"]
+
+
 async def test_runtime_pipeline_emits_stage_failure_log_for_memory_persist(caplog) -> None:
     memory = FailingWriteMemoryRepository(recent_memory=[])
     action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
