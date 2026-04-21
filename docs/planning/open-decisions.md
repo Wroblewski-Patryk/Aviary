@@ -712,6 +712,9 @@ The current repo already works as an MVP slice, but several architecture-level d
     `/health.identity` and runtime debug, including precedence baseline,
     supported codes, selected source, candidate continuity inputs, and
     fallback posture.
+  - `PRJ-413` now regression-pins explicit-request posture, profile-only
+    continuity posture, and unsupported-profile fallback against the current
+    MVP language boundary (`en|pl`).
 - Decision (interim baseline resolved in `PRJ-411`, 2026-04-21):
   - language handling stays heuristic-plus-profile for the MVP
   - multilingual posture remains explicitly bounded to supported runtime codes

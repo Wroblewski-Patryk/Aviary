@@ -1733,8 +1733,14 @@ Last updated: 2026-04-21
 - 2026-04-21: `PRJ-412` validation is green:
   `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_pipeline.py`
   passed with `149 passed`.
-- 2026-04-21: `PRJ-413` is now the first `READY` task, focused on regression
-  coverage for language-continuity posture and supported-language boundaries.
+- 2026-04-21: `PRJ-413` is complete: explicit-request posture,
+  profile-continuity posture, and unsupported-profile fallback are now
+  regression-pinned across language utility and runtime paths.
+- 2026-04-21: `PRJ-413` validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_language_runtime.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+  passed with `165 passed`.
+- 2026-04-21: `PRJ-414` is now the first `READY` task, focused on final
+  docs/context sync for the identity and language ownership baseline.
 
 ## Working Agreements
 

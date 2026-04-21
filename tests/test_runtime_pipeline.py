@@ -2522,6 +2522,85 @@ async def test_runtime_pipeline_uses_user_profile_language_for_ambiguous_turn_wi
     assert result.system_debug.adaptive_state["language_continuity"]["memory_candidate"] is None
 
 
+async def test_runtime_pipeline_exposes_explicit_request_language_diagnostics_for_current_event() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+
+    result = await runtime.run(
+        Event(
+            event_id="evt-language-explicit-debug",
+            source="api",
+            subsource="event_endpoint",
+            timestamp=datetime.now(timezone.utc),
+            payload={"text": "Reply in Polish, please."},
+            meta=EventMeta(user_id="u-language-explicit-debug", trace_id="t-language-explicit-debug"),
+        )
+    )
+
+    assert result.perception.language == "pl"
+    assert result.perception.language_source == "explicit_request"
+    assert result.system_debug is not None
+    assert result.system_debug.adaptive_state["language_continuity"]["selected_source"] == "explicit_request"
+    assert result.system_debug.adaptive_state["language_continuity"]["current_turn_posture"] == "explicit_request"
+    assert result.system_debug.adaptive_state["language_continuity"]["continuity_resolution"] == (
+        "not_needed_current_turn_signal"
+    )
+    assert result.system_debug.adaptive_state["language_continuity"]["fallback_posture"] == "not_used"
+
+
+async def test_runtime_pipeline_ignores_unsupported_profile_language_in_continuity_diagnostics() -> None:
+    memory = FakeMemoryRepository(
+        recent_memory=[],
+        user_profile={"preferred_language": "es", "language_confidence": 0.95, "language_source": "explicit_request"},
+    )
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    openai = FakeOpenAIClient()
+    reflection = FakeReflectionWorker()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=openai),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=reflection,
+    )
+
+    result = await runtime.run(
+        Event(
+            event_id="evt-language-unsupported-profile",
+            source="api",
+            subsource="event_endpoint",
+            timestamp=datetime.now(timezone.utc),
+            payload={"text": "ok"},
+            meta=EventMeta(user_id="u-language-unsupported-profile", trace_id="t-language-unsupported-profile"),
+        )
+    )
+
+    assert result.perception.language == "en"
+    assert result.perception.language_source == "default"
+    assert result.expression.language == "en"
+    assert result.system_debug is not None
+    assert result.system_debug.adaptive_state["language_continuity"]["selected_source"] == "default"
+    assert result.system_debug.adaptive_state["language_continuity"]["profile_candidate"] is None
+    assert result.system_debug.adaptive_state["language_continuity"]["fallback_posture"] == "selected_default"
+
+
 async def test_runtime_pipeline_preserves_language_continuity_across_session_restart_without_recent_memory() -> None:
     class SessionProfileMemoryRepository(PersistingFakeMemoryRepository):
         def __init__(self) -> None:

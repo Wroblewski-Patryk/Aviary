@@ -54,23 +54,19 @@ Last updated: 2026-04-21
 
 ## READY
 
-- [ ] PRJ-413 Add regressions for language-continuity posture and supported-language boundaries
-  - Group: Identity And Language Ownership Baseline
-  - Owner: QA/Test
-  - Depends on: PRJ-412
-  - Priority: P1
-  - Scope:
-    - pin explicit-request, profile-only continuity, and default posture
-      diagnostics through runtime and API-visible surfaces
-    - keep unsupported-language fallback bounded to the current MVP language set
-
-## BACKLOG
-
 - [ ] PRJ-414 Sync docs/context for identity and language ownership baseline
   - Group: Identity And Language Ownership Baseline
   - Owner: Product Docs
   - Depends on: PRJ-413
   - Priority: P1
+  - Scope:
+    - align architecture, runtime-reality, planning docs, and context truth on
+      the identity-policy owner plus language-continuity diagnostics baseline
+    - leave Group 49 in a clean complete state with no stale `READY` drift
+
+## BACKLOG
+
+- [ ] (none)
 
 ## FUTURE
 
@@ -89,6 +85,22 @@ Last updated: 2026-04-21
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-413 Add regressions for language-continuity posture and supported-language boundaries
+  - Status: DONE
+  - Group: Identity And Language Ownership Baseline
+  - Owner: QA/Test
+  - Depends on: PRJ-412
+  - Priority: P1
+  - Result:
+    - explicit-request posture, profile-only continuity posture, and
+      unsupported-profile fallback are now regression-pinned across language
+      utility and runtime paths
+    - supported-language boundary remains explicit at `en|pl` for current MVP
+      continuity behavior
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_language_runtime.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+      (`165 passed`)
 
 - [x] PRJ-412 Expose language-continuity posture diagnostics through health and runtime debug
   - Status: DONE

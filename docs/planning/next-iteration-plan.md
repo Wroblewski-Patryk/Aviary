@@ -2529,7 +2529,7 @@ This group makes the identity/profile boundary explicit through one shared
 policy owner, then follows it with more visible language-continuity posture
 before any broader multilingual or profile-surface expansion.
 
-Status update (2026-04-21): `PRJ-411..PRJ-412` are complete and `PRJ-413` is
+Status update (2026-04-21): `PRJ-411..PRJ-413` are complete and `PRJ-414` is
 the next derived `READY` task.
 
 - `PRJ-411` Define a shared identity/profile ownership policy and baseline visibility. (complete)
@@ -2555,10 +2555,15 @@ the next derived `READY` task.
       (`149 passed`)
 
 - `PRJ-413` Add regressions for language-continuity posture and supported-language boundaries.
-  - Result:
-    - language-source precedence and unsupported-code fallback should become
-      regression-pinned across runtime and API-visible diagnostics
-    - later multilingual expansion should inherit explicit continuity tests
+  - Result: (complete)
+    - explicit-request posture, profile-only continuity posture, and
+      unsupported-profile fallback are now regression-pinned across language
+      utility, runtime, and API-visible diagnostics
+    - the current MVP language boundary stays explicit at `en|pl` instead of
+      silently accepting unsupported profile continuity inputs
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_language_runtime.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+      (`165 passed`)
 
 - `PRJ-414` Sync docs/context for identity and language ownership baseline.
   - Result:

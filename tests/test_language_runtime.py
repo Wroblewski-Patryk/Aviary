@@ -2,7 +2,11 @@ from datetime import datetime, timezone
 
 from app.agents.perception import PerceptionAgent
 from app.core.contracts import Event, EventMeta
-from app.utils.language import detect_language
+from app.utils.language import (
+    detect_language,
+    detect_language_with_diagnostics,
+    language_continuity_policy_snapshot,
+)
 
 
 def _event(text: str) -> Event:
@@ -21,6 +25,47 @@ def test_detect_language_prefers_explicit_request() -> None:
 
     assert result.code == "pl"
     assert result.source == "explicit_request"
+
+
+def test_language_continuity_policy_snapshot_pins_supported_language_boundary() -> None:
+    snapshot = language_continuity_policy_snapshot()
+
+    assert snapshot == {
+        "policy_owner": "language_continuity",
+        "profile_owner_field": "preferred_language",
+        "supported_language_codes": ["en", "pl"],
+        "precedence": [
+            "explicit_request",
+            "diacritic_signal",
+            "strong_keyword_signal",
+            "continuity_resolution",
+            "weak_keyword_signal",
+            "default",
+        ],
+        "continuity_sources": [
+            "explicit_request",
+            "diacritic_signal",
+            "keyword_signal",
+            "recent_memory",
+            "user_profile",
+            "default",
+        ],
+        "multilingual_posture": "mvp_supported_languages_only",
+    }
+
+
+def test_detect_language_with_diagnostics_exposes_explicit_request_posture() -> None:
+    decision, diagnostics = detect_language_with_diagnostics("Reply in Polish, please.")
+
+    assert decision.code == "pl"
+    assert decision.source == "explicit_request"
+    assert diagnostics["selected_language"] == "pl"
+    assert diagnostics["selected_source"] == "explicit_request"
+    assert diagnostics["current_turn_posture"] == "explicit_request"
+    assert diagnostics["continuity_resolution"] == "not_needed_current_turn_signal"
+    assert diagnostics["fallback_posture"] == "not_used"
+    assert diagnostics["memory_candidate"] is None
+    assert diagnostics["profile_candidate"] is None
 
 
 def test_detect_language_uses_recent_memory_for_short_follow_up() -> None:
@@ -43,6 +88,22 @@ def test_detect_language_uses_user_profile_when_recent_memory_is_missing() -> No
 
     assert result.code == "pl"
     assert result.source == "user_profile"
+
+
+def test_detect_language_with_diagnostics_ignores_unsupported_profile_language_and_falls_back_to_default() -> None:
+    decision, diagnostics = detect_language_with_diagnostics(
+        "ok",
+        user_profile={"preferred_language": "es", "language_confidence": 0.95},
+    )
+
+    assert decision.code == "en"
+    assert decision.source == "default"
+    assert diagnostics["selected_language"] == "en"
+    assert diagnostics["selected_source"] == "default"
+    assert diagnostics["continuity_resolution"] == "default_fallback"
+    assert diagnostics["fallback_posture"] == "selected_default"
+    assert diagnostics["profile_candidate"] is None
+    assert diagnostics["memory_candidate"] is None
 
 
 def test_detect_language_prefers_recent_memory_over_user_profile() -> None:
