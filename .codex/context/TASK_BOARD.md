@@ -36,29 +36,8 @@ Last updated: 2026-04-21
 
 ## READY
 
-- [ ] PRJ-347 Add machine-readable behavior-validation artifact output for CI consumers
-  - Status: READY
-  - Group: Behavior Validation CI-Ingestion Follow-up
-  - Owner: Backend Builder
-  - Depends on: PRJ-346
-  - Priority: P1
-  - Result:
-    - behavior validation run path now emits one machine-readable artifact
-      payload suitable for CI ingestion (`json` contract with summary,
-      scenario-level results, and failure counts)
-    - current human-readable behavior-validation flow remains intact and
-      backward-compatible for local/operator usage
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py`
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-348 Add release/ops script support for behavior-validation CI gate posture
-  - Status: FUTURE
+  - Status: READY
   - Group: Behavior Validation CI-Ingestion Follow-up
   - Owner: Ops/Release
   - Depends on: PRJ-347
@@ -70,6 +49,12 @@ Last updated: 2026-04-21
       violations
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_main_runtime_policy.py tests/test_api_routes.py`
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
 
 - [ ] PRJ-349 Add regressions for behavior-validation artifact and CI gate semantics
   - Status: FUTURE
@@ -113,6 +98,24 @@ Last updated: 2026-04-21
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-347 Add machine-readable behavior-validation artifact output for CI consumers
+  - Status: DONE
+  - Group: Behavior Validation CI-Ingestion Follow-up
+  - Owner: Backend Builder
+  - Depends on: PRJ-346
+  - Priority: P1
+  - Result:
+    - behavior validation run path now emits a machine-readable JSON artifact
+      (`artifacts/behavior_validation/report.json`) with summary counts,
+      per-test status, and pytest exit-code posture
+    - `run_behavior_validation.{ps1,sh}` now use the shared Python entrypoint
+      and remain backward-compatible for local/operator usage
+  - Validation:
+    - `.\.venv\Scripts\python .\scripts\run_behavior_validation.py --artifact-path artifacts/behavior_validation/prj347-report.json`
+      (`6 passed`)
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py`
+      (`140 passed`)
 
 - [x] PRJ-346 Sync docs/context for relation-aware inferred promotion governance lane
   - Status: DONE

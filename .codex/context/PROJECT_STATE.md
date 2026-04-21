@@ -1371,8 +1371,21 @@ Last updated: 2026-04-21
   `docs/planning/open-decisions.md`,
   `.codex/context/TASK_BOARD.md`, and
   `.codex/context/PROJECT_STATE.md`.
-- 2026-04-21: `PRJ-347` is now the next `READY` slice, focused on
-  machine-readable behavior-validation artifact output for CI consumers.
+- 2026-04-21: `PRJ-347` is complete: behavior validation now has a shared
+  Python entrypoint (`scripts/run_behavior_validation.py`) that emits a
+  machine-readable JSON artifact with summary counts, per-test status, and
+  pytest exit-code posture for CI ingestion.
+- 2026-04-21: `PRJ-347` also updates both shell wrappers
+  (`run_behavior_validation.ps1`, `run_behavior_validation.sh`) to consume the
+  shared artifact-producing path without breaking local/operator behavior.
+- 2026-04-21: `PRJ-347` validation is green:
+  `.\.venv\Scripts\python .\scripts\run_behavior_validation.py --artifact-path artifacts/behavior_validation/prj347-report.json`
+  passed with `6 passed`.
+- 2026-04-21: `PRJ-347` scope regression is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py`
+  passed with `140 passed`.
+- 2026-04-21: `PRJ-348` is now the next `READY` slice, focused on release/ops
+  script posture for CI artifact gating semantics.
 
 ## Working Agreements
 

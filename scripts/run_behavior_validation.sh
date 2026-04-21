@@ -9,4 +9,33 @@ else
   PYTHON_BIN="python3"
 fi
 
-"$PYTHON_BIN" -m pytest -q tests/test_api_routes.py tests/test_runtime_pipeline.py -k "system_debug_behavior_contract or system_debug_surface or behavior_harness_outputs_structured_contract_results or runtime_behavior_"
+ARTIFACT_PATH="artifacts/behavior_validation/report.json"
+PRINT_ARTIFACT_JSON="false"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --artifact-path)
+      ARTIFACT_PATH="${2:-$ARTIFACT_PATH}"
+      shift 2
+      ;;
+    --print-artifact-json)
+      PRINT_ARTIFACT_JSON="true"
+      shift
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+
+ARGS=(
+  "./scripts/run_behavior_validation.py"
+  "--python-exe" "$PYTHON_BIN"
+  "--artifact-path" "$ARTIFACT_PATH"
+)
+if [[ "$PRINT_ARTIFACT_JSON" == "true" ]]; then
+  ARGS+=("--print-artifact-json")
+fi
+
+"$PYTHON_BIN" "${ARGS[@]}"
