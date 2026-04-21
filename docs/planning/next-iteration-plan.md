@@ -68,6 +68,30 @@ Completed on 2026-04-22:
   planning/context truth are synchronized through Group 56.
 - after Group 56 closed, no seeded `READY` task remains; the next queue should
   again be derived from any newly discovered post-convergence follow-up.
+- `PRJ-443` is complete: top-level planning/context surfaces now use one shared
+  post-convergence stance instead of repeating stale queue-seeding notes from
+  earlier convergence waves.
+
+## Post-Convergence Operating Mode
+
+After `PRJ-442`, the repo no longer has a pre-seeded architecture queue.
+
+Execution should now prefer:
+
+- newly discovered drift between runtime truth, `/health`, `system_debug`, and
+  canonical docs
+- operator-facing hardening where release smoke, deployment evidence, or
+  runtime policy still leave ambiguous posture
+- focused behavioral gaps where existing architecture is documented but live
+  runtime influence is not yet convincingly test-visible
+
+Execution should now avoid:
+
+- inventing placeholder queue groups only to preserve numbering momentum
+- keeping stale historical queue-seeding notes at the top of canonical backlog
+  files once those queues are already complete
+- reopening resolved architecture decisions without a concrete runtime or
+  operational trigger
 
 Completed on 2026-04-21:
 

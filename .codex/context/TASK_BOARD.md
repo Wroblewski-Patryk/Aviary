@@ -15,54 +15,17 @@ Last updated: 2026-04-22
   - run relevant tests and validations
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
-- The convergence queue is complete through `PRJ-299`; reflection lane is now
-  complete through `PRJ-304`, and post-reflection hardening plus runtime
-  behavior-validation queue is complete through `PRJ-317`.
-- Runtime behavior-validation lane is now complete through `PRJ-317`
-  (`PRJ-310..PRJ-317`).
-- Next architecture-to-code queue is now seeded through `PRJ-378`.
-- Next architecture-to-code queue is now seeded through `PRJ-394`.
-- Subsequent slices should follow the grouped execution order for foreground
-  runtime convergence, background topology, production retrieval rollout,
-  adaptive governance, dual-loop execution boundaries, and operational
-  hardening.
-- Memory, continuity, and failure handling are now validated as
-  living-system behavior rather than only contract correctness.
-- Next queue turns remaining architecture decisions into implementation lanes
-  for connector execution policy, future-write typed intents,
-  `ActionDelivery` extensibility, and production compatibility-sunset
-  readiness.
-- Additional architecture-alignment work should be appended after that queue so
-  the backlog stays explicitly open for later discovery instead of pretending
-  the plan is complete.
-- The next convergence queue now focuses on background adaptive-output
-  ownership, durable attention-inbox rollout, role/skill capability
-  separation, and retrieval/theta governance so the repo keeps moving toward
-  the canonical architecture after compatibility-sunset readiness.
-- Groups 41 through 44 are now complete through `PRJ-394`.
-- Background adaptive outputs, durable attention parity baseline, bounded
-  role-to-skill capability metadata, and retrieval/theta governance snapshots
-  are now explicit runtime surfaces instead of planning-only follow-ups.
-- The next convergence queue is now seeded through `PRJ-410`.
-- That queue focuses on evidence-driven role selection, affective-assessment
-  rollout policy, reflection scope governance, and true durable attention
-  contract-store rollout preparation.
-- The next convergence queue is now seeded through `PRJ-414`.
-- That queue focuses on explicit identity/profile ownership visibility first,
-  followed by language-continuity posture diagnostics and the related
-  docs/regression sync.
-- Group 49 is now complete through `PRJ-414`.
-- The next convergence queue is now seeded through `PRJ-442`.
-- That queue focuses on runtime topology finalization, production-boundary
-  hardening, retrieval and affective-memory productionization, adaptive
-  identity governance, goal/task plus proposal governance, scheduler and
-  connector capability convergence, and deployment standard plus
-  release-reliability closure.
-- Groups 50 through 56 are now complete through `PRJ-442`.
-- Runtime topology switch policy, production-boundary hardening, local
-  provider-backed retrieval posture, adaptive/planning/connector governance
-  snapshots, and deployment-standard release evidence are now explicit runtime
-  surfaces instead of open planning-only follow-ups.
+- Architecture convergence work is complete through `PRJ-442`.
+- The repo is now in post-convergence follow-up mode:
+  - no seeded execution queue remains
+  - the next task must be derived from newly discovered gaps, drift, or
+    hardening opportunities
+  - new slices should prefer runtime truth, health/debug visibility,
+    deployment evidence, and canonical-doc consistency over synthetic backlog
+    generation
+- Memory, continuity, failure handling, adaptive governance, scheduler and
+  connector boundaries, retrieval posture, and release evidence are now
+  validated as living-system behavior rather than planning-only follow-ups.
 
 ## READY
 
@@ -89,6 +52,22 @@ Last updated: 2026-04-22
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-443 Clean post-convergence backlog surfaces and planning truth
+  - Status: DONE
+  - Group: Post-Convergence Backlog Hygiene
+  - Owner: Product Docs
+  - Depends on: PRJ-442
+  - Priority: P1
+  - Result:
+    - task board, project state, next-iteration plan, and open decisions now
+      share one post-Group-56 operating stance instead of repeating stale
+      queue-seeding notes from earlier convergence waves
+    - the canonical backlog surface is now easier to derive from because it
+      points to post-convergence follow-up discovery rather than historical
+      queue scaffolding
+  - Validation:
+    - doc-and-context sync across `.codex/context/` and `docs/planning/`
 
 - [x] PRJ-414 Sync docs/context for identity and language ownership baseline
   - Status: DONE

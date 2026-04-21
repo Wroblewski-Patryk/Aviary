@@ -9,7 +9,7 @@ Last updated: 2026-04-22
   structured pipeline, replies through API or Telegram, and learns lightweight
   user preferences over time
 - Commercial model: TBD
-- Current phase: target-state architecture convergence planning and execution
+- Current phase: post-convergence follow-up discovery and hardening
 
 ## Product Decisions (Confirmed)
 
@@ -1767,6 +1767,10 @@ Last updated: 2026-04-22
 - 2026-04-22: no seeded `READY` task remains after Group 56; the next
   architecture slice should again be derived from planning docs and any newly
   discovered post-convergence follow-ups.
+- 2026-04-22: `PRJ-443` is complete: stale queue-seeding notes from earlier
+  convergence waves were pruned from the top-level planning/context surfaces so
+  the repo now has one shared post-convergence operating stance instead of a
+  stack of historical queue headers.
 
 ## Working Agreements
 

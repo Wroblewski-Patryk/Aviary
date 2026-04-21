@@ -89,26 +89,14 @@ The current repo already works as an MVP slice, but several architecture-level d
     (`12`, `12a`, `12c`) - complete
   - `PRJ-439..PRJ-442`: deployment standard and release-reliability closure
     (`6`, `7`) - complete
-- reflection deployment lane is complete through `PRJ-304`, and
-  post-reflection hardening decisions are now complete through `PRJ-309`.
-- runtime behavior-validation lane is now complete through `PRJ-317`.
-- next architecture-to-code queue is now seeded through `PRJ-394`.
-- post-Group-44 state now has no remaining `READY` task; the next convergence
-  queue should again be derived from planning docs plus the still-open
-  architecture decisions below.
-- post-Group-48 state has no remaining seeded `READY`; the next architecture
-  slice should be derived from the remaining open decisions below.
-- post-`PRJ-411` state now has the next convergence queue seeded through
-  `PRJ-414`, starting with language-continuity posture diagnostics on top of
-  the new identity/profile ownership baseline.
-- post-Group-49 state has no remaining seeded `READY`; the next architecture
-  slice should again be derived from the remaining open decisions below.
-- on 2026-04-22, the next convergence queue was seeded through `PRJ-442` so
-  the remaining open decisions now map to explicit groups instead of an empty
-  post-Group-49 backlog.
 - post-Group-56 state has no remaining seeded `READY`; the next architecture
   slice should again be derived from any newly discovered post-convergence
-  follow-up instead of the previously open decision clusters below.
+  follow-up instead of inventing a new queue without a concrete runtime or
+  operational driver.
+- historical queue-seeding notes for Groups 41 through 56 are intentionally
+  omitted from this header now that those groups are complete; the decisions
+  below remain as architecture history plus future reference unless a new
+  follow-up reopens them explicitly.
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 
