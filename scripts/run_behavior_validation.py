@@ -23,6 +23,12 @@ BEHAVIOR_FILTER = (
     "or runtime_behavior_"
 )
 DEFAULT_ARTIFACT_PATH = Path("artifacts/behavior_validation/report.json")
+ARTIFACT_SCHEMA_VERSION = "1.1.0"
+GATE_REASON_TAXONOMY_VERSION = "v1"
+GATE_REASON_FAILED_CASES_DETECTED = "failed_cases_detected"
+GATE_REASON_ERROR_CASES_DETECTED = "error_cases_detected"
+GATE_REASON_PYTEST_EXIT_CODE_NON_ZERO = "pytest_exit_code_non_zero"
+GATE_REASON_NO_BEHAVIOR_TESTS_COLLECTED = "no_behavior_validation_tests_collected"
 
 
 @dataclass(frozen=True)
@@ -136,6 +142,8 @@ def _artifact_payload(*, exit_code: int, pytest_cmd: list[str], results: list[Va
 
     return {
         "kind": "behavior_validation_artifact",
+        "artifact_schema_version": ARTIFACT_SCHEMA_VERSION,
+        "gate_reason_taxonomy_version": GATE_REASON_TAXONOMY_VERSION,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "pytest_cmd": pytest_cmd,
         "summary": {
@@ -163,25 +171,32 @@ def _evaluate_gate(
     gate_mode: str,
     summary: dict[str, int],
     ci_require_tests: bool,
-) -> tuple[str, list[str]]:
+) -> tuple[str, list[str], dict[str, int]]:
+    context = {
+        "summary_total": int(summary.get("total", 0)),
+        "summary_failed": int(summary.get("failed", 0)),
+        "summary_errors": int(summary.get("errors", 0)),
+        "pytest_exit_code": int(summary.get("exit_code", 1)),
+    }
+
     if gate_mode == "operator":
-        if int(summary.get("exit_code", 1)) == 0:
-            return "pass", []
-        return "fail", [f"pytest_exit_code_non_zero:{summary.get('exit_code', 1)}"]
+        if context["pytest_exit_code"] == 0:
+            return "pass", [], context
+        return "fail", [GATE_REASON_PYTEST_EXIT_CODE_NON_ZERO], context
 
     violations: list[str] = []
-    if int(summary.get("failed", 0)) > 0:
-        violations.append("failed_cases_detected")
-    if int(summary.get("errors", 0)) > 0:
-        violations.append("error_cases_detected")
-    if int(summary.get("exit_code", 1)) != 0:
-        violations.append(f"pytest_exit_code_non_zero:{summary.get('exit_code', 1)}")
-    if ci_require_tests and int(summary.get("total", 0)) == 0:
-        violations.append("no_behavior_validation_tests_collected")
+    if context["summary_failed"] > 0:
+        violations.append(GATE_REASON_FAILED_CASES_DETECTED)
+    if context["summary_errors"] > 0:
+        violations.append(GATE_REASON_ERROR_CASES_DETECTED)
+    if context["pytest_exit_code"] != 0:
+        violations.append(GATE_REASON_PYTEST_EXIT_CODE_NON_ZERO)
+    if ci_require_tests and context["summary_total"] == 0:
+        violations.append(GATE_REASON_NO_BEHAVIOR_TESTS_COLLECTED)
 
     if violations:
-        return "fail", violations
-    return "pass", []
+        return "fail", violations, context
+    return "pass", [], context
 
 
 def main() -> int:
@@ -199,7 +214,7 @@ def main() -> int:
     results = _parse_junit_results(junit_path=junit_path)
     payload = _artifact_payload(exit_code=exit_code, pytest_cmd=pytest_cmd, results=results)
     summary = payload["summary"]
-    gate_status, gate_violations = _evaluate_gate(
+    gate_status, gate_violations, gate_context = _evaluate_gate(
         gate_mode=str(args.gate_mode),
         summary=summary,
         ci_require_tests=bool(args.ci_require_tests),
@@ -207,7 +222,9 @@ def main() -> int:
     payload["gate"] = {
         "mode": str(args.gate_mode),
         "status": gate_status,
+        "reason_taxonomy_version": GATE_REASON_TAXONOMY_VERSION,
         "violations": gate_violations,
+        "violation_context": gate_context,
         "ci_require_tests": bool(args.ci_require_tests),
     }
     artifact_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")

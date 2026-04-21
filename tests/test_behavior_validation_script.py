@@ -26,18 +26,24 @@ def _summary(*, total: int, passed: int, failed: int, errors: int, skipped: int,
 
 
 def test_ci_gate_fails_when_no_tests_collected_and_tests_are_required() -> None:
-    status, violations = MODULE._evaluate_gate(
+    status, violations, context = MODULE._evaluate_gate(
         gate_mode="ci",
         summary=_summary(total=0, passed=0, failed=0, errors=0, skipped=0, exit_code=0),
         ci_require_tests=True,
     )
 
     assert status == "fail"
-    assert violations == ["no_behavior_validation_tests_collected"]
+    assert violations == [MODULE.GATE_REASON_NO_BEHAVIOR_TESTS_COLLECTED]
+    assert context == {
+        "summary_total": 0,
+        "summary_failed": 0,
+        "summary_errors": 0,
+        "pytest_exit_code": 0,
+    }
 
 
 def test_ci_gate_allows_empty_collection_when_requirement_is_disabled() -> None:
-    status, violations = MODULE._evaluate_gate(
+    status, violations, context = MODULE._evaluate_gate(
         gate_mode="ci",
         summary=_summary(total=0, passed=0, failed=0, errors=0, skipped=0, exit_code=0),
         ci_require_tests=False,
@@ -45,17 +51,19 @@ def test_ci_gate_allows_empty_collection_when_requirement_is_disabled() -> None:
 
     assert status == "pass"
     assert violations == []
+    assert context["summary_total"] == 0
 
 
 def test_operator_gate_tracks_pytest_exit_only() -> None:
-    status, violations = MODULE._evaluate_gate(
+    status, violations, context = MODULE._evaluate_gate(
         gate_mode="operator",
         summary=_summary(total=0, passed=0, failed=0, errors=0, skipped=0, exit_code=1),
         ci_require_tests=True,
     )
 
     assert status == "fail"
-    assert violations == ["pytest_exit_code_non_zero:1"]
+    assert violations == [MODULE.GATE_REASON_PYTEST_EXIT_CODE_NON_ZERO]
+    assert context["pytest_exit_code"] == 1
 
 
 def test_main_includes_gate_payload_and_returns_ci_failure_on_gate_violation(
@@ -82,10 +90,15 @@ def test_main_includes_gate_payload_and_returns_ci_failure_on_gate_violation(
 
     payload = MODULE.json.loads(artifact_path.read_text(encoding="utf-8"))
     assert exit_code == 1
+    assert payload["artifact_schema_version"] == MODULE.ARTIFACT_SCHEMA_VERSION
+    assert payload["gate_reason_taxonomy_version"] == MODULE.GATE_REASON_TAXONOMY_VERSION
     assert payload["summary"]["exit_code"] == 0
     assert payload["gate"]["mode"] == "ci"
     assert payload["gate"]["status"] == "fail"
-    assert payload["gate"]["violations"] == ["no_behavior_validation_tests_collected"]
+    assert payload["gate"]["reason_taxonomy_version"] == MODULE.GATE_REASON_TAXONOMY_VERSION
+    assert payload["gate"]["violations"] == [MODULE.GATE_REASON_NO_BEHAVIOR_TESTS_COLLECTED]
+    assert payload["gate"]["violation_context"]["summary_total"] == 0
+    assert payload["gate"]["violation_context"]["pytest_exit_code"] == 0
     assert payload["gate"]["ci_require_tests"] is True
 
 
@@ -113,7 +126,9 @@ def test_main_includes_gate_payload_and_keeps_operator_mode_exit_code(
 
     payload = MODULE.json.loads(artifact_path.read_text(encoding="utf-8"))
     assert exit_code == 0
+    assert payload["artifact_schema_version"] == MODULE.ARTIFACT_SCHEMA_VERSION
     assert payload["gate"]["mode"] == "operator"
     assert payload["gate"]["status"] == "pass"
     assert payload["gate"]["violations"] == []
+    assert payload["gate"]["violation_context"]["pytest_exit_code"] == 0
     assert payload["gate"]["ci_require_tests"] is True

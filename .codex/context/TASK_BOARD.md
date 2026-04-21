@@ -36,28 +36,8 @@ Last updated: 2026-04-21
 
 ## READY
 
-- [ ] PRJ-351 Add artifact schema versioning and gate reason taxonomy for behavior-validation reports
-  - Status: READY
-  - Group: Behavior Validation Artifact Governance
-  - Owner: Backend Builder
-  - Depends on: PRJ-350
-  - Priority: P1
-  - Result:
-    - behavior-validation artifact now exposes explicit schema version and
-      deterministic gate reason taxonomy for stable CI ingestion
-    - operator and CI consumers can distinguish contract changes from runtime
-      failures without inference from free-text fields
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_runtime_pipeline.py`
-
-## BACKLOG
-
-- [ ] (none)
-
-## FUTURE
-
 - [ ] PRJ-352 Add local artifact gate-evaluation mode for CI consumers without rerunning pytest
-  - Status: FUTURE
+  - Status: READY
   - Group: Behavior Validation Artifact Governance
   - Owner: Backend Builder
   - Depends on: PRJ-351
@@ -69,6 +49,12 @@ Last updated: 2026-04-21
       preserving one gate contract owner
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_main_runtime_policy.py tests/test_api_routes.py`
+
+## BACKLOG
+
+- [ ] (none)
+
+## FUTURE
 
 - [ ] PRJ-353 Add regressions for schema-version and local artifact gate-evaluation semantics
   - Status: FUTURE
@@ -112,6 +98,24 @@ Last updated: 2026-04-21
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-351 Add artifact schema versioning and gate reason taxonomy for behavior-validation reports
+  - Status: DONE
+  - Group: Behavior Validation Artifact Governance
+  - Owner: Backend Builder
+  - Depends on: PRJ-350
+  - Priority: P1
+  - Result:
+    - behavior-validation artifact now includes explicit schema-version
+      metadata (`artifact_schema_version`) and gate-reason taxonomy version
+      (`gate_reason_taxonomy_version`)
+    - gate violations now use normalized taxonomy codes with explicit
+      `violation_context`, making CI-consumer parsing deterministic
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_runtime_pipeline.py`
+      (`80 passed`)
+    - `.\.venv\Scripts\python .\scripts\run_behavior_validation.py --artifact-path artifacts/behavior_validation/prj351-report.json --gate-mode ci`
+      (`6 passed`)
 
 - [x] PRJ-350 Sync docs/context for behavior-validation CI-ingestion lane
   - Status: DONE

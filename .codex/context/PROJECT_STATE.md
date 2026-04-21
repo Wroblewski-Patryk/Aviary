@@ -1424,8 +1424,19 @@ Last updated: 2026-04-21
   `docs/engineering/testing.md`,
   `.codex/context/TASK_BOARD.md`, and
   `.codex/context/PROJECT_STATE.md`.
-- 2026-04-21: `PRJ-351` is now the next `READY` slice, focused on
-  behavior-validation artifact schema-version and gate-reason taxonomy posture.
+- 2026-04-21: `PRJ-351` is complete: behavior-validation artifact output now
+  includes explicit schema-version metadata and normalized gate-reason
+  taxonomy/version fields for deterministic CI parsing.
+- 2026-04-21: `PRJ-351` also adds explicit gate `violation_context` payload so
+  reason codes can be interpreted without parsing free-text fragments.
+- 2026-04-21: `PRJ-351` validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_runtime_pipeline.py`
+  passed with `80 passed`.
+- 2026-04-21: `PRJ-351` artifact smoke is green:
+  `.\.venv\Scripts\python .\scripts\run_behavior_validation.py --artifact-path artifacts/behavior_validation/prj351-report.json --gate-mode ci`
+  passed with `6 passed`.
+- 2026-04-21: `PRJ-352` is now the next `READY` slice, focused on local
+  artifact gate-evaluation mode for CI consumers without rerunning pytest.
 
 ## Working Agreements
 
