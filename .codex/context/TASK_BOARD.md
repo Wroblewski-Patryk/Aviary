@@ -50,75 +50,42 @@ Last updated: 2026-04-21
 
 ## READY
 
-- [ ] PRJ-403 Define explicit scope policy for reflection outputs with multi-goal risk
-  - Group: Reflection Scope Governance
+- [ ] PRJ-407 Define the durable attention contract-store shape and persistence responsibilities
+  - Group: Durable Attention Contract-Store Rollout
   - Owner: Planner
-  - Depends on: PRJ-402
+  - Depends on: PRJ-406
   - Priority: P1
   - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_api_routes.py tests/test_graph_state_contract.py`
 
 ## BACKLOG
 
-- [ ] PRJ-404 Apply scope policy to remaining reflection outputs and runtime readers
-  - Group: Reflection Scope Governance
+- [ ] PRJ-408 Add repository-backed durable attention store primitives behind owner-mode rollout
+  - Group: Durable Attention Contract-Store Rollout
   - Owner: Backend Builder
-  - Depends on: PRJ-403
+  - Depends on: PRJ-407
   - Priority: P1
   - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_api_routes.py tests/test_runtime_pipeline.py`
 
-- [ ] PRJ-405 Add regressions for no-cross-goal leakage in scoped reflection outputs
-  - Group: Reflection Scope Governance
+- [ ] PRJ-409 Add regressions for durable attention contract-store parity and cleanup behavior
+  - Group: Durable Attention Contract-Store Rollout
   - Owner: QA/Test
-  - Depends on: PRJ-404
+  - Depends on: PRJ-408
   - Priority: P1
   - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_api_routes.py tests/test_runtime_pipeline.py`
 
-- [ ] PRJ-406 Sync docs/context for reflection scope governance
-  - Group: Reflection Scope Governance
+- [ ] PRJ-410 Sync docs/context for durable attention contract-store rollout
+  - Group: Durable Attention Contract-Store Rollout
   - Owner: Product Docs
-  - Depends on: PRJ-405
+  - Depends on: PRJ-409
   - Priority: P1
   - Validation:
     - doc-and-context sync across `docs/architecture/`,
       `docs/implementation/`, `docs/planning/`, and `.codex/context/`
 
 ## FUTURE
-
-- [ ] PRJ-403 Define explicit scope policy for reflection outputs with multi-goal risk
-  - Group: Reflection Scope Governance
-  - Owner: Planner
-  - Depends on: PRJ-402
-  - Priority: P1
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
-
-- [ ] PRJ-404 Apply scope policy to remaining reflection outputs and runtime readers
-  - Group: Reflection Scope Governance
-  - Owner: Backend Builder
-  - Depends on: PRJ-403
-  - Priority: P1
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
-
-- [ ] PRJ-405 Add regressions for no-cross-goal leakage in scoped reflection outputs
-  - Group: Reflection Scope Governance
-  - Owner: QA/Test
-  - Depends on: PRJ-404
-  - Priority: P1
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
-
-- [ ] PRJ-406 Sync docs/context for reflection scope governance
-  - Group: Reflection Scope Governance
-  - Owner: Product Docs
-  - Depends on: PRJ-405
-  - Priority: P1
-  - Validation:
-    - doc-and-context sync across `docs/architecture/`,
-      `docs/implementation/`, `docs/planning/`, and `.codex/context/`
 
 - [ ] PRJ-407 Define the durable attention contract-store shape and persistence responsibilities
   - Group: Durable Attention Contract-Store Rollout
@@ -166,6 +133,71 @@ Last updated: 2026-04-21
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-406 Sync docs/context for reflection scope governance
+  - Status: DONE
+  - Group: Reflection Scope Governance
+  - Owner: Product Docs
+  - Depends on: PRJ-405
+  - Priority: P1
+  - Result:
+    - architecture, runtime-reality, planning docs, testing guidance, and
+      context truth now align on one reflection scope owner plus multi-goal
+      leakage guardrails
+    - `PRJ-407` is now the next `READY` task for durable attention
+      contract-store rollout
+  - Validation:
+    - doc-and-context sync across `docs/architecture/`,
+      `docs/implementation/`, `docs/planning/`, `docs/engineering/`, and
+      `.codex/context/`
+
+- [x] PRJ-405 Add regressions for no-cross-goal leakage in scoped reflection outputs
+  - Status: DONE
+  - Group: Reflection Scope Governance
+  - Owner: QA/Test
+  - Depends on: PRJ-404
+  - Priority: P1
+  - Result:
+    - regressions now pin goal-scoped reflection writes, canonicalized
+      repository reads, and runtime behavior when scoped rows could otherwise
+      override global adaptive signals
+    - future reflection-scope additions inherit explicit no-cross-goal
+      leakage coverage across worker, repository, and runtime paths
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
+      (`172 passed`)
+
+- [x] PRJ-404 Apply scope policy to remaining reflection outputs and runtime readers
+  - Status: DONE
+  - Group: Reflection Scope Governance
+  - Owner: Backend Builder
+  - Depends on: PRJ-403
+  - Priority: P1
+  - Result:
+    - reflection writes and memory/runtime readers now share one policy owner
+      in `app/core/reflection_scope_policy.py`
+    - repository canonicalizes invalid scoped writes for global reflection
+      outputs and prevents scoped overrides from leaking into runtime
+  - Validation:
+    - Group 47 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
+      (`172 passed`)
+
+- [x] PRJ-403 Define explicit scope policy for reflection outputs with multi-goal risk
+  - Status: DONE
+  - Group: Reflection Scope Governance
+  - Owner: Planner
+  - Depends on: PRJ-402
+  - Priority: P1
+  - Result:
+    - reflection scope ownership is now explicit through one shared owner for
+      global, goal-scoped, and future task-scoped reflection families
+    - goal-progress and milestone conclusions remain goal-scoped, while
+      adaptive role/collaboration/affective outputs remain user-global unless
+      architecture changes explicitly revise that baseline
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
+      (`172 passed`)
 
 - [x] PRJ-402 Sync docs/context for affective-assessment rollout policy
   - Status: DONE

@@ -203,6 +203,12 @@ The live runtime now supports scoped semantic conclusions:
 - `aion_conclusion` rows include `scope_type` and `scope_key`
 - scoped uniqueness is `(user_id, kind, scope_type, scope_key)`
 - reflection writes goal-operational conclusions with goal scope
+- reflection scope ownership is now centralized in
+  `app/core/reflection_scope_policy.py`
+- goal-progress and milestone conclusions remain goal-scoped, while
+  affective/adaptive reflection outputs stay user-global by default
+- repository/runtime readers now canonicalize invalid scoped overrides for
+  global reflection outputs instead of letting them shadow global posture
 
 Current transition note:
 
@@ -675,6 +681,8 @@ Deployment baseline update (`PRJ-301`):
   `docs/operations/runtime-ops-runbook.md`
 - release smoke now fails fast when reflection deployment-readiness blockers
   are present in `/health.reflection.deployment_readiness`
+- reflection scope governance now treats cross-goal leakage as a shared
+  reader/writer contract problem, not only as a worker-local heuristic
 
 This is more advanced than a purely conceptual background loop, but still
 lighter than the long-term architecture could become.

@@ -1373,6 +1373,56 @@ async def test_memory_repository_get_user_conclusions_can_filter_by_scope(tmp_pa
     await engine.dispose()
 
 
+async def test_memory_repository_canonicalizes_global_reflection_conclusions_to_global_scope(tmp_path) -> None:
+    database_path = tmp_path / "memory-conclusions-reflection-scope-policy.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    stored = await repository.upsert_conclusion(
+        user_id="u-1",
+        kind="affective_support_pattern",
+        content="recurring_distress",
+        confidence=0.76,
+        source="background_reflection",
+        supporting_event_id="evt-affective-goal-11",
+        scope_type="goal",
+        scope_key="11",
+    )
+
+    goal_only = await repository.get_user_conclusions(
+        user_id="u-1",
+        limit=5,
+        scope_type="goal",
+        scope_key="11",
+    )
+    goal_with_global = await repository.get_user_conclusions(
+        user_id="u-1",
+        limit=5,
+        scope_type="goal",
+        scope_key="11",
+        include_global=True,
+    )
+    preferences = await repository.get_user_runtime_preferences(
+        user_id="u-1",
+        scope_type="goal",
+        scope_key="11",
+        include_global=True,
+    )
+
+    assert stored["scope_type"] == "global"
+    assert stored["scope_key"] == "global"
+    assert goal_only == []
+    assert len(goal_with_global) == 1
+    assert goal_with_global[0]["scope_type"] == "global"
+    assert preferences["affective_support_pattern"] == "recurring_distress"
+    assert preferences["affective_support_pattern_scope_type"] == "global"
+    assert preferences["affective_support_pattern_scope_key"] == "global"
+
+    await engine.dispose()
+
+
 async def test_memory_repository_exposes_goal_progress_score_in_runtime_preferences(tmp_path) -> None:
     database_path = tmp_path / "memory-goal-progress-score.db"
     engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")

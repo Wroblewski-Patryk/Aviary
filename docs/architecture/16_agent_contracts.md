@@ -171,6 +171,29 @@ without fragmenting handoff ownership by connector family.
 
 ---
 
+## Reflection Scope Governance Contract
+
+Reflection outputs now follow one explicit scope owner rather than ad hoc
+writer-side heuristics.
+
+Contract rules:
+
+1. goal-progress and goal-milestone reflection conclusions are goal-scoped
+   adaptive outputs and must resolve through one shared scope-policy owner.
+2. affective reflection conclusions plus adaptive role/collaboration signals
+   remain user-global unless architecture docs explicitly promote them to
+   narrower scope families later.
+3. reflection writers and repository/runtime readers must consume the same
+   scope-policy owner so invalid scoped overrides for global outputs are
+   ignored instead of leaking across goals.
+4. future task-scoped reflection additions must register their family in the
+   shared scope policy before runtime readers depend on them.
+
+This keeps multi-goal leakage guardrails explicit without moving reflection
+logic back into stage-local conventions.
+
+---
+
 ## Adaptive Influence Governance Contract (PRJ-288 Baseline)
 
 Adaptive signals may influence foreground cognition only through one governed

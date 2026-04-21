@@ -17,6 +17,11 @@ from app.core.behavior_harness import (
 )
 from app.core.contracts import Event, EventMeta, MotivationOutput, NoopDomainIntent
 from app.core.events import build_scheduler_event
+from app.core.reflection_scope_policy import (
+    conclusion_matches_scope_request,
+    normalize_scope,
+    relation_matches_scope_request,
+)
 from app.core.runtime import RuntimeOrchestrator
 from app.expression.generator import ExpressionAgent
 from app.motivation.engine import MotivationEngine
@@ -65,7 +70,18 @@ class FakeMemoryRepository:
             return self.user_preferences
         if normalized_scope_type == "global":
             return self.user_preferences
-        scoped = self.scoped_user_preferences.get((normalized_scope_type, normalized_scope_key), {})
+        scoped = {
+            key: value
+            for key, value in self.scoped_user_preferences.get((normalized_scope_type, normalized_scope_key), {}).items()
+            if conclusion_matches_scope_request(
+                kind=key.removesuffix("_confidence").removesuffix("_source").removesuffix("_updated_at").removesuffix("_scope_type").removesuffix("_scope_key"),
+                row_scope_type=normalized_scope_type,
+                row_scope_key=normalized_scope_key,
+                requested_scope_type=scope_type,
+                requested_scope_key=scope_key,
+                include_global=include_global,
+            )
+        }
         if include_global:
             merged = dict(self.user_preferences)
             merged.update(scoped)
@@ -84,20 +100,19 @@ class FakeMemoryRepository:
         rows = [*self.user_conclusions, *self.scoped_user_conclusions]
         if scope_type is None and scope_key is None:
             return rows[:limit]
-        normalized_scope_type, normalized_scope_key = self._normalize_scope(scope_type=scope_type, scope_key=scope_key)
-        if normalized_scope_type == "global":
-            scoped_rows = [row for row in rows if str(row.get("scope_type", "global")) == "global"]
-            return scoped_rows[:limit]
-        scoped_rows = [
+        filtered_rows = [
             row
             for row in rows
-            if str(row.get("scope_type", "global")) == normalized_scope_type
-            and str(row.get("scope_key", "global")) == normalized_scope_key
+            if conclusion_matches_scope_request(
+                kind=str(row.get("kind", "")),
+                row_scope_type=str(row.get("scope_type", "global")),
+                row_scope_key=str(row.get("scope_key", "global")),
+                requested_scope_type=scope_type,
+                requested_scope_key=scope_key,
+                include_global=include_global,
+            )
         ]
-        if include_global:
-            global_rows = [row for row in rows if str(row.get("scope_type", "global")) == "global"]
-            return [*scoped_rows, *global_rows][:limit]
-        return scoped_rows[:limit]
+        return filtered_rows[:limit]
 
     async def get_user_theta(self, user_id: str) -> dict | None:
         return self.user_theta
@@ -160,13 +175,7 @@ class FakeMemoryRepository:
         return rows[:limit]
 
     def _normalize_scope(self, *, scope_type: str | None, scope_key: str | None) -> tuple[str, str]:
-        normalized_scope_type = str(scope_type or "global").strip().lower()
-        normalized_scope_key = str(scope_key or "").strip()
-        if normalized_scope_type not in {"global", "goal", "task"}:
-            return "global", "global"
-        if normalized_scope_type == "global" or not normalized_scope_key:
-            return "global", "global"
-        return normalized_scope_type, normalized_scope_key
+        return normalize_scope(scope_type=scope_type, scope_key=scope_key)
 
     async def write_episode(self, **kwargs) -> dict:
         return {
@@ -374,14 +383,14 @@ class FakeHybridMemoryRepository(FakeMemoryRepository):
             if not has_scope:
                 rows.append(item)
                 continue
-            item_scope_type, item_scope_key = self._normalize_scope(
-                scope_type=str(item.get("scope_type") or "global"),
-                scope_key=str(item.get("scope_key") or "global"),
-            )
-            if item_scope_type == normalized_scope_type and item_scope_key == normalized_scope_key:
-                rows.append(item)
-                continue
-            if include_global and item_scope_type == "global":
+            if relation_matches_scope_request(
+                relation_type=str(item.get("relation_type", "")),
+                row_scope_type=str(item.get("scope_type") or "global"),
+                row_scope_key=str(item.get("scope_key") or "global"),
+                requested_scope_type=scope_type,
+                requested_scope_key=scope_key,
+                include_global=include_global,
+            ):
                 rows.append(item)
         return rows[:limit]
 
@@ -1604,6 +1613,78 @@ async def test_runtime_pipeline_uses_primary_goal_scoped_state_without_cross_goa
     assert result.motivation.mode == "analyze"
     assert "recover_goal_progress" in result.plan.steps
     assert "continue_goal_execution" not in result.plan.steps
+    assert result.action_result.status == "success"
+
+
+async def test_runtime_pipeline_ignores_goal_scoped_overrides_for_global_reflection_outputs() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    memory.active_goals = [
+        {
+            "id": 11,
+            "user_id": "u-1",
+            "name": "ship the MVP this week",
+            "description": "User-declared goal: ship the MVP this week",
+            "priority": "high",
+            "status": "active",
+            "goal_type": "operational",
+        }
+    ]
+    memory.user_preferences = {
+        "affective_support_pattern": "confidence_recovery",
+        "affective_support_pattern_confidence": 0.74,
+        "affective_support_pattern_source": "background_reflection",
+    }
+    memory.scoped_user_preferences[("goal", "11")] = {
+        "affective_support_pattern": "recurring_distress",
+        "affective_support_pattern_confidence": 0.76,
+        "affective_support_pattern_source": "background_reflection",
+    }
+    memory.user_conclusions = [
+        {
+            "kind": "affective_support_pattern",
+            "content": "confidence_recovery",
+            "confidence": 0.74,
+            "source": "background_reflection",
+            "scope_type": "global",
+            "scope_key": "global",
+        }
+    ]
+    memory.scoped_user_conclusions = [
+        {
+            "kind": "affective_support_pattern",
+            "content": "recurring_distress",
+            "confidence": 0.76,
+            "source": "background_reflection",
+            "scope_type": "goal",
+            "scope_key": "11",
+        }
+    ]
+    action = ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient())
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=FakeOpenAIClient()),
+        action_executor=action,
+        memory_repository=memory,
+        reflection_worker=FakeReflectionWorker(),
+    )
+
+    event = Event(
+        event_id="evt-global-reflection-scope",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "How should we handle this release work?"},
+        meta=EventMeta(user_id="u-1", trace_id="t-global-reflection-scope"),
+    )
+
+    result = await runtime.run(event)
+
+    assert "Stable user preferences: recent turns show confidence recovery after earlier stress." in result.context.summary
+    assert "Stable user preferences: recent turns show recurring stress signals and benefit from supportive pacing." not in result.context.summary
     assert result.action_result.status == "success"
 
 

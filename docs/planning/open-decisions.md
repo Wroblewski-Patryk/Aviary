@@ -73,7 +73,7 @@ The current repo already works as an MVP slice, but several architecture-level d
     (`5`, `5d`, `10b`) - complete
   - `PRJ-395..PRJ-398`: role-selection evidence baseline (`4`, `10b`) - complete
   - `PRJ-399..PRJ-402`: affective-assessment rollout policy (`4a`) - complete
-  - `PRJ-403..PRJ-406`: reflection scope governance (`5c`) - planned
+  - `PRJ-403..PRJ-406`: reflection scope governance (`5c`) - complete
   - `PRJ-407..PRJ-410`: durable attention contract-store rollout (`12a`) - planned
 - reflection deployment lane is complete through `PRJ-304`, and
   post-reflection hardening decisions are now complete through `PRJ-309`.
@@ -82,8 +82,8 @@ The current repo already works as an MVP slice, but several architecture-level d
 - post-Group-44 state now has no remaining `READY` task; the next convergence
   queue should again be derived from planning docs plus the still-open
   architecture decisions below.
-- post-Group-46 state now has `PRJ-403` as the first `READY` task, focused on
-  explicit scope governance for reflection outputs with multi-goal risk.
+- post-Group-47 state now has `PRJ-407` as the first `READY` task, focused on
+  durable attention contract-store ownership and persistence boundaries.
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 
@@ -460,13 +460,16 @@ The current repo already works as an MVP slice, but several architecture-level d
   - runtime consumers now resolve a primary active goal and read scoped
     conclusions/preferences with global fallback, reducing cross-goal leakage in
     context, motivation, planning, and milestone enrichment.
-- Decision needed:
-  - which reflection outputs should be global per user, and which must become
-    goal-scoped or task-scoped before the runtime grows further?
-- Planned implementation lane:
-  - `PRJ-403..PRJ-406` will turn reflection scope policy into an explicit
-    implementation lane before additional adaptive/reflection outputs widen the
-    cross-goal leakage surface.
+- Decision (resolved in `PRJ-403..PRJ-406`, 2026-04-21):
+  - reflection scope ownership now lives in one shared owner
+    (`app/core/reflection_scope_policy.py`) reused by reflection writers and
+    repository/runtime readers.
+  - goal-progress and milestone reflection conclusions remain goal-scoped.
+  - adaptive role/collaboration and affective reflection outputs remain
+    user-global by default until a later architecture change explicitly narrows
+    their ownership.
+  - repository/runtime readers now ignore invalid scoped overrides for global
+    reflection outputs, so cross-goal leakage is test-visible and bounded.
 
 ### 5d. Vector Retrieval Activation
 

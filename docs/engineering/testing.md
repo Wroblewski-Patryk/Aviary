@@ -135,6 +135,11 @@ For meaningful repo changes, leave behind:
   - `.\.venv\Scripts\python -m pytest -q tests/test_config.py`
 - for reflection-scope governance slices, regression evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
+  - coverage should pin all three surfaces:
+    - reflection writer scope selection
+    - repository canonicalization/filtering for scoped vs global conclusions
+    - runtime no-cross-goal leakage when scoped rows coexist with global
+      adaptive outputs
 - for durable attention contract-store slices, regression evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_api_routes.py tests/test_runtime_pipeline.py`
 - for CI-sensitive slices, behavior gate evidence from:

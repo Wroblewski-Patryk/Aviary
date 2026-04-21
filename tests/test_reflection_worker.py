@@ -764,6 +764,31 @@ async def test_reflection_worker_writes_goal_operational_conclusions_with_goal_s
     )
 
 
+async def test_reflection_worker_keeps_global_reflection_outputs_global_even_with_active_goal() -> None:
+    repository = FakeMemoryRepository(
+        recent_memory=[
+            {"summary": "role=executor; goal_update=ship the MVP this week; action=success; expression=One."},
+            {"summary": "role=executor; task_status_update=deploy blocker:done; action=success; expression=Two."},
+            {"summary": "role=executor; task_status_update=release smoke:done; action=success; expression=Three."},
+            {"summary": "role=mentor; action=success; expression=Four."},
+        ]
+    )
+    repository.active_goals = [
+        {"id": 11, "name": "ship the MVP this week", "priority": "high", "status": "active", "goal_type": "operational"}
+    ]
+    worker = ReflectionWorker(memory_repository=repository)
+
+    result = await worker.reflect_user(user_id="u-1", event_id="evt-global-scope-policy")
+
+    assert result is True
+    assert any(
+        update.get("kind") == "preferred_role"
+        and update.get("scope_type") == "global"
+        and update.get("scope_key") == "global"
+        for update in repository.raw_conclusion_updates
+    )
+
+
 async def test_reflection_worker_infers_goal_milestone_transition_into_completion_window() -> None:
     repository = FakeMemoryRepository(
         recent_memory=[

@@ -4,6 +4,7 @@ from collections.abc import Sequence
 
 from app.core.logging import get_logger
 from app.core.background_adaptive_outputs import build_background_adaptive_output_summary
+from app.core.reflection_scope_policy import resolve_conclusion_scope, resolve_relation_scope
 from app.memory.episodic import extract_episode_fields
 from app.memory.repository import MemoryRepository
 from app.reflection.adaptive_signals import (
@@ -769,15 +770,13 @@ class ReflectionWorker:
         return shared_priority_rank(priority)
 
     def _conclusion_scope(self, *, kind: str, primary_goal: dict | None) -> tuple[str, str]:
-        if kind.startswith("goal_") and primary_goal is not None and primary_goal.get("id") is not None:
-            return "goal", str(primary_goal["id"])
-        return "global", "global"
+        return resolve_conclusion_scope(
+            kind=kind,
+            goal_id=primary_goal.get("id") if primary_goal is not None else None,
+        )
 
     def _relation_scope(self, *, relation_type: str, primary_goal: dict | None) -> tuple[str, str]:
-        goal_scoped_types = {
-            "goal_execution_trust",
-            "goal_collaboration_flow",
-        }
-        if relation_type in goal_scoped_types and primary_goal is not None and primary_goal.get("id") is not None:
-            return "goal", str(primary_goal["id"])
-        return "global", "global"
+        return resolve_relation_scope(
+            relation_type=relation_type,
+            goal_id=primary_goal.get("id") if primary_goal is not None else None,
+        )

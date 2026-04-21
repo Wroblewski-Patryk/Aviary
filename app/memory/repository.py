@@ -4,6 +4,14 @@ from sqlalchemy import and_, or_, select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from app.core.contracts import MemoryLayerKind
+from app.core.reflection_scope_policy import (
+    GLOBAL_SCOPE_KEY,
+    GLOBAL_SCOPE_TYPE,
+    canonicalize_conclusion_scope,
+    canonicalize_relation_scope,
+    conclusion_matches_scope_request,
+    relation_matches_scope_request,
+)
 from app.memory.embeddings import (
     cosine_similarity,
     deterministic_embedding,
@@ -66,8 +74,8 @@ class MemoryRepository:
             "proactive_outreach_trigger",
         }
     )
-    GLOBAL_SCOPE_TYPE = "global"
-    GLOBAL_SCOPE_KEY = "global"
+    GLOBAL_SCOPE_TYPE = GLOBAL_SCOPE_TYPE
+    GLOBAL_SCOPE_KEY = GLOBAL_SCOPE_KEY
 
     def __init__(
         self,
@@ -170,7 +178,8 @@ class MemoryRepository:
         evidence_count: int = 1,
         decay_rate: float = 0.02,
     ) -> dict:
-        normalized_scope_type, normalized_scope_key = self._normalize_conclusion_scope(
+        normalized_scope_type, normalized_scope_key = canonicalize_relation_scope(
+            relation_type=relation_type,
             scope_type=scope_type,
             scope_key=scope_key,
         )
@@ -336,6 +345,15 @@ class MemoryRepository:
         for row in rows:
             revalidated = self._serialize_relation_with_revalidation(row=row, now=now)
             if revalidated is None:
+                continue
+            if not relation_matches_scope_request(
+                relation_type=str(revalidated.get("relation_type", "")),
+                row_scope_type=str(revalidated.get("scope_type") or self.GLOBAL_SCOPE_TYPE),
+                row_scope_key=str(revalidated.get("scope_key") or self.GLOBAL_SCOPE_KEY),
+                requested_scope_type=scope_type,
+                requested_scope_key=scope_key,
+                include_global=include_global,
+            ):
                 continue
             if float(revalidated.get("confidence", 0.0) or 0.0) < threshold:
                 continue
@@ -1175,6 +1193,21 @@ class MemoryRepository:
         if not rows:
             return {}
 
+        rows = [
+            row
+            for row in rows
+            if conclusion_matches_scope_request(
+                kind=row.kind,
+                row_scope_type=row.scope_type,
+                row_scope_key=row.scope_key,
+                requested_scope_type=scope_type,
+                requested_scope_key=scope_key,
+                include_global=include_global,
+            )
+        ]
+        if not rows:
+            return {}
+
         preferences: dict[str, object] = {}
 
         def set_preference(key: str, value: object, row: AionConclusion) -> None:
@@ -1279,10 +1312,23 @@ class MemoryRepository:
                 select(AionConclusion)
                 .where(*where_clauses)
                 .order_by(AionConclusion.updated_at.desc(), AionConclusion.id.desc())
-                .limit(limit)
+                .limit(max(limit * 4, limit))
             )
             result = await session.execute(statement)
             rows = result.scalars().all()
+
+        filtered_rows = [
+            row
+            for row in rows
+            if conclusion_matches_scope_request(
+                kind=row.kind,
+                row_scope_type=row.scope_type,
+                row_scope_key=row.scope_key,
+                requested_scope_type=scope_type,
+                requested_scope_key=scope_key,
+                include_global=include_global,
+            )
+        ]
 
         return [
             {
@@ -1296,7 +1342,7 @@ class MemoryRepository:
                 "scope_key": row.scope_key,
                 "updated_at": row.updated_at,
             }
-            for row in rows
+            for row in filtered_rows[:limit]
         ]
 
     async def upsert_user_profile_language(
@@ -1354,7 +1400,8 @@ class MemoryRepository:
         scope_type: str | None = None,
         scope_key: str | None = None,
     ) -> dict:
-        normalized_scope_type, normalized_scope_key = self._normalize_conclusion_scope(
+        normalized_scope_type, normalized_scope_key = canonicalize_conclusion_scope(
+            kind=kind,
             scope_type=scope_type,
             scope_key=scope_key,
         )

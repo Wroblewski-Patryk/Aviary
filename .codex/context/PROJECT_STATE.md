@@ -1685,8 +1685,19 @@ Last updated: 2026-04-21
   passed with `199 passed`, and
   `.\.venv\Scripts\python -m pytest -q`
   passed with `734 passed`.
-- 2026-04-21: `PRJ-403` is now the first `READY` task, focused on explicit
-  scope governance for remaining reflection outputs with multi-goal risk.
+- 2026-04-21: `PRJ-403..PRJ-406` are complete: reflection outputs now share an
+  explicit scope owner (`app/core/reflection_scope_policy.py`) that keeps
+  goal-progress and milestone conclusions goal-scoped while preserving
+  adaptive/affective reflection outputs as user-global by default.
+- 2026-04-21: `MemoryRepository`, reflection worker scope resolution, and
+  runtime test doubles now canonicalize reflection scopes through the shared
+  policy owner, so invalid scoped overrides for global reflection outputs no
+  longer leak into runtime preferences or scoped conclusion reads.
+- 2026-04-21: Group 47 validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
+  passed with `172 passed`.
+- 2026-04-21: `PRJ-407` is now the first `READY` task, focused on defining the
+  durable attention contract-store shape and persistence responsibilities.
 
 ## Working Agreements
 

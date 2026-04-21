@@ -2437,7 +2437,7 @@ Status update (2026-04-21): `PRJ-399..PRJ-402` are complete.
 This group resolves the remaining question of which reflection outputs should
 stay global and which need scoped ownership as goal/task complexity grows.
 
-- `PRJ-403` Define explicit scope policy for reflection outputs with multi-goal risk.
+- `PRJ-403` Define explicit scope policy for reflection outputs with multi-goal risk. (complete)
   - Result:
     - reflection outputs gain one explicit scope policy instead of relying on
       mixed historical conventions
@@ -2446,7 +2446,7 @@ stay global and which need scoped ownership as goal/task complexity grows.
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
 
-- `PRJ-404` Apply scope policy to remaining reflection outputs and runtime readers.
+- `PRJ-404` Apply scope policy to remaining reflection outputs and runtime readers. (complete)
   - Result:
     - runtime readers and reflection writers align on which outputs must stay
       scoped to goal/task context versus user-global posture
@@ -2454,7 +2454,7 @@ stay global and which need scoped ownership as goal/task complexity grows.
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
 
-- `PRJ-405` Add regressions for no-cross-goal leakage in scoped reflection outputs.
+- `PRJ-405` Add regressions for no-cross-goal leakage in scoped reflection outputs. (complete)
   - Result:
     - scoped reflection leakage becomes test-visible across reflection,
       repository, and runtime integration paths
@@ -2462,7 +2462,7 @@ stay global and which need scoped ownership as goal/task complexity grows.
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
 
-- `PRJ-406` Sync docs/context for reflection scope governance.
+- `PRJ-406` Sync docs/context for reflection scope governance. (complete)
   - Result:
     - architecture, runtime-reality, planning docs, and context truth align on
       reflection scope ownership and multi-goal guardrails
@@ -2470,6 +2470,9 @@ stay global and which need scoped ownership as goal/task complexity grows.
       baseline governance question
   - Validation:
     - doc-and-context sync plus targeted reflection-scope cross-doc review
+    - Group 47 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
+      (`172 passed`)
 
 ## Group 48 - Durable Attention Contract-Store Rollout
 
