@@ -353,6 +353,7 @@ class PlanningAgent:
             proposal_handoffs=proposal_handoffs,
             accepted_proposals=accepted_proposals,
             connector_permission_gates=connector_permission_gates,
+            selected_skills=list(role.selected_skills),
         )
 
     def _build_proactive_plan(

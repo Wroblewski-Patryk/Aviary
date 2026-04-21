@@ -70,6 +70,22 @@ Completed on 2026-04-21:
 - `PRJ-361..PRJ-362` are complete: attention timing now has an explicit
   production baseline (`120ms` burst window, `5s` answered TTL, `30s` stale
   cleanup) with health-visible alignment posture and synchronized docs/context.
+- after Group 40 closed, the next architecture-convergence queue is now seeded
+  through `PRJ-394`, with new groups focused on background adaptive outputs,
+  durable attention ownership, role/skill capability separation, and
+  retrieval/theta governance.
+- `PRJ-379..PRJ-382` are complete: background adaptive outputs now have an
+  explicit summary contract, reflection snapshots surface that summary, and
+  health/runtime debug make background-owned adaptive posture visible.
+- `PRJ-383..PRJ-386` are complete: durable attention owner posture now exposes
+  parity semantics (`persistence_owner`, `parity_state`) and
+  `durable_inbox` mode preserves current turn-assembly baseline behavior.
+- `PRJ-387..PRJ-390` are complete: role selection now emits bounded
+  `selected_skills` metadata from a shared capability registry, and planning
+  carries the same metadata without turning skills into side-effect owners.
+- `PRJ-391..PRJ-394` are complete: runtime and `/health` now expose shared
+  retrieval-depth policy snapshots plus bounded theta-influence diagnostics
+  across foreground stages.
 
 Completed on 2026-04-17:
 
@@ -1909,6 +1925,10 @@ Next architecture-to-code queue:
 - `PRJ-367..PRJ-370` Typed-intent coverage for future writes
 - `PRJ-371..PRJ-374` Action-delivery extensibility
 - `PRJ-375..PRJ-378` Compatibility sunset readiness
+- `PRJ-379..PRJ-382` Background adaptive-output convergence
+- `PRJ-383..PRJ-386` Durable attention-inbox rollout baseline
+- `PRJ-387..PRJ-390` Role-and-skill capability convergence
+- `PRJ-391..PRJ-394` Retrieval-depth and theta-governance baseline
 
 ## Group 37 - Connector Boundary Execution Policy
 
@@ -2107,6 +2127,202 @@ Status update (2026-04-21): `PRJ-375..PRJ-378` are complete.
     - doc-and-context sync plus targeted compatibility-sunset cross-doc review
       recorded in this slice
 
+## Group 41 - Background Adaptive-Output Convergence
+
+This group turns the background runtime from a lightweight reflection worker
+into a more explicit owner of adaptive outputs, so theta/relation/progress
+changes follow one durable contract instead of scattered side effects.
+
+Status update (2026-04-21): `PRJ-379..PRJ-382` are complete.
+
+- `PRJ-379` Define a shared background adaptive-output contract for reflection results. (complete)
+  - Result:
+    - reflection outputs gain one explicit contract for conclusion updates,
+      relation updates, theta updates, and progress signals
+    - foreground/runtime consumers can depend on typed adaptive outputs instead
+      of implicit repository-side behavior
+  - Validation:
+    - Group 41 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-380` Expose reflection adaptive-output summaries through runtime health and debug surfaces. (complete)
+  - Result:
+    - operators can see whether background runtime is producing adaptive state
+      updates and what kinds of outputs are currently active
+    - background-runtime evidence stops living only in logs and repository rows
+  - Validation:
+    - Group 41 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-381` Add regressions for adaptive-output ownership and no-foreground-theta-mutation posture. (complete)
+  - Result:
+    - theta/relation/progress updates are pinned as background-owned outputs
+      with no drift back into foreground side effects
+    - adaptive-output visibility stays stable across reflection, runtime, and
+      health surfaces
+  - Validation:
+    - Group 41 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-382` Sync docs/context for background adaptive-output convergence. (complete)
+  - Result:
+    - architecture, runtime-reality, planning docs, and context truth align on
+      the background runtime as the durable owner of adaptive outputs
+    - later subconscious-loop work can extend adaptive state without reopening
+      ownership boundaries
+  - Validation:
+    - doc-and-context sync plus targeted background-runtime cross-doc review
+
+## Group 42 - Durable Attention-Inbox Rollout Baseline
+
+This group starts the migration from in-memory attention coordination toward
+the canonical durable inbox boundary without forcing an immediate production
+default switch.
+
+Status update (2026-04-21): `PRJ-383..PRJ-386` are complete.
+
+- `PRJ-383` Define the durable attention-inbox persistence contract and repository boundary. (complete)
+  - Result:
+    - attention inbox items and pending-turn assembly gain an explicit durable
+      owner contract instead of existing only as in-process coordinator state
+    - future owner-mode rollout becomes implementable without redefining the
+      turn-assembly model
+  - Validation:
+    - Group 42 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-384` Add runtime-owner adapter for `durable_inbox` mode with health-visible parity semantics. (complete)
+  - Result:
+    - runtime can route attention ownership through a durable-inbox adapter
+      while preserving current `in_process` baseline behavior
+    - `/health.attention` shows mode-consistent readiness and owner posture for
+      both baselines
+  - Validation:
+    - Group 42 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-385` Add regressions for in-process versus durable attention-owner parity. (complete)
+  - Result:
+    - burst coalescing, claimed-turn protection, and answered/deferred state
+      semantics stay aligned across owner modes
+    - durable-inbox rollout drift becomes test-visible before production switch
+  - Validation:
+    - Group 42 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-386` Sync docs/context for durable attention-inbox rollout baseline. (complete)
+  - Result:
+    - canonical docs, implementation reality, planning docs, and context truth
+      align on the staged path from in-process coordination to durable inbox
+      ownership
+    - production default can later change without reopening the contract model
+  - Validation:
+    - doc-and-context sync plus targeted attention-boundary cross-doc review
+
+## Group 43 - Role-And-Skill Capability Convergence
+
+This group closes the gap between the documented role/skill architecture and
+the current role-only heuristic runtime by adding an explicit capability layer
+without letting skills bypass action ownership.
+
+Status update (2026-04-21): `PRJ-387..PRJ-390` are complete.
+
+- `PRJ-387` Define a shared skill-registry contract and role-to-skill capability model. (complete)
+  - Result:
+    - roles stay behavioral stances while skills become explicit reusable
+      capabilities with limitations
+    - planning/expression/action can refer to one capability surface instead of
+      ad-hoc implicit ability assumptions
+  - Validation:
+    - Group 43 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-388` Extend foreground outputs with bounded selected-skill metadata without tool leakage. (complete)
+  - Result:
+    - role selection and planning can expose which skills are relevant for the
+      turn without turning skills into tools or direct actions
+    - expression/action keep current side-effect boundaries while capability
+      choice becomes explicit
+  - Validation:
+    - Group 43 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-389` Add regressions for role/skill separation and no-skill-side-effect posture. (complete)
+  - Result:
+    - the repo pins `role != skill != action` across runtime tests and contract
+      surfaces
+    - future capability growth can extend behavior without reintroducing layer
+      confusion
+  - Validation:
+    - Group 43 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-390` Sync docs/context for role-and-skill capability convergence. (complete)
+  - Result:
+    - architecture, runtime-reality, planning docs, and context truth align on
+      explicit capability semantics between role selection and action
+    - the runtime moves closer to the documented role/skill layer instead of a
+      role-only heuristic implementation
+  - Validation:
+    - doc-and-context sync plus targeted role/skill cross-doc review
+
+## Group 44 - Retrieval-Depth And Theta-Governance Baseline
+
+This group makes production retrieval depth and theta influence more explicit,
+so adaptive behavior is observable and bounded instead of depending on
+implementation-local heuristics.
+
+Status update (2026-04-21): `PRJ-391..PRJ-394` are complete.
+
+- `PRJ-391` Define a shared retrieval-depth policy snapshot for hybrid memory loading. (complete)
+  - Result:
+    - runtime exposes one explicit owner for retrieval depth, source limits, and
+      hybrid bundle posture
+    - production load-depth decisions stop living only inside orchestrator code
+  - Validation:
+    - Group 44 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-392` Expose theta-influence posture diagnostics across role, motivation, planning, and expression. (complete)
+  - Result:
+    - adaptive tie-break influence becomes machine-visible instead of implicit
+      in stage heuristics
+    - theta remains bounded to documented precedence and tie-break semantics
+  - Validation:
+    - Group 44 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-393` Add regressions for retrieval-depth governance and bounded theta influence. (complete)
+  - Result:
+    - retrieval-depth drift and over-broad theta influence become visible in
+      regression coverage
+    - production rollout of richer retrieval/adaptive logic stays constrained by
+      explicit contracts
+  - Validation:
+    - Group 44 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q`
+      (`726 passed`)
+
+- `PRJ-394` Sync docs/context for retrieval-depth and theta-governance baseline. (complete)
+  - Result:
+    - architecture, implementation reality, planning docs, and context truth
+      align on production retrieval-depth posture and bounded theta influence
+    - later multilingual/retrieval improvements can extend the runtime without
+      reopening adaptive-governance ownership
+  - Validation:
+    - doc-and-context sync plus targeted adaptive-governance cross-doc review
+
 ## Parallel-Ready Lanes
 
 The next three groups intentionally stay sequential because they define shared
@@ -2157,10 +2373,14 @@ group locks the production and release baseline for the converged runtime.
 24. `PRJ-367..PRJ-370` Typed-intent coverage for future writes
 25. `PRJ-371..PRJ-374` Action-delivery extensibility
 26. `PRJ-375..PRJ-378` Compatibility sunset readiness
+27. `PRJ-379..PRJ-382` Background adaptive-output convergence
+28. `PRJ-383..PRJ-386` Durable attention-inbox rollout baseline
+29. `PRJ-387..PRJ-390` Role-and-skill capability convergence
+30. `PRJ-391..PRJ-394` Retrieval-depth and theta-governance baseline
 
 The queue should still be treated as intentionally open after those items.
 Additional small architecture-alignment slices may still be discovered while
-executing Groups 17 through 40.
+executing Groups 17 through 44.
 
 ## Handoff Rules For Execution Agents
 

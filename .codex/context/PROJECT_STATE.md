@@ -1627,6 +1627,36 @@ Last updated: 2026-04-21
   debug ingress posture.
 - 2026-04-21: no `READY` task remains after Group 40; the next slice should
   be derived again from planning docs and open decisions.
+- 2026-04-21: the next architecture-to-code queue is now seeded through
+  `PRJ-394`.
+- 2026-04-21: newly planned Groups 41 through 44 now turn the remaining
+  architecture follow-ups into executable lanes for background adaptive-output
+  ownership, durable attention-inbox rollout, role-and-skill capability
+  convergence, and retrieval/theta governance.
+- 2026-04-21: `PRJ-379` is now the first `READY` task, focused on defining one
+  shared adaptive-output contract for reflection/background runtime results
+  before durable attention and role/skill follow-ups build on that boundary.
+- 2026-04-21: `PRJ-379..PRJ-382` are complete: reflection/background runtime
+  now has one explicit adaptive-output summary contract, reflection snapshots
+  expose that summary, `/health.reflection` surfaces adaptive-output posture,
+  and runtime `system_debug.adaptive_state` carries bounded background-owned
+  adaptive visibility without foreground theta mutation.
+- 2026-04-21: `PRJ-383..PRJ-386` are complete: durable attention rollout now
+  uses explicit `persistence_owner` and `parity_state` semantics, and
+  `ATTENTION_COORDINATION_MODE=durable_inbox` preserves the same turn-assembly
+  behavior baseline instead of reporting a placeholder blocker posture.
+- 2026-04-21: `PRJ-387..PRJ-390` are complete: role selection now emits
+  bounded `selected_skills` capability metadata from a shared skill registry,
+  planning carries the same selected-skill posture forward, and skills remain
+  metadata-only capabilities rather than tool or side-effect owners.
+- 2026-04-21: `PRJ-391..PRJ-394` are complete: runtime and `/health` now share
+  one retrieval-depth policy snapshot plus bounded theta-influence diagnostics
+  across role, motivation, planning, and expression, and `system_debug` also
+  exposes adaptive-state metadata for retrieval depth, theta posture, and
+  selected/planned skills.
+- 2026-04-21: Group 41 through Group 44 are now complete, so no `READY` task
+  remains on the task board after `PRJ-394`; the next queue should again be
+  derived from planning docs and open decisions.
 
 ## Working Agreements
 

@@ -9,6 +9,7 @@ from app.agents.planning import PlanningAgent
 from app.agents.role import RoleAgent
 from app.core.action import ActionExecutor
 from app.core.attention_gate import evaluate_proactive_attention_gate
+from app.core.background_adaptive_outputs import summarize_loaded_adaptive_state
 from app.core.contracts import (
     ActionDelivery,
     Event,
@@ -22,6 +23,7 @@ from app.core.contracts import (
 from app.core.graph_adapters import GraphStageAdapters
 from app.core.graph_state import GraphMemoryState, build_graph_state_seed, expression_to_action_delivery
 from app.core.logging import RuntimeLogContext, RuntimeStageLogger, get_logger
+from app.core.retrieval_policy import retrieval_depth_policy_snapshot, theta_influence_snapshot
 from app.core.runtime_graph import ForegroundLangGraphRunner
 from app.core.scheduler_contracts import (
     normalize_reflection_runtime_mode,
@@ -107,6 +109,8 @@ class RuntimeOrchestrator:
         affective_conclusions: list[dict],
         relations: list[dict],
         hybrid_diagnostics: dict[str, int],
+        retrieval_depth_policy: dict,
+        adaptive_state: dict,
         context,
         motivation,
         role,
@@ -146,6 +150,10 @@ class RuntimeOrchestrator:
             ),
             expression=expression,
             action_result=action_result,
+            adaptive_state={
+                **dict(adaptive_state),
+                "retrieval_depth_policy": dict(retrieval_depth_policy),
+            },
         )
 
     def _run_stage(
@@ -318,6 +326,17 @@ class RuntimeOrchestrator:
         hybrid_diagnostics: dict[str, int],
         stage_timings_ms: dict[str, int],
     ):
+        retrieval_depth_policy = retrieval_depth_policy_snapshot(
+            episodic_limit=self.MEMORY_LOAD_LIMIT,
+            conclusion_limit=8,
+            semantic_vector_enabled=self.semantic_vector_enabled,
+            hybrid_diagnostics=hybrid_diagnostics,
+        )
+        background_adaptive_outputs = summarize_loaded_adaptive_state(
+            user_conclusions=user_conclusions,
+            relations=relations,
+            theta=user_theta if isinstance(user_theta, dict) else None,
+        )
         return build_graph_state_seed(event).model_copy(
             update={
                 "memory": GraphMemoryState(
@@ -329,10 +348,12 @@ class RuntimeOrchestrator:
                         "user_preferences": user_preferences,
                         "user_theta": user_theta,
                         "hybrid_retrieval_diagnostics": hybrid_diagnostics,
+                        "retrieval_depth_policy": retrieval_depth_policy,
                     },
                 ),
                 "conclusions": list(user_conclusions),
                 "relations": list(relations),
+                "background_adaptive_outputs": background_adaptive_outputs,
                 "user_preferences": dict(user_preferences),
                 "theta": user_theta,
                 "identity": identity,
@@ -807,6 +828,28 @@ class RuntimeOrchestrator:
         assert expression is not None
         action_result = graph_state.action_result
         assert action_result is not None
+        retrieval_depth_policy = retrieval_depth_policy_snapshot(
+            episodic_limit=self.MEMORY_LOAD_LIMIT,
+            conclusion_limit=8,
+            semantic_vector_enabled=self.semantic_vector_enabled,
+            hybrid_diagnostics=hybrid_diagnostics,
+        )
+        adaptive_state = {
+            "background_adaptive_outputs": summarize_loaded_adaptive_state(
+                user_conclusions=user_conclusions,
+                relations=relations,
+                theta=user_theta if isinstance(user_theta, dict) else None,
+            ),
+            "theta_influence": theta_influence_snapshot(
+                theta=user_theta if isinstance(user_theta, dict) else None,
+                role_selected=role.selected,
+                motivation_mode=motivation.mode,
+                plan_steps=list(plan.steps),
+                expression_tone=expression.tone,
+            ),
+            "selected_skills": [skill.model_dump(mode="json") for skill in role.selected_skills],
+            "planned_skills": [skill.model_dump(mode="json") for skill in plan.selected_skills],
+        }
         system_debug = self._build_system_debug_output(
             event=event,
             perception=perception,
@@ -815,6 +858,8 @@ class RuntimeOrchestrator:
             affective_conclusions=affective_conclusions,
             relations=relations,
             hybrid_diagnostics=hybrid_diagnostics,
+            retrieval_depth_policy=retrieval_depth_policy,
+            adaptive_state=adaptive_state,
             context=context,
             motivation=motivation,
             role=role,

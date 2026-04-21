@@ -117,6 +117,7 @@ class GraphRuntimeState(BaseModel):
     memory: GraphMemoryState = Field(default_factory=GraphMemoryState)
     conclusions: list[dict[str, Any]] = Field(default_factory=list)
     relations: list[dict[str, Any]] = Field(default_factory=list)
+    background_adaptive_outputs: dict[str, Any] = Field(default_factory=dict)
     user_preferences: dict[str, Any] = Field(default_factory=dict)
     theta: dict[str, Any] | None = None
     identity: IdentityOutput | None = None

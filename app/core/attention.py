@@ -33,10 +33,6 @@ def attention_coordination_readiness_snapshot(
     selected_mode = normalize_attention_coordination_mode(coordination_mode)
     turn_state_owner = "durable_attention_inbox" if selected_mode == "durable_inbox" else "in_process_coordinator"
     blocking_signals: list[str] = []
-    if selected_mode == "durable_inbox":
-        blocking_signals.append("durable_inbox_owner_mode_not_implemented")
-        if pending > 0 or claimed > 0:
-            blocking_signals.append("in_process_attention_turns_present_while_durable_selected")
     return {
         "baseline_coordination_mode": ATTENTION_COORDINATION_BASELINE_MODE,
         "selected_coordination_mode": selected_mode,
@@ -44,6 +40,14 @@ def attention_coordination_readiness_snapshot(
         "blocking_signals": blocking_signals,
         "turn_state_owner": turn_state_owner,
         "durable_inbox_expected": selected_mode == "durable_inbox",
+        "persistence_owner": (
+            "durable_attention_contract_store" if selected_mode == "durable_inbox" else "in_process_coordinator_store"
+        ),
+        "parity_state": (
+            "durable_inbox_parity_baseline_active"
+            if selected_mode == "durable_inbox"
+            else "in_process_baseline_active"
+        ),
     }
 
 
@@ -133,8 +137,6 @@ class AttentionTurnCoordinator:
         self._turns_by_conversation: dict[str, _PendingTurn] = {}
 
     async def prepare_event(self, event: Event) -> TurnAssemblyDecision:
-        if self.coordination_mode == "durable_inbox":
-            return TurnAssemblyDecision(should_process=True, event=event)
         if not self._is_telegram_user_event(event):
             return TurnAssemblyDecision(should_process=True, event=event)
 
@@ -244,8 +246,6 @@ class AttentionTurnCoordinator:
         )
 
     async def finalize_event(self, event: Event) -> None:
-        if self.coordination_mode == "durable_inbox":
-            return
         if not self._is_telegram_user_event(event):
             return
         turn_id = str(event.payload.get("turn_id", "")).strip()

@@ -6,6 +6,7 @@ from app.core.adaptive_policy import (
     relation_value,
 )
 from app.core.contracts import ContextOutput, Event, PerceptionOutput, RoleOutput
+from app.core.skill_registry import skills_for_role_and_topic
 from app.utils.language import normalize_for_matching
 
 
@@ -80,15 +81,35 @@ class RoleAgent:
         }
 
         if affective_needs_support or affective_label == "support_distress":
-            return RoleOutput(selected="friend", confidence=0.74)
+            return self._build_role_output(
+                selected="friend",
+                confidence=0.74,
+                perception=perception,
+                event_text=text,
+            )
         if relation_support == "high_support" and perception.event_type == "question":
-            return RoleOutput(selected="mentor", confidence=0.68)
+            return self._build_role_output(
+                selected="mentor",
+                confidence=0.68,
+                perception=perception,
+                event_text=text,
+            )
 
         if perception.topic == "planning" or any(keyword in lowered for keyword in analysis_keywords):
-            return RoleOutput(selected="analyst", confidence=0.82)
+            return self._build_role_output(
+                selected="analyst",
+                confidence=0.82,
+                perception=perception,
+                event_text=text,
+            )
 
         if any(lowered.startswith(keyword) for keyword in executor_keywords):
-            return RoleOutput(selected="executor", confidence=0.78)
+            return self._build_role_output(
+                selected="executor",
+                confidence=0.78,
+                perception=perception,
+                event_text=text,
+            )
 
         if preferred_role_allowed(
             preferred_role=preferred_role,
@@ -96,38 +117,111 @@ class RoleAgent:
             allowed_roles=self.PREFERRED_ROLES,
         ):
             if is_help_turn:
-                return RoleOutput(selected=preferred_role, confidence=0.73)
+                return self._build_role_output(
+                    selected=preferred_role,
+                    confidence=0.73,
+                    perception=perception,
+                    event_text=text,
+                )
             if is_general_turn:
-                return RoleOutput(selected=preferred_role, confidence=0.68)
+                return self._build_role_output(
+                    selected=preferred_role,
+                    confidence=0.68,
+                    perception=perception,
+                    event_text=text,
+                )
 
         collaboration_role = self._collaboration_role(collaboration_preference)
         if collaboration_role is not None and is_role_tie_break_turn:
             if is_help_turn:
-                return RoleOutput(selected=collaboration_role, confidence=0.71)
+                return self._build_role_output(
+                    selected=collaboration_role,
+                    confidence=0.71,
+                    perception=perception,
+                    event_text=text,
+                )
             if is_general_turn:
-                return RoleOutput(selected=collaboration_role, confidence=0.66)
+                return self._build_role_output(
+                    selected=collaboration_role,
+                    confidence=0.66,
+                    perception=perception,
+                    event_text=text,
+                )
 
         relation_role = self._collaboration_role(relation_collaboration or "")
         if relation_role is not None and is_role_tie_break_turn:
             if is_help_turn:
-                return RoleOutput(selected=relation_role, confidence=0.69)
+                return self._build_role_output(
+                    selected=relation_role,
+                    confidence=0.69,
+                    perception=perception,
+                    event_text=text,
+                )
             if is_general_turn:
-                return RoleOutput(selected=relation_role, confidence=0.64)
+                return self._build_role_output(
+                    selected=relation_role,
+                    confidence=0.64,
+                    perception=perception,
+                    event_text=text,
+                )
 
         theta_role = self._theta_role(theta)
         if theta_role is not None and is_role_tie_break_turn:
             if is_help_turn:
-                return RoleOutput(selected=theta_role, confidence=0.69)
+                return self._build_role_output(
+                    selected=theta_role,
+                    confidence=0.69,
+                    perception=perception,
+                    event_text=text,
+                )
             if is_general_turn:
-                return RoleOutput(selected=theta_role, confidence=0.64)
+                return self._build_role_output(
+                    selected=theta_role,
+                    confidence=0.64,
+                    perception=perception,
+                    event_text=text,
+                )
 
         if is_help_turn:
-            return RoleOutput(selected="mentor", confidence=0.71)
+            return self._build_role_output(
+                selected="mentor",
+                confidence=0.71,
+                perception=perception,
+                event_text=text,
+            )
 
         if context.risk_level >= 0.5:
-            return RoleOutput(selected="advisor", confidence=0.7)
+            return self._build_role_output(
+                selected="advisor",
+                confidence=0.7,
+                perception=perception,
+                event_text=text,
+            )
 
-        return RoleOutput(selected="advisor", confidence=0.6)
+        return self._build_role_output(
+            selected="advisor",
+            confidence=0.6,
+            perception=perception,
+            event_text=text,
+        )
+
+    def _build_role_output(
+        self,
+        *,
+        selected: str,
+        confidence: float,
+        perception: PerceptionOutput,
+        event_text: str,
+    ) -> RoleOutput:
+        return RoleOutput(
+            selected=selected,
+            confidence=confidence,
+            selected_skills=skills_for_role_and_topic(
+                role_name=selected,
+                topic=perception.topic,
+                event_text=event_text,
+            ),
+        )
 
     def _theta_role(self, theta: dict | None) -> str | None:
         channel = dominant_theta_channel(theta)

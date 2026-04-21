@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from collections.abc import Sequence
 
 from app.core.logging import get_logger
+from app.core.background_adaptive_outputs import build_background_adaptive_output_summary
 from app.memory.episodic import extract_episode_fields
 from app.memory.repository import MemoryRepository
 from app.reflection.adaptive_signals import (
@@ -47,6 +48,7 @@ class ReflectionWorker:
         self._task: asyncio.Task | None = None
         self._queued_task_ids: set[int] = set()
         self.max_attempts = max_attempts
+        self._last_adaptive_output_summary: dict | None = None
         self.logger = get_logger("aion.reflection")
 
     async def start(self) -> None:
@@ -207,6 +209,13 @@ class ReflectionWorker:
                     stored_proposal["confidence"],
                     stored_proposal["status"],
                 )
+        self._last_adaptive_output_summary = build_background_adaptive_output_summary(
+            conclusions=conclusions,
+            relation_updates=relation_updates,
+            theta=theta,
+            subconscious_proposals=subconscious_proposals,
+            event_id=event_id,
+        )
         synced_milestone: dict | None = None
         if primary_goal is not None and primary_goal.get("id") is not None:
             goal_milestone_state = next(
@@ -383,6 +392,7 @@ class ReflectionWorker:
             "max_attempts": self.max_attempts,
             "retry_backoff_seconds": list(self.RETRY_BACKOFF_SECONDS),
             "stuck_processing_seconds": self.STUCK_PROCESSING_SECONDS,
+            "adaptive_output_summary": dict(self._last_adaptive_output_summary or {}),
         }
 
     def _is_task_ready(self, task: dict) -> bool:

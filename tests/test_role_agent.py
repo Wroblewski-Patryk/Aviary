@@ -70,6 +70,7 @@ def test_role_agent_uses_analyst_for_planning_topics() -> None:
     )
 
     assert result.selected == "analyst"
+    assert any(skill.skill_id == "structured_reasoning" for skill in result.selected_skills)
 
 
 def test_role_agent_uses_executor_for_direct_action_request() -> None:
@@ -80,6 +81,7 @@ def test_role_agent_uses_executor_for_direct_action_request() -> None:
     )
 
     assert result.selected == "executor"
+    assert any(skill.skill_id == "execution_planning" for skill in result.selected_skills)
 
 
 def test_role_agent_uses_mentor_for_general_questions() -> None:

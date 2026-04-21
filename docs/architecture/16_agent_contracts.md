@@ -51,6 +51,7 @@ Canonical shared runtime state may include:
   "tasks": [],
   "attention_inbox": [],
   "pending_turn": {},
+  "background_adaptive_outputs": {},
   "subconscious_proposals": [],
   "proposal_handoffs": [],
   "connector_capabilities": [],
@@ -101,6 +102,8 @@ Minimum `system_debug` fields:
 7. plan summary with explicit `domain_intents`
 8. expression summary
 9. action result
+10. adaptive-state summary (`background_adaptive_outputs`,
+    retrieval-depth posture, theta influence, selected skill metadata)
 
 Behavior tests should pair that internal mode with user-simulation mode
 (no debug payloads) so correctness is validated both structurally and
@@ -273,6 +276,14 @@ Rules:
 4. subconscious research proposals must declare read-only policy and tool bounds
 5. connector-expansion proposals must stay suggestion-only until conscious
    planning emits explicit permission-gated connector intents
+
+Durable attention rollout baseline:
+
+1. owner mode may be `in_process` or `durable_inbox`
+2. `/health.attention` should expose `persistence_owner` and `parity_state`
+   for rollout parity visibility
+3. durable mode must preserve the same burst/claim/answer semantics unless a
+   later contract revision explicitly changes turn assembly behavior
 
 Canonical ownership baseline:
 
@@ -475,7 +486,16 @@ Select the behavioral stance for the turn.
 {
   "role": {
     "selected": "advisor|analyst|mentor|executor|friend",
-    "confidence": 0.0
+    "confidence": 0.0,
+    "selected_skills": [
+      {
+        "skill_id": "structured_reasoning",
+        "label": "Structured reasoning",
+        "capability_family": "analysis",
+        "reason": "...",
+        "side_effect_posture": "metadata_only"
+      }
+    ]
   }
 }
 ```
@@ -519,6 +539,7 @@ Decide what should happen next.
     ],
     "proposal_handoffs": [],
     "accepted_proposals": [],
+    "selected_skills": [],
     "connector_permission_gates": [],
     "domain_intents": [
       {
@@ -771,7 +792,19 @@ Analyze patterns across memory and update slower-moving state.
     "updated_conclusions": [],
     "theta_update": {},
     "relation_update": {},
-    "progress_update": {}
+    "progress_update": {},
+    "adaptive_output_summary": {
+      "adaptive_output_count": 0,
+      "conclusion_kinds": [],
+      "relation_types": [],
+      "proposal_types": [],
+      "progress_signal_kinds": [],
+      "theta_update": {
+        "present": false,
+        "dominant_channel": null
+      },
+      "foreground_mutation_posture": "background_owned_only"
+    }
   }
 }
 ```

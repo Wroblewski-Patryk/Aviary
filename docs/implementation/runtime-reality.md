@@ -356,6 +356,15 @@ Current limitation:
 - startup now emits `embedding_refresh_hint` whenever refresh mode deviates from
   rollout recommendation posture.
 
+Retrieval-depth governance is now also explicit:
+
+- `app/core/retrieval_policy.py` owns a shared retrieval-depth policy snapshot
+  for runtime and `/health`
+- runtime `system_debug.adaptive_state` now includes retrieval-depth posture,
+  bounded theta influence, and selected/planned skill metadata
+- `/health.memory_retrieval.retrieval_depth_policy` exposes the same policy
+  owner instead of leaving load-depth semantics only inside orchestrator code
+
 ### Event API behavior
 
 `POST /event` currently returns:
@@ -574,6 +583,9 @@ Current intent-ownership boundary:
   generic `noop` when the runtime still needs a durable state trace
 - runtime `system_debug.plan` now carries those inferred diagnostics for
   operator-facing debug triage
+- role selection now also emits bounded `selected_skills` capability metadata
+  from `app/core/skill_registry.py`, and planning carries that metadata
+  forward without turning skills into tools or side-effect owners
 
 Reflection also derives lightweight operational signals such as:
 
@@ -628,6 +640,13 @@ Current behavior:
 - regression coverage now pins anti-feedback-loop behavior,
   goal-scoped relation anti-leakage for proactive attention gating, and
   sub-threshold adaptive influence boundaries across role/motivation/planning
+- reflection snapshots now expose `adaptive_output_summary`, which provides one
+  bounded background-owned view of conclusion kinds, relation types, progress
+  signals, proposal types, and theta-update posture produced by the worker
+- `/health.reflection.adaptive_outputs` and runtime
+  `system_debug.adaptive_state.background_adaptive_outputs` now surface that
+  adaptive-output posture for operator/debug visibility without giving the
+  foreground loop write ownership over adaptive state
 
 Current topology ownership split:
 
@@ -685,6 +704,10 @@ What is already live:
   `ATTENTION_COORDINATION_MODE` (`in_process|durable_inbox`) and
   `/health.attention` readiness fields (`coordination_mode`,
   `turn_state_owner`, `deployment_readiness`)
+- `/health.attention` now also exposes durable-rollout parity fields
+  (`persistence_owner`, `parity_state`), and `durable_inbox` mode preserves the
+  same burst coalescing / claimed-turn / answered-turn semantics as
+  `in_process`
 - attention turn timing is now runtime-configurable through
   `ATTENTION_BURST_WINDOW_MS`, `ATTENTION_ANSWERED_TTL_SECONDS`, and
   `ATTENTION_STALE_TURN_SECONDS`

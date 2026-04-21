@@ -141,6 +141,7 @@ def test_build_graph_state_seed_defaults() -> None:
     assert state.source_runtime == "python_orchestrator"
     assert state.event.event_id == "evt-graph-1"
     assert state.memory.episodic == []
+    assert state.background_adaptive_outputs == {}
     assert state.attention_inbox == []
     assert state.pending_turn is None
     assert state.subconscious_proposals == []
@@ -174,6 +175,7 @@ def test_runtime_result_to_graph_state_maps_orchestrator_contract() -> None:
     assert graph_state.action_delivery.execution_envelope.connector_safe is False
     assert graph_state.action_result is not None
     assert graph_state.action_result.status == "success"
+    assert graph_state.background_adaptive_outputs == {}
 
 
 def test_runtime_result_to_graph_state_builds_connector_safe_action_delivery_envelope() -> None:

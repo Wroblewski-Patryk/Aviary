@@ -64,10 +64,20 @@ The current repo already works as an MVP slice, but several architecture-level d
     (`10a`) - complete
   - `PRJ-371..PRJ-374`: action-delivery extensibility (`3a`) - complete
   - `PRJ-375..PRJ-378`: compatibility sunset readiness (`2`, `3`) - complete
+  - `PRJ-379..PRJ-382`: background adaptive-output convergence
+    (`1`, `5`, `9a`) - complete
+  - `PRJ-383..PRJ-386`: durable attention-inbox rollout baseline
+    (`12`, `12a`) - complete
+  - `PRJ-387..PRJ-390`: role-and-skill capability convergence (`4`, `6`) - complete
+  - `PRJ-391..PRJ-394`: retrieval-depth and theta-governance baseline
+    (`5`, `5d`, `10b`) - complete
 - reflection deployment lane is complete through `PRJ-304`, and
   post-reflection hardening decisions are now complete through `PRJ-309`.
 - runtime behavior-validation lane is now complete through `PRJ-317`.
-- next architecture-to-code queue is now seeded through `PRJ-378`.
+- next architecture-to-code queue is now seeded through `PRJ-394`.
+- post-Group-44 state now has no remaining `READY` task; the next convergence
+  queue should again be derived from planning docs plus the still-open
+  architecture decisions below.
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 
@@ -771,15 +781,25 @@ The current repo already works as an MVP slice, but several architecture-level d
 
 - Current repo fact:
   - reflection now updates a lightweight `aion_theta` state from repeated recent role patterns, and runtime can use that state as a soft bias for role selection, motivation, planning, and expression on ambiguous turns.
+  - runtime and `/health` now expose a shared retrieval/theta governance
+    snapshot so retrieval-depth posture and theta influence are machine-visible
+    through one owner.
+  - `system_debug.adaptive_state.theta_influence` now reports bounded posture
+    per foreground stage (`role`, `motivation`, `planning`, `expression`) and
+    explicitly marks theta as tie-break-only governance.
 - Decision (interim baseline resolved in `PRJ-288`, 2026-04-20):
   - theta stays a lightweight adaptive tie-break signal, not a dominant
     identity owner
   - theta influence remains ambiguity-gated and threshold-gated
     (`dominant_bias >= 0.58`)
-- Follow-up decision:
-  - after adaptive-governance regressions in `PRJ-291`, decide whether theta
-    should remain bounded to tie-break posture or gain broader long-horizon
-    influence
+- Follow-up implementation (resolved in `PRJ-391..PRJ-394`, 2026-04-21):
+  - retrieval-depth policy snapshot and theta-influence diagnostics are now
+    explicit runtime surfaces
+  - bounded theta posture is regression-pinned in runtime, role, planning, and
+    health contract coverage
+- Remaining follow-up decision:
+  - should theta remain permanently bounded to tie-break posture, or should a
+    later long-horizon identity model ever receive broader authority?
 
 ### 12. Scheduler And Proactive Runtime
 
@@ -869,6 +889,15 @@ The current repo already works as an MVP slice, but several architecture-level d
   - `/health.attention.timing_policy` now exposes both the production baseline
     and the current configured values together with alignment posture so
     operators can distinguish baseline deployment from local/rollout overrides.
+- Follow-up implementation (resolved in `PRJ-383..PRJ-386`, 2026-04-21):
+  - `ATTENTION_COORDINATION_MODE=durable_inbox` now keeps the same conscious
+    turn-assembly semantics as `in_process` instead of reporting placeholder
+    not-ready posture
+  - `/health.attention` now exposes `persistence_owner` and `parity_state` so
+    durable rollout parity is explicit and operator-visible
+- Remaining follow-up decision:
+  - when should the repo add a true repository-backed durable inbox owner
+    instead of the current parity-preserving rollout baseline?
 
 ### 12b. Conscious vs Subconscious Coordination Boundary
 

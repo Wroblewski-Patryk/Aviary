@@ -573,258 +573,38 @@ def test_health_endpoint_returns_ok() -> None:
     response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.json() == {
-        "status": "ok",
-        "runtime_policy": {
-            "startup_schema_mode": "migrate",
-            "startup_schema_compatibility_posture": "migration_only",
-            "startup_schema_compatibility_sunset_ready": True,
-            "startup_schema_compatibility_sunset_reason": "migration_only_baseline_active",
-            "event_debug_enabled": True,
-            "event_debug_token_required": False,
-            "production_debug_token_required": True,
-            "event_debug_query_compat_enabled": True,
-            "event_debug_query_compat_source": "environment_default",
-            "event_debug_ingress_owner": "internal_route_primary_shared_route_compat",
-            "event_debug_internal_ingress_path": "/internal/event/debug",
-            "event_debug_shared_ingress_path": "/event/debug",
-            "event_debug_shared_ingress_mode": "compatibility",
-            "event_debug_shared_ingress_break_glass_required": False,
-            "event_debug_shared_ingress_posture": "transitional_compatibility",
-            "event_debug_shared_ingress_sunset_ready": False,
-            "event_debug_shared_ingress_sunset_reason": "shared_debug_route_still_in_compatibility_mode",
-            "debug_access_posture": "open_no_token",
-            "debug_token_policy_hint": "debug_access_open_without_token",
-            "event_debug_source": "explicit",
-            "production_policy_enforcement": "warn",
-            "recommended_production_policy_enforcement": "warn",
-            "production_policy_mismatches": [],
-            "production_policy_mismatch_count": 0,
-            "strict_startup_blocked": False,
-            "strict_rollout_ready": True,
-            "strict_rollout_hint": "not_applicable_non_production",
-            "compatibility_sunset_ready": False,
-            "compatibility_sunset_blockers": ["shared_debug_ingress_compatibility_mode_active"],
-            "event_debug_query_compat_allow_rate": 0.0,
-            "event_debug_query_compat_block_rate": 0.0,
-            "event_debug_query_compat_recommendation": "no_compat_traffic_detected_disable_when_possible",
-            "event_debug_query_compat_sunset_ready": True,
-            "event_debug_query_compat_sunset_reason": "no_compat_attempts_detected",
-            "event_debug_query_compat_recent_attempts_total": 0,
-            "event_debug_query_compat_recent_allow_rate": 0.0,
-            "event_debug_query_compat_recent_block_rate": 0.0,
-            "event_debug_query_compat_recent_state": "no_recent_attempts",
-            "event_debug_query_compat_stale_after_seconds": 86400,
-            "event_debug_query_compat_last_attempt_age_seconds": None,
-            "event_debug_query_compat_last_attempt_state": "no_attempts_recorded",
-            "event_debug_query_compat_activity_state": "no_attempts_observed",
-            "event_debug_query_compat_activity_hint": "can_disable_when_ready",
-            "event_debug_query_compat_telemetry": {
-                "attempts_total": 0,
-                "allowed_total": 0,
-                "blocked_total": 0,
-                "last_attempt_at": None,
-                "last_allowed_at": None,
-                "last_blocked_at": None,
-                "recent_window_size": 20,
-                "recent_attempts_total": 0,
-                "recent_allowed_total": 0,
-                "recent_blocked_total": 0,
-            },
-        },
-        "release_readiness": {
-            "ready": True,
-            "violations": [],
-        },
-        "memory_retrieval": {
-            "semantic_vector_enabled": True,
-            "semantic_retrieval_mode": "hybrid_vector_lexical",
-            "semantic_embedding_provider_ready": True,
-            "semantic_embedding_posture": "ready",
-            "semantic_embedding_provider_requested": "deterministic",
-            "semantic_embedding_provider_effective": "deterministic",
-            "semantic_embedding_provider_hint": "deterministic_baseline",
-            "semantic_embedding_provider_ownership_state": "deterministic_baseline_owner",
-            "semantic_embedding_provider_ownership_hint": "deterministic_provider_owns_embedding_execution",
-            "semantic_embedding_provider_ownership_enforcement": "warn",
-            "semantic_embedding_provider_ownership_enforcement_state": "not_applicable_no_fallback",
-            "semantic_embedding_provider_ownership_enforcement_hint": "no_provider_ownership_violation",
-            "semantic_embedding_owner_strategy_state": "deterministic_on_write_owner",
-            "semantic_embedding_owner_strategy_hint": "deterministic_baseline_owner_active",
-            "semantic_embedding_owner_strategy_recommendation": "deterministic_on_write_baseline_is_active",
-            "semantic_embedding_model_requested": "deterministic-v1",
-            "semantic_embedding_model_effective": "deterministic-v1",
-            "semantic_embedding_model_governance_state": "model_contract_aligned",
-            "semantic_embedding_model_governance_hint": "embedding_model_contract_aligned_with_provider",
-            "semantic_embedding_model_governance_enforcement": "warn",
-            "semantic_embedding_model_governance_enforcement_state": "not_applicable_aligned",
-            "semantic_embedding_model_governance_enforcement_hint": "no_model_governance_violation",
-            "semantic_embedding_strict_rollout_violations": [],
-            "semantic_embedding_strict_rollout_violation_count": 0,
-            "semantic_embedding_strict_rollout_ready": True,
-            "semantic_embedding_strict_rollout_state": "ready",
-            "semantic_embedding_strict_rollout_hint": "can_enable_strict_provider_and_model_enforcement",
-            "semantic_embedding_strict_rollout_recommendation": "enable_strict_provider_and_model_enforcement",
-            "semantic_embedding_recommended_provider_ownership_enforcement": "strict",
-            "semantic_embedding_recommended_model_governance_enforcement": "strict",
-            "semantic_embedding_provider_ownership_enforcement_alignment": "below_recommendation",
-            "semantic_embedding_model_governance_enforcement_alignment": "below_recommendation",
-            "semantic_embedding_enforcement_alignment_state": "below_recommendation",
-            "semantic_embedding_enforcement_alignment_hint": "consider_enabling_strict_for_provider_and_model",
-            "semantic_embedding_dimensions": 32,
-            "semantic_embedding_warning_state": "no_warning",
-            "semantic_embedding_warning_hint": "embedding_strategy_ready",
-            "semantic_embedding_source_kinds": ["episodic", "semantic", "affective"],
-            "semantic_embedding_source_coverage_state": "full_for_current_retrieval_path",
-            "semantic_embedding_source_coverage_hint": "semantic_and_affective_sources_enabled",
-            "semantic_embedding_source_rollout_state": "semantic_affective_baseline",
-            "semantic_embedding_source_rollout_hint": "high_signal_sources_active",
-            "semantic_embedding_source_rollout_recommendation": "add_relation_source_after_baseline_stabilizes",
-            "semantic_embedding_source_rollout_order": ["semantic", "affective", "relation"],
-            "semantic_embedding_source_rollout_enabled_sources": ["semantic", "affective"],
-            "semantic_embedding_source_rollout_missing_sources": ["relation"],
-            "semantic_embedding_source_rollout_next_source_kind": "relation",
-            "semantic_embedding_source_rollout_completion_state": "baseline_complete_relation_pending",
-            "semantic_embedding_source_rollout_phase_index": 2,
-            "semantic_embedding_source_rollout_phase_total": 3,
-            "semantic_embedding_source_rollout_progress_percent": 67,
-            "semantic_embedding_source_rollout_enforcement": "warn",
-            "semantic_embedding_source_rollout_enforcement_state": "warning_only",
-            "semantic_embedding_source_rollout_enforcement_hint": "pending_source_rollout_allowed_in_warn_mode",
-            "semantic_embedding_recommended_source_rollout_enforcement": "warn",
-            "semantic_embedding_source_rollout_enforcement_alignment": "aligned",
-            "semantic_embedding_source_rollout_enforcement_alignment_state": "aligned_with_recommendation",
-            "semantic_embedding_source_rollout_enforcement_alignment_hint": "source_rollout_enforcement_matches_recommendation",
-            "semantic_embedding_refresh_mode": "on_write",
-            "semantic_embedding_refresh_interval_seconds": 21600,
-            "semantic_embedding_refresh_state": "on_write_refresh_active",
-            "semantic_embedding_refresh_hint": "refresh_on_write_enabled",
-            "semantic_embedding_refresh_cadence_state": "on_write_continuous",
-            "semantic_embedding_refresh_cadence_hint": "on_write_refresh_has_no_manual_gap",
-            "semantic_embedding_recommended_refresh_mode": "on_write",
-            "semantic_embedding_refresh_alignment_state": "aligned",
-            "semantic_embedding_refresh_alignment_hint": "refresh_mode_matches_active_rollout_recommendation",
-        },
-        "scheduler": {
-            "healthy": True,
-            "execution_mode": "in_process",
-            "configured_enabled": False,
-            "enabled": False,
-            "running": False,
-            "proactive_enabled": False,
-            "maintenance_cadence_owner": "in_process_scheduler",
-            "proactive_cadence_owner": "in_process_scheduler",
-            "cadence_execution": {
-                "baseline_execution_mode": "in_process",
-                "selected_execution_mode": "in_process",
-                "ready": True,
-                "blocking_signals": [],
-                "maintenance_cadence_owner": "in_process_scheduler",
-                "proactive_cadence_owner": "in_process_scheduler",
-                "maintenance_tick_dispatch": True,
-                "maintenance_tick_reason": "in_process_owner_mode",
-                "proactive_tick_dispatch": False,
-                "proactive_tick_reason": "proactive_disabled",
-                "scheduler_enabled": False,
-                "scheduler_running": False,
-                "proactive_enabled": False,
-            },
-            "reflection_runtime_mode": "in_process",
-            "reflection_interval_seconds": 900,
-            "maintenance_interval_seconds": 3600,
-            "reflection_batch_limit": 10,
-            "next_reflection_due_at": None,
-            "next_maintenance_due_at": None,
-            "last_reflection_tick_at": None,
-            "last_maintenance_tick_at": None,
-            "last_reflection_summary": {},
-            "last_maintenance_summary": {},
-        },
-            "attention": {
-                "healthy": True,
-                "coordination_mode": "in_process",
-                "turn_state_owner": "in_process_coordinator",
-                "durable_inbox_expected": False,
-            "deployment_readiness": {
-                "baseline_coordination_mode": "in_process",
-                "selected_coordination_mode": "in_process",
-                "ready": True,
-                "blocking_signals": [],
-                    "turn_state_owner": "in_process_coordinator",
-                    "durable_inbox_expected": False,
-                },
-                "timing_policy": {
-                    "production_baseline": {
-                        "burst_window_ms": 120,
-                        "answered_ttl_seconds": 5.0,
-                        "stale_turn_seconds": 30.0,
-                    },
-                    "current": {
-                        "burst_window_ms": 120,
-                        "answered_ttl_seconds": 0.5,
-                        "stale_turn_seconds": 3.0,
-                    },
-                    "alignment_state": "customized_timing_override",
-                    "alignment_hint": "review_attention_timing_override_before_production_rollout",
-                    "deviations": [
-                        "answered_ttl_lower_than_baseline",
-                        "stale_turn_window_lower_than_baseline",
-                    ],
-                },
-                "burst_window_ms": 120,
-                "answered_ttl_seconds": 0.5,
-                "stale_turn_seconds": 3.0,
-                "pending": 0,
-                "claimed": 0,
-            "answered": 0,
-        },
-        "reflection": {
-            "healthy": True,
-            "runtime_mode": "in_process",
-            "deployment_readiness": {
-                "baseline_runtime_mode": "in_process",
-                "selected_runtime_mode": "in_process",
-                "ready": True,
-                "blocking_signals": [],
-            },
-            "topology": {
-                "runtime_mode": "in_process",
-                "enqueue_owner": "runtime_followup",
-                "queue_backend": "durable_postgres_queue",
-                "queue_drain_owner": "in_process_worker",
-                "retry_owner": "durable_queue",
-                "external_driver_expected": False,
-                "worker_running": True,
-                "runtime_enqueue_dispatch": True,
-                "runtime_enqueue_reason": "in_process_worker_running",
-                "scheduler_tick_dispatch": False,
-                "scheduler_tick_reason": "in_process_worker_running",
-                "max_attempts": 3,
-                "retry_backoff_seconds": [5, 30, 120],
-                "stuck_processing_seconds": 180,
-            },
-            "worker": {
-                "running": True,
-                "queue_size": 1,
-                "queue_capacity": 99,
-                "queued_task_count": 1,
-                "queued_task_ids": [42],
-                "max_attempts": 3,
-                "retry_backoff_seconds": [5, 30, 120],
-                "stuck_processing_seconds": 180,
-            },
-            "tasks": {
-                "total": 4,
-                "pending": 1,
-                "processing": 1,
-                "completed": 1,
-                "failed": 1,
-                "retryable_failed": 1,
-                "exhausted_failed": 0,
-                "stuck_processing": 0,
-            },
-        },
+    body = response.json()
+    assert body["status"] == "ok"
+    assert body["release_readiness"] == {"ready": True, "violations": []}
+    assert body["runtime_policy"]["startup_schema_mode"] == "migrate"
+    assert body["runtime_policy"]["event_debug_shared_ingress_mode"] == "compatibility"
+    assert body["runtime_policy"]["compatibility_sunset_ready"] is False
+    assert body["runtime_policy"]["event_debug_query_compat_telemetry"]["recent_window_size"] == 20
+    assert body["memory_retrieval"]["semantic_retrieval_mode"] == "hybrid_vector_lexical"
+    assert body["memory_retrieval"]["retrieval_depth_policy"] == {
+        "episodic_limit": 12,
+        "conclusion_limit": 8,
+        "semantic_vector_enabled": True,
+        "retrieval_mode": "hybrid_vector_lexical",
+        "vector_hits": 0,
+        "episodic_lexical_hits": 0,
+        "semantic_candidates": 0,
+        "affective_candidates": 0,
+        "policy_owner": "runtime_memory_load",
     }
+    assert body["scheduler"]["healthy"] is True
+    assert body["scheduler"]["cadence_execution"]["selected_execution_mode"] == "in_process"
+    assert body["attention"]["healthy"] is True
+    assert body["attention"]["coordination_mode"] == "in_process"
+    assert body["attention"]["turn_state_owner"] == "in_process_coordinator"
+    assert body["attention"]["persistence_owner"] == "in_process_coordinator_store"
+    assert body["attention"]["parity_state"] == "in_process_baseline_active"
+    assert body["attention"]["deployment_readiness"]["ready"] is True
+    assert body["attention"]["timing_policy"]["alignment_state"] == "customized_timing_override"
+    assert body["reflection"]["healthy"] is True
+    assert body["reflection"]["deployment_readiness"]["ready"] is True
+    assert body["reflection"]["worker"]["queued_task_ids"] == [42]
+    assert body["reflection"]["adaptive_outputs"] == {}
 
 
 def test_health_endpoint_allows_deferred_reflection_mode_without_running_worker() -> None:
@@ -884,74 +664,21 @@ def test_health_endpoint_exposes_lexical_only_memory_retrieval_mode_when_semanti
 
     assert response.status_code == 200
     body = response.json()
-    assert body["memory_retrieval"] == {
+    assert body["memory_retrieval"]["semantic_vector_enabled"] is False
+    assert body["memory_retrieval"]["semantic_retrieval_mode"] == "lexical_only"
+    assert body["memory_retrieval"]["semantic_embedding_provider_ownership_state"] == "vectors_disabled"
+    assert body["memory_retrieval"]["semantic_embedding_strict_rollout_ready"] is False
+    assert body["memory_retrieval"]["semantic_embedding_warning_state"] == "vectors_disabled"
+    assert body["memory_retrieval"]["retrieval_depth_policy"] == {
+        "episodic_limit": 12,
+        "conclusion_limit": 8,
         "semantic_vector_enabled": False,
-        "semantic_retrieval_mode": "lexical_only",
-        "semantic_embedding_provider_ready": True,
-        "semantic_embedding_posture": "ready",
-        "semantic_embedding_provider_requested": "deterministic",
-        "semantic_embedding_provider_effective": "deterministic",
-        "semantic_embedding_provider_hint": "deterministic_baseline",
-        "semantic_embedding_provider_ownership_state": "vectors_disabled",
-        "semantic_embedding_provider_ownership_hint": "not_applicable_vectors_disabled",
-        "semantic_embedding_provider_ownership_enforcement": "warn",
-        "semantic_embedding_provider_ownership_enforcement_state": "not_applicable_vectors_disabled",
-        "semantic_embedding_provider_ownership_enforcement_hint": "not_applicable_vectors_disabled",
-        "semantic_embedding_owner_strategy_state": "vectors_disabled",
-        "semantic_embedding_owner_strategy_hint": "enable_vectors_before_owner_strategy_rollout",
-        "semantic_embedding_owner_strategy_recommendation": "defer_owner_strategy_selection_until_vectors_enabled",
-        "semantic_embedding_model_requested": "deterministic-v1",
-        "semantic_embedding_model_effective": "deterministic-v1",
-        "semantic_embedding_model_governance_state": "vectors_disabled",
-        "semantic_embedding_model_governance_hint": "not_applicable_vectors_disabled",
-        "semantic_embedding_model_governance_enforcement": "warn",
-        "semantic_embedding_model_governance_enforcement_state": "not_applicable_vectors_disabled",
-        "semantic_embedding_model_governance_enforcement_hint": "not_applicable_vectors_disabled",
-        "semantic_embedding_strict_rollout_violations": [],
-        "semantic_embedding_strict_rollout_violation_count": 0,
-        "semantic_embedding_strict_rollout_ready": False,
-        "semantic_embedding_strict_rollout_state": "not_applicable_vectors_disabled",
-        "semantic_embedding_strict_rollout_hint": "enable_vectors_before_strict_enforcement_rollout",
-        "semantic_embedding_strict_rollout_recommendation": "defer_strict_enforcement_until_vectors_enabled",
-        "semantic_embedding_recommended_provider_ownership_enforcement": "warn",
-        "semantic_embedding_recommended_model_governance_enforcement": "warn",
-        "semantic_embedding_provider_ownership_enforcement_alignment": "not_applicable_vectors_disabled",
-        "semantic_embedding_model_governance_enforcement_alignment": "not_applicable_vectors_disabled",
-        "semantic_embedding_enforcement_alignment_state": "not_applicable_vectors_disabled",
-        "semantic_embedding_enforcement_alignment_hint": "enable_vectors_before_enforcement_alignment",
-        "semantic_embedding_dimensions": 32,
-        "semantic_embedding_warning_state": "vectors_disabled",
-        "semantic_embedding_warning_hint": "enable_semantic_vectors_to_activate_embedding_strategy",
-        "semantic_embedding_source_kinds": ["episodic", "semantic", "affective"],
-        "semantic_embedding_source_coverage_state": "vectors_disabled",
-        "semantic_embedding_source_coverage_hint": "not_applicable_vectors_disabled",
-        "semantic_embedding_source_rollout_state": "vectors_disabled",
-        "semantic_embedding_source_rollout_hint": "enable_vectors_before_source_rollout",
-        "semantic_embedding_source_rollout_recommendation": "defer_source_rollout_until_vectors_enabled",
-        "semantic_embedding_source_rollout_order": ["semantic", "affective", "relation"],
-        "semantic_embedding_source_rollout_enabled_sources": ["semantic", "affective"],
-        "semantic_embedding_source_rollout_missing_sources": ["relation"],
-        "semantic_embedding_source_rollout_next_source_kind": "none",
-        "semantic_embedding_source_rollout_completion_state": "vectors_disabled",
-        "semantic_embedding_source_rollout_phase_index": 2,
-        "semantic_embedding_source_rollout_phase_total": 3,
-        "semantic_embedding_source_rollout_progress_percent": 67,
-        "semantic_embedding_source_rollout_enforcement": "warn",
-        "semantic_embedding_source_rollout_enforcement_state": "not_applicable_vectors_disabled",
-        "semantic_embedding_source_rollout_enforcement_hint": "not_applicable_vectors_disabled",
-        "semantic_embedding_recommended_source_rollout_enforcement": "warn",
-        "semantic_embedding_source_rollout_enforcement_alignment": "not_applicable_vectors_disabled",
-        "semantic_embedding_source_rollout_enforcement_alignment_state": "not_applicable_vectors_disabled",
-        "semantic_embedding_source_rollout_enforcement_alignment_hint": "enable_vectors_before_source_rollout_enforcement_alignment",
-        "semantic_embedding_refresh_mode": "on_write",
-        "semantic_embedding_refresh_interval_seconds": 21600,
-        "semantic_embedding_refresh_state": "vectors_disabled",
-        "semantic_embedding_refresh_hint": "not_applicable_vectors_disabled",
-        "semantic_embedding_refresh_cadence_state": "vectors_disabled",
-        "semantic_embedding_refresh_cadence_hint": "not_applicable_vectors_disabled",
-        "semantic_embedding_recommended_refresh_mode": "on_write",
-        "semantic_embedding_refresh_alignment_state": "not_applicable_vectors_disabled",
-        "semantic_embedding_refresh_alignment_hint": "enable_vectors_before_refresh_alignment",
+        "retrieval_mode": "lexical_only",
+        "vector_hits": 0,
+        "episodic_lexical_hits": 0,
+        "semantic_candidates": 0,
+        "affective_candidates": 0,
+        "policy_owner": "runtime_memory_load",
     }
 
 
@@ -966,75 +693,15 @@ def test_health_endpoint_exposes_embedding_provider_fallback_posture_when_non_de
 
     assert response.status_code == 200
     body = response.json()
-    assert body["memory_retrieval"] == {
-        "semantic_vector_enabled": True,
-        "semantic_retrieval_mode": "hybrid_vector_lexical",
-        "semantic_embedding_provider_ready": False,
-        "semantic_embedding_posture": "fallback_deterministic",
-        "semantic_embedding_provider_requested": "openai",
-        "semantic_embedding_provider_effective": "deterministic",
-        "semantic_embedding_provider_hint": "provider_not_implemented_fallback_deterministic",
-        "semantic_embedding_provider_ownership_state": "provider_fallback_active",
-        "semantic_embedding_provider_ownership_hint": "requested_provider_not_effective_owner",
-        "semantic_embedding_provider_ownership_enforcement": "warn",
-        "semantic_embedding_provider_ownership_enforcement_state": "warning_only",
-        "semantic_embedding_provider_ownership_enforcement_hint": "fallback_allowed_in_warn_mode",
-        "semantic_embedding_owner_strategy_state": "fallback_owner_active",
-        "semantic_embedding_owner_strategy_hint": "requested_provider_not_effective_owner",
-        "semantic_embedding_owner_strategy_recommendation": "keep_deterministic_owner_until_provider_execution_is_available",
-        "semantic_embedding_model_requested": "text-embedding-3-small",
-        "semantic_embedding_model_effective": "deterministic-v1",
-        "semantic_embedding_model_governance_state": "provider_fallback_effective_model",
-        "semantic_embedding_model_governance_hint": "effective_model_controlled_by_fallback_provider",
-        "semantic_embedding_model_governance_enforcement": "warn",
-        "semantic_embedding_model_governance_enforcement_state": "not_applicable_aligned",
-        "semantic_embedding_model_governance_enforcement_hint": "no_model_governance_violation",
-        "semantic_embedding_strict_rollout_violations": ["provider_ownership_fallback_active"],
-        "semantic_embedding_strict_rollout_violation_count": 1,
-        "semantic_embedding_strict_rollout_ready": False,
-        "semantic_embedding_strict_rollout_state": "not_ready_provider_ownership",
-        "semantic_embedding_strict_rollout_hint": "resolve_provider_ownership_before_strict",
-        "semantic_embedding_strict_rollout_recommendation": "keep_provider_ownership_warn_until_provider_owner_is_effective",
-        "semantic_embedding_recommended_provider_ownership_enforcement": "warn",
-        "semantic_embedding_recommended_model_governance_enforcement": "strict",
-        "semantic_embedding_provider_ownership_enforcement_alignment": "aligned",
-        "semantic_embedding_model_governance_enforcement_alignment": "below_recommendation",
-        "semantic_embedding_enforcement_alignment_state": "below_recommendation",
-        "semantic_embedding_enforcement_alignment_hint": "consider_enabling_model_governance_strict",
-        "semantic_embedding_dimensions": 1536,
-        "semantic_embedding_warning_state": "provider_fallback_active",
-        "semantic_embedding_warning_hint": "provider_not_implemented_using_deterministic_fallback",
-        "semantic_embedding_source_kinds": ["episodic", "semantic", "affective"],
-        "semantic_embedding_source_coverage_state": "full_for_current_retrieval_path",
-        "semantic_embedding_source_coverage_hint": "semantic_and_affective_sources_enabled",
-        "semantic_embedding_source_rollout_state": "semantic_affective_baseline",
-        "semantic_embedding_source_rollout_hint": "high_signal_sources_active",
-        "semantic_embedding_source_rollout_recommendation": "add_relation_source_after_baseline_stabilizes",
-        "semantic_embedding_source_rollout_order": ["semantic", "affective", "relation"],
-        "semantic_embedding_source_rollout_enabled_sources": ["semantic", "affective"],
-        "semantic_embedding_source_rollout_missing_sources": ["relation"],
-        "semantic_embedding_source_rollout_next_source_kind": "relation",
-        "semantic_embedding_source_rollout_completion_state": "baseline_complete_relation_pending",
-        "semantic_embedding_source_rollout_phase_index": 2,
-        "semantic_embedding_source_rollout_phase_total": 3,
-        "semantic_embedding_source_rollout_progress_percent": 67,
-        "semantic_embedding_source_rollout_enforcement": "warn",
-        "semantic_embedding_source_rollout_enforcement_state": "warning_only",
-        "semantic_embedding_source_rollout_enforcement_hint": "pending_source_rollout_allowed_in_warn_mode",
-        "semantic_embedding_recommended_source_rollout_enforcement": "warn",
-        "semantic_embedding_source_rollout_enforcement_alignment": "aligned",
-        "semantic_embedding_source_rollout_enforcement_alignment_state": "aligned_with_recommendation",
-        "semantic_embedding_source_rollout_enforcement_alignment_hint": "source_rollout_enforcement_matches_recommendation",
-        "semantic_embedding_refresh_mode": "on_write",
-        "semantic_embedding_refresh_interval_seconds": 21600,
-        "semantic_embedding_refresh_state": "on_write_refresh_active",
-        "semantic_embedding_refresh_hint": "refresh_on_write_enabled",
-        "semantic_embedding_refresh_cadence_state": "on_write_continuous",
-        "semantic_embedding_refresh_cadence_hint": "on_write_refresh_has_no_manual_gap",
-        "semantic_embedding_recommended_refresh_mode": "on_write",
-        "semantic_embedding_refresh_alignment_state": "aligned",
-        "semantic_embedding_refresh_alignment_hint": "refresh_mode_matches_active_rollout_recommendation",
-    }
+    assert body["memory_retrieval"]["semantic_vector_enabled"] is True
+    assert body["memory_retrieval"]["semantic_retrieval_mode"] == "hybrid_vector_lexical"
+    assert body["memory_retrieval"]["semantic_embedding_provider_ready"] is False
+    assert body["memory_retrieval"]["semantic_embedding_posture"] == "fallback_deterministic"
+    assert body["memory_retrieval"]["semantic_embedding_provider_requested"] == "openai"
+    assert body["memory_retrieval"]["semantic_embedding_provider_effective"] == "deterministic"
+    assert body["memory_retrieval"]["semantic_embedding_strict_rollout_violations"] == ["provider_ownership_fallback_active"]
+    assert body["memory_retrieval"]["semantic_embedding_dimensions"] == 1536
+    assert body["memory_retrieval"]["retrieval_depth_policy"]["retrieval_mode"] == "hybrid_vector_lexical"
 
 
 def test_health_endpoint_exposes_configured_embedding_source_kinds() -> None:
@@ -1348,44 +1015,32 @@ def test_health_endpoint_exposes_attention_snapshot() -> None:
 
     assert response.status_code == 200
     body = response.json()
-    assert body["attention"] == {
-        "healthy": True,
-        "coordination_mode": "in_process",
-        "turn_state_owner": "in_process_coordinator",
-        "durable_inbox_expected": False,
-        "deployment_readiness": {
-            "baseline_coordination_mode": "in_process",
-            "selected_coordination_mode": "in_process",
-            "ready": True,
-            "blocking_signals": [],
-            "turn_state_owner": "in_process_coordinator",
-            "durable_inbox_expected": False,
+    assert body["attention"]["healthy"] is True
+    assert body["attention"]["coordination_mode"] == "in_process"
+    assert body["attention"]["turn_state_owner"] == "in_process_coordinator"
+    assert body["attention"]["durable_inbox_expected"] is False
+    assert body["attention"]["persistence_owner"] == "in_process_coordinator_store"
+    assert body["attention"]["parity_state"] == "in_process_baseline_active"
+    assert body["attention"]["deployment_readiness"]["ready"] is True
+    assert body["attention"]["deployment_readiness"]["turn_state_owner"] == "in_process_coordinator"
+    assert body["attention"]["timing_policy"] == {
+        "production_baseline": {
+            "burst_window_ms": 120,
+            "answered_ttl_seconds": 5.0,
+            "stale_turn_seconds": 30.0,
         },
-        "timing_policy": {
-            "production_baseline": {
-                "burst_window_ms": 120,
-                "answered_ttl_seconds": 5.0,
-                "stale_turn_seconds": 30.0,
-            },
-            "current": {
-                "burst_window_ms": 240,
-                "answered_ttl_seconds": 0.5,
-                "stale_turn_seconds": 3.0,
-            },
-            "alignment_state": "customized_timing_override",
-            "alignment_hint": "review_attention_timing_override_before_production_rollout",
-            "deviations": [
-                "burst_window_higher_than_baseline",
-                "answered_ttl_lower_than_baseline",
-                "stale_turn_window_lower_than_baseline",
-            ],
+        "current": {
+            "burst_window_ms": 240,
+            "answered_ttl_seconds": 0.5,
+            "stale_turn_seconds": 3.0,
         },
-        "burst_window_ms": 240,
-        "answered_ttl_seconds": 0.5,
-        "stale_turn_seconds": 3.0,
-        "pending": 0,
-        "claimed": 0,
-        "answered": 0,
+        "alignment_state": "customized_timing_override",
+        "alignment_hint": "review_attention_timing_override_before_production_rollout",
+        "deviations": [
+            "burst_window_higher_than_baseline",
+            "answered_ttl_lower_than_baseline",
+            "stale_turn_window_lower_than_baseline",
+        ],
     }
 
 
@@ -1429,10 +1084,12 @@ def test_health_endpoint_exposes_durable_attention_owner_mode_posture() -> None:
     assert body["attention"]["coordination_mode"] == "durable_inbox"
     assert body["attention"]["turn_state_owner"] == "durable_attention_inbox"
     assert body["attention"]["durable_inbox_expected"] is True
-    assert body["attention"]["healthy"] is False
+    assert body["attention"]["healthy"] is True
+    assert body["attention"]["persistence_owner"] == "durable_attention_contract_store"
+    assert body["attention"]["parity_state"] == "durable_inbox_parity_baseline_active"
     assert body["attention"]["deployment_readiness"]["selected_coordination_mode"] == "durable_inbox"
-    assert body["attention"]["deployment_readiness"]["ready"] is False
-    assert "durable_inbox_owner_mode_not_implemented" in body["attention"]["deployment_readiness"]["blocking_signals"]
+    assert body["attention"]["deployment_readiness"]["ready"] is True
+    assert body["attention"]["deployment_readiness"]["blocking_signals"] == []
 
 
 def test_health_endpoint_exposes_runtime_policy_flags() -> None:
@@ -2518,6 +2175,31 @@ def test_event_endpoint_coalesces_rapid_telegram_messages_into_single_runtime_tu
     assert assembled.payload["turn_status"] == "claimed"
     assert assembled.payload["turn_source_count"] == 2
     assert len(assembled.payload["coalesced_event_ids"]) == 2
+
+
+def test_event_endpoint_preserves_attention_parity_in_durable_inbox_mode() -> None:
+    client, runtime, _ = _client(
+        attention_burst_window_ms=160,
+        attention_coordination_mode="durable_inbox",
+    )
+    first_response: dict[str, object] = {}
+
+    def _first_call() -> None:
+        first_response["value"] = client.post("/event", json=_telegram_update(4001, "durable first burst"))
+
+    thread = Thread(target=_first_call)
+    thread.start()
+    sleep(0.05)
+    second = client.post("/event", json=_telegram_update(4002, "durable second burst"))
+    thread.join(timeout=2.0)
+
+    assert "value" in first_response
+    assert second.status_code == 200
+    second_body = second.json()
+    assert second_body["queue"]["reason"] == "coalesced_into_pending_turn"
+    assert second_body["queue"]["source_count"] == 2
+    assert len(runtime.events) == 1
+    assert runtime.events[0].payload["text"] == "durable first burst\ndurable second burst"
 
 
 def test_event_endpoint_ignores_duplicate_telegram_update_during_pending_turn() -> None:

@@ -2626,6 +2626,8 @@ async def test_runtime_pipeline_uses_preferred_role_from_semantic_memory_for_amb
     result = await runtime.run(event)
 
     assert result.role.selected == "analyst"
+    assert any(skill.skill_id == "structured_reasoning" for skill in result.role.selected_skills)
+    assert any(skill.skill_id == "structured_reasoning" for skill in result.plan.selected_skills)
     assert result.reflection_triggered is True
 
 
@@ -2664,6 +2666,9 @@ async def test_runtime_pipeline_uses_theta_bias_when_no_preferred_role_exists() 
 
     assert result.role.selected == "analyst"
     assert result.reflection_triggered is True
+    assert result.system_debug is not None
+    assert result.system_debug.adaptive_state["theta_influence"]["dominant_channel"] == "analysis"
+    assert result.system_debug.adaptive_state["theta_influence"]["role_posture"] == "applied"
 
 
 async def test_runtime_pipeline_uses_theta_bias_for_motivation_and_planning_on_brief_turn() -> None:
@@ -2705,6 +2710,10 @@ async def test_runtime_pipeline_uses_theta_bias_for_motivation_and_planning_on_b
     assert result.reflection_triggered is True
     assert result.expression.tone == "analytical"
     assert openai.calls[0]["response_tone"] == "analytical"
+    assert result.system_debug is not None
+    assert result.system_debug.adaptive_state["theta_influence"]["motivation_posture"] == "applied"
+    assert result.system_debug.adaptive_state["theta_influence"]["planning_posture"] == "eligible_not_selected"
+    assert result.system_debug.adaptive_state["theta_influence"]["expression_posture"] == "applied"
 
 
 async def test_runtime_pipeline_uses_collaboration_preference_in_context_and_plan() -> None:
@@ -4465,6 +4474,8 @@ async def test_runtime_pipeline_exposes_system_debug_surface_for_behavior_valida
     assert "episodic_lexical_hits" in result.system_debug.memory_bundle.diagnostics
     assert result.system_debug.plan.domain_intents
     assert result.system_debug.action_result.status in {"success", "noop"}
+    assert result.system_debug.adaptive_state["retrieval_depth_policy"]["episodic_limit"] == RuntimeOrchestrator.MEMORY_LOAD_LIMIT
+    assert result.system_debug.adaptive_state["background_adaptive_outputs"]["theta_loaded"] is False
 
 
 async def test_behavior_harness_outputs_structured_contract_results() -> None:

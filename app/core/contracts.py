@@ -196,9 +196,24 @@ class ConnectorPermissionGateOutput(BaseModel):
     reason: str = "explicit_user_authorization_required"
 
 
+class SkillCapabilityOutput(BaseModel):
+    skill_id: str
+    label: str
+    capability_family: Literal[
+        "support",
+        "analysis",
+        "execution",
+        "memory",
+        "connector_boundary",
+    ]
+    reason: str
+    side_effect_posture: Literal["metadata_only"] = "metadata_only"
+
+
 class RoleOutput(BaseModel):
     selected: str
     confidence: float
+    selected_skills: list[SkillCapabilityOutput] = Field(default_factory=list)
 
 
 class NoopDomainIntent(BaseModel):
@@ -366,6 +381,7 @@ class PlanOutput(BaseModel):
     proposal_handoffs: list[ProposalHandoffDecisionOutput] = Field(default_factory=list)
     accepted_proposals: list[SubconsciousProposalRecord] = Field(default_factory=list)
     connector_permission_gates: list[ConnectorPermissionGateOutput] = Field(default_factory=list)
+    selected_skills: list[SkillCapabilityOutput] = Field(default_factory=list)
 
 
 class ActionResult(BaseModel):
@@ -495,6 +511,7 @@ class RuntimeSystemDebugOutput(BaseModel):
     plan: RuntimeSystemDebugPlanView
     expression: ExpressionOutput
     action_result: ActionResult
+    adaptive_state: dict[str, Any] = Field(default_factory=dict)
 
 
 class RuntimeResult(BaseModel):

@@ -327,6 +327,20 @@ async def test_reflection_worker_infers_preferred_role_from_repeated_role_usage(
             "execution_bias": 1.0,
         }
     ]
+    assert worker.snapshot()["adaptive_output_summary"] == {
+        "source": "background_reflection",
+        "event_id": "evt-role",
+        "adaptive_output_count": 4,
+        "conclusion_kinds": ["preferred_role", "response_style"],
+        "relation_types": ["delivery_reliability"],
+        "proposal_types": [],
+        "progress_signal_kinds": [],
+        "theta_update": {
+            "present": True,
+            "dominant_channel": "execution",
+        },
+        "foreground_mutation_posture": "background_owned_only",
+    }
 
 
 async def test_reflection_worker_infers_concise_style_from_repeated_short_successful_outputs() -> None:
@@ -1382,6 +1396,7 @@ async def test_reflection_worker_derives_goal_progress_score_from_task_mix() -> 
             "source_event_id": "evt-goal-progress-score",
         }
     ]
+    assert "goal_progress_score" in worker.snapshot()["adaptive_output_summary"]["progress_signal_kinds"]
 
 
 async def test_reflection_worker_derives_improving_goal_progress_trend_against_previous_score() -> None:

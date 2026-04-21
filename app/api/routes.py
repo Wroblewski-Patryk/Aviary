@@ -28,6 +28,7 @@ from app.core.runtime_policy import (
     runtime_policy_snapshot,
 )
 from app.core.runtime import RuntimeOrchestrator
+from app.core.retrieval_policy import retrieval_depth_policy_snapshot
 from app.core.scheduler_contracts import (
     normalize_scheduler_execution_mode,
     reflection_deployment_readiness_snapshot,
@@ -117,6 +118,8 @@ def _attention_snapshot_from_request(request: Request) -> dict[str, Any]:
         "coordination_mode": str(readiness["selected_coordination_mode"]),
         "turn_state_owner": str(readiness["turn_state_owner"]),
         "durable_inbox_expected": bool(readiness["durable_inbox_expected"]),
+        "persistence_owner": str(readiness["persistence_owner"]),
+        "parity_state": str(readiness["parity_state"]),
         "deployment_readiness": readiness,
         "timing_policy": timing_policy,
         "burst_window_ms": burst_window_ms,
@@ -127,7 +130,7 @@ def _attention_snapshot_from_request(request: Request) -> dict[str, Any]:
 
 
 def _memory_retrieval_snapshot_from_settings(settings) -> dict[str, Any]:
-    return embedding_strategy_snapshot(
+    snapshot = embedding_strategy_snapshot(
         semantic_vector_enabled=bool(getattr(settings, "semantic_vector_enabled", True)),
         provider=str(getattr(settings, "embedding_provider", "deterministic")),
         model=str(getattr(settings, "embedding_model", "deterministic-v1")),
@@ -147,6 +150,12 @@ def _memory_retrieval_snapshot_from_settings(settings) -> dict[str, Any]:
             getattr(settings, "embedding_source_rollout_enforcement", "warn")
         ),
     )
+    snapshot["retrieval_depth_policy"] = retrieval_depth_policy_snapshot(
+        episodic_limit=RuntimeOrchestrator.MEMORY_LOAD_LIMIT,
+        conclusion_limit=8,
+        semantic_vector_enabled=bool(getattr(settings, "semantic_vector_enabled", True)),
+    )
+    return snapshot
 
 
 def _debug_query_compat_telemetry_from_request(request: Request) -> DebugQueryCompatTelemetry:
@@ -396,6 +405,7 @@ async def health(request: Request) -> dict[str, Any]:
             "deployment_readiness": reflection_deployment_readiness,
             "topology": reflection_topology,
             "worker": reflection_snapshot,
+            "adaptive_outputs": dict(reflection_snapshot.get("adaptive_output_summary", {})),
             "tasks": reflection_stats,
         },
     }
