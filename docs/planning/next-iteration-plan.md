@@ -29,6 +29,19 @@ Confirmed on 2026-04-19:
 
 ## Progress Update
 
+Planned on 2026-04-22:
+
+- after Group 49 closed, the next architecture-convergence queue is now seeded
+  through `PRJ-442`.
+- the remaining work is now organized into seven detailed convergence lanes:
+  runtime topology finalization, production-boundary hardening, retrieval and
+  affective-memory productionization, adaptive identity governance, goal/task
+  and proposal governance, scheduler-plus-connector capability convergence, and
+  deployment standard plus release-reliability closure.
+- this queue is intentionally ordered to finish ownership and rollout
+  boundaries before widening inference authority or changing production
+  defaults.
+
 Completed on 2026-04-21:
 
 - `PRJ-329` is complete: canonical docs, runtime-reality notes, and context
@@ -2574,6 +2587,428 @@ Status update (2026-04-21): `PRJ-411..PRJ-414` are complete.
   - Validation:
     - doc-and-context sync plus targeted identity/language cross-doc review
 
+## Detailed Functional Analysis And Remaining Work (2026-04-22)
+
+### 1. Runtime Topology And Ownership
+
+- Current state:
+  - reflection has durable queue ownership and machine-visible readiness, but
+    production still defaults to `REFLECTION_RUNTIME_MODE=in_process`
+  - attention now has a real durable contract store, but the long-term owner
+    decision between in-process coordination and durable-owner posture is not
+    formally closed
+  - graph-stage execution is explicit, but pre/post graph ownership versus
+    future graph-node expansion is still an open architecture question
+- Target state:
+  - background reflection, durable attention, and graph ownership are explicit
+    enough that production defaults can move without semantic drift or hidden
+    framework coupling
+- Gap:
+  - the repo has the mechanics, but not the final switch criteria, release
+    policy, or long-term ownership baseline
+- Planned queue:
+  - `PRJ-415..PRJ-418`
+
+### 2. Production Boundary Hardening
+
+- Current state:
+  - startup is migration-first, but `create_tables()` compatibility still
+    exists behind rollout guardrails
+  - shared `/event?debug=true` posture is guarded and visible, but production
+    has not yet enforced dedicated internal-ingress-only debug access as the
+    default baseline
+- Target state:
+  - production runtime starts only through migration-owned schema control, and
+    internal debug stays on a dedicated protected ingress with break-glass
+    posture instead of a convenience default
+- Gap:
+  - release-window removal and enforcement timing are still planning-only
+    decisions
+- Planned queue:
+  - `PRJ-419..PRJ-422`
+
+### 3. Retrieval, Semantic Recall, And Affective Memory
+
+- Current state:
+  - retrieval is still heuristic-first with deeper load depth, policy
+    visibility, and deterministic embedding/provider placeholders
+  - affective memory exists as tags and conclusions, but the long-term split
+    between transient turn-state and durable affective memory is not fully
+    settled
+- Target state:
+  - retrieval should be a production-ready hybrid lexical-plus-vector system
+    with explicit provider ownership, explicit default depth, and a stable
+    affective-memory model
+- Gap:
+  - the current repo has contracts and deterministic baselines, but not the
+    production retrieval owner or the final affective-memory boundaries
+- Planned queue:
+  - `PRJ-423..PRJ-426`
+
+### 4. Adaptive Identity, Role, Language, And Preference Governance
+
+- Current state:
+  - identity/profile ownership, language continuity, role-selection evidence,
+    affective rollout posture, and theta governance are all explicit and
+    bounded
+  - learned preferences and adaptive signals remain deliberately narrow
+    tie-break inputs
+- Target state:
+  - the app should have a clearly documented long-horizon governance policy for
+    how far role history, affective signals, language continuity, profile
+    identity, preferences, and theta are allowed to shape later behavior
+- Gap:
+  - the baseline is safe and inspectable, but the future authority model is
+    still unresolved
+- Planned queue:
+  - `PRJ-427..PRJ-430`
+
+### 5. Goal/Task Growth And Proposal Governance
+
+- Current state:
+  - the runtime already supports explicit goal/task creation, scoped goal
+    reflection state, inferred typed maintenance intents, and proposal
+    promotion through the conscious boundary
+- Target state:
+  - the app should define exactly when inference is allowed to create or widen
+    internal planning state and whether subconscious proposal handling needs a
+    richer conscious decision set
+- Gap:
+  - the repo has bounded mechanics, but not the final policy for inferred
+    planning growth or proposal-decision extensibility
+- Planned queue:
+  - `PRJ-431..PRJ-434`
+
+### 6. Scheduler Ownership And Connector Capability Convergence
+
+- Current state:
+  - scheduler cadence, proactive dispatch, attention timing, and connector
+    execution policy are explicit and test-visible
+  - connector families already have a shared baseline policy owner
+- Target state:
+  - external scheduling, durable attention ownership, and connector capability
+    expansion should converge on one explicit conscious-execution boundary with
+    clear opt-in, authorization, and proposal rules
+- Gap:
+  - the repo still needs a final authority split between in-app coordination,
+    external schedulers, and user-authorized connector execution
+- Planned queue:
+  - `PRJ-435..PRJ-438`
+
+### 7. Deployment Standard And Release Reliability
+
+- Current state:
+  - Coolify remains the documented hosting baseline, deployment-trigger
+    evidence exists, and release smoke now verifies deployment evidence
+- Target state:
+  - deployment ownership, trigger SLOs, rollback expectations, and release
+    evidence should describe the intended long-term operating model instead of
+    a transitional fallback-heavy posture
+- Gap:
+  - webhook reliability thresholds and any post-Coolify hosting standard are
+    still unresolved
+- Planned queue:
+  - `PRJ-439..PRJ-442`
+
+## Group 50 - Runtime Topology Finalization
+
+This group closes the remaining topology questions around foreground graph
+ownership, background reflection execution, and durable attention ownership
+before any production-default switches.
+
+- `PRJ-415` Define the production switch criteria for deferred reflection and durable attention ownership.
+  - Result:
+    - one explicit switch contract records when production may move from
+      `REFLECTION_RUNTIME_MODE=in_process` to `deferred` and from
+      `ATTENTION_COORDINATION_MODE=in_process` to `durable_inbox`
+    - reflection readiness, attention contract-store readiness, and rollback
+      criteria are described in one place instead of spread across docs
+  - Validation:
+    - targeted cross-doc review covering `open-decisions`, runtime ops, and
+      architecture/runtime-reality ownership notes
+
+- `PRJ-416` Add machine-visible readiness evidence for the selected topology owner path.
+  - Result:
+    - `/health` and release-smoke evidence expose the final readiness checklist
+      for reflection-mode and attention-owner switches
+    - operator-visible blockers become machine-readable before any default
+      change is scheduled
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_main_runtime_policy.py tests/test_deployment_trigger_scripts.py`
+
+- `PRJ-417` Decide the long-term graph ownership boundary and proposal decision-set baseline.
+  - Result:
+    - the repo records whether current pre/post graph ownership remains the
+      long-term baseline or whether selected non-stage segments should migrate
+      into graph-owned nodes later
+    - the conscious proposal-decision set is either explicitly frozen or a
+      bounded extension path is documented
+  - Validation:
+    - architecture and planning cross-review plus targeted graph-contract test
+      impact note
+
+- `PRJ-418` Sync docs/context for runtime topology finalization.
+  - Result:
+    - task board, project state, open decisions, canonical architecture docs,
+      runtime-reality notes, and ops guidance all align on the final topology
+      stance
+  - Validation:
+    - doc-and-context sync across `docs/architecture/`,
+      `docs/implementation/`, `docs/planning/`,
+      `docs/operations/`, and `.codex/context/`
+
+## Group 51 - Production Boundary Hardening
+
+This group turns transitional production guardrails into an explicit path
+toward migration-only startup and dedicated internal debug ingress.
+
+- `PRJ-419` Schedule the actual `create_tables()` removal window and strict startup baseline.
+  - Result:
+    - a concrete release window and prerequisite checklist exists for removing
+      compatibility-mode schema creation
+    - startup policy docs, ops notes, and `/health.runtime_policy` all point to
+      the same migration-only target baseline
+  - Validation:
+    - targeted runtime-policy and ops doc cross-review
+
+- `PRJ-420` Enforce dedicated internal-ingress-only debug posture with break-glass override.
+  - Result:
+    - production debug access defaults to dedicated internal ingress only, with
+      a narrow break-glass override path instead of shared-endpoint default
+      exposure
+    - release and rollback paths explicitly cover the selected debug posture
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_main_runtime_policy.py`
+
+- `PRJ-421` Add release evidence for migration-only startup and debug-ingress enforcement.
+  - Result:
+    - release smoke and startup evidence prove the chosen production boundary
+      instead of relying on manual interpretation
+    - the repo gains one release-readiness story for schema ownership and debug
+      ingress retirement
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_main_runtime_policy.py tests/test_api_routes.py`
+
+- `PRJ-422` Sync docs/context for production boundary hardening.
+  - Result:
+    - planning docs, runtime ops, testing guidance, and context truth all align
+      on migration-only startup plus dedicated debug-ingress enforcement
+  - Validation:
+    - doc-and-context sync across `docs/planning/`,
+      `docs/operations/`, `docs/engineering/`, and `.codex/context/`
+
+## Group 52 - Retrieval And Affective-Memory Productionization
+
+This group upgrades retrieval from deterministic heuristic baseline toward the
+production semantic-recall model described by the architecture.
+
+- `PRJ-423` Define the production retrieval architecture and default depth policy.
+  - Result:
+    - one shared plan records the target hybrid lexical-plus-vector retrieval
+      path, provider owner, fallback posture, and production default depth
+    - retrieval and embedding strategy decisions stop being spread across
+      multiple open-decision sections
+  - Validation:
+    - architecture/planning cross-review across decisions `5`, `5d`, and `5e`
+
+- `PRJ-424` Implement provider-backed retrieval and embedding rollout behind explicit owner-mode policy.
+  - Result:
+    - retrieval and embedding providers move from deterministic placeholder
+      contracts to a real rollout path with explicit owner-mode and fallback
+      semantics
+    - the repo can test production-like semantic recall without redefining the
+      retrieval contract again
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_context_agent.py tests/test_memory_repository.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+
+- `PRJ-425` Separate durable affective-memory patterns from transient turn-state and pin their influence.
+  - Result:
+    - durable affective signals and transient turn affect are explicitly split
+      so later retrieval/ranking work does not overfit recent emotion noise
+    - context, motivation, and reflection influence from affective memory is
+      regression-pinned under the new boundary
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_context_agent.py tests/test_motivation_engine.py tests/test_reflection_worker.py tests/test_runtime_pipeline.py`
+
+- `PRJ-426` Sync docs/context for retrieval and affective-memory productionization.
+  - Result:
+    - docs, planning truth, testing guidance, and context notes all describe
+      the same retrieval owner, default depth, embedding posture, and
+      affective-memory split
+  - Validation:
+    - doc-and-context sync across `docs/architecture/`,
+      `docs/implementation/`, `docs/planning/`,
+      `docs/engineering/`, and `.codex/context/`
+
+## Group 53 - Adaptive Identity And Role-Governance Evolution
+
+This group decides how far adaptive state is allowed to shape future behavior
+without drifting into implicit identity ownership.
+
+- `PRJ-427` Define the long-horizon role-selection and affective-rollout boundary.
+  - Result:
+    - the repo records whether role selection should remain a lightweight
+      foreground policy or grow toward longer-horizon state/history reasoning
+    - affective-assessment default posture is intentionally fixed for future
+      environments instead of staying an open rollout assumption
+  - Validation:
+    - architecture/planning cross-review plus targeted role and affective test
+      scope note
+
+- `PRJ-428` Decide the future authority of learned preferences and theta signals.
+  - Result:
+    - one explicit governance statement defines whether preference signals and
+      theta remain tie-break-only or gain any broader influence on proactive,
+      attention, or identity behavior
+    - expansion, if any, is bounded by stage ownership and evidence thresholds
+  - Validation:
+    - policy cross-review across `16_agent_contracts.md` and
+      `open-decisions.md`
+
+- `PRJ-429` Define the future profile and multilingual identity boundary.
+  - Result:
+    - the repo records whether conclusion-owned preferences should stay
+      separate from profile identity long-term and when language continuity may
+      evolve beyond the current `en|pl` heuristic-plus-profile baseline
+    - future identity growth gets one explicit compatibility path instead of ad
+      hoc profile widening
+  - Validation:
+    - identity/language cross-review across architecture, planning, and ops
+      notes
+
+- `PRJ-430` Sync docs/context for adaptive identity and role governance.
+  - Result:
+    - task board, project state, open decisions, and canonical docs all align
+      on the bounded future authority of role history, affective posture,
+      preferences, theta, and multilingual continuity
+  - Validation:
+    - doc-and-context sync across `docs/architecture/`,
+      `docs/planning/`, `docs/implementation/`, and `.codex/context/`
+
+## Group 54 - Goal/Task And Proposal Governance
+
+This group decides how internal planning state is allowed to grow and how
+subconscious proposals should evolve without bypassing the conscious boundary.
+
+- `PRJ-431` Define the inference boundary for future goal and task creation.
+  - Result:
+    - one explicit policy records whether internal goals/tasks remain limited to
+      explicit user declarations or may be inferred from repeated execution and
+      plan patterns
+    - inferred creation, if allowed, gains bounded triggers and rollback-safe
+      guardrails
+  - Validation:
+    - planning/memory cross-review plus targeted goal/task test impact note
+
+- `PRJ-432` Decide the long-term conscious decision set for subconscious proposals.
+  - Result:
+    - proposal handling either keeps the current `accept|merge|defer|discard`
+      baseline or gains a bounded extension path with explicit status mapping
+    - proposal-family growth stays inside conscious planning ownership
+  - Validation:
+    - planning/architecture cross-review for proposal lifecycle contracts
+
+- `PRJ-433` Add machine-visible governance diagnostics for inferred planning growth and proposal handling.
+  - Result:
+    - runtime debug and/or health surfaces expose the chosen inferred-planning
+      and proposal-governance posture so later rollout is observable
+    - future inference expansion no longer depends on reading scattered code
+      paths
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+
+- `PRJ-434` Sync docs/context for goal/task and proposal governance.
+  - Result:
+    - canonical docs, planning truth, and context notes all align on internal
+      planning growth limits plus proposal-decision baseline
+  - Validation:
+    - doc-and-context sync across `docs/architecture/`,
+      `docs/planning/`, `docs/implementation/`, and `.codex/context/`
+
+## Group 55 - Scheduler And Connector Capability Convergence
+
+This group completes the conscious execution boundary across cadence ownership,
+durable attention, and external productivity connectors.
+
+- `PRJ-435` Define the final scheduler-versus-attention ownership split.
+  - Result:
+    - one explicit policy records where app-local scheduler ownership ends, how
+      external cadence ownership interacts with durable attention, and which
+      path becomes the intended production baseline
+    - proactive and maintenance scheduling can move forward without reopening
+      attention semantics
+  - Validation:
+    - scheduler/attention cross-review across architecture, runtime-reality,
+      and ops docs
+
+- `PRJ-436` Define the connector authorization matrix for read, suggestion, and direct execution.
+  - Result:
+    - connector families gain an explicit operation matrix that distinguishes
+      read-only, suggestion-only, and safe direct-execution paths after user
+      opt-in
+    - future connector growth stays policy-owned instead of depending on local
+      planner/action heuristics
+  - Validation:
+    - planning/action/connector policy cross-review and targeted permission
+      regression note
+
+- `PRJ-437` Define the capability-proposal workflow for new connectors without self-authorization.
+  - Result:
+    - the system gets one explicit proposal path for suggesting new connector
+      capability or expansion without silently authorizing itself
+    - runtime/debug visibility records when capability growth is merely
+      suggested versus actually authorized
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_connector_policy.py tests/test_planning_agent.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
+
+- `PRJ-438` Sync docs/context for scheduler and connector capability convergence.
+  - Result:
+    - canonical docs, planning docs, ops guidance, and context truth all align
+      on scheduler ownership, durable attention interaction, and connector
+      authorization posture
+  - Validation:
+    - doc-and-context sync across `docs/architecture/`,
+      `docs/planning/`, `docs/operations/`, and `.codex/context/`
+
+## Group 56 - Deployment Standard And Release-Reliability Closure
+
+This group converts the remaining deployment and release questions into one
+explicit long-term operating model.
+
+- `PRJ-439` Choose the post-Coolify hosting baseline and responsibility split.
+  - Result:
+    - the repo records whether Coolify remains the medium-term standard or a
+      new hosting baseline should replace it, together with ownership for
+      secrets, deploy orchestration, rollback, and operator visibility
+    - future runtime work stops assuming an unspecified hosting transition
+  - Validation:
+    - ops/planning cross-review with updated deployment decision record
+
+- `PRJ-440` Define the deployment-trigger SLO and manual-fallback retirement criteria.
+  - Result:
+    - one objective webhook delivery and deployment evidence target defines
+      when manual redeploy becomes exception-only instead of routine fallback
+    - release policy and smoke checks align with that SLO
+  - Validation:
+    - runbook and behavior-validation/release-smoke cross-review
+
+- `PRJ-441` Align release evidence, smoke workflow, and rollback notes to the chosen deployment standard.
+  - Result:
+    - release readiness, smoke execution, and rollback documentation all point
+      at the same long-term deployment baseline
+    - deployment reliability is proved through repeatable evidence rather than
+      ad hoc operator memory
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_main_runtime_policy.py`
+
+- `PRJ-442` Sync docs/context for deployment standard and release reliability closure.
+  - Result:
+    - context truth, planning docs, runtime ops, and architecture notes all
+      align on the chosen hosting baseline plus deployment-trigger SLO posture
+  - Validation:
+    - doc-and-context sync across `docs/planning/`,
+      `docs/operations/`, `docs/implementation/`, and `.codex/context/`
+
 ## Parallel-Ready Lanes
 
 The next three groups intentionally stay sequential because they define shared
@@ -2633,10 +3068,17 @@ group locks the production and release baseline for the converged runtime.
 33. `PRJ-403..PRJ-406` Reflection scope governance
 34. `PRJ-407..PRJ-410` Durable attention contract-store rollout
 35. `PRJ-411..PRJ-414` Identity and language ownership baseline
+36. `PRJ-415..PRJ-418` Runtime topology finalization
+37. `PRJ-419..PRJ-422` Production boundary hardening
+38. `PRJ-423..PRJ-426` Retrieval and affective-memory productionization
+39. `PRJ-427..PRJ-430` Adaptive identity and role-governance evolution
+40. `PRJ-431..PRJ-434` Goal/task and proposal governance
+41. `PRJ-435..PRJ-438` Scheduler and connector capability convergence
+42. `PRJ-439..PRJ-442` Deployment standard and release-reliability closure
 
 The queue should still be treated as intentionally open after those items.
 Additional small architecture-alignment slices may still be discovered while
-executing Groups 17 through 49.
+executing Groups 17 through 56.
 
 ## Handoff Rules For Execution Agents
 

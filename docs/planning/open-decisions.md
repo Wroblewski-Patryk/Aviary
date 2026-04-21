@@ -76,7 +76,19 @@ The current repo already works as an MVP slice, but several architecture-level d
   - `PRJ-403..PRJ-406`: reflection scope governance (`5c`) - complete
   - `PRJ-407..PRJ-410`: durable attention contract-store rollout (`12a`) - complete
   - `PRJ-411..PRJ-414`: identity/profile ownership and language continuity
-    governance (`8`, `9`)
+    governance (`8`, `9`) - complete
+  - `PRJ-415..PRJ-418`: runtime topology finalization
+    (`1`, `3b`, `12`, `12a`, `12b`)
+  - `PRJ-419..PRJ-422`: production boundary hardening (`2`, `3`)
+  - `PRJ-423..PRJ-426`: retrieval and affective-memory productionization
+    (`5`, `5b`, `5d`, `5e`)
+  - `PRJ-427..PRJ-430`: adaptive identity and role-governance evolution
+    (`4`, `4a`, `8`, `9`, `10`, `11`)
+  - `PRJ-431..PRJ-434`: goal/task and proposal governance (`5a`, `12b`)
+  - `PRJ-435..PRJ-438`: scheduler and connector capability convergence
+    (`12`, `12a`, `12c`)
+  - `PRJ-439..PRJ-442`: deployment standard and release-reliability closure
+    (`6`, `7`)
 - reflection deployment lane is complete through `PRJ-304`, and
   post-reflection hardening decisions are now complete through `PRJ-309`.
 - runtime behavior-validation lane is now complete through `PRJ-317`.
@@ -91,6 +103,9 @@ The current repo already works as an MVP slice, but several architecture-level d
   the new identity/profile ownership baseline.
 - post-Group-49 state has no remaining seeded `READY`; the next architecture
   slice should again be derived from the remaining open decisions below.
+- on 2026-04-22, the next convergence queue was seeded through `PRJ-442` so
+  the remaining open decisions now map to explicit groups instead of an empty
+  post-Group-49 backlog.
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 
