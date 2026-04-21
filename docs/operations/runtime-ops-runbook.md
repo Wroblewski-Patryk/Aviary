@@ -39,7 +39,14 @@ runtime flags (for example `startup_schema_mode`, `event_debug_enabled`, and
 `event_debug_query_compat_last_attempt_state`,
 `event_debug_query_compat_activity_state`,
 `event_debug_query_compat_activity_hint`, `debug_access_posture`,
-`debug_token_policy_hint`) plus
+`debug_token_policy_hint`,
+`startup_schema_compatibility_posture`,
+`startup_schema_compatibility_sunset_ready`,
+`startup_schema_compatibility_sunset_reason`,
+`event_debug_shared_ingress_sunset_ready`,
+`event_debug_shared_ingress_sunset_reason`,
+`compatibility_sunset_ready`, and
+`compatibility_sunset_blockers`) plus
 strict-rollout readiness signals
 (`production_policy_mismatches`, `production_policy_mismatch_count`,
 `strict_startup_blocked`, and `strict_rollout_ready`) plus rollout guidance
@@ -250,6 +257,9 @@ Operator release gate:
 - verify `/health.runtime_policy.production_policy_mismatches` is empty
 - verify `/health.runtime_policy.strict_startup_blocked=false`
 - verify `/health.runtime_policy.event_debug_query_compat_enabled=false`
+- verify `/health.runtime_policy.startup_schema_compatibility_sunset_ready=true`
+- verify `/health.runtime_policy.event_debug_shared_ingress_sunset_ready=true`
+- verify `/health.runtime_policy.compatibility_sunset_ready=true`
 
 ## Internal Debug Ingress Boundary (PRJ-307)
 
@@ -353,6 +363,9 @@ Release smoke ownership:
 - when deployment evidence is provided, smoke also fails fast if the artifact
   kind is wrong, the webhook response was unsuccessful, or the artifact age
   exceeds the selected max-age window.
+- smoke now also fails fast when compatibility-sunset evidence fields are
+  missing or internally inconsistent, and includes the verified
+  migration-bootstrap/shared-debug-ingress posture in the JSON summary.
 - release is not considered complete until smoke passes (`GET /health` plus
   `POST /event` roundtrip).
 - release-readiness now also requires behavior-validation evidence for the

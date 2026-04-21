@@ -44,6 +44,7 @@ def test_startup_logs_warning_when_production_enables_query_compat_debug_route(c
 
     messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
     assert any("disable_event_debug_query_compat_in_production" in message for message in messages)
+    assert any("retire_shared_debug_ingress_from_normal_production_use" in message for message in messages)
 
 
 def test_startup_skips_warning_when_debug_payload_is_disabled(caplog) -> None:
@@ -277,6 +278,10 @@ def test_startup_logs_strict_rollout_hint_when_production_warn_mode_is_ready(cap
     assert any("runtime_policy_hint" in message for message in messages)
     assert any("recommended_enforcement=strict" in message for message in messages)
     assert any("hint=can_enable_strict" in message for message in messages)
+    assert any("runtime_policy_compatibility_sunset_hint" in message for message in messages)
+    assert any("startup_schema_compatibility_sunset_ready=True" in message for message in messages)
+    assert any("event_debug_shared_ingress_sunset_ready=True" in message for message in messages)
+    assert any("compatibility_sunset_ready=True" in message for message in messages)
 
 
 def test_startup_blocks_with_production_default_strict_policy_when_enforcement_is_unset(caplog) -> None:

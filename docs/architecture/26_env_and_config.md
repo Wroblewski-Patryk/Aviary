@@ -360,6 +360,15 @@ Compatibility `STARTUP_SCHEMA_MODE=create_tables` should be removed only after:
   `event_debug_shared_ingress_break_glass_required`, and
   `event_debug_shared_ingress_posture` to expose transitional shared-endpoint
   sunset posture
+- `startup_schema_compatibility_posture`,
+  `startup_schema_compatibility_sunset_ready`, and
+  `startup_schema_compatibility_sunset_reason` to expose whether migration-only
+  bootstrap is already in removal-ready posture
+- `event_debug_shared_ingress_sunset_ready` and
+  `event_debug_shared_ingress_sunset_reason` to expose whether shared debug
+  ingress is already retired from normal production use
+- `compatibility_sunset_ready` and `compatibility_sunset_blockers` to expose
+  aggregate readiness for scheduling actual compatibility-path removal windows
 - `event_debug_query_compat_telemetry` with in-process compat-route usage
   counters (`attempts_total`, `allowed_total`, `blocked_total`) and last-attempt
   timestamps for sunset-readiness tracking

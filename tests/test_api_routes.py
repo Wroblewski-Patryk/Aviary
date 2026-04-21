@@ -577,6 +577,9 @@ def test_health_endpoint_returns_ok() -> None:
         "status": "ok",
         "runtime_policy": {
             "startup_schema_mode": "migrate",
+            "startup_schema_compatibility_posture": "migration_only",
+            "startup_schema_compatibility_sunset_ready": True,
+            "startup_schema_compatibility_sunset_reason": "migration_only_baseline_active",
             "event_debug_enabled": True,
             "event_debug_token_required": False,
             "production_debug_token_required": True,
@@ -588,6 +591,8 @@ def test_health_endpoint_returns_ok() -> None:
             "event_debug_shared_ingress_mode": "compatibility",
             "event_debug_shared_ingress_break_glass_required": False,
             "event_debug_shared_ingress_posture": "transitional_compatibility",
+            "event_debug_shared_ingress_sunset_ready": False,
+            "event_debug_shared_ingress_sunset_reason": "shared_debug_route_still_in_compatibility_mode",
             "debug_access_posture": "open_no_token",
             "debug_token_policy_hint": "debug_access_open_without_token",
             "event_debug_source": "explicit",
@@ -598,6 +603,8 @@ def test_health_endpoint_returns_ok() -> None:
             "strict_startup_blocked": False,
             "strict_rollout_ready": True,
             "strict_rollout_hint": "not_applicable_non_production",
+            "compatibility_sunset_ready": False,
+            "compatibility_sunset_blockers": ["shared_debug_ingress_compatibility_mode_active"],
             "event_debug_query_compat_allow_rate": 0.0,
             "event_debug_query_compat_block_rate": 0.0,
             "event_debug_query_compat_recommendation": "no_compat_traffic_detected_disable_when_possible",
@@ -1443,6 +1450,9 @@ def test_health_endpoint_exposes_runtime_policy_flags() -> None:
     assert body["status"] == "ok"
     assert body["runtime_policy"] == {
         "startup_schema_mode": "create_tables",
+        "startup_schema_compatibility_posture": "compatibility_create_tables",
+        "startup_schema_compatibility_sunset_ready": False,
+        "startup_schema_compatibility_sunset_reason": "create_tables_compatibility_active",
         "event_debug_enabled": False,
         "event_debug_token_required": False,
         "production_debug_token_required": True,
@@ -1454,6 +1464,8 @@ def test_health_endpoint_exposes_runtime_policy_flags() -> None:
         "event_debug_shared_ingress_mode": "compatibility",
         "event_debug_shared_ingress_break_glass_required": False,
         "event_debug_shared_ingress_posture": "transitional_compatibility",
+        "event_debug_shared_ingress_sunset_ready": True,
+        "event_debug_shared_ingress_sunset_reason": "shared_debug_route_disabled_with_debug_payload_off",
         "debug_access_posture": "disabled",
         "debug_token_policy_hint": "not_applicable_debug_disabled",
         "event_debug_source": "explicit",
@@ -1464,6 +1476,8 @@ def test_health_endpoint_exposes_runtime_policy_flags() -> None:
         "strict_startup_blocked": True,
         "strict_rollout_ready": False,
         "strict_rollout_hint": "resolve_mismatches_before_strict",
+        "compatibility_sunset_ready": False,
+        "compatibility_sunset_blockers": ["startup_schema_compatibility_active"],
         "event_debug_query_compat_allow_rate": 0.0,
         "event_debug_query_compat_block_rate": 0.0,
         "event_debug_query_compat_recommendation": "compat_disabled",
@@ -1506,6 +1520,8 @@ def test_health_endpoint_marks_break_glass_shared_ingress_posture_when_configure
     assert body["runtime_policy"]["event_debug_shared_ingress_mode"] == "break_glass_only"
     assert body["runtime_policy"]["event_debug_shared_ingress_break_glass_required"] is True
     assert body["runtime_policy"]["event_debug_shared_ingress_posture"] == "transitional_break_glass_only"
+    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is True
+    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_reason"] == "shared_debug_route_break_glass_only"
     assert body["runtime_policy"]["event_debug_internal_ingress_path"] == "/internal/event/debug"
     assert body["runtime_policy"]["event_debug_shared_ingress_path"] == "/event/debug"
 
@@ -1532,6 +1548,18 @@ def test_health_endpoint_marks_event_debug_source_as_environment_default_when_un
     assert body["runtime_policy"]["strict_startup_blocked"] is False
     assert body["runtime_policy"]["strict_rollout_ready"] is True
     assert body["runtime_policy"]["strict_rollout_hint"] == "not_applicable_non_production"
+    assert body["runtime_policy"]["startup_schema_compatibility_posture"] == "migration_only"
+    assert body["runtime_policy"]["startup_schema_compatibility_sunset_ready"] is True
+    assert body["runtime_policy"]["startup_schema_compatibility_sunset_reason"] == "migration_only_baseline_active"
+    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is False
+    assert (
+        body["runtime_policy"]["event_debug_shared_ingress_sunset_reason"]
+        == "shared_debug_route_still_in_compatibility_mode"
+    )
+    assert body["runtime_policy"]["compatibility_sunset_ready"] is False
+    assert body["runtime_policy"]["compatibility_sunset_blockers"] == [
+        "shared_debug_ingress_compatibility_mode_active"
+    ]
     assert body["release_readiness"]["ready"] is True
     assert body["release_readiness"]["violations"] == []
     assert body["runtime_policy"]["event_debug_query_compat_allow_rate"] == 0.0
@@ -1573,6 +1601,19 @@ def test_health_endpoint_exposes_all_production_policy_mismatches_when_present()
     assert body["runtime_policy"]["production_policy_mismatch_count"] == 3
     assert body["runtime_policy"]["strict_startup_blocked"] is True
     assert body["runtime_policy"]["strict_rollout_ready"] is False
+    assert body["runtime_policy"]["startup_schema_compatibility_posture"] == "compatibility_create_tables"
+    assert body["runtime_policy"]["startup_schema_compatibility_sunset_ready"] is False
+    assert body["runtime_policy"]["startup_schema_compatibility_sunset_reason"] == "create_tables_compatibility_active"
+    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is False
+    assert (
+        body["runtime_policy"]["event_debug_shared_ingress_sunset_reason"]
+        == "shared_debug_route_still_in_compatibility_mode"
+    )
+    assert body["runtime_policy"]["compatibility_sunset_ready"] is False
+    assert body["runtime_policy"]["compatibility_sunset_blockers"] == [
+        "startup_schema_compatibility_active",
+        "shared_debug_ingress_compatibility_mode_active",
+    ]
     assert body["release_readiness"]["ready"] is False
     assert body["release_readiness"]["violations"] == [
         "runtime_policy.production_policy_mismatches_non_empty",
@@ -1623,6 +1664,16 @@ def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() ->
     assert body["runtime_policy"]["strict_rollout_ready"] is True
     assert body["runtime_policy"]["recommended_production_policy_enforcement"] == "strict"
     assert body["runtime_policy"]["strict_rollout_hint"] == "can_enable_strict"
+    assert body["runtime_policy"]["startup_schema_compatibility_posture"] == "migration_only"
+    assert body["runtime_policy"]["startup_schema_compatibility_sunset_ready"] is True
+    assert body["runtime_policy"]["startup_schema_compatibility_sunset_reason"] == "migration_only_baseline_active"
+    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is True
+    assert (
+        body["runtime_policy"]["event_debug_shared_ingress_sunset_reason"]
+        == "shared_debug_route_disabled_with_debug_payload_off"
+    )
+    assert body["runtime_policy"]["compatibility_sunset_ready"] is True
+    assert body["runtime_policy"]["compatibility_sunset_blockers"] == []
     assert body["runtime_policy"]["event_debug_query_compat_allow_rate"] == 0.0
     assert body["runtime_policy"]["event_debug_query_compat_block_rate"] == 0.0
     assert body["runtime_policy"]["event_debug_query_compat_recommendation"] == "compat_disabled"
@@ -1679,6 +1730,12 @@ def test_health_endpoint_marks_query_compat_as_explicit_production_mismatch_when
     ]
     assert body["runtime_policy"]["production_policy_mismatch_count"] == 2
     assert body["runtime_policy"]["strict_rollout_ready"] is False
+    assert body["runtime_policy"]["startup_schema_compatibility_sunset_ready"] is True
+    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is False
+    assert body["runtime_policy"]["compatibility_sunset_ready"] is False
+    assert body["runtime_policy"]["compatibility_sunset_blockers"] == [
+        "shared_debug_ingress_compatibility_mode_active"
+    ]
     assert body["release_readiness"]["ready"] is False
     assert body["release_readiness"]["violations"] == [
         "runtime_policy.production_policy_mismatches_non_empty",

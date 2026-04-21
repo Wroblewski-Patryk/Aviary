@@ -94,6 +94,27 @@ def _log_runtime_policy_warnings(*, settings, logger) -> None:
             policy["recommended_production_policy_enforcement"],
             policy["strict_rollout_hint"],
         )
+    if (
+        app_environment(settings) == "production"
+        and policy["event_debug_enabled"]
+        and not policy["event_debug_shared_ingress_sunset_ready"]
+    ):
+        logger.warning(
+            "runtime_policy_warning env=%s event_debug_shared_ingress_mode=%s recommendation=retire_shared_debug_ingress_from_normal_production_use",
+            settings.app_env,
+            policy["event_debug_shared_ingress_mode"],
+        )
+    if app_environment(settings) == "production":
+        logger.info(
+            "runtime_policy_compatibility_sunset_hint env=%s startup_schema_compatibility_sunset_ready=%s startup_schema_compatibility_sunset_reason=%s event_debug_shared_ingress_sunset_ready=%s event_debug_shared_ingress_sunset_reason=%s compatibility_sunset_ready=%s compatibility_sunset_blockers=%s",
+            settings.app_env,
+            policy["startup_schema_compatibility_sunset_ready"],
+            policy["startup_schema_compatibility_sunset_reason"],
+            policy["event_debug_shared_ingress_sunset_ready"],
+            policy["event_debug_shared_ingress_sunset_reason"],
+            policy["compatibility_sunset_ready"],
+            ",".join(str(item) for item in policy["compatibility_sunset_blockers"]),
+        )
 
 
 def _log_embedding_strategy_warnings(*, settings, logger) -> None:

@@ -2,11 +2,18 @@ from types import SimpleNamespace
 
 from app.core.config import Settings
 from app.core.runtime_policy import (
+    compatibility_sunset_blockers,
+    compatibility_sunset_ready,
+    event_debug_shared_ingress_sunset_reason,
+    event_debug_shared_ingress_sunset_ready,
     production_policy_mismatch_count,
     recommended_production_policy_enforcement,
     release_readiness_snapshot,
     release_readiness_violations,
     runtime_policy_snapshot,
+    startup_schema_compatibility_posture,
+    startup_schema_compatibility_sunset_reason,
+    startup_schema_compatibility_sunset_ready,
     strict_rollout_hint,
     strict_rollout_ready,
     strict_startup_blocked,
@@ -27,6 +34,9 @@ def test_runtime_policy_snapshot_defaults_to_no_production_mismatches_outside_pr
 
     assert snapshot == {
         "startup_schema_mode": "migrate",
+        "startup_schema_compatibility_posture": "migration_only",
+        "startup_schema_compatibility_sunset_ready": True,
+        "startup_schema_compatibility_sunset_reason": "migration_only_baseline_active",
         "event_debug_enabled": True,
         "event_debug_token_required": False,
         "production_debug_token_required": True,
@@ -38,6 +48,8 @@ def test_runtime_policy_snapshot_defaults_to_no_production_mismatches_outside_pr
         "event_debug_shared_ingress_mode": "compatibility",
         "event_debug_shared_ingress_break_glass_required": False,
         "event_debug_shared_ingress_posture": "transitional_compatibility",
+        "event_debug_shared_ingress_sunset_ready": False,
+        "event_debug_shared_ingress_sunset_reason": "shared_debug_route_still_in_compatibility_mode",
         "debug_access_posture": "open_no_token",
         "debug_token_policy_hint": "debug_access_open_without_token",
         "event_debug_source": "explicit",
@@ -48,6 +60,8 @@ def test_runtime_policy_snapshot_defaults_to_no_production_mismatches_outside_pr
         "strict_startup_blocked": False,
         "strict_rollout_ready": True,
         "strict_rollout_hint": "not_applicable_non_production",
+        "compatibility_sunset_ready": False,
+        "compatibility_sunset_blockers": ["shared_debug_ingress_compatibility_mode_active"],
     }
 
 
@@ -79,11 +93,21 @@ def test_runtime_policy_snapshot_includes_all_production_mismatches() -> None:
     assert snapshot["event_debug_shared_ingress_mode"] == "compatibility"
     assert snapshot["event_debug_shared_ingress_break_glass_required"] is False
     assert snapshot["event_debug_shared_ingress_posture"] == "transitional_compatibility"
+    assert snapshot["event_debug_shared_ingress_sunset_ready"] is False
+    assert snapshot["event_debug_shared_ingress_sunset_reason"] == "shared_debug_route_still_in_compatibility_mode"
     assert snapshot["debug_access_posture"] == "token_gated"
     assert snapshot["debug_token_policy_hint"] == "token_gated"
     assert snapshot["recommended_production_policy_enforcement"] == "warn"
     assert snapshot["strict_rollout_hint"] == "resolve_mismatches_before_strict"
     assert snapshot["production_policy_enforcement"] == "strict"
+    assert snapshot["startup_schema_compatibility_posture"] == "compatibility_create_tables"
+    assert snapshot["startup_schema_compatibility_sunset_ready"] is False
+    assert snapshot["startup_schema_compatibility_sunset_reason"] == "create_tables_compatibility_active"
+    assert snapshot["compatibility_sunset_ready"] is False
+    assert snapshot["compatibility_sunset_blockers"] == [
+        "startup_schema_compatibility_active",
+        "shared_debug_ingress_compatibility_mode_active",
+    ]
 
 
 def test_runtime_policy_snapshot_defaults_to_strict_enforcement_for_production_settings_when_unset() -> None:
@@ -143,6 +167,11 @@ def test_runtime_policy_snapshot_marks_event_debug_source_as_environment_default
     assert snapshot["event_debug_shared_ingress_mode"] == "compatibility"
     assert snapshot["event_debug_shared_ingress_break_glass_required"] is False
     assert snapshot["event_debug_shared_ingress_posture"] == "transitional_compatibility"
+    assert snapshot["event_debug_shared_ingress_sunset_ready"] is True
+    assert (
+        snapshot["event_debug_shared_ingress_sunset_reason"]
+        == "shared_debug_route_disabled_with_debug_payload_off"
+    )
     assert snapshot["debug_access_posture"] == "disabled"
     assert snapshot["debug_token_policy_hint"] == "not_applicable_debug_disabled"
     assert snapshot["production_policy_mismatches"] == []
@@ -152,6 +181,11 @@ def test_runtime_policy_snapshot_marks_event_debug_source_as_environment_default
     assert snapshot["recommended_production_policy_enforcement"] == "strict"
     assert snapshot["strict_rollout_hint"] == "can_enable_strict"
     assert snapshot["event_debug_token_required"] is False
+    assert snapshot["startup_schema_compatibility_posture"] == "migration_only"
+    assert snapshot["startup_schema_compatibility_sunset_ready"] is True
+    assert snapshot["startup_schema_compatibility_sunset_reason"] == "migration_only_baseline_active"
+    assert snapshot["compatibility_sunset_ready"] is True
+    assert snapshot["compatibility_sunset_blockers"] == []
 
 
 def test_strict_startup_blocked_is_false_when_warn_mode_has_mismatches() -> None:
@@ -278,6 +312,10 @@ def test_runtime_policy_snapshot_marks_break_glass_shared_ingress_posture() -> N
     assert snapshot["event_debug_shared_ingress_mode"] == "break_glass_only"
     assert snapshot["event_debug_shared_ingress_break_glass_required"] is True
     assert snapshot["event_debug_shared_ingress_posture"] == "transitional_break_glass_only"
+    assert snapshot["event_debug_shared_ingress_sunset_ready"] is True
+    assert snapshot["event_debug_shared_ingress_sunset_reason"] == "shared_debug_route_break_glass_only"
+    assert snapshot["compatibility_sunset_ready"] is True
+    assert snapshot["compatibility_sunset_blockers"] == []
 
 
 def test_runtime_policy_snapshot_includes_query_compat_and_token_missing_when_both_apply() -> None:
@@ -355,3 +393,49 @@ def test_release_readiness_violations_are_not_applicable_outside_production() ->
     }
 
     assert release_readiness_violations(runtime_policy) == []
+
+
+def test_compatibility_sunset_helpers_mark_create_tables_and_shared_compat_as_not_ready() -> None:
+    settings = SimpleNamespace(
+        app_env="production",
+        event_debug_enabled=True,
+        event_debug_token="debug-secret",
+        production_debug_token_required=True,
+        event_debug_shared_ingress_mode="compatibility",
+        startup_schema_mode="create_tables",
+        production_policy_enforcement="warn",
+    )
+
+    assert startup_schema_compatibility_posture(settings) == "compatibility_create_tables"
+    assert startup_schema_compatibility_sunset_ready(settings) is False
+    assert startup_schema_compatibility_sunset_reason(settings) == "create_tables_compatibility_active"
+    assert event_debug_shared_ingress_sunset_ready(settings) is False
+    assert (
+        event_debug_shared_ingress_sunset_reason(settings)
+        == "shared_debug_route_still_in_compatibility_mode"
+    )
+    assert compatibility_sunset_blockers(settings) == [
+        "startup_schema_compatibility_active",
+        "shared_debug_ingress_compatibility_mode_active",
+    ]
+    assert compatibility_sunset_ready(settings) is False
+
+
+def test_compatibility_sunset_helpers_mark_migration_only_and_break_glass_as_ready() -> None:
+    settings = SimpleNamespace(
+        app_env="production",
+        event_debug_enabled=True,
+        event_debug_token="debug-secret",
+        production_debug_token_required=True,
+        event_debug_shared_ingress_mode="break_glass_only",
+        startup_schema_mode="migrate",
+        production_policy_enforcement="warn",
+    )
+
+    assert startup_schema_compatibility_posture(settings) == "migration_only"
+    assert startup_schema_compatibility_sunset_ready(settings) is True
+    assert startup_schema_compatibility_sunset_reason(settings) == "migration_only_baseline_active"
+    assert event_debug_shared_ingress_sunset_ready(settings) is True
+    assert event_debug_shared_ingress_sunset_reason(settings) == "shared_debug_route_break_glass_only"
+    assert compatibility_sunset_blockers(settings) == []
+    assert compatibility_sunset_ready(settings) is True

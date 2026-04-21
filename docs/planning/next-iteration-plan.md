@@ -2061,35 +2061,46 @@ This group turns the remaining production-hardening follow-ups into explicit
 readiness evidence so the repo can schedule actual compatibility removals from
 observable runtime posture instead of only from planning notes.
 
-- `PRJ-375` Add compatibility-sunset readiness diagnostics for migration-only bootstrap and internal-only debug ingress.
-  - Result:
-    - runtime health exposes machine-readable readiness posture for removing
-      `create_tables` compatibility and retiring shared debug ingress from
-      normal production use
-    - release-window decisions gain explicit runtime evidence
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_main_runtime_policy.py`
+Status update (2026-04-21): `PRJ-375..PRJ-378` are complete.
 
-- `PRJ-376` Extend release smoke and runtime-policy gates for compatibility-sunset readiness evidence.
+- `PRJ-375` Add compatibility-sunset readiness diagnostics for migration-only bootstrap and internal-only debug ingress. (complete)
   - Result:
-    - release smoke can verify migration-only bootstrap posture and
+    - runtime health now exposes machine-readable readiness posture for
+      removing `create_tables` compatibility and retiring shared debug ingress
+      from normal production use
+    - release-window decisions now have explicit runtime evidence instead of
+      living only in planning notes
+  - Validation:
+    - Group 40 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_main_runtime_policy.py tests/test_deployment_trigger_scripts.py`
+      (`127 passed`)
+
+- `PRJ-376` Extend release smoke and runtime-policy gates for compatibility-sunset readiness evidence. (complete)
+  - Result:
+    - release smoke now verifies migration-only bootstrap posture and
       dedicated-internal-ingress debug posture as explicit release evidence
-    - compatibility-removal planning gains a repeatable operator workflow
+    - compatibility-removal planning now has a repeatable operator workflow
+      for checking evidence presence and coherence
   - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_main_runtime_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py`
+    - Group 40 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_main_runtime_policy.py tests/test_deployment_trigger_scripts.py`
+      (`127 passed`)
 
-- `PRJ-377` Add regressions for compatibility-sunset readiness and release-gate semantics.
+- `PRJ-377` Add regressions for compatibility-sunset readiness and release-gate semantics. (complete)
   - Result:
     - readiness posture and release-gate semantics are pinned for
       `create_tables` removal and shared-debug-ingress retirement
     - remaining compatibility paths stay observable until explicit removal
   - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_main_runtime_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py`
+    - Group 40 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_main_runtime_policy.py tests/test_deployment_trigger_scripts.py`
+      (`127 passed`)
 
-- `PRJ-378` Sync docs/context for compatibility-sunset readiness governance.
+- `PRJ-378` Sync docs/context for compatibility-sunset readiness governance. (complete)
   - Result:
-    - architecture, operations guidance, planning docs, and context truth
-      align on how transitional compatibility paths become retirement-ready
+    - architecture, operations guidance, planning docs, testing guidance, and
+      context truth now align on how transitional compatibility paths become
+      retirement-ready
     - the next queue can choose actual removal windows from runtime evidence
       instead of re-planning the baseline
   - Validation:

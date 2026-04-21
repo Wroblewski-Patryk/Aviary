@@ -94,11 +94,19 @@ def stub_aion_server() -> _StubAionServer:
     _StubAionHandler.health_payload = {
         "status": "ok",
         "runtime_policy": {
+            "startup_schema_compatibility_posture": "migration_only",
+            "startup_schema_compatibility_sunset_ready": True,
+            "startup_schema_compatibility_sunset_reason": "migration_only_baseline_active",
             "event_debug_internal_ingress_path": "/internal/event/debug",
             "event_debug_shared_ingress_path": "/event/debug",
             "event_debug_shared_ingress_mode": "compatibility",
             "event_debug_shared_ingress_break_glass_required": False,
             "event_debug_shared_ingress_posture": "transitional_compatibility",
+            "event_debug_enabled": False,
+            "event_debug_shared_ingress_sunset_ready": True,
+            "event_debug_shared_ingress_sunset_reason": "shared_debug_route_disabled_with_debug_payload_off",
+            "compatibility_sunset_ready": True,
+            "compatibility_sunset_blockers": [],
             "strict_startup_blocked": False,
             "event_debug_query_compat_enabled": False,
             "production_policy_mismatches": [],
@@ -258,6 +266,13 @@ def test_release_smoke_allows_optional_deployment_evidence_to_be_omitted(
     assert result.returncode == 0, result.stderr
     summary = json.loads(result.stdout)
     assert summary["health_status"] == "ok"
+    assert summary["startup_schema_compatibility_posture"] == "migration_only"
+    assert summary["startup_schema_compatibility_sunset_ready"] is True
+    assert summary["startup_schema_compatibility_sunset_reason"] == "migration_only_baseline_active"
+    assert summary["debug_shared_ingress_sunset_ready"] is True
+    assert summary["debug_shared_ingress_sunset_reason"] == "shared_debug_route_disabled_with_debug_payload_off"
+    assert summary["compatibility_sunset_ready"] is True
+    assert summary["compatibility_sunset_blockers"] == []
     assert summary["deployment_evidence_checked"] is False
     assert summary["deployment_evidence_path"] == ""
     assert summary["deployment_evidence_status_code"] is None
@@ -331,3 +346,17 @@ def test_release_smoke_fails_when_deployment_evidence_response_is_unsuccessful(
     combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
     assert "Deployment evidence verification failed" in combined_output
     assert "webhook response is not successful" in combined_output
+
+
+def test_release_smoke_fails_when_compatibility_sunset_evidence_is_missing(
+    stub_aion_server: _StubAionServer,
+) -> None:
+    runtime_policy = dict(_StubAionHandler.health_payload["runtime_policy"])
+    runtime_policy.pop("compatibility_sunset_ready", None)
+    _StubAionHandler.health_payload["runtime_policy"] = runtime_policy
+
+    result = _run_release_smoke("-BaseUrl", stub_aion_server.base_url, cwd=ROOT)
+
+    assert result.returncode != 0
+    combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
+    assert "runtime_policy is missing compatibility_sunset_ready" in combined_output

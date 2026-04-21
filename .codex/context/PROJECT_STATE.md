@@ -1612,9 +1612,21 @@ Last updated: 2026-04-21
   docs, testing guidance, and context truth now align on one shared
   extensible `ActionDelivery` contract with connector-safe execution
   envelopes and bounded routing visibility.
-- 2026-04-21: `PRJ-375` is now the next `READY` task, focused on
-  compatibility-sunset readiness diagnostics for migration-only bootstrap and
-  internal-only debug ingress.
+- 2026-04-21: `PRJ-375..PRJ-377` are complete: `/health.runtime_policy` now
+  exposes compatibility-sunset readiness for migration-only bootstrap and
+  shared debug ingress retirement, startup logs surface the same posture, and
+  release smoke verifies evidence presence/coherence before using it as
+  release evidence.
+- 2026-04-21: Group 40 (`PRJ-375..PRJ-378`) is now complete.
+- 2026-04-21: Group 40 validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_main_runtime_policy.py tests/test_deployment_trigger_scripts.py`
+  passed with `127 passed`.
+- 2026-04-21: `PRJ-378` is complete: architecture, operations guidance,
+  planning docs, testing guidance, and context truth now align on
+  compatibility-sunset readiness governance for migration bootstrap and shared
+  debug ingress posture.
+- 2026-04-21: no `READY` task remains after Group 40; the next slice should
+  be derived again from planning docs and open decisions.
 
 ## Working Agreements
 

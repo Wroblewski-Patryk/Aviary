@@ -62,8 +62,8 @@ The current repo already works as an MVP slice, but several architecture-level d
     (`12c`) - complete
   - `PRJ-367..PRJ-370`: typed-intent coverage for future writes
     (`10a`) - complete
-  - `PRJ-371..PRJ-374`: action-delivery extensibility (`3a`) - planned
-  - `PRJ-375..PRJ-378`: compatibility sunset readiness (`2`, `3`) - planned
+  - `PRJ-371..PRJ-374`: action-delivery extensibility (`3a`) - complete
+  - `PRJ-375..PRJ-378`: compatibility sunset readiness (`2`, `3`) - complete
 - reflection deployment lane is complete through `PRJ-304`, and
   post-reflection hardening decisions are now complete through `PRJ-309`.
 - runtime behavior-validation lane is now complete through `PRJ-317`.
@@ -170,6 +170,14 @@ The current repo already works as an MVP slice, but several architecture-level d
 - Planned implementation lane:
   - `PRJ-375..PRJ-378` will make migration-only removal readiness
     machine-visible before an actual release-window removal is scheduled.
+- Resolved baseline (2026-04-21):
+  - `/health.runtime_policy` now exposes machine-readable sunset-readiness
+    posture for migration-only bootstrap
+    (`startup_schema_compatibility_posture`,
+    `startup_schema_compatibility_sunset_ready`,
+    `startup_schema_compatibility_sunset_reason`).
+  - release smoke now verifies that compatibility-sunset evidence is present
+    and internally consistent before using it as release evidence.
 
 ### 3. Public API Shape
 
@@ -298,7 +306,15 @@ The current repo already works as an MVP slice, but several architecture-level d
     break-glass override)?
 - Planned implementation lane:
   - `PRJ-375..PRJ-378` will turn shared-debug-ingress retirement into explicit
-    readiness and release evidence before selecting the enforcement window.
+  readiness and release evidence before selecting the enforcement window.
+- Resolved baseline (2026-04-21):
+  - `/health.runtime_policy` now exposes machine-readable sunset-readiness
+    posture for shared debug ingress retirement
+    (`event_debug_shared_ingress_sunset_ready`,
+    `event_debug_shared_ingress_sunset_reason`,
+    `compatibility_sunset_ready`, `compatibility_sunset_blockers`).
+  - release smoke now validates that shared-debug-ingress sunset evidence is
+    present and coherent before treating it as release evidence.
 
 ### 3a. Expression vs Action Ordering
 

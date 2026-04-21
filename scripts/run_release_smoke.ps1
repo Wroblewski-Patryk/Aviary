@@ -214,6 +214,86 @@ else {
 if ($sharedIngressPosture -ne $expectedSharedIngressPosture) {
     throw "Health check failed: inconsistent shared ingress posture '$sharedIngressPosture'."
 }
+if (-not (Has-Property -Object $runtimePolicy -Name "startup_schema_compatibility_posture")) {
+    throw "Health check failed: runtime_policy is missing startup_schema_compatibility_posture."
+}
+$startupSchemaCompatibilityPosture = [string]$runtimePolicy.startup_schema_compatibility_posture
+if (@("migration_only", "compatibility_create_tables") -notcontains $startupSchemaCompatibilityPosture) {
+    throw "Health check failed: unexpected startup_schema_compatibility_posture '$startupSchemaCompatibilityPosture'."
+}
+if (-not (Has-Property -Object $runtimePolicy -Name "startup_schema_compatibility_sunset_ready")) {
+    throw "Health check failed: runtime_policy is missing startup_schema_compatibility_sunset_ready."
+}
+$startupSchemaCompatibilitySunsetReady = [bool]$runtimePolicy.startup_schema_compatibility_sunset_ready
+if (-not (Has-Property -Object $runtimePolicy -Name "startup_schema_compatibility_sunset_reason")) {
+    throw "Health check failed: runtime_policy is missing startup_schema_compatibility_sunset_reason."
+}
+$startupSchemaCompatibilitySunsetReason = [string]$runtimePolicy.startup_schema_compatibility_sunset_reason
+$expectedStartupSchemaSunsetReady = $startupSchemaCompatibilityPosture -eq "migration_only"
+$expectedStartupSchemaSunsetReason = if ($expectedStartupSchemaSunsetReady) {
+    "migration_only_baseline_active"
+}
+else {
+    "create_tables_compatibility_active"
+}
+if ($startupSchemaCompatibilitySunsetReady -ne $expectedStartupSchemaSunsetReady) {
+    throw "Health check failed: inconsistent startup schema sunset readiness."
+}
+if ($startupSchemaCompatibilitySunsetReason -ne $expectedStartupSchemaSunsetReason) {
+    throw "Health check failed: inconsistent startup schema sunset reason '$startupSchemaCompatibilitySunsetReason'."
+}
+if (-not (Has-Property -Object $runtimePolicy -Name "event_debug_shared_ingress_sunset_ready")) {
+    throw "Health check failed: runtime_policy is missing event_debug_shared_ingress_sunset_ready."
+}
+$sharedIngressSunsetReady = [bool]$runtimePolicy.event_debug_shared_ingress_sunset_ready
+if (-not (Has-Property -Object $runtimePolicy -Name "event_debug_shared_ingress_sunset_reason")) {
+    throw "Health check failed: runtime_policy is missing event_debug_shared_ingress_sunset_reason."
+}
+$sharedIngressSunsetReason = [string]$runtimePolicy.event_debug_shared_ingress_sunset_reason
+$debugEnabledForSunset = if (Has-Property -Object $runtimePolicy -Name "event_debug_enabled") {
+    [bool]$runtimePolicy.event_debug_enabled
+}
+else {
+    $false
+}
+$expectedSharedIngressSunsetReady = (-not $debugEnabledForSunset) -or $sharedBreakGlassRequired
+$expectedSharedIngressSunsetReason = if (-not $debugEnabledForSunset) {
+    "shared_debug_route_disabled_with_debug_payload_off"
+}
+elseif ($sharedBreakGlassRequired) {
+    "shared_debug_route_break_glass_only"
+}
+else {
+    "shared_debug_route_still_in_compatibility_mode"
+}
+if ($sharedIngressSunsetReady -ne $expectedSharedIngressSunsetReady) {
+    throw "Health check failed: inconsistent shared ingress sunset readiness."
+}
+if ($sharedIngressSunsetReason -ne $expectedSharedIngressSunsetReason) {
+    throw "Health check failed: inconsistent shared ingress sunset reason '$sharedIngressSunsetReason'."
+}
+if (-not (Has-Property -Object $runtimePolicy -Name "compatibility_sunset_ready")) {
+    throw "Health check failed: runtime_policy is missing compatibility_sunset_ready."
+}
+$compatibilitySunsetReady = [bool]$runtimePolicy.compatibility_sunset_ready
+if (-not (Has-Property -Object $runtimePolicy -Name "compatibility_sunset_blockers")) {
+    throw "Health check failed: runtime_policy is missing compatibility_sunset_blockers."
+}
+$compatibilitySunsetBlockers = @($runtimePolicy.compatibility_sunset_blockers)
+$expectedCompatibilitySunsetReady = $startupSchemaCompatibilitySunsetReady -and $sharedIngressSunsetReady
+$expectedCompatibilitySunsetBlockers = @()
+if (-not $startupSchemaCompatibilitySunsetReady) {
+    $expectedCompatibilitySunsetBlockers += "startup_schema_compatibility_active"
+}
+if (-not $sharedIngressSunsetReady) {
+    $expectedCompatibilitySunsetBlockers += "shared_debug_ingress_compatibility_mode_active"
+}
+if ($compatibilitySunsetReady -ne $expectedCompatibilitySunsetReady) {
+    throw "Health check failed: inconsistent compatibility_sunset_ready."
+}
+if (($compatibilitySunsetBlockers -join ",") -ne ($expectedCompatibilitySunsetBlockers -join ",")) {
+    throw "Health check failed: inconsistent compatibility_sunset_blockers."
+}
 
 $releaseReadiness = $health.release_readiness
 $releaseReadinessReady = $true
@@ -405,6 +485,13 @@ $summary = @{
     debug_shared_ingress_mode        = $sharedIngressMode
     debug_shared_break_glass_required = $sharedBreakGlassRequired
     debug_shared_ingress_posture     = $sharedIngressPosture
+    startup_schema_compatibility_posture = $startupSchemaCompatibilityPosture
+    startup_schema_compatibility_sunset_ready = $startupSchemaCompatibilitySunsetReady
+    startup_schema_compatibility_sunset_reason = $startupSchemaCompatibilitySunsetReason
+    debug_shared_ingress_sunset_ready = $sharedIngressSunsetReady
+    debug_shared_ingress_sunset_reason = $sharedIngressSunsetReason
+    compatibility_sunset_ready = $compatibilitySunsetReady
+    compatibility_sunset_blockers = @($compatibilitySunsetBlockers)
     debug_included       = [bool]$response.debug
     deployment_evidence_checked = [bool]$deploymentEvidenceCheck.checked
     deployment_evidence_path = [string]$deploymentEvidenceCheck.path

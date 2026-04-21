@@ -37,27 +37,7 @@ Last updated: 2026-04-21
 
 ## READY
 
-- [ ] PRJ-375 Add compatibility-sunset readiness diagnostics for migration-only bootstrap and internal-only debug ingress
-  - Status: READY
-  - Group: Compatibility Sunset Readiness
-  - Owner: Backend Builder
-  - Depends on: PRJ-374
-  - Priority: P1
-  - Ready because:
-    - Group 39 now keeps one shared extensible `ActionDelivery` contract with
-      execution-envelope validation in action and bounded routing notes in
-      integration dispatch
-    - the next remaining architecture follow-up is turning compatibility-sunset
-      decisions into machine-readable readiness evidence for operators and
-      release gates
-  - Expected result:
-    - runtime health exposes explicit operator-visible readiness posture for
-      removing `create_tables` compatibility and retiring shared debug ingress
-      from normal production use
-    - remaining release-window decisions gain machine-readable evidence
-      instead of living only in planning notes
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_main_runtime_policy.py`
+- [ ] (none)
 
 ## BACKLOG
 
@@ -65,63 +45,7 @@ Last updated: 2026-04-21
 
 ## FUTURE
 
-- [ ] PRJ-375 Add compatibility-sunset readiness diagnostics for migration-only bootstrap and internal-only debug ingress
-  - Status: FUTURE
-  - Group: Compatibility Sunset Readiness
-  - Owner: Backend Builder
-  - Depends on: PRJ-374
-  - Priority: P1
-  - Expected result:
-    - runtime health exposes explicit operator-visible readiness posture for
-      removing `create_tables` compatibility and retiring shared debug ingress
-      from normal production use
-    - remaining release-window decisions gain machine-readable evidence
-      instead of living only in planning notes
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_main_runtime_policy.py`
-
-- [ ] PRJ-376 Extend release smoke and runtime-policy gates for compatibility-sunset readiness evidence
-  - Status: FUTURE
-  - Group: Compatibility Sunset Readiness
-  - Owner: Ops/Release
-  - Depends on: PRJ-375
-  - Priority: P1
-  - Expected result:
-    - release smoke can verify migration-only/bootstrap posture and
-      dedicated-internal-ingress debug posture as explicit release evidence
-    - compatibility-removal planning gains a repeatable readiness check
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_main_runtime_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py`
-
-- [ ] PRJ-377 Add regressions for compatibility-sunset readiness and release-gate semantics
-  - Status: FUTURE
-  - Group: Compatibility Sunset Readiness
-  - Owner: QA/Test
-  - Depends on: PRJ-376
-  - Priority: P1
-  - Expected result:
-    - regressions pin readiness and release-gate behavior for
-      `create_tables` removal posture and shared-debug-ingress retirement
-    - remaining compatibility paths stay observable until explicit removal
-  - Validation:
-    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_main_runtime_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py`
-
-- [ ] PRJ-378 Sync docs/context for compatibility-sunset readiness governance
-  - Status: FUTURE
-  - Group: Compatibility Sunset Readiness
-  - Owner: Product Docs
-  - Depends on: PRJ-377
-  - Priority: P1
-  - Expected result:
-    - planning, ops, architecture, and context truth align on how migration
-      compatibility and shared debug ingress move from transitional to
-      retirement-ready posture
-    - the next queue can choose actual removal windows from machine-visible
-      readiness evidence instead of re-planning the baseline
-  - Validation:
-    - doc-and-context sync across `docs/architecture/`,
-      `docs/implementation/`, `docs/planning/`, `docs/operations/`, and
-      `.codex/context/`
+- [ ] (none)
 
 ## IN_PROGRESS
 
@@ -136,6 +60,71 @@ Last updated: 2026-04-21
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-378 Sync docs/context for compatibility-sunset readiness governance
+  - Status: DONE
+  - Group: Compatibility Sunset Readiness
+  - Owner: Product Docs
+  - Depends on: PRJ-377
+  - Priority: P1
+  - Result:
+    - planning, ops, architecture, testing guidance, and context truth now
+      align on how migration compatibility and shared debug ingress move from
+      transitional to retirement-ready posture
+    - no `READY` task remains after Group 40, so the next slice should again
+      be derived from planning docs and open decisions
+  - Validation:
+    - doc-and-context sync across `docs/architecture/`,
+      `docs/planning/`, `docs/operations/`, `docs/engineering/`, and
+      `.codex/context/`
+
+- [x] PRJ-377 Add regressions for compatibility-sunset readiness and release-gate semantics
+  - Status: DONE
+  - Group: Compatibility Sunset Readiness
+  - Owner: QA/Test
+  - Depends on: PRJ-376
+  - Priority: P1
+  - Result:
+    - regressions now pin migration-bootstrap sunset readiness,
+      shared-debug-ingress sunset readiness, and smoke evidence gate
+      semantics
+    - compatibility readiness drift is now test-visible across runtime policy,
+      `/health`, startup logs, and release smoke
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_main_runtime_policy.py tests/test_deployment_trigger_scripts.py`
+      (`127 passed`)
+
+- [x] PRJ-376 Extend release smoke and runtime-policy gates for compatibility-sunset readiness evidence
+  - Status: DONE
+  - Group: Compatibility Sunset Readiness
+  - Owner: Ops/Release
+  - Depends on: PRJ-375
+  - Priority: P1
+  - Result:
+    - release smoke now verifies compatibility-sunset evidence for
+      migration-only bootstrap and shared debug ingress posture
+    - smoke summary now carries explicit sunset-readiness posture for operator
+      release notes and triage
+  - Validation:
+    - Group 40 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_main_runtime_policy.py tests/test_deployment_trigger_scripts.py`
+      (`127 passed`)
+
+- [x] PRJ-375 Add compatibility-sunset readiness diagnostics for migration-only bootstrap and internal-only debug ingress
+  - Status: DONE
+  - Group: Compatibility Sunset Readiness
+  - Owner: Backend Builder
+  - Depends on: PRJ-374
+  - Priority: P1
+  - Result:
+    - `/health.runtime_policy` now exposes machine-readable sunset-readiness
+      posture for migration-only bootstrap and shared debug ingress
+    - startup runtime-policy hints now surface compatibility-sunset readiness
+      during production boot diagnostics
+  - Validation:
+    - Group 40 consolidated validation:
+      `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_main_runtime_policy.py tests/test_deployment_trigger_scripts.py`
+      (`127 passed`)
 
 - [x] PRJ-374 Sync docs/context for `ActionDelivery` extensibility baseline
   - Status: DONE
