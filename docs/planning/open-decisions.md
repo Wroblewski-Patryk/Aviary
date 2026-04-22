@@ -116,6 +116,20 @@ The current repo already works as an MVP slice, but several architecture-level d
   and `semantic_embedding_execution_class`, so empathy triage and retrieval
   execution posture are explicit operator surfaces in the same way as other
   post-convergence health diagnostics.
+- architecture-conformance analysis on 2026-04-22 identified seven new
+  post-convergence lanes that should be handled before another broad planning
+  pass:
+  - `PRJ-464..PRJ-467`: migration parity and schema governance
+  - `PRJ-468..PRJ-471`: canonical docs consistency sweep
+  - `PRJ-472..PRJ-475`: connector execution productionization
+  - `PRJ-476..PRJ-479`: retrieval provider completion
+  - `PRJ-480..PRJ-483`: background worker externalization
+  - `PRJ-484..PRJ-487`: proactive runtime activation
+  - `PRJ-488..PRJ-491`: role/skill maturity and behavior-validation expansion
+- this queue is intentionally ordered by architectural risk:
+  deployment/schema truth first, then canonical docs consistency, then
+  productionization of still-rollout subsystems, and finally behavior-proof
+  expansion.
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 

@@ -93,6 +93,262 @@ Completed on 2026-04-22:
   converge on affective health visibility plus retrieval execution-class
   diagnostics as first-class post-convergence triage surfaces.
 
+Planned on 2026-04-22 after full architecture-conformance analysis:
+
+- the next queue is now seeded through `PRJ-491`.
+- unlike the earlier convergence waves, this queue is driven by verified
+  post-convergence gaps between canonical architecture, live runtime code,
+  migration truth, and release-readiness evidence.
+- the execution order intentionally starts with schema/migration truth, then
+  canonical architecture-document consistency, then subsystem
+  productionization and behavior-proof expansion.
+
+New groups:
+
+- `PRJ-464..PRJ-467` Migration parity and schema governance
+- `PRJ-468..PRJ-471` Canonical docs consistency sweep
+- `PRJ-472..PRJ-475` Connector execution productionization
+- `PRJ-476..PRJ-479` Retrieval provider completion
+- `PRJ-480..PRJ-483` Background worker externalization
+- `PRJ-484..PRJ-487` Proactive runtime activation
+- `PRJ-488..PRJ-491` Role/skill maturity and behavior-validation expansion
+
+Why this order:
+
+- migration parity is the biggest runtime-versus-deployment truth gap and must
+  be fixed before any deeper productionization work
+- canonical docs consistency comes next so later work does not amplify stale
+  architecture wording
+- connector, retrieval, background, and proactive groups each move one
+  rollout-shaped subsystem toward the documented target-state
+- the last group turns the remaining capability and behavior-proof gaps into
+  explicit contracts and release evidence instead of aspirational docs
+
+Detailed queue:
+
+## Group 63 - Migration Parity And Schema Governance
+
+- `PRJ-464` Audit model-vs-migration parity and define the missing Alembic delta set.
+  - Result:
+    - one explicit inventory maps every live SQLAlchemy model/table and current
+      column family to existing Alembic revisions
+    - missing migration deltas are recorded before implementation starts
+  - Validation:
+    - targeted review across `app/memory/models.py`, `migrations/versions/`,
+      and current schema docs
+
+- `PRJ-465` Add Alembic revisions for durable attention and subconscious proposal persistence.
+  - Result:
+    - the migration chain creates `aion_attention_turn` and
+      `aion_subconscious_proposal` with the same ownership assumptions as the
+      live repository/runtime
+  - Validation:
+    - `.\.venv\Scripts\python -m alembic upgrade head --sql`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_schema_baseline.py tests/test_memory_repository.py`
+
+- `PRJ-466` Add schema-parity regressions for migration-first startup against the current model baseline.
+  - Result:
+    - tests pin that migration-first environments can reach the current runtime
+      schema without relying on `create_tables`
+    - schema drift becomes release-visible instead of operator-discovered
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_schema_baseline.py tests/test_main_lifespan_policy.py tests/test_main_runtime_policy.py`
+
+- `PRJ-467` Sync docs/context for migration parity and schema governance.
+  - Result:
+    - planning, ops, implementation reality, testing guidance, and context
+      truth all align on migration-first schema ownership for the actual live
+      model set
+  - Validation:
+    - doc-and-context sync across `.codex/context/`, `docs/planning/`,
+      `docs/implementation/`, `docs/operations/`, and `docs/engineering/`
+
+## Group 64 - Canonical Docs Consistency Sweep
+
+- `PRJ-468` Audit canonical architecture docs for flow/order drift against `02`, `15`, and `16`.
+  - Result:
+    - one explicit inventory identifies stale files that still contradict the
+      canonical `expression -> action` boundary, dual-loop ownership, or
+      target-state wording
+  - Validation:
+    - targeted cross-review across `docs/architecture/`
+
+- `PRJ-469` Rewrite stale architecture docs to match the current canonical contract set.
+  - Result:
+    - older architecture files stop contradicting `02_architecture.md`,
+      `15_runtime_flow.md`, and `16_agent_contracts.md`
+  - Validation:
+    - cross-doc consistency review plus targeted wording regression note
+
+- `PRJ-470` Align overview and docs index with the corrected canonical architecture narrative.
+  - Result:
+    - `docs/README.md` and `docs/overview.md` no longer inherit stale wording
+      from pre-convergence phases
+  - Validation:
+    - doc sync across top-level docs surfaces
+
+- `PRJ-471` Sync planning/context for canonical docs consistency.
+  - Result:
+    - context truth and planning surfaces record the architecture-doc sweep as
+      complete and keep later slices grounded in one consistent target-state
+  - Validation:
+    - doc-and-context sync across `.codex/context/` and `docs/planning/`
+
+## Group 65 - Connector Execution Productionization
+
+- `PRJ-472` Decide the MVP production boundary for connector execution adapters.
+  - Result:
+    - the repo explicitly records which connector families will gain real
+      provider-backed execution now, and which remain proposal/suggestion-only
+      on purpose
+  - Validation:
+    - cross-review across `open-decisions`, `16_agent_contracts.md`, and ops docs
+
+- `PRJ-473` Implement the first provider-backed connector execution path behind existing policy gates.
+  - Result:
+    - at least one connector family moves from typed intent only to real
+      guarded execution via integration adapters without breaking the action
+      boundary
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_connector_policy.py tests/test_planning_agent.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
+
+- `PRJ-474` Add health/debug visibility and failure posture for provider-backed connector execution.
+  - Result:
+    - operators can distinguish proposal-only posture, authorized execution
+      posture, and provider failure posture through runtime-visible surfaces
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
+
+- `PRJ-475` Sync docs/context for connector execution productionization.
+  - Result:
+    - architecture, runtime reality, ops, testing guidance, and context truth
+      all describe the selected connector execution baseline
+  - Validation:
+    - doc-and-context sync across canonical docs, runtime reality, ops, and planning
+
+## Group 66 - Retrieval Provider Completion
+
+- `PRJ-476` Define the target provider-owned retrieval baseline beyond deterministic fallback.
+  - Result:
+    - one explicit decision records the intended provider, execution mode,
+      fallback posture, and operational baseline for production retrieval
+  - Validation:
+    - cross-review across retrieval docs, env/config, and open decisions
+
+- `PRJ-477` Implement provider-owned semantic embedding execution for the selected baseline.
+  - Result:
+    - retrieval can run through a real provider-backed embedding path instead
+      of only deterministic fallback or local placeholder execution
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_embedding_strategy.py tests/test_memory_repository.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+
+- `PRJ-478` Add rollout/readiness evidence for provider-owned retrieval execution.
+  - Result:
+    - `/health`, startup policy, and release evidence clearly distinguish
+      provider-owned steady state from fallback posture
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_main_runtime_policy.py tests/test_runtime_policy.py`
+
+- `PRJ-479` Sync docs/context for retrieval provider completion.
+  - Result:
+    - docs, planning, ops, and context truth all align on the real retrieval
+      production baseline
+  - Validation:
+    - doc-and-context sync across implementation, ops, planning, and engineering docs
+
+## Group 67 - Background Worker Externalization
+
+- `PRJ-480` Define the production external-worker baseline for deferred reflection.
+  - Result:
+    - one explicit operating model records when `deferred` reflection becomes
+      a true production baseline rather than a monitored rollout posture
+  - Validation:
+    - reflection topology and ops cross-review
+
+- `PRJ-481` Implement the external-driver-ready reflection execution path and ownership checks.
+  - Result:
+    - deferred reflection path is complete enough to run without app-local
+      worker ownership assumptions leaking back in
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_scheduler_worker.py tests/test_api_routes.py tests/test_runtime_pipeline.py`
+
+- `PRJ-482` Add release-smoke and health evidence for external worker posture.
+  - Result:
+    - release validation can prove the selected background execution owner path
+      instead of inferring it from logs
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_api_routes.py tests/test_main_runtime_policy.py`
+
+- `PRJ-483` Sync docs/context for background worker externalization.
+  - Result:
+    - architecture, runtime reality, ops, and planning all describe the same
+      background execution baseline
+  - Validation:
+    - doc-and-context sync across canonical docs, runtime reality, ops, and planning
+
+## Group 68 - Proactive Runtime Activation
+
+- `PRJ-484` Define the true MVP proactive runtime baseline and anti-spam contract.
+  - Result:
+    - one explicit contract records what “live proactive” means for cadence,
+      delivery target, unanswered throttles, cooldowns, and feedback loops
+  - Validation:
+    - cross-review across proactive architecture, guardrails, and runtime reality
+
+- `PRJ-485` Implement live proactive cadence ownership beyond passive scheduler plumbing.
+  - Result:
+    - the system can actually emit bounded proactive wakeups under governed
+      scheduler ownership instead of only holding engine/guard primitives
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+
+- `PRJ-486` Add scenario-level behavior validation for proactive outreach quality and anti-spam posture.
+  - Result:
+    - proactive runtime is proven by behavior scenarios, not only by contracts
+      and helper tests
+  - Validation:
+    - `.\scripts\run_behavior_validation.ps1 -GateMode operator`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_api_routes.py`
+
+- `PRJ-487` Sync docs/context for proactive runtime activation.
+  - Result:
+    - planning, runtime reality, ops, testing guidance, and context truth all
+      describe the same proactive baseline
+  - Validation:
+    - doc-and-context sync across implementation, ops, planning, and engineering docs
+
+## Group 69 - Role/Skill Maturity And Behavior-Validation Expansion
+
+- `PRJ-488` Decide the long-term role-versus-skill execution boundary.
+  - Result:
+    - one explicit governance statement records whether skills remain
+      metadata-only capability hints or grow into a fuller execution-assist
+      layer
+  - Validation:
+    - architecture/planning cross-review across role/skill docs and runtime contracts
+
+- `PRJ-489` Apply the selected role/skill maturity baseline in runtime surfaces and contracts.
+  - Result:
+    - runtime outputs, contracts, and health/debug surfaces reflect the chosen
+      role/skill boundary instead of a partially transitional posture
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_role_agent.py tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+
+- `PRJ-490` Expand behavior-validation coverage for post-convergence architecture lanes.
+  - Result:
+    - behavior validation now covers connector execution posture, proactive
+      cadence behavior, deferred/background execution expectations, and the
+      strongest remaining continuity risks
+  - Validation:
+    - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
+
+- `PRJ-491` Sync docs/context for role/skill maturity and behavior-validation expansion.
+  - Result:
+    - architecture, runtime reality, testing guidance, ops notes, and context
+      truth all align on the final queue outcome
+  - Validation:
+    - doc-and-context sync across canonical docs, implementation docs, ops, testing, and planning
+
 ## Post-Convergence Operating Mode
 
 After `PRJ-453`, the repo no longer has a pre-seeded architecture queue.

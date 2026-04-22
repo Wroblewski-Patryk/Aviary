@@ -44,10 +44,31 @@ Last updated: 2026-04-22
 - Affective health visibility and retrieval execution-class triage are now
   described consistently across the runbook and planning/context truth instead
   of being discoverable only through runtime reality and tests.
+- A new post-convergence execution queue is now seeded through `PRJ-491`.
+- The next architecture lane prioritizes migration parity first, then
+  canonical-doc consistency, then productionization of still-rollout
+  subsystems (connectors, retrieval provider path, background execution,
+  proactive cadence, role/skill maturity, and behavior validation breadth).
 
 ## READY
 
-- [ ] (none)
+- [ ] PRJ-464 Audit model-vs-migration parity and define the missing Alembic delta set
+  - Owner: Planner
+  - Group: Migration Parity And Schema Governance
+  - Depends on: PRJ-463
+  - Priority: P0
+  - Why now:
+    - current `models.py` includes durable tables and fields that are not yet
+      fully represented in Alembic revisions, creating deployment-truth drift
+      between runtime schema and migration path
+  - Done when:
+    - one explicit migration-parity inventory exists for every live table and
+      current column family
+    - the repo records the exact missing migration deltas before code changes
+  - Validation:
+    - targeted review across `app/memory/models.py`,
+      `migrations/versions/`, `docs/implementation/runtime-reality.md`, and
+      `docs/operations/runtime-ops-runbook.md`
 
 ## BACKLOG
 

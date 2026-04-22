@@ -1802,6 +1802,15 @@ Last updated: 2026-04-22
   `memory_retrieval.semantic_embedding_execution_class` as explicit
   operator-facing diagnostics for empathy triage and retrieval execution
   posture.
+- 2026-04-22: architecture-conformance analysis is now refreshed against
+  canonical docs plus live runtime code. The highest-priority remaining gap is
+  migration parity between `app/memory/models.py` and Alembic revisions,
+  followed by canonical-doc consistency cleanup and productionization of still
+  rollout-shaped subsystems (connector execution, retrieval provider path,
+  background worker topology, proactive cadence, role/skill maturity, and
+  behavior-validation breadth).
+- 2026-04-22: a new post-convergence queue is now seeded through `PRJ-491`,
+  starting with Group 63 for migration parity and schema governance.
 
 ## Working Agreements
 
