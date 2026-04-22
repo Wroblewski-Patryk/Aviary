@@ -224,6 +224,13 @@ Last updated: 2026-04-22
 - 2026-04-22: `PRJ-563` is now the first `READY` task; the next slice should
   synchronize contracts, runtime reality, ops notes, testing guidance, and
   planning/context truth around the new backend work-partner baseline.
+- 2026-04-22: `PRJ-563` is complete: canonical contracts, runtime reality,
+  behavior-testing guidance, ops notes, and planning/context truth now all
+  describe the same backend work-partner baseline and its scenario-level
+  proof through `T15.1..T15.2`.
+- 2026-04-22: `PRJ-564` is now the first `READY` task; the next slice should
+  freeze one explicit no-UI `v1` release gate and operator acceptance bundle
+  before more UI-readiness work lands.
 - 2026-04-22: fresh post-`PRJ-515` analysis has now seeded a new queue through
   `PRJ-539`, focused on operator-grade incident-evidence handling, actual
   debug-compat retirement, bounded connector read expansion, external cadence

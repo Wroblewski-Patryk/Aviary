@@ -345,6 +345,8 @@ Current scenario anchors:
 - `T14.1`: analyst-driven bounded web search via action-owned tool path
 - `T14.2`: analyst-driven bounded page read via action-owned tool path
 - `T14.3`: executor-aligned ClickUp update via action-owned connector path
+- `T15.1`: work-partner organization via bounded search plus ClickUp update
+- `T15.2`: work-partner decision support via bounded page-read browsing
 
 When behavior validation is used during release or incident triage, the
 resulting artifact should attach to the same operator incident-evidence bundle

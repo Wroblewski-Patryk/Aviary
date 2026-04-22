@@ -459,14 +459,21 @@ Last updated: 2026-04-22
   - Group: Work-Partner Role And Capability Orchestration
   - Depends on: PRJ-562
   - Priority: P1
-  - Status: READY
+  - Status: DONE
+  - Result:
+    - contracts, runtime reality, behavior-testing guidance, ops notes, and
+      planning/context truth now all describe the same backend work-partner
+      baseline plus behavior proof through `T15.1..T15.2`
+  - Validation:
+    - doc-and-context sync across architecture, implementation, ops, testing,
+      planning, and context
 
 - [ ] PRJ-564 Freeze the `v1` release gate and production acceptance bundle
   - Owner: Planner
   - Group: V1 Release Closure And V2 API Readiness
   - Depends on: PRJ-563
   - Priority: P1
-  - Status: BACKLOG
+  - Status: READY
 
 - [x] PRJ-516 Define the operator-facing incident evidence bundle and retention baseline
   - Owner: Planner

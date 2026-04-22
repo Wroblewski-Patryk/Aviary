@@ -67,6 +67,13 @@ The current repo already works as an MVP slice, but several architecture-level d
   - it may combine bounded metadata-only skills with already approved tools
   - it remains inside the same role-selection, planning, permission-gate, and
     action boundary as every other role
+- `PRJ-561..PRJ-562` now make that baseline backend-real:
+  - explicit `work_partner` turns can be selected through the shared
+    role-selection owner
+  - the role carries a bounded skill mix and machine-visible role-skill
+    policy posture
+  - behavior validation proves work-partner organization and decision support
+    through `T15.1..T15.2`
 - the next execution queue therefore prioritizes:
   - production conversation reliability
   - life-assistant workflow activation

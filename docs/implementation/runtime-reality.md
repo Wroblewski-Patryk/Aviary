@@ -467,6 +467,11 @@ The live runtime now exposes one explicit role/skill maturity baseline:
 - `app/core/role_skill_policy.py` is now the shared owner for that boundary
 - `/health.role_skill` plus `system_debug.adaptive_state.role_skill_policy`
   expose the same metadata-only execution boundary
+- `work_partner` is now a live backend role under that same owner:
+  - it remains a role of the same personality, not a separate persona
+  - it carries a bounded skill mix for work organization and decision support
+  - it may orchestrate only already approved tools through explicit typed
+    intents and the action boundary
 - planning may carry selected skills forward, but action still requires
   explicit typed intents and delivery/action contracts for any execution
   posture
@@ -1116,6 +1121,10 @@ Current limitation:
   - `T14.1` analyst-driven DuckDuckGo search
   - `T14.2` analyst-driven generic HTTP page read
   - `T14.3` executor-aligned ClickUp task update
+- behavior validation now also proves backend work-partner orchestration
+  through:
+  - `T15.1` work-partner organization with bounded search plus ClickUp update
+  - `T15.2` work-partner decision support with bounded page-read browsing
 
 ---
 

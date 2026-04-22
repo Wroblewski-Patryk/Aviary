@@ -164,6 +164,10 @@ posture:
   - `T14.1` analyst-driven DuckDuckGo search
   - `T14.2` analyst-driven generic HTTP page read
   - `T14.3` executor-aligned ClickUp task update
+- when a release or incident touches backend work-partner behavior, attach
+  behavior-validation evidence for:
+  - `T15.1` work-partner organization with bounded search plus ClickUp update
+  - `T15.2` work-partner decision support with bounded page-read browsing
 
 `GET /health` now also includes a `memory_retrieval` object with semantic
 retrieval posture:
@@ -1171,6 +1175,14 @@ Important health surfaces for current release checks:
     page-read adapter is live and action may execute bounded page-read intents
   - `web_browser.suggest_page_review.state=planning_only_allowed` remains the
     non-executing suggestion posture for browser guidance
+- `role_skill`
+  - metadata-only skill boundary owner
+  - selected and planned skill counts
+  - current role name when runtime debug is available
+  - `work_partner_role_state=selected|available` for the backend
+    work-partner orchestration role
+  - `work_partner_tool_families` and `work_partner_mutation_boundary` show
+    that work-partner still respects connector opt-in and confirmation rules
 - `identity.adaptive_governance`
   - bounded authority model for role horizon, affective rollout,
     preferences, theta, and multilingual/profile posture

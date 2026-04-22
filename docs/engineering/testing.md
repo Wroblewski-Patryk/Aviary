@@ -180,6 +180,19 @@ For meaningful repo changes, leave behind:
       - `T14.1` analyst-driven DuckDuckGo search
       - `T14.2` analyst-driven generic HTTP page read
       - `T14.3` executor-aligned ClickUp task update
+- for backend work-partner orchestration slices, regression and behavior
+  evidence from:
+  - `.\.venv\Scripts\python -m pytest -q tests/test_role_agent.py tests/test_planning_agent.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
+  - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
+  - coverage should pin:
+    - explicit `work_partner` role selection and bounded skill mix
+    - machine-visible role-skill policy posture for `work_partner`
+    - work-partner orchestration of approved tool slices through typed intents
+      and action results
+    - scenario-level proof through:
+      - `T15.1` work-partner organization with bounded search plus ClickUp
+        update
+      - `T15.2` work-partner decision support with bounded page-read browsing
 - for no-UI `v1` life-assistant workflow slices, regression and behavior
   evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_goal_task_signals.py tests/test_planning_agent.py tests/test_action_executor.py tests/test_memory_repository.py tests/test_runtime_pipeline.py`
