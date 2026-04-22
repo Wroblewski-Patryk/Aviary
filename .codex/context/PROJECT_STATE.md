@@ -81,9 +81,14 @@ Last updated: 2026-04-22
   live-read slice is now frozen as `cloud_drive:list_files` with
   `provider_hint=google_drive`, and its safe output boundary is limited to
   file metadata evidence rather than document content or write semantics.
-- 2026-04-22: `PRJ-529` is now the first `READY` task; the next slice should
-  implement that bounded cloud-drive metadata read adapter behind the existing
-  connector policy and action guardrails.
+- 2026-04-22: `PRJ-529` is complete: planner now emits
+  `cloud_drive:list_files` with `provider_hint=google_drive`, and action
+  executes that typed read intent through a dedicated bounded Google Drive
+  metadata adapter that returns file metadata previews without exposing
+  document bodies, downloads, or write semantics.
+- 2026-04-22: `PRJ-530` is now the first `READY` task; the next slice should
+  expose cloud-drive metadata-read readiness and failure posture through
+  `/health.connectors`.
 - 2026-04-22: Group 76 (`PRJ-516..PRJ-519`) is now complete, and the next
   `READY` task is `PRJ-520` for dedicated debug-ingress compatibility
   retirement.

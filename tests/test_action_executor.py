@@ -165,6 +165,32 @@ class FakeGoogleCalendarClient:
         }
 
 
+class FakeGoogleDriveClient:
+    def __init__(self, *, ready: bool = True, error: Exception | None = None):
+        self.ready = ready
+        self.error = error
+        self.calls: list[dict[str, str]] = []
+
+    async def list_files(self, *, file_hint: str, limit: int = 5) -> list[dict]:
+        self.calls.append({"file_hint": file_hint, "limit": str(limit)})
+        if self.error is not None:
+            raise self.error
+        return [
+            {
+                "id": "drv_1",
+                "name": "Release notes",
+                "mime_type": "application/vnd.google-apps.document",
+                "modified_time": "2026-04-22T07:00:00Z",
+            },
+            {
+                "id": "drv_2",
+                "name": "Deployment checklist",
+                "mime_type": "text/markdown",
+                "modified_time": "2026-04-21T12:00:00Z",
+            },
+        ]
+
+
 def _event(text: str) -> Event:
     return Event(
         event_id="evt-1",
@@ -478,6 +504,78 @@ async def test_execute_fails_when_provider_backed_google_calendar_read_errors() 
     assert result.status == "fail"
     assert result.actions == ["google_calendar_read_availability"]
     assert "calendar unavailable" in result.notes
+    assert telegram_client.calls == []
+
+
+async def test_execute_runs_provider_backed_google_drive_metadata_read_before_delivery() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    drive_client = FakeGoogleDriveClient()
+    executor = ActionExecutor(
+        memory_repository=memory_repository,
+        telegram_client=telegram_client,
+        google_drive_client=drive_client,
+    )
+
+    plan = _plan(
+        domain_intents=[
+            ConnectedDriveAccessDomainIntent(
+                operation="list_files",
+                provider_hint="google_drive",
+                mode="read_only",
+                file_hint="release notes",
+            )
+        ]
+    )
+
+    result = await executor.execute(
+        plan,
+        _delivery(
+            channel="api",
+            execution_envelope=build_action_delivery_execution_envelope(plan),
+        ),
+    )
+
+    assert result.status == "success"
+    assert result.actions == ["google_drive_list_files", "api_response"]
+    assert "Google Drive metadata read returned:" in result.notes
+    assert "Release notes [application/vnd.google-apps.document] (drv_1)" in result.notes
+    assert drive_client.calls == [{"file_hint": "release notes", "limit": "5"}]
+
+
+async def test_execute_fails_when_provider_backed_google_drive_metadata_read_errors() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    drive_client = FakeGoogleDriveClient(error=RuntimeError("drive unavailable"))
+    executor = ActionExecutor(
+        memory_repository=memory_repository,
+        telegram_client=telegram_client,
+        google_drive_client=drive_client,
+    )
+
+    plan = _plan(
+        domain_intents=[
+            ConnectedDriveAccessDomainIntent(
+                operation="list_files",
+                provider_hint="google_drive",
+                mode="read_only",
+                file_hint="release notes",
+            )
+        ]
+    )
+
+    result = await executor.execute(
+        plan,
+        _delivery(
+            channel="telegram",
+            chat_id=123456,
+            execution_envelope=build_action_delivery_execution_envelope(plan),
+        ),
+    )
+
+    assert result.status == "fail"
+    assert result.actions == ["google_drive_list_files"]
+    assert "drive unavailable" in result.notes
     assert telegram_client.calls == []
 
 

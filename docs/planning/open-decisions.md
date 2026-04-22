@@ -383,7 +383,12 @@ The current repo already works as an MVP slice, but several architecture-level d
     `cloud_drive:list_files` with `provider_hint=google_drive`
   - safe output posture is limited to file metadata evidence rather than
     document content, downloads, or write semantics
-  - the next active slice in this lane is `PRJ-529`
+- `PRJ-529` is now complete:
+  - planner emits `cloud_drive:list_files` with `provider_hint=google_drive`
+    as the bounded metadata-read baseline
+  - action executes that intent through a bounded Google Drive metadata adapter
+    and returns only file metadata previews before normal delivery
+  - the next active slice in this lane is `PRJ-530`
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 

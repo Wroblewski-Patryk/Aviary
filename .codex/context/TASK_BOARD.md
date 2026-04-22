@@ -190,12 +190,15 @@ Last updated: 2026-04-22
     metadata read contract.
 
 - Group 79 note:
-  - `PRJ-528` is now complete.
+  - `PRJ-528..PRJ-529` are now complete.
   - the next bounded cloud-drive live-read path is frozen as
     `cloud_drive:list_files` with `provider_hint=google_drive`.
   - safe output is intentionally metadata-only, leaving document contents,
     downloads, and writes outside the selected baseline.
-  - `PRJ-529` is the next active slice for the provider-backed adapter.
+  - the provider-backed adapter now executes only bounded metadata listing
+    notes before delivery and preserves the planning-to-action boundary.
+  - `PRJ-530` is the next active slice for operator-visible readiness and
+    failure posture through `/health.connectors`.
 
 - [x] PRJ-520 Freeze the shared debug compatibility retirement gate
   - Owner: Planner
@@ -370,15 +373,22 @@ Last updated: 2026-04-22
   - Validation:
     - connector policy, architecture, and ops cross-review
 
-- [ ] PRJ-529 Implement the selected cloud-drive metadata read adapter behind existing connector policy gates
+- [x] PRJ-529 Implement the selected cloud-drive metadata read adapter behind existing connector policy gates
   - Owner: Backend Builder
   - Group: Cloud-Drive Metadata Read Baseline
   - Depends on: PRJ-528
   - Priority: P2
-  - Status: READY
+  - Status: DONE
   - Done when:
     - the selected cloud-drive read path executes from explicit read-only
       typed intents and preserves the planning-to-action execution boundary
+  - Result:
+    - planner now emits `cloud_drive:list_files` with
+      `provider_hint=google_drive` as the bounded metadata-read baseline when
+      the user asks to list drive files
+    - action now executes that typed intent through a dedicated
+      `GoogleDriveMetadataClient`, returning bounded file metadata previews
+      only and keeping document contents plus write semantics out of scope
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_connector_policy.py tests/test_planning_agent.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
 
@@ -387,7 +397,7 @@ Last updated: 2026-04-22
   - Group: Cloud-Drive Metadata Read Baseline
   - Depends on: PRJ-529
   - Priority: P2
-  - Status: BACKLOG
+  - Status: READY
   - Done when:
     - `/health.connectors.execution_baseline` distinguishes the new
       cloud-drive metadata-read posture from both policy-only families and

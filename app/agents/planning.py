@@ -1044,9 +1044,10 @@ class PlanningAgent:
                 mode=resolve_connector_operation_policy("cloud_drive", "suggest_file_plan").mode,
                 file_hint=lowered_text[:120],
             )
+        selected_provider = "google_drive" if provider == "generic" else provider
         return ConnectedDriveAccessDomainIntent(
             operation="list_files",
-            provider_hint=provider,
+            provider_hint=selected_provider,
             mode=resolve_connector_operation_policy("cloud_drive", "list_files").mode,
             file_hint=lowered_text[:120],
         )

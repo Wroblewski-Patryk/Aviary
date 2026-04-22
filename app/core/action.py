@@ -31,6 +31,7 @@ from app.core.connector_policy import (
     connector_intent_policy_violation,
 )
 from app.integrations.calendar.google_calendar_client import GoogleCalendarAvailabilityClient
+from app.integrations.cloud_drive.google_drive_client import GoogleDriveMetadataClient
 from app.integrations.delivery_router import DeliveryRouter
 from app.integrations.task_system.clickup_client import ClickUpTaskClient
 from app.integrations.telegram.client import TelegramClient
@@ -64,6 +65,7 @@ class ActionExecutor:
         openai_embedding_client: OpenAIEmbeddingClient | None = None,
         clickup_task_client: ClickUpTaskClient | None = None,
         google_calendar_client: GoogleCalendarAvailabilityClient | None = None,
+        google_drive_client: GoogleDriveMetadataClient | None = None,
     ):
         self.memory_repository = memory_repository
         self.delivery_router = DeliveryRouter(telegram_client=telegram_client)
@@ -84,6 +86,7 @@ class ActionExecutor:
             self.openai_embedding_client = OpenAIEmbeddingClient(api_key=openai_api_key)
         self.clickup_task_client = clickup_task_client
         self.google_calendar_client = google_calendar_client
+        self.google_drive_client = google_drive_client
 
     async def execute(self, plan: PlanOutput, delivery: ActionDelivery) -> ActionResult:
         proactive_delivery_guard = plan.proactive_delivery_guard
@@ -363,6 +366,35 @@ class ActionExecutor:
                         f"({availability.get('window_start')} -> {availability.get('window_end')}, "
                         f"{availability.get('time_zone')}) found no bounded free-slot preview."
                     )
+                continue
+
+            if isinstance(intent, ConnectedDriveAccessDomainIntent):
+                if (
+                    self.google_drive_client is None
+                    or not getattr(self.google_drive_client, "ready", False)
+                    or intent.provider_hint != "google_drive"
+                    or intent.operation != "list_files"
+                ):
+                    continue
+                try:
+                    files = await self.google_drive_client.list_files(
+                        file_hint=intent.file_hint,
+                        limit=5,
+                    )
+                except Exception as exc:
+                    return ActionResult(
+                        status="fail",
+                        actions=["google_drive_list_files"],
+                        notes=f"Google Drive metadata read failed: {type(exc).__name__}: {exc}",
+                    )
+
+                executed_actions.append("google_drive_list_files")
+                if files:
+                    preview = [self._connector_drive_preview(item) for item in files[:3]]
+                    notes.append("Google Drive metadata read returned: " + "; ".join(preview) + ".")
+                else:
+                    notes.append("Google Drive metadata read returned no visible files.")
+                continue
 
         if not executed_actions:
             return None
@@ -394,6 +426,12 @@ class ActionExecutor:
         if not normalized:
             return "AION follow-up"
         return normalized[:120]
+
+    def _connector_drive_preview(self, item: dict[str, str]) -> str:
+        name = " ".join(str(item.get("name", "") or "").split())[:80] or "unnamed"
+        mime_type = str(item.get("mime_type", "") or "").strip() or "unknown"
+        item_id = str(item.get("id", "") or "").strip() or "unknown"
+        return f"{name} [{mime_type}] ({item_id})"
 
     async def _apply_domain_intents(self, *, event: Event, plan: PlanOutput) -> dict[str, object]:
         preference_update = ""

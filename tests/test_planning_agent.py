@@ -678,6 +678,35 @@ def test_planning_agent_builds_allowed_connector_permission_gates_for_read_and_s
     assert drive_gate.reason == "suggestion_or_read_only_allowed"
 
 
+def test_planning_agent_selects_google_drive_for_bounded_list_files_baseline() -> None:
+    result = PlanningAgent().run(
+        event=_event(text="List files in drive for the release notes folder."),
+        context=_context(),
+        motivation=MotivationOutput(
+            importance=0.68,
+            urgency=0.31,
+            valence=0.02,
+            arousal=0.34,
+            mode="analyze",
+        ),
+        role=RoleOutput(selected="advisor", confidence=0.82),
+    )
+
+    drive_intent = next(
+        intent for intent in result.domain_intents if isinstance(intent, ConnectedDriveAccessDomainIntent)
+    )
+    drive_gate = next(
+        gate for gate in result.connector_permission_gates if gate.connector_kind == "cloud_drive"
+    )
+
+    assert drive_intent.operation == "list_files"
+    assert drive_intent.provider_hint == "google_drive"
+    assert drive_intent.mode == "read_only"
+    assert drive_gate.operation == "list_files"
+    assert drive_gate.allowed is True
+    assert drive_gate.requires_confirmation is False
+
+
 def test_planning_agent_promotes_connector_expansion_proposal_into_discovery_intent() -> None:
     result = PlanningAgent().run(
         event=_event(text="Can we integrate ClickUp with this assistant for task sync?"),

@@ -360,6 +360,32 @@ class FakeGoogleCalendarClient:
         }
 
 
+class FakeGoogleDriveClient:
+    def __init__(self, *, ready: bool = True, error: Exception | None = None):
+        self.ready = ready
+        self.error = error
+        self.calls: list[dict[str, str]] = []
+
+    async def list_files(self, *, file_hint: str, limit: int = 5) -> list[dict]:
+        self.calls.append({"file_hint": file_hint, "limit": str(limit)})
+        if self.error is not None:
+            raise self.error
+        return [
+            {
+                "id": "drv_1",
+                "name": "Release notes",
+                "mime_type": "application/vnd.google-apps.document",
+                "modified_time": "2026-04-22T07:00:00Z",
+            },
+            {
+                "id": "drv_2",
+                "name": "Deployment checklist",
+                "mime_type": "text/markdown",
+                "modified_time": "2026-04-21T12:00:00Z",
+            },
+        ]
+
+
 class FakeHybridMemoryRepository(FakeMemoryRepository):
     def __init__(self, recent_memory: list[dict] | None = None, user_profile: dict | None = None):
         super().__init__(recent_memory=recent_memory, user_profile=user_profile)
@@ -4828,6 +4854,39 @@ async def test_runtime_pipeline_executes_provider_backed_google_calendar_read_pa
     assert result.action_result.status == "success"
     assert "google_calendar_read_availability" in result.action_result.actions
     assert "Google Calendar availability read" in result.action_result.notes
+
+
+async def test_runtime_pipeline_executes_provider_backed_google_drive_metadata_read_path() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=FakeOpenAIClient()),
+        action_executor=ActionExecutor(
+            memory_repository=memory,
+            telegram_client=FakeTelegramClient(),
+            google_drive_client=FakeGoogleDriveClient(),
+        ),
+        memory_repository=memory,
+        reflection_worker=FakeReflectionWorker(),
+    )
+    event = Event(
+        event_id="evt-drive-read",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "List files in drive for the release notes folder."},
+        meta=EventMeta(user_id="u-1", trace_id="t-drive-read"),
+    )
+
+    result = await runtime.run(event)
+
+    assert result.action_result.status == "success"
+    assert "google_drive_list_files" in result.action_result.actions
+    assert "Google Drive metadata read returned:" in result.action_result.notes
 
 
 def _build_behavior_runtime(memory_repository: FakeMemoryRepository) -> RuntimeOrchestrator:

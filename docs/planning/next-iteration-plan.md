@@ -343,7 +343,11 @@ cloud-drive reads rather than durable file or write semantics.
   contract is now frozen as `cloud_drive:list_files` with
   `provider_hint=google_drive`, and the safe output boundary is limited to
   file metadata evidence rather than document bodies, downloads, or writes.
-- the next active slice in this lane is `PRJ-529`.
+- `PRJ-529` is complete: planner now emits the bounded cloud-drive live-read
+  path with `provider_hint=google_drive`, and action executes it through a
+  dedicated Google Drive metadata adapter that returns bounded file metadata
+  previews only.
+- the next active slice in this lane is `PRJ-530`.
 
 - `PRJ-528` Define the first bounded cloud-drive metadata read baseline.
   - Result:

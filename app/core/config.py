@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     google_calendar_access_token: str | None = None
     google_calendar_calendar_id: str | None = None
     google_calendar_timezone: str = "UTC"
+    google_drive_access_token: str | None = None
+    google_drive_folder_id: str | None = None
     app_env: str = "development"
     app_port: int = 8000
     log_level: str = "INFO"
