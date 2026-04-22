@@ -35,6 +35,7 @@ def resolve_embedding_posture(
             "model_requested": requested_model,
             "model_effective": requested_model,
             "provider_hint": "deterministic_baseline",
+            "execution_class": "deterministic_baseline",
         }
 
     if requested_provider == LOCAL_HYBRID_EMBEDDING_PROVIDER:
@@ -44,6 +45,7 @@ def resolve_embedding_posture(
             "model_requested": requested_model,
             "model_effective": requested_model or LOCAL_HYBRID_EMBEDDING_MODEL,
             "provider_hint": "local_provider_execution",
+            "execution_class": "local_provider_owned",
         }
 
     return {
@@ -52,6 +54,7 @@ def resolve_embedding_posture(
         "model_requested": requested_model,
         "model_effective": DEFAULT_EMBEDDING_MODEL,
         "provider_hint": "provider_not_implemented_fallback_deterministic",
+        "execution_class": "fallback_to_deterministic",
     }
 
 
@@ -453,6 +456,7 @@ def embedding_strategy_snapshot(
         "semantic_embedding_provider_requested": posture["provider_requested"],
         "semantic_embedding_provider_effective": posture["provider_effective"],
         "semantic_embedding_provider_hint": posture["provider_hint"],
+        "semantic_embedding_execution_class": posture["execution_class"],
         "semantic_embedding_provider_ownership_state": provider_ownership_state,
         "semantic_embedding_provider_ownership_hint": provider_ownership_hint,
         "semantic_embedding_provider_ownership_enforcement": normalized_provider_ownership_enforcement,

@@ -754,6 +754,7 @@ def test_health_endpoint_returns_ok() -> None:
         "affective_assessment_rollout_policy"
     )
     assert body["memory_retrieval"]["semantic_retrieval_mode"] == "hybrid_vector_lexical"
+    assert body["memory_retrieval"]["semantic_embedding_execution_class"] == "deterministic_baseline"
     assert body["memory_retrieval"]["retrieval_depth_policy"] == {
         "episodic_limit": 12,
         "conclusion_limit": 8,
@@ -913,6 +914,7 @@ def test_health_endpoint_exposes_embedding_provider_fallback_posture_when_non_de
     assert body["memory_retrieval"]["semantic_embedding_posture"] == "fallback_deterministic"
     assert body["memory_retrieval"]["semantic_embedding_provider_requested"] == "openai"
     assert body["memory_retrieval"]["semantic_embedding_provider_effective"] == "deterministic"
+    assert body["memory_retrieval"]["semantic_embedding_execution_class"] == "fallback_to_deterministic"
     assert body["memory_retrieval"]["semantic_embedding_strict_rollout_violations"] == ["provider_ownership_fallback_active"]
     assert body["memory_retrieval"]["semantic_embedding_dimensions"] == 1536
     assert body["memory_retrieval"]["retrieval_depth_policy"]["retrieval_mode"] == "hybrid_vector_lexical"
@@ -1608,6 +1610,7 @@ def test_health_endpoint_exposes_local_hybrid_embedding_provider_as_ready_owner(
     assert body["memory_retrieval"]["semantic_embedding_provider_effective"] == "local_hybrid"
     assert body["memory_retrieval"]["semantic_embedding_provider_ready"] is True
     assert body["memory_retrieval"]["semantic_embedding_provider_hint"] == "local_provider_execution"
+    assert body["memory_retrieval"]["semantic_embedding_execution_class"] == "local_provider_owned"
 
 
 def test_health_endpoint_defaults_to_strict_policy_enforcement_in_production_when_unset() -> None:
