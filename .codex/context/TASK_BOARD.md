@@ -164,16 +164,28 @@ Last updated: 2026-04-22
   - the bundle contract is now frozen, implemented, smoke-covered, and fully
     synchronized in docs/context truth.
 
-- [ ] PRJ-520 Freeze the shared debug compatibility retirement gate
+- Group 77 note:
+  - `PRJ-520` is now complete.
+  - shared debug retirement now has one explicit checklist and cutover
+    posture, and `PRJ-521` is the next active enforcement slice.
+
+- [x] PRJ-520 Freeze the shared debug compatibility retirement gate
   - Owner: Planner
   - Group: Dedicated Debug Ingress Compatibility Retirement
   - Depends on: PRJ-519
   - Priority: P1
-  - Status: BACKLOG
+  - Status: DONE
   - Done when:
     - the repo records one explicit checklist and cutover posture for retiring
       shared `POST /event/debug` and query-compat `POST /event?debug=true`
       surfaces in favor of dedicated internal ingress only
+  - Result:
+    - shared debug retirement now has one explicit owner-level checklist and
+      cutover posture in `app/core/debug_ingress_policy.py` instead of only a
+      loose blocker list
+    - `/health.runtime_policy` now exposes machine-readable retirement target,
+      cutover posture, gate checklist, and gate state so the next enforcement
+      slice can rely on one source of truth
   - Validation:
     - runtime-policy, architecture, and ops cross-review
 

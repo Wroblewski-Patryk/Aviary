@@ -41,6 +41,13 @@ Last updated: 2026-04-22
   guidance, ops guidance, and context truth now describe the same
   incident-evidence bundle helper, bundle file set, and release-smoke
   verification path.
+- 2026-04-22: `PRJ-520` is complete: shared debug retirement now has one
+  explicit owner-level checklist and cutover posture, and
+  `/health.runtime_policy` exposes retirement target, cutover posture, gate
+  checklist, and gate state in addition to the existing blocker list.
+- 2026-04-22: `PRJ-521` is now the first `READY` task; the next slice should
+  turn that frozen retirement gate into default dedicated-admin-only
+  enforcement for shared compatibility routes.
 - 2026-04-22: Group 76 (`PRJ-516..PRJ-519`) is now complete, and the next
   `READY` task is `PRJ-520` for dedicated debug-ingress compatibility
   retirement.

@@ -338,6 +338,38 @@ Producer or retrieval boundary:
   not redefine their ownership or schema independently of those runtime
   surfaces
 
+## Dedicated Debug Ingress Retirement Gate
+
+The long-term debug-ingress owner is the dedicated internal admin route:
+
+- `POST /internal/event/debug`
+
+Shared debug surfaces remain compatibility-only:
+
+- `POST /event/debug`
+- `POST /event?debug=true`
+
+Retirement cutover posture is fixed as:
+
+- `dedicated_internal_admin_route_primary_shared_routes_break_glass_then_remove`
+
+Shared-route retirement gate checklist:
+
+- `normal_operator_debug_uses_dedicated_internal_admin_route`
+- `shared_event_debug_route_is_break_glass_only_or_disabled`
+- `query_debug_compatibility_route_disabled`
+- `release_smoke_green_for_dedicated_admin_debug_path`
+- `rollback_notes_cover_shared_debug_break_glass_reenablement`
+
+Machine-visible gate state belongs to `/health.runtime_policy` through:
+
+- `event_debug_shared_ingress_retirement_target`
+- `event_debug_shared_ingress_retirement_cutover_posture`
+- `event_debug_shared_ingress_retirement_gate_checklist`
+- `event_debug_shared_ingress_retirement_gate_state`
+- `event_debug_shared_ingress_retirement_blockers`
+- `event_debug_shared_ingress_retirement_ready`
+
 ---
 
 ## Final Principle

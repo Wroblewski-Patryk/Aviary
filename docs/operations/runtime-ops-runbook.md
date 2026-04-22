@@ -25,6 +25,10 @@ runtime flags (for example `startup_schema_mode`, `event_debug_enabled`, and
 (`event_debug_token_required`, `production_debug_token_required`,
 `event_debug_admin_policy_owner`, `event_debug_admin_ingress_target_path`,
 `event_debug_admin_posture_state`,
+`event_debug_shared_ingress_retirement_target`,
+`event_debug_shared_ingress_retirement_cutover_posture`,
+`event_debug_shared_ingress_retirement_gate_checklist`,
+`event_debug_shared_ingress_retirement_gate_state`,
 `event_debug_shared_ingress_retirement_ready`,
 `event_debug_shared_ingress_retirement_blockers`,
 `event_debug_query_compat_enabled`, `event_debug_query_compat_source`,
@@ -883,6 +887,25 @@ path.
 Production default posture now treats shared `POST /event/debug` as
 break-glass-only when no explicit override is configured; use
 `POST /internal/event/debug` as the normal operator ingress.
+
+Shared debug retirement gate baseline:
+
+- cutover posture:
+  `dedicated_internal_admin_route_primary_shared_routes_break_glass_then_remove`
+- required checklist:
+  - `normal_operator_debug_uses_dedicated_internal_admin_route`
+  - `shared_event_debug_route_is_break_glass_only_or_disabled`
+  - `query_debug_compatibility_route_disabled`
+  - `release_smoke_green_for_dedicated_admin_debug_path`
+  - `rollback_notes_cover_shared_debug_break_glass_reenablement`
+- treat `event_debug_shared_ingress_retirement_gate_state` as the compact
+  machine-visible summary:
+  - `shared_debug_compatibility_retirement_blocked`: shared route or query
+    compat is still active in normal flows
+  - `shared_debug_break_glass_retirement_gate_ready`: runtime is at
+    break-glass-only posture and ready for the next enforcement/removal step
+  - `shared_debug_disabled_retirement_gate_satisfied`: debug payload is off, so
+    no shared ingress remains to retire operationally
 
 ### Run Health Check
 

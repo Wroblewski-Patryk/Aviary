@@ -230,6 +230,13 @@ Completed on 2026-04-22:
 This group converts the existing admin-ingress target posture into actual
 shared-route retirement instead of continued monitored compatibility.
 
+Completed on 2026-04-22:
+
+- `PRJ-520` is complete: shared debug retirement now has one explicit
+  checklist, cutover posture, and machine-visible gate state exposed through
+  `/health.runtime_policy` for later enforcement work.
+- the next active slice in this lane is `PRJ-521`.
+
 - `PRJ-520` Freeze the shared debug compatibility retirement gate.
   - Result:
     - one explicit checklist records when shared `POST /event/debug` and query

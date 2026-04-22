@@ -332,6 +332,14 @@ The current repo already works as an MVP slice, but several architecture-level d
     planning, and context truth all describe the same bundle helper and smoke
     verification path
   - Group 76 is now complete and `PRJ-520` is now the next active task
+- `PRJ-520` is now complete:
+  - shared debug retirement now has one explicit cutover posture
+    (`dedicated_internal_admin_route_primary_shared_routes_break_glass_then_remove`)
+    plus one fixed checklist for operator path adoption, break-glass posture,
+    query-compat shutdown, release-smoke proof, and rollback-note coverage
+  - `/health.runtime_policy` now exposes retirement target, cutover posture,
+    gate checklist, and gate state so later enforcement no longer depends on
+    reconstructing posture from loose blocker fields alone
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 

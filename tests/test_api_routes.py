@@ -754,6 +754,22 @@ def test_health_endpoint_returns_ok() -> None:
     assert body["runtime_policy"]["event_debug_admin_policy_owner"] == "dedicated_admin_debug_ingress_policy"
     assert body["runtime_policy"]["event_debug_admin_ingress_target_path"] == "/internal/event/debug"
     assert body["runtime_policy"]["event_debug_admin_posture_state"] == "transitional_shared_compatibility_active"
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_target"] == (
+        "break_glass_only_then_remove_from_normal_operator_flows"
+    )
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_cutover_posture"] == (
+        "dedicated_internal_admin_route_primary_shared_routes_break_glass_then_remove"
+    )
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_gate_checklist"] == [
+        "normal_operator_debug_uses_dedicated_internal_admin_route",
+        "shared_event_debug_route_is_break_glass_only_or_disabled",
+        "query_debug_compatibility_route_disabled",
+        "release_smoke_green_for_dedicated_admin_debug_path",
+        "rollback_notes_cover_shared_debug_break_glass_reenablement",
+    ]
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_gate_state"] == (
+        "shared_debug_compatibility_retirement_blocked"
+    )
     assert body["runtime_policy"]["event_debug_shared_ingress_retirement_blockers"] == [
         "shared_debug_route_still_primary",
         "query_debug_compatibility_still_enabled",
@@ -1452,6 +1468,20 @@ def test_health_endpoint_exposes_runtime_policy_flags() -> None:
         "event_debug_shared_ingress_mode_source": "explicit",
         "event_debug_shared_ingress_break_glass_required": False,
         "event_debug_shared_ingress_posture": "shared_route_compatibility",
+        "event_debug_shared_ingress_retirement_target": "break_glass_only_then_remove_from_normal_operator_flows",
+        "event_debug_shared_ingress_retirement_cutover_posture": (
+            "dedicated_internal_admin_route_primary_shared_routes_break_glass_then_remove"
+        ),
+        "event_debug_shared_ingress_retirement_gate_checklist": [
+            "normal_operator_debug_uses_dedicated_internal_admin_route",
+            "shared_event_debug_route_is_break_glass_only_or_disabled",
+            "query_debug_compatibility_route_disabled",
+            "release_smoke_green_for_dedicated_admin_debug_path",
+            "rollback_notes_cover_shared_debug_break_glass_reenablement",
+        ],
+        "event_debug_shared_ingress_retirement_gate_state": (
+            "shared_debug_disabled_retirement_gate_satisfied"
+        ),
         "event_debug_shared_ingress_retirement_blockers": [],
         "event_debug_shared_ingress_retirement_ready": True,
         "event_debug_shared_ingress_sunset_ready": True,
@@ -1513,6 +1543,9 @@ def test_health_endpoint_marks_break_glass_shared_ingress_posture_when_configure
     assert body["runtime_policy"]["event_debug_shared_ingress_break_glass_required"] is True
     assert body["runtime_policy"]["event_debug_shared_ingress_posture"] == "shared_route_break_glass_only"
     assert body["runtime_policy"]["event_debug_admin_posture_state"] == "transitional_shared_compatibility_active"
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_gate_state"] == (
+        "shared_debug_compatibility_retirement_blocked"
+    )
     assert body["runtime_policy"]["event_debug_shared_ingress_retirement_blockers"] == [
         "query_debug_compatibility_still_enabled",
     ]

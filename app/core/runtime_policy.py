@@ -5,6 +5,7 @@ from app.core.affective_policy import affective_assessment_policy_snapshot
 from app.core.debug_ingress_policy import (
     debug_ingress_admin_posture_state,
     debug_ingress_policy_snapshot,
+    debug_ingress_retirement_gate_state,
     debug_ingress_retirement_blockers,
 )
 
@@ -304,6 +305,11 @@ def runtime_policy_snapshot(settings: Any) -> dict[str, Any]:
         shared_ingress_mode=shared_ingress_mode,
         query_compat_enabled=query_compat_enabled,
     )
+    debug_retirement_gate_state = debug_ingress_retirement_gate_state(
+        debug_enabled=debug_enabled,
+        shared_ingress_mode=shared_ingress_mode,
+        query_compat_enabled=query_compat_enabled,
+    )
     debug_admin_posture_state = debug_ingress_admin_posture_state(
         debug_enabled=debug_enabled,
         shared_ingress_mode=shared_ingress_mode,
@@ -332,6 +338,14 @@ def runtime_policy_snapshot(settings: Any) -> dict[str, Any]:
         "event_debug_shared_ingress_mode_source": event_debug_shared_ingress_mode_source(settings),
         "event_debug_shared_ingress_break_glass_required": shared_ingress_mode == "break_glass_only",
         "event_debug_shared_ingress_posture": event_debug_shared_ingress_posture(settings),
+        "event_debug_shared_ingress_retirement_target": debug_policy["shared_compat_retirement_target"],
+        "event_debug_shared_ingress_retirement_cutover_posture": debug_policy[
+            "shared_compat_retirement_cutover_posture"
+        ],
+        "event_debug_shared_ingress_retirement_gate_checklist": debug_policy[
+            "shared_compat_retirement_gate_checklist"
+        ],
+        "event_debug_shared_ingress_retirement_gate_state": debug_retirement_gate_state,
         "event_debug_shared_ingress_retirement_blockers": debug_retirement_blockers,
         "event_debug_shared_ingress_retirement_ready": len(debug_retirement_blockers) == 0,
         "event_debug_shared_ingress_sunset_ready": shared_ingress_sunset_ready,
