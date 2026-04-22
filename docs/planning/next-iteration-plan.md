@@ -29,18 +29,16 @@ Confirmed on 2026-04-19:
 
 ## Progress Update
 
-Planned on 2026-04-22:
+Historical planning note (2026-04-22):
 
-- after Group 49 closed, the next architecture-convergence queue is now seeded
-  through `PRJ-442`.
-- the remaining work is now organized into seven detailed convergence lanes:
-  runtime topology finalization, production-boundary hardening, retrieval and
-  affective-memory productionization, adaptive identity governance, goal/task
-  and proposal governance, scheduler-plus-connector capability convergence, and
-  deployment standard plus release-reliability closure.
-- this queue is intentionally ordered to finish ownership and rollout
-  boundaries before widening inference authority or changing production
-  defaults.
+- after Group 49 closed, the repo seeded a seven-lane convergence queue
+  through `PRJ-442` covering runtime topology finalization,
+  production-boundary hardening, retrieval and affective-memory
+  productionization, adaptive identity governance, goal/task and proposal
+  governance, scheduler-plus-connector capability convergence, and deployment
+  standard plus release-reliability closure.
+- that queue has since been completed and is kept here only as architecture
+  history for how Groups 50 through 56 were organized.
 
 Completed on 2026-04-22:
 
@@ -80,10 +78,14 @@ Completed on 2026-04-22:
 - `PRJ-452..PRJ-453` are complete: embedding posture now exposes one explicit
   execution class for deterministic baseline, local provider ownership, and
   fallback-to-deterministic paths.
+- `PRJ-454` is complete: top-level planning/context surfaces now treat
+  post-`PRJ-453` follow-up discovery as the only active planning posture and
+  no longer mix it with stale queue-seeding notes from the earlier
+  `PRJ-415..PRJ-442` convergence wave.
 
 ## Post-Convergence Operating Mode
 
-After `PRJ-442`, the repo no longer has a pre-seeded architecture queue.
+After `PRJ-453`, the repo no longer has a pre-seeded architecture queue.
 
 Execution should now prefer:
 

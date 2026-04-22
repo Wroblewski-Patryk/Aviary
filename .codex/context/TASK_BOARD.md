@@ -15,7 +15,7 @@ Last updated: 2026-04-22
   - run relevant tests and validations
   - capture architecture follow-up if discovered
   - sync task state, project state, and learning journal when needed
-- Architecture convergence work is complete through `PRJ-442`.
+- Architecture convergence work is complete through `PRJ-453`.
 - The repo is now in post-convergence follow-up mode:
   - no seeded execution queue remains
   - the next task must be derived from newly discovered gaps, drift, or
@@ -57,6 +57,22 @@ Last updated: 2026-04-22
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-454 Sync post-convergence planning surfaces after Groups 57 through 59
+  - Status: DONE
+  - Group: Post-Convergence Planning Hygiene
+  - Owner: Product Docs
+  - Depends on: PRJ-453
+  - Priority: P1
+  - Result:
+    - top-level planning/context surfaces now describe one shared
+      post-`PRJ-453` operating stance instead of mixing current
+      post-convergence follow-up mode with stale queue-seeding notes from the
+      earlier `PRJ-415..PRJ-442` wave
+    - future execution can again be derived from concrete runtime or
+      operational follow-ups without conflicting backlog headers
+  - Validation:
+    - doc-and-context sync across `.codex/context/` and `docs/planning/`
 
 - [x] PRJ-453 Sync docs/context for embedding execution-class diagnostics
   - Status: DONE

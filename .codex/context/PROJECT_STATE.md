@@ -1783,6 +1783,10 @@ Last updated: 2026-04-22
   exposes `semantic_embedding_execution_class` so deterministic baseline,
   local provider-owned execution, and fallback-to-deterministic posture are
   machine-visible in one field.
+- 2026-04-22: `PRJ-454` is complete: top-level planning/context surfaces now
+  consistently describe post-`PRJ-453` follow-up discovery mode and no longer
+  keep stale references to the older seeded `PRJ-415..PRJ-442` queue as if it
+  were still the current planning baseline.
 
 ## Working Agreements
 

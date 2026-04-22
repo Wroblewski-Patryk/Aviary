@@ -92,7 +92,7 @@ The current repo already works as an MVP slice, but several architecture-level d
   - `PRJ-444..PRJ-447`: shared debug-ingress vocabulary convergence (`3`) - complete
   - `PRJ-448..PRJ-451`: affective diagnostics convergence (`4a`) - complete
   - `PRJ-452..PRJ-453`: embedding execution-class diagnostics (`5d`, `5e`) - complete
-- post-Group-56 state has no remaining seeded `READY`; the next architecture
+- post-`PRJ-453` state has no remaining seeded `READY`; the next architecture
   slice should again be derived from any newly discovered post-convergence
   follow-up instead of inventing a new queue without a concrete runtime or
   operational driver.
@@ -100,6 +100,9 @@ The current repo already works as an MVP slice, but several architecture-level d
   omitted from this header now that those groups are complete; the decisions
   below remain as architecture history plus future reference unless a new
   follow-up reopens them explicitly.
+- `PRJ-454` cleaned the remaining top-level planning drift after Groups 57
+  through 59 so this file, the task board, project state, and the next
+  iteration plan all describe the same post-convergence follow-up stance.
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 
