@@ -109,6 +109,13 @@ Last updated: 2026-04-22
   expose backend-owned inspection surfaces for learned state and planning state
   so future UI can read real runtime truth instead of reconstructing it
   client-side.
+- 2026-04-22: `PRJ-549` is complete: `/health.learned_state` now exposes the
+  shared introspection posture and `/internal/state/inspect?user_id=...`
+  exposes backend-owned identity, learned knowledge, role/skill metadata, and
+  planning state through the existing internal debug boundary.
+- 2026-04-22: `PRJ-550` is now the first `READY` task; the next slice should
+  make learned-state introspection part of regression and incident-evidence
+  truth so future UI- and operator-facing surfaces are release-stable.
 - 2026-04-22: fresh post-`PRJ-515` analysis has now seeded a new queue through
   `PRJ-539`, focused on operator-grade incident-evidence handling, actual
   debug-compat retirement, bounded connector read expansion, external cadence

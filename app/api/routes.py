@@ -16,7 +16,9 @@ from app.core.debug_compat import (
     debug_query_compat_sunset_snapshot,
 )
 from app.core.events import looks_like_telegram_update, normalize_event
+from app.core.background_adaptive_outputs import summarize_loaded_adaptive_state
 from app.core.identity_policy import identity_policy_snapshot
+from app.core.learned_state_policy import learned_state_policy_snapshot
 from app.core.adaptive_governance import adaptive_identity_governance_snapshot
 from app.core.affective_diagnostics import affective_input_policy_snapshot
 from app.core.affective_policy import affective_assessment_policy_snapshot
@@ -38,6 +40,7 @@ from app.core.observability_policy import build_runtime_incident_evidence
 from app.core.planning_governance import planning_governance_snapshot
 from app.core.proactive_policy import proactive_runtime_policy_snapshot
 from app.core.role_skill_policy import role_skill_policy_snapshot
+from app.core.skill_registry import skill_registry_snapshot
 from app.core.runtime_policy import (
     app_environment,
     event_debug_enabled,
@@ -284,6 +287,92 @@ def _enforce_debug_access(*, request: Request, settings) -> None:
         return
     if app_environment(settings) == "production" and production_debug_token_required(settings):
         raise HTTPException(status_code=403, detail="Debug token is required in production.")
+
+
+async def _build_learned_state_snapshot(*, request: Request, user_id: str) -> dict[str, Any]:
+    memory_repository = _memory_repository_from_request(request)
+    profile = await memory_repository.get_user_profile(user_id=user_id)
+    preferences = await memory_repository.get_user_runtime_preferences(user_id=user_id)
+    conclusions = await memory_repository.get_user_conclusions(user_id=user_id, limit=24)
+    relations = await memory_repository.get_user_relations(user_id=user_id, limit=12)
+    active_goals = await memory_repository.get_active_goals(user_id=user_id, limit=8)
+    goal_ids = [int(goal["id"]) for goal in active_goals if goal.get("id") is not None]
+    active_tasks = await memory_repository.get_active_tasks(user_id=user_id, goal_ids=goal_ids, limit=12)
+    active_goal_milestones = await memory_repository.get_active_goal_milestones(
+        user_id=user_id,
+        goal_ids=goal_ids,
+        limit=8,
+    )
+    pending_proposals = await memory_repository.get_pending_subconscious_proposals(
+        user_id=user_id,
+        limit=8,
+    )
+    theta_loader = getattr(memory_repository, "get_user_theta", None)
+    theta = await theta_loader(user_id=user_id) if callable(theta_loader) else None
+    adaptive_outputs = summarize_loaded_adaptive_state(
+        user_conclusions=conclusions,
+        relations=relations,
+        theta=theta if isinstance(theta, dict) else None,
+    )
+
+    preference_kinds = {
+        "response_style",
+        "collaboration_preference",
+        "preferred_role",
+        "proactive_opt_in",
+    }
+    affective_kinds = {
+        "affective_support_pattern",
+        "affective_support_sensitivity",
+    }
+    learned_preferences = {
+        key: value
+        for key, value in {
+            "preferred_language": (profile or {}).get("preferred_language") if isinstance(profile, dict) else None,
+            "response_style": preferences.get("response_style"),
+            "collaboration_preference": preferences.get("collaboration_preference"),
+            "preferred_role": preferences.get("preferred_role"),
+            "proactive_opt_in": preferences.get("proactive_opt_in"),
+        }.items()
+        if value not in {None, ""}
+    }
+    semantic_conclusions = [
+        row
+        for row in conclusions
+        if str(row.get("kind", "")).strip().lower() not in preference_kinds.union(affective_kinds)
+    ]
+    affective_conclusions = [
+        row for row in conclusions if str(row.get("kind", "")).strip().lower() in affective_kinds
+    ]
+
+    return {
+        **learned_state_policy_snapshot(),
+        "user_id": user_id,
+        "identity_state": {
+            "identity_policy": identity_policy_snapshot(),
+            "profile": dict(profile or {}) if isinstance(profile, dict) else {},
+            "learned_preferences": learned_preferences,
+        },
+        "learned_knowledge": {
+            "semantic_conclusions": semantic_conclusions,
+            "affective_conclusions": affective_conclusions,
+            "relations": relations,
+            "adaptive_outputs": adaptive_outputs,
+            "theta": dict(theta) if isinstance(theta, dict) else {},
+        },
+        "role_skill_state": {
+            "role_skill_policy": role_skill_policy_snapshot(),
+            "skill_registry": skill_registry_snapshot(),
+            "current_turn_selected_role_available_via": "system_debug.role",
+            "current_turn_selected_skills_available_via": "system_debug.adaptive_state.selected_skills",
+        },
+        "planning_state": {
+            "active_goals": active_goals,
+            "active_tasks": active_tasks,
+            "active_goal_milestones": active_goal_milestones,
+            "pending_proposals": pending_proposals,
+        },
+    }
 
 
 async def _handle_event_request(
@@ -607,6 +696,7 @@ async def health(request: Request) -> dict[str, Any]:
         },
         "memory_retrieval": memory_retrieval_snapshot,
         "planning_governance": planning_governance_snapshot(),
+        "learned_state": learned_state_policy_snapshot(),
         "connectors": {
             **connector_authorization_matrix_snapshot(),
             "capability_proposal": connector_capability_proposal_snapshot(),
@@ -640,6 +730,16 @@ async def health(request: Request) -> dict[str, Any]:
             "tasks": reflection_stats,
         },
     }
+
+
+@router.get("/internal/state/inspect")
+async def internal_state_inspection_endpoint(
+    request: Request,
+    user_id: str = Query(..., min_length=1),
+) -> dict[str, Any]:
+    settings = _settings_from_request(request)
+    _enforce_debug_access(request=request, settings=settings)
+    return await _build_learned_state_snapshot(request=request, user_id=user_id.strip())
 
 
 @router.post("/event", response_model=EventResponse, response_model_exclude_none=True)

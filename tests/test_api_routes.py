@@ -363,6 +363,34 @@ class FakeMemoryRepository:
             "stuck_processing": 0,
         }
         self.attention_turns: dict[tuple[str, str], dict] = {}
+        self.user_profile = {"preferred_language": "pl"}
+        self.user_preferences = {
+            "response_style": "concise",
+            "collaboration_preference": "guided",
+            "preferred_role": "advisor",
+            "proactive_opt_in": True,
+        }
+        self.user_conclusions = [
+            {"kind": "response_style", "content": "concise", "confidence": 0.95, "source": "explicit_request"},
+            {"kind": "affective_support_pattern", "content": "supportive", "confidence": 0.78, "source": "background_reflection"},
+            {"kind": "custom_semantic_fact", "content": "release blockers require follow-up", "confidence": 0.74, "source": "background_reflection"},
+        ]
+        self.user_relations = [
+            {"relation_type": "collaboration_dynamic", "relation_value": "guided", "confidence": 0.8}
+        ]
+        self.active_goals = [
+            {"id": 1, "name": "ship the MVP", "priority": "high", "status": "active", "goal_type": "tactical"}
+        ]
+        self.active_tasks = [
+            {"id": 2, "goal_id": 1, "name": "fix deployment blocker", "priority": "high", "status": "blocked"}
+        ]
+        self.active_goal_milestones = [
+            {"id": 3, "goal_id": 1, "name": "Stabilize release path", "status": "active", "phase": "execution_phase"}
+        ]
+        self.pending_proposals = [
+            {"proposal_id": 5, "proposal_type": "ask_user", "summary": "Clarify blocker scope.", "status": "pending"}
+        ]
+        self.user_theta = {"orientation": "support"}
 
     async def get_reflection_task_stats(
         self,
@@ -376,6 +404,33 @@ class FakeMemoryRepository:
         assert stuck_after_seconds == 180
         assert retry_backoff_seconds == (5, 30, 120)
         return self.stats
+
+    async def get_user_profile(self, user_id: str) -> dict | None:
+        return dict(self.user_profile)
+
+    async def get_user_runtime_preferences(self, user_id: str, **kwargs) -> dict:
+        return dict(self.user_preferences)
+
+    async def get_user_conclusions(self, user_id: str, limit: int = 24, **kwargs) -> list[dict]:
+        return self.user_conclusions[:limit]
+
+    async def get_user_relations(self, *, user_id: str, limit: int = 12, **kwargs) -> list[dict]:
+        return self.user_relations[:limit]
+
+    async def get_active_goals(self, user_id: str, limit: int = 8) -> list[dict]:
+        return self.active_goals[:limit]
+
+    async def get_active_tasks(self, user_id: str, *, goal_ids: list[int] | None = None, limit: int = 12) -> list[dict]:
+        return self.active_tasks[:limit]
+
+    async def get_active_goal_milestones(self, user_id: str, *, goal_ids: list[int] | None = None, limit: int = 8) -> list[dict]:
+        return self.active_goal_milestones[:limit]
+
+    async def get_pending_subconscious_proposals(self, *, user_id: str, limit: int = 8) -> list[dict]:
+        return self.pending_proposals[:limit]
+
+    async def get_user_theta(self, user_id: str) -> dict | None:
+        return dict(self.user_theta)
 
     async def get_attention_turn(self, *, user_id: str, conversation_key: str) -> dict | None:
         row = self.attention_turns.get((user_id, conversation_key))
@@ -884,6 +939,60 @@ def test_health_endpoint_returns_ok() -> None:
     assert body["reflection"]["deployment_readiness"]["ready"] is True
     assert body["reflection"]["worker"]["queued_task_ids"] == [42]
     assert body["reflection"]["adaptive_outputs"] == {}
+
+
+def test_health_endpoint_exposes_learned_state_introspection_posture() -> None:
+    client, _, _ = _client()
+
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["learned_state"] == {
+        "policy_owner": "learned_state_inspection_policy",
+        "internal_inspection_path": "/internal/state/inspect",
+        "inspection_boundary": "internal_admin_debug_access_only",
+        "identity_state_scope": "profile_language_plus_conclusion_preferences",
+        "learned_knowledge_scope": "semantic_affective_relations_and_reflection_outputs",
+        "skill_learning_posture": "selected_skill_metadata_only",
+        "planning_state_scope": "active_goals_tasks_milestones_and_pending_proposals",
+        "current_turn_selection_surface": "system_debug",
+        "future_ui_posture": "backend_owned_surfaces_before_ui",
+    }
+
+
+def test_internal_state_inspection_endpoint_exposes_learned_and_planning_state() -> None:
+    client, _, _ = _client()
+
+    response = client.get("/internal/state/inspect", params={"user_id": "u-1"})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["policy_owner"] == "learned_state_inspection_policy"
+    assert body["identity_state"]["profile"]["preferred_language"] == "pl"
+    assert body["identity_state"]["learned_preferences"]["response_style"] == "concise"
+    assert body["identity_state"]["learned_preferences"]["proactive_opt_in"] is True
+    assert body["learned_knowledge"]["semantic_conclusions"][0]["kind"] == "custom_semantic_fact"
+    assert body["learned_knowledge"]["affective_conclusions"][0]["kind"] == "affective_support_pattern"
+    assert body["learned_knowledge"]["adaptive_outputs"]["loaded_conclusion_kinds"] == [
+        "affective_support_pattern",
+        "custom_semantic_fact",
+        "response_style",
+    ]
+    assert body["role_skill_state"]["role_skill_policy"]["policy_owner"] == "role_skill_boundary_policy"
+    assert body["role_skill_state"]["skill_registry"]["policy_owner"] == "skill_registry"
+    assert body["planning_state"]["active_goals"][0]["name"] == "ship the MVP"
+    assert body["planning_state"]["active_tasks"][0]["name"] == "fix deployment blocker"
+    assert body["planning_state"]["pending_proposals"][0]["proposal_id"] == 5
+
+
+def test_internal_state_inspection_endpoint_requires_debug_access() -> None:
+    client, _, _ = _client(event_debug_enabled=False)
+
+    response = client.get("/internal/state/inspect", params={"user_id": "u-1"})
+
+    assert response.status_code == 403
+    assert response.json()["detail"] == "Debug payload is disabled for this environment."
 
 
 def test_health_endpoint_exposes_affective_assessment_policy_disabled_in_production_by_default() -> None:

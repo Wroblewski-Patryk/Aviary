@@ -220,7 +220,21 @@ Last updated: 2026-04-22
   - Group: Learned-State And Skill Introspection
   - Depends on: PRJ-548
   - Priority: P1
+  - Status: DONE
+
+- [ ] PRJ-550 Add regression and incident-evidence coverage for introspection surfaces
+  - Owner: QA/Test
+  - Group: Learned-State And Skill Introspection
+  - Depends on: PRJ-549
+  - Priority: P1
   - Status: READY
+
+- [ ] PRJ-551 Sync docs/context for learned-state and skill introspection
+  - Owner: Product Docs
+  - Group: Learned-State And Skill Introspection
+  - Depends on: PRJ-550
+  - Priority: P1
+  - Status: BACKLOG
 
 - [ ] PRJ-552 Define the architecture baseline for web search and browser tool families
   - Owner: Planner
