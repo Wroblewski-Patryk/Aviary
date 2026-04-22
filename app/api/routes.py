@@ -41,6 +41,7 @@ from app.core.planning_governance import planning_governance_snapshot
 from app.core.proactive_policy import proactive_runtime_policy_snapshot
 from app.core.role_skill_policy import role_skill_policy_snapshot
 from app.core.skill_registry import skill_registry_snapshot
+from app.core.v1_readiness_policy import v1_readiness_policy_snapshot
 from app.core.web_knowledge_policy import web_knowledge_tooling_snapshot
 from app.core.runtime_policy import (
     app_environment,
@@ -251,6 +252,8 @@ async def _incident_evidence_from_request(
         bot_token_configured=bool(getattr(settings, "telegram_bot_token", "")),
         webhook_secret_configured=bool(getattr(settings, "telegram_webhook_secret", "")),
     )
+    learned_state = learned_state_policy_snapshot()
+    role_skill_policy = role_skill_policy_snapshot()
     return build_runtime_incident_evidence(
         trace_id=result.event.meta.trace_id,
         event_id=result.event.event_id,
@@ -259,7 +262,12 @@ async def _incident_evidence_from_request(
         stage_timings_ms=result.stage_timings_ms,
         runtime_policy=runtime_policy,
         memory_retrieval=memory_retrieval,
-        learned_state=learned_state_policy_snapshot(),
+        learned_state=learned_state,
+        v1_readiness=v1_readiness_policy_snapshot(
+            telegram_conversation_channel=telegram_conversation_channel,
+            learned_state=learned_state,
+            role_skill_policy=role_skill_policy,
+        ),
         scheduler_external_owner_policy=scheduler_external_owner_policy,
         reflection_supervision=reflection_supervision,
         connectors_execution_baseline=connectors_execution_baseline,
@@ -681,10 +689,17 @@ async def health(request: Request) -> dict[str, Any]:
         bot_token_configured=bool(getattr(settings, "telegram_bot_token", "")),
         webhook_secret_configured=bool(getattr(settings, "telegram_webhook_secret", "")),
     )
+    learned_state = learned_state_policy_snapshot()
+    v1_readiness = v1_readiness_policy_snapshot(
+        telegram_conversation_channel=telegram_channel,
+        learned_state=learned_state,
+        role_skill_policy=role_skill_policy,
+    )
     return {
         "status": "ok",
         "runtime_policy": runtime_policy,
         "release_readiness": release_readiness,
+        "v1_readiness": v1_readiness,
         "runtime_topology": topology_policy,
         "observability": observability,
         "identity": {
@@ -698,7 +713,7 @@ async def health(request: Request) -> dict[str, Any]:
         },
         "memory_retrieval": memory_retrieval_snapshot,
         "planning_governance": planning_governance_snapshot(),
-        "learned_state": learned_state_policy_snapshot(),
+        "learned_state": learned_state,
         "connectors": {
             **connector_authorization_matrix_snapshot(),
             "capability_proposal": connector_capability_proposal_snapshot(),

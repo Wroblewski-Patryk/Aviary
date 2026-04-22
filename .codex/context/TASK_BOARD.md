@@ -490,14 +490,23 @@ Last updated: 2026-04-22
   - Group: V1 Release Closure And V2 API Readiness
   - Depends on: PRJ-564
   - Priority: P1
-  - Status: READY
+  - Status: DONE
+  - Result:
+    - `/health.v1_readiness` now exposes one shared backend release-gate owner
+      for no-UI `v1`
+    - exported `incident_evidence.policy_posture["v1_readiness"]` now mirrors
+      the same release-gate posture
+    - release smoke and behavior-validation incident-evidence ingestion now
+      require that `v1_readiness` surface
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py tests/test_api_routes.py`
 
 - [ ] PRJ-566 Expose stable backend API-readiness surfaces for future `v2` UI
   - Owner: Backend Builder
   - Group: V1 Release Closure And V2 API Readiness
   - Depends on: PRJ-565
   - Priority: P1
-  - Status: BACKLOG
+  - Status: READY
 
 - [ ] PRJ-567 Sync docs/context for `v1` closure and `v2` API readiness
   - Owner: Product Docs

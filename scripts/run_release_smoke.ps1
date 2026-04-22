@@ -255,6 +255,22 @@ function Validate-IncidentEvidenceBundle {
     if ([string]$learnedState.internal_inspection_path -ne "/internal/state/inspect") {
         throw "Incident evidence bundle verification failed: unexpected learned_state internal_inspection_path '$($learnedState.internal_inspection_path)'."
     }
+    $v1Readiness = $incidentEvidence.policy_posture.v1_readiness
+    if ($null -eq $v1Readiness) {
+        throw "Incident evidence bundle verification failed: v1_readiness posture is missing."
+    }
+    if ([string]$v1Readiness.policy_owner -ne "v1_release_readiness_policy") {
+        throw "Incident evidence bundle verification failed: unexpected v1_readiness policy_owner '$($v1Readiness.policy_owner)'."
+    }
+    if ([string]$v1Readiness.product_stage -ne "v1_no_ui_life_assistant") {
+        throw "Incident evidence bundle verification failed: unexpected v1_readiness product_stage '$($v1Readiness.product_stage)'."
+    }
+    if ([string]$v1Readiness.conversation_gate_state -ne "conversation_surface_ready") {
+        throw "Incident evidence bundle verification failed: unexpected v1_readiness conversation_gate_state '$($v1Readiness.conversation_gate_state)'."
+    }
+    if ([string]$v1Readiness.learned_state_gate_state -ne "inspection_surface_ready") {
+        throw "Incident evidence bundle verification failed: unexpected v1_readiness learned_state_gate_state '$($v1Readiness.learned_state_gate_state)'."
+    }
 
     return @{
         checked                  = $true
@@ -891,6 +907,46 @@ if (-not (Has-Property -Object $learnedState -Name "internal_inspection_path")) 
 if ([string]$learnedState.internal_inspection_path -ne "/internal/state/inspect") {
     throw "Health check failed: unexpected learned_state.internal_inspection_path '$($learnedState.internal_inspection_path)'."
 }
+$v1Readiness = $health.v1_readiness
+if ($null -eq $v1Readiness) {
+    throw "Health check failed: response is missing v1_readiness."
+}
+if ([string]$v1Readiness.policy_owner -ne "v1_release_readiness_policy") {
+    throw "Health check failed: unexpected v1_readiness.policy_owner '$($v1Readiness.policy_owner)'."
+}
+if ([string]$v1Readiness.product_stage -ne "v1_no_ui_life_assistant") {
+    throw "Health check failed: unexpected v1_readiness.product_stage '$($v1Readiness.product_stage)'."
+}
+if ([string]$v1Readiness.conversation_gate_state -ne "conversation_surface_ready") {
+    throw "Health check failed: unexpected v1_readiness.conversation_gate_state '$($v1Readiness.conversation_gate_state)'."
+}
+if ([string]$v1Readiness.learned_state_gate_state -ne "inspection_surface_ready") {
+    throw "Health check failed: unexpected v1_readiness.learned_state_gate_state '$($v1Readiness.learned_state_gate_state)'."
+}
+$requiredV1Scenarios = @("T13.1", "T14.1", "T14.2", "T14.3", "T15.1", "T15.2")
+$actualV1Scenarios = @()
+if ($v1Readiness.PSObject.Properties.Name -contains "required_behavior_scenarios" -and $null -ne $v1Readiness.required_behavior_scenarios) {
+    $actualV1Scenarios = @($v1Readiness.required_behavior_scenarios)
+}
+foreach ($requiredScenario in $requiredV1Scenarios) {
+    if ($actualV1Scenarios -notcontains $requiredScenario) {
+        throw "Health check failed: v1_readiness is missing required behavior scenario '$requiredScenario'."
+    }
+}
+$requiredV1ToolSlices = @(
+    "knowledge_search.search_web",
+    "web_browser.read_page",
+    "task_system.clickup_update_task"
+)
+$actualV1ToolSlices = @()
+if ($v1Readiness.PSObject.Properties.Name -contains "approved_tool_slices" -and $null -ne $v1Readiness.approved_tool_slices) {
+    $actualV1ToolSlices = @($v1Readiness.approved_tool_slices)
+}
+foreach ($requiredToolSlice in $requiredV1ToolSlices) {
+    if ($actualV1ToolSlices -notcontains $requiredToolSlice) {
+        throw "Health check failed: v1_readiness is missing approved tool slice '$requiredToolSlice'."
+    }
+}
 
 $response = Invoke-JsonUtf8 -Method POST -Uri $eventUrl -BodyBytes $bodyBytes
 
@@ -968,6 +1024,22 @@ if ($IncludeDebug) {
     }
     if ([string]$incidentLearnedState.internal_inspection_path -ne "/internal/state/inspect") {
         throw "Smoke request failed: unexpected incident_evidence learned_state internal_inspection_path '$($incidentLearnedState.internal_inspection_path)'."
+    }
+    $incidentV1Readiness = $incidentEvidence.policy_posture.v1_readiness
+    if ($null -eq $incidentV1Readiness) {
+        throw "Smoke request failed: incident_evidence is missing v1_readiness posture."
+    }
+    if ([string]$incidentV1Readiness.policy_owner -ne "v1_release_readiness_policy") {
+        throw "Smoke request failed: unexpected incident_evidence v1_readiness policy_owner '$($incidentV1Readiness.policy_owner)'."
+    }
+    if ([string]$incidentV1Readiness.product_stage -ne "v1_no_ui_life_assistant") {
+        throw "Smoke request failed: unexpected incident_evidence v1_readiness product_stage '$($incidentV1Readiness.product_stage)'."
+    }
+    if ([string]$incidentV1Readiness.conversation_gate_state -ne "conversation_surface_ready") {
+        throw "Smoke request failed: unexpected incident_evidence v1_readiness conversation_gate_state '$($incidentV1Readiness.conversation_gate_state)'."
+    }
+    if ([string]$incidentV1Readiness.learned_state_gate_state -ne "inspection_surface_ready") {
+        throw "Smoke request failed: unexpected incident_evidence v1_readiness learned_state_gate_state '$($incidentV1Readiness.learned_state_gate_state)'."
     }
 }
 

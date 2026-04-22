@@ -1928,6 +1928,13 @@ def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() ->
         "defer",
         "discard",
     ]
+    assert body["v1_readiness"]["policy_owner"] == "v1_release_readiness_policy"
+    assert body["v1_readiness"]["product_stage"] == "v1_no_ui_life_assistant"
+    assert body["v1_readiness"]["conversation_gate_state"] == "conversation_surface_ready"
+    assert body["v1_readiness"]["learned_state_gate_state"] == "inspection_surface_ready"
+    assert "T13.1" in body["v1_readiness"]["required_behavior_scenarios"]
+    assert "T15.2" in body["v1_readiness"]["required_behavior_scenarios"]
+    assert "task_system.clickup_update_task" in body["v1_readiness"]["approved_tool_slices"]
     assert body["planning_governance"]["goal_task_creation_posture"] == (
         "bounded_inferred_growth_from_repeated_execution_blockers_only"
     )
@@ -3128,15 +3135,16 @@ def test_health_endpoint_exposes_observability_export_policy_baseline() -> None:
         ],
         "bundle_entrypoint_path": "scripts/export_incident_evidence_bundle.py",
         "bundle_helper_available": True,
-        "required_policy_posture_surfaces": [
-            "runtime_policy",
-            "memory_retrieval",
-            "learned_state",
-            "scheduler.external_owner_policy",
-            "reflection.supervision",
-            "connectors.execution_baseline",
-            "conversation_channels.telegram",
-        ],
+            "required_policy_posture_surfaces": [
+                "runtime_policy",
+                "memory_retrieval",
+                "learned_state",
+                "v1_readiness",
+                "scheduler.external_owner_policy",
+                "reflection.supervision",
+                "connectors.execution_baseline",
+                "conversation_channels.telegram",
+            ],
         "local_surfaces": [
             "structured_runtime_logs",
             "health_policy_surfaces",

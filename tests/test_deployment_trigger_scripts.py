@@ -120,6 +120,25 @@ def stub_aion_server() -> _StubAionServer:
             "ready": True,
             "violations": [],
         },
+        "v1_readiness": {
+            "policy_owner": "v1_release_readiness_policy",
+            "product_stage": "v1_no_ui_life_assistant",
+            "conversation_gate_state": "conversation_surface_ready",
+            "learned_state_gate_state": "inspection_surface_ready",
+            "required_behavior_scenarios": [
+                "T13.1",
+                "T14.1",
+                "T14.2",
+                "T14.3",
+                "T15.1",
+                "T15.2",
+            ],
+            "approved_tool_slices": [
+                "knowledge_search.search_web",
+                "web_browser.read_page",
+                "task_system.clickup_update_task",
+            ],
+        },
         "runtime_topology": {
             "policy_owner": "runtime_topology_finalization",
             "release_window": "after_group_50_evidence_green",
@@ -236,6 +255,7 @@ def stub_aion_server() -> _StubAionServer:
                     "runtime_policy",
                     "memory_retrieval",
                     "learned_state",
+                    "v1_readiness",
                     "scheduler.external_owner_policy",
                     "reflection.supervision",
                     "connectors.execution_baseline",
@@ -265,6 +285,25 @@ def stub_aion_server() -> _StubAionServer:
                 "learned_state": {
                     "policy_owner": "learned_state_inspection_policy",
                     "internal_inspection_path": "/internal/state/inspect",
+                },
+                "v1_readiness": {
+                    "policy_owner": "v1_release_readiness_policy",
+                    "product_stage": "v1_no_ui_life_assistant",
+                    "conversation_gate_state": "conversation_surface_ready",
+                    "learned_state_gate_state": "inspection_surface_ready",
+                    "required_behavior_scenarios": [
+                        "T13.1",
+                        "T14.1",
+                        "T14.2",
+                        "T14.3",
+                        "T15.1",
+                        "T15.2",
+                    ],
+                    "approved_tool_slices": [
+                        "knowledge_search.search_web",
+                        "web_browser.read_page",
+                        "task_system.clickup_update_task",
+                    ],
                 },
                 "scheduler.external_owner_policy": {
                     "policy_owner": "external_scheduler_cadence_policy",
@@ -377,6 +416,7 @@ def _write_incident_bundle(
                 "runtime_policy",
                 "memory_retrieval",
                 "learned_state",
+                "v1_readiness",
                 "scheduler.external_owner_policy",
                 "reflection.supervision",
                 "connectors.execution_baseline",
@@ -406,6 +446,25 @@ def _write_incident_bundle(
             "learned_state": {
                 "policy_owner": "learned_state_inspection_policy",
                 "internal_inspection_path": "/internal/state/inspect",
+            },
+            "v1_readiness": {
+                "policy_owner": "v1_release_readiness_policy",
+                "product_stage": "v1_no_ui_life_assistant",
+                "conversation_gate_state": "conversation_surface_ready",
+                "learned_state_gate_state": "inspection_surface_ready",
+                "required_behavior_scenarios": [
+                    "T13.1",
+                    "T14.1",
+                    "T14.2",
+                    "T14.3",
+                    "T15.1",
+                    "T15.2",
+                ],
+                "approved_tool_slices": [
+                    "knowledge_search.search_web",
+                    "web_browser.read_page",
+                    "task_system.clickup_update_task",
+                ],
             },
             "scheduler.external_owner_policy": {
                 "policy_owner": "external_scheduler_cadence_policy",
@@ -444,6 +503,12 @@ def _write_incident_bundle(
         "learned_state": {
             "policy_owner": "learned_state_inspection_policy",
             "internal_inspection_path": "/internal/state/inspect",
+        },
+        "v1_readiness": {
+            "policy_owner": "v1_release_readiness_policy",
+            "product_stage": "v1_no_ui_life_assistant",
+            "conversation_gate_state": "conversation_surface_ready",
+            "learned_state_gate_state": "inspection_surface_ready",
         },
     }
     (bundle_dir / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")

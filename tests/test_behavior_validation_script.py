@@ -460,6 +460,25 @@ def test_main_records_incident_evidence_summary_when_valid_input_is_provided(
                         "policy_owner": "learned_state_inspection_policy",
                         "internal_inspection_path": "/internal/state/inspect",
                     },
+                    "v1_readiness": {
+                        "policy_owner": "v1_release_readiness_policy",
+                        "product_stage": "v1_no_ui_life_assistant",
+                        "conversation_gate_state": "conversation_surface_ready",
+                        "learned_state_gate_state": "inspection_surface_ready",
+                        "required_behavior_scenarios": [
+                            "T13.1",
+                            "T14.1",
+                            "T14.2",
+                            "T14.3",
+                            "T15.1",
+                            "T15.2",
+                        ],
+                        "approved_tool_slices": [
+                            "knowledge_search.search_web",
+                            "web_browser.read_page",
+                            "task_system.clickup_update_task",
+                        ],
+                    },
                 },
             }
         ),
@@ -564,6 +583,25 @@ def test_main_fails_when_incident_evidence_policy_surface_is_incomplete(
                         "policy_owner": "learned_state_inspection_policy",
                         "internal_inspection_path": "/internal/state/inspect",
                     },
+                    "v1_readiness": {
+                        "policy_owner": "v1_release_readiness_policy",
+                        "product_stage": "v1_no_ui_life_assistant",
+                        "conversation_gate_state": "conversation_surface_ready",
+                        "learned_state_gate_state": "inspection_surface_ready",
+                        "required_behavior_scenarios": [
+                            "T13.1",
+                            "T14.1",
+                            "T14.2",
+                            "T14.3",
+                            "T15.1",
+                            "T15.2",
+                        ],
+                        "approved_tool_slices": [
+                            "knowledge_search.search_web",
+                            "web_browser.read_page",
+                            "task_system.clickup_update_task",
+                        ],
+                    },
                 },
             }
         ),
@@ -648,6 +686,25 @@ def test_main_fails_when_incident_evidence_debug_posture_does_not_match_dedicate
                         "policy_owner": "learned_state_inspection_policy",
                         "internal_inspection_path": "/internal/state/inspect",
                     },
+                    "v1_readiness": {
+                        "policy_owner": "v1_release_readiness_policy",
+                        "product_stage": "v1_no_ui_life_assistant",
+                        "conversation_gate_state": "conversation_surface_ready",
+                        "learned_state_gate_state": "inspection_surface_ready",
+                        "required_behavior_scenarios": [
+                            "T13.1",
+                            "T14.1",
+                            "T14.2",
+                            "T14.3",
+                            "T15.1",
+                            "T15.2",
+                        ],
+                        "approved_tool_slices": [
+                            "knowledge_search.search_web",
+                            "web_browser.read_page",
+                            "task_system.clickup_update_task",
+                        ],
+                    },
                 },
             }
         ),
@@ -723,6 +780,25 @@ def test_main_fails_when_incident_evidence_external_cadence_cutover_proof_is_mis
                         "policy_owner": "learned_state_inspection_policy",
                         "internal_inspection_path": "/internal/state/inspect",
                     },
+                    "v1_readiness": {
+                        "policy_owner": "v1_release_readiness_policy",
+                        "product_stage": "v1_no_ui_life_assistant",
+                        "conversation_gate_state": "conversation_surface_ready",
+                        "learned_state_gate_state": "inspection_surface_ready",
+                        "required_behavior_scenarios": [
+                            "T13.1",
+                            "T14.1",
+                            "T14.2",
+                            "T14.3",
+                            "T15.1",
+                            "T15.2",
+                        ],
+                        "approved_tool_slices": [
+                            "knowledge_search.search_web",
+                            "web_browser.read_page",
+                            "task_system.clickup_update_task",
+                        ],
+                    },
                 },
             }
         ),
@@ -797,6 +873,25 @@ def test_main_fails_when_incident_evidence_telegram_conversation_surface_is_miss
                         "duplicate_protection_posture": {
                             "state": "single_owner_boundary_clear",
                         },
+                    },
+                    "v1_readiness": {
+                        "policy_owner": "v1_release_readiness_policy",
+                        "product_stage": "v1_no_ui_life_assistant",
+                        "conversation_gate_state": "conversation_surface_ready",
+                        "learned_state_gate_state": "inspection_surface_ready",
+                        "required_behavior_scenarios": [
+                            "T13.1",
+                            "T14.1",
+                            "T14.2",
+                            "T14.3",
+                            "T15.1",
+                            "T15.2",
+                        ],
+                        "approved_tool_slices": [
+                            "knowledge_search.search_web",
+                            "web_browser.read_page",
+                            "task_system.clickup_update_task",
+                        ],
                     },
                 },
             }

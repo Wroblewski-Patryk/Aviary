@@ -238,6 +238,13 @@ Last updated: 2026-04-22
 - 2026-04-22: `PRJ-565` is now the first `READY` task; the next slice should
   make that release gate machine-visible through `/health`, incident evidence,
   release smoke, and behavior-validation tooling.
+- 2026-04-22: `PRJ-565` is complete: `/health.v1_readiness` now exposes one
+  shared backend release-gate owner, exported incident evidence mirrors the
+  same posture, and both release smoke and behavior-validation incident
+  evidence checks now require that surface.
+- 2026-04-22: `PRJ-566` is now the first `READY` task; the next slice should
+  leave behind one stable backend API-readiness contract for future `v2` UI
+  callers.
 - 2026-04-22: fresh post-`PRJ-515` analysis has now seeded a new queue through
   `PRJ-539`, focused on operator-grade incident-evidence handling, actual
   debug-compat retirement, bounded connector read expansion, external cadence

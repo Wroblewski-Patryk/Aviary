@@ -41,6 +41,7 @@ GATE_REASON_INCIDENT_EVIDENCE_DEBUG_POSTURE_INVALID = "incident_evidence_debug_p
 GATE_REASON_INCIDENT_EVIDENCE_DEBUG_EXCEPTION_STATE_INVALID = "incident_evidence_debug_exception_state_invalid"
 GATE_REASON_INCIDENT_EVIDENCE_EXTERNAL_CADENCE_PROOF_INVALID = "incident_evidence_external_cadence_proof_invalid"
 GATE_REASON_INCIDENT_EVIDENCE_TELEGRAM_CONVERSATION_INVALID = "incident_evidence_telegram_conversation_invalid"
+GATE_REASON_INCIDENT_EVIDENCE_V1_READINESS_INVALID = "incident_evidence_v1_readiness_invalid"
 
 
 @dataclass(frozen=True)
@@ -314,6 +315,10 @@ def _evaluate_incident_evidence_input(
         "incident_evidence_telegram_conversation_policy_owner": None,
         "incident_evidence_telegram_conversation_round_trip_state": None,
         "incident_evidence_telegram_conversation_bot_token_configured": None,
+        "incident_evidence_v1_readiness_policy_owner": None,
+        "incident_evidence_v1_readiness_product_stage": None,
+        "incident_evidence_v1_readiness_conversation_gate_state": None,
+        "incident_evidence_v1_readiness_learned_state_gate_state": None,
     }
     violations: list[str] = []
 
@@ -390,6 +395,11 @@ def _evaluate_incident_evidence_input(
         candidate_telegram_conversation_policy = policy_posture.get("conversation_channels.telegram")
         if isinstance(candidate_telegram_conversation_policy, dict):
             telegram_conversation_policy = candidate_telegram_conversation_policy
+    v1_readiness_policy = {}
+    if isinstance(policy_posture, dict):
+        candidate_v1_readiness_policy = policy_posture.get("v1_readiness")
+        if isinstance(candidate_v1_readiness_policy, dict):
+            v1_readiness_policy = candidate_v1_readiness_policy
 
     maintenance_evidence = scheduler_policy.get("maintenance_run_evidence")
     proactive_evidence = scheduler_policy.get("proactive_run_evidence")
@@ -448,6 +458,31 @@ def _evaluate_incident_evidence_input(
     )
     if not telegram_conversation_valid:
         violations.append(GATE_REASON_INCIDENT_EVIDENCE_TELEGRAM_CONVERSATION_INVALID)
+
+    context["incident_evidence_v1_readiness_policy_owner"] = v1_readiness_policy.get("policy_owner")
+    context["incident_evidence_v1_readiness_product_stage"] = v1_readiness_policy.get("product_stage")
+    context["incident_evidence_v1_readiness_conversation_gate_state"] = v1_readiness_policy.get(
+        "conversation_gate_state"
+    )
+    context["incident_evidence_v1_readiness_learned_state_gate_state"] = v1_readiness_policy.get(
+        "learned_state_gate_state"
+    )
+    required_behavior_scenarios = set(v1_readiness_policy.get("required_behavior_scenarios") or [])
+    approved_tool_slices = set(v1_readiness_policy.get("approved_tool_slices") or [])
+    v1_readiness_valid = (
+        v1_readiness_policy.get("policy_owner") == "v1_release_readiness_policy"
+        and v1_readiness_policy.get("product_stage") == "v1_no_ui_life_assistant"
+        and v1_readiness_policy.get("conversation_gate_state") == "conversation_surface_ready"
+        and v1_readiness_policy.get("learned_state_gate_state") == "inspection_surface_ready"
+        and {"T13.1", "T14.1", "T14.2", "T14.3", "T15.1", "T15.2"}.issubset(required_behavior_scenarios)
+        and {
+            "knowledge_search.search_web",
+            "web_browser.read_page",
+            "task_system.clickup_update_task",
+        }.issubset(approved_tool_slices)
+    )
+    if not v1_readiness_valid:
+        violations.append(GATE_REASON_INCIDENT_EVIDENCE_V1_READINESS_INVALID)
 
     return violations, context
 
