@@ -95,6 +95,8 @@ Goal: network of cognitive systems.
 
 ### v1 – Life Assistant
 
+- backend-first, no dedicated UI yet  
+- production-stable conversation through Telegram or API  
 - daily support  
 - reminders  
 - planning  
@@ -102,11 +104,18 @@ Goal: network of cognitive systems.
 
 ---
 
-### v2 – Work / Business Partner
+### v2 – UI And Work / Business Partner Surface
 
+- dedicated UI or admin product layer on top of the backend runtime  
+- inspection of learned state, plans, roles, and selected skill metadata  
+- work / business partner workflows surfaced through product UX  
 - task tracking  
 - decision support  
 - system awareness  
+
+Work-partner remains a role of the same personality.  
+It may use bounded skills and authorized tools through the existing action boundary.  
+It is not a separate persona.  
 
 ---
 
@@ -151,7 +160,7 @@ AION may support:
 
 ## Interface Expansion
 
-Beyond Telegram:
+Beyond the no-UI `v1` backend surface:
 
 - web app  
 - mobile app  

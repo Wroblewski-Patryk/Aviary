@@ -34,6 +34,14 @@ Last updated: 2026-04-22
 - 2026-04-22: `PRJ-540` is now the first `READY` task; it freezes the no-UI
   `v1` product contract and makes Telegram or API round-trip reliability a
   release-blocking baseline before broader capability work continues.
+- 2026-04-22: `PRJ-540` is complete: canonical planning surfaces and
+  `docs/architecture/10_future_vision.md` now align on one product
+  interpretation where `v1` is backend-first and no-UI, `v2` begins with a
+  dedicated UI or admin surface, and work-partner remains a role of the same
+  personality rather than a separate persona.
+- 2026-04-22: `PRJ-541` is now the first `READY` task; the next slice should
+  repair and instrument the Telegram ingress-to-delivery path so production
+  no-response incidents become machine-visible instead of log-only.
 - 2026-04-22: fresh post-`PRJ-515` analysis has now seeded a new queue through
   `PRJ-539`, focused on operator-grade incident-evidence handling, actual
   debug-compat retirement, bounded connector read expansion, external cadence

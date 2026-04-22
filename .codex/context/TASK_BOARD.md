@@ -93,7 +93,7 @@ Last updated: 2026-04-22
   - Group: Production Conversation Reliability
   - Depends on: PRJ-539
   - Priority: P0
-  - Status: READY
+  - Status: DONE
   - Why now:
     - the current runtime already exceeds classic MVP scope, but a
       user-reported Telegram no-response posture means `v1` cannot yet be
@@ -106,6 +106,12 @@ Last updated: 2026-04-22
       - Telegram or API conversation reliability is release-blocking
       - work-partner remains a role inside the same personality
       - future UI belongs to `v2`
+  - Result:
+    - canonical planning surfaces and `docs/architecture/10_future_vision.md`
+      now align on one product interpretation where `v1` is backend-first and
+      no-UI, `v2` begins with a dedicated UI or admin surface, and
+      work-partner remains a role of the same personality rather than a
+      separate persona
   - Validation:
     - architecture, runtime-reality, ops, and planning cross-review
 
@@ -114,7 +120,7 @@ Last updated: 2026-04-22
   - Group: Production Conversation Reliability
   - Depends on: PRJ-540
   - Priority: P0
-  - Status: BACKLOG
+  - Status: READY
 
 - [ ] PRJ-542 Add Telegram round-trip smoke and incident-evidence coverage
   - Owner: QA/Test
