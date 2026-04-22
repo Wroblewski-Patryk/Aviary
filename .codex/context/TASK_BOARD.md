@@ -51,8 +51,340 @@ Last updated: 2026-04-22
   runtime surfaces first, then external cadence ownership, connector-read
   posture, retrieval lifecycle closure, reflection supervision, and
   observability/export evidence.
+- Fresh post-`PRJ-515` analysis has now seeded a new execution queue through
+  `PRJ-539`.
+- This queue is intentionally narrower and more production-facing than the
+  previous hardening wave:
+  - incident evidence must become easier for operators to export, retain, and
+    attach to repeatable triage flows
+  - shared debug compatibility routes should move from monitored posture to an
+    actual retirement lane
+  - externalized cadence ownership needs machine-visible cutover proof, not
+    only target-policy surfaces
+  - connector expansion should widen along bounded read-only slices
+    (`calendar`, then `cloud_drive`) instead of generic capability growth
+  - retrieval should close the remaining relation-source rollout question with
+    explicit policy and evidence instead of leaving it as an open optional
+    family forever
 
 ## READY
+
+- [ ] PRJ-516 Define the operator-facing incident evidence bundle and retention baseline
+  - Owner: Planner
+  - Group: Incident Evidence Bundle And Retention
+  - Depends on: PRJ-515
+  - Priority: P1
+  - Status: READY
+  - Why now:
+    - the repo can already export `incident_evidence`, but operators still do
+      not have one canonical artifact bundle, retention rule, or retrieval
+      path for real incidents and release investigations
+    - this closes the gap between exportable debug data and actionable
+      operational evidence without inventing a new observability stack
+  - Done when:
+    - one explicit contract defines the bundle contents, naming/retention
+      expectations, and the canonical producer or retrieval path for incident
+      evidence artifacts
+  - Validation:
+    - cross-review across `docs/architecture/17_logging_and_debugging.md`,
+      `docs/architecture/29_runtime_behavior_testing.md`,
+      `docs/implementation/runtime-reality.md`, and
+      `docs/operations/runtime-ops-runbook.md`
+
+- [ ] PRJ-517 Implement canonical incident evidence export or bundle generation flow
+  - Owner: Backend Builder
+  - Group: Incident Evidence Bundle And Retention
+  - Depends on: PRJ-516
+  - Priority: P1
+  - Status: BACKLOG
+  - Done when:
+    - operators can produce or collect the agreed incident-evidence bundle
+      through one canonical path without ad hoc manual JSON harvesting from
+      debug responses
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_observability_policy.py tests/test_api_routes.py tests/test_runtime_pipeline.py`
+
+- [ ] PRJ-518 Add regression and smoke coverage for incident evidence bundle integrity
+  - Owner: QA/Test
+  - Group: Incident Evidence Bundle And Retention
+  - Depends on: PRJ-517
+  - Priority: P1
+  - Status: BACKLOG
+  - Done when:
+    - release smoke and focused regression coverage verify the selected bundle
+      contract, required fields, and failure posture for unreadable or partial
+      artifacts
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_deployment_trigger_scripts.py tests/test_observability_policy.py`
+
+- [ ] PRJ-519 Sync docs/context for incident evidence bundle and retention baseline
+  - Owner: Product Docs
+  - Group: Incident Evidence Bundle And Retention
+  - Depends on: PRJ-518
+  - Priority: P1
+  - Status: BACKLOG
+  - Done when:
+    - architecture, runtime reality, ops guidance, testing guidance, and
+      context truth all describe the same operator-facing incident evidence
+      bundle baseline
+  - Validation:
+    - doc-and-context sync across architecture, implementation, ops, testing,
+      planning, and context
+
+- [ ] PRJ-520 Freeze the shared debug compatibility retirement gate
+  - Owner: Planner
+  - Group: Dedicated Debug Ingress Compatibility Retirement
+  - Depends on: PRJ-519
+  - Priority: P1
+  - Status: BACKLOG
+  - Done when:
+    - the repo records one explicit checklist and cutover posture for retiring
+      shared `POST /event/debug` and query-compat `POST /event?debug=true`
+      surfaces in favor of dedicated internal ingress only
+  - Validation:
+    - runtime-policy, architecture, and ops cross-review
+
+- [ ] PRJ-521 Enforce dedicated-admin-only debug ingress by default after retirement gate closure
+  - Owner: Backend Builder
+  - Group: Dedicated Debug Ingress Compatibility Retirement
+  - Depends on: PRJ-520
+  - Priority: P1
+  - Status: BACKLOG
+  - Done when:
+    - shared debug compatibility routes no longer behave as normal runtime
+      ingress and the dedicated internal route is the sole canonical debug
+      payload path outside narrowly bounded rollback handling
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_policy.py tests/test_main_runtime_policy.py`
+
+- [ ] PRJ-522 Add release and behavior evidence for dedicated-admin-only debug posture
+  - Owner: Ops/Release
+  - Group: Dedicated Debug Ingress Compatibility Retirement
+  - Depends on: PRJ-521
+  - Priority: P1
+  - Status: BACKLOG
+  - Done when:
+    - smoke and policy evidence prove dedicated-admin-only debug posture and
+      make any fallback or rollback exception explicit
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py tests/test_api_routes.py`
+
+- [ ] PRJ-523 Sync docs/context for dedicated debug-ingress retirement
+  - Owner: Product Docs
+  - Group: Dedicated Debug Ingress Compatibility Retirement
+  - Depends on: PRJ-522
+  - Priority: P1
+  - Status: BACKLOG
+  - Done when:
+    - canonical docs, runtime reality, ops notes, testing guidance, and
+      context truth all describe the same post-compat debug ingress posture
+  - Validation:
+    - doc-and-context sync across architecture, implementation, ops, testing,
+      planning, and context
+
+- [ ] PRJ-524 Define the first bounded calendar read baseline
+  - Owner: Planner
+  - Group: Calendar Read Connector Baseline
+  - Depends on: PRJ-523
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - one explicit contract defines the first provider-backed calendar read
+      slice, its safe output shape, and its read-only permission posture
+      without widening planning or context ownership
+  - Validation:
+    - connector policy, architecture, and ops cross-review
+
+- [ ] PRJ-525 Implement the selected calendar read adapter behind existing connector policy gates
+  - Owner: Backend Builder
+  - Group: Calendar Read Connector Baseline
+  - Depends on: PRJ-524
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - the selected calendar read path executes from explicit read-only typed
+      intents and returns bounded execution notes through action
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_connector_policy.py tests/test_planning_agent.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
+
+- [ ] PRJ-526 Expose calendar-read readiness and failure posture through `/health.connectors`
+  - Owner: Ops/Release
+  - Group: Calendar Read Connector Baseline
+  - Depends on: PRJ-525
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - operators can distinguish policy-only, credentials-missing, and
+      provider-backed-ready calendar read posture through the existing health
+      contract
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
+
+- [ ] PRJ-527 Sync docs/context for the bounded calendar read baseline
+  - Owner: Product Docs
+  - Group: Calendar Read Connector Baseline
+  - Depends on: PRJ-526
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - canonical contracts, runtime reality, ops notes, testing guidance, and
+      context truth all describe the same bounded calendar read baseline
+  - Validation:
+    - doc-and-context sync across architecture, implementation, ops, testing,
+      planning, and context
+
+- [ ] PRJ-528 Define the first bounded cloud-drive metadata read baseline
+  - Owner: Planner
+  - Group: Cloud-Drive Metadata Read Baseline
+  - Depends on: PRJ-527
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - one explicit contract defines the first provider-backed cloud-drive
+      metadata read slice, safe output fields, and its read-only permission
+      boundary
+  - Validation:
+    - connector policy, architecture, and ops cross-review
+
+- [ ] PRJ-529 Implement the selected cloud-drive metadata read adapter behind existing connector policy gates
+  - Owner: Backend Builder
+  - Group: Cloud-Drive Metadata Read Baseline
+  - Depends on: PRJ-528
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - the selected cloud-drive read path executes from explicit read-only
+      typed intents and preserves the planning-to-action execution boundary
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_connector_policy.py tests/test_planning_agent.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
+
+- [ ] PRJ-530 Expose cloud-drive metadata-read readiness and failure posture through `/health.connectors`
+  - Owner: Ops/Release
+  - Group: Cloud-Drive Metadata Read Baseline
+  - Depends on: PRJ-529
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - `/health.connectors.execution_baseline` distinguishes the new
+      cloud-drive metadata-read posture from both policy-only families and
+      existing task-system live paths
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
+
+- [ ] PRJ-531 Sync docs/context for the cloud-drive metadata read baseline
+  - Owner: Product Docs
+  - Group: Cloud-Drive Metadata Read Baseline
+  - Depends on: PRJ-530
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - canonical contracts, runtime reality, ops notes, testing guidance, and
+      context truth all describe the same cloud-drive metadata-read baseline
+  - Validation:
+    - doc-and-context sync across architecture, implementation, ops, testing,
+      planning, and context
+
+- [ ] PRJ-532 Define the external cadence cutover proof baseline
+  - Owner: Planner
+  - Group: External Cadence Cutover Proof
+  - Depends on: PRJ-531
+  - Priority: P1
+  - Status: BACKLOG
+  - Done when:
+    - one explicit contract defines what evidence is required before
+      production can treat externalized maintenance and proactive cadence as
+      the real owner instead of policy-only target posture
+  - Validation:
+    - scheduler, runtime policy, and ops cross-review
+
+- [ ] PRJ-533 Implement machine-visible last-run and idempotency evidence for external cadence entrypoints
+  - Owner: Backend Builder
+  - Group: External Cadence Cutover Proof
+  - Depends on: PRJ-532
+  - Priority: P1
+  - Status: BACKLOG
+  - Done when:
+    - health or runtime evidence shows recent external cadence execution and
+      bounded duplicate-protection posture instead of only selected target mode
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+
+- [ ] PRJ-534 Add smoke and behavior evidence for external cadence cutover readiness
+  - Owner: QA/Test
+  - Group: External Cadence Cutover Proof
+  - Depends on: PRJ-533
+  - Priority: P1
+  - Status: BACKLOG
+  - Done when:
+    - release and behavior evidence can prove external cadence ownership
+      posture through the agreed cutover fields and failure cases
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_scheduler_worker.py tests/test_runtime_pipeline.py`
+
+- [ ] PRJ-535 Sync docs/context for external cadence cutover proof
+  - Owner: Product Docs
+  - Group: External Cadence Cutover Proof
+  - Depends on: PRJ-534
+  - Priority: P1
+  - Status: BACKLOG
+  - Done when:
+    - implementation reality, ops guidance, testing guidance, planning, and
+      context truth all describe the same external cadence cutover evidence
+      baseline
+  - Validation:
+    - doc-and-context sync across implementation, ops, testing, planning, and
+      context
+
+- [ ] PRJ-536 Decide the relation-source retrieval completion posture
+  - Owner: Planner
+  - Group: Relation Retrieval Source Completion
+  - Depends on: PRJ-535
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - the repo explicitly records whether relation embeddings stay optional
+      long-term or become part of the steady-state retrieval rollout, together
+      with influence and refresh boundaries
+  - Validation:
+    - retrieval architecture, runtime reality, and ops cross-review
+
+- [ ] PRJ-537 Implement the selected relation-source rollout or governance boundary
+  - Owner: Backend Builder
+  - Group: Relation Retrieval Source Completion
+  - Depends on: PRJ-536
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - retrieval code and health surfaces reflect the selected relation-source
+      posture instead of keeping it as a silent optional family
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_context_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+
+- [ ] PRJ-538 Add regression and release evidence for relation-aware retrieval posture
+  - Owner: QA/Test
+  - Group: Relation Retrieval Source Completion
+  - Depends on: PRJ-537
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - runtime and release evidence pin the selected relation-source posture,
+      including alignment or bounded exclusion from the steady-state retrieval
+      baseline
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_deployment_trigger_scripts.py tests/test_memory_repository.py`
+
+- [ ] PRJ-539 Sync docs/context for relation retrieval source completion
+  - Owner: Product Docs
+  - Group: Relation Retrieval Source Completion
+  - Depends on: PRJ-538
+  - Priority: P2
+  - Status: BACKLOG
+  - Done when:
+    - architecture, runtime reality, ops guidance, testing guidance, and
+      context truth all describe the same relation-source retrieval posture
+  - Validation:
+    - doc-and-context sync across architecture, implementation, ops, testing,
+      planning, and context
 
 - [x] PRJ-512 Define the minimum exportable observability baseline beyond local logs and `/health`
   - Owner: Planner

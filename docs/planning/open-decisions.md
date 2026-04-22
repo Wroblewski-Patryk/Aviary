@@ -295,6 +295,23 @@ The current repo already works as an MVP slice, but several architecture-level d
     and context truth now describe the same observability export baseline
   - no seeded `READY` task remains after Group 75; the next slice should be
     derived from new runtime or operational analysis
+- post-`PRJ-515` follow-up analysis on 2026-04-22 identifies six new
+  production-facing lanes that should be handled before the next broad
+  architecture review:
+  - `PRJ-516..PRJ-519`: incident evidence bundle and retention
+  - `PRJ-520..PRJ-523`: dedicated debug ingress compatibility retirement
+  - `PRJ-524..PRJ-527`: calendar read connector baseline
+  - `PRJ-528..PRJ-531`: cloud-drive metadata read baseline
+  - `PRJ-532..PRJ-535`: external cadence cutover proof
+  - `PRJ-536..PRJ-539`: relation retrieval source completion
+- this queue is intentionally ordered around the remaining seams between
+  explicit runtime policy surfaces and actual production operation:
+  operator-grade evidence first, then real debug-route retirement, then
+  bounded connector read expansion, then external cadence cutover proof, and
+  finally the remaining relation-source retrieval decision.
+- `PRJ-516` is now the first `READY` task and freezes the operator-facing
+  incident-evidence artifact baseline before later retirement and cutover
+  lanes depend on it.
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 

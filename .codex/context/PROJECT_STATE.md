@@ -10,6 +10,13 @@ Last updated: 2026-04-22
   user preferences over time
 - Commercial model: TBD
 - Current phase: post-convergence follow-up discovery and hardening
+- 2026-04-22: fresh post-`PRJ-515` analysis has now seeded a new queue through
+  `PRJ-539`, focused on operator-grade incident-evidence handling, actual
+  debug-compat retirement, bounded connector read expansion, external cadence
+  cutover proof, and the remaining relation-source retrieval decision.
+- 2026-04-22: `PRJ-516` is now the first `READY` task; it freezes the
+  operator-facing incident-evidence bundle and retention baseline before any
+  further runtime cutover work depends on ad hoc debug JSON capture.
 
 ## Product Decisions (Confirmed)
 
