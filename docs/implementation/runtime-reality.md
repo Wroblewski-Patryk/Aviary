@@ -405,6 +405,20 @@ Retrieval-depth governance is now also explicit:
 - `/health.memory_retrieval.retrieval_depth_policy` exposes the same policy
   owner instead of leaving load-depth semantics only inside orchestrator code
 
+### Role and skill boundary
+
+The live runtime now exposes one explicit role/skill maturity baseline:
+
+- role selection remains the behavior owner for the turn
+- `app/core/skill_registry.py` selects bounded capability metadata only
+- skills remain metadata-only hints and do not execute tools or side effects
+- `app/core/role_skill_policy.py` is now the shared owner for that boundary
+- `/health.role_skill` plus `system_debug.adaptive_state.role_skill_policy`
+  expose the same metadata-only execution boundary
+- planning may carry selected skills forward, but action still requires
+  explicit typed intents and delivery/action contracts for any execution
+  posture
+
 ### Event API behavior
 
 `POST /event` currently returns:
@@ -534,6 +548,9 @@ Current behavior:
   relation/theta policy surfaces from `app/core/adaptive_policy.py`
 - adaptive relation/theta cues may tighten proactive posture, but attention and
   anti-spam gate boundaries remain explicit owners
+- behavior validation now also covers metadata-only role/skill boundary
+  posture, connector execution posture, proactive cadence posture, and
+  deferred reflection enqueue expectations through the shared artifact flow
 
 ---
 

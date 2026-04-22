@@ -119,7 +119,7 @@ New groups:
 - `PRJ-476..PRJ-479` Retrieval provider completion
 - `PRJ-480..PRJ-483` Background worker externalization
 - `PRJ-484..PRJ-487` Proactive runtime activation - complete
-- `PRJ-488..PRJ-491` Role/skill maturity and behavior-validation expansion
+- `PRJ-488..PRJ-491` Role/skill maturity and behavior-validation expansion - complete
 
 Why this order:
 
@@ -415,6 +415,20 @@ Completed on 2026-04-22:
 
 ## Group 69 - Role/Skill Maturity And Behavior-Validation Expansion
 
+Completed on 2026-04-22:
+
+- `PRJ-488` fixed the long-term role-versus-skill boundary explicitly:
+  skills remain metadata-only capability hints that inform role and planning,
+  but never gain tool or side-effect ownership on their own.
+- `PRJ-489` applied that boundary in runtime surfaces and contracts through one
+  shared policy owner plus `/health.role_skill` and runtime debug visibility.
+- `PRJ-490` expanded behavior validation so CI now proves role/skill boundary
+  posture, connector execution posture, proactive cadence posture, and
+  deferred reflection enqueue expectations in one artifact flow.
+- `PRJ-491` synchronized planning/context, runtime reality, canonical
+  contracts, behavior-testing guidance, and ops notes so the seeded
+  post-convergence queue can close cleanly.
+
 - `PRJ-488` Decide the long-term role-versus-skill execution boundary.
   - Result:
     - one explicit governance statement records whether skills remain
@@ -444,6 +458,15 @@ Completed on 2026-04-22:
       truth all align on the final queue outcome
   - Validation:
     - doc-and-context sync across canonical docs, implementation docs, ops, testing, and planning
+
+## Post-Queue Status
+
+Completed on 2026-04-22:
+
+- the seeded post-convergence queue through `PRJ-491` is now fully complete
+- no seeded `READY` task remains on the task board
+- the next slice should come only from new architecture analysis, runtime
+  drift, release evidence, or operator-facing gaps
 
 ## Post-Convergence Operating Mode
 

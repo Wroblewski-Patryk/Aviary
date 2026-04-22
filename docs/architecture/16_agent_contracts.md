@@ -103,7 +103,8 @@ Minimum `system_debug` fields:
 8. expression summary
 9. action result
 10. adaptive-state summary (`background_adaptive_outputs`,
-    retrieval-depth posture, theta influence, selected skill metadata)
+    retrieval-depth posture, theta influence, selected skill metadata, and
+    role/skill boundary policy)
 
 Behavior tests should pair that internal mode with user-simulation mode
 (no debug payloads) so correctness is validated both structurally and
@@ -263,6 +264,28 @@ themselves.
 4. AI-assisted affective classification rollout posture must remain explicit
    through one rollout-policy owner; disabled-policy fallback and
    classifier-unavailable fallback are both valid but must be machine-visible
+
+---
+
+## Role And Skill Boundary Contract
+
+Role remains the behavior selector.
+Skills remain metadata-only capability hints unless a future contract revision
+explicitly expands their authority.
+
+Contract rules:
+
+1. role selection owns the chosen behavioral stance for the turn
+2. skill selection may annotate that stance with bounded capability metadata
+3. skills may inform planning and debug visibility, but they do not execute
+   tools, side effects, or connector operations on their own
+4. action must never treat selected skills as executable authority; explicit
+   plan intents and action-boundary contracts remain the only execution owner
+5. `/health` and runtime debug should expose one shared role/skill policy owner
+   so metadata-only posture is machine-visible during rollout and review
+
+This preserves the canonical `role -> planning -> expression -> action`
+boundary while allowing skills to stay useful as bounded capability signals.
 
 ---
 

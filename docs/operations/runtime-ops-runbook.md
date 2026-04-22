@@ -80,6 +80,14 @@ cadence posture:
 Use `/health.proactive` together with `/health.scheduler.last_proactive_summary`
 when triaging why proactive outreach is quiet, blocked, or actively delivering.
 
+`GET /health` now also includes a `role_skill` object with the current
+role-versus-skill maturity baseline:
+
+- shared policy owner
+- metadata-only execution boundary
+- whether planning carries selected skills forward
+- explicit confirmation that action cannot execute selected skills directly
+
 `GET /health` now also includes an `attention` object with burst-turn assembly
 posture (`coordination_mode`, owner/readiness semantics, timing windows) and
 live turn counters (`pending`, `claimed`, `answered`) to support burst-message
@@ -444,7 +452,9 @@ Release smoke ownership:
     - Debian/bash:
       `./scripts/run_behavior_validation.sh --gate-mode ci --artifact-input-path artifacts/behavior_validation/report.json --artifact-path artifacts/behavior_validation/report.gate.json`
   - required focus: internal `system_debug` surface plus scenario checks for
-    memory influence, multi-session continuity, and failure-mode stability.
+    memory influence, multi-session continuity, failure-mode stability,
+    connector execution posture, proactive cadence posture, metadata-only
+    role/skill boundary, and deferred reflection expectations.
   - artifact contract now includes explicit
     `artifact_schema_version` + `gate_reason_taxonomy_version`, and gate output
     includes `violation_context` for deterministic machine parsing.
@@ -758,6 +768,10 @@ Important health surfaces for current release checks:
   - heuristic-input ownership baseline
   - assessment rollout/fallback posture for live empathy triage
 - `runtime_topology`
+- `role_skill`
+  - shared role/skill policy owner
+  - metadata-only execution boundary
+  - planning carry-forward posture and action-side execution denial
 - `proactive`
   - shared proactive policy owner and selected cadence owner
   - delivery-target baseline and candidate-selection baseline

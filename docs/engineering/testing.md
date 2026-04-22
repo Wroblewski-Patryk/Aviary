@@ -156,6 +156,9 @@ For meaningful repo changes, leave behind:
   - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_pipeline.py tests/test_role_agent.py tests/test_planning_agent.py tests/test_memory_repository.py`
 - for role-selection evidence slices, regression evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_role_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+- for role/skill maturity slices, regression evidence from:
+  - `.\.venv\Scripts\python -m pytest -q tests/test_role_agent.py tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+  - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
 - for affective rollout-policy slices, regression evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_affective_assessor.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
   - `.\.venv\Scripts\python -m pytest -q tests/test_config.py`

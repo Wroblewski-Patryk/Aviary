@@ -4736,6 +4736,11 @@ async def test_runtime_pipeline_exposes_system_debug_surface_for_behavior_valida
     assert result.system_debug.adaptive_state["identity_policy"]["profile_owner_fields"] == ["preferred_language"]
     assert result.system_debug.adaptive_state["retrieval_depth_policy"]["episodic_limit"] == RuntimeOrchestrator.MEMORY_LOAD_LIMIT
     assert result.system_debug.adaptive_state["background_adaptive_outputs"]["theta_loaded"] is False
+    assert result.system_debug.adaptive_state["role_skill_policy"]["policy_owner"] == "role_skill_boundary_policy"
+    assert result.system_debug.adaptive_state["role_skill_policy"]["skill_execution_boundary"] == (
+        "metadata_only_capability_hints"
+    )
+    assert result.system_debug.adaptive_state["role_skill_policy"]["action_skill_execution_allowed"] is False
     assert result.system_debug.adaptive_state["affective_input_policy"] == {
         "policy_owner": "perception_affective_input",
         "input_kind": "heuristic_turn_signal",
@@ -5162,4 +5167,115 @@ async def test_runtime_behavior_proactive_scenarios_cover_delivery_and_anti_spam
         ]
     )
     assert len(results) == 2
+    assert {result.status for result in results} == {"pass"}
+
+
+async def test_runtime_behavior_role_skill_connector_and_deferred_reflection_scenarios() -> None:
+    async def role_skill_boundary_scenario() -> BehaviorScenarioCheck:
+        memory = PersistingFakeMemoryRepository(recent_memory=[])
+        runtime = _build_behavior_runtime(memory)
+        result = await runtime.run(
+            _behavior_event(
+                event_id="evt-role-skill-1",
+                trace_id="t-role-skill-1",
+                text="Can you help me plan the rollout and remember the key risks?",
+            )
+        )
+        selected_skill_ids = [skill.skill_id for skill in result.role.selected_skills]
+        policy = result.system_debug.adaptive_state["role_skill_policy"] if result.system_debug else {}
+        passed = (
+            result.role.skill_policy_owner == "role_skill_boundary_policy"
+            and "structured_reasoning" in selected_skill_ids
+            and "memory_recall" in selected_skill_ids
+            and result.action_result.status in {"success", "noop"}
+            and policy.get("action_skill_execution_allowed") is False
+            and policy.get("skill_execution_boundary") == "metadata_only_capability_hints"
+        )
+        return BehaviorScenarioCheck(
+            passed=passed,
+            reason="role_skill_metadata_only_boundary" if passed else "role_skill_boundary_regression",
+            trace_id=result.event.meta.trace_id,
+            notes=(
+                f"skills={','.join(selected_skill_ids)};"
+                f"action_status={result.action_result.status};"
+                f"policy={policy.get('skill_execution_boundary', '')}"
+            ),
+        )
+
+    async def connector_posture_scenario() -> BehaviorScenarioCheck:
+        memory = PersistingFakeMemoryRepository(recent_memory=[])
+        runtime = _build_behavior_runtime(memory)
+        result = await runtime.run(
+            _behavior_event(
+                event_id="evt-connector-behavior-1",
+                trace_id="t-connector-behavior-1",
+                text="Create calendar meeting tomorrow, create task in ClickUp, and upload notes to Google Drive.",
+            )
+        )
+        payload = result.memory_record.payload if result.memory_record else {}
+        passed = (
+            result.memory_record is not None
+            and payload.get("task_connector_update") == "create_task:mutate_with_confirmation:clickup"
+            and payload.get("calendar_connector_guardrail") == "external_mutation_requires_confirmation:blocked_until_confirmation"
+            and payload.get("drive_connector_guardrail") == "external_mutation_requires_confirmation:blocked_until_confirmation"
+        )
+        return BehaviorScenarioCheck(
+            passed=passed,
+            reason="connector_boundary_posture_visible" if passed else "connector_boundary_regression",
+            trace_id=result.event.meta.trace_id,
+            notes=(
+                f"task={payload.get('task_connector_update', '')};"
+                f"calendar={payload.get('calendar_connector_guardrail', '')};"
+                f"drive={payload.get('drive_connector_guardrail', '')}"
+            ),
+        )
+
+    async def deferred_reflection_scenario() -> BehaviorScenarioCheck:
+        memory = PersistingFakeMemoryRepository(recent_memory=[])
+        reflection = FakeReflectionWorker(running=False)
+        runtime = RuntimeOrchestrator(
+            perception_agent=PerceptionAgent(),
+            context_agent=ContextAgent(),
+            motivation_engine=MotivationEngine(),
+            role_agent=RoleAgent(),
+            planning_agent=PlanningAgent(),
+            expression_agent=ExpressionAgent(openai_client=FakeOpenAIClient()),
+            action_executor=ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient()),
+            memory_repository=memory,
+            reflection_worker=reflection,
+            reflection_runtime_mode="deferred",
+        )
+        result = await runtime.run(
+            _behavior_event(
+                event_id="evt-deferred-reflection-1",
+                trace_id="t-deferred-reflection-1",
+                text="Remember that the blocker is still migration drift.",
+            )
+        )
+        dispatch_posture = reflection.calls[0]["dispatch"] if reflection.calls else "missing"
+        passed = (
+            result.reflection_triggered is True
+            and len(reflection.calls) == 1
+            and dispatch_posture == "no"
+            and result.memory_record is not None
+        )
+        return BehaviorScenarioCheck(
+            passed=passed,
+                reason="deferred_reflection_enqueue_boundary" if passed else "deferred_reflection_boundary_regression",
+                trace_id=result.event.meta.trace_id,
+                notes=(
+                    f"triggered={result.reflection_triggered};"
+                    f"enqueue_calls={len(reflection.calls)};"
+                    f"dispatch={dispatch_posture}"
+                ),
+            )
+
+    results = await execute_behavior_scenarios(
+        [
+            BehaviorScenarioDefinition(test_id="T6.1", run=role_skill_boundary_scenario),
+            BehaviorScenarioDefinition(test_id="T7.1", run=connector_posture_scenario),
+            BehaviorScenarioDefinition(test_id="T9.1", run=deferred_reflection_scenario),
+        ]
+    )
+    assert len(results) == 3
     assert {result.status for result in results} == {"pass"}

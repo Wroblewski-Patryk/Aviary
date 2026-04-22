@@ -34,6 +34,7 @@ from app.core.graph_state import GraphMemoryState, build_graph_state_seed, expre
 from app.core.identity_policy import identity_policy_snapshot
 from app.core.planning_governance import planning_governance_snapshot
 from app.core.proactive_policy import proactive_runtime_policy_snapshot
+from app.core.role_skill_policy import role_skill_policy_snapshot
 from app.core.logging import RuntimeLogContext, RuntimeStageLogger, get_logger
 from app.core.retrieval_policy import retrieval_depth_policy_snapshot, theta_influence_snapshot
 from app.core.runtime_graph import ForegroundLangGraphRunner
@@ -880,6 +881,10 @@ class RuntimeOrchestrator:
                 scheduler_execution_mode="in_process",
                 scheduler_ready=True,
                 scheduler_running=False,
+            ),
+            "role_skill_policy": role_skill_policy_snapshot(
+                selected_skill_count=len(role.selected_skills),
+                planned_skill_count=len(plan.selected_skills),
             ),
             "connector_authorization_matrix": connector_authorization_matrix_snapshot(),
             "connector_capability_proposal": connector_capability_proposal_snapshot(),

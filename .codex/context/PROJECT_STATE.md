@@ -176,6 +176,15 @@ Last updated: 2026-04-22
 - 2026-04-22: proactive behavior validation now covers both delivery-ready and
   anti-spam-blocked posture, so proactive runtime is proven through
   scenario-level evidence in addition to unit and integration coverage.
+- 2026-04-22: role/skill maturity now has one shared policy owner in
+  `app/core/role_skill_policy.py`; `/health.role_skill` and runtime
+  `system_debug.adaptive_state.role_skill_policy` expose the long-term
+  metadata-only skill boundary instead of leaving it implicit in local role
+  helpers.
+- 2026-04-22: behavior validation now also covers role/skill metadata-only
+  posture, connector execution boundary posture, and deferred reflection
+  enqueue expectations, so the post-convergence runtime has stronger
+  scenario-level proof across its remaining architectural seams.
 - 2026-04-19: embedding strategy posture is now explicit through
   `EMBEDDING_PROVIDER`, `EMBEDDING_MODEL`, and `EMBEDDING_DIMENSIONS` with
   deterministic-fallback visibility in `GET /health.memory_retrieval`
@@ -1915,6 +1924,19 @@ Last updated: 2026-04-22
 - 2026-04-22: the next `READY` lane is Group 69 (`PRJ-488..PRJ-491`),
   focused on freezing the long-term role-versus-skill boundary and widening
   behavior-validation proof for the post-convergence runtime.
+- 2026-04-22: `PRJ-488..PRJ-491` are complete: skills remain an explicit
+  metadata-only capability layer, `/health.role_skill` and runtime debug
+  surfaces expose the same boundary, and behavior validation now covers
+  role/skill, connector posture, proactive cadence, and deferred reflection
+  expectations in one CI-ready artifact flow.
+- 2026-04-22: Group 69 validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_role_agent.py tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+  passed with `236 passed`, and
+  `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
+  passed with `8 passed`.
+- 2026-04-22: no seeded `READY` task remains after `PRJ-491`; the queued
+  post-convergence architecture follow-ups are fully complete and the next
+  slice should be derived only from new analysis, drift, or runtime evidence.
 
 ## Working Agreements
 

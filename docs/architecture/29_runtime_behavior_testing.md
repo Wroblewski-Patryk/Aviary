@@ -319,6 +319,13 @@ also include:
 - clear `skip` markers for intentionally unimplemented capability
 - evidence that stored state changes later reasoning or response behavior
 
+Post-convergence minimum scenario families now also include:
+
+- metadata-only role/skill boundary behavior
+- connector execution and guardrail posture
+- proactive delivery-ready versus anti-spam-blocked posture
+- deferred reflection enqueue and non-blocking background expectations
+
 ---
 
 ## Final Principle

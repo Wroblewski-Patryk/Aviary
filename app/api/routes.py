@@ -31,6 +31,7 @@ from app.core.connector_execution import connector_execution_baseline_snapshot
 from app.core.deployment_policy import deployment_policy_snapshot
 from app.core.planning_governance import planning_governance_snapshot
 from app.core.proactive_policy import proactive_runtime_policy_snapshot
+from app.core.role_skill_policy import role_skill_policy_snapshot
 from app.core.runtime_policy import (
     app_environment,
     event_debug_enabled,
@@ -421,6 +422,7 @@ async def health(request: Request) -> dict[str, Any]:
         scheduler_ready=bool(scheduler_execution["ready"]),
         scheduler_running=scheduler_running,
     )
+    role_skill_policy = role_skill_policy_snapshot()
     reflection_external_driver_policy = reflection_external_driver_policy_snapshot(
         reflection_runtime_mode=reflection_runtime_mode,
         worker_running=bool(reflection_snapshot["running"]),
@@ -465,6 +467,7 @@ async def health(request: Request) -> dict[str, Any]:
             "scheduler_tick_summary": dict(scheduler_snapshot.get("last_proactive_summary", {})),
             "last_tick_at": scheduler_snapshot.get("last_proactive_tick_at"),
         },
+        "role_skill": role_skill_policy,
         "attention": attention_snapshot,
         "reflection": {
             "healthy": reflection_healthy,

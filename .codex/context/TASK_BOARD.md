@@ -44,7 +44,8 @@ Last updated: 2026-04-22
 - Affective health visibility and retrieval execution-class triage are now
   described consistently across the runbook and planning/context truth instead
   of being discoverable only through runtime reality and tests.
-- A new post-convergence execution queue is now seeded through `PRJ-491`.
+- The post-convergence execution queue seeded through `PRJ-491` is now
+  complete.
 - The next architecture lane prioritizes migration parity first, then
   canonical-doc consistency, then productionization of still-rollout
   subsystems (connectors, retrieval provider path, background execution,
@@ -52,22 +53,7 @@ Last updated: 2026-04-22
 
 ## READY
 
-- [ ] PRJ-488 Decide the long-term role-versus-skill execution boundary
-  - Owner: Planner
-  - Group: Role/Skill Maturity And Behavior-Validation Expansion
-  - Depends on: PRJ-487
-  - Priority: P1
-  - Why now:
-    - proactive cadence now has an explicit live baseline, so the last seeded
-      lane is to freeze the long-term role-versus-skill boundary and widen
-      behavior-validation evidence for the post-convergence runtime
-  - Done when:
-    - the repo records whether skills remain metadata-only capability hints or
-      grow into a fuller execution-assist layer
-    - runtime surfaces and behavior-validation expectations can converge on
-      one explicit role/skill maturity baseline
-  - Validation:
-    - architecture/planning cross-review across role/skill docs and runtime contracts
+- [ ] (none)
 
 ## BACKLOG
 
@@ -90,6 +76,66 @@ Last updated: 2026-04-22
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-491 Sync docs/context for role/skill maturity and behavior-validation expansion
+  - Status: DONE
+  - Group: Role/Skill Maturity And Behavior-Validation Expansion
+  - Owner: Product Docs
+  - Depends on: PRJ-490
+  - Priority: P1
+  - Result:
+    - architecture, implementation reality, ops guidance, testing guidance,
+      behavior-validation docs, and planning/context truth now describe one
+      shared metadata-only role/skill boundary plus the expanded
+      behavior-validation baseline
+    - no seeded `READY` task remains after `PRJ-491`
+  - Validation:
+    - doc-and-context sync across canonical docs, implementation docs, ops,
+      testing, and planning/context surfaces
+
+- [x] PRJ-490 Expand behavior-validation coverage for post-convergence architecture lanes
+  - Status: DONE
+  - Group: Role/Skill Maturity And Behavior-Validation Expansion
+  - Owner: QA/Test
+  - Depends on: PRJ-489
+  - Priority: P1
+  - Result:
+    - behavior validation now covers role/skill metadata-only boundary,
+      connector execution posture, proactive cadence posture, and deferred
+      reflection enqueue expectations
+    - CI gate evidence now proves the strongest remaining post-convergence
+      behavior boundaries instead of relying only on targeted unit tests
+  - Validation:
+    - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
+
+- [x] PRJ-489 Apply the selected role/skill maturity baseline in runtime surfaces and contracts
+  - Status: DONE
+  - Group: Role/Skill Maturity And Behavior-Validation Expansion
+  - Owner: Backend Builder
+  - Depends on: PRJ-488
+  - Priority: P1
+  - Result:
+    - runtime contracts, `/health.role_skill`, and
+      `system_debug.adaptive_state.role_skill_policy` now expose one shared
+      metadata-only skill boundary instead of leaving role/skill maturity as
+      implied local behavior
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_role_agent.py tests/test_planning_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+
+- [x] PRJ-488 Decide the long-term role-versus-skill execution boundary
+  - Status: DONE
+  - Group: Role/Skill Maturity And Behavior-Validation Expansion
+  - Owner: Planner
+  - Depends on: PRJ-487
+  - Priority: P1
+  - Result:
+    - the repo now records one explicit long-term role/skill boundary:
+      skills remain metadata-only capability hints that inform role and
+      planning, but never execute tools or side effects on their own
+    - later capability growth now requires an explicit contract change instead
+      of quiet expansion from helper logic
+  - Validation:
+    - architecture/planning cross-review across role/skill docs and runtime contracts
 
 - [x] PRJ-487 Sync docs/context for proactive runtime activation
   - Status: DONE

@@ -758,6 +758,9 @@ def test_health_endpoint_returns_ok() -> None:
     assert body["proactive"]["production_baseline_state"] == "disabled_by_policy"
     assert body["proactive"]["anti_spam_contract"]["delivery_guard_recent_outbound_limit_default"] == 2
     assert body["proactive"]["anti_spam_contract"]["attention_gate_recent_outbound_limit_default"] == 3
+    assert body["role_skill"]["policy_owner"] == "role_skill_boundary_policy"
+    assert body["role_skill"]["skill_execution_boundary"] == "metadata_only_capability_hints"
+    assert body["role_skill"]["action_skill_execution_allowed"] is False
     assert body["identity"]["policy_owner"] == "identity_policy"
     assert body["identity"]["language_strategy"] == "heuristic_plus_profile_continuity"
     assert body["identity"]["profile_owner_fields"] == ["preferred_language"]

@@ -71,7 +71,9 @@ def test_role_agent_uses_analyst_for_planning_topics() -> None:
 
     assert result.selected == "analyst"
     assert result.selection_reason == "planning_topic_or_analysis_keyword"
+    assert result.skill_policy_owner == "role_skill_boundary_policy"
     assert any(skill.skill_id == "structured_reasoning" for skill in result.selected_skills)
+    assert all(skill.policy_owner == "role_skill_boundary_policy" for skill in result.selected_skills)
 
 
 def test_role_agent_uses_executor_for_direct_action_request() -> None:

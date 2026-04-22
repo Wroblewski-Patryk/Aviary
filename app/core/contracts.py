@@ -197,6 +197,7 @@ class ConnectorPermissionGateOutput(BaseModel):
 
 
 class SkillCapabilityOutput(BaseModel):
+    policy_owner: Literal["role_skill_boundary_policy"] = "role_skill_boundary_policy"
     skill_id: str
     label: str
     capability_family: Literal[
@@ -222,6 +223,7 @@ class RoleOutput(BaseModel):
     selected: str
     confidence: float
     selection_policy_owner: Literal["role_selection_policy"] = "role_selection_policy"
+    skill_policy_owner: Literal["role_skill_boundary_policy"] = "role_skill_boundary_policy"
     selection_reason: str = ""
     selection_evidence: list[RoleSelectionEvidenceOutput] = Field(default_factory=list)
     selected_skills: list[SkillCapabilityOutput] = Field(default_factory=list)

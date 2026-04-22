@@ -125,7 +125,7 @@ The current repo already works as an MVP slice, but several architecture-level d
   - `PRJ-476..PRJ-479`: retrieval provider completion - complete
   - `PRJ-480..PRJ-483`: background worker externalization - complete
   - `PRJ-484..PRJ-487`: proactive runtime activation - complete
-  - `PRJ-488..PRJ-491`: role/skill maturity and behavior-validation expansion
+  - `PRJ-488..PRJ-491`: role/skill maturity and behavior-validation expansion - complete
 - this queue is intentionally ordered by architectural risk:
   deployment/schema truth first, then canonical docs consistency, then
   productionization of still-rollout subsystems, and finally behavior-proof
@@ -182,6 +182,17 @@ The current repo already works as an MVP slice, but several architecture-level d
     proactive outcomes
   - the next active lane is role/skill maturity and behavior-validation
     expansion
+- `PRJ-488..PRJ-491` are now complete:
+  - skills remain an explicit metadata-only capability layer that can inform
+    role and planning but cannot execute tools or side effects on their own
+  - `/health.role_skill` and runtime debug now expose the same shared
+    role/skill boundary policy
+  - behavior validation now covers role/skill boundary posture, connector
+    execution posture, proactive cadence behavior, and deferred reflection
+    enqueue expectations in one CI gate flow
+- the seeded post-convergence queue through `PRJ-491` is now complete; the
+  next architecture slice should again be derived only from new analysis,
+  runtime drift, release evidence, or operator-facing gaps.
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 
