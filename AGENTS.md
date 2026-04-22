@@ -27,6 +27,7 @@ Read these before starting non-trivial work:
 - `docs/architecture/29_runtime_behavior_testing.md`
 - `docs/architecture/26_env_and_config.md`
 - `docs/architecture/27_codex_instructions.md`
+- `docs/architecture/architecture-source-of-truth.md`
 - `docs/engineering/local-development.md`
 - `docs/engineering/testing.md`
 - `docs/planning/next-iteration-plan.md`
@@ -36,6 +37,51 @@ Read these before starting non-trivial work:
 - `docs/governance/repository-structure-policy.md`
 
 ## Core Rules
+
+### 1. Architecture Is Source Of Truth
+
+- `docs/architecture/` is the single architecture authority for this repo.
+- Implementation must stay aligned with approved architecture docs.
+- If implementation does not fit architecture, stop and report the mismatch
+  instead of forcing a workaround.
+
+### 2. Critical Prohibitions
+
+- Do not create new systems without explicit approval.
+- Do not introduce workaround paths or temporary bypasses.
+- Do not duplicate logic already covered by existing mechanisms.
+- Always reuse existing approved systems first.
+
+### 3. Decision Mode For Mismatches
+
+When architecture and implementation clash:
+
+1. describe the problem
+2. propose 2 to 3 valid options
+3. wait for explicit user decision
+
+### 4. Mandatory Task Structure
+
+Each task must use `.codex/templates/task-template.md`, including:
+
+- `Context`
+- `Goal`
+- `Constraints`
+- `Definition of Done`
+- `Forbidden`
+
+### 5. Mandatory Review And Refactor
+
+After implementation, verify:
+
+- architecture alignment
+- reuse of existing systems
+- no workaround introduced
+- no logic duplication introduced
+
+If any check fails, fix before closure.
+
+### 6. Repository Guardrails
 
 - Project state, task board, learning journal, and canonical docs are the
   source of truth.
@@ -62,10 +108,11 @@ Read these before starting non-trivial work:
 - When a recurring environment or execution pitfall is discovered, record it in
   `.codex/context/LEARNING_JOURNAL.md` in the same task.
 - Follow the default loop:
-  - plan
+  - check architecture
+  - create task
   - implement
-  - test
-  - review risks and architecture follow-up
+  - review
+  - fix or refactor
   - sync docs and context
   - repeat
 
