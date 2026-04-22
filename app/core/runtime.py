@@ -36,7 +36,11 @@ from app.core.planning_governance import planning_governance_snapshot
 from app.core.proactive_policy import proactive_runtime_policy_snapshot
 from app.core.role_skill_policy import role_skill_policy_snapshot
 from app.core.logging import RuntimeLogContext, RuntimeStageLogger, get_logger
-from app.core.retrieval_policy import retrieval_depth_policy_snapshot, theta_influence_snapshot
+from app.core.retrieval_policy import (
+    relation_source_policy_snapshot,
+    retrieval_depth_policy_snapshot,
+    theta_influence_snapshot,
+)
 from app.core.runtime_graph import ForegroundLangGraphRunner
 from app.core.scheduler_contracts import (
     normalize_reflection_runtime_mode,
@@ -873,6 +877,10 @@ class RuntimeOrchestrator:
                 motivation_mode=motivation.mode,
                 plan_steps=list(plan.steps),
                 expression_tone=expression.tone,
+            ),
+            "relation_source_policy": relation_source_policy_snapshot(
+                semantic_vector_enabled=self.semantic_vector_enabled,
+                enabled_source_kinds=getattr(self.memory_repository, "embedding_source_kinds", ()),
             ),
             "planning_governance": planning_governance_snapshot(),
             "proactive_policy": proactive_runtime_policy_snapshot(

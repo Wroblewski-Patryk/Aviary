@@ -565,16 +565,24 @@ Last updated: 2026-04-22
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_context_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
 
-- [ ] PRJ-538 Add regression and release evidence for relation-aware retrieval posture
+- [x] PRJ-538 Add regression and release evidence for relation-aware retrieval posture
   - Owner: QA/Test
   - Group: Relation Retrieval Source Completion
   - Depends on: PRJ-537
   - Priority: P2
-  - Status: READY
+  - Status: DONE
   - Done when:
     - runtime and release evidence pin the selected relation-source posture,
       including alignment or bounded exclusion from the steady-state retrieval
       baseline
+  - Result:
+    - runtime `system_debug.adaptive_state` now exposes the same shared
+      relation-source policy posture as `/health.memory_retrieval`, so
+      behavior-level traces can prove whether relation is disabled, enabled,
+      or still ahead of baseline
+    - release smoke now requires relation-source policy owner/state/enabled
+      evidence in `memory_retrieval`, and focused regression coverage pins both
+      the green path and the missing-evidence failure posture
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_deployment_trigger_scripts.py tests/test_memory_repository.py`
 
@@ -583,7 +591,7 @@ Last updated: 2026-04-22
   - Group: Relation Retrieval Source Completion
   - Depends on: PRJ-538
   - Priority: P2
-  - Status: BACKLOG
+  - Status: READY
   - Done when:
     - architecture, runtime reality, ops guidance, testing guidance, and
       context truth all describe the same relation-source retrieval posture

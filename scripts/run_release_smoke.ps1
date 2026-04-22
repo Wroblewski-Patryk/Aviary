@@ -785,6 +785,15 @@ if (-not (Has-Property -Object $memoryRetrieval -Name "retrieval_lifecycle_align
 if (-not (Has-Property -Object $memoryRetrieval -Name "retrieval_lifecycle_pending_gaps")) {
     throw "Health check failed: memory_retrieval is missing retrieval_lifecycle_pending_gaps."
 }
+if (-not (Has-Property -Object $memoryRetrieval -Name "retrieval_lifecycle_relation_source_policy_owner")) {
+    throw "Health check failed: memory_retrieval is missing retrieval_lifecycle_relation_source_policy_owner."
+}
+if (-not (Has-Property -Object $memoryRetrieval -Name "retrieval_lifecycle_relation_source_state")) {
+    throw "Health check failed: memory_retrieval is missing retrieval_lifecycle_relation_source_state."
+}
+if (-not (Has-Property -Object $memoryRetrieval -Name "retrieval_lifecycle_relation_source_enabled")) {
+    throw "Health check failed: memory_retrieval is missing retrieval_lifecycle_relation_source_enabled."
+}
 $observability = $health.observability
 if ($null -eq $observability) {
     throw "Health check failed: response is missing observability."
@@ -925,6 +934,10 @@ $summary = @{
     retrieval_lifecycle_provider_drift_state = [string]$memoryRetrieval.retrieval_lifecycle_provider_drift_state
     retrieval_lifecycle_alignment_state = [string]$memoryRetrieval.retrieval_lifecycle_alignment_state
     retrieval_lifecycle_pending_gaps = @($memoryRetrieval.retrieval_lifecycle_pending_gaps)
+    retrieval_lifecycle_relation_source_policy_owner = [string]$memoryRetrieval.retrieval_lifecycle_relation_source_policy_owner
+    retrieval_lifecycle_relation_source_posture = [string]$memoryRetrieval.retrieval_lifecycle_relation_source_posture
+    retrieval_lifecycle_relation_source_state = [string]$memoryRetrieval.retrieval_lifecycle_relation_source_state
+    retrieval_lifecycle_relation_source_enabled = [bool]$memoryRetrieval.retrieval_lifecycle_relation_source_enabled
     observability_policy_owner = [string]$observability.policy_owner
     observability_export_artifact_available = [bool]$observability.export_artifact_available
     observability_incident_export_ready = [bool]$observability.incident_export_ready

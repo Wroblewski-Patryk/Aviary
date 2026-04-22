@@ -122,9 +122,13 @@ Last updated: 2026-04-22
   rollout-completion baseline, while relation has one explicit optional-family
   policy surface (`relation_source_retrieval_policy`) with state, hint,
   recommendation, and enabled/alignment visibility.
-- 2026-04-22: `PRJ-538` is now the first `READY` task; the next slice should
-  add regression and release evidence for the selected relation-aware
-  retrieval posture.
+- 2026-04-22: `PRJ-538` is complete: runtime `system_debug.adaptive_state` now
+  exposes the same shared relation-source posture as `/health`, while release
+  smoke and focused regressions require relation-source policy owner/state/
+  enabled evidence instead of treating it as an undocumented optional field.
+- 2026-04-22: `PRJ-539` is now the first `READY` task; the next slice should
+  synchronize architecture, runtime reality, ops, testing, and context truth
+  around the completed relation-source retrieval posture.
 - 2026-04-22: Group 76 (`PRJ-516..PRJ-519`) is now complete, and the next
   `READY` task is `PRJ-520` for dedicated debug-ingress compatibility
   retirement.

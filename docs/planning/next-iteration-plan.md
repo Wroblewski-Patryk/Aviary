@@ -456,7 +456,11 @@ state.
   reflect semantic+affective as the foreground rollout-completion baseline,
   while relation source posture is exposed through one explicit
   optional-family policy surface instead of staying an implicit pending stage.
-- the next active slice in this lane is `PRJ-538`.
+- `PRJ-538` is complete: runtime `system_debug.adaptive_state` and release
+  smoke now both require the selected relation-source policy owner/state/
+  enabled evidence instead of leaving relation-aware retrieval posture implicit
+  in `/health` only.
+- the next active slice in this lane is `PRJ-539`.
 
 - `PRJ-536` Decide the relation-source retrieval completion posture.
   - Result:

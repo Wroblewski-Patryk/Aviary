@@ -134,6 +134,10 @@ def stub_aion_server() -> _StubAionServer:
         },
         "memory_retrieval": {
             "retrieval_lifecycle_policy_owner": "retrieval_lifecycle_policy",
+            "retrieval_lifecycle_relation_source_policy_owner": "relation_source_retrieval_policy",
+            "retrieval_lifecycle_relation_source_posture": "optional_after_foreground_baseline",
+            "retrieval_lifecycle_relation_source_state": "optional_family_not_enabled",
+            "retrieval_lifecycle_relation_source_enabled": False,
             "retrieval_lifecycle_provider_drift_state": "compatibility_fallback_active",
             "retrieval_lifecycle_alignment_state": "lifecycle_gaps_present",
             "retrieval_lifecycle_pending_gaps": ["provider_baseline_not_aligned"],
@@ -238,6 +242,10 @@ def stub_aion_server() -> _StubAionServer:
                 },
                 "memory_retrieval": {
                     "retrieval_lifecycle_policy_owner": "retrieval_lifecycle_policy",
+                    "retrieval_lifecycle_relation_source_policy_owner": "relation_source_retrieval_policy",
+                    "retrieval_lifecycle_relation_source_posture": "optional_after_foreground_baseline",
+                    "retrieval_lifecycle_relation_source_state": "optional_family_not_enabled",
+                    "retrieval_lifecycle_relation_source_enabled": False,
                 },
                 "scheduler.external_owner_policy": {
                     "policy_owner": "external_scheduler_cadence_policy",
@@ -364,6 +372,10 @@ def _write_incident_bundle(
                 },
                 "memory_retrieval": {
                     "retrieval_lifecycle_policy_owner": "retrieval_lifecycle_policy",
+                    "retrieval_lifecycle_relation_source_policy_owner": "relation_source_retrieval_policy",
+                    "retrieval_lifecycle_relation_source_posture": "optional_after_foreground_baseline",
+                    "retrieval_lifecycle_relation_source_state": "optional_family_not_enabled",
+                    "retrieval_lifecycle_relation_source_enabled": False,
                 },
             "scheduler.external_owner_policy": {
                 "policy_owner": "external_scheduler_cadence_policy",
@@ -513,6 +525,10 @@ def test_release_smoke_allows_optional_deployment_evidence_to_be_omitted(
     assert summary["scheduler_external_baseline_ready"] is False
     assert summary["scheduler_external_baseline_state"] == "external_scheduler_target_without_cutover_proof"
     assert summary["retrieval_lifecycle_policy_owner"] == "retrieval_lifecycle_policy"
+    assert summary["retrieval_lifecycle_relation_source_policy_owner"] == "relation_source_retrieval_policy"
+    assert summary["retrieval_lifecycle_relation_source_posture"] == "optional_after_foreground_baseline"
+    assert summary["retrieval_lifecycle_relation_source_state"] == "optional_family_not_enabled"
+    assert summary["retrieval_lifecycle_relation_source_enabled"] is False
     assert summary["retrieval_lifecycle_provider_drift_state"] == "compatibility_fallback_active"
     assert summary["retrieval_lifecycle_alignment_state"] == "lifecycle_gaps_present"
     assert summary["retrieval_lifecycle_pending_gaps"] == ["provider_baseline_not_aligned"]
@@ -528,6 +544,22 @@ def test_release_smoke_allows_optional_deployment_evidence_to_be_omitted(
     assert summary["deployment_evidence_checked"] is False
     assert summary["deployment_evidence_path"] == ""
     assert summary["deployment_evidence_status_code"] is None
+
+
+def test_release_smoke_fails_when_relation_source_policy_evidence_is_missing(
+    stub_aion_server: _StubAionServer,
+) -> None:
+    original = dict(_StubAionHandler.health_payload["memory_retrieval"])
+    broken = dict(original)
+    broken.pop("retrieval_lifecycle_relation_source_policy_owner", None)
+    _StubAionHandler.health_payload["memory_retrieval"] = broken
+    try:
+        result = _run_release_smoke("-BaseUrl", stub_aion_server.base_url, cwd=ROOT)
+    finally:
+        _StubAionHandler.health_payload["memory_retrieval"] = original
+
+    assert result.returncode != 0
+    assert "retrieval_lifecycle_relation_source_policy_owner" in result.stderr
 
 
 def test_release_smoke_verifies_fresh_successful_deployment_evidence(

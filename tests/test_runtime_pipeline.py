@@ -4927,6 +4927,7 @@ async def test_runtime_pipeline_exposes_system_debug_surface_for_behavior_valida
     )
     memory.user_conclusions = [{"kind": "response_style", "content": "structured", "confidence": 0.82}]
     memory.relations = [{"relation_type": "collaboration_dynamic", "relation_value": "guided", "confidence": 0.79}]
+    memory.embedding_source_kinds = {"episodic", "semantic", "affective"}
     runtime = _build_behavior_runtime(memory)
 
     result = await runtime.run(
@@ -4948,6 +4949,15 @@ async def test_runtime_pipeline_exposes_system_debug_surface_for_behavior_valida
     assert result.system_debug.adaptive_state["identity_policy"]["policy_owner"] == "identity_policy"
     assert result.system_debug.adaptive_state["identity_policy"]["profile_owner_fields"] == ["preferred_language"]
     assert result.system_debug.adaptive_state["retrieval_depth_policy"]["episodic_limit"] == RuntimeOrchestrator.MEMORY_LOAD_LIMIT
+    assert result.system_debug.adaptive_state["relation_source_policy"] == {
+        "policy_owner": "relation_source_retrieval_policy",
+        "steady_state_posture": "optional_follow_on_family",
+        "relation_source_enabled": False,
+        "baseline_ready": True,
+        "state": "optional_family_not_enabled",
+        "hint": "steady_state_baseline_does_not_require_relation",
+        "recommendation": "relation_can_remain_disabled_without_rollout_gap",
+    }
     assert result.system_debug.adaptive_state["background_adaptive_outputs"]["theta_loaded"] is False
     assert result.system_debug.adaptive_state["role_skill_policy"]["policy_owner"] == "role_skill_boundary_policy"
     assert result.system_debug.adaptive_state["role_skill_policy"]["skill_execution_boundary"] == (
@@ -4975,6 +4985,31 @@ async def test_runtime_pipeline_exposes_system_debug_surface_for_behavior_valida
         result.system_debug.adaptive_state["affective_resolution"]["resolution_owner_chain"]
         == "perception_affective_input_to_affective_assessment"
     )
+
+
+async def test_runtime_pipeline_exposes_relation_source_policy_when_optional_family_is_enabled() -> None:
+    memory = FakeHybridMemoryRepository(recent_memory=[])
+    memory.embedding_source_kinds = {"episodic", "semantic", "affective", "relation"}
+    runtime = _build_behavior_runtime(memory)
+
+    result = await runtime.run(
+        _behavior_event(
+            event_id="evt-relation-policy-1",
+            trace_id="t-relation-policy-1",
+            text="Can you keep the answer structured?",
+        )
+    )
+
+    assert result.system_debug is not None
+    assert result.system_debug.adaptive_state["relation_source_policy"] == {
+        "policy_owner": "relation_source_retrieval_policy",
+        "steady_state_posture": "optional_follow_on_family",
+        "relation_source_enabled": True,
+        "baseline_ready": True,
+        "state": "optional_family_enabled",
+        "hint": "relation_enabled_without_redefining_steady_state_baseline",
+        "recommendation": "keep_relation_as_optional_follow_on_family",
+    }
 
 
 async def test_runtime_pipeline_exposes_disabled_affective_policy_in_system_debug() -> None:
