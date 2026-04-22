@@ -502,15 +502,23 @@ Last updated: 2026-04-22
     - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py`
 
 - [ ] PRJ-535 Sync docs/context for external cadence cutover proof
+- [x] PRJ-535 Sync docs/context for external cadence cutover proof
   - Owner: Product Docs
   - Group: External Cadence Cutover Proof
   - Depends on: PRJ-534
   - Priority: P1
-  - Status: READY
+  - Status: DONE
   - Done when:
     - implementation reality, ops guidance, testing guidance, planning, and
       context truth all describe the same external cadence cutover evidence
       baseline
+  - Result:
+    - runtime reality, testing guidance, ops notes, and context truth now all
+      describe the same external cadence cutover proof surface, including
+      per-cadence evidence states, duplicate-protection posture, and
+      `cutover_proof_ready`
+    - Group 80 is now complete and the next active lane is relation retrieval
+      source completion
   - Validation:
     - doc-and-context sync across implementation, ops, testing, planning, and
       context
@@ -520,7 +528,7 @@ Last updated: 2026-04-22
   - Group: Relation Retrieval Source Completion
   - Depends on: PRJ-535
   - Priority: P2
-  - Status: BACKLOG
+  - Status: READY
   - Done when:
     - the repo explicitly records whether relation embeddings stay optional
       long-term or become part of the steady-state retrieval rollout, together

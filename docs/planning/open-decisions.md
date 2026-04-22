@@ -417,7 +417,11 @@ The current repo already works as an MVP slice, but several architecture-level d
   - behavior-validation gate logic validates the same proof surface from
     exported incident evidence and now fails on incomplete scheduler cutover
     payloads
-  - the next active slice is `PRJ-535` for docs/context sync
+- `PRJ-535` is now complete:
+  - runtime reality, testing guidance, ops notes, planning, and context truth
+    all describe the same external cadence cutover proof surface
+  - Group 80 is complete and the next active slice is `PRJ-536` for relation
+    retrieval source completion
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 

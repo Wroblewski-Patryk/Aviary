@@ -799,9 +799,26 @@ Cutover proof baseline for treating the external scheduler as the real owner:
 6. rollback posture that keeps app-local scheduler ownership as the explicit
    recovery baseline when any proof item is missing
 
-Until those proof items are machine-visible, treat
-`/health.scheduler.external_owner_policy` as target-policy posture only, not
-as sufficient evidence that production cadence has fully cut over.
+These proof items are now machine-visible through
+`/health.scheduler.external_owner_policy`:
+
+- `maintenance_run_evidence`
+- `proactive_run_evidence`
+- `duplicate_protection_posture`
+- `cutover_proof_ready`
+
+Interpretation:
+
+- `selected_execution_mode=externalized` plus `cutover_proof_ready=false`
+  means the repo is targeting external ownership but has not yet proven
+  cutover readiness
+- `cutover_proof_ready=true` means recent run evidence and bounded
+  duplicate-protection posture are both present for the current cadence
+  baseline
+- release smoke now validates that those proof fields exist and use recognized
+  states
+- behavior-validation gate logic now validates the same proof surface from
+  exported `incident_evidence`
 
 ## Post-Reflection Hardening Baseline (PRJ-309)
 

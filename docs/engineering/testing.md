@@ -183,6 +183,13 @@ For meaningful repo changes, leave behind:
     - `cloud_drive.google_drive_list_files`
 - for external-scheduler ownership slices, regression evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
+  - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py`
+  - coverage should pin both:
+    - `/health.scheduler.external_owner_policy` cutover-proof fields
+      (`maintenance_run_evidence`, `proactive_run_evidence`,
+      `duplicate_protection_posture`, `cutover_proof_ready`)
+    - smoke and incident-evidence gate failures when that proof surface is
+      incomplete
   - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_deployment_trigger_scripts.py tests/test_main_runtime_policy.py`
 - for typed future-write ownership slices, regression evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_action_executor.py tests/test_runtime_pipeline.py tests/test_reflection_worker.py tests/test_scheduler_worker.py`

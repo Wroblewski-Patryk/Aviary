@@ -406,7 +406,10 @@ duplicate-protection posture.
   validate the external cadence cutover proof surface, including proof owner,
   per-cadence evidence states, duplicate-protection posture, and missing-field
   failures from exported incident evidence.
-- the next active slice in this lane is `PRJ-535`.
+- `PRJ-535` is complete: runtime reality, testing guidance, ops notes,
+  planning, and context truth now describe the same external cadence cutover
+  proof baseline and its machine-visible release/gate evidence.
+- Group 80 is now complete, and the next active slice is `PRJ-536`.
 
 - `PRJ-532` Define the external cadence cutover proof baseline.
   - Result:

@@ -626,9 +626,14 @@ Scheduler-facing runtime contracts are now explicit:
   `maintenance_entrypoint_path=scripts/run_maintenance_tick_once.py`, canonical
   `proactive_entrypoint_path=scripts/run_proactive_tick_once.py`, and explicit
   in-process fallback posture
-- this surface is still target-policy truth, not full cutover proof:
-  it does not yet show recent successful external last-run evidence or
-  duplicate-protection posture for the canonical cadence entrypoints
+- this surface now also exposes cutover-proof posture instead of only target
+  mode:
+  - `maintenance_run_evidence` and `proactive_run_evidence` distinguish
+    `missing|stale|recent_success|recent_non_success`
+  - `duplicate_protection_posture.state` exposes the bounded single-owner
+    boundary between external cadence entrypoints and app-local fallback
+  - `cutover_proof_ready` keeps proven cutover distinct from mere target-mode
+    selection
 - `/health.proactive` now exposes the shared proactive runtime policy owner,
   selected cadence owner, delivery-target baseline, candidate-selection
   baseline, anti-spam thresholds, and latest proactive tick summary
@@ -991,6 +996,13 @@ baseline:
   - bundle verification validates the same posture from
     `incident_evidence.json`
   - behavior-validation CI gates fail on debug-posture drift or missing
+    rollback-exception posture
+- external cadence cutover evidence is now checked through both release and
+  behavior-validation flows:
+  - release smoke validates proof owner, per-cadence evidence states, and
+    duplicate-protection posture from `/health.scheduler.external_owner_policy`
+  - behavior-validation CI gates fail on incomplete
+    `incident_evidence.policy_posture["scheduler.external_owner_policy"]`
     explicit rollback-exception state
 
 Current limitation:
