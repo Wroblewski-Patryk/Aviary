@@ -290,6 +290,51 @@ Current post-convergence diagnostics also require:
     scheduler external ownership, reflection supervision, and connector
     execution baseline
 
+## Operator Incident Evidence Bundle
+
+When runtime or release investigation requires more than local logs, operators
+must treat incident evidence as one bounded artifact bundle rather than a set
+of unrelated JSON snippets.
+
+Canonical bundle contents:
+
+- `manifest.json`
+  - bundle schema version
+  - capture timestamp
+  - capture mode (`incident|release_smoke|behavior_validation`)
+  - optional `trace_id` and `event_id`
+- `incident_evidence.json`
+  - exported machine-readable runtime evidence from the debug surface
+- `health_snapshot.json`
+  - captured `GET /health` payload from the same investigation window
+- optional `behavior_validation_report.json`
+  - attached only when behavior validation was run for the same incident or
+    release investigation
+
+Canonical naming posture:
+
+- artifact root should be operator-readable and trace-oriented:
+  `artifacts/incident_evidence/<captured_at_utc>_<trace_id_or_event_id>/`
+- file names inside the bundle stay fixed so later tooling can consume them
+  without path heuristics
+
+Retention baseline:
+
+- keep the most recent successful release-evidence bundle
+- keep the most recent failing release or incident bundle
+- keep active incident bundles until the incident and rollback follow-up are
+  closed
+- do not treat console logs alone as sufficient incident evidence once bundle
+  export exists
+
+Producer or retrieval boundary:
+
+- the debug/runtime surface remains the source of truth for
+  `incident_evidence.json`
+- `/health` remains the source of truth for `health_snapshot.json`
+- a future canonical bundle helper may collect both, but it must not redefine
+  their ownership or schema independently of those runtime surfaces
+
 ---
 
 ## Final Principle

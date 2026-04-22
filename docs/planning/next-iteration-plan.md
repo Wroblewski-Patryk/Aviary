@@ -172,6 +172,17 @@ Detailed queue:
 This group turns exported `incident_evidence` from a debug-mode JSON surface
 into an operator-ready artifact contract with one canonical retrieval path.
 
+Completed on 2026-04-22:
+
+- `PRJ-516` is complete: the repo now defines one operator-facing
+  incident-evidence bundle contract built around `manifest.json`,
+  `incident_evidence.json`, `health_snapshot.json`, and optional
+  `behavior_validation_report.json`, with fixed naming posture and retention
+  expectations.
+- the next active task in this lane is `PRJ-517`, which should implement a
+  canonical collection or export path without creating a second evidence
+  schema.
+
 - `PRJ-516` Define the operator-facing incident evidence bundle and retention baseline.
   - Result:
     - one explicit contract defines required bundle contents, naming posture,

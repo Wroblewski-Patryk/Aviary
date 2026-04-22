@@ -797,6 +797,40 @@ With `-IncludeDebug`, release smoke now also validates exported
 `incident_evidence` directly and records its schema version, stage count, and
 policy-surface coverage in the smoke summary.
 
+## Incident Evidence Bundle Baseline
+
+Operator-ready incident evidence should be captured as one bounded bundle:
+
+- `manifest.json`
+- `incident_evidence.json`
+- `health_snapshot.json`
+- optional `behavior_validation_report.json`
+
+Recommended artifact root:
+
+- `artifacts/incident_evidence/<captured_at_utc>_<trace_id_or_event_id>/`
+
+Current source-of-truth mapping:
+
+- `incident_evidence.json` comes from debug-mode runtime output
+- `health_snapshot.json` comes from `GET /health`
+- `behavior_validation_report.json` is attached only when validation was run
+  for the same investigation window
+
+Retention baseline:
+
+- keep the latest successful release bundle
+- keep the latest failing release or incident bundle
+- keep active incident bundles until incident closure plus rollback review
+
+Minimal operator collection flow:
+
+1. capture `GET /health` and persist it as `health_snapshot.json`
+2. capture one debug-mode event response and persist `incident_evidence`
+3. if release smoke or behavior validation was run, attach the resulting
+   report to the same bundle root instead of storing it separately
+4. record `trace_id`, `event_id`, and capture mode in `manifest.json`
+
 Optional debug payload with token:
 
 ```powershell
@@ -969,6 +1003,9 @@ Preconditions checklist (required for reliable Telegram delivery triage):
 - startup now defaults to migration-first schema ownership; `create_tables()` remains only as a compatibility path behind `STARTUP_SCHEMA_MODE=create_tables`
 - runtime now has exportable JSON incident evidence, but there is still no
   external observability stack with dashboards or centralized trace storage
+- the canonical incident-evidence bundle contract is now defined, but runtime
+  still relies on operator-side collection rather than a first-class bundle
+  helper
 - proactive cadence is live in-process today, while external scheduler
   ownership is now the explicit target posture with machine-visible fallback
   evidence

@@ -312,6 +312,13 @@ The current repo already works as an MVP slice, but several architecture-level d
 - `PRJ-516` is now the first `READY` task and freezes the operator-facing
   incident-evidence artifact baseline before later retirement and cutover
   lanes depend on it.
+- `PRJ-516` is now complete:
+  - the operator-facing incident-evidence bundle is frozen as
+    `manifest.json`, `incident_evidence.json`, `health_snapshot.json`, plus
+    optional `behavior_validation_report.json`
+  - naming posture and retention expectations are now explicit before helper
+    implementation begins
+  - `PRJ-517` is now the next active task in the lane
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 

@@ -69,12 +69,12 @@ Last updated: 2026-04-22
 
 ## READY
 
-- [ ] PRJ-516 Define the operator-facing incident evidence bundle and retention baseline
+- [x] PRJ-516 Define the operator-facing incident evidence bundle and retention baseline
   - Owner: Planner
   - Group: Incident Evidence Bundle And Retention
   - Depends on: PRJ-515
   - Priority: P1
-  - Status: READY
+  - Status: DONE
   - Why now:
     - the repo can already export `incident_evidence`, but operators still do
       not have one canonical artifact bundle, retention rule, or retrieval
@@ -85,6 +85,14 @@ Last updated: 2026-04-22
     - one explicit contract defines the bundle contents, naming/retention
       expectations, and the canonical producer or retrieval path for incident
       evidence artifacts
+  - Result:
+    - canonical architecture docs now freeze one operator-facing
+      incident-evidence bundle contract built around `manifest.json`,
+      `incident_evidence.json`, `health_snapshot.json`, and optional
+      `behavior_validation_report.json`
+    - runtime reality and ops guidance now explicitly state that current
+      runtime exports only the raw `incident_evidence.json` surface while
+      bundle collection remains an operator workflow until a helper lands
   - Validation:
     - cross-review across `docs/architecture/17_logging_and_debugging.md`,
       `docs/architecture/29_runtime_behavior_testing.md`,
@@ -96,7 +104,7 @@ Last updated: 2026-04-22
   - Group: Incident Evidence Bundle And Retention
   - Depends on: PRJ-516
   - Priority: P1
-  - Status: BACKLOG
+  - Status: READY
   - Done when:
     - operators can produce or collect the agreed incident-evidence bundle
       through one canonical path without ad hoc manual JSON harvesting from
@@ -130,6 +138,12 @@ Last updated: 2026-04-22
   - Validation:
     - doc-and-context sync across architecture, implementation, ops, testing,
       planning, and context
+
+- Group 76 note:
+  - `PRJ-516` is now complete, and `PRJ-517` is the next `READY` task.
+  - the bundle contract is frozen before implementation so the helper path can
+    reuse existing runtime ownership instead of inventing a second evidence
+    schema.
 
 - [ ] PRJ-520 Freeze the shared debug compatibility retirement gate
   - Owner: Planner

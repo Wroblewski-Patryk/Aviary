@@ -17,6 +17,13 @@ Last updated: 2026-04-22
 - 2026-04-22: `PRJ-516` is now the first `READY` task; it freezes the
   operator-facing incident-evidence bundle and retention baseline before any
   further runtime cutover work depends on ad hoc debug JSON capture.
+- 2026-04-22: `PRJ-516` is complete: architecture, runtime reality, and ops
+  guidance now freeze one operator-facing incident-evidence bundle contract
+  (`manifest.json`, `incident_evidence.json`, `health_snapshot.json`, optional
+  `behavior_validation_report.json`) plus naming and retention posture.
+- 2026-04-22: `PRJ-517` is now the first `READY` task; the next slice should
+  implement a canonical helper or export path for collecting that bundle
+  without changing ownership of `incident_evidence` or `/health`.
 
 ## Product Decisions (Confirmed)
 

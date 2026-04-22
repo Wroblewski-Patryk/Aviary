@@ -965,6 +965,16 @@ Current limitation:
 
 - this is an exportable JSON evidence baseline, not yet a full external
   observability stack with dashboards, aggregation, or tracing backend
+- the canonical operator bundle shape is now defined as:
+  - `manifest.json`
+  - `incident_evidence.json`
+  - `health_snapshot.json`
+  - optional `behavior_validation_report.json`
+- current runtime still exports the raw `incident_evidence.json` surface rather
+  than a full bundle helper; bundle collection remains an operator workflow
+  until a dedicated helper lands
+- `incident_evidence.json` remains owned by the debug/runtime export contract,
+  while `health_snapshot.json` remains owned by `GET /health`
 
 ---
 

@@ -328,6 +328,18 @@ Post-convergence minimum scenario families now also include:
 - exported `incident_evidence` consumption through smoke or validation tooling
   whenever observability-sensitive runtime or release slices change
 
+When behavior validation is used during release or incident triage, the
+resulting artifact should attach to the same operator incident-evidence bundle
+instead of creating a separate ad hoc evidence family.
+
+Bundle expectation for behavior-sensitive incident work:
+
+- `incident_evidence.json` explains the concrete runtime turn or smoke request
+- `health_snapshot.json` captures the selected policy posture around that run
+- optional `behavior_validation_report.json` proves scenario-level behavior
+  when the incident touches memory, planning, proactive cadence, connector
+  posture, or other behavior-sensitive seams
+
 ---
 
 ## Final Principle
