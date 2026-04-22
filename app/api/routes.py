@@ -8,6 +8,7 @@ from app.core.attention import (
     attention_coordination_readiness_snapshot,
     attention_timing_policy_snapshot,
 )
+from app.core.api_readiness_policy import api_readiness_policy_snapshot
 from app.core.debug_compat import (
     DebugQueryCompatTelemetry,
     debug_query_compat_activity_snapshot,
@@ -357,6 +358,7 @@ async def _build_learned_state_snapshot(*, request: Request, user_id: str) -> di
 
     return {
         **learned_state_policy_snapshot(),
+        "api_readiness": api_readiness_policy_snapshot(),
         "user_id": user_id,
         "identity_state": {
             "identity_policy": identity_policy_snapshot(),
@@ -700,6 +702,7 @@ async def health(request: Request) -> dict[str, Any]:
         "runtime_policy": runtime_policy,
         "release_readiness": release_readiness,
         "v1_readiness": v1_readiness,
+        "api_readiness": api_readiness_policy_snapshot(),
         "runtime_topology": topology_policy,
         "observability": observability,
         "identity": {

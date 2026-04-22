@@ -506,14 +506,23 @@ Last updated: 2026-04-22
   - Group: V1 Release Closure And V2 API Readiness
   - Depends on: PRJ-565
   - Priority: P1
-  - Status: READY
+  - Status: DONE
+  - Result:
+    - `/health.api_readiness` now exposes one shared backend-readiness owner
+      for future `v2` UI callers, covering learned-state, role-skill,
+      connector, and `v1` release surfaces
+    - internal `GET /internal/state/inspect?user_id=...` now carries the same
+      `api_readiness` snapshot so backend-owned inspection sections and
+      current-turn debug surfaces are stable in one place
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_pipeline.py`
 
 - [ ] PRJ-567 Sync docs/context for `v1` closure and `v2` API readiness
   - Owner: Product Docs
   - Group: V1 Release Closure And V2 API Readiness
   - Depends on: PRJ-566
   - Priority: P1
-  - Status: BACKLOG
+  - Status: READY
 
 - [x] PRJ-516 Define the operator-facing incident evidence bundle and retention baseline
   - Owner: Planner

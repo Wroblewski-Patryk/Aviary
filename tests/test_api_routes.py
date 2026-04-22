@@ -959,6 +959,35 @@ def test_health_endpoint_exposes_learned_state_introspection_posture() -> None:
         "current_turn_selection_surface": "system_debug",
         "future_ui_posture": "backend_owned_surfaces_before_ui",
     }
+    assert body["api_readiness"] == {
+        "policy_owner": "v2_backend_api_readiness_policy",
+        "product_stage": "v2_backend_surface_seed",
+        "readiness_state": "stable_backend_surfaces_available",
+        "health_surfaces": {
+            "learned_state": "/health.learned_state",
+            "role_skill": "/health.role_skill",
+            "connectors": "/health.connectors",
+            "v1_readiness": "/health.v1_readiness",
+        },
+        "internal_inspection_path": "/internal/state/inspect",
+        "internal_inspection_sections": [
+            "identity_state",
+            "learned_knowledge",
+            "role_skill_state",
+            "planning_state",
+        ],
+        "planning_state_sections": [
+            "active_goals",
+            "active_tasks",
+            "active_goal_milestones",
+            "pending_proposals",
+        ],
+        "current_turn_debug_surface_path": "/internal/event/debug",
+        "current_turn_role_surface": "system_debug.role",
+        "current_turn_selected_skills_surface": "system_debug.adaptive_state.selected_skills",
+        "current_turn_plan_surface": "system_debug.plan",
+        "connector_posture_surface": "/health.connectors",
+    }
 
 
 def test_internal_state_inspection_endpoint_exposes_learned_and_planning_state() -> None:
@@ -969,6 +998,12 @@ def test_internal_state_inspection_endpoint_exposes_learned_and_planning_state()
     assert response.status_code == 200
     body = response.json()
     assert body["policy_owner"] == "learned_state_inspection_policy"
+    assert body["api_readiness"]["policy_owner"] == "v2_backend_api_readiness_policy"
+    assert body["api_readiness"]["product_stage"] == "v2_backend_surface_seed"
+    assert body["api_readiness"]["health_surfaces"]["learned_state"] == "/health.learned_state"
+    assert body["api_readiness"]["health_surfaces"]["role_skill"] == "/health.role_skill"
+    assert body["api_readiness"]["internal_inspection_path"] == "/internal/state/inspect"
+    assert body["api_readiness"]["current_turn_debug_surface_path"] == "/internal/event/debug"
     assert body["identity_state"]["profile"]["preferred_language"] == "pl"
     assert body["identity_state"]["learned_preferences"]["response_style"] == "concise"
     assert body["identity_state"]["learned_preferences"]["proactive_opt_in"] is True

@@ -245,6 +245,15 @@ Last updated: 2026-04-22
 - 2026-04-22: `PRJ-566` is now the first `READY` task; the next slice should
   leave behind one stable backend API-readiness contract for future `v2` UI
   callers.
+- 2026-04-22: `PRJ-566` is complete: `/health.api_readiness` now exposes one
+  shared backend-readiness contract for future `v2` UI callers, and internal
+  `GET /internal/state/inspect?user_id=...` carries the same snapshot so UI
+  bootstrap can read learned-state, planning-state, role-skill, and
+  current-turn-debug surface contracts from one backend-owned source.
+- 2026-04-22: `PRJ-567` is now the first `READY` task; the final slice should
+  synchronize architecture notes, runtime reality, testing guidance, ops
+  notes, planning, and context around the completed no-UI `v1` baseline plus
+  the new backend API-readiness contract for later `v2` UI work.
 - 2026-04-22: fresh post-`PRJ-515` analysis has now seeded a new queue through
   `PRJ-539`, focused on operator-grade incident-evidence handling, actual
   debug-compat retirement, bounded connector read expansion, external cadence
