@@ -362,7 +362,13 @@ The current repo already works as an MVP slice, but several architecture-level d
     `calendar:read_availability` with `provider_hint=google_calendar`
   - safe output posture is limited to action-owned availability evidence
     rather than raw event titles, attendees, or descriptions
-  - the next active slice in this lane is `PRJ-525`
+- `PRJ-525` is now complete:
+  - planner emits `calendar:read_availability` with
+    `provider_hint=google_calendar` as the selected live-read baseline
+  - action executes that intent through a bounded Google Calendar availability
+    adapter and returns only normalized window evidence, busy-window counts,
+    and free-slot preview notes
+  - the next active slice in this lane is `PRJ-526`
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 

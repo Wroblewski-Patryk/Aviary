@@ -30,6 +30,7 @@ from app.core.connector_policy import (
     connector_guardrail_snapshot,
     connector_intent_policy_violation,
 )
+from app.integrations.calendar.google_calendar_client import GoogleCalendarAvailabilityClient
 from app.integrations.delivery_router import DeliveryRouter
 from app.integrations.task_system.clickup_client import ClickUpTaskClient
 from app.integrations.telegram.client import TelegramClient
@@ -62,6 +63,7 @@ class ActionExecutor:
         openai_api_key: str | None = None,
         openai_embedding_client: OpenAIEmbeddingClient | None = None,
         clickup_task_client: ClickUpTaskClient | None = None,
+        google_calendar_client: GoogleCalendarAvailabilityClient | None = None,
     ):
         self.memory_repository = memory_repository
         self.delivery_router = DeliveryRouter(telegram_client=telegram_client)
@@ -81,6 +83,7 @@ class ActionExecutor:
         if self.openai_embedding_client is None and str(openai_api_key or "").strip():
             self.openai_embedding_client = OpenAIEmbeddingClient(api_key=openai_api_key)
         self.clickup_task_client = clickup_task_client
+        self.google_calendar_client = google_calendar_client
 
     async def execute(self, plan: PlanOutput, delivery: ActionDelivery) -> ActionResult:
         proactive_delivery_guard = plan.proactive_delivery_guard
@@ -264,59 +267,102 @@ class ActionExecutor:
         )
 
     async def _execute_provider_backed_connector_intents(self, plan: PlanOutput) -> ActionResult | None:
-        if self.clickup_task_client is None or not getattr(self.clickup_task_client, "ready", False):
-            return None
-
         executed_actions: list[str] = []
         notes: list[str] = []
 
         for intent in plan.domain_intents:
-            if not isinstance(intent, ExternalTaskSyncDomainIntent):
-                continue
-            if intent.provider_hint != "clickup":
+            if isinstance(intent, ExternalTaskSyncDomainIntent):
+                if (
+                    self.clickup_task_client is None
+                    or not getattr(self.clickup_task_client, "ready", False)
+                    or intent.provider_hint != "clickup"
+                ):
+                    continue
+
+                if intent.operation == "create_task":
+                    task_name = self._connector_task_name(intent.task_hint)
+                    try:
+                        result = await self.clickup_task_client.create_task(
+                            name=task_name,
+                            description=f"Created by AION connector execution from intent: {intent.task_hint}",
+                        )
+                    except Exception as exc:
+                        return ActionResult(
+                            status="fail",
+                            actions=["clickup_create_task"],
+                            notes=f"ClickUp task execution failed: {type(exc).__name__}: {exc}",
+                        )
+
+                    executed_actions.append("clickup_create_task")
+                    task_id = str(result.get("id", "unknown"))
+                    notes.append(f"ClickUp task created ({task_id}) for '{task_name}'.")
+                    continue
+
+                if intent.operation == "list_tasks":
+                    try:
+                        tasks = await self.clickup_task_client.list_tasks(limit=5)
+                    except Exception as exc:
+                        return ActionResult(
+                            status="fail",
+                            actions=["clickup_list_tasks"],
+                            notes=f"ClickUp task read failed: {type(exc).__name__}: {exc}",
+                        )
+
+                    executed_actions.append("clickup_list_tasks")
+                    task_names = [
+                        self._connector_task_name(str(task.get("name", "")))
+                        for task in tasks
+                        if str(task.get("name", "")).strip()
+                    ]
+                    if task_names:
+                        notes.append(
+                            "ClickUp task read returned: " + ", ".join(task_names[:3]) + "."
+                        )
+                    else:
+                        notes.append("ClickUp task read returned no visible tasks.")
+                    continue
+
                 continue
 
-            if intent.operation == "create_task":
-                task_name = self._connector_task_name(intent.task_hint)
+            if isinstance(intent, CalendarSchedulingIntentDomainIntent):
+                if (
+                    self.google_calendar_client is None
+                    or not getattr(self.google_calendar_client, "ready", False)
+                    or intent.provider_hint != "google_calendar"
+                    or intent.operation != "read_availability"
+                ):
+                    continue
                 try:
-                    result = await self.clickup_task_client.create_task(
-                        name=task_name,
-                        description=f"Created by AION connector execution from intent: {intent.task_hint}",
+                    availability = await self.google_calendar_client.read_availability(
+                        time_hint=intent.time_hint,
+                        slot_minutes=60,
+                        slot_limit=3,
                     )
                 except Exception as exc:
                     return ActionResult(
                         status="fail",
-                        actions=["clickup_create_task"],
-                        notes=f"ClickUp task execution failed: {type(exc).__name__}: {exc}",
+                        actions=["google_calendar_read_availability"],
+                        notes=f"Google Calendar availability read failed: {type(exc).__name__}: {exc}",
                     )
 
-                executed_actions.append("clickup_create_task")
-                task_id = str(result.get("id", "unknown"))
-                notes.append(f"ClickUp task created ({task_id}) for '{task_name}'.")
-                continue
-
-            if intent.operation == "list_tasks":
-                try:
-                    tasks = await self.clickup_task_client.list_tasks(limit=5)
-                except Exception as exc:
-                    return ActionResult(
-                        status="fail",
-                        actions=["clickup_list_tasks"],
-                        notes=f"ClickUp task read failed: {type(exc).__name__}: {exc}",
-                    )
-
-                executed_actions.append("clickup_list_tasks")
-                task_names = [
-                    self._connector_task_name(str(task.get("name", "")))
-                    for task in tasks
-                    if str(task.get("name", "")).strip()
-                ]
-                if task_names:
+                executed_actions.append("google_calendar_read_availability")
+                free_slot_preview = list(availability.get("free_slot_preview", []))
+                if free_slot_preview:
                     notes.append(
-                        "ClickUp task read returned: " + ", ".join(task_names[:3]) + "."
+                        "Google Calendar availability read "
+                        f"({availability.get('window_start')} -> {availability.get('window_end')}, "
+                        f"{availability.get('time_zone')}) found "
+                        f"{availability.get('busy_window_count', 0)} busy windows. "
+                        "Top free slots: "
+                        + "; ".join(str(slot) for slot in free_slot_preview[:3])
+                        + "."
                     )
                 else:
-                    notes.append("ClickUp task read returned no visible tasks.")
+                    notes.append(
+                        "Google Calendar availability read "
+                        f"({availability.get('window_start')} -> {availability.get('window_end')}, "
+                        f"{availability.get('time_zone')}) found no bounded free-slot preview."
+                    )
 
         if not executed_actions:
             return None

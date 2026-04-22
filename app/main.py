@@ -31,6 +31,7 @@ from app.core.runtime_policy import (
 )
 from app.core.runtime import RuntimeOrchestrator
 from app.expression.generator import ExpressionAgent
+from app.integrations.calendar.google_calendar_client import GoogleCalendarAvailabilityClient
 from app.integrations.openai.client import OpenAIClient
 from app.integrations.task_system.clickup_client import ClickUpTaskClient
 from app.integrations.telegram.client import TelegramClient
@@ -514,6 +515,11 @@ async def lifespan(app: FastAPI):
         clickup_task_client=ClickUpTaskClient(
             api_token=getattr(settings, "clickup_api_token", None),
             list_id=getattr(settings, "clickup_list_id", None),
+        ),
+        google_calendar_client=GoogleCalendarAvailabilityClient(
+            access_token=getattr(settings, "google_calendar_access_token", None),
+            calendar_id=getattr(settings, "google_calendar_calendar_id", None),
+            default_timezone=str(getattr(settings, "google_calendar_timezone", "UTC")),
         ),
     )
     reflection_worker = ReflectionWorker(memory_repository=memory_repository)

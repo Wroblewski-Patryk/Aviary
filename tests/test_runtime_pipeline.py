@@ -332,6 +332,34 @@ class FakeClickUpTaskClient:
         ]
 
 
+class FakeGoogleCalendarClient:
+    def __init__(self, *, ready: bool = True, error: Exception | None = None):
+        self.ready = ready
+        self.error = error
+        self.calls: list[dict[str, str]] = []
+
+    async def read_availability(self, *, time_hint: str, slot_minutes: int = 60, slot_limit: int = 3) -> dict:
+        self.calls.append(
+            {
+                "time_hint": time_hint,
+                "slot_minutes": str(slot_minutes),
+                "slot_limit": str(slot_limit),
+            }
+        )
+        if self.error is not None:
+            raise self.error
+        return {
+            "window_start": "2026-04-28T08:00:00+00:00",
+            "window_end": "2026-05-03T18:00:00+00:00",
+            "time_zone": "UTC",
+            "busy_window_count": 1,
+            "free_slot_preview": [
+                "2026-04-28T09:00:00+00:00 -> 2026-04-28T10:00:00+00:00",
+                "2026-04-28T11:00:00+00:00 -> 2026-04-28T12:00:00+00:00",
+            ],
+        }
+
+
 class FakeHybridMemoryRepository(FakeMemoryRepository):
     def __init__(self, recent_memory: list[dict] | None = None, user_profile: dict | None = None):
         super().__init__(recent_memory=recent_memory, user_profile=user_profile)
@@ -4767,6 +4795,39 @@ async def test_runtime_pipeline_executes_provider_backed_clickup_task_read_path(
     assert result.action_result.status == "success"
     assert "clickup_list_tasks" in result.action_result.actions
     assert "ClickUp task read returned: Release checklist, Docs sync." in result.action_result.notes
+
+
+async def test_runtime_pipeline_executes_provider_backed_google_calendar_read_path() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=FakeOpenAIClient()),
+        action_executor=ActionExecutor(
+            memory_repository=memory,
+            telegram_client=FakeTelegramClient(),
+            google_calendar_client=FakeGoogleCalendarClient(),
+        ),
+        memory_repository=memory,
+        reflection_worker=FakeReflectionWorker(),
+    )
+    event = Event(
+        event_id="evt-calendar-read",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "When can we use the calendar next week for a team sync?"},
+        meta=EventMeta(user_id="u-1", trace_id="t-calendar-read"),
+    )
+
+    result = await runtime.run(event)
+
+    assert result.action_result.status == "success"
+    assert "google_calendar_read_availability" in result.action_result.actions
+    assert "Google Calendar availability read" in result.action_result.notes
 
 
 def _build_behavior_runtime(memory_repository: FakeMemoryRepository) -> RuntimeOrchestrator:

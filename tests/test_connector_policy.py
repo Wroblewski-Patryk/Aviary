@@ -86,13 +86,13 @@ def test_connector_read_baseline_selects_clickup_task_list_as_next_live_read_pat
 
     assert snapshot["policy_owner"] == "connector_read_execution_baseline"
     selected = snapshot["selected_live_read_path"]
-    assert selected["connector_kind"] == "task_system"
-    assert selected["provider"] == "clickup"
-    assert selected["operation"] == "list_tasks"
+    assert selected["connector_kind"] == "calendar"
+    assert selected["provider"] == "google_calendar"
+    assert selected["operation"] == "read_availability"
     assert selected["execution_mode"] == "provider_backed_next"
     assert (
-        snapshot["deferred_families"]["calendar"]
-        == "policy_only_until_read_posture_and_time-boundary_contracts_are_explicit"
+        snapshot["deferred_families"]["task_system"]
+        == "current_live_read_path_already_implemented_through_clickup_list_tasks"
     )
 
 
@@ -142,6 +142,7 @@ def test_planning_agent_uses_shared_connector_policy_for_non_mutating_intents() 
         if isinstance(intent, CalendarSchedulingIntentDomainIntent)
     )
     assert calendar_intent.operation == "read_availability"
+    assert calendar_intent.provider_hint == "google_calendar"
     assert calendar_intent.mode == resolve_connector_operation_policy(
         "calendar",
         "read_availability",

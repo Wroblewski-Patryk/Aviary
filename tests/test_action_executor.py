@@ -137,6 +137,34 @@ class FakeClickUpTaskClient:
         ]
 
 
+class FakeGoogleCalendarClient:
+    def __init__(self, *, ready: bool = True, error: Exception | None = None):
+        self.ready = ready
+        self.error = error
+        self.calls: list[dict[str, str]] = []
+
+    async def read_availability(self, *, time_hint: str, slot_minutes: int = 60, slot_limit: int = 3) -> dict:
+        self.calls.append(
+            {
+                "time_hint": time_hint,
+                "slot_minutes": str(slot_minutes),
+                "slot_limit": str(slot_limit),
+            }
+        )
+        if self.error is not None:
+            raise self.error
+        return {
+            "window_start": "2026-04-23T08:00:00+00:00",
+            "window_end": "2026-04-23T18:00:00+00:00",
+            "time_zone": "UTC",
+            "busy_window_count": 2,
+            "free_slot_preview": [
+                "2026-04-23T09:00:00+00:00 -> 2026-04-23T10:00:00+00:00",
+                "2026-04-23T13:00:00+00:00 -> 2026-04-23T14:00:00+00:00",
+            ],
+        }
+
+
 def _event(text: str) -> Event:
     return Event(
         event_id="evt-1",
@@ -371,6 +399,86 @@ async def test_execute_runs_provider_backed_clickup_task_read_before_delivery() 
     assert result.actions == ["clickup_list_tasks", "api_response"]
     assert "ClickUp task read returned: Release checklist, Docs sync." in result.notes
     assert clickup_client.calls == [{"operation": "list_tasks", "limit": "5"}]
+
+
+async def test_execute_runs_provider_backed_google_calendar_read_before_delivery() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    calendar_client = FakeGoogleCalendarClient()
+    executor = ActionExecutor(
+        memory_repository=memory_repository,
+        telegram_client=telegram_client,
+        google_calendar_client=calendar_client,
+    )
+
+    plan = _plan(
+        domain_intents=[
+            CalendarSchedulingIntentDomainIntent(
+                operation="read_availability",
+                provider_hint="google_calendar",
+                mode="read_only",
+                title_hint="team sync",
+                time_hint="tomorrow morning",
+            )
+        ]
+    )
+
+    result = await executor.execute(
+        plan,
+        _delivery(
+            channel="api",
+            execution_envelope=build_action_delivery_execution_envelope(plan),
+        ),
+    )
+
+    assert result.status == "success"
+    assert result.actions == ["google_calendar_read_availability", "api_response"]
+    assert "Google Calendar availability read" in result.notes
+    assert "Top free slots:" in result.notes
+    assert calendar_client.calls == [
+        {
+            "time_hint": "tomorrow morning",
+            "slot_minutes": "60",
+            "slot_limit": "3",
+        }
+    ]
+
+
+async def test_execute_fails_when_provider_backed_google_calendar_read_errors() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    calendar_client = FakeGoogleCalendarClient(error=RuntimeError("calendar unavailable"))
+    executor = ActionExecutor(
+        memory_repository=memory_repository,
+        telegram_client=telegram_client,
+        google_calendar_client=calendar_client,
+    )
+
+    plan = _plan(
+        domain_intents=[
+            CalendarSchedulingIntentDomainIntent(
+                operation="read_availability",
+                provider_hint="google_calendar",
+                mode="read_only",
+                title_hint="team sync",
+                time_hint="next week",
+            )
+        ]
+    )
+
+    result = await executor.execute(
+        plan,
+        _delivery(
+            channel="telegram",
+            chat_id=123456,
+            execution_envelope=build_action_delivery_execution_envelope(plan),
+        ),
+    )
+
+    assert result.status == "fail"
+    assert result.actions == ["google_calendar_read_availability"]
+    assert "calendar unavailable" in result.notes
+    assert telegram_client.calls == []
 
 
 async def test_execute_blocks_connector_intent_when_mode_violates_shared_policy() -> None:

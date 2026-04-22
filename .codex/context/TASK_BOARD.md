@@ -171,7 +171,17 @@ Last updated: 2026-04-22
     behavior evidence for dedicated-admin-only incident-evidence posture.
   - docs, runtime reality, testing guidance, ops notes, and context truth now
     describe the same incident-evidence-backed retirement proof.
-  - `PRJ-524` is the next bounded connector-read planning slice.
+  - `PRJ-524` seeded the bounded calendar read lane that is now active through
+    `PRJ-525`.
+
+- Group 78 note:
+  - `PRJ-524..PRJ-525` are now complete.
+  - the bounded calendar read lane now has one explicit provider
+    (`google_calendar`), one provider-backed action adapter, and one bounded
+    output shape limited to normalized availability evidence instead of raw
+    event payloads.
+  - `PRJ-526` is the next active slice for operator-visible readiness and
+    failure posture through `/health.connectors`.
 
 - [x] PRJ-520 Freeze the shared debug compatibility retirement gate
   - Owner: Planner
@@ -271,15 +281,23 @@ Last updated: 2026-04-22
   - Validation:
     - connector policy, architecture, and ops cross-review
 
-- [ ] PRJ-525 Implement the selected calendar read adapter behind existing connector policy gates
+- [x] PRJ-525 Implement the selected calendar read adapter behind existing connector policy gates
   - Owner: Backend Builder
   - Group: Calendar Read Connector Baseline
   - Depends on: PRJ-524
   - Priority: P2
-  - Status: READY
+  - Status: DONE
   - Done when:
     - the selected calendar read path executes from explicit read-only typed
       intents and returns bounded execution notes through action
+  - Result:
+    - planner now emits `calendar:read_availability` with
+      `provider_hint=google_calendar` as the bounded live-read baseline instead
+      of leaving the provider implicit
+    - action now executes that typed intent through a dedicated
+      `GoogleCalendarAvailabilityClient`, returning bounded availability
+      evidence only: normalized window, busy-window count, and top free-slot
+      preview without raw event titles or attendee payloads
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_connector_policy.py tests/test_planning_agent.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
 
@@ -288,7 +306,7 @@ Last updated: 2026-04-22
   - Group: Calendar Read Connector Baseline
   - Depends on: PRJ-525
   - Priority: P2
-  - Status: BACKLOG
+  - Status: READY
   - Done when:
     - operators can distinguish policy-only, credentials-missing, and
       provider-backed-ready calendar read posture through the existing health

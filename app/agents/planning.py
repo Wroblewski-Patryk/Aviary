@@ -934,6 +934,7 @@ class PlanningAgent:
         if any(keyword in lowered_text for keyword in ("availability", "free", "woln", "when can", "kiedy")):
             return CalendarSchedulingIntentDomainIntent(
                 operation="read_availability",
+                provider_hint="google_calendar",
                 mode=resolve_connector_operation_policy("calendar", "read_availability").mode,
                 title_hint=lowered_text[:120],
                 time_hint=lowered_text[:120],

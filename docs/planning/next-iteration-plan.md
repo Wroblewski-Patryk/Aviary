@@ -290,7 +290,11 @@ Completed on 2026-04-22:
   frozen as `calendar:read_availability` with `provider_hint=google_calendar`,
   read-only opt-in posture, and an action-owned safe output shape limited to
   normalized availability evidence rather than raw calendar event payloads.
-- the next active slice in this lane is `PRJ-525`.
+- `PRJ-525` is complete: planner now emits the bounded calendar live-read path
+  with `provider_hint=google_calendar`, and action executes it through a
+  dedicated Google Calendar availability adapter that returns only normalized
+  availability evidence, busy-window counts, and top free-slot previews.
+- the next active slice in this lane is `PRJ-526`.
 
 - `PRJ-524` Define the first bounded calendar read baseline.
   - Result:

@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     database_url: str | None = None
     clickup_api_token: str | None = None
     clickup_list_id: str | None = None
+    google_calendar_access_token: str | None = None
+    google_calendar_calendar_id: str | None = None
+    google_calendar_timezone: str = "UTC"
     app_env: str = "development"
     app_port: int = 8000
     log_level: str = "INFO"

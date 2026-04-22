@@ -635,7 +635,7 @@ def test_planning_agent_builds_connected_drive_intent_and_permission_gate() -> N
 
 def test_planning_agent_builds_allowed_connector_permission_gates_for_read_and_suggestion_posture() -> None:
     result = PlanningAgent().run(
-        event=_event(text="List tasks in ClickUp and suggest how to organize files in Google Drive."),
+        event=_event(text="When can we use the calendar next week, list tasks in ClickUp and suggest how to organize files in Google Drive."),
         context=_context(),
         motivation=MotivationOutput(
             importance=0.7,
@@ -647,12 +647,25 @@ def test_planning_agent_builds_allowed_connector_permission_gates_for_read_and_s
         role=RoleOutput(selected="advisor", confidence=0.82),
     )
 
+    calendar_intent = next(
+        intent for intent in result.domain_intents if isinstance(intent, CalendarSchedulingIntentDomainIntent)
+    )
+    calendar_gate = next(
+        gate for gate in result.connector_permission_gates if gate.connector_kind == "calendar"
+    )
     task_gate = next(
         gate for gate in result.connector_permission_gates if gate.connector_kind == "task_system"
     )
     drive_gate = next(
         gate for gate in result.connector_permission_gates if gate.connector_kind == "cloud_drive"
     )
+
+    assert calendar_intent.operation == "read_availability"
+    assert calendar_intent.provider_hint == "google_calendar"
+    assert calendar_gate.operation == "read_availability"
+    assert calendar_gate.allowed is True
+    assert calendar_gate.requires_confirmation is False
+    assert calendar_gate.reason == "suggestion_or_read_only_allowed"
 
     assert task_gate.operation == "list_tasks"
     assert task_gate.allowed is True
