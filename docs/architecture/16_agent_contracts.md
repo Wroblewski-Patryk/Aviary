@@ -344,7 +344,8 @@ Durable attention contract-store rollout:
    cleanup timing, while repository code owns durable storage primitives.
 4. `/health.attention` should expose contract-store posture and cleanup
    candidate visibility before any production-default switch to durable owner
-   mode.
+   mode, including `contract_store_mode`, `deployment_readiness.contract_store_state`,
+   `stale_cleanup_candidates`, and `answered_cleanup_candidates`.
 
 Canonical ownership baseline:
 

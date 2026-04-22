@@ -31,6 +31,11 @@ Last updated: 2026-04-22
 - Memory, continuity, failure handling, adaptive governance, scheduler and
   connector boundaries, retrieval posture, and release evidence are now
   validated as living-system behavior rather than planning-only follow-ups.
+- Post-convergence Group 60 is now complete through `PRJ-457`.
+- Attention contract-store docs, config guidance, ops runbook visibility, and
+  planning/context truth now consistently describe repository-backed durable
+  inbox posture instead of mixing rollout-era wording with current runtime
+  reality.
 
 ## READY
 
@@ -57,6 +62,51 @@ Last updated: 2026-04-22
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-457 Sync planning/context for attention contract-store docs convergence
+  - Status: DONE
+  - Group: Attention Contract-Store Docs Convergence
+  - Owner: Product Docs
+  - Depends on: PRJ-456
+  - Priority: P1
+  - Result:
+    - task board, project state, next-iteration plan, and open decisions now
+      describe one shared post-`PRJ-457` stance for durable attention
+      contract-store documentation convergence
+    - future follow-up discovery no longer needs to reconcile attention-owner
+      drift across planning surfaces first
+  - Validation:
+    - doc-and-context sync across `.codex/context/` and `docs/planning/`
+
+- [x] PRJ-456 Sync ops/config docs for durable attention contract-store visibility
+  - Status: DONE
+  - Group: Attention Contract-Store Docs Convergence
+  - Owner: Ops/Release
+  - Depends on: PRJ-455
+  - Priority: P1
+  - Result:
+    - config and runbook guidance now describe the live repository-backed
+      durable inbox posture and the exact `/health.attention` fields used for
+      contract-store and cleanup triage
+  - Validation:
+    - doc sync across `docs/architecture/26_env_and_config.md` and
+      `docs/operations/runtime-ops-runbook.md`
+
+- [x] PRJ-455 Record durable attention contract-store baseline in canonical docs
+  - Status: DONE
+  - Group: Attention Contract-Store Docs Convergence
+  - Owner: Product Docs
+  - Depends on: PRJ-454
+  - Priority: P1
+  - Result:
+    - canonical docs now explicitly state that durable attention uses
+      repository-backed `aion_attention_turn` storage and exposes concrete
+      contract-store posture fields for operator visibility
+    - implementation-reality table inventory now includes
+      `aion_attention_turn` as part of the live persisted schema
+  - Validation:
+    - doc sync across `docs/architecture/16_agent_contracts.md` and
+      `docs/implementation/runtime-reality.md`
 
 - [x] PRJ-454 Sync post-convergence planning surfaces after Groups 57 through 59
   - Status: DONE

@@ -569,6 +569,7 @@ The codebase currently persists these concrete tables:
 - `aion_semantic_embedding`
 - `aion_theta`
 - `aion_relation`
+- `aion_attention_turn`
 - `aion_goal`
 - `aion_task`
 - `aion_goal_progress`

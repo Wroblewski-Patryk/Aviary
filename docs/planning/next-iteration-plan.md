@@ -82,6 +82,10 @@ Completed on 2026-04-22:
   post-`PRJ-453` follow-up discovery as the only active planning posture and
   no longer mix it with stale queue-seeding notes from the earlier
   `PRJ-415..PRJ-442` convergence wave.
+- `PRJ-455..PRJ-457` are complete: durable attention contract-store
+  documentation now converges across canonical contracts, implementation
+  reality, env/config guidance, ops runbook notes, and planning/context
+  surfaces.
 
 ## Post-Convergence Operating Mode
 

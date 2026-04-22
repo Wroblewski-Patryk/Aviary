@@ -1787,6 +1787,11 @@ Last updated: 2026-04-22
   consistently describe post-`PRJ-453` follow-up discovery mode and no longer
   keep stale references to the older seeded `PRJ-415..PRJ-442` queue as if it
   were still the current planning baseline.
+- 2026-04-22: `PRJ-455..PRJ-457` are complete: canonical attention docs,
+  config guidance, ops runbook notes, and planning/context surfaces now align
+  on repository-backed `aion_attention_turn` durable inbox posture and the
+  exact `/health.attention` contract-store visibility fields used for
+  operator triage.
 
 ## Working Agreements
 

@@ -358,8 +358,8 @@ Compatibility `STARTUP_SCHEMA_MODE=create_tables` should be removed only after:
   expose canonical debug route path ownership
 - `event_debug_shared_ingress_mode`,
   `event_debug_shared_ingress_break_glass_required`, and
-  `event_debug_shared_ingress_posture` to expose transitional shared-endpoint
-  sunset posture
+  `event_debug_shared_ingress_posture` to expose final shared-route
+  compatibility versus break-glass posture
 - `startup_schema_compatibility_posture`,
   `startup_schema_compatibility_sunset_ready`, and
   `startup_schema_compatibility_sunset_reason` to expose whether migration-only
@@ -577,8 +577,9 @@ coalescing tolerance.
 Controls attention turn-assembly owner posture:
 
 - `in_process`: in-memory turn coordinator owns burst-message assembly
-- `durable_inbox`: durable inbox owner is expected (current runtime exposes
-  explicit readiness/blocker posture for this mode)
+- `durable_inbox`: attention boundary uses repository-backed
+  `aion_attention_turn` storage while keeping the same burst-message assembly
+  semantics
 
 Health posture (`/health.attention`) now exposes this owner mode through:
 
@@ -587,6 +588,10 @@ Health posture (`/health.attention`) now exposes this owner mode through:
 - `durable_inbox_expected`
 - `deployment_readiness` (`selected_coordination_mode`, `ready`,
   `blocking_signals`)
+- `persistence_owner` and `parity_state`
+- `contract_store_mode`
+- `deployment_readiness.contract_store_state`
+- `stale_cleanup_candidates` and `answered_cleanup_candidates`
 
 `ATTENTION_ANSWERED_TTL_SECONDS`
 

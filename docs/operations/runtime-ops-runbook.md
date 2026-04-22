@@ -72,6 +72,11 @@ settings) and latest reflection/maintenance tick summaries.
 posture (`coordination_mode`, owner/readiness semantics, timing windows) and
 live turn counters (`pending`, `claimed`, `answered`) to support burst-message
 triage and owner-mode rollout verification.
+`GET /health.attention` also exposes durable contract-store posture through
+`persistence_owner`, `parity_state`, `contract_store_mode`,
+`deployment_readiness.contract_store_state`, `stale_cleanup_candidates`, and
+`answered_cleanup_candidates`, so operators can distinguish in-memory owner
+mode from repository-backed durable inbox behavior and cleanup pressure.
 `GET /health.attention.timing_policy` now also exposes the production timing
 baseline (`120ms` burst window, `5s` answered TTL, `30s` stale cleanup) plus
 alignment posture for the currently selected config values.
