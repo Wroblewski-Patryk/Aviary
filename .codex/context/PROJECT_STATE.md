@@ -1821,6 +1821,15 @@ Last updated: 2026-04-22
 - 2026-04-22: the next `READY` lane is Group 64 (`PRJ-468..PRJ-471`),
   focused on canonical architecture-doc consistency after schema truth was
   restored.
+- 2026-04-22: `PRJ-468..PRJ-471` are complete: canonical docs no longer carry
+  a competing older flow where `action` precedes `expression`, and action docs
+  now distinguish action-owned side effects from runtime-owned post-action
+  follow-ups such as episodic memory persistence and reflection enqueue.
+- 2026-04-22: `docs/README.md` and `docs/overview.md` now explicitly direct
+  readers to `02_architecture.md`, `15_runtime_flow.md`, and
+  `16_agent_contracts.md` as the canonical ordering/ownership set.
+- 2026-04-22: the next `READY` lane is Group 65 (`PRJ-472..PRJ-475`),
+  focused on connector execution productionization.
 
 ## Working Agreements
 

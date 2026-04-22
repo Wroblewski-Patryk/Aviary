@@ -24,6 +24,13 @@ The documentation is intentionally split into two layers:
 
 When those layers differ, the difference must be explicit rather than hidden.
 
+For canonical stage ordering and ownership boundaries, treat
+`docs/architecture/02_architecture.md`,
+`docs/architecture/15_runtime_flow.md`, and
+`docs/architecture/16_agent_contracts.md` as the source of truth. Older
+numbered architecture docs should elaborate on that contract, not contradict
+it.
+
 ## Current Runtime Shape
 
 The implemented foreground path is:

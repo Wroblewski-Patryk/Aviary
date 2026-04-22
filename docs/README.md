@@ -13,6 +13,10 @@ This repository uses a two-layer documentation model:
 - `architecture/15_runtime_flow.md` - canonical runtime order
 - `architecture/16_agent_contracts.md` - canonical stage contracts
 
+If an older numbered architecture doc ever reads differently from `02`, `15`,
+and `16`, treat `02/15/16` as canonical and update the older file instead of
+carrying two competing architecture narratives.
+
 ## Canonical Architecture
 
 These files describe the intended long-term shape of the system:

@@ -52,24 +52,23 @@ Last updated: 2026-04-22
 
 ## READY
 
-- [ ] PRJ-468 Audit canonical architecture docs for flow/order drift against `02`, `15`, and `16`
+- [ ] PRJ-472 Decide the MVP production boundary for connector execution adapters
   - Owner: Planner
-  - Group: Canonical Docs Consistency Sweep
-  - Depends on: PRJ-467
+  - Group: Connector Execution Productionization
+  - Depends on: PRJ-471
   - Priority: P1
   - Why now:
-    - migration parity is now restored, so the next biggest architecture risk
-      is stale canonical-doc wording that still contradicts the current
-      `expression -> action` boundary or dual-loop ownership
+    - schema truth and canonical-doc consistency are now aligned, so the next
+      live architecture gap is connector runtime behavior that is still mostly
+      policy-only rather than provider-backed
   - Done when:
-    - one explicit inventory identifies which older architecture docs still
-      conflict with the current canonical contract set
-    - the repo has a bounded rewrite target before touching docs content
+    - the repo records which connector families stay proposal-only and which
+      one will gain the first provider-backed execution path
+    - action/policy/docs can move forward without ambiguous connector scope
   - Validation:
-    - targeted cross-review across `docs/architecture/02_architecture.md`,
-      `docs/architecture/15_runtime_flow.md`,
-      `docs/architecture/16_agent_contracts.md`, and older numbered
-      architecture docs
+    - cross-review across `docs/planning/open-decisions.md`,
+      `docs/architecture/16_agent_contracts.md`, and
+      `docs/operations/runtime-ops-runbook.md`
 
 ## BACKLOG
 
@@ -92,6 +91,74 @@ Last updated: 2026-04-22
 - [ ] (none)
 
 ## DONE
+
+- [x] PRJ-471 Sync planning/context for canonical docs consistency
+  - Status: DONE
+  - Group: Canonical Docs Consistency Sweep
+  - Owner: Product Docs
+  - Depends on: PRJ-470
+  - Priority: P1
+  - Result:
+    - planning/context truth now records one completed architecture-doc sweep
+      instead of leaving Group 64 as an implied docs cleanup
+    - the next active lane is connector execution productionization
+  - Validation:
+    - doc-and-context sync across `.codex/context/` and `docs/planning/`
+
+- [x] PRJ-470 Align overview and docs index with the corrected canonical architecture narrative
+  - Status: DONE
+  - Group: Canonical Docs Consistency Sweep
+  - Owner: Product Docs
+  - Depends on: PRJ-469
+  - Priority: P1
+  - Result:
+    - `docs/README.md` and `docs/overview.md` now point readers to `02`, `15`,
+      and `16` as the canonical source of stage order and ownership semantics
+    - older numbered architecture docs are no longer implicitly treated as
+      alternate canonical flows
+  - Validation:
+    - doc sync across `docs/README.md` and `docs/overview.md`
+
+- [x] PRJ-469 Rewrite stale architecture docs to match the current canonical contract set
+  - Status: DONE
+  - Group: Canonical Docs Consistency Sweep
+  - Owner: Product Docs
+  - Depends on: PRJ-468
+  - Priority: P1
+  - Result:
+    - `docs/architecture/05_conscious_subconscious.md` now uses the canonical
+      `planning -> expression -> action -> memory -> reflection trigger`
+      narrative instead of the older `plan -> action -> expression -> memory`
+      ordering
+    - `docs/architecture/20_action_system.md` now distinguishes action-owned
+      side effects from runtime-owned post-action follow-ups
+      (`memory`, `reflection enqueue`) instead of treating all persistence as
+      generic action work
+  - Validation:
+    - cross-doc consistency review across `docs/architecture/05_*`,
+      `20_action_system.md`, `02_architecture.md`,
+      `15_runtime_flow.md`, and `16_agent_contracts.md`
+
+- [x] PRJ-468 Audit canonical architecture docs for flow/order drift against `02`, `15`, and `16`
+  - Status: DONE
+  - Group: Canonical Docs Consistency Sweep
+  - Owner: Planner
+  - Depends on: PRJ-467
+  - Priority: P1
+  - Result:
+    - audit identified two concrete canonical-doc drifts:
+      `docs/architecture/05_conscious_subconscious.md` still reversed
+      `expression` and `action`, and `docs/architecture/20_action_system.md`
+      still treated memory/trigger follow-ups as generic action ownership
+    - `docs/README.md` and `docs/overview.md` were also identified as the
+      right reader-entry surfaces to restate `02/15/16` precedence
+  - Validation:
+    - targeted cross-review across `docs/architecture/02_architecture.md`,
+      `docs/architecture/15_runtime_flow.md`,
+      `docs/architecture/16_agent_contracts.md`,
+      `docs/architecture/05_conscious_subconscious.md`,
+      `docs/architecture/20_action_system.md`, `docs/README.md`, and
+      `docs/overview.md`
 
 - [x] PRJ-467 Sync docs/context for migration parity and schema governance
   - Status: DONE

@@ -2,12 +2,12 @@
 
 ## Purpose
 
-This document defines the two main operating modes of AION:
+This document defines the two operating modes of AION:
 
-- conscious loop  
-- subconscious loop  
+- conscious loop
+- subconscious loop
 
-They are not separate personalities.  
+They are not separate personalities.
 They are two modes of the same system.
 
 ---
@@ -16,8 +16,8 @@ They are two modes of the same system.
 
 AION operates in two temporal modes:
 
-- Conscious → handles the present  
-- Subconscious → processes the past to improve the future  
+- Conscious -> handles the present turn through the foreground pipeline
+- Subconscious -> processes stored episodes to improve future turns
 
 ---
 
@@ -33,31 +33,30 @@ It reacts to incoming events and produces immediate behavior.
 
 ### Responsibilities
 
-- receive event  
-- interpret input  
-- build context  
-- retrieve memory  
-- evaluate importance  
-- select role  
-- create plan  
-- execute actions  
-- generate response  
-- store episodic memory  
+- receive and normalize the event
+- assemble or claim the attention turn when needed
+- load the runtime baseline (identity, memory, goals, tasks, adaptive state)
+- run the canonical foreground stage order:
+  `perception -> context -> motivation -> role -> planning -> expression -> action`
+- hand off the completed turn to post-action follow-ups:
+  episodic memory persistence and reflection enqueue
 
 ---
 
 ### Flow
 
-input → perception → context → motivation → role → plan → action → expression → memory
+event -> normalization -> attention intake -> baseline load -> perception ->
+context -> motivation -> role -> planning -> expression -> action -> memory ->
+reflection trigger
 
 ---
 
 ### Characteristics
 
-- fast  
-- reactive  
-- visible to user  
-- action-oriented  
+- fast
+- reactive
+- visible to the user
+- execution-oriented
 
 ---
 
@@ -65,12 +64,13 @@ input → perception → context → motivation → role → plan → action →
 
 The conscious loop must NOT:
 
-- update identity directly  
-- perform deep learning  
-- overfit on single events  
-- perform heavy reflection  
+- update identity directly
+- perform deep learning
+- overfit on single events
+- perform heavy reflection
 
-Its job is to act, not to evolve the system.
+Its job is to complete the current turn correctly, not to evolve the system by
+itself.
 
 ---
 
@@ -86,34 +86,36 @@ It runs independently of real-time interaction.
 
 ### Responsibilities
 
-- analyze stored memory  
-- detect patterns  
-- generate conclusions  
-- update theta  
-- refine behavior  
-- maintain consistency  
+- analyze stored memory
+- detect patterns
+- generate conclusions
+- update theta and relation state
+- refine behavior
+- maintain consistency
+- prepare proposal-style background outputs for conscious review when needed
 
 ---
 
 ### Flow
 
-memory → analysis → pattern detection → conclusions → theta update → storage
+memory -> analysis -> pattern detection -> conclusions -> adaptive updates ->
+stored background outputs
 
 ---
 
 ### Characteristics
 
-- slow  
-- reflective  
-- not user-visible  
-- pattern-oriented  
+- slow
+- reflective
+- not user-visible
+- pattern-oriented
 
 ---
 
 ## Key Rule
 
-Conscious loop = action  
-Subconscious loop = adaptation  
+Conscious loop = bounded real-time execution
+Subconscious loop = delayed adaptation
 
 This separation is critical.
 
@@ -123,16 +125,16 @@ This separation is critical.
 
 Without separation:
 
-- system becomes slow  
-- learning becomes unstable  
-- identity becomes chaotic  
-- responses degrade  
+- the system becomes slow
+- learning becomes unstable
+- identity becomes chaotic
+- responses degrade
 
 With separation:
 
-- real-time stays fast  
-- learning stays stable  
-- system evolves correctly  
+- real-time stays fast
+- learning stays stable
+- the system evolves correctly
 
 ---
 
@@ -140,11 +142,11 @@ With separation:
 
 Both loops operate on the same:
 
-- identity  
-- memory  
-- theta  
-- goals  
-- context  
+- identity
+- memory
+- theta
+- goals
+- context
 
 This ensures coherence.
 
@@ -154,14 +156,14 @@ This ensures coherence.
 
 ### Conscious loop
 
-- communicates directly with user  
+- communicates directly with the user
 
 ### Subconscious loop
 
-- does NOT communicate directly  
-- produces internal updates  
+- does NOT communicate directly
+- produces internal updates, conclusions, and proposals
 
-If needed, subconscious insights are passed through conscious loop.
+If needed, subconscious insights are passed through the conscious loop.
 
 ---
 
@@ -169,29 +171,30 @@ If needed, subconscious insights are passed through conscious loop.
 
 ### Conscious triggers
 
-- user message  
-- API request  
-- system event  
+- user message
+- API request
+- system event
+- scheduler wakeup that is admitted through the attention boundary
 
 ### Subconscious triggers
 
-- time-based (cron)  
-- batch processing  
-- after N events  
-- scheduled reflection  
+- time-based cadence
+- queued reflection work
+- scheduled maintenance
+- explicit background execution owner
 
 ---
 
 ## Temporal Dynamics
 
-- conscious loop = immediate  
-- subconscious loop = periodic  
+- conscious loop = immediate
+- subconscious loop = periodic or deferred
 
 Example:
 
-- real-time: always active  
-- reflection: every few hours  
-- deep reflection: daily  
+- live turn handling: immediate
+- reflection: scheduled or queue-driven
+- deeper background analysis: delayed
 
 ---
 
@@ -199,9 +202,9 @@ Example:
 
 If subconscious loop fails:
 
-- conscious loop must still work  
-- system must still respond  
-- reflection can retry later  
+- conscious loop must still work
+- the system must still respond
+- background work can retry later
 
 ---
 
@@ -209,17 +212,18 @@ If subconscious loop fails:
 
 ### Conscious
 
-- FastAPI endpoint  
-- LangGraph pipeline  
-- Telegram integration  
-- memory writing  
+- event ingress (`FastAPI`, Telegram, scheduler-normalized wakeups)
+- runtime orchestrator and foreground graph
+- expression-to-action handoff
+- action-layer side effects
+- post-action follow-ups (`memory`, `reflection trigger`)
 
 ### Subconscious
 
-- background worker  
-- scheduler  
-- reflection pipeline  
-- conclusion updates  
+- reflection worker
+- scheduler and externalized background execution paths
+- reflection inference modules
+- proposal generation and adaptive-output maintenance
 
 ---
 
@@ -227,8 +231,5 @@ If subconscious loop fails:
 
 AION works because:
 
-- it acts in the present  
-- it learns from the past  
-
-Conscious loop lives.  
-Subconscious loop understands.
+- it acts in the present through the conscious loop
+- it learns from the past through the subconscious loop

@@ -96,6 +96,10 @@ Completed on 2026-04-22:
   full live model set, Alembic head creates durable attention and subconscious
   proposal tables, and schema-baseline regressions now prove fresh
   migration-first bootstrap against the current metadata baseline.
+- `PRJ-468..PRJ-471` are complete: canonical architecture docs no longer carry
+  a conflicting `plan -> action -> expression` flow, action docs now separate
+  action-owned side effects from runtime follow-ups, and reader-entry docs now
+  restate `02/15/16` as the canonical ownership set.
 
 Planned on 2026-04-22 after full architecture-conformance analysis:
 
@@ -183,6 +187,18 @@ Completed on 2026-04-22:
       `docs/implementation/`, `docs/operations/`, and `docs/engineering/`
 
 ## Group 64 - Canonical Docs Consistency Sweep
+
+Completed on 2026-04-22:
+
+- `PRJ-468` audit identified the concrete drift surface: older architecture
+  docs in `05_conscious_subconscious.md` and `20_action_system.md`, plus
+  reader-entry ambiguity in `docs/README.md` and `docs/overview.md`.
+- `PRJ-469` rewrote those stale architecture docs to match the current
+  canonical foreground order and post-action ownership split.
+- `PRJ-470` aligned `docs/README.md` and `docs/overview.md` so readers are
+  redirected to `02`, `15`, and `16` whenever numbered docs differ.
+- `PRJ-471` synchronized planning/context truth so the completed docs sweep is
+  recorded and the next lane can move on to connector execution.
 
 - `PRJ-468` Audit canonical architecture docs for flow/order drift against `02`, `15`, and `16`.
   - Result:

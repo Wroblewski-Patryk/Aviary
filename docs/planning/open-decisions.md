@@ -120,7 +120,7 @@ The current repo already works as an MVP slice, but several architecture-level d
   post-convergence lanes that should be handled before another broad planning
   pass:
   - `PRJ-464..PRJ-467`: migration parity and schema governance - complete
-  - `PRJ-468..PRJ-471`: canonical docs consistency sweep
+  - `PRJ-468..PRJ-471`: canonical docs consistency sweep - complete
   - `PRJ-472..PRJ-475`: connector execution productionization
   - `PRJ-476..PRJ-479`: retrieval provider completion
   - `PRJ-480..PRJ-483`: background worker externalization
@@ -135,6 +135,12 @@ The current repo already works as an MVP slice, but several architecture-level d
   - migration parity is regression-tested through fresh `upgrade head`
     instead of inferred only from metadata or runtime docs
   - the next active lane is canonical architecture-doc consistency
+- `PRJ-468..PRJ-471` are now complete:
+  - older canonical docs no longer contradict the `planning -> expression ->
+    action` boundary or the runtime-owned post-action follow-up split
+  - `docs/README.md` and `docs/overview.md` now explicitly direct readers to
+    `02/15/16` as the canonical contract set
+  - the next active lane is connector execution productionization
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 
