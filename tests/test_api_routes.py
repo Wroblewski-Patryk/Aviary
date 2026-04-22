@@ -3117,6 +3117,7 @@ def test_health_endpoint_exposes_observability_export_policy_baseline() -> None:
         "required_policy_posture_surfaces": [
             "runtime_policy",
             "memory_retrieval",
+            "learned_state",
             "scheduler.external_owner_policy",
             "reflection.supervision",
             "connectors.execution_baseline",

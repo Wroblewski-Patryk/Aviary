@@ -227,14 +227,27 @@ Last updated: 2026-04-22
   - Group: Learned-State And Skill Introspection
   - Depends on: PRJ-549
   - Priority: P1
-  - Status: READY
+  - Status: DONE
+  - Result:
+    - runtime incident evidence now treats `learned_state` as a required
+      policy posture surface alongside runtime policy, retrieval, scheduler,
+      reflection, connector execution, and Telegram conversation posture
+    - release smoke now validates the learned-state introspection owner and
+      internal inspection path from `/health`, debug-mode `incident_evidence`,
+      and incident-evidence bundles
+    - behavior-validation gate fixtures now fail when the learned-state
+      posture is missing from incident evidence or carries the wrong owner/path
+      contract
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py`
+    - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
 
 - [ ] PRJ-551 Sync docs/context for learned-state and skill introspection
   - Owner: Product Docs
   - Group: Learned-State And Skill Introspection
   - Depends on: PRJ-550
   - Priority: P1
-  - Status: BACKLOG
+  - Status: READY
 
 - [ ] PRJ-552 Define the architecture baseline for web search and browser tool families
   - Owner: Planner

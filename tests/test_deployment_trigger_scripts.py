@@ -147,6 +147,10 @@ def stub_aion_server() -> _StubAionServer:
             "export_artifact_available": True,
             "incident_export_ready": True,
         },
+        "learned_state": {
+            "policy_owner": "learned_state_inspection_policy",
+            "internal_inspection_path": "/internal/state/inspect",
+        },
         "conversation_channels": {
             "telegram": {
                 "policy_owner": "telegram_conversation_reliability_telemetry",
@@ -231,6 +235,7 @@ def stub_aion_server() -> _StubAionServer:
                 "present": [
                     "runtime_policy",
                     "memory_retrieval",
+                    "learned_state",
                     "scheduler.external_owner_policy",
                     "reflection.supervision",
                     "connectors.execution_baseline",
@@ -256,6 +261,10 @@ def stub_aion_server() -> _StubAionServer:
                     "retrieval_lifecycle_relation_source_posture": "optional_after_foreground_baseline",
                     "retrieval_lifecycle_relation_source_state": "optional_family_not_enabled",
                     "retrieval_lifecycle_relation_source_enabled": False,
+                },
+                "learned_state": {
+                    "policy_owner": "learned_state_inspection_policy",
+                    "internal_inspection_path": "/internal/state/inspect",
                 },
                 "scheduler.external_owner_policy": {
                     "policy_owner": "external_scheduler_cadence_policy",
@@ -367,6 +376,7 @@ def _write_incident_bundle(
             "present": [
                 "runtime_policy",
                 "memory_retrieval",
+                "learned_state",
                 "scheduler.external_owner_policy",
                 "reflection.supervision",
                 "connectors.execution_baseline",
@@ -386,13 +396,17 @@ def _write_incident_bundle(
                     "event_debug_shared_ingress_sunset_ready": True,
                     "event_debug_shared_ingress_sunset_reason": "shared_debug_route_break_glass_only",
                 },
-                "memory_retrieval": {
-                    "retrieval_lifecycle_policy_owner": "retrieval_lifecycle_policy",
-                    "retrieval_lifecycle_relation_source_policy_owner": "relation_source_retrieval_policy",
-                    "retrieval_lifecycle_relation_source_posture": "optional_after_foreground_baseline",
-                    "retrieval_lifecycle_relation_source_state": "optional_family_not_enabled",
-                    "retrieval_lifecycle_relation_source_enabled": False,
-                },
+            "memory_retrieval": {
+                "retrieval_lifecycle_policy_owner": "retrieval_lifecycle_policy",
+                "retrieval_lifecycle_relation_source_policy_owner": "relation_source_retrieval_policy",
+                "retrieval_lifecycle_relation_source_posture": "optional_after_foreground_baseline",
+                "retrieval_lifecycle_relation_source_state": "optional_family_not_enabled",
+                "retrieval_lifecycle_relation_source_enabled": False,
+            },
+            "learned_state": {
+                "policy_owner": "learned_state_inspection_policy",
+                "internal_inspection_path": "/internal/state/inspect",
+            },
             "scheduler.external_owner_policy": {
                 "policy_owner": "external_scheduler_cadence_policy",
                 "cutover_proof_owner": "external_scheduler_cutover_proof_policy",
@@ -426,6 +440,10 @@ def _write_incident_bundle(
         "observability": {
             "policy_owner": "incident_evidence_export_policy",
             "bundle_helper_available": True,
+        },
+        "learned_state": {
+            "policy_owner": "learned_state_inspection_policy",
+            "internal_inspection_path": "/internal/state/inspect",
         },
     }
     (bundle_dir / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")

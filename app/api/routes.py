@@ -258,6 +258,7 @@ async def _incident_evidence_from_request(
         stage_timings_ms=result.stage_timings_ms,
         runtime_policy=runtime_policy,
         memory_retrieval=memory_retrieval,
+        learned_state=learned_state_policy_snapshot(),
         scheduler_external_owner_policy=scheduler_external_owner_policy,
         reflection_supervision=reflection_supervision,
         connectors_execution_baseline=connectors_execution_baseline,

@@ -14,6 +14,7 @@ REQUIRED_INCIDENT_EVIDENCE_FIELDS = (
 REQUIRED_POLICY_POSTURE_SURFACES = (
     "runtime_policy",
     "memory_retrieval",
+    "learned_state",
     "scheduler.external_owner_policy",
     "reflection.supervision",
     "connectors.execution_baseline",
@@ -89,6 +90,7 @@ def build_runtime_incident_evidence(
     stage_timings_ms: dict[str, int],
     runtime_policy: dict[str, object],
     memory_retrieval: dict[str, object],
+    learned_state: dict[str, object],
     scheduler_external_owner_policy: dict[str, object],
     reflection_supervision: dict[str, object],
     connectors_execution_baseline: dict[str, object],
@@ -97,6 +99,7 @@ def build_runtime_incident_evidence(
     policy_posture = {
         "runtime_policy": dict(runtime_policy),
         "memory_retrieval": dict(memory_retrieval),
+        "learned_state": dict(learned_state),
         "scheduler.external_owner_policy": dict(scheduler_external_owner_policy),
         "reflection.supervision": dict(reflection_supervision),
         "connectors.execution_baseline": dict(connectors_execution_baseline),

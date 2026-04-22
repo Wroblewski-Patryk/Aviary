@@ -116,6 +116,15 @@ Last updated: 2026-04-22
 - 2026-04-22: `PRJ-550` is now the first `READY` task; the next slice should
   make learned-state introspection part of regression and incident-evidence
   truth so future UI- and operator-facing surfaces are release-stable.
+- 2026-04-22: `PRJ-550` is complete: runtime incident evidence now requires
+  `learned_state` posture, release smoke validates the learned-state
+  introspection owner plus internal inspection path from `/health`, debug
+  `incident_evidence`, and incident-evidence bundles, and behavior-validation
+  fixtures now fail on missing or invalid learned-state posture.
+- 2026-04-22: `PRJ-551` is now the first `READY` task; the next slice should
+  synchronize learned-state and skill-introspection evidence across canonical
+  contracts, runtime reality, testing guidance, ops notes, and planning or
+  context truth.
 - 2026-04-22: fresh post-`PRJ-515` analysis has now seeded a new queue through
   `PRJ-539`, focused on operator-grade incident-evidence handling, actual
   debug-compat retirement, bounded connector read expansion, external cadence

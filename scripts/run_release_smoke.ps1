@@ -245,6 +245,16 @@ function Validate-IncidentEvidenceBundle {
     if ($validTelegramRoundTripStates -notcontains [string]$telegramConversation.round_trip_state) {
         throw "Incident evidence bundle verification failed: unexpected conversation_channels.telegram round_trip_state '$($telegramConversation.round_trip_state)'."
     }
+    $learnedState = $incidentEvidence.policy_posture.learned_state
+    if ($null -eq $learnedState) {
+        throw "Incident evidence bundle verification failed: learned_state posture is missing."
+    }
+    if ([string]$learnedState.policy_owner -ne "learned_state_inspection_policy") {
+        throw "Incident evidence bundle verification failed: unexpected learned_state policy_owner '$($learnedState.policy_owner)'."
+    }
+    if ([string]$learnedState.internal_inspection_path -ne "/internal/state/inspect") {
+        throw "Incident evidence bundle verification failed: unexpected learned_state internal_inspection_path '$($learnedState.internal_inspection_path)'."
+    }
 
     return @{
         checked                  = $true
@@ -865,6 +875,22 @@ if (-not (Has-Property -Object $telegramConversation -Name "delivery_attempts"))
 if (-not (Has-Property -Object $telegramConversation -Name "delivery_failures")) {
     throw "Health check failed: conversation_channels.telegram is missing delivery_failures."
 }
+$learnedState = $health.learned_state
+if ($null -eq $learnedState) {
+    throw "Health check failed: response is missing learned_state."
+}
+if (-not (Has-Property -Object $learnedState -Name "policy_owner")) {
+    throw "Health check failed: learned_state is missing policy_owner."
+}
+if ([string]$learnedState.policy_owner -ne "learned_state_inspection_policy") {
+    throw "Health check failed: unexpected learned_state.policy_owner '$($learnedState.policy_owner)'."
+}
+if (-not (Has-Property -Object $learnedState -Name "internal_inspection_path")) {
+    throw "Health check failed: learned_state is missing internal_inspection_path."
+}
+if ([string]$learnedState.internal_inspection_path -ne "/internal/state/inspect") {
+    throw "Health check failed: unexpected learned_state.internal_inspection_path '$($learnedState.internal_inspection_path)'."
+}
 
 $response = Invoke-JsonUtf8 -Method POST -Uri $eventUrl -BodyBytes $bodyBytes
 
@@ -932,6 +958,16 @@ if ($IncludeDebug) {
     }
     if ($validTelegramRoundTripStates -notcontains [string]$incidentTelegramConversation.round_trip_state) {
         throw "Smoke request failed: unexpected incident_evidence conversation_channels.telegram round_trip_state '$($incidentTelegramConversation.round_trip_state)'."
+    }
+    $incidentLearnedState = $incidentEvidence.policy_posture.learned_state
+    if ($null -eq $incidentLearnedState) {
+        throw "Smoke request failed: incident_evidence is missing learned_state posture."
+    }
+    if ([string]$incidentLearnedState.policy_owner -ne "learned_state_inspection_policy") {
+        throw "Smoke request failed: unexpected incident_evidence learned_state policy_owner '$($incidentLearnedState.policy_owner)'."
+    }
+    if ([string]$incidentLearnedState.internal_inspection_path -ne "/internal/state/inspect") {
+        throw "Smoke request failed: unexpected incident_evidence learned_state internal_inspection_path '$($incidentLearnedState.internal_inspection_path)'."
     }
 }
 

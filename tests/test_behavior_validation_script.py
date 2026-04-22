@@ -456,6 +456,10 @@ def test_main_records_incident_evidence_summary_when_valid_input_is_provided(
                         "round_trip_state": "provider_backed_ready",
                         "bot_token_configured": True,
                     },
+                    "learned_state": {
+                        "policy_owner": "learned_state_inspection_policy",
+                        "internal_inspection_path": "/internal/state/inspect",
+                    },
                 },
             }
         ),
@@ -556,6 +560,10 @@ def test_main_fails_when_incident_evidence_policy_surface_is_incomplete(
                         "round_trip_state": "provider_backed_ready",
                         "bot_token_configured": True,
                     },
+                    "learned_state": {
+                        "policy_owner": "learned_state_inspection_policy",
+                        "internal_inspection_path": "/internal/state/inspect",
+                    },
                 },
             }
         ),
@@ -636,6 +644,10 @@ def test_main_fails_when_incident_evidence_debug_posture_does_not_match_dedicate
                         "round_trip_state": "provider_backed_ready",
                         "bot_token_configured": True,
                     },
+                    "learned_state": {
+                        "policy_owner": "learned_state_inspection_policy",
+                        "internal_inspection_path": "/internal/state/inspect",
+                    },
                 },
             }
         ),
@@ -706,6 +718,10 @@ def test_main_fails_when_incident_evidence_external_cadence_cutover_proof_is_mis
                         "policy_owner": "telegram_conversation_reliability_telemetry",
                         "round_trip_state": "provider_backed_ready",
                         "bot_token_configured": True,
+                    },
+                    "learned_state": {
+                        "policy_owner": "learned_state_inspection_policy",
+                        "internal_inspection_path": "/internal/state/inspect",
                     },
                 },
             }
