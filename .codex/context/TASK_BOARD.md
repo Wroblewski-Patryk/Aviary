@@ -175,6 +175,23 @@ Last updated: 2026-04-22
   - Group: Life Assistant Workflow Activation
   - Depends on: PRJ-543
   - Priority: P1
+  - Status: DONE
+  - Result:
+    - canonical docs now freeze one bounded no-UI `v1` workflow set:
+      reminder capture and follow-up, daily planning activation, task or goal
+      check-in, and reflection-backed continuity over time
+    - the same baseline now records explicit non-goals for this lane:
+      no separate reminder subsystem, no calendar-grade due-date or recurrence
+      contract yet, and no reminder UI
+  - Validation:
+    - cross-review across `09_mvp_scope`, `10_future_vision`,
+      `16_agent_contracts`, and runtime reality
+
+- [ ] PRJ-545 Implement missing bounded workflow execution for reminders and daily support
+  - Owner: Backend Builder
+  - Group: Life Assistant Workflow Activation
+  - Depends on: PRJ-544
+  - Priority: P1
   - Status: READY
 
 - [ ] PRJ-548 Freeze the learned-state model for `v1`

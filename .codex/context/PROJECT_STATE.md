@@ -67,6 +67,15 @@ Last updated: 2026-04-22
 - 2026-04-22: `PRJ-544` is now the first `READY` task; the next slice should
   freeze the exact no-UI `v1` life-assistant workflow set before expanding
   workflow execution or behavior scenarios.
+- 2026-04-22: `PRJ-544` is complete: canonical product and contract docs now
+  freeze one bounded no-UI `v1` workflow set built around reminder capture and
+  follow-up, daily planning activation, task/goal check-ins, and
+  reflection-backed continuity, while explicitly keeping full due-date or
+  recurrence scheduling outside this lane.
+- 2026-04-22: `PRJ-545` is now the first `READY` task; the next slice should
+  wire the missing bounded execution pieces for reminder opt-in/capture and
+  daily-support phrasing through the existing planning, action, task, and
+  proactive boundaries.
 - 2026-04-22: fresh post-`PRJ-515` analysis has now seeded a new queue through
   `PRJ-539`, focused on operator-grade incident-evidence handling, actual
   debug-compat retirement, bounded connector read expansion, external cadence

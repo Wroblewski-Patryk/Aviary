@@ -558,6 +558,47 @@ Rules:
 
 ---
 
+## V1 Life-Assistant Workflow Baseline
+
+No-UI `v1` uses the existing goal/task, proactive, scheduler, and action
+boundaries. It does not introduce a second orchestration path for "assistant"
+workflows.
+
+Canonical workflow set:
+
+1. reminder capture and follow-up
+   - explicit reminder phrasing may create an internal active task through
+     normal planning intents
+   - explicit reminder or check-in consent may update a learned proactive
+     preference through a typed planning intent and action-owned persistence
+   - later follow-up delivery must still enter through scheduler-owned
+     proactive ticks and pass attention plus delivery guardrails
+2. daily planning activation
+   - explicit day or week planning turns may create operational goals or tasks
+     through the same planning/action boundary used by other internal work
+   - expression must return concrete planning help in the same turn
+3. task or goal check-in
+   - explicit user progress reports and proactive follow-up turns must reuse
+     active goals, active tasks, task-status writes, and scoped reflection
+     state instead of creating a separate check-in store
+4. reflection-backed continuity
+   - memory persistence plus reflection outputs remain the only long-horizon
+     owners for continuity across reminder, planning, and check-in turns
+
+Bounded reminder-preference contract:
+
+1. proactive reminder eligibility remains preference-owned and must not be
+   inferred solely from scheduler heuristics
+2. explicit user opt-in or opt-out for reminders/check-ins may be represented
+   as a typed planning intent and persisted through the action-owned
+   conclusion-preference path
+3. that preference may influence scheduler candidate selection and proactive
+   delivery guards, but it must not bypass attention gates or action ownership
+4. richer scheduling semantics such as calendar-grade due dates, recurrence
+   editing, or UI-managed reminder controls remain outside the `v1` baseline
+
+---
+
 ## Relation Retrieval Completion Baseline
 
 Relation memory remains a first-class adaptive influence family, but relation

@@ -102,6 +102,34 @@ Goal: network of cognitive systems.
 - planning  
 - reflection  
 
+#### v1 workflow baseline
+
+No-UI `v1` is considered real only when the backend can execute these bounded
+life-assistant workflows end to end through the existing runtime:
+
+1. reminder capture and follow-up
+   - explicit user phrasing may create or update internal active work
+   - explicit reminder or check-in preference may opt the user into bounded
+     proactive follow-up
+   - later reminder or check-in delivery must still go through scheduler ->
+     planning -> expression -> action
+2. daily planning activation
+   - explicit "plan today/tomorrow/this week" style turns may create an
+     operational planning anchor in goals or tasks
+   - the same turn must return concrete planning help, not only internal state
+3. task or goal check-in
+   - explicit user progress updates and proactive time-based check-ins reuse
+     the same active goal/task boundary
+   - check-ins must update or reference existing internal work instead of
+     opening a separate orchestration path
+4. reflection-backed continuity over time
+   - memory and reflection outputs must influence later reminder, planning, and
+     check-in turns
+
+`v1` does not require full calendar-grade scheduling, due-date parsing, or a
+dedicated reminder UI. Those richer surfaces belong to later tool-expansion or
+`v2` work.
+
 ---
 
 ### v2 – UI And Work / Business Partner Surface

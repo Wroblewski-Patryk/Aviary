@@ -754,6 +754,28 @@ Reflection also derives lightweight operational signals such as:
 - `goal_milestone_due_window`
 - `goal_milestone_risk`
 
+### V1 workflow interpretation
+
+The current no-UI `v1` lane is intentionally narrower than a full
+calendar-grade reminder product.
+
+Selected workflow baseline:
+
+- reminder capture and follow-up should run through:
+  explicit task capture -> learned proactive preference -> scheduler proactive
+  tick -> planning -> expression -> action
+- daily planning should run through:
+  explicit operational goal/task capture plus same-turn planning help
+- task or goal check-ins should run through:
+  active work retrieval, task-status updates, proactive `time_checkin` or
+  `goal_stagnation` events, and scoped reflection continuity
+
+Explicit non-goals for this `v1` lane:
+
+- no separate reminder subsystem outside goals/tasks plus proactive cadence
+- no free-form due-date scheduling contract yet
+- no dedicated reminder UI or admin workflow yet
+
 ---
 
 ## Current Reflection Reality

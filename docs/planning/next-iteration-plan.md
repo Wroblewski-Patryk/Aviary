@@ -186,10 +186,16 @@ surfaces.
   - Result:
     - one explicit baseline records the required no-UI user workflows for
       `v1`:
-      - reminder capture and follow-up
-      - daily planning
-      - task or goal check-in
+      - reminder capture and follow-up through tasks plus proactive preference
+        and scheduler-owned follow-up
+      - daily planning activation through operational goal/task anchors plus
+        same-turn planning help
+      - task or goal check-in through active work plus proactive cadence
       - reflection-backed continuity over time
+    - the repo also freezes what `v1` does not include yet:
+      - no separate reminder subsystem
+      - no calendar-grade due-date or recurrence contract
+      - no reminder UI
   - Validation:
     - cross-review across `09_mvp_scope`, `10_future_vision`,
       `16_agent_contracts`, and runtime reality
