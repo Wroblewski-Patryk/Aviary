@@ -339,6 +339,8 @@ Bundle expectation for behavior-sensitive incident work:
 - optional `behavior_validation_report.json` proves scenario-level behavior
   when the incident touches memory, planning, proactive cadence, connector
   posture, or other behavior-sensitive seams
+- when release smoke validates `-IncidentEvidenceBundlePath`, the bundle
+  directory itself becomes part of the repeatable evidence contract
 
 ---
 

@@ -332,8 +332,11 @@ Producer or retrieval boundary:
 - the debug/runtime surface remains the source of truth for
   `incident_evidence.json`
 - `/health` remains the source of truth for `health_snapshot.json`
-- a future canonical bundle helper may collect both, but it must not redefine
-  their ownership or schema independently of those runtime surfaces
+- the canonical collection helper is now
+  `scripts/export_incident_evidence_bundle.py`
+- the helper may collect both runtime-owned files into one bundle, but it must
+  not redefine their ownership or schema independently of those runtime
+  surfaces
 
 ---
 

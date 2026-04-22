@@ -970,9 +970,9 @@ Current limitation:
   - `incident_evidence.json`
   - `health_snapshot.json`
   - optional `behavior_validation_report.json`
-- current runtime still exports the raw `incident_evidence.json` surface rather
-  than a full bundle helper; bundle collection remains an operator workflow
-  until a dedicated helper lands
+- current runtime now also provides a canonical bundle helper at
+  `scripts/export_incident_evidence_bundle.py`; that helper collects the
+  existing runtime-owned surfaces into the frozen bundle shape
 - `incident_evidence.json` remains owned by the debug/runtime export contract,
   while `health_snapshot.json` remains owned by `GET /health`
 

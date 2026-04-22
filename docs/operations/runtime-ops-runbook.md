@@ -816,6 +816,8 @@ Current source-of-truth mapping:
 - `health_snapshot.json` comes from `GET /health`
 - `behavior_validation_report.json` is attached only when validation was run
   for the same investigation window
+- the canonical collection helper is
+  `scripts/export_incident_evidence_bundle.py`
 
 Retention baseline:
 
@@ -823,13 +825,28 @@ Retention baseline:
 - keep the latest failing release or incident bundle
 - keep active incident bundles until incident closure plus rollback review
 
-Minimal operator collection flow:
+Canonical helper flow:
 
-1. capture `GET /health` and persist it as `health_snapshot.json`
-2. capture one debug-mode event response and persist `incident_evidence`
-3. if release smoke or behavior validation was run, attach the resulting
-   report to the same bundle root instead of storing it separately
-4. record `trace_id`, `event_id`, and capture mode in `manifest.json`
+```powershell
+.\.venv\Scripts\python .\scripts\export_incident_evidence_bundle.py `
+  --base-url "http://localhost:8000"
+```
+
+Optional attachment flow when behavior validation already exists:
+
+```powershell
+.\.venv\Scripts\python .\scripts\export_incident_evidence_bundle.py `
+  --base-url "http://localhost:8000" `
+  --behavior-validation-report-path "artifacts/behavior_validation/report.json"
+```
+
+Bundle verification through release smoke:
+
+```powershell
+.\scripts\run_release_smoke.ps1 `
+  -BaseUrl "http://localhost:8000" `
+  -IncidentEvidenceBundlePath "artifacts/incident_evidence/<captured_at_utc>_<trace_id_or_event_id>"
+```
 
 Optional debug payload with token:
 
@@ -1001,11 +1018,9 @@ Preconditions checklist (required for reliable Telegram delivery triage):
   worker supervision and recovery posture are now bounded by explicit
   supervision policy and release evidence
 - startup now defaults to migration-first schema ownership; `create_tables()` remains only as a compatibility path behind `STARTUP_SCHEMA_MODE=create_tables`
-- runtime now has exportable JSON incident evidence, but there is still no
-  external observability stack with dashboards or centralized trace storage
-- the canonical incident-evidence bundle contract is now defined, but runtime
-  still relies on operator-side collection rather than a first-class bundle
-  helper
+- runtime now has exportable JSON incident evidence plus a canonical bundle
+  helper, but there is still no external observability stack with dashboards
+  or centralized trace storage
 - proactive cadence is live in-process today, while external scheduler
   ownership is now the explicit target posture with machine-visible fallback
   evidence

@@ -327,7 +327,11 @@ The current repo already works as an MVP slice, but several architecture-level d
     `-IncidentEvidenceBundlePath`
   - regression coverage now pins both bundle success and partial-bundle
     failure posture
-  - `PRJ-519` is now the next active task in the lane
+- `PRJ-519` is now complete:
+  - canonical docs, runtime reality, testing guidance, ops guidance,
+    planning, and context truth all describe the same bundle helper and smoke
+    verification path
+  - Group 76 is now complete and `PRJ-520` is now the next active task
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 

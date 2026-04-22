@@ -186,8 +186,11 @@ Completed on 2026-04-22:
 - `PRJ-518` is complete: release smoke now validates full bundle integrity via
   `-IncidentEvidenceBundlePath`, and regression coverage now pins both valid
   bundle and partial-bundle failure posture.
-- the next active task in this lane is `PRJ-519`, which should synchronize the
-  completed helper plus smoke behavior across docs and context truth.
+- `PRJ-519` is complete: canonical docs, runtime reality, testing guidance,
+  ops guidance, planning, and context truth now describe the same helper,
+  bundle file set, and smoke verification path.
+- Group 76 is now complete, and the next active lane is dedicated debug
+  ingress compatibility retirement.
 
 - `PRJ-516` Define the operator-facing incident evidence bundle and retention baseline.
   - Result:

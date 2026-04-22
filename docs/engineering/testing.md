@@ -41,6 +41,12 @@ Artifact-input gate evaluation command (CI split-stage, no pytest rerun):
 .\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactInputPath artifacts/behavior_validation/report.json -ArtifactPath artifacts/behavior_validation/report.gate.json
 ```
 
+Incident-evidence bundle export helper:
+
+```powershell
+.\.venv\Scripts\python .\scripts\export_incident_evidence_bundle.py --base-url http://localhost:8000
+```
+
 ## Testing Layers For This Repo
 
 - Unit tests:
@@ -122,10 +128,12 @@ For meaningful repo changes, leave behind:
   - `.\.venv\Scripts\python -m pytest -q tests/test_observability_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py`
   - `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_deployment_trigger_scripts.py`
   - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
+  - `.\.venv\Scripts\python .\scripts\export_incident_evidence_bundle.py --base-url http://localhost:8000`
   - coverage should pin:
     - `/health.observability` export-readiness posture
     - debug-response `incident_evidence` export contract
-    - smoke-mode validation of exported incident evidence
+    - smoke-mode validation of exported incident evidence and full bundle
+      directories
     - optional behavior-artifact ingestion of exported incident evidence
 - for runtime-topology, adaptive-governance, planning-governance, or
   deployment-policy surface changes, regression evidence from:

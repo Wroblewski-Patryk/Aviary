@@ -139,25 +139,30 @@ Last updated: 2026-04-22
     - `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_deployment_trigger_scripts.py tests/test_observability_policy.py`
     - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_api_routes.py`
 
-- [ ] PRJ-519 Sync docs/context for incident evidence bundle and retention baseline
+- [x] PRJ-519 Sync docs/context for incident evidence bundle and retention baseline
   - Owner: Product Docs
   - Group: Incident Evidence Bundle And Retention
   - Depends on: PRJ-518
   - Priority: P1
-  - Status: READY
+  - Status: DONE
   - Done when:
     - architecture, runtime reality, ops guidance, testing guidance, and
       context truth all describe the same operator-facing incident evidence
       bundle baseline
+  - Result:
+    - canonical docs, runtime reality, testing guidance, ops guidance, and
+      context truth now all describe the same bundle helper, bundle file set,
+      release-smoke verification path, and remaining observability limit
+    - Group 76 is now complete and the next active lane is dedicated debug
+      ingress compatibility retirement
   - Validation:
     - doc-and-context sync across architecture, implementation, ops, testing,
       planning, and context
 
 - Group 76 note:
-  - `PRJ-516..PRJ-518` are now complete, and `PRJ-519` is the next `READY`
-    task.
-  - the bundle contract is now frozen, implemented, and smoke-covered before
-    the final docs/context sync for the group.
+  - `PRJ-516..PRJ-519` are now complete.
+  - the bundle contract is now frozen, implemented, smoke-covered, and fully
+    synchronized in docs/context truth.
 
 - [ ] PRJ-520 Freeze the shared debug compatibility retirement gate
   - Owner: Planner
