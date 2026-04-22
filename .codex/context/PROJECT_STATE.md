@@ -1961,8 +1961,15 @@ Last updated: 2026-04-22
 - 2026-04-22: `PRJ-493` validation is green:
   `.\.venv\Scripts\python -m pytest -q tests/test_runtime_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py`
   passed with `98 passed`.
-- 2026-04-22: `PRJ-494` is now the next `READY` task, focused on runbook/startup
-  guidance for the same dedicated-admin debug posture.
+- 2026-04-22: `PRJ-494` is complete: production startup now emits one shared
+  `runtime_policy_debug_ingress_hint` for the dedicated-admin debug target,
+  and the runtime ops runbook plus release smoke consume the same
+  `event_debug_admin_*` and shared-retirement fields.
+- 2026-04-22: `PRJ-494` validation is green:
+  `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_main_runtime_policy.py tests/test_api_routes.py`
+  passed with `119 passed`.
+- 2026-04-22: `PRJ-495` is now the next `READY` task, focused on full
+  docs/context sync for the debug ingress retirement lane.
 
 ## Working Agreements
 

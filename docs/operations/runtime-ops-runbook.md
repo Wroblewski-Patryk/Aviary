@@ -23,6 +23,10 @@ This runbook covers the currently implemented AION MVP service, not the full lon
 runtime flags (for example `startup_schema_mode`, `event_debug_enabled`, and
 `event_debug_source`) plus debug-route posture markers
 (`event_debug_token_required`, `production_debug_token_required`,
+`event_debug_admin_policy_owner`, `event_debug_admin_ingress_target_path`,
+`event_debug_admin_posture_state`,
+`event_debug_shared_ingress_retirement_ready`,
+`event_debug_shared_ingress_retirement_blockers`,
 `event_debug_query_compat_enabled`, `event_debug_query_compat_source`,
 `event_debug_query_compat_telemetry`,
 `event_debug_query_compat_allow_rate`,
@@ -338,6 +342,8 @@ Target posture:
 Current transitional posture:
 
 - `POST /internal/event/debug` is now the primary internal debug ingress
+- `/health.runtime_policy.event_debug_admin_*` is the canonical machine-visible
+  source for that dedicated-admin target posture
 - shared `POST /event/debug` still runs on the shared API service endpoint
   behind runtime policy gates and is treated as compatibility surface
 - shared ingress mode is explicitly configurable via
@@ -364,6 +370,9 @@ Migration guardrails:
 3. before retiring shared-endpoint debug in production, verify dedicated
    internal ingress is operator-reachable and release evidence no longer depends
    on `POST /event/debug` from public endpoint paths
+4. treat `/health.runtime_policy.event_debug_shared_ingress_retirement_blockers`
+   as the live checklist for any remaining shared compat dependence before
+   tightening or removing public debug compatibility surfaces
 
 ## `create_tables` Compatibility Removal Guardrails (PRJ-306)
 

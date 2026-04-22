@@ -54,19 +54,33 @@ Last updated: 2026-04-22
 
 ## READY
 
-- [ ] PRJ-494 Add release-smoke and operator guidance for dedicated-admin debug posture
+- [ ] PRJ-495 Sync docs/context for debug ingress retirement and admin boundary closure
+  - Owner: Product Docs
+  - Group: Debug Ingress Retirement And Admin Boundary Closure
+  - Depends on: PRJ-494
+  - Priority: P1
+  - Why now:
+    - the runtime and smoke evidence are now aligned, so canonical docs and
+      planning/context truth should lock the same admin-only debug boundary
+  - Done when:
+    - architecture, implementation notes, ops guidance, testing guidance, and
+      planning/context truth all describe the same dedicated-admin target and
+      shared-compat retirement posture
+  - Validation:
+    - doc-and-context sync across planning, ops, implementation, architecture, and context
+
+- [x] PRJ-494 Add release-smoke and operator guidance for dedicated-admin debug posture
   - Owner: Ops/Release
   - Group: Debug Ingress Retirement And Admin Boundary Closure
   - Depends on: PRJ-493
   - Priority: P1
-  - Why now:
-    - once runtime exposes the admin ingress posture, smoke and operator
-      guidance should consume the same fields so release triage stops depending
-      on memory
-  - Done when:
-    - release smoke verifies dedicated-admin ingress posture and shared-ingress
-      retirement blockers from `/health.runtime_policy`
-    - operator guidance can point at one machine-visible debug-boundary story
+  - Status: DONE
+  - Result:
+    - startup logs now emit one shared `runtime_policy_debug_ingress_hint`
+      surface for dedicated-admin posture and shared-compat blockers in
+      production
+    - runtime ops runbook and release smoke now consume the same
+      machine-visible admin-ingress policy fields from `/health.runtime_policy`
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_main_runtime_policy.py tests/test_api_routes.py`
 

@@ -112,6 +112,17 @@ def _log_runtime_policy_warnings(*, settings, logger) -> None:
         )
     if app_environment(settings) == "production":
         logger.info(
+            "runtime_policy_debug_ingress_hint env=%s admin_policy_owner=%s admin_target_path=%s admin_posture_state=%s shared_retirement_ready=%s shared_retirement_blockers=%s operator_default=%s",
+            settings.app_env,
+            policy["event_debug_admin_policy_owner"],
+            policy["event_debug_admin_ingress_target_path"],
+            policy["event_debug_admin_posture_state"],
+            policy["event_debug_shared_ingress_retirement_ready"],
+            ",".join(str(item) for item in policy["event_debug_shared_ingress_retirement_blockers"]),
+            policy["event_debug_admin_operator_default"],
+        )
+    if app_environment(settings) == "production":
+        logger.info(
             "runtime_policy_compatibility_sunset_hint env=%s startup_schema_compatibility_sunset_ready=%s startup_schema_compatibility_sunset_reason=%s event_debug_shared_ingress_sunset_ready=%s event_debug_shared_ingress_sunset_reason=%s compatibility_sunset_ready=%s compatibility_sunset_blockers=%s",
             settings.app_env,
             policy["startup_schema_compatibility_sunset_ready"],

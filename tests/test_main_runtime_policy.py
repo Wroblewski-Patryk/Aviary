@@ -304,10 +304,36 @@ def test_startup_logs_strict_rollout_hint_when_production_warn_mode_is_ready(cap
     assert any("runtime_policy_hint" in message for message in messages)
     assert any("recommended_enforcement=strict" in message for message in messages)
     assert any("hint=can_enable_strict" in message for message in messages)
+    assert any("runtime_policy_debug_ingress_hint" in message for message in messages)
+    assert any("admin_policy_owner=dedicated_admin_debug_ingress_policy" in message for message in messages)
+    assert any("admin_target_path=/internal/event/debug" in message for message in messages)
     assert any("runtime_policy_compatibility_sunset_hint" in message for message in messages)
     assert any("startup_schema_compatibility_sunset_ready=True" in message for message in messages)
     assert any("event_debug_shared_ingress_sunset_ready=True" in message for message in messages)
     assert any("compatibility_sunset_ready=True" in message for message in messages)
+
+
+def test_startup_logs_transitional_debug_ingress_blockers_when_shared_compat_paths_remain(caplog) -> None:
+    logger_name = "aion.app"
+    caplog.set_level("INFO", logger=logger_name)
+    logger = logging.getLogger(logger_name)
+    settings = SimpleNamespace(
+        app_env="production",
+        event_debug_enabled=True,
+        event_debug_token="debug-secret",
+        production_debug_token_required=True,
+        event_debug_query_compat_enabled=True,
+        startup_schema_mode="migrate",
+        production_policy_enforcement="warn",
+    )
+
+    _log_runtime_policy_warnings(settings=settings, logger=logger)
+
+    messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
+    assert any("runtime_policy_debug_ingress_hint" in message for message in messages)
+    assert any("admin_posture_state=transitional_shared_compatibility_active" in message for message in messages)
+    assert any("shared_retirement_ready=False" in message for message in messages)
+    assert any("shared_retirement_blockers=query_debug_compatibility_still_enabled" in message for message in messages)
 
 
 def test_startup_blocks_with_production_default_strict_policy_when_enforcement_is_unset(caplog) -> None:
