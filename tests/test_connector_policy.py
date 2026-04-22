@@ -15,6 +15,8 @@ from app.core.contracts import (
     Event,
     EventMeta,
     ExternalTaskSyncDomainIntent,
+    KnowledgeSearchDomainIntent,
+    WebBrowserAccessDomainIntent,
     MotivationOutput,
     RoleOutput,
 )
@@ -39,6 +41,8 @@ def test_connector_operation_policy_defines_internal_vs_external_baseline() -> N
     calendar_create = resolve_connector_operation_policy("calendar", "create_event")
     task_link = resolve_connector_operation_policy("task_system", "link_internal_task")
     drive_read = resolve_connector_operation_policy("cloud_drive", "read_document")
+    search_read = resolve_connector_operation_policy("knowledge_search", "search_web")
+    browser_read = resolve_connector_operation_policy("web_browser", "read_page")
 
     assert calendar_create.mode == "mutate_with_confirmation"
     assert calendar_create.requires_confirmation is True
@@ -51,6 +55,14 @@ def test_connector_operation_policy_defines_internal_vs_external_baseline() -> N
     assert drive_read.mode == "read_only"
     assert drive_read.requires_confirmation is False
     assert drive_read.allowed_without_external_access is True
+
+    assert search_read.mode == "read_only"
+    assert search_read.requires_opt_in is False
+    assert search_read.allowed_without_external_access is True
+
+    assert browser_read.mode == "read_only"
+    assert browser_read.requires_opt_in is False
+    assert browser_read.allowed_without_external_access is True
 
 
 def test_connector_capability_discovery_policy_stays_suggestion_only() -> None:
@@ -79,6 +91,32 @@ def test_build_connector_permission_gate_uses_shared_policy_outputs() -> None:
     assert gate.allowed is True
     assert gate.requires_confirmation is False
     assert gate.reason == "suggestion_or_read_only_allowed"
+
+    search_gate = build_connector_permission_gate(
+        KnowledgeSearchDomainIntent(
+            operation="search_web",
+            provider_hint="generic",
+            mode="read_only",
+            query_hint="release notes",
+        )
+    )
+    browser_gate = build_connector_permission_gate(
+        WebBrowserAccessDomainIntent(
+            operation="read_page",
+            provider_hint="generic",
+            mode="read_only",
+            page_hint="https://example.com/release-notes",
+        )
+    )
+
+    assert search_gate.connector_kind == "knowledge_search"
+    assert search_gate.operation == "search_web"
+    assert search_gate.allowed is True
+    assert search_gate.requires_opt_in is False
+    assert browser_gate.connector_kind == "web_browser"
+    assert browser_gate.operation == "read_page"
+    assert browser_gate.allowed is True
+    assert browser_gate.requires_opt_in is False
 
 
 def test_connector_read_baseline_selects_clickup_task_list_as_next_live_read_path() -> None:
@@ -180,4 +218,38 @@ def test_planning_agent_uses_shared_connector_policy_for_non_mutating_intents() 
     assert drive_intent.mode == resolve_connector_operation_policy(
         "cloud_drive",
         "suggest_file_plan",
+    ).mode
+
+    search_result = planner.run(
+        event=_event("Please search the web for the latest release notes."),
+        context=_context(),
+        motivation=motivation,
+        role=role,
+    )
+    search_intent = next(
+        intent
+        for intent in search_result.domain_intents
+        if isinstance(intent, KnowledgeSearchDomainIntent)
+    )
+    assert search_intent.operation == "search_web"
+    assert search_intent.mode == resolve_connector_operation_policy(
+        "knowledge_search",
+        "search_web",
+    ).mode
+
+    browser_result = planner.run(
+        event=_event("Read page https://example.com/changelog in the browser."),
+        context=_context(),
+        motivation=motivation,
+        role=role,
+    )
+    browser_intent = next(
+        intent
+        for intent in browser_result.domain_intents
+        if isinstance(intent, WebBrowserAccessDomainIntent)
+    )
+    assert browser_intent.operation == "read_page"
+    assert browser_intent.mode == resolve_connector_operation_policy(
+        "web_browser",
+        "read_page",
     ).mode

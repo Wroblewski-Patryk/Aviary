@@ -282,14 +282,23 @@ Last updated: 2026-04-22
   - Group: Web Knowledge And Tooling Architecture
   - Depends on: PRJ-552
   - Priority: P1
-  - Status: READY
+  - Status: DONE
+  - Result:
+    - shared typed intents now model `knowledge_search` and `web_browser`
+      under the same action-owned permission-gate path as existing external
+      capability families
+    - planner now emits bounded search and browser intents through the shared
+      connector policy owner, and action blocks mode drift for those intents
+      before any delivery or side effect path continues
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_connector_policy.py tests/test_planning_agent.py tests/test_action_executor.py tests/test_runtime_pipeline.py`
 
 - [ ] PRJ-554 Expose readiness and debug visibility for the selected tool-family posture
   - Owner: Backend Builder
   - Group: Web Knowledge And Tooling Architecture
   - Depends on: PRJ-553
   - Priority: P1
-  - Status: BACKLOG
+  - Status: READY
 
 - [ ] PRJ-555 Sync docs/context for the web knowledge and tooling baseline
   - Owner: Product Docs

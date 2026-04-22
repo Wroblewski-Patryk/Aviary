@@ -19,7 +19,7 @@ SubconsciousProposalType = Literal[
 ProposalHandoffDecisionType = Literal["accept", "merge", "defer", "discard"]
 SubconsciousProposalStatus = Literal["pending", "accepted", "merged", "deferred", "discarded"]
 SubconsciousResearchPolicy = Literal["read_only"]
-ConnectorKind = Literal["calendar", "task_system", "cloud_drive"]
+ConnectorKind = Literal["calendar", "task_system", "cloud_drive", "knowledge_search", "web_browser"]
 ConnectorOperationMode = Literal["read_only", "suggestion_only", "mutate_with_confirmation"]
 
 
@@ -341,6 +341,22 @@ class ConnectorCapabilityDiscoveryDomainIntent(BaseModel):
     mode: Literal["suggestion_only"] = "suggestion_only"
 
 
+class KnowledgeSearchDomainIntent(BaseModel):
+    intent_type: Literal["knowledge_search_intent"] = "knowledge_search_intent"
+    operation: Literal["search_web", "suggest_search"] = "search_web"
+    provider_hint: str = "generic"
+    mode: ConnectorOperationMode = "suggestion_only"
+    query_hint: str = ""
+
+
+class WebBrowserAccessDomainIntent(BaseModel):
+    intent_type: Literal["web_browser_access_intent"] = "web_browser_access_intent"
+    operation: Literal["read_page", "suggest_page_review"] = "read_page"
+    provider_hint: str = "generic"
+    mode: ConnectorOperationMode = "suggestion_only"
+    page_hint: str = ""
+
+
 class MaintainRelationDomainIntent(BaseModel):
     intent_type: Literal["maintain_relation"] = "maintain_relation"
     relation_type: str
@@ -383,6 +399,8 @@ DomainActionIntent = Annotated[
     | ExternalTaskSyncDomainIntent
     | ConnectedDriveAccessDomainIntent
     | ConnectorCapabilityDiscoveryDomainIntent
+    | KnowledgeSearchDomainIntent
+    | WebBrowserAccessDomainIntent
     | MaintainRelationDomainIntent
     | UpdateProactiveStateDomainIntent,
     Field(discriminator="intent_type"),

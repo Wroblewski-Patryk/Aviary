@@ -142,6 +142,16 @@ Last updated: 2026-04-22
 - 2026-04-22: `PRJ-553` is now the first `READY` task; the next slice should
   implement one shared capability and permission-gate owner for web knowledge
   tools before health visibility or provider-backed slices are widened.
+- 2026-04-22: `PRJ-553` is complete: shared typed intents now model
+  `knowledge_search` and `web_browser` under the same action-owned
+  permission-gate path as existing external capability families, planner emits
+  bounded search/browser intents through the shared connector policy owner,
+  and action now blocks mode drift for those intents before any delivery path
+  continues.
+- 2026-04-22: `PRJ-554` is now the first `READY` task; the next slice should
+  expose health and runtime-debug visibility for the selected web-knowledge
+  tool-family posture before any provider-backed search or browser execution
+  is introduced.
 - 2026-04-22: fresh post-`PRJ-515` analysis has now seeded a new queue through
   `PRJ-539`, focused on operator-grade incident-evidence handling, actual
   debug-compat retirement, bounded connector read expansion, external cadence

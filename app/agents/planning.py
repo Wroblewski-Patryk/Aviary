@@ -18,6 +18,8 @@ from app.core.contracts import (
     ProposalHandoffDecisionOutput,
     RoleOutput,
     SubconsciousProposalRecord,
+    KnowledgeSearchDomainIntent,
+    WebBrowserAccessDomainIntent,
     UpdateProactiveStateDomainIntent,
     UpdateProactivePreferenceDomainIntent,
     UpdateCollaborationPreferenceDomainIntent,
@@ -579,6 +581,14 @@ class PlanningAgent:
         if connected_drive_intent is not None:
             intents.append(connected_drive_intent)
 
+        knowledge_search_intent = self._knowledge_search_intent(lowered_text)
+        if knowledge_search_intent is not None:
+            intents.append(knowledge_search_intent)
+
+        web_browser_intent = self._web_browser_access_intent(lowered_text)
+        if web_browser_intent is not None:
+            intents.append(web_browser_intent)
+
         inferred_intents, inferred_promotion_diagnostics = self._build_inferred_goal_task_intents(
             event_text=event_text,
             context_summary=context_summary,
@@ -1066,6 +1076,66 @@ class PlanningAgent:
             file_hint=lowered_text[:120],
         )
 
+    def _knowledge_search_intent(self, lowered_text: str) -> KnowledgeSearchDomainIntent | None:
+        search_markers = (
+            "search the web",
+            "search online",
+            "look up",
+            "find online",
+            "google it",
+            "google for",
+            "internet search",
+            "wyszukaj",
+            "poszukaj",
+            "szukaj w internecie",
+            "sprawdz w internecie",
+        )
+        if not any(marker in lowered_text for marker in search_markers):
+            return None
+        if any(keyword in lowered_text for keyword in ("should i search", "czy warto szukac", "suggest search")):
+            return KnowledgeSearchDomainIntent(
+                operation="suggest_search",
+                provider_hint="generic",
+                mode=resolve_connector_operation_policy("knowledge_search", "suggest_search").mode,
+                query_hint=lowered_text[:160],
+            )
+        return KnowledgeSearchDomainIntent(
+            operation="search_web",
+            provider_hint="generic",
+            mode=resolve_connector_operation_policy("knowledge_search", "search_web").mode,
+            query_hint=lowered_text[:160],
+        )
+
+    def _web_browser_access_intent(self, lowered_text: str) -> WebBrowserAccessDomainIntent | None:
+        browser_markers = (
+            "open page",
+            "read page",
+            "browse",
+            "browser",
+            "website",
+            "web page",
+            "url",
+            "otworz strone",
+            "przeczytaj strone",
+            "odwiedz strone",
+            "przegladaj strone",
+        )
+        if not any(marker in lowered_text for marker in browser_markers):
+            return None
+        if any(keyword in lowered_text for keyword in ("should we browse", "suggest page", "review page later")):
+            return WebBrowserAccessDomainIntent(
+                operation="suggest_page_review",
+                provider_hint="generic",
+                mode=resolve_connector_operation_policy("web_browser", "suggest_page_review").mode,
+                page_hint=lowered_text[:160],
+            )
+        return WebBrowserAccessDomainIntent(
+            operation="read_page",
+            provider_hint="generic",
+            mode=resolve_connector_operation_policy("web_browser", "read_page").mode,
+            page_hint=lowered_text[:160],
+        )
+
     def _build_connector_permission_gates(
         self,
         domain_intents: list[DomainActionIntent],
@@ -1079,6 +1149,10 @@ class PlanningAgent:
             if isinstance(intent, ConnectedDriveAccessDomainIntent):
                 gates.append(build_connector_permission_gate(intent))
             if isinstance(intent, ConnectorCapabilityDiscoveryDomainIntent):
+                gates.append(build_connector_permission_gate(intent))
+            if isinstance(intent, KnowledgeSearchDomainIntent):
+                gates.append(build_connector_permission_gate(intent))
+            if isinstance(intent, WebBrowserAccessDomainIntent):
                 gates.append(build_connector_permission_gate(intent))
         return gates
 

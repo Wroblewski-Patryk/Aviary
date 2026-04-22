@@ -4796,6 +4796,40 @@ async def test_runtime_pipeline_emits_connector_permission_gates_and_connector_p
     )
 
 
+async def test_runtime_pipeline_emits_web_knowledge_permission_gates_under_shared_policy() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=FakeOpenAIClient()),
+        action_executor=ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient()),
+        memory_repository=memory,
+        reflection_worker=FakeReflectionWorker(),
+    )
+
+    event = Event(
+        event_id="evt-web-knowledge-intents",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "Search the web for release notes and read page https://example.com/changelog in the browser."},
+        meta=EventMeta(user_id="u-1", trace_id="t-web-knowledge-intents"),
+    )
+
+    result = await runtime.run(event)
+
+    assert len(result.plan.connector_permission_gates) == 2
+    assert {gate.connector_kind for gate in result.plan.connector_permission_gates} == {
+        "knowledge_search",
+        "web_browser",
+    }
+    assert all(gate.allowed is True for gate in result.plan.connector_permission_gates)
+    assert all(gate.requires_opt_in is False for gate in result.plan.connector_permission_gates)
+
+
 async def test_runtime_pipeline_executes_provider_backed_clickup_task_read_path() -> None:
     memory = FakeMemoryRepository(recent_memory=[])
     runtime = RuntimeOrchestrator(

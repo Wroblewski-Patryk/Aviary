@@ -18,6 +18,8 @@ from app.core.contracts import (
     PromoteInferredGoalDomainIntent,
     PromoteInferredTaskDomainIntent,
     RoleOutput,
+    KnowledgeSearchDomainIntent,
+    WebBrowserAccessDomainIntent,
     MaintainRelationDomainIntent,
     UpdateProactiveStateDomainIntent,
     UpdateCollaborationPreferenceDomainIntent,
@@ -698,6 +700,8 @@ class ActionExecutor:
                     ExternalTaskSyncDomainIntent,
                     ConnectedDriveAccessDomainIntent,
                     ConnectorCapabilityDiscoveryDomainIntent,
+                    KnowledgeSearchDomainIntent,
+                    WebBrowserAccessDomainIntent,
                 ),
             ):
                 violation = connector_intent_policy_violation(intent)

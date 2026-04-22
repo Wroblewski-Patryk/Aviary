@@ -15,6 +15,7 @@ from app.core.contracts import (
     EventMeta,
     ExpressionOutput,
     ExternalTaskSyncDomainIntent,
+    KnowledgeSearchDomainIntent,
     MaintainRelationDomainIntent,
     MaintainTaskStatusDomainIntent,
     MotivationOutput,
@@ -32,6 +33,7 @@ from app.core.contracts import (
     UpdateTaskStatusDomainIntent,
     UpsertGoalDomainIntent,
     UpsertTaskDomainIntent,
+    WebBrowserAccessDomainIntent,
 )
 
 
@@ -603,6 +605,39 @@ async def test_execute_blocks_connector_intent_when_mode_violates_shared_policy(
     assert result.actions == []
     assert "Connector policy guardrail blocked inconsistent intent posture" in result.notes
     assert "external_task_sync_intent:list_tasks" in result.notes
+    assert telegram_client.calls == []
+
+
+async def test_execute_blocks_web_knowledge_intent_when_mode_violates_shared_policy() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    executor = ActionExecutor(memory_repository=memory_repository, telegram_client=telegram_client)
+
+    result = await executor.execute(
+        _plan(
+            domain_intents=[
+                KnowledgeSearchDomainIntent(
+                    operation="search_web",
+                    provider_hint="generic",
+                    mode="mutate_with_confirmation",
+                    query_hint="latest release notes",
+                ),
+                WebBrowserAccessDomainIntent(
+                    operation="read_page",
+                    provider_hint="generic",
+                    mode="mutate_with_confirmation",
+                    page_hint="https://example.com/changelog",
+                ),
+            ]
+        ),
+        _delivery(channel="telegram", chat_id=123456),
+    )
+
+    assert result.status == "fail"
+    assert result.actions == []
+    assert "Connector policy guardrail blocked inconsistent intent posture" in result.notes
+    assert "knowledge_search_intent:search_web" in result.notes
+    assert "web_browser_access_intent:read_page" in result.notes
     assert telegram_client.calls == []
 
 

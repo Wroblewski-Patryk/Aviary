@@ -8,6 +8,8 @@ from app.core.contracts import (
     ConnectorOperationMode,
     ConnectorPermissionGateOutput,
     ExternalTaskSyncDomainIntent,
+    KnowledgeSearchDomainIntent,
+    WebBrowserAccessDomainIntent,
 )
 
 
@@ -176,6 +178,42 @@ _OPERATION_POLICIES: dict[tuple[ConnectorKind, str], ConnectorOperationPolicy] =
         allowed_without_external_access=False,
         policy_reason="external_mutation_requires_confirmation",
     ),
+    ("knowledge_search", "search_web"): ConnectorOperationPolicy(
+        connector_kind="knowledge_search",
+        operation="search_web",
+        mode="read_only",
+        requires_opt_in=False,
+        requires_confirmation=False,
+        allowed_without_external_access=True,
+        policy_reason="read_only_public_knowledge_access",
+    ),
+    ("knowledge_search", "suggest_search"): ConnectorOperationPolicy(
+        connector_kind="knowledge_search",
+        operation="suggest_search",
+        mode="suggestion_only",
+        requires_opt_in=False,
+        requires_confirmation=False,
+        allowed_without_external_access=True,
+        policy_reason="suggestion_only_public_knowledge_boundary",
+    ),
+    ("web_browser", "read_page"): ConnectorOperationPolicy(
+        connector_kind="web_browser",
+        operation="read_page",
+        mode="read_only",
+        requires_opt_in=False,
+        requires_confirmation=False,
+        allowed_without_external_access=True,
+        policy_reason="read_only_public_page_access",
+    ),
+    ("web_browser", "suggest_page_review"): ConnectorOperationPolicy(
+        connector_kind="web_browser",
+        operation="suggest_page_review",
+        mode="suggestion_only",
+        requires_opt_in=False,
+        requires_confirmation=False,
+        allowed_without_external_access=True,
+        policy_reason="suggestion_only_public_page_boundary",
+    ),
 }
 
 
@@ -210,7 +248,9 @@ def build_connector_permission_gate(
     intent: CalendarSchedulingIntentDomainIntent
     | ExternalTaskSyncDomainIntent
     | ConnectedDriveAccessDomainIntent
-    | ConnectorCapabilityDiscoveryDomainIntent,
+    | ConnectorCapabilityDiscoveryDomainIntent
+    | KnowledgeSearchDomainIntent
+    | WebBrowserAccessDomainIntent,
 ) -> ConnectorPermissionGateOutput:
     policy = resolve_policy_for_connector_intent(intent)
     if isinstance(intent, CalendarSchedulingIntentDomainIntent):
@@ -223,6 +263,14 @@ def build_connector_permission_gate(
         operation = intent.operation
     elif isinstance(intent, ConnectedDriveAccessDomainIntent):
         connector_kind = "cloud_drive"
+        provider_hint = intent.provider_hint
+        operation = intent.operation
+    elif isinstance(intent, KnowledgeSearchDomainIntent):
+        connector_kind = "knowledge_search"
+        provider_hint = intent.provider_hint
+        operation = intent.operation
+    elif isinstance(intent, WebBrowserAccessDomainIntent):
+        connector_kind = "web_browser"
         provider_hint = intent.provider_hint
         operation = intent.operation
     else:
@@ -246,7 +294,9 @@ def resolve_policy_for_connector_intent(
     intent: CalendarSchedulingIntentDomainIntent
     | ExternalTaskSyncDomainIntent
     | ConnectedDriveAccessDomainIntent
-    | ConnectorCapabilityDiscoveryDomainIntent,
+    | ConnectorCapabilityDiscoveryDomainIntent
+    | KnowledgeSearchDomainIntent
+    | WebBrowserAccessDomainIntent,
 ) -> ConnectorOperationPolicy:
     if isinstance(intent, CalendarSchedulingIntentDomainIntent):
         return resolve_connector_operation_policy("calendar", intent.operation)
@@ -254,6 +304,10 @@ def resolve_policy_for_connector_intent(
         return resolve_connector_operation_policy("task_system", intent.operation)
     if isinstance(intent, ConnectedDriveAccessDomainIntent):
         return resolve_connector_operation_policy("cloud_drive", intent.operation)
+    if isinstance(intent, KnowledgeSearchDomainIntent):
+        return resolve_connector_operation_policy("knowledge_search", intent.operation)
+    if isinstance(intent, WebBrowserAccessDomainIntent):
+        return resolve_connector_operation_policy("web_browser", intent.operation)
     return resolve_connector_capability_discovery_policy(
         intent.connector_kind,
         intent.requested_capability,
@@ -293,7 +347,9 @@ def connector_guardrail_snapshot(
     intent: CalendarSchedulingIntentDomainIntent
     | ExternalTaskSyncDomainIntent
     | ConnectedDriveAccessDomainIntent
-    | ConnectorCapabilityDiscoveryDomainIntent,
+    | ConnectorCapabilityDiscoveryDomainIntent
+    | KnowledgeSearchDomainIntent
+    | WebBrowserAccessDomainIntent,
 ) -> str:
     policy = resolve_policy_for_connector_intent(intent)
     state = (
@@ -308,7 +364,9 @@ def connector_intent_policy_violation(
     intent: CalendarSchedulingIntentDomainIntent
     | ExternalTaskSyncDomainIntent
     | ConnectedDriveAccessDomainIntent
-    | ConnectorCapabilityDiscoveryDomainIntent,
+    | ConnectorCapabilityDiscoveryDomainIntent
+    | KnowledgeSearchDomainIntent
+    | WebBrowserAccessDomainIntent,
 ) -> str | None:
     policy = resolve_policy_for_connector_intent(intent)
     if intent.mode != policy.mode:
