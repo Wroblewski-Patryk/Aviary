@@ -165,9 +165,10 @@ Last updated: 2026-04-22
     synchronized in docs/context truth.
 
 - Group 77 note:
-  - `PRJ-520` is now complete.
-  - shared debug retirement now has one explicit checklist and cutover
-    posture, and `PRJ-521` is the next active enforcement slice.
+  - `PRJ-520..PRJ-521` are now complete.
+  - shared debug retirement now has one explicit checklist plus enforced
+    dedicated-admin-only default posture, and `PRJ-522` is the next evidence
+    slice.
 
 - [x] PRJ-520 Freeze the shared debug compatibility retirement gate
   - Owner: Planner
@@ -189,16 +190,23 @@ Last updated: 2026-04-22
   - Validation:
     - runtime-policy, architecture, and ops cross-review
 
-- [ ] PRJ-521 Enforce dedicated-admin-only debug ingress by default after retirement gate closure
+- [x] PRJ-521 Enforce dedicated-admin-only debug ingress by default after retirement gate closure
   - Owner: Backend Builder
   - Group: Dedicated Debug Ingress Compatibility Retirement
   - Depends on: PRJ-520
   - Priority: P1
-  - Status: BACKLOG
+  - Status: DONE
   - Done when:
     - shared debug compatibility routes no longer behave as normal runtime
       ingress and the dedicated internal route is the sole canonical debug
       payload path outside narrowly bounded rollback handling
+  - Result:
+    - `EVENT_DEBUG_SHARED_INGRESS_MODE` now defaults to `break_glass_only`,
+      and `EVENT_DEBUG_QUERY_COMPAT_ENABLED` now defaults to disabled even
+      outside production
+    - runtime policy and route behavior now treat `/internal/event/debug` as
+      the only normal debug ingress, while shared paths require explicit
+      compatibility or break-glass posture
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_policy.py tests/test_main_runtime_policy.py`
 

@@ -45,9 +45,13 @@ Last updated: 2026-04-22
   explicit owner-level checklist and cutover posture, and
   `/health.runtime_policy` exposes retirement target, cutover posture, gate
   checklist, and gate state in addition to the existing blocker list.
-- 2026-04-22: `PRJ-521` is now the first `READY` task; the next slice should
-  turn that frozen retirement gate into default dedicated-admin-only
-  enforcement for shared compatibility routes.
+- 2026-04-22: `PRJ-521` is complete: dedicated-admin debug ingress is now the
+  default posture across environments, shared `/event/debug` defaults to
+  break-glass-only, and query compat `POST /event?debug=true` is now
+  disabled-by-default unless explicitly re-enabled.
+- 2026-04-22: `PRJ-522` is now the first `READY` task; the next slice should
+  add release-smoke and behavior evidence for this dedicated-admin-only debug
+  posture.
 - 2026-04-22: Group 76 (`PRJ-516..PRJ-519`) is now complete, and the next
   `READY` task is `PRJ-520` for dedicated debug-ingress compatibility
   retirement.

@@ -235,7 +235,10 @@ Completed on 2026-04-22:
 - `PRJ-520` is complete: shared debug retirement now has one explicit
   checklist, cutover posture, and machine-visible gate state exposed through
   `/health.runtime_policy` for later enforcement work.
-- the next active slice in this lane is `PRJ-521`.
+- `PRJ-521` is complete: dedicated-admin debug ingress is now the default
+  posture across environments, with shared `/event/debug` break-glass-only by
+  default and query compat disabled by default unless explicitly re-enabled.
+- the next active slice in this lane is `PRJ-522`.
 
 - `PRJ-520` Freeze the shared debug compatibility retirement gate.
   - Result:

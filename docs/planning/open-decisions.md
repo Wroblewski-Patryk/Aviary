@@ -340,6 +340,12 @@ The current repo already works as an MVP slice, but several architecture-level d
   - `/health.runtime_policy` now exposes retirement target, cutover posture,
     gate checklist, and gate state so later enforcement no longer depends on
     reconstructing posture from loose blocker fields alone
+- `PRJ-521` is now complete:
+  - dedicated-admin debug ingress is now the default runtime posture across
+    environments
+  - shared `/event/debug` now defaults to `break_glass_only`, and query compat
+    `POST /event?debug=true` now defaults to disabled unless explicitly
+    re-enabled for bounded rollback or migration handling
 - Introduce new feature surface only when it advances one of those convergence
   lanes or removes a documented transitional shortcut.
 

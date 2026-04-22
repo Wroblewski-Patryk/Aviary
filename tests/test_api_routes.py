@@ -268,7 +268,7 @@ class FakeSettings:
         event_debug_token: str | None = None,
         production_debug_token_required: bool = True,
         event_debug_query_compat_enabled: bool | None = None,
-        event_debug_shared_ingress_mode: str = "compatibility",
+        event_debug_shared_ingress_mode: str = "break_glass_only",
         event_debug_query_compat_recent_window: int = 20,
         event_debug_query_compat_stale_after_seconds: int = 86400,
         semantic_vector_enabled: bool = True,
@@ -337,7 +337,7 @@ class FakeSettings:
     def is_event_debug_query_compat_enabled(self) -> bool:
         if self.event_debug_query_compat_enabled is not None:
             return self.event_debug_query_compat_enabled
-        return self.app_env != "production"
+        return False
 
 
 class FakeMemoryRepository:
@@ -626,7 +626,7 @@ def _client(
     event_debug_token: str | None = None,
     production_debug_token_required: bool = True,
     event_debug_query_compat_enabled: bool | None = None,
-    event_debug_shared_ingress_mode: str = "compatibility",
+    event_debug_shared_ingress_mode: str = "break_glass_only",
     event_debug_query_compat_recent_window: int = 20,
     event_debug_query_compat_stale_after_seconds: int = 86400,
     semantic_vector_enabled: bool = True,
@@ -750,10 +750,10 @@ def test_health_endpoint_returns_ok() -> None:
     assert body["runtime_policy"]["affective_assessment_source"] == "environment_default"
     assert body["runtime_policy"]["affective_classifier_available"] is False
     assert body["runtime_policy"]["affective_assessment_posture"] == "fallback_only_classifier_unavailable"
-    assert body["runtime_policy"]["event_debug_shared_ingress_mode"] == "compatibility"
+    assert body["runtime_policy"]["event_debug_shared_ingress_mode"] == "break_glass_only"
     assert body["runtime_policy"]["event_debug_admin_policy_owner"] == "dedicated_admin_debug_ingress_policy"
     assert body["runtime_policy"]["event_debug_admin_ingress_target_path"] == "/internal/event/debug"
-    assert body["runtime_policy"]["event_debug_admin_posture_state"] == "transitional_shared_compatibility_active"
+    assert body["runtime_policy"]["event_debug_admin_posture_state"] == "dedicated_admin_route_primary"
     assert body["runtime_policy"]["event_debug_shared_ingress_retirement_target"] == (
         "break_glass_only_then_remove_from_normal_operator_flows"
     )
@@ -768,14 +768,11 @@ def test_health_endpoint_returns_ok() -> None:
         "rollback_notes_cover_shared_debug_break_glass_reenablement",
     ]
     assert body["runtime_policy"]["event_debug_shared_ingress_retirement_gate_state"] == (
-        "shared_debug_compatibility_retirement_blocked"
+        "shared_debug_break_glass_retirement_gate_ready"
     )
-    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_blockers"] == [
-        "shared_debug_route_still_primary",
-        "query_debug_compatibility_still_enabled",
-    ]
-    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_ready"] is False
-    assert body["runtime_policy"]["compatibility_sunset_ready"] is False
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_blockers"] == []
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_ready"] is True
+    assert body["runtime_policy"]["compatibility_sunset_ready"] is True
     assert body["runtime_policy"]["event_debug_query_compat_telemetry"]["recent_window_size"] == 20
     assert body["proactive"]["policy_owner"] == "proactive_runtime_policy"
     assert body["proactive"]["enabled"] is False
@@ -1456,7 +1453,7 @@ def test_health_endpoint_exposes_runtime_policy_flags() -> None:
         "production_debug_token_required": True,
         "event_debug_query_compat_enabled": False,
         "event_debug_query_compat_source": "environment_default",
-        "event_debug_ingress_owner": "internal_route_primary_shared_route_compat",
+        "event_debug_ingress_owner": "internal_route_primary_shared_route_break_glass_fallback",
         "event_debug_admin_policy_owner": "dedicated_admin_debug_ingress_policy",
         "event_debug_admin_ingress_target_kind": "dedicated_internal_admin_route",
         "event_debug_admin_ingress_target_path": "/internal/event/debug",
@@ -1464,10 +1461,10 @@ def test_health_endpoint_exposes_runtime_policy_flags() -> None:
         "event_debug_admin_posture_state": "debug_disabled_admin_route_primary_by_default",
         "event_debug_internal_ingress_path": "/internal/event/debug",
         "event_debug_shared_ingress_path": "/event/debug",
-        "event_debug_shared_ingress_mode": "compatibility",
+        "event_debug_shared_ingress_mode": "break_glass_only",
         "event_debug_shared_ingress_mode_source": "explicit",
-        "event_debug_shared_ingress_break_glass_required": False,
-        "event_debug_shared_ingress_posture": "shared_route_compatibility",
+        "event_debug_shared_ingress_break_glass_required": True,
+        "event_debug_shared_ingress_posture": "shared_route_break_glass_only",
         "event_debug_shared_ingress_retirement_target": "break_glass_only_then_remove_from_normal_operator_flows",
         "event_debug_shared_ingress_retirement_cutover_posture": (
             "dedicated_internal_admin_route_primary_shared_routes_break_glass_then_remove"
@@ -1542,14 +1539,12 @@ def test_health_endpoint_marks_break_glass_shared_ingress_posture_when_configure
     assert body["runtime_policy"]["event_debug_shared_ingress_mode"] == "break_glass_only"
     assert body["runtime_policy"]["event_debug_shared_ingress_break_glass_required"] is True
     assert body["runtime_policy"]["event_debug_shared_ingress_posture"] == "shared_route_break_glass_only"
-    assert body["runtime_policy"]["event_debug_admin_posture_state"] == "transitional_shared_compatibility_active"
+    assert body["runtime_policy"]["event_debug_admin_posture_state"] == "dedicated_admin_route_primary"
     assert body["runtime_policy"]["event_debug_shared_ingress_retirement_gate_state"] == (
-        "shared_debug_compatibility_retirement_blocked"
+        "shared_debug_break_glass_retirement_gate_ready"
     )
-    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_blockers"] == [
-        "query_debug_compatibility_still_enabled",
-    ]
-    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_ready"] is False
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_blockers"] == []
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_ready"] is True
     assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is True
     assert body["runtime_policy"]["event_debug_shared_ingress_sunset_reason"] == "shared_debug_route_break_glass_only"
     assert body["runtime_policy"]["event_debug_internal_ingress_path"] == "/internal/event/debug"
@@ -1566,7 +1561,7 @@ def test_health_endpoint_marks_event_debug_source_as_environment_default_when_un
     assert body["runtime_policy"]["event_debug_enabled"] is True
     assert body["runtime_policy"]["event_debug_token_required"] is False
     assert body["runtime_policy"]["production_debug_token_required"] is True
-    assert body["runtime_policy"]["event_debug_query_compat_enabled"] is True
+    assert body["runtime_policy"]["event_debug_query_compat_enabled"] is False
     assert body["runtime_policy"]["event_debug_query_compat_source"] == "environment_default"
     assert body["runtime_policy"]["debug_access_posture"] == "open_no_token"
     assert body["runtime_policy"]["debug_token_policy_hint"] == "debug_access_open_without_token"
@@ -1581,40 +1576,32 @@ def test_health_endpoint_marks_event_debug_source_as_environment_default_when_un
     assert body["runtime_policy"]["startup_schema_compatibility_posture"] == "migration_only"
     assert body["runtime_policy"]["startup_schema_compatibility_sunset_ready"] is True
     assert body["runtime_policy"]["startup_schema_compatibility_sunset_reason"] == "migration_only_baseline_active"
-    assert body["runtime_policy"]["event_debug_admin_posture_state"] == "transitional_shared_compatibility_active"
-    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_blockers"] == [
-        "shared_debug_route_still_primary",
-        "query_debug_compatibility_still_enabled",
-    ]
-    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_ready"] is False
-    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is False
-    assert (
-        body["runtime_policy"]["event_debug_shared_ingress_sunset_reason"]
-        == "shared_debug_route_still_in_compatibility_mode"
-    )
-    assert body["runtime_policy"]["compatibility_sunset_ready"] is False
-    assert body["runtime_policy"]["compatibility_sunset_blockers"] == [
-        "shared_debug_ingress_compatibility_mode_active"
-    ]
+    assert body["runtime_policy"]["event_debug_admin_posture_state"] == "dedicated_admin_route_primary"
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_blockers"] == []
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_ready"] is True
+    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is True
+    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_reason"] == "shared_debug_route_break_glass_only"
+    assert body["runtime_policy"]["compatibility_sunset_ready"] is True
+    assert body["runtime_policy"]["compatibility_sunset_blockers"] == []
     assert body["release_readiness"]["ready"] is True
     assert body["release_readiness"]["violations"] == []
     assert body["runtime_policy"]["event_debug_query_compat_allow_rate"] == 0.0
     assert body["runtime_policy"]["event_debug_query_compat_block_rate"] == 0.0
     assert (
         body["runtime_policy"]["event_debug_query_compat_recommendation"]
-        == "no_compat_traffic_detected_disable_when_possible"
+        == "compat_disabled"
     )
     assert body["runtime_policy"]["event_debug_query_compat_sunset_ready"] is True
-    assert body["runtime_policy"]["event_debug_query_compat_sunset_reason"] == "no_compat_attempts_detected"
+    assert body["runtime_policy"]["event_debug_query_compat_sunset_reason"] == "compat_disabled"
     assert body["runtime_policy"]["event_debug_query_compat_recent_attempts_total"] == 0
     assert body["runtime_policy"]["event_debug_query_compat_recent_allow_rate"] == 0.0
     assert body["runtime_policy"]["event_debug_query_compat_recent_block_rate"] == 0.0
-    assert body["runtime_policy"]["event_debug_query_compat_recent_state"] == "no_recent_attempts"
+    assert body["runtime_policy"]["event_debug_query_compat_recent_state"] == "compat_disabled"
     assert body["runtime_policy"]["event_debug_query_compat_stale_after_seconds"] == 86400
     assert body["runtime_policy"]["event_debug_query_compat_last_attempt_age_seconds"] is None
     assert body["runtime_policy"]["event_debug_query_compat_last_attempt_state"] == "no_attempts_recorded"
-    assert body["runtime_policy"]["event_debug_query_compat_activity_state"] == "no_attempts_observed"
-    assert body["runtime_policy"]["event_debug_query_compat_activity_hint"] == "can_disable_when_ready"
+    assert body["runtime_policy"]["event_debug_query_compat_activity_state"] == "compat_disabled"
+    assert body["runtime_policy"]["event_debug_query_compat_activity_hint"] == "compat_disabled_no_action"
 
 
 def test_health_endpoint_exposes_all_production_policy_mismatches_when_present() -> None:
@@ -1640,20 +1627,14 @@ def test_health_endpoint_exposes_all_production_policy_mismatches_when_present()
     assert body["runtime_policy"]["startup_schema_compatibility_posture"] == "compatibility_create_tables"
     assert body["runtime_policy"]["startup_schema_compatibility_sunset_ready"] is False
     assert body["runtime_policy"]["startup_schema_compatibility_sunset_reason"] == "create_tables_compatibility_active"
-    assert body["runtime_policy"]["event_debug_admin_posture_state"] == "transitional_shared_compatibility_active"
-    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_blockers"] == [
-        "shared_debug_route_still_primary",
-    ]
-    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_ready"] is False
-    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is False
-    assert (
-        body["runtime_policy"]["event_debug_shared_ingress_sunset_reason"]
-        == "shared_debug_route_still_in_compatibility_mode"
-    )
+    assert body["runtime_policy"]["event_debug_admin_posture_state"] == "dedicated_admin_route_primary"
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_blockers"] == []
+    assert body["runtime_policy"]["event_debug_shared_ingress_retirement_ready"] is True
+    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is True
+    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_reason"] == "shared_debug_route_break_glass_only"
     assert body["runtime_policy"]["compatibility_sunset_ready"] is False
     assert body["runtime_policy"]["compatibility_sunset_blockers"] == [
         "startup_schema_compatibility_active",
-        "shared_debug_ingress_compatibility_mode_active",
     ]
     assert body["release_readiness"]["ready"] is False
     assert body["release_readiness"]["violations"] == [
@@ -1877,11 +1858,9 @@ def test_health_endpoint_marks_query_compat_as_explicit_production_mismatch_when
     assert body["runtime_policy"]["production_policy_mismatch_count"] == 2
     assert body["runtime_policy"]["strict_rollout_ready"] is False
     assert body["runtime_policy"]["startup_schema_compatibility_sunset_ready"] is True
-    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is False
-    assert body["runtime_policy"]["compatibility_sunset_ready"] is False
-    assert body["runtime_policy"]["compatibility_sunset_blockers"] == [
-        "shared_debug_ingress_compatibility_mode_active"
-    ]
+    assert body["runtime_policy"]["event_debug_shared_ingress_sunset_ready"] is True
+    assert body["runtime_policy"]["compatibility_sunset_ready"] is True
+    assert body["runtime_policy"]["compatibility_sunset_blockers"] == []
     assert body["release_readiness"]["ready"] is False
     assert body["release_readiness"]["violations"] == [
         "runtime_policy.production_policy_mismatches_non_empty",
@@ -2112,7 +2091,10 @@ def test_event_endpoint_user_id_fallback_does_not_stick_between_requests() -> No
 
 
 def test_event_endpoint_can_return_full_runtime_debug_payload_when_requested() -> None:
-    client, runtime, _ = _client(reflection_triggered=True)
+    client, runtime, _ = _client(
+        reflection_triggered=True,
+        event_debug_query_compat_enabled=True,
+    )
 
     response = client.post("/event?debug=true", json={"text": "show debug runtime"})
 
@@ -2139,7 +2121,10 @@ def test_event_endpoint_can_return_full_runtime_debug_payload_when_requested() -
 
 
 def test_event_debug_endpoint_returns_full_runtime_debug_payload_when_enabled() -> None:
-    client, runtime, _ = _client(reflection_triggered=True)
+    client, runtime, _ = _client(
+        reflection_triggered=True,
+        event_debug_shared_ingress_mode="compatibility",
+    )
 
     response = client.post("/event/debug", json={"text": "show explicit debug runtime"})
 
@@ -2254,7 +2239,11 @@ def test_internal_event_debug_endpoint_ignores_shared_break_glass_posture() -> N
 
 
 def test_event_endpoint_rejects_debug_payload_when_debug_token_is_missing() -> None:
-    client, runtime, _ = _client(event_debug_enabled=True, event_debug_token="debug-secret")
+    client, runtime, _ = _client(
+        event_debug_enabled=True,
+        event_debug_token="debug-secret",
+        event_debug_query_compat_enabled=True,
+    )
 
     response = client.post("/event?debug=true", json={"text": "show debug runtime"})
 
@@ -2264,7 +2253,11 @@ def test_event_endpoint_rejects_debug_payload_when_debug_token_is_missing() -> N
 
 
 def test_event_debug_endpoint_rejects_debug_payload_when_debug_token_is_missing() -> None:
-    client, runtime, _ = _client(event_debug_enabled=True, event_debug_token="debug-secret")
+    client, runtime, _ = _client(
+        event_debug_enabled=True,
+        event_debug_token="debug-secret",
+        event_debug_shared_ingress_mode="compatibility",
+    )
 
     response = client.post("/event/debug", json={"text": "show debug runtime"})
 
@@ -2295,6 +2288,7 @@ def test_event_debug_endpoint_rejects_debug_payload_in_production_when_token_is_
         event_debug_enabled=True,
         event_debug_token=None,
         production_debug_token_required=True,
+        event_debug_shared_ingress_mode="compatibility",
     )
 
     response = client.post("/event/debug", json={"text": "show debug runtime"})
@@ -2360,7 +2354,11 @@ def test_event_endpoint_rejects_debug_query_compat_route_in_production_when_disa
 
 
 def test_event_endpoint_allows_debug_payload_when_debug_token_matches() -> None:
-    client, runtime, _ = _client(event_debug_enabled=True, event_debug_token="debug-secret")
+    client, runtime, _ = _client(
+        event_debug_enabled=True,
+        event_debug_token="debug-secret",
+        event_debug_query_compat_enabled=True,
+    )
 
     response = client.post(
         "/event?debug=true",
@@ -2458,6 +2456,7 @@ def test_health_endpoint_exposes_query_compat_telemetry_after_allowed_and_blocke
 
 def test_health_endpoint_respects_configured_query_compat_recent_window_size() -> None:
     client, _, _ = _client(
+        event_debug_query_compat_enabled=True,
         event_debug_query_compat_recent_window=3,
     )
 
@@ -2492,12 +2491,13 @@ def test_health_endpoint_respects_configured_query_compat_stale_threshold() -> N
     assert body["runtime_policy"]["event_debug_query_compat_stale_after_seconds"] == 30
     assert body["runtime_policy"]["event_debug_query_compat_last_attempt_age_seconds"] is None
     assert body["runtime_policy"]["event_debug_query_compat_last_attempt_state"] == "no_attempts_recorded"
-    assert body["runtime_policy"]["event_debug_query_compat_activity_state"] == "no_attempts_observed"
-    assert body["runtime_policy"]["event_debug_query_compat_activity_hint"] == "can_disable_when_ready"
+    assert body["runtime_policy"]["event_debug_query_compat_activity_state"] == "compat_disabled"
+    assert body["runtime_policy"]["event_debug_query_compat_activity_hint"] == "compat_disabled_no_action"
 
 
 def test_health_endpoint_marks_query_compat_activity_as_stale_when_last_attempt_is_older_than_threshold() -> None:
     client, _, _ = _client(
+        event_debug_query_compat_enabled=True,
         event_debug_query_compat_stale_after_seconds=1,
     )
 
@@ -2512,7 +2512,11 @@ def test_health_endpoint_marks_query_compat_activity_as_stale_when_last_attempt_
 
 
 def test_event_debug_endpoint_allows_debug_payload_when_debug_token_matches() -> None:
-    client, runtime, _ = _client(event_debug_enabled=True, event_debug_token="debug-secret")
+    client, runtime, _ = _client(
+        event_debug_enabled=True,
+        event_debug_token="debug-secret",
+        event_debug_shared_ingress_mode="compatibility",
+    )
 
     response = client.post(
         "/event/debug",
@@ -2541,12 +2545,18 @@ def test_event_endpoint_rejects_debug_payload_when_debug_mode_is_disabled() -> N
     response = client.post("/event?debug=true", json={"text": "show debug runtime"})
 
     assert response.status_code == 403
-    assert response.json()["detail"] == "Debug payload is disabled for this environment."
+    assert (
+        response.json()["detail"]
+        == "Debug query compatibility route is disabled for this environment. Use POST /internal/event/debug."
+    )
     assert runtime.last_event is None
 
 
 def test_event_debug_endpoint_rejects_debug_payload_when_debug_mode_is_disabled() -> None:
-    client, runtime, _ = _client(event_debug_enabled=False)
+    client, runtime, _ = _client(
+        event_debug_enabled=False,
+        event_debug_shared_ingress_mode="compatibility",
+    )
 
     response = client.post("/event/debug", json={"text": "show debug runtime"})
 
@@ -2567,7 +2577,7 @@ def test_event_endpoint_contract_smoke_pins_public_shape_and_debug_gate() -> Non
     assert set(body["runtime"].keys()) == {"role", "motivation_mode", "action_status", "reflection_triggered"}
     assert "debug" not in body
 
-    debug_response = client.post("/event?debug=true", json={"text": "contract smoke debug"})
+    debug_response = client.post("/internal/event/debug", json={"text": "contract smoke debug"})
 
     assert debug_response.status_code == 200
     debug_body = debug_response.json()
@@ -2575,7 +2585,7 @@ def test_event_endpoint_contract_smoke_pins_public_shape_and_debug_gate() -> Non
     assert "system_debug" in debug_body
     assert "event" in debug_body["debug"]
     assert "stage_timings_ms" in debug_body["debug"]
-    assert debug_response.headers["x-aion-debug-compat"] == "query_debug_route_is_compatibility_use_internal_event_debug"
+    assert "x-aion-debug-compat" not in debug_response.headers
 
 
 def test_event_debug_endpoint_exposes_system_debug_behavior_contract() -> None:
@@ -2643,7 +2653,7 @@ def test_event_debug_endpoint_exposes_runtime_incident_evidence_export() -> None
 
 
 def test_event_endpoint_debug_payload_pins_foreground_boundary_stage_order() -> None:
-    client, _, _ = _client()
+    client, _, _ = _client(event_debug_query_compat_enabled=True)
 
     debug_response = client.post("/event?debug=true", json={"text": "foreground boundary parity"})
 

@@ -13,7 +13,7 @@ def test_settings_default_to_migration_first_startup_mode() -> None:
     assert settings.event_debug_token is None
     assert settings.production_debug_token_required is True
     assert settings.event_debug_query_compat_enabled is None
-    assert settings.event_debug_shared_ingress_mode == "compatibility"
+    assert settings.event_debug_shared_ingress_mode == "break_glass_only"
     assert settings.event_debug_query_compat_recent_window == 20
     assert settings.event_debug_query_compat_stale_after_seconds == 86400
     assert settings.semantic_vector_enabled is True
@@ -40,7 +40,7 @@ def test_settings_default_to_migration_first_startup_mode() -> None:
     assert settings.attention_stale_turn_seconds == 30.0
     assert settings.is_affective_assessment_enabled() is True
     assert settings.is_event_debug_enabled() is True
-    assert settings.is_event_debug_query_compat_enabled() is True
+    assert settings.is_event_debug_query_compat_enabled() is False
 
 
 def test_settings_allow_explicit_compatibility_create_tables_mode() -> None:

@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     event_debug_token: str | None = None
     production_debug_token_required: bool = True
     event_debug_query_compat_enabled: bool | None = None
-    event_debug_shared_ingress_mode: Literal["compatibility", "break_glass_only"] = "compatibility"
+    event_debug_shared_ingress_mode: Literal["compatibility", "break_glass_only"] = "break_glass_only"
     event_debug_query_compat_recent_window: int = 20
     event_debug_query_compat_stale_after_seconds: int = 86400
     semantic_vector_enabled: bool = True
@@ -112,7 +112,7 @@ class Settings(BaseSettings):
     def is_event_debug_query_compat_enabled(self) -> bool:
         if self.event_debug_query_compat_enabled is not None:
             return self.event_debug_query_compat_enabled
-        return self.app_env.lower() != "production"
+        return False
 
     def resolve_production_policy_enforcement(self) -> Literal["warn", "strict"]:
         mode = str(self.production_policy_enforcement).strip().lower()

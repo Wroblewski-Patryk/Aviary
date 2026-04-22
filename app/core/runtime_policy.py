@@ -36,7 +36,7 @@ def event_debug_query_compat_enabled(settings: Any) -> bool:
     compat_explicit = getattr(settings, "event_debug_query_compat_enabled", None)
     if compat_explicit is not None:
         return bool(compat_explicit)
-    return app_environment(settings) != "production"
+    return False
 
 
 def event_debug_query_compat_source(settings: Any) -> Literal["explicit", "environment_default"]:
@@ -48,7 +48,7 @@ def event_debug_query_compat_source(settings: Any) -> Literal["explicit", "envir
 def event_debug_shared_ingress_mode(settings: Any) -> Literal["compatibility", "break_glass_only"]:
     explicit_mode = getattr(settings, "event_debug_shared_ingress_mode", None)
     if explicit_mode is None:
-        mode = "break_glass_only" if app_environment(settings) == "production" else "compatibility"
+        mode = "break_glass_only"
     else:
         mode = str(explicit_mode or "compatibility").strip().lower()
     if mode == "break_glass_only":
@@ -326,7 +326,7 @@ def runtime_policy_snapshot(settings: Any) -> dict[str, Any]:
         "production_debug_token_required": production_debug_token_required(settings),
         "event_debug_query_compat_enabled": query_compat_enabled,
         "event_debug_query_compat_source": event_debug_query_compat_source(settings),
-        "event_debug_ingress_owner": "internal_route_primary_shared_route_compat",
+        "event_debug_ingress_owner": "internal_route_primary_shared_route_break_glass_fallback",
         "event_debug_admin_policy_owner": debug_policy["policy_owner"],
         "event_debug_admin_ingress_target_kind": debug_policy["target_admin_ingress_kind"],
         "event_debug_admin_ingress_target_path": debug_policy["target_admin_ingress_path"],
