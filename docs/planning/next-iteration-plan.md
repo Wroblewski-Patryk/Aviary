@@ -186,6 +186,18 @@ Queue update (2026-04-23):
   - Validation:
     - architecture/runtime/ops cross-review
 
+Queue update (2026-04-23):
+
+- `PRJ-584` is now complete.
+- retrieval provider baseline is now frozen as:
+  - steady-state production baseline remains `openai_api_embeddings`
+  - `local_hybrid` remains the bounded transition owner
+  - deterministic remains explicit compatibility fallback only
+  - provider, model, and source-rollout enforcement stays `warn` during
+    runtime alignment and becomes release-strict only after `PRJ-585`
+- the next active slice is `PRJ-585`, which should align live runtime and
+  production configuration to that already-approved baseline.
+
 - `PRJ-585` Align production retrieval configuration and execution to the chosen provider baseline.
   - Result:
     - production no longer reports `provider_baseline_not_aligned`

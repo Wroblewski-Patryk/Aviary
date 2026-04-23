@@ -23,10 +23,11 @@ partially resolved areas:
    - release smoke, exported `incident_evidence`, and behavior-validation proof
      now verify the same live proactive owner posture
 3. retrieval provider baseline
-   - `/health.memory_retrieval` still reports
-     `retrieval_lifecycle_pending_gaps=["provider_baseline_not_aligned"]`
-   - the repo needs one explicit production answer about provider baseline and
-     enforcement strictness
+   - resolved for planning posture through `PRJ-584`
+   - steady-state production baseline remains `openai_api_embeddings`
+   - `local_hybrid` remains the bounded transition owner and deterministic
+     remains compatibility fallback only
+   - runtime alignment and strict release proof still need `PRJ-585..PRJ-586`
 4. learned-state and personality-growth introspection
    - backend surfaces exist, but they still read more like readiness posture
      than a rich personality-growth inspection bundle
@@ -44,6 +45,17 @@ Queue seeded from this analysis:
 - `PRJ-584..PRJ-587` Retrieval Provider Baseline Alignment
 - `PRJ-588..PRJ-591` Learned-State And Personality-Growth Introspection
 - `PRJ-592..PRJ-595` Production Organizer-Tool Readiness
+
+Resolved retrieval-baseline decision in `PRJ-584` (2026-04-23):
+
+- production retrieval keeps `openai_api_embeddings` as the steady-state target
+  baseline
+- `local_hybrid` remains a bounded transition owner, not the final production
+  owner
+- deterministic execution remains the explicit compatibility fallback posture
+- provider, model, and source-rollout enforcement stays `warn` during
+  `PRJ-585` so live runtime alignment can land before `PRJ-586` makes drift
+  release-blocking
 
 Resolved proactive production-policy decision in `PRJ-580` (2026-04-23):
 

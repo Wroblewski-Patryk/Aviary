@@ -301,6 +301,14 @@ Last updated: 2026-04-23
 - 2026-04-23: `PRJ-584` is now the first `READY` task; the next slice should
   freeze the production retrieval-provider baseline and its enforcement
   posture before any provider-alignment runtime changes proceed.
+- 2026-04-23: `PRJ-584` is complete: production retrieval keeps
+  `openai_api_embeddings` as the steady-state target baseline,
+  `local_hybrid` remains transition-only, deterministic remains compatibility
+  fallback, and provider/model/source-rollout enforcement stays `warn` until
+  live runtime alignment lands in `PRJ-585`.
+- 2026-04-23: `PRJ-585` is now the first `READY` task; the next slice should
+  align live production retrieval configuration and execution so
+  `/health.memory_retrieval` stops reporting `provider_baseline_not_aligned`.
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.

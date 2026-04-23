@@ -166,9 +166,13 @@ Last updated: 2026-04-23
   follow-up under external scheduler ownership, release smoke plus
   incident-evidence gates now require the same proactive owner posture, and
   docs/context truth no longer describe proactive as `disabled_by_policy`.
-- `PRJ-584` is now the first `READY` slice because retrieval provider baseline
-  alignment is the next remaining architecture-to-production gap after durable
-  attention and proactive production activation are both complete.
+- `PRJ-584` is complete: production retrieval keeps `openai_api_embeddings` as
+  the steady-state target baseline, `local_hybrid` remains transition-only,
+  deterministic remains compatibility fallback, and enforcement stays
+  explicitly `warn` until runtime alignment lands in `PRJ-585`.
+- `PRJ-585` is now the first `READY` slice because live production still
+  reports `provider_baseline_not_aligned` after the retrieval baseline and
+  enforcement posture were frozen.
 
 ## READY
 
@@ -356,25 +360,30 @@ Last updated: 2026-04-23
     - runtime reality, testing guidance, ops notes, planning, and repository context now describe the same live bounded proactive production baseline
     - the queue now advances to retrieval-provider baseline alignment
 
-- [ ] PRJ-584 Freeze the production retrieval-provider baseline and enforcement posture
+- [x] PRJ-584 Freeze the production retrieval-provider baseline and enforcement posture
   - Owner: Planner
   - Group: Retrieval Provider Baseline Alignment
   - Depends on: PRJ-583
   - Priority: P1
-  - Status: READY
+  - Status: DONE
   - Done when:
     - one explicit provider baseline is chosen for production retrieval
     - the strictness posture for provider/model/source enforcement is frozen
       before runtime changes
   - Validation:
     - architecture/runtime/ops cross-review
+    - live production `/health.memory_retrieval`
+  - Result:
+    - `openai_api_embeddings` remains the explicit steady-state production baseline
+    - `local_hybrid` remains the bounded transition owner and deterministic remains compatibility fallback
+    - provider/model/source-rollout enforcement stays `warn` during runtime alignment and becomes release-strict only after `PRJ-585`
 
 - [ ] PRJ-585 Align production retrieval configuration and execution to the chosen provider baseline
   - Owner: Backend Builder
   - Group: Retrieval Provider Baseline Alignment
   - Depends on: PRJ-584
   - Priority: P1
-  - Status: BACKLOG
+  - Status: READY
   - Done when:
     - production no longer reports `provider_baseline_not_aligned`
     - `/health.memory_retrieval` shows the chosen provider as both target and
