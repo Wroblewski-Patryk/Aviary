@@ -7,6 +7,73 @@ This plan translates the repo analysis into an execution roadmap that brings the
 The goal is not to add more features first.
 The goal is to make the current AION runtime more correct, more inspectable, and easier to extend without architectural drift.
 
+## Planned On 2026-04-23 After Production Repair
+
+The no-UI `v1` baseline is now real in production again after `PRJ-570`, so the
+next queue should stop chasing feature breadth and close the most obvious live
+runtime drift that production `/health` still reports.
+
+### Fresh Runtime Gap Snapshot
+
+Observed after the production repair deploy:
+
+- Telegram round-trip is healthy again
+- migration-first startup is healthy again
+- reflection queue ownership still reports external-driver target posture but
+  active `in_process` compatibility mode
+- scheduler cadence ownership still reports externalized target posture but
+  active `in_process` execution mode
+
+### New Queue
+
+The next queue is now seeded through `PRJ-574`.
+
+New group:
+
+- `PRJ-572..PRJ-574` Post-V1 Production Hardening
+
+Why this order:
+
+- production already exposes the target owner policies for reflection and
+  scheduler externalization
+- these are now the clearest remaining operational mismatches between runtime
+  truth and target posture
+- externalizing these owners is higher-value than widening capability lanes,
+  because it reduces deploy drift and makes the production baseline more
+  truthful before future `v2` work
+
+### Group 89 - Post-V1 Production Hardening
+
+- `PRJ-572` Externalize production reflection queue ownership.
+  - Result:
+    - production moves from app-local reflection queue drain to the existing
+      external-driver baseline
+    - `/health.reflection.external_driver_policy` and supervision posture stop
+      reporting `in_process` compatibility as the active mode
+  - Validation:
+    - relevant pytest coverage
+    - Coolify deploy
+    - production `/health` and release evidence
+
+- `PRJ-573` Externalize maintenance and proactive cadence ownership.
+  - Result:
+    - production moves scheduler cadence ownership to the existing externalized
+      baseline
+    - `/health.scheduler.external_owner_policy` reports the selected external
+      owner instead of `in_process` compatibility mode
+  - Validation:
+    - relevant pytest coverage
+    - release smoke
+    - production `/health.scheduler`
+
+- `PRJ-574` Sync post-v1 production-hardening docs and release evidence.
+  - Result:
+    - canonical docs, runtime reality, runbook, testing guidance, and planning
+      truth describe the same externalized production owner baseline
+  - Validation:
+    - doc-and-context sync across architecture, implementation, ops, testing,
+      planning, and context
+
 ## Repo Analysis Snapshot
 
 Confirmed on 2026-04-19:

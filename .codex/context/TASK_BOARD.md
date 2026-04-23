@@ -102,10 +102,72 @@ Last updated: 2026-04-23
   again, Telegram round-trip telemetry shows successful ingress and delivery,
   and the post-deploy migration hook is normalized back to
   `python -m alembic upgrade head`.
-- no seeded execution queue is currently active; the next task should be
-  derived from the next fresh production or architecture gap.
+- `PRJ-571` is complete: fresh post-`v1` planning truth is now seeded from the
+  live production runtime instead of historical backlog. The next queue starts
+  with the remaining operational drift already visible in `/health` and
+  startup logs:
+  - reflection external-driver posture still runs in `in_process`
+    compatibility mode
+  - scheduler cadence ownership still runs in `in_process`
+  - both lanes already expose target owner policies and therefore should be
+    externalized before another broad capability expansion
 
 ## READY
+
+- [ ] PRJ-572 Externalize production reflection queue ownership
+  - Owner: Ops/Release
+  - Group: Post-V1 Production Hardening
+  - Depends on: PRJ-571
+  - Priority: P0
+  - Why now:
+    - live production `/health.reflection.external_driver_policy` still reports
+      `production_baseline_ready=false`
+    - the runtime already exposes the external entrypoint and supervision
+      policy, so the next smallest useful step is to make production actually
+      use that owner path
+  - Done when:
+    - production no longer runs app-local reflection queue drain as the active
+      baseline
+    - `/health.reflection.external_driver_policy` and supervision posture move
+      to the externalized baseline without breaking turn handling
+  - Validation:
+    - relevant pytest coverage
+    - Coolify deploy
+    - production `/health` and release-smoke evidence
+
+- [ ] PRJ-573 Externalize maintenance and proactive cadence ownership
+  - Owner: Ops/Release
+  - Group: Post-V1 Production Hardening
+  - Depends on: PRJ-572
+  - Priority: P0
+  - Why now:
+    - production `/health.scheduler.external_owner_policy` still shows
+      `in_process` ownership
+    - proactive and maintenance cadence already have target entrypoints and
+      proof surfaces, so the next gap is operational cutover
+  - Done when:
+    - selected scheduler execution mode is externalized in production
+    - cadence cutover proof remains green after deploy
+  - Validation:
+    - relevant pytest coverage
+    - release smoke
+    - production `/health.scheduler`
+
+- [ ] PRJ-574 Sync post-v1 production-hardening docs and release evidence
+  - Owner: Product Docs
+  - Group: Post-V1 Production Hardening
+  - Depends on: PRJ-573
+  - Priority: P1
+  - Why now:
+    - once reflection and cadence owners are externalized, runtime reality,
+      runbook, testing, and planning truth must stop describing those lanes as
+      transitional
+  - Done when:
+    - docs, context, and ops guidance describe the same externalized production
+      baseline and evidence path
+  - Validation:
+    - doc-and-context sync across architecture, implementation, ops, testing,
+      planning, and context
 
 - [ ] PRJ-540 Freeze the no-UI `v1` product contract and conversation-reliability gate
   - Owner: Planner

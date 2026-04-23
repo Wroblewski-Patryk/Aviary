@@ -9,7 +9,7 @@ Last updated: 2026-04-23
   structured pipeline, replies through API or Telegram, and learns lightweight
   user preferences over time
 - Commercial model: TBD
-- Current phase: no-UI V1 baseline achieved; awaiting next production/runtime analysis
+- Current phase: no-UI V1 baseline achieved; post-v1 production hardening queued
 - 2026-04-22: product staging is now explicit:
   - `MVP` is already exceeded by the current runtime
   - `v1` means a no-UI but production-usable life assistant over Telegram or
@@ -205,6 +205,12 @@ Last updated: 2026-04-23
   returned `200`, Telegram round-trip telemetry recorded a successful ingress
   and delivery after the repair, and the post-deploy migration hook was
   normalized to `python -m alembic upgrade head`.
+- 2026-04-23: `PRJ-571` is complete: the next seeded queue now comes from live
+  production gaps instead of synthetic backlog generation. The next active lane
+  is post-`v1` production hardening:
+  - externalize reflection queue ownership in production
+  - externalize maintenance and proactive cadence ownership in production
+  - sync docs and release evidence once those owner cutovers are real
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.

@@ -88,6 +88,13 @@ The current repo already works as an MVP slice, but several architecture-level d
     point for later `v2` UI integration
   - the seeded `v1` queue is complete; any next queue should come from fresh
     production/runtime analysis rather than from unfinished `v1` backlog
+- `PRJ-571` now seeds that next queue from live production truth:
+  - Telegram and migration-first startup are repaired
+  - the clearest remaining production drift is still operational:
+    - reflection queue drain remains `in_process`
+    - scheduler cadence ownership remains `in_process`
+  - the next execution queue should therefore externalize those owners before
+    widening capability growth again
 - the completed `v1` execution queue prioritized:
   - production conversation reliability
   - life-assistant workflow activation
