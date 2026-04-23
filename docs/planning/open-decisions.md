@@ -4,6 +4,45 @@
 
 The current repo already works as an MVP slice, but several architecture-level docs describe systems that are not implemented yet. This file keeps the next real decisions visible and tied to the current codebase.
 
+## Post-V1 Architecture Gap Analysis (2026-04-23)
+
+Fresh comparison of canonical docs, runtime reality, and live production
+`/health` shows that the biggest remaining gaps are no longer basic runtime
+survival. The next queue should focus on the following unresolved or only
+partially resolved areas:
+
+1. attention ownership
+   - production still runs `coordination_mode=in_process`
+   - repository-backed durable inbox is implemented and readiness is green, so
+     the remaining work is production cutover plus proof
+2. proactive production posture
+   - cadence ownership is externalized, but production follow-up still reports
+     `disabled_by_policy`
+   - the repo needs one explicit answer about bounded opt-in proactive delivery
+     in production
+3. retrieval provider baseline
+   - `/health.memory_retrieval` still reports
+     `retrieval_lifecycle_pending_gaps=["provider_baseline_not_aligned"]`
+   - the repo needs one explicit production answer about provider baseline and
+     enforcement strictness
+4. learned-state and personality-growth introspection
+   - backend surfaces exist, but they still read more like readiness posture
+     than a rich personality-growth inspection bundle
+   - future UI or admin work should build on richer backend-owned truth, not on
+     frontend reconstruction
+5. organizer-tool production posture
+   - ClickUp, Google Calendar, and Google Drive slices exist, but production
+     readiness is still fragmented across per-provider credential states and
+     lacks one bounded operator-facing acceptance bundle
+
+Queue seeded from this analysis:
+
+- `PRJ-576..PRJ-579` Durable Attention Production Cutover
+- `PRJ-580..PRJ-583` Proactive Opt-In Production Activation
+- `PRJ-584..PRJ-587` Retrieval Provider Baseline Alignment
+- `PRJ-588..PRJ-591` Learned-State And Personality-Growth Introspection
+- `PRJ-592..PRJ-595` Production Organizer-Tool Readiness
+
 ## V1 Productization Stance (2026-04-22)
 
 - `v1` is now interpreted as a no-UI but production-usable life-assistant

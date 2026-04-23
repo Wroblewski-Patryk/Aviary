@@ -7,6 +7,229 @@ This plan translates the repo analysis into an execution roadmap that brings the
 The goal is not to add more features first.
 The goal is to make the current AION runtime more correct, more inspectable, and easier to extend without architectural drift.
 
+## Planned On 2026-04-23 After Post-V1 Production Hardening
+
+`PRJ-572..PRJ-574` closed the most urgent post-v1 operational drift: production
+now runs deferred reflection through the external driver and maintenance or
+proactive cadence through the external scheduler baseline. The next queue
+should therefore come from fresh comparison of live production truth against
+the canonical architecture rather than from historical hardening residue.
+
+### Fresh Architecture Gap Snapshot
+
+Observed from canonical docs, runtime reality, and live production `/health`:
+
+- Telegram round-trip is healthy and no longer the main blocker
+- reflection external-driver ownership is aligned in production
+- scheduler cadence ownership is aligned in production
+- attention ownership is still `in_process` even though repository-backed
+  durable inbox readiness is already green
+- proactive cadence is healthy technically, but production follow-up remains
+  `disabled_by_policy`
+- retrieval lifecycle still reports `provider_baseline_not_aligned`
+- learned-state inspection exists, but the backend still lacks a richer
+  personality-growth inspection bundle suitable for later UI or admin product
+  work
+- organizer-tool families exist contractually, but the first production
+  ClickUp + Calendar + Drive stack is still fragmented across per-provider
+  credential readiness and does not yet read like one operator-facing product
+  baseline
+
+### New Queue
+
+The next queue is now seeded through `PRJ-595`.
+
+New groups:
+
+- `PRJ-576..PRJ-579` Durable Attention Production Cutover
+- `PRJ-580..PRJ-583` Proactive Opt-In Production Activation
+- `PRJ-584..PRJ-587` Retrieval Provider Baseline Alignment
+- `PRJ-588..PRJ-591` Learned-State And Personality-Growth Introspection
+- `PRJ-592..PRJ-595` Production Organizer-Tool Readiness
+
+Why this order:
+
+- durable attention is the clearest remaining runtime-topology mismatch after
+  reflection and cadence externalization
+- proactive should be decided only after attention ownership is frozen, because
+  proactive follow-up still depends on the same conversation-boundary truth
+- retrieval provider alignment should happen before broader tool expansion so
+  memory quality and release evidence stop depending on compatibility fallback
+- richer learned-state introspection should be added before any future UI or
+  admin work expands, so backend-owned truth stays ahead of presentation
+- organizer tools should be treated as a bounded product stack after the
+  runtime, retrieval, and introspection baselines are less transitional
+
+### Group 90 - Durable Attention Production Cutover
+
+- `PRJ-576` Freeze the durable-attention production baseline and cutover gate.
+  - Result:
+    - one explicit policy records when durable inbox becomes the production
+      attention owner, what proof surfaces must be green first, and how to roll
+      back without semantic drift
+  - Validation:
+    - architecture/runtime/ops cross-review
+
+- `PRJ-577` Switch production attention ownership to durable inbox.
+  - Result:
+    - production defaults to `ATTENTION_COORDINATION_MODE=durable_inbox`
+    - `/health.attention` no longer reports `in_process_only` as the active
+      contract-store posture
+  - Validation:
+    - relevant pytest coverage
+    - release smoke
+    - production `/health.attention`
+
+- `PRJ-578` Add durable-attention release and behavior evidence.
+  - Result:
+    - release smoke, incident evidence, and behavior validation all prove the
+      durable-attention production baseline
+  - Validation:
+    - targeted pytest coverage
+    - behavior-validation and smoke evidence
+
+- `PRJ-579` Sync docs/context for durable-attention production baseline.
+  - Result:
+    - canonical docs, runtime reality, testing guidance, ops guidance, and
+      context truth describe the same durable-attention production posture
+  - Validation:
+    - doc-and-context sync
+
+### Group 91 - Proactive Opt-In Production Activation
+
+- `PRJ-580` Freeze the proactive opt-in production policy baseline.
+  - Result:
+    - one explicit policy records whether production proactive remains disabled
+      or becomes enabled for bounded opt-in follow-up
+    - anti-spam, delivery-target, and rollback conditions are frozen before
+      activation
+  - Validation:
+    - architecture/product/ops cross-review
+
+- `PRJ-581` Enable bounded proactive follow-up in production.
+  - Result:
+    - production proactive follows the chosen bounded policy instead of staying
+      generically `disabled_by_policy`
+    - `/health.proactive` exposes the real production baseline
+  - Validation:
+    - relevant pytest coverage
+    - release smoke
+    - production `/health.proactive`
+
+- `PRJ-582` Prove proactive delivery and anti-spam behavior in release evidence.
+  - Result:
+    - behavior validation and incident evidence prove both
+      delivery-ready and blocked-by-guardrail proactive cases
+  - Validation:
+    - targeted pytest coverage
+    - behavior-validation and smoke evidence
+
+- `PRJ-583` Sync docs/context for proactive production baseline.
+  - Result:
+    - docs and context truth align on the chosen proactive production posture
+  - Validation:
+    - doc-and-context sync
+
+### Group 92 - Retrieval Provider Baseline Alignment
+
+- `PRJ-584` Freeze the production retrieval-provider baseline and enforcement posture.
+  - Result:
+    - one explicit provider baseline is chosen for production retrieval
+    - provider, model, and source-rollout enforcement posture are frozen before
+      runtime changes
+  - Validation:
+    - architecture/runtime/ops cross-review
+
+- `PRJ-585` Align production retrieval configuration and execution to the chosen provider baseline.
+  - Result:
+    - production no longer reports `provider_baseline_not_aligned`
+    - `/health.memory_retrieval` shows the chosen provider as both target and
+      effective production baseline
+  - Validation:
+    - relevant pytest coverage
+    - production `/health.memory_retrieval`
+
+- `PRJ-586` Add strict release and incident evidence for retrieval-provider alignment.
+  - Result:
+    - release smoke and incident evidence fail on retrieval-provider drift for
+      the selected production baseline
+  - Validation:
+    - targeted pytest coverage
+    - smoke evidence
+
+- `PRJ-587` Sync docs/context for retrieval-provider baseline.
+  - Result:
+    - docs and context truth align on the selected retrieval provider baseline
+      and enforcement posture
+  - Validation:
+    - doc-and-context sync
+
+### Group 93 - Learned-State And Personality-Growth Introspection
+
+- `PRJ-588` Freeze the backend introspection contract for learned personality growth.
+  - Result:
+    - the backend records one explicit contract for exposing learned roles,
+      selected skill metadata, reflection outputs, and planning continuity
+      without pretending that the system self-modifies executable skills
+  - Validation:
+    - architecture/product cross-review
+
+- `PRJ-589` Expose richer backend-owned learned-state inspection surfaces.
+  - Result:
+    - internal inspection surfaces expose richer role, skill, preference,
+      reflection, and planning-growth summaries for future UI or admin callers
+  - Validation:
+    - relevant pytest coverage
+    - internal inspection checks
+
+- `PRJ-590` Add regression and release evidence for learned-state introspection.
+  - Result:
+    - regression and evidence flows pin the richer learned-state inspection
+      contract instead of only a policy-level posture
+  - Validation:
+    - targeted pytest coverage
+    - release or evidence checks where applicable
+
+- `PRJ-591` Sync docs/context for learned-state introspection.
+  - Result:
+    - docs and context truth align on the richer backend personality-growth
+      introspection baseline
+  - Validation:
+    - doc-and-context sync
+
+### Group 94 - Production Organizer-Tool Readiness
+
+- `PRJ-592` Freeze the first production organizer-tool stack baseline.
+  - Result:
+    - one explicit backend baseline records which ClickUp, Calendar, and Drive
+      slices count as the first real organization stack for life/work support
+    - confirmation, opt-in, and bounded-read constraints remain explicit
+  - Validation:
+    - architecture/product/connector cross-review
+
+- `PRJ-593` Expose one acceptance surface for organizer-tool readiness and opt-in gaps.
+  - Result:
+    - backend surfaces expose one operator-visible readiness bundle for
+      ClickUp, Calendar, and Drive instead of fragmented per-provider states
+  - Validation:
+    - relevant pytest coverage
+    - `/health.connectors` checks
+
+- `PRJ-594` Add behavior and smoke evidence for work-partner organizer-tool posture.
+  - Result:
+    - behavior or smoke evidence proves the same organizer-tool posture that
+      backend readiness surfaces describe
+  - Validation:
+    - targeted pytest coverage
+    - smoke or behavior-validation evidence
+
+- `PRJ-595` Sync docs/context for organizer-tool production readiness.
+  - Result:
+    - docs and context truth align on the first production organizer-tool
+      baseline for work-partner and no-UI assistant flows
+  - Validation:
+    - doc-and-context sync
+
 ## Planned On 2026-04-23 After Production Repair
 
 The no-UI `v1` baseline is now real in production again after `PRJ-570`, so the

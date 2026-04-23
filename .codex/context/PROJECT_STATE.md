@@ -9,7 +9,7 @@ Last updated: 2026-04-23
   structured pipeline, replies through API or Telegram, and learns lightweight
   user preferences over time
 - Commercial model: TBD
-- Current phase: no-UI V1 baseline achieved; post-v1 production hardening queued
+- Current phase: no-UI V1 baseline achieved; next architecture-closure queue seeded
 - 2026-04-22: product staging is now explicit:
   - `MVP` is already exceeded by the current runtime
   - `v1` means a no-UI but production-usable life assistant over Telegram or
@@ -231,6 +231,20 @@ Last updated: 2026-04-23
 - 2026-04-23: after `PRJ-574`, no seeded `READY` slice remains in the
   post-v1 production-hardening lane; the next task should come from a fresh
   runtime or product-gap analysis.
+- 2026-04-23: `PRJ-575` is complete: fresh architecture-gap analysis now
+  compares canonical docs, runtime reality, and live production `/health`
+  instead of relying on historical backlog residue.
+- 2026-04-23: the next queue is now seeded through `PRJ-595` and is ordered
+  around the clearest remaining architecture-to-production gaps:
+  - durable attention production cutover
+  - proactive opt-in production activation
+  - retrieval provider baseline alignment
+  - richer backend introspection of learned personality growth
+  - production organizer-tool readiness for ClickUp, Calendar, and Drive
+- 2026-04-23: `PRJ-576` is now the first `READY` task; it freezes the durable
+  attention production cutover gate before any production switch, because live
+  `/health.attention` still reports `coordination_mode=in_process` despite
+  durable-inbox readiness already being green.
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.
