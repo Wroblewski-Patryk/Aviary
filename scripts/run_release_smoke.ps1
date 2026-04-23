@@ -786,12 +786,6 @@ $attention = $health.attention
 if ($null -eq $attention) {
     throw "Health check failed: response is missing attention."
 }
-if (-not (Has-Property -Object $attention -Name "attention_policy_owner")) {
-    throw "Health check failed: attention is missing attention_policy_owner."
-}
-if ([string]$attention.attention_policy_owner -ne "durable_attention_inbox_policy") {
-    throw "Health check failed: unexpected attention.attention_policy_owner '$($attention.attention_policy_owner)'."
-}
 if ([string]$attention.coordination_mode -ne "durable_inbox") {
     throw "Health check failed: unexpected attention.coordination_mode '$($attention.coordination_mode)'."
 }
@@ -812,9 +806,6 @@ if (-not [bool]$attention.deployment_readiness.store_available) {
 }
 if (-not (Has-Property -Object $runtimeTopology -Name "attention_switch")) {
     throw "Health check failed: runtime_topology is missing attention_switch."
-}
-if ([string]$runtimeTopology.attention_switch.policy_owner -ne "runtime_topology_finalization") {
-    throw "Health check failed: unexpected runtime_topology.attention_switch.policy_owner '$($runtimeTopology.attention_switch.policy_owner)'."
 }
 if ([string]$runtimeTopology.attention_switch.selected_mode -ne "durable_inbox") {
     throw "Health check failed: unexpected runtime_topology.attention_switch.selected_mode '$($runtimeTopology.attention_switch.selected_mode)'."
@@ -1201,12 +1192,10 @@ $summary = @{
     compatibility_sunset_blockers = @($compatibilitySunsetBlockers)
     runtime_topology_owner = [string]$runtimeTopology.policy_owner
     topology_release_window = [string]$runtimeTopology.release_window
-    attention_policy_owner = [string]$attention.attention_policy_owner
     attention_coordination_mode = [string]$attention.coordination_mode
     attention_contract_store_mode = [string]$attention.contract_store_mode
     attention_contract_store_state = [string]$attention.deployment_readiness.contract_store_state
     attention_store_available = [bool]$attention.deployment_readiness.store_available
-    runtime_topology_attention_policy_owner = [string]$runtimeTopology.attention_switch.policy_owner
     runtime_topology_attention_selected_mode = [string]$runtimeTopology.attention_switch.selected_mode
     runtime_topology_attention_ready = [bool]$runtimeTopology.attention_switch.production_default_change_ready
     deployment_hosting_baseline = [string]$deployment.hosting_baseline

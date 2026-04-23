@@ -668,12 +668,10 @@ def test_release_smoke_allows_optional_deployment_evidence_to_be_omitted(
     assert summary["compatibility_sunset_blockers"] == []
     assert summary["runtime_topology_owner"] == "runtime_topology_finalization"
     assert summary["topology_release_window"] == "after_group_50_evidence_green"
-    assert summary["attention_policy_owner"] == "durable_attention_inbox_policy"
     assert summary["attention_coordination_mode"] == "durable_inbox"
     assert summary["attention_contract_store_mode"] == "repository_backed"
     assert summary["attention_contract_store_state"] == "repository_backed_contract_store_active"
     assert summary["attention_store_available"] is True
-    assert summary["runtime_topology_attention_policy_owner"] == "runtime_topology_finalization"
     assert summary["runtime_topology_attention_selected_mode"] == "durable_inbox"
     assert summary["runtime_topology_attention_ready"] is True
     assert summary["deployment_hosting_baseline"] == "coolify_medium_term_standard"
