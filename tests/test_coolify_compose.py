@@ -50,6 +50,24 @@ def test_coolify_compose_defaults_proactive_enabled_to_true() -> None:
     assert app_environment["PROACTIVE_ENABLED"] == "${PROACTIVE_ENABLED:-true}"
 
 
+def test_coolify_compose_defaults_embedding_provider_to_openai() -> None:
+    compose_path = Path("docker-compose.coolify.yml")
+    compose = yaml.safe_load(compose_path.read_text(encoding="utf-8"))
+
+    app_environment = compose["services"]["app"]["environment"]
+
+    assert app_environment["EMBEDDING_PROVIDER"] == "${EMBEDDING_PROVIDER:-openai}"
+
+
+def test_coolify_compose_defaults_embedding_model_to_openai_small() -> None:
+    compose_path = Path("docker-compose.coolify.yml")
+    compose = yaml.safe_load(compose_path.read_text(encoding="utf-8"))
+
+    app_environment = compose["services"]["app"]["environment"]
+
+    assert app_environment["EMBEDDING_MODEL"] == "${EMBEDDING_MODEL:-text-embedding-3-small}"
+
+
 def test_coolify_compose_includes_external_cadence_services() -> None:
     compose_path = Path("docker-compose.coolify.yml")
     compose = yaml.safe_load(compose_path.read_text(encoding="utf-8"))
