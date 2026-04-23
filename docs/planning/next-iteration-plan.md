@@ -115,6 +115,22 @@ Queue update (2026-04-23):
   - Validation:
     - doc-and-context sync
 
+Queue update (2026-04-23):
+
+- `PRJ-579` is now complete.
+- durable-attention production truth is now synchronized across architecture,
+  runtime reality, testing guidance, ops guidance, planning docs, and
+  repository context.
+- canonical proof path for the live durable baseline is now explicit as:
+  - public `/health.attention`
+  - public `/health.runtime_topology.attention_switch`
+  - exported `incident_evidence.policy_posture["attention"]`
+  - exported `incident_evidence.policy_posture["runtime_topology.attention_switch"]`
+  - release smoke
+  - behavior-validation burst-coalescing regression coverage
+- the next active lane is Group 91 (`PRJ-580..PRJ-583`), starting with the
+  bounded proactive production-policy freeze.
+
 ### Group 91 - Proactive Opt-In Production Activation
 
 - `PRJ-580` Freeze the proactive opt-in production policy baseline.
@@ -125,6 +141,20 @@ Queue update (2026-04-23):
       activation
   - Validation:
     - architecture/product/ops cross-review
+
+Queue update (2026-04-23):
+
+- `PRJ-580` is now complete.
+- proactive production policy is now frozen as:
+  - bounded opt-in follow-up enabled in production
+  - external scheduler remains the cadence owner
+  - candidate selection stays limited to opted-in users with active work or
+    time-checkin triggers
+  - delivery target stays bounded to Telegram direct message using recent chat
+    id or numeric user-id fallback
+  - rollback posture returns production to `PROACTIVE_ENABLED=false`
+- the next active slice is `PRJ-581`, which should implement this exact policy
+  in live runtime and production deployment.
 
 - `PRJ-581` Enable bounded proactive follow-up in production.
   - Result:

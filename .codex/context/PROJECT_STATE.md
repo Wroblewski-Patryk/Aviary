@@ -270,6 +270,21 @@ Last updated: 2026-04-23
   synchronize architecture, runtime reality, testing guidance, ops notes, and
   planning/context truth around the live durable-attention production baseline
   and its new proof surfaces.
+- 2026-04-23: `PRJ-579` is complete: canonical contracts, runtime reality,
+  testing guidance, ops notes, planning truth, and repository context now all
+  describe the same live durable-attention production baseline and the same
+  proof path through public `/health`, exported `incident_evidence`, release
+  smoke, and behavior validation.
+- 2026-04-23: `PRJ-580` is now the first `READY` task; the next slice should
+  freeze one explicit production policy for bounded proactive follow-up before
+  any runtime activation or release-evidence widening happens.
+- 2026-04-23: `PRJ-580` is complete: production proactive is now frozen as
+  bounded opt-in follow-up under external scheduler ownership, with the
+  existing Telegram delivery target, current anti-spam thresholds, and one
+  explicit rollback path back to `PROACTIVE_ENABLED=false`.
+- 2026-04-23: `PRJ-581` is now the first `READY` task; the next slice should
+  implement that bounded proactive policy in runtime and production deployment
+  so `/health.proactive` stops reporting `disabled_by_policy`.
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.

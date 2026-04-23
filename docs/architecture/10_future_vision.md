@@ -113,6 +113,8 @@ life-assistant workflows end to end through the existing runtime:
      proactive follow-up
    - later reminder or check-in delivery must still go through scheduler ->
      planning -> expression -> action
+   - production baseline for that lane is bounded opt-in follow-up, not
+     permanently policy-disabled proactive outreach
 2. daily planning activation
    - explicit "plan today/tomorrow/this week" style turns may create an
      operational planning anchor in goals or tasks

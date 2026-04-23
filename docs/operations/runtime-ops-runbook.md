@@ -132,7 +132,14 @@ Durable-attention production cutover gate:
   - `/health.conversation_channels.telegram.round_trip_ready=true`
 - canonical proof path:
   - production `GET /health`
+  - exported `incident_evidence.policy_posture["attention"]`
+  - exported `incident_evidence.policy_posture["runtime_topology.attention_switch"]`
   - release smoke
+- current production baseline:
+  - `/health.attention.coordination_mode=durable_inbox`
+  - `/health.attention.contract_store_mode=repository_backed`
+  - `/health.attention.deployment_readiness.contract_store_state=repository_backed_contract_store_active`
+  - `/health.runtime_topology.attention_switch.selected_mode=durable_inbox`
 - rollback posture:
   - revert production to `ATTENTION_COORDINATION_MODE=in_process` if durable
     cutover shows burst-claim drift, cleanup drift, duplicate replies, or
@@ -1055,6 +1062,9 @@ only on live `/health` during release or incident review.
 Bundle verification now also checks learned-state inspection posture from
 `incident_evidence.json`, so future UI and admin inspection readiness do not
 depend only on live `/health.learned_state` during release or incident review.
+Bundle verification now also checks durable-attention posture from
+`incident_evidence.json`, so release and incident review do not depend only on
+the public `/health` snapshot for attention-owner proof.
 
 Optional debug payload with token:
 

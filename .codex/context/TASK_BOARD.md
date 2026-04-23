@@ -155,9 +155,15 @@ Last updated: 2026-04-23
   reports `attention.coordination_mode=durable_inbox`,
   `contract_store_mode=repository_backed`, and Telegram round-trip remained
   healthy through release smoke.
-- `PRJ-578` is now the first `READY` slice because the production owner switch
-  is complete and the next smallest useful step is to turn that live cutover
-  into release, incident-evidence, and behavior-validation proof.
+- `PRJ-578` is complete: release smoke, exported incident evidence,
+  incident-evidence bundles, and CI behavior validation now require the live
+  durable-attention owner posture plus `runtime_topology.attention_switch`
+  proof, and burst-coalescing stability no longer depends on manual operator
+  inspection.
+- `PRJ-579` is now the first `READY` slice because the durable-attention
+  production baseline and its new proof path still need final doc/context sync
+  across architecture, runtime reality, testing guidance, ops notes, and
+  planning truth.
 
 ## READY
 
@@ -260,33 +266,45 @@ Last updated: 2026-04-23
   - Group: Durable Attention Production Cutover
   - Depends on: PRJ-578
   - Priority: P1
-  - Status: BACKLOG
+  - Status: DONE
   - Done when:
     - architecture, runtime reality, ops, testing, planning, and context truth
       describe the same durable-attention production baseline
   - Validation:
-    - doc-and-context sync
+    - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'` -> passed
+  - Result:
+    - architecture, runtime reality, testing guidance, ops notes, task truth,
+      and project state now all describe the same live durable-attention
+      production baseline
+    - the durable-attention proof path is now explicit across public `/health`,
+      exported `incident_evidence`, release smoke, and behavior validation
 
 - [ ] PRJ-580 Freeze the proactive opt-in production policy baseline
   - Owner: Planner
   - Group: Proactive Opt-In Production Activation
   - Depends on: PRJ-579
   - Priority: P1
-  - Status: BACKLOG
+  - Status: DONE
   - Done when:
     - one explicit policy records whether production proactive remains disabled
       or becomes enabled for bounded opt-in follow-up
     - delivery eligibility, anti-spam posture, and rollback conditions are
       frozen before activation
   - Validation:
-    - architecture/product/ops cross-review
+    - architecture/product/ops cross-review plus live production `/health.proactive`
+  - Result:
+    - production proactive is now frozen as bounded opt-in follow-up instead
+      of a permanently disabled posture
+    - external scheduler remains the cadence owner, existing anti-spam
+      thresholds remain the minimum guardrail contract, and rollback remains
+      one explicit switch back to `PROACTIVE_ENABLED=false`
 
 - [ ] PRJ-581 Enable bounded proactive follow-up in production
   - Owner: Backend Builder
   - Group: Proactive Opt-In Production Activation
   - Depends on: PRJ-580
   - Priority: P1
-  - Status: BACKLOG
+  - Status: READY
   - Done when:
     - production proactive runtime follows the frozen opt-in policy
     - `/health.proactive` no longer reports `disabled_by_policy` for the chosen

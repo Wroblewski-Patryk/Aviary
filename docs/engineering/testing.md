@@ -138,6 +138,20 @@ For meaningful repo changes, leave behind:
     - smoke-mode validation of exported incident evidence and full bundle
       directories
     - optional behavior-artifact ingestion of exported incident evidence
+- for durable-attention production-baseline slices, regression and evidence
+  checks from:
+  - `.\.venv\Scripts\python -m pytest -q tests/test_observability_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py`
+  - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
+  - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'`
+  - coverage should pin:
+    - public `/health.attention` durable owner plus repository-backed
+      contract-store posture
+    - public `/health.runtime_topology.attention_switch` selected durable mode
+      and readiness posture
+    - exported `incident_evidence.policy_posture["attention"]`
+    - exported `incident_evidence.policy_posture["runtime_topology.attention_switch"]`
+    - behavior-level burst-coalescing proof for the live `durable_inbox`
+      baseline
 - for `v1` conversation-reliability slices, regression and smoke evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_delivery_router.py`
   - `.\.venv\Scripts\python -m pytest -q tests/test_action_executor.py tests/test_runtime_pipeline.py`

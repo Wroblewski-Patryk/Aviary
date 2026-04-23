@@ -41,6 +41,15 @@ def test_coolify_compose_defaults_attention_coordination_mode_to_durable_inbox()
     )
 
 
+def test_coolify_compose_defaults_proactive_enabled_to_true() -> None:
+    compose_path = Path("docker-compose.coolify.yml")
+    compose = yaml.safe_load(compose_path.read_text(encoding="utf-8"))
+
+    app_environment = compose["services"]["app"]["environment"]
+
+    assert app_environment["PROACTIVE_ENABLED"] == "${PROACTIVE_ENABLED:-true}"
+
+
 def test_coolify_compose_includes_external_cadence_services() -> None:
     compose_path = Path("docker-compose.coolify.yml")
     compose = yaml.safe_load(compose_path.read_text(encoding="utf-8"))

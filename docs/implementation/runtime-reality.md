@@ -930,6 +930,17 @@ What is already live:
 - `/health.attention` now exposes durable contract-store posture and cleanup
   visibility (`contract_store_mode`, `contract_store_state`,
   `stale_cleanup_candidates`, `answered_cleanup_candidates`)
+- Coolify production now runs this lane on the durable baseline:
+  `/health.attention.coordination_mode=durable_inbox`,
+  `/health.attention.contract_store_mode=repository_backed`, and
+  `/health.runtime_topology.attention_switch.selected_mode=durable_inbox`
+- release and incident proof for this lane now also includes:
+  - exported `incident_evidence.policy_posture["attention"]`
+  - exported `incident_evidence.policy_posture["runtime_topology.attention_switch"]`
+  - release-smoke validation of the same durable-attention fields from live
+    `/health`
+  - behavior-validation regression for burst coalescing under
+    `durable_inbox`
 - attention turn timing is now runtime-configurable through
   `ATTENTION_BURST_WINDOW_MS`, `ATTENTION_ANSWERED_TTL_SECONDS`, and
   `ATTENTION_STALE_TURN_SECONDS`
@@ -1063,6 +1074,8 @@ baseline:
     - `runtime_policy`
     - `memory_retrieval`
     - `learned_state`
+    - `attention`
+    - `runtime_topology.attention_switch`
     - `scheduler.external_owner_policy`
     - `reflection.supervision`
     - `connectors.execution_baseline`

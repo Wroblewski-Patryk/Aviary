@@ -681,6 +681,20 @@ Bounded reminder-preference contract:
 4. richer scheduling semantics such as calendar-grade due dates, recurrence
    editing, or UI-managed reminder controls remain outside the `v1` baseline
 
+Production proactive baseline for no-UI `v1`:
+
+1. production proactive should be enabled only for bounded opt-in follow-up,
+   not for generic autonomous outreach
+2. cadence ownership remains external-scheduler-owned in production
+3. candidate selection remains limited to opted-in users with active work or
+   time-checkin triggers
+4. delivery target remains bounded to Telegram direct message using recent chat
+   id or the existing numeric user-id fallback
+5. rollback posture remains explicit:
+   - return production to `PROACTIVE_ENABLED=false`
+   - treat `disabled_by_policy` as the safe fallback baseline if outreach drift
+     or guardrail regressions appear
+
 ## Learned-State Introspection Baseline
 
 Future UI or admin surfaces must distinguish backend-owned state families

@@ -338,6 +338,8 @@ Post-convergence minimum scenario families now also include:
 - deferred reflection enqueue and non-blocking background expectations
 - exported `incident_evidence` consumption through smoke or validation tooling
   whenever observability-sensitive runtime or release slices change
+- durable-attention burst-coalescing proof for the live
+  `durable_inbox + repository_backed` production baseline
 
 Current scenario anchors:
 
@@ -347,6 +349,12 @@ Current scenario anchors:
 - `T14.3`: executor-aligned ClickUp update via action-owned connector path
 - `T15.1`: work-partner organization via bounded search plus ClickUp update
 - `T15.2`: work-partner decision support via bounded page-read browsing
+- durable-attention burst-coalescing regression in API/runtime integration
+  coverage, paired with:
+  - `incident_evidence.policy_posture["attention"]`
+  - `incident_evidence.policy_posture["runtime_topology.attention_switch"]`
+  - release-smoke validation of the same durable-attention fields from
+    `/health`
 
 When behavior validation is used during release or incident triage, the
 resulting artifact should attach to the same operator incident-evidence bundle

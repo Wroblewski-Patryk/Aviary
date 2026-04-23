@@ -12,14 +12,16 @@ survival. The next queue should focus on the following unresolved or only
 partially resolved areas:
 
 1. attention ownership
-   - production still runs `coordination_mode=in_process`
-   - repository-backed durable inbox is implemented and readiness is green, so
-     the remaining work is production cutover plus proof
+   - resolved through `PRJ-576..PRJ-579`
+   - production now runs `coordination_mode=durable_inbox`
+   - release, incident-evidence, and behavior-validation proof are now part of
+     the live durable-attention baseline
 2. proactive production posture
-   - cadence ownership is externalized, but production follow-up still reports
-     `disabled_by_policy`
-   - the repo needs one explicit answer about bounded opt-in proactive delivery
-     in production
+   - resolved through `PRJ-580`
+   - cadence ownership stays externalized and production proactive should move
+     to bounded opt-in follow-up instead of staying `disabled_by_policy`
+   - rollout still needs runtime activation and proof, but the product-policy
+     answer is now explicit
 3. retrieval provider baseline
    - `/health.memory_retrieval` still reports
      `retrieval_lifecycle_pending_gaps=["provider_baseline_not_aligned"]`
@@ -43,6 +45,17 @@ Queue seeded from this analysis:
 - `PRJ-588..PRJ-591` Learned-State And Personality-Growth Introspection
 - `PRJ-592..PRJ-595` Production Organizer-Tool Readiness
 
+Resolved proactive production-policy decision in `PRJ-580` (2026-04-23):
+
+- production proactive is now frozen as bounded opt-in follow-up
+- cadence ownership remains `external_scheduler`
+- candidate selection remains limited to opted-in users with active work or
+  time-checkin triggers
+- delivery target remains bounded to Telegram direct message via recent chat id
+  or numeric user-id fallback
+- rollback posture remains explicit:
+  - return production to `PROACTIVE_ENABLED=false`
+
 Resolved first cutover-decision in `PRJ-576` (2026-04-23):
 
 - durable inbox is now frozen as the target production attention owner
@@ -54,6 +67,20 @@ Resolved first cutover-decision in `PRJ-576` (2026-04-23):
 - rollback posture remains explicit:
   - return to `ATTENTION_COORDINATION_MODE=in_process` until burst-assembly,
     cleanup, and reply-order semantics are stable again
+
+Durable-attention lane completion update (`PRJ-577..PRJ-579`, 2026-04-23):
+
+- production now runs the durable attention baseline:
+  - `/health.attention.coordination_mode=durable_inbox`
+  - `/health.attention.contract_store_mode=repository_backed`
+  - `/health.runtime_topology.attention_switch.selected_mode=durable_inbox`
+- release and incident proof now also includes:
+  - exported `incident_evidence.policy_posture["attention"]`
+  - exported `incident_evidence.policy_posture["runtime_topology.attention_switch"]`
+  - release smoke
+  - behavior-validation burst-coalescing regression coverage
+- the next unresolved lane is proactive production posture, not attention
+  ownership
 
 ## V1 Productization Stance (2026-04-22)
 

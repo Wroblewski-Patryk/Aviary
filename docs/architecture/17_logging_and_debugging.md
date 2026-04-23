@@ -315,6 +315,23 @@ Current post-convergence diagnostics also require:
   - machine-readable learned-state inspection posture for `learned_state`
   - machine-readable conversation-channel posture for
     `conversation_channels.telegram`
+  - machine-readable durable-attention posture for `attention`
+  - machine-readable runtime-topology attention-switch posture for
+    `runtime_topology.attention_switch`
+
+Durable-attention production proof is now part of the logging/debugging
+baseline too:
+
+- public `/health.attention` proves the live durable owner and
+  repository-backed contract-store posture
+- public `/health.runtime_topology.attention_switch` proves the selected
+  attention owner switch and production-default readiness
+- exported `incident_evidence.policy_posture["attention"]` and
+  `incident_evidence.policy_posture["runtime_topology.attention_switch"]`
+  carry the same owner-level durable-attention evidence for release and
+  incident review
+- behavior-validation CI gates must fail when that durable-attention posture is
+  missing or invalid, so burst-coalescing proof does not regress silently
 
 For the no-UI `v1` release baseline, conversation reliability is now also an
 operator-visible evidence contract:
