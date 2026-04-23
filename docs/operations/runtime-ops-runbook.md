@@ -366,6 +366,19 @@ Operator interpretation for retrieval lifecycle closure:
   `refresh_owner_not_aligned` in `retrieval_lifecycle_pending_gaps` as rollout
   blockers when deciding whether retrieval is actually at its intended
   lifecycle baseline
+- current production-ready retrieval baseline should read as:
+  - `semantic_embedding_provider_requested=openai`
+  - `semantic_embedding_provider_effective=openai`
+  - `semantic_embedding_model_requested=text-embedding-3-small`
+  - `semantic_embedding_model_effective=text-embedding-3-small`
+  - `semantic_embedding_execution_class=provider_owned_openai_api`
+  - `semantic_embedding_production_baseline_state=aligned_openai_provider_owned`
+  - `retrieval_lifecycle_provider_drift_state=aligned_target_provider`
+  - `retrieval_lifecycle_alignment_state=aligned_with_defined_lifecycle_baseline`
+  - `retrieval_lifecycle_pending_gaps=[]`
+- release smoke, exported `incident_evidence`, and incident-evidence bundles now
+  fail on retrieval drift for this baseline instead of leaving the decision to
+  manual operator interpretation
 
 When provider-ownership fallback is active and
 `EMBEDDING_PROVIDER_OWNERSHIP_ENFORCEMENT=strict`, startup emits

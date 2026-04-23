@@ -44,6 +44,11 @@ New groups:
 - `PRJ-576..PRJ-579` Durable Attention Production Cutover
 - `PRJ-580..PRJ-583` Proactive Opt-In Production Activation
 - `PRJ-584..PRJ-587` Retrieval Provider Baseline Alignment
+  - Status: complete
+  - Outcome:
+    - production retrieval now aligns with the OpenAI provider-owned baseline
+    - release smoke, exported incident evidence, bundles, and CI behavior
+      validation now fail on retrieval drift
 - `PRJ-588..PRJ-591` Learned-State And Personality-Growth Introspection
 - `PRJ-592..PRJ-595` Production Organizer-Tool Readiness
 
@@ -128,9 +133,9 @@ Queue update (2026-04-23):
   - exported `incident_evidence.policy_posture["runtime_topology.attention_switch"]`
   - release smoke
   - behavior-validation burst-coalescing regression coverage
-- the next active lane is Group 92 (`PRJ-584..PRJ-587`), starting with the
-  retrieval-provider baseline freeze after the proactive production lane
-  completed.
+- Group 92 (`PRJ-584..PRJ-587`) is now complete; the next active lane is Group
+  93 (`PRJ-588..PRJ-591`) for learned-state and personality-growth
+  introspection.
 
 ### Group 91 - Proactive Opt-In Production Activation
 
@@ -195,8 +200,9 @@ Queue update (2026-04-23):
   - deterministic remains explicit compatibility fallback only
   - provider, model, and source-rollout enforcement stays `warn` during
     runtime alignment and becomes release-strict only after `PRJ-585`
-- the next active slice is `PRJ-585`, which should align live runtime and
-  production configuration to that already-approved baseline.
+- the next active slice is `PRJ-588`, which should freeze the richer learned
+  personality-growth introspection contract now that retrieval provider drift
+  is closed.
 
 - `PRJ-585` Align production retrieval configuration and execution to the chosen provider baseline.
   - Result:

@@ -27,7 +27,7 @@ partially resolved areas:
    - steady-state production baseline remains `openai_api_embeddings`
    - `local_hybrid` remains the bounded transition owner and deterministic
      remains compatibility fallback only
-   - runtime alignment and strict release proof still need `PRJ-585..PRJ-586`
+   - runtime alignment and strict release proof completed in `PRJ-585..PRJ-586`
 4. learned-state and personality-growth introspection
    - backend surfaces exist, but they still read more like readiness posture
      than a rich personality-growth inspection bundle
@@ -54,7 +54,7 @@ Resolved retrieval-baseline decision in `PRJ-584` (2026-04-23):
   owner
 - deterministic execution remains the explicit compatibility fallback posture
 - provider, model, and source-rollout enforcement stays `warn` during
-  `PRJ-585` so live runtime alignment can land before `PRJ-586` makes drift
+  `PRJ-585` so live runtime alignment could land before `PRJ-586` makes drift
   release-blocking
 
 Resolved proactive production-policy decision in `PRJ-580` (2026-04-23):

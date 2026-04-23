@@ -170,9 +170,13 @@ Last updated: 2026-04-23
   the steady-state target baseline, `local_hybrid` remains transition-only,
   deterministic remains compatibility fallback, and enforcement stays
   explicitly `warn` until runtime alignment lands in `PRJ-585`.
-- `PRJ-585` is now the first `READY` slice because live production still
-  reports `provider_baseline_not_aligned` after the retrieval baseline and
-  enforcement posture were frozen.
+- `PRJ-585..PRJ-587` are complete: repository-driven Coolify production now
+  aligns with the OpenAI retrieval baseline, release smoke plus incident
+  evidence fail on retrieval drift, and docs/context truth now describe the
+  same aligned provider-owned baseline and strict evidence path.
+- `PRJ-588` is now the first `READY` slice because retrieval baseline drift is
+  closed and the next remaining architecture gap is richer introspection of
+  learned personality growth for future UI and operator tooling.
 
 ## READY
 
@@ -378,51 +382,75 @@ Last updated: 2026-04-23
     - `local_hybrid` remains the bounded transition owner and deterministic remains compatibility fallback
     - provider/model/source-rollout enforcement stays `warn` during runtime alignment and becomes release-strict only after `PRJ-585`
 
-- [ ] PRJ-585 Align production retrieval configuration and execution to the chosen provider baseline
+- [x] PRJ-585 Align production retrieval configuration and execution to the chosen provider baseline
   - Owner: Backend Builder
   - Group: Retrieval Provider Baseline Alignment
   - Depends on: PRJ-584
   - Priority: P1
-  - Status: READY
+  - Status: DONE
   - Done when:
     - production no longer reports `provider_baseline_not_aligned`
     - `/health.memory_retrieval` shows the chosen provider as both target and
       effective baseline
   - Validation:
-    - relevant pytest coverage
-    - production `/health.memory_retrieval`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_coolify_compose.py` -> `7 passed`
+    - `docker compose -f docker-compose.coolify.yml config` -> OK
+    - production `/health.memory_retrieval` shows requested/effective `openai`,
+      `provider_owned_openai_api`, `aligned_openai_provider_owned`,
+      `aligned_target_provider`, `aligned_with_defined_lifecycle_baseline`, and
+      empty pending gaps
+    - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'` -> passed
+  - Result:
+    - repository-driven Coolify production now defaults to the approved OpenAI
+      embedding provider and model baseline
+    - live production no longer reports `provider_baseline_not_aligned`
+    - retrieval lifecycle alignment now matches the provider baseline frozen in
+      `PRJ-584`
 
-- [ ] PRJ-586 Add strict release and incident evidence for retrieval-provider alignment
+- [x] PRJ-586 Add strict release and incident evidence for retrieval-provider alignment
   - Owner: QA/Test
   - Group: Retrieval Provider Baseline Alignment
   - Depends on: PRJ-585
   - Priority: P1
-  - Status: BACKLOG
+  - Status: DONE
   - Done when:
     - release smoke and incident evidence fail on retrieval provider drift for
       the selected production baseline
   - Validation:
-    - targeted pytest coverage
-    - smoke evidence
+    - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py` -> `38 passed`
+    - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json` -> `12 passed`
+    - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'` -> passed
+  - Result:
+    - release smoke now fails on retrieval-provider drift from `/health.memory_retrieval`
+    - exported `incident_evidence` and incident-evidence bundles now prove the
+      same retrieval alignment posture
+    - CI behavior validation now fails when retrieval-provider incident
+      evidence drifts from the approved baseline
 
-- [ ] PRJ-587 Sync docs/context for retrieval-provider baseline
+- [x] PRJ-587 Sync docs/context for retrieval-provider baseline
   - Owner: Product Docs
   - Group: Retrieval Provider Baseline Alignment
   - Depends on: PRJ-586
   - Priority: P1
-  - Status: BACKLOG
+  - Status: DONE
   - Done when:
     - docs and context truth align on the selected retrieval provider baseline
       and enforcement posture
   - Validation:
-    - doc-and-context sync
+    - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'` -> passed
+  - Result:
+    - runtime reality, testing guidance, ops notes, planning docs, and context
+      now describe the same aligned OpenAI retrieval-provider production
+      baseline
+    - the queue now advances to learned-state and personality-growth
+      introspection in `PRJ-588`
 
 - [ ] PRJ-588 Freeze the backend introspection contract for learned personality growth
   - Owner: Planner
   - Group: Learned-State And Personality-Growth Introspection
   - Depends on: PRJ-587
   - Priority: P1
-  - Status: BACKLOG
+  - Status: READY
   - Done when:
     - the repo records one explicit backend contract for exposing learned
       roles, selected skill metadata, reflection outputs, and planning

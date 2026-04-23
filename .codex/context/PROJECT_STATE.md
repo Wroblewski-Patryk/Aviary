@@ -306,9 +306,23 @@ Last updated: 2026-04-23
   `local_hybrid` remains transition-only, deterministic remains compatibility
   fallback, and provider/model/source-rollout enforcement stays `warn` until
   live runtime alignment lands in `PRJ-585`.
-- 2026-04-23: `PRJ-585` is now the first `READY` task; the next slice should
-  align live production retrieval configuration and execution so
-  `/health.memory_retrieval` stops reporting `provider_baseline_not_aligned`.
+- 2026-04-23: `PRJ-585` is complete: repository-driven Coolify production now
+  requests `EMBEDDING_PROVIDER=openai` and
+  `EMBEDDING_MODEL=text-embedding-3-small` by default, and live
+  `/health.memory_retrieval` reports requested/effective `openai`,
+  `provider_owned_openai_api`, `aligned_openai_provider_owned`,
+  `aligned_target_provider`, and no pending lifecycle gaps.
+- 2026-04-23: `PRJ-586` is complete: release smoke, exported
+  `incident_evidence`, incident-evidence bundles, and CI behavior validation
+  now fail on retrieval-provider drift instead of leaving retrieval alignment
+  as health-only operator evidence.
+- 2026-04-23: `PRJ-587` is complete: runtime reality, testing guidance, ops
+  notes, planning docs, and repository context now all describe the same
+  aligned OpenAI retrieval-provider production baseline and strict evidence
+  path.
+- 2026-04-23: `PRJ-588` is now the first `READY` task; the next slice should
+  freeze the richer learned personality-growth introspection contract now that
+  the remaining retrieval-provider production drift is closed.
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.

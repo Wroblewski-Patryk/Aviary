@@ -338,6 +338,19 @@ Current limitation:
   records policy owner, provider drift posture, alignment state, and pending
   lifecycle gaps in the smoke summary instead of inferring lifecycle truth only
   from embedding provider fields
+- the current production retrieval baseline is now expected to stay aligned:
+  - `semantic_embedding_provider_requested=openai`
+  - `semantic_embedding_provider_effective=openai`
+  - `semantic_embedding_model_requested=text-embedding-3-small`
+  - `semantic_embedding_model_effective=text-embedding-3-small`
+  - `semantic_embedding_execution_class=provider_owned_openai_api`
+  - `semantic_embedding_production_baseline_state=aligned_openai_provider_owned`
+  - `retrieval_lifecycle_provider_drift_state=aligned_target_provider`
+  - `retrieval_lifecycle_alignment_state=aligned_with_defined_lifecycle_baseline`
+  - `retrieval_lifecycle_pending_gaps=[]`
+- exported `incident_evidence`, incident-evidence bundles, and CI behavior
+  validation now consume the same retrieval-alignment posture instead of
+  treating retrieval drift as operator-only warning evidence
 - `/health.memory_retrieval` now exposes explicit warning posture fields
   (`semantic_embedding_warning_state`, `semantic_embedding_warning_hint`) and
   startup warning logs reuse the same warning-state semantics.

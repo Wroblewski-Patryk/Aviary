@@ -239,6 +239,17 @@ For meaningful repo changes, leave behind:
       `local_hybrid` is active
     - release-smoke summary fields for retrieval lifecycle owner, drift, and
       alignment posture
+  - when production baseline is frozen as OpenAI provider-owned embeddings,
+    release-evidence coverage should also pin:
+    - requested/effective provider `openai`
+    - requested/effective model `text-embedding-3-small`
+    - `semantic_embedding_execution_class=provider_owned_openai_api`
+    - `semantic_embedding_production_baseline_state=aligned_openai_provider_owned`
+    - `retrieval_lifecycle_provider_drift_state=aligned_target_provider`
+    - `retrieval_lifecycle_alignment_state=aligned_with_defined_lifecycle_baseline`
+    - empty `retrieval_lifecycle_pending_gaps`
+  - CI behavior-validation gate coverage should fail when incident evidence no
+    longer proves that aligned retrieval posture
 - for background-worker externalization slices, regression evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_main_runtime_policy.py tests/test_deployment_trigger_scripts.py`
   - `.\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py tests/test_reflection_worker.py`
