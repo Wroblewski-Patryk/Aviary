@@ -245,6 +245,14 @@ Last updated: 2026-04-23
   attention production cutover gate before any production switch, because live
   `/health.attention` still reports `coordination_mode=in_process` despite
   durable-inbox readiness already being green.
+- 2026-04-23: `PRJ-576` is complete: durable attention now has one explicit
+  production cutover gate with target owner `durable_inbox`, required proof
+  surfaces (`/health.attention`, `/health.runtime_topology`,
+  `/health.conversation_channels.telegram`, release smoke), and rollback
+  posture back to `ATTENTION_COORDINATION_MODE=in_process`.
+- 2026-04-23: `PRJ-577` is now the first `READY` task; the next slice should
+  perform the real production switch to durable attention because the cutover
+  criteria are now frozen instead of implicit.
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.

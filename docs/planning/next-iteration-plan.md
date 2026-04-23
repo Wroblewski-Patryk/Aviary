@@ -70,6 +70,26 @@ Why this order:
   - Validation:
     - architecture/runtime/ops cross-review
 
+Queue update (2026-04-23):
+
+- `PRJ-576` is now complete.
+- durable-attention production cutover is now frozen around one explicit gate:
+  - target owner:
+    - `ATTENTION_COORDINATION_MODE=durable_inbox`
+  - required proof surfaces:
+    - `/health.attention`
+    - `/health.runtime_topology`
+    - `/health.conversation_channels.telegram`
+    - release smoke
+  - required green posture:
+    - `attention.deployment_readiness.ready=true`
+    - `attention.deployment_readiness.blocking_signals=[]`
+    - `attention.contract_store_mode=repository_backed_durable_inbox`
+    - Telegram round-trip remains healthy through the switch
+  - rollback posture:
+    - return production to `ATTENTION_COORDINATION_MODE=in_process` until burst
+      assembly, cleanup, and reply-order semantics are stable again
+
 - `PRJ-577` Switch production attention ownership to durable inbox.
   - Result:
     - production defaults to `ATTENTION_COORDINATION_MODE=durable_inbox`

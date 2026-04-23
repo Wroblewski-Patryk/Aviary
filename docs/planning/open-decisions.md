@@ -43,6 +43,18 @@ Queue seeded from this analysis:
 - `PRJ-588..PRJ-591` Learned-State And Personality-Growth Introspection
 - `PRJ-592..PRJ-595` Production Organizer-Tool Readiness
 
+Resolved first cutover-decision in `PRJ-576` (2026-04-23):
+
+- durable inbox is now frozen as the target production attention owner
+- production switch proof must be read from:
+  - `/health.attention`
+  - `/health.runtime_topology`
+  - `/health.conversation_channels.telegram`
+  - release smoke
+- rollback posture remains explicit:
+  - return to `ATTENTION_COORDINATION_MODE=in_process` until burst-assembly,
+    cleanup, and reply-order semantics are stable again
+
 ## V1 Productization Stance (2026-04-22)
 
 - `v1` is now interpreted as a no-UI but production-usable life-assistant

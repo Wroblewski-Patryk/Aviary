@@ -120,6 +120,24 @@ mode from repository-backed durable inbox behavior and cleanup pressure.
 baseline (`120ms` burst window, `5s` answered TTL, `30s` stale cleanup) plus
 alignment posture for the currently selected config values.
 
+Durable-attention production cutover gate:
+
+- target owner:
+  - `ATTENTION_COORDINATION_MODE=durable_inbox`
+- required green posture before and after the switch:
+  - `/health.attention.deployment_readiness.ready=true`
+  - `/health.attention.deployment_readiness.blocking_signals=[]`
+  - `/health.attention.contract_store_mode=repository_backed_durable_inbox`
+  - `/health.runtime_topology.attention_switch.production_default_change_ready=true`
+  - `/health.conversation_channels.telegram.round_trip_ready=true`
+- canonical proof path:
+  - production `GET /health`
+  - release smoke
+- rollback posture:
+  - revert production to `ATTENTION_COORDINATION_MODE=in_process` if durable
+    cutover shows burst-claim drift, cleanup drift, duplicate replies, or
+    reply-order regressions
+
 `GET /health` now also includes an `affective` object for live affective-turn
 triage:
 

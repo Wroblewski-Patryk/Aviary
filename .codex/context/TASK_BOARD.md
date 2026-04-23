@@ -146,6 +146,12 @@ Last updated: 2026-04-23
   deferred reflection and externalized cadence, while `/health.attention`
   still shows `coordination_mode=in_process` even though durable-inbox
   readiness is green.
+- `PRJ-576` is complete: durable attention now has one explicit production
+  cutover gate with target owner, required proof surfaces, and rollback
+  posture frozen before the runtime switch.
+- `PRJ-577` is now the first `READY` slice because the cutover criteria are
+  frozen and the next smallest useful step is the real production switch to
+  `ATTENTION_COORDINATION_MODE=durable_inbox`.
 
 ## READY
 
@@ -173,12 +179,12 @@ Last updated: 2026-04-23
     - architecture/runtime/context review plus live production `/health`
       snapshot
 
-- [ ] PRJ-576 Freeze the durable-attention production baseline and cutover gate
+- [x] PRJ-576 Freeze the durable-attention production baseline and cutover gate
   - Owner: Planner
   - Group: Durable Attention Production Cutover
   - Depends on: PRJ-575
   - Priority: P0
-  - Status: READY
+  - Status: DONE
   - Why now:
     - production `/health.attention` still reports
       `coordination_mode=in_process` and `contract_store_mode=in_process_only`
@@ -191,14 +197,22 @@ Last updated: 2026-04-23
     - cutover criteria, rollback posture, and proof surfaces are frozen before
       the production switch
   - Validation:
-    - architecture/runtime/ops cross-review plus updated task note
+    - architecture/runtime/ops cross-review plus live production
+      `/health.attention`
+  - Result:
+    - durable inbox is now frozen as the target production attention owner
+    - cutover proof is now explicitly tied to `/health.attention`,
+      `/health.runtime_topology`, `/health.conversation_channels.telegram`,
+      and release smoke
+    - rollback posture is now explicitly `ATTENTION_COORDINATION_MODE=in_process`
+      until burst claim, cleanup, and reply-order semantics are proven stable
 
 - [ ] PRJ-577 Switch production attention ownership to durable inbox
   - Owner: Backend Builder
   - Group: Durable Attention Production Cutover
   - Depends on: PRJ-576
   - Priority: P0
-  - Status: BACKLOG
+  - Status: READY
   - Done when:
     - production uses `ATTENTION_COORDINATION_MODE=durable_inbox`
     - Telegram burst coalescing and reply delivery remain healthy after deploy
