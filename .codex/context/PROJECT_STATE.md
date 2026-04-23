@@ -253,6 +253,9 @@ Last updated: 2026-04-23
 - 2026-04-23: `PRJ-577` is now the first `READY` task; the next slice should
   perform the real production switch to durable attention because the cutover
   criteria are now frozen instead of implicit.
+- 2026-04-23: `PRJ-577` is now in progress; the deployment baseline is being
+  switched to `ATTENTION_COORDINATION_MODE=durable_inbox` with compose
+  defaults, focused regressions, and live production verification.
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.

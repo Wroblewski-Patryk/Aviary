@@ -152,6 +152,9 @@ Last updated: 2026-04-23
 - `PRJ-577` is now the first `READY` slice because the cutover criteria are
   frozen and the next smallest useful step is the real production switch to
   `ATTENTION_COORDINATION_MODE=durable_inbox`.
+- `PRJ-577` is now in progress: the deployment baseline is being switched to
+  durable attention, with compose defaults and focused regressions updated
+  before the production deploy and smoke verification.
 
 ## READY
 
@@ -212,7 +215,7 @@ Last updated: 2026-04-23
   - Group: Durable Attention Production Cutover
   - Depends on: PRJ-576
   - Priority: P0
-  - Status: READY
+  - Status: IN_PROGRESS
   - Done when:
     - production uses `ATTENTION_COORDINATION_MODE=durable_inbox`
     - Telegram burst coalescing and reply delivery remain healthy after deploy

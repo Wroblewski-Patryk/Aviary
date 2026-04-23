@@ -29,6 +29,18 @@ def test_coolify_compose_defaults_scheduler_execution_mode_to_externalized() -> 
     )
 
 
+def test_coolify_compose_defaults_attention_coordination_mode_to_durable_inbox() -> None:
+    compose_path = Path("docker-compose.coolify.yml")
+    compose = yaml.safe_load(compose_path.read_text(encoding="utf-8"))
+
+    app_environment = compose["services"]["app"]["environment"]
+
+    assert (
+        app_environment["ATTENTION_COORDINATION_MODE"]
+        == "${ATTENTION_COORDINATION_MODE:-durable_inbox}"
+    )
+
+
 def test_coolify_compose_includes_external_cadence_services() -> None:
     compose_path = Path("docker-compose.coolify.yml")
     compose = yaml.safe_load(compose_path.read_text(encoding="utf-8"))
