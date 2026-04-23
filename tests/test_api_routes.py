@@ -3059,6 +3059,11 @@ def test_event_debug_endpoint_exposes_runtime_incident_evidence_export() -> None
     assert incident_evidence["policy_posture"]["runtime_topology.attention_switch"]["selected_mode"] == (
         "durable_inbox"
     )
+    assert incident_evidence["policy_posture"]["proactive"]["policy_owner"] == (
+        "proactive_runtime_policy"
+    )
+    assert "enabled" in incident_evidence["policy_posture"]["proactive"]
+    assert "production_baseline_ready" in incident_evidence["policy_posture"]["proactive"]
     assert incident_evidence["policy_posture"]["scheduler.external_owner_policy"]["policy_owner"] == (
         "external_scheduler_cadence_policy"
     )
@@ -3284,6 +3289,7 @@ def test_health_endpoint_exposes_observability_export_policy_baseline() -> None:
                 "v1_readiness",
                 "attention",
                 "runtime_topology.attention_switch",
+                "proactive",
                 "scheduler.external_owner_policy",
                 "reflection.supervision",
                 "connectors.execution_baseline",

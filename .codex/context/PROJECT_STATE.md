@@ -285,6 +285,22 @@ Last updated: 2026-04-23
 - 2026-04-23: `PRJ-581` is now the first `READY` task; the next slice should
   implement that bounded proactive policy in runtime and production deployment
   so `/health.proactive` stops reporting `disabled_by_policy`.
+- 2026-04-23: `PRJ-581` is complete: repository-driven Coolify production now
+  runs with the bounded proactive baseline enabled, live `/health.proactive`
+  reports `enabled=true` and
+  `production_baseline_state=external_scheduler_target_owner`, and the cutover
+  also confirmed that an explicit Coolify env override can silently mask a
+  repo-driven compose default.
+- 2026-04-23: `PRJ-582` is complete: exported `incident_evidence`,
+  incident-evidence bundle checks, release smoke, and CI behavior-validation
+  gates now require the same proactive policy owner and enabled production
+  baseline that `/health.proactive` exposes.
+- 2026-04-23: `PRJ-583` is complete: runtime reality, testing guidance, ops
+  notes, planning docs, and repository context now all describe the same live
+  bounded proactive production baseline and its proof path.
+- 2026-04-23: `PRJ-584` is now the first `READY` task; the next slice should
+  freeze the production retrieval-provider baseline and its enforcement
+  posture before any provider-alignment runtime changes proceed.
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.

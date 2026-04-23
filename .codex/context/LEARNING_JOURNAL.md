@@ -25,6 +25,35 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-04-23 - Coolify env overrides can silently mask repo-driven defaults
+- Context:
+  - production proactive was expected to follow the repo-driven Coolify compose
+    baseline after `PROACTIVE_ENABLED` defaulted to `true`, but live `/health`
+    still reported `disabled_by_policy`.
+- Symptom:
+  - production runtime contradicted the repository-owned compose default even
+    after the correct commit was pushed and deployed.
+- Root cause:
+  - the active Coolify application still had an explicit env override
+    `PROACTIVE_ENABLED=false`, which took precedence over the compose default.
+- Guardrail:
+  - when production `/health` disagrees with a repo-driven compose default,
+    check explicit Coolify env overrides before assuming deploy drift or a
+    runtime bug.
+- Preferred pattern:
+  - keep the desired baseline in `docker-compose.coolify.yml`
+  - use app-level env overrides only for deliberate exceptions
+  - after changing an override, redeploy and verify the corresponding `/health`
+    surface directly
+- Avoid:
+  - assuming a pushed compose default always wins over existing Coolify env
+    values
+  - debugging runtime logic before checking app-level overrides
+- Evidence:
+  - `PRJ-581`
+  - production `/health.proactive`
+  - Coolify production app env for `PROACTIVE_ENABLED`
+
 ### 2026-04-23 - Coolify production checks can silently target the wrong team scope
 - Context:
   - production attention cutover verification needed direct Coolify UI

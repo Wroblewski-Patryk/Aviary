@@ -158,6 +158,12 @@ def stub_aion_server() -> _StubAionServer:
                 "store_available": True,
             },
         },
+        "proactive": {
+            "policy_owner": "proactive_runtime_policy",
+            "enabled": True,
+            "production_baseline_ready": True,
+            "production_baseline_state": "external_scheduler_target_owner",
+        },
         "deployment": {
             "hosting_baseline": "coolify_medium_term_standard",
             "deployment_trigger_slo": {
@@ -273,6 +279,7 @@ def stub_aion_server() -> _StubAionServer:
                 "v1_readiness",
                 "attention",
                 "runtime_topology.attention_switch",
+                "proactive",
                 "scheduler.external_owner_policy",
                 "reflection.supervision",
                 "connectors.execution_baseline",
@@ -335,6 +342,12 @@ def stub_aion_server() -> _StubAionServer:
                 "policy_owner": "runtime_topology_finalization",
                 "selected_mode": "durable_inbox",
                 "production_default_change_ready": True,
+            },
+            "proactive": {
+                "policy_owner": "proactive_runtime_policy",
+                "enabled": True,
+                "production_baseline_ready": True,
+                "production_baseline_state": "external_scheduler_target_owner",
             },
             "scheduler.external_owner_policy": {
                 "policy_owner": "external_scheduler_cadence_policy",
@@ -450,6 +463,7 @@ def _write_incident_bundle(
                 "v1_readiness",
                 "attention",
                 "runtime_topology.attention_switch",
+                "proactive",
                 "scheduler.external_owner_policy",
                 "reflection.supervision",
                 "connectors.execution_baseline",
@@ -512,6 +526,12 @@ def _write_incident_bundle(
                     "policy_owner": "runtime_topology_finalization",
                     "selected_mode": "durable_inbox",
                     "production_default_change_ready": True,
+                },
+                "proactive": {
+                    "policy_owner": "proactive_runtime_policy",
+                    "enabled": True,
+                    "production_baseline_ready": True,
+                    "production_baseline_state": "external_scheduler_target_owner",
                 },
                 "scheduler.external_owner_policy": {
                     "policy_owner": "external_scheduler_cadence_policy",
@@ -674,6 +694,10 @@ def test_release_smoke_allows_optional_deployment_evidence_to_be_omitted(
     assert summary["attention_store_available"] is True
     assert summary["runtime_topology_attention_selected_mode"] == "durable_inbox"
     assert summary["runtime_topology_attention_ready"] is True
+    assert summary["proactive_policy_owner"] == "proactive_runtime_policy"
+    assert summary["proactive_enabled"] is True
+    assert summary["proactive_production_baseline_ready"] is True
+    assert summary["proactive_production_baseline_state"] == "external_scheduler_target_owner"
     assert summary["deployment_hosting_baseline"] == "coolify_medium_term_standard"
     assert summary["deployment_manual_fallback_exception_rate_percent"] == 5.0
     assert summary["scheduler_external_policy_owner"] == "external_scheduler_cadence_policy"
@@ -756,6 +780,23 @@ def test_release_smoke_fails_when_attention_health_surface_is_missing(
     assert "response is missing attention" in combined_output
 
 
+def test_release_smoke_fails_when_proactive_health_surface_is_missing(
+    stub_aion_server: _StubAionServer,
+) -> None:
+    original = dict(_StubAionHandler.health_payload)
+    broken = dict(original)
+    broken.pop("proactive", None)
+    _StubAionHandler.health_payload = broken
+    try:
+        result = _run_release_smoke("-BaseUrl", stub_aion_server.base_url, cwd=ROOT)
+    finally:
+        _StubAionHandler.health_payload = original
+
+    assert result.returncode != 0
+    combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
+    assert "response is missing proactive" in combined_output
+
+
 def test_release_smoke_verifies_fresh_successful_deployment_evidence(
     stub_aion_server: _StubAionServer,
     tmp_path: Path,
@@ -814,6 +855,12 @@ def test_release_smoke_validates_exported_incident_evidence_when_debug_mode_is_r
     assert summary["incident_evidence_attention_runtime_topology_policy_owner"] == "runtime_topology_finalization"
     assert summary["incident_evidence_attention_runtime_topology_selected_mode"] == "durable_inbox"
     assert summary["incident_evidence_attention_runtime_topology_ready"] is True
+    assert summary["incident_evidence_proactive_policy_owner"] == "proactive_runtime_policy"
+    assert summary["incident_evidence_proactive_enabled"] is True
+    assert summary["incident_evidence_proactive_production_baseline_ready"] is True
+    assert summary["incident_evidence_proactive_production_baseline_state"] == (
+        "external_scheduler_target_owner"
+    )
     assert summary["scheduler_external_cutover_proof_owner"] == "external_scheduler_cutover_proof_policy"
     assert summary["scheduler_external_cutover_proof_ready"] is False
     assert summary["scheduler_external_maintenance_evidence_state"] == "missing_external_run_evidence"
@@ -853,6 +900,11 @@ def test_release_smoke_verifies_incident_evidence_bundle_when_bundle_path_is_pro
     assert summary["incident_bundle_attention_coordination_mode"] == "durable_inbox"
     assert summary["incident_bundle_attention_contract_store_state"] == "repository_backed_contract_store_active"
     assert summary["incident_bundle_attention_runtime_topology_selected_mode"] == "durable_inbox"
+    assert summary["incident_bundle_proactive_policy_owner"] == "proactive_runtime_policy"
+    assert summary["incident_bundle_proactive_enabled"] is True
+    assert summary["incident_bundle_proactive_production_baseline_state"] == (
+        "external_scheduler_target_owner"
+    )
 
 
 def test_release_smoke_fails_when_incident_evidence_bundle_is_partial(

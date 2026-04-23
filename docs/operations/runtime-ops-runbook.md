@@ -95,6 +95,10 @@ cadence posture:
 - anti-spam contract defaults (cooldown, recent outbound threshold,
   unanswered threshold)
 - latest proactive tick summary and last tick timestamp
+- live enabled state plus production baseline readiness and state
+  (`enabled=true`,
+  `production_baseline_state=external_scheduler_target_owner` in Coolify
+  production today)
 
 Use `/health.proactive` together with `/health.scheduler.last_proactive_summary`
 when triaging why proactive outreach is quiet, blocked, or actively delivering.
@@ -1165,6 +1169,7 @@ Important health surfaces for current release checks:
   - shared proactive policy owner and selected cadence owner
   - delivery-target baseline and candidate-selection baseline
   - anti-spam threshold snapshot plus latest proactive tick summary
+  - enabled state plus production baseline readiness and state
 - `planning_governance`
   - inferred goal/task growth posture
   - fixed proposal-decision baseline
@@ -1316,9 +1321,9 @@ Preconditions checklist (required for reliable Telegram delivery triage):
 - runtime now has exportable JSON incident evidence plus a canonical bundle
   helper, but there is still no external observability stack with dashboards
   or centralized trace storage
-- proactive cadence ownership is externalized in production today, but
-  proactive outreach itself remains disabled by policy until a future product
-  decision enables scheduler-owned outreach
+- proactive cadence ownership is externalized in production today, and bounded
+  opt-in proactive outreach is also enabled in production under the shared
+  `proactive_runtime_policy` baseline
 - reflection queue drain ownership is also externalized in production today;
   local in-process reflection and scheduler cadence are compatibility/local-dev
   postures rather than current Coolify production truth

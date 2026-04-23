@@ -254,6 +254,21 @@ For meaningful repo changes, leave behind:
 - for proactive-runtime activation slices, regression evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
   - `.\scripts\run_behavior_validation.ps1 -GateMode operator`
+  - coverage should pin:
+    - `/health.proactive` owner, enabled state, and production baseline posture
+    - anti-spam guardrail outcomes through proactive runtime and scheduler paths
+    - latest proactive tick summary together with scheduler-owned cadence
+      evidence
+- for proactive production-evidence slices, regression and evidence checks from:
+  - `.\.venv\Scripts\python -m pytest -q tests/test_observability_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py`
+  - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
+  - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'`
+  - coverage should pin:
+    - exported `incident_evidence.policy_posture["proactive"]`
+    - release-smoke failure when proactive health or incident-evidence posture
+      is missing, disabled, or carries the wrong owner
+    - behavior-validation rejection when proactive posture drifts from the live
+      bounded production baseline
 - for embedding execution-class diagnostics slices, regression evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py`
 - for connector execution-policy slices, regression evidence from:

@@ -311,6 +311,17 @@ async def _incident_evidence_from_request(
         ),
         attention=attention_snapshot,
         runtime_topology_attention_switch=dict(runtime_topology.get("attention_switch", {})),
+        proactive=proactive_runtime_policy_snapshot(
+            proactive_enabled=bool(getattr(settings, "proactive_enabled", False)),
+            proactive_interval_seconds=int(getattr(settings, "proactive_interval", 1800)),
+            scheduler_execution_mode=str(
+                scheduler_snapshot.get("execution_mode", scheduler_execution_mode)
+            ),
+            scheduler_ready=bool(
+                scheduler_external_owner_policy.get("production_baseline_ready", False)
+            ),
+            scheduler_running=bool(scheduler_snapshot.get("running", False)),
+        ),
         scheduler_external_owner_policy=scheduler_external_owner_policy,
         reflection_supervision=reflection_supervision,
         connectors_execution_baseline=connectors_execution_baseline,

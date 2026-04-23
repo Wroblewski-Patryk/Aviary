@@ -656,7 +656,14 @@ Scheduler-facing runtime contracts are now explicit:
     selection
 - `/health.proactive` now exposes the shared proactive runtime policy owner,
   selected cadence owner, delivery-target baseline, candidate-selection
-  baseline, anti-spam thresholds, and latest proactive tick summary
+  baseline, anti-spam thresholds, latest proactive tick summary, and the live
+  enabled-versus-disabled production posture
+- Coolify production now runs the bounded proactive baseline with:
+  - `enabled=true`
+  - `production_baseline_ready=true`
+  - `production_baseline_state=external_scheduler_target_owner`
+  - recent external cadence proof from
+    `/health.scheduler.external_owner_policy.proactive_run_evidence`
 
 `PRJ-308` now defines the target cadence-ownership direction:
 
@@ -1074,6 +1081,7 @@ baseline:
     - `runtime_policy`
     - `memory_retrieval`
     - `learned_state`
+    - `proactive`
     - `attention`
     - `runtime_topology.attention_switch`
     - `scheduler.external_owner_policy`
@@ -1123,6 +1131,10 @@ Current limitation:
   `conversation_channels.telegram`, so release smoke and behavior-validation
   gates can verify Telegram conversation posture from exported evidence rather
   than only from live `/health`
+- debug-mode `incident_evidence.policy_posture["proactive"]` now mirrors the
+  same live bounded proactive baseline from `/health.proactive`, so release
+  smoke and behavior-validation gates fail when proactive is missing, disabled,
+  or drifted from the shared owner contract
 - `/health.learned_state` now exposes the shared learned-state inspection
   policy owner plus the canonical internal inspection path
 - `/health.api_readiness` now exposes the shared backend API-readiness owner

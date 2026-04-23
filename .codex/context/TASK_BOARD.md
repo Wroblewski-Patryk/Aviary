@@ -160,10 +160,15 @@ Last updated: 2026-04-23
   durable-attention owner posture plus `runtime_topology.attention_switch`
   proof, and burst-coalescing stability no longer depends on manual operator
   inspection.
-- `PRJ-579` is now the first `READY` slice because the durable-attention
-  production baseline and its new proof path still need final doc/context sync
-  across architecture, runtime reality, testing guidance, ops notes, and
-  planning truth.
+- `PRJ-579` is complete: durable-attention production truth is now synchronized
+  across runtime reality, testing guidance, ops notes, planning, and context.
+- `PRJ-580..PRJ-583` are complete: production now runs bounded proactive
+  follow-up under external scheduler ownership, release smoke plus
+  incident-evidence gates now require the same proactive owner posture, and
+  docs/context truth no longer describe proactive as `disabled_by_policy`.
+- `PRJ-584` is now the first `READY` slice because retrieval provider baseline
+  alignment is the next remaining architecture-to-production gap after durable
+  attention and proactive production activation are both complete.
 
 ## READY
 
@@ -261,7 +266,7 @@ Last updated: 2026-04-23
     - release smoke, debug `incident_evidence`, and incident-evidence bundles now require durable-attention posture and `runtime_topology.attention_switch` proof
     - behavior validation now includes a durable-attention burst-coalescing regression path instead of leaving burst assembly to manual operator inspection
 
-- [ ] PRJ-579 Sync docs/context for durable-attention production baseline
+- [x] PRJ-579 Sync docs/context for durable-attention production baseline
   - Owner: Product Docs
   - Group: Durable Attention Production Cutover
   - Depends on: PRJ-578
@@ -279,7 +284,7 @@ Last updated: 2026-04-23
     - the durable-attention proof path is now explicit across public `/health`,
       exported `incident_evidence`, release smoke, and behavior validation
 
-- [ ] PRJ-580 Freeze the proactive opt-in production policy baseline
+- [x] PRJ-580 Freeze the proactive opt-in production policy baseline
   - Owner: Planner
   - Group: Proactive Opt-In Production Activation
   - Depends on: PRJ-579
@@ -299,52 +304,64 @@ Last updated: 2026-04-23
       thresholds remain the minimum guardrail contract, and rollback remains
       one explicit switch back to `PROACTIVE_ENABLED=false`
 
-- [ ] PRJ-581 Enable bounded proactive follow-up in production
+- [x] PRJ-581 Enable bounded proactive follow-up in production
   - Owner: Backend Builder
   - Group: Proactive Opt-In Production Activation
   - Depends on: PRJ-580
   - Priority: P1
-  - Status: READY
+  - Status: DONE
   - Done when:
     - production proactive runtime follows the frozen opt-in policy
     - `/health.proactive` no longer reports `disabled_by_policy` for the chosen
       bounded baseline
   - Validation:
-    - relevant pytest coverage
-    - release smoke
-    - production `/health.proactive`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_coolify_compose.py tests/test_api_routes.py tests/test_scheduler_worker.py` -> `105 passed`
+    - `docker compose -f docker-compose.coolify.yml config` -> OK
+    - production `/health.proactive.enabled=true`
+    - production `/health.proactive.production_baseline_state=external_scheduler_target_owner`
+  - Result:
+    - repository-driven Coolify production now defaults `PROACTIVE_ENABLED` to the bounded proactive baseline
+    - live production no longer reports `disabled_by_policy`
+    - the production cutover also confirmed that an explicit Coolify env override can silently mask repo-driven defaults
 
-- [ ] PRJ-582 Prove proactive delivery and anti-spam behavior in release evidence
+- [x] PRJ-582 Prove proactive delivery and anti-spam behavior in release evidence
   - Owner: QA/Test
   - Group: Proactive Opt-In Production Activation
   - Depends on: PRJ-581
   - Priority: P1
-  - Status: BACKLOG
+  - Status: DONE
   - Done when:
     - behavior validation proves both delivery-ready and blocked-by-guardrail
       proactive cases against the production policy
     - incident evidence and smoke checks expose the same proactive posture
   - Validation:
-    - targeted pytest coverage
-    - behavior-validation and smoke evidence
+    - `.\.venv\Scripts\python -m pytest -q tests/test_observability_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py` -> `126 passed`
+    - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json` -> `12 passed`
+    - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'` -> passed
+  - Result:
+    - exported `incident_evidence`, incident-evidence bundle validation, and release smoke now require the same proactive owner posture as `/health.proactive`
+    - proactive drift is now release-blocking instead of operator-inferred
 
-- [ ] PRJ-583 Sync docs/context for proactive production baseline
+- [x] PRJ-583 Sync docs/context for proactive production baseline
   - Owner: Product Docs
   - Group: Proactive Opt-In Production Activation
   - Depends on: PRJ-582
   - Priority: P1
-  - Status: BACKLOG
+  - Status: DONE
   - Done when:
     - docs and context truth align on the chosen proactive production posture
   - Validation:
-    - doc-and-context sync
+    - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'` -> passed
+  - Result:
+    - runtime reality, testing guidance, ops notes, planning, and repository context now describe the same live bounded proactive production baseline
+    - the queue now advances to retrieval-provider baseline alignment
 
 - [ ] PRJ-584 Freeze the production retrieval-provider baseline and enforcement posture
   - Owner: Planner
   - Group: Retrieval Provider Baseline Alignment
   - Depends on: PRJ-583
   - Priority: P1
-  - Status: BACKLOG
+  - Status: READY
   - Done when:
     - one explicit provider baseline is chosen for production retrieval
     - the strictness posture for provider/model/source enforcement is frozen

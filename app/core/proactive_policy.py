@@ -45,6 +45,7 @@ def proactive_runtime_policy_snapshot(
 
     return {
         "policy_owner": PROACTIVE_RUNTIME_POLICY_OWNER,
+        "enabled": proactive_enabled,
         "selected_execution_mode": selected_execution_mode,
         "selected_cadence_owner": selected_cadence_owner,
         "delivery_channel_baseline": "telegram_direct_message",

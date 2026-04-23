@@ -17,11 +17,11 @@ partially resolved areas:
    - release, incident-evidence, and behavior-validation proof are now part of
      the live durable-attention baseline
 2. proactive production posture
-   - resolved through `PRJ-580`
-   - cadence ownership stays externalized and production proactive should move
-     to bounded opt-in follow-up instead of staying `disabled_by_policy`
-   - rollout still needs runtime activation and proof, but the product-policy
-     answer is now explicit
+   - resolved through `PRJ-580..PRJ-583`
+   - cadence ownership remains externalized and production now runs bounded
+     opt-in follow-up
+   - release smoke, exported `incident_evidence`, and behavior-validation proof
+     now verify the same live proactive owner posture
 3. retrieval provider baseline
    - `/health.memory_retrieval` still reports
      `retrieval_lifecycle_pending_gaps=["provider_baseline_not_aligned"]`
@@ -79,8 +79,8 @@ Durable-attention lane completion update (`PRJ-577..PRJ-579`, 2026-04-23):
   - exported `incident_evidence.policy_posture["runtime_topology.attention_switch"]`
   - release smoke
   - behavior-validation burst-coalescing regression coverage
-- the next unresolved lane is proactive production posture, not attention
-  ownership
+- the next unresolved lane is retrieval-provider baseline alignment, not
+  attention or proactive production posture
 
 ## V1 Productization Stance (2026-04-22)
 

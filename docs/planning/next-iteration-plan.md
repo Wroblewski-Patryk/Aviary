@@ -128,8 +128,9 @@ Queue update (2026-04-23):
   - exported `incident_evidence.policy_posture["runtime_topology.attention_switch"]`
   - release smoke
   - behavior-validation burst-coalescing regression coverage
-- the next active lane is Group 91 (`PRJ-580..PRJ-583`), starting with the
-  bounded proactive production-policy freeze.
+- the next active lane is Group 92 (`PRJ-584..PRJ-587`), starting with the
+  retrieval-provider baseline freeze after the proactive production lane
+  completed.
 
 ### Group 91 - Proactive Opt-In Production Activation
 
@@ -153,32 +154,27 @@ Queue update (2026-04-23):
   - delivery target stays bounded to Telegram direct message using recent chat
     id or numeric user-id fallback
   - rollback posture returns production to `PROACTIVE_ENABLED=false`
-- the next active slice is `PRJ-581`, which should implement this exact policy
-  in live runtime and production deployment.
+- the next active slice is `PRJ-584`, which should freeze the retrieval-provider
+  production baseline now that proactive production activation is complete.
 
-- `PRJ-581` Enable bounded proactive follow-up in production.
-  - Result:
-    - production proactive follows the chosen bounded policy instead of staying
-      generically `disabled_by_policy`
-    - `/health.proactive` exposes the real production baseline
-  - Validation:
-    - relevant pytest coverage
-    - release smoke
-    - production `/health.proactive`
+- `PRJ-581` is now complete.
+- repository-driven Coolify production now runs the bounded proactive baseline:
+  - `/health.proactive.enabled=true`
+  - `/health.proactive.production_baseline_ready=true`
+  - `/health.proactive.production_baseline_state=external_scheduler_target_owner`
+  - `/health.scheduler.external_owner_policy.proactive_run_evidence.evidence_state=recent_external_run_evidence`
+- the production cutover also confirmed an ops pitfall: explicit Coolify env
+  overrides can mask repo-driven defaults until removed or changed.
 
-- `PRJ-582` Prove proactive delivery and anti-spam behavior in release evidence.
-  - Result:
-    - behavior validation and incident evidence prove both
-      delivery-ready and blocked-by-guardrail proactive cases
-  - Validation:
-    - targeted pytest coverage
-    - behavior-validation and smoke evidence
+- `PRJ-582` is now complete.
+- exported `incident_evidence`, release smoke, and behavior-validation CI gates
+  now require the same proactive owner posture and enabled baseline as
+  `/health.proactive`.
 
-- `PRJ-583` Sync docs/context for proactive production baseline.
-  - Result:
-    - docs and context truth align on the chosen proactive production posture
-  - Validation:
-    - doc-and-context sync
+- `PRJ-583` is now complete.
+- runtime reality, testing guidance, ops notes, planning docs, and repository
+  context now describe the same live bounded proactive production baseline and
+  proof path.
 
 ### Group 92 - Retrieval Provider Baseline Alignment
 

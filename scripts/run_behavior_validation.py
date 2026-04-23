@@ -43,6 +43,7 @@ GATE_REASON_INCIDENT_EVIDENCE_EXTERNAL_CADENCE_PROOF_INVALID = "incident_evidenc
 GATE_REASON_INCIDENT_EVIDENCE_TELEGRAM_CONVERSATION_INVALID = "incident_evidence_telegram_conversation_invalid"
 GATE_REASON_INCIDENT_EVIDENCE_V1_READINESS_INVALID = "incident_evidence_v1_readiness_invalid"
 GATE_REASON_INCIDENT_EVIDENCE_DURABLE_ATTENTION_INVALID = "incident_evidence_durable_attention_invalid"
+GATE_REASON_INCIDENT_EVIDENCE_PROACTIVE_INVALID = "incident_evidence_proactive_invalid"
 
 
 @dataclass(frozen=True)
@@ -327,6 +328,10 @@ def _evaluate_incident_evidence_input(
         "incident_evidence_attention_runtime_topology_policy_owner": None,
         "incident_evidence_attention_runtime_topology_selected_mode": None,
         "incident_evidence_attention_runtime_topology_ready": None,
+        "incident_evidence_proactive_policy_owner": None,
+        "incident_evidence_proactive_enabled": None,
+        "incident_evidence_proactive_production_baseline_ready": None,
+        "incident_evidence_proactive_production_baseline_state": None,
     }
     violations: list[str] = []
 
@@ -418,6 +423,11 @@ def _evaluate_incident_evidence_input(
         candidate_topology_attention_policy = policy_posture.get("runtime_topology.attention_switch")
         if isinstance(candidate_topology_attention_policy, dict):
             topology_attention_policy = candidate_topology_attention_policy
+    proactive_policy = {}
+    if isinstance(policy_posture, dict):
+        candidate_proactive_policy = policy_posture.get("proactive")
+        if isinstance(candidate_proactive_policy, dict):
+            proactive_policy = candidate_proactive_policy
 
     maintenance_evidence = scheduler_policy.get("maintenance_run_evidence")
     proactive_evidence = scheduler_policy.get("proactive_run_evidence")
@@ -532,6 +542,23 @@ def _evaluate_incident_evidence_input(
     )
     if not durable_attention_valid:
         violations.append(GATE_REASON_INCIDENT_EVIDENCE_DURABLE_ATTENTION_INVALID)
+
+    context["incident_evidence_proactive_policy_owner"] = proactive_policy.get("policy_owner")
+    context["incident_evidence_proactive_enabled"] = proactive_policy.get("enabled")
+    context["incident_evidence_proactive_production_baseline_ready"] = proactive_policy.get(
+        "production_baseline_ready"
+    )
+    context["incident_evidence_proactive_production_baseline_state"] = proactive_policy.get(
+        "production_baseline_state"
+    )
+    proactive_valid = (
+        proactive_policy.get("policy_owner") == "proactive_runtime_policy"
+        and proactive_policy.get("enabled") is True
+        and proactive_policy.get("production_baseline_ready") is True
+        and proactive_policy.get("production_baseline_state") != "disabled_by_policy"
+    )
+    if not proactive_valid:
+        violations.append(GATE_REASON_INCIDENT_EVIDENCE_PROACTIVE_INVALID)
 
     return violations, context
 

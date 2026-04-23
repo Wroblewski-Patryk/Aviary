@@ -162,6 +162,9 @@ function Validate-IncidentEvidenceBundle {
         attention_coordination_mode = $null
         attention_contract_store_state = $null
         attention_runtime_topology_selected_mode = $null
+        proactive_policy_owner = $null
+        proactive_enabled = $null
+        proactive_production_baseline_state = $null
     }
 
     if (-not $Path) {
@@ -283,6 +286,22 @@ function Validate-IncidentEvidenceBundle {
     if (-not [bool]$runtimeTopologyAttention.production_default_change_ready) {
         throw "Incident evidence bundle verification failed: runtime_topology.attention_switch production_default_change_ready is not true."
     }
+    $proactive = $incidentEvidence.policy_posture.proactive
+    if ($null -eq $proactive) {
+        throw "Incident evidence bundle verification failed: proactive posture is missing."
+    }
+    if ([string]$proactive.policy_owner -ne "proactive_runtime_policy") {
+        throw "Incident evidence bundle verification failed: unexpected proactive policy_owner '$($proactive.policy_owner)'."
+    }
+    if (-not [bool]$proactive.enabled) {
+        throw "Incident evidence bundle verification failed: proactive enabled flag is not true."
+    }
+    if (-not [bool]$proactive.production_baseline_ready) {
+        throw "Incident evidence bundle verification failed: proactive production_baseline_ready is not true."
+    }
+    if ([string]$proactive.production_baseline_state -eq "disabled_by_policy") {
+        throw "Incident evidence bundle verification failed: proactive production baseline is still disabled_by_policy."
+    }
     $learnedState = $incidentEvidence.policy_posture.learned_state
     if ($null -eq $learnedState) {
         throw "Incident evidence bundle verification failed: learned_state posture is missing."
@@ -326,6 +345,9 @@ function Validate-IncidentEvidenceBundle {
         attention_coordination_mode = [string]$attention.coordination_mode
         attention_contract_store_state = [string]$attention.deployment_readiness.contract_store_state
         attention_runtime_topology_selected_mode = [string]$runtimeTopologyAttention.selected_mode
+        proactive_policy_owner = [string]$proactive.policy_owner
+        proactive_enabled = [bool]$proactive.enabled
+        proactive_production_baseline_state = [string]$proactive.production_baseline_state
     }
 }
 
@@ -813,6 +835,22 @@ if ([string]$runtimeTopology.attention_switch.selected_mode -ne "durable_inbox")
 if (-not [bool]$runtimeTopology.attention_switch.production_default_change_ready) {
     throw "Health check failed: runtime_topology.attention_switch.production_default_change_ready is not true."
 }
+$proactive = $health.proactive
+if ($null -eq $proactive) {
+    throw "Health check failed: response is missing proactive."
+}
+if ([string]$proactive.policy_owner -ne "proactive_runtime_policy") {
+    throw "Health check failed: unexpected proactive policy owner '$($proactive.policy_owner)'."
+}
+if (-not [bool]$proactive.enabled) {
+    throw "Health check failed: proactive is not enabled."
+}
+if (-not [bool]$proactive.production_baseline_ready) {
+    throw "Health check failed: proactive production_baseline_ready is not true."
+}
+if ([string]$proactive.production_baseline_state -eq "disabled_by_policy") {
+    throw "Health check failed: proactive production baseline is still disabled_by_policy."
+}
 $deployment = $health.deployment
 if ($null -eq $deployment) {
     throw "Health check failed: response is missing deployment."
@@ -1043,6 +1081,7 @@ $incidentDebugPosture = $null
 $incidentTelegramConversation = $null
 $incidentAttention = $null
 $incidentTopologyAttention = $null
+$incidentProactive = $null
 if ($IncludeDebug) {
     if (-not (Has-Property -Object $response -Name "incident_evidence")) {
         throw "Smoke request failed: debug request is missing incident_evidence."
@@ -1121,6 +1160,22 @@ if ($IncludeDebug) {
     if (-not [bool]$incidentTopologyAttention.production_default_change_ready) {
         throw "Smoke request failed: incident_evidence runtime_topology.attention_switch production_default_change_ready is not true."
     }
+    $incidentProactive = $incidentEvidence.policy_posture.proactive
+    if ($null -eq $incidentProactive) {
+        throw "Smoke request failed: incident_evidence is missing proactive posture."
+    }
+    if ([string]$incidentProactive.policy_owner -ne "proactive_runtime_policy") {
+        throw "Smoke request failed: unexpected incident_evidence proactive policy_owner '$($incidentProactive.policy_owner)'."
+    }
+    if (-not [bool]$incidentProactive.enabled) {
+        throw "Smoke request failed: incident_evidence proactive enabled is not true."
+    }
+    if (-not [bool]$incidentProactive.production_baseline_ready) {
+        throw "Smoke request failed: incident_evidence proactive production_baseline_ready is not true."
+    }
+    if ([string]$incidentProactive.production_baseline_state -eq "disabled_by_policy") {
+        throw "Smoke request failed: incident_evidence proactive production baseline is still disabled_by_policy."
+    }
     $incidentLearnedState = $incidentEvidence.policy_posture.learned_state
     if ($null -eq $incidentLearnedState) {
         throw "Smoke request failed: incident_evidence is missing learned_state posture."
@@ -1198,6 +1253,10 @@ $summary = @{
     attention_store_available = [bool]$attention.deployment_readiness.store_available
     runtime_topology_attention_selected_mode = [string]$runtimeTopology.attention_switch.selected_mode
     runtime_topology_attention_ready = [bool]$runtimeTopology.attention_switch.production_default_change_ready
+    proactive_policy_owner = [string]$proactive.policy_owner
+    proactive_enabled = [bool]$proactive.enabled
+    proactive_production_baseline_ready = [bool]$proactive.production_baseline_ready
+    proactive_production_baseline_state = [string]$proactive.production_baseline_state
     deployment_hosting_baseline = [string]$deployment.hosting_baseline
     deployment_manual_fallback_exception_rate_percent = [double]$deployment.deployment_trigger_slo.manual_redeploy_exception_rate_percent
     scheduler_external_policy_owner = [string]$externalSchedulerPolicy.policy_owner
@@ -1242,6 +1301,10 @@ $summary = @{
     incident_evidence_attention_runtime_topology_policy_owner = if ($null -ne $incidentTopologyAttention) { [string]$incidentTopologyAttention.policy_owner } else { $null }
     incident_evidence_attention_runtime_topology_selected_mode = if ($null -ne $incidentTopologyAttention) { [string]$incidentTopologyAttention.selected_mode } else { $null }
     incident_evidence_attention_runtime_topology_ready = if ($null -ne $incidentTopologyAttention) { [bool]$incidentTopologyAttention.production_default_change_ready } else { $null }
+    incident_evidence_proactive_policy_owner = if ($null -ne $incidentProactive) { [string]$incidentProactive.policy_owner } else { $null }
+    incident_evidence_proactive_enabled = if ($null -ne $incidentProactive) { [bool]$incidentProactive.enabled } else { $null }
+    incident_evidence_proactive_production_baseline_ready = if ($null -ne $incidentProactive) { [bool]$incidentProactive.production_baseline_ready } else { $null }
+    incident_evidence_proactive_production_baseline_state = if ($null -ne $incidentProactive) { [string]$incidentProactive.production_baseline_state } else { $null }
     incident_bundle_checked = [bool]$incidentEvidenceBundleCheck.checked
     incident_bundle_path = [string]$incidentEvidenceBundleCheck.path
     incident_bundle_manifest_schema_version = $incidentEvidenceBundleCheck.manifest_schema_version
@@ -1257,6 +1320,9 @@ $summary = @{
     incident_bundle_attention_coordination_mode = $incidentEvidenceBundleCheck.attention_coordination_mode
     incident_bundle_attention_contract_store_state = $incidentEvidenceBundleCheck.attention_contract_store_state
     incident_bundle_attention_runtime_topology_selected_mode = $incidentEvidenceBundleCheck.attention_runtime_topology_selected_mode
+    incident_bundle_proactive_policy_owner = $incidentEvidenceBundleCheck.proactive_policy_owner
+    incident_bundle_proactive_enabled = $incidentEvidenceBundleCheck.proactive_enabled
+    incident_bundle_proactive_production_baseline_state = $incidentEvidenceBundleCheck.proactive_production_baseline_state
     deployment_evidence_checked = [bool]$deploymentEvidenceCheck.checked
     deployment_evidence_path = [string]$deploymentEvidenceCheck.path
     deployment_evidence_age_minutes = $deploymentEvidenceCheck.age_minutes
