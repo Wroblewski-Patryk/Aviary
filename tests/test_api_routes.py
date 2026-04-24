@@ -296,6 +296,9 @@ class FakeSettings:
         proactive_enabled: bool = False,
         proactive_interval: int = 1800,
         attention_coordination_mode: str = "in_process",
+        google_calendar_access_token: str | None = None,
+        google_calendar_calendar_id: str | None = None,
+        google_calendar_timezone: str | None = None,
         google_drive_access_token: str | None = None,
         google_drive_folder_id: str | None = None,
     ):
@@ -331,6 +334,9 @@ class FakeSettings:
         self.proactive_enabled = proactive_enabled
         self.proactive_interval = proactive_interval
         self.attention_coordination_mode = attention_coordination_mode
+        self.google_calendar_access_token = google_calendar_access_token
+        self.google_calendar_calendar_id = google_calendar_calendar_id
+        self.google_calendar_timezone = google_calendar_timezone
         self.google_drive_access_token = google_drive_access_token
         self.google_drive_folder_id = google_drive_folder_id
 
@@ -2201,6 +2207,31 @@ def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() ->
         organizer_stack["readiness_hint"]
         == "configure_clickup_google_calendar_and_google_drive_credentials_for_full_stack_readiness"
     )
+    activation = organizer_stack["activation_snapshot"]
+    assert activation["policy_owner"] == "production_organizer_tool_activation"
+    assert activation["provider_activation_total"] == 3
+    assert activation["provider_activation_ready"] == 0
+    assert activation["provider_activation_state"] == "provider_activation_incomplete"
+    assert activation["user_opt_in_required"] is True
+    assert activation["mutation_confirmation_required"] is True
+    assert activation["next_actions"] == [
+        "configure_clickup_api_token_and_clickup_list_id",
+        "configure_google_calendar_access_token_calendar_id_and_timezone",
+        "configure_google_drive_access_token_and_folder_id",
+    ]
+    assert activation["provider_requirements"]["clickup"]["missing_settings"] == [
+        "CLICKUP_API_TOKEN",
+        "CLICKUP_LIST_ID",
+    ]
+    assert activation["provider_requirements"]["google_calendar"]["missing_settings"] == [
+        "GOOGLE_CALENDAR_ACCESS_TOKEN",
+        "GOOGLE_CALENDAR_CALENDAR_ID",
+        "GOOGLE_CALENDAR_TIMEZONE",
+    ]
+    assert activation["provider_requirements"]["google_drive"]["missing_settings"] == [
+        "GOOGLE_DRIVE_ACCESS_TOKEN",
+        "GOOGLE_DRIVE_FOLDER_ID",
+    ]
     search_baseline = body["connectors"]["execution_baseline"]["knowledge_search"]["search_web"]
     assert search_baseline["execution_mode"] == "provider_backed_without_credentials"
     assert search_baseline["ready"] is True
@@ -2260,12 +2291,20 @@ def test_health_endpoint_exposes_provider_backed_clickup_connector_readiness_whe
         "cloud_drive.google_drive_list_files",
     ]
     assert organizer_stack["readiness_state"] == "provider_credentials_missing"
+    activation = organizer_stack["activation_snapshot"]
+    assert activation["provider_activation_ready"] == 1
+    assert activation["provider_requirements"]["clickup"]["ready"] is True
+    assert activation["provider_requirements"]["clickup"]["missing_settings"] == []
+    assert activation["provider_requirements"]["clickup"]["next_action"] == (
+        "ready_for_clickup_operator_acceptance"
+    )
 
 
 def test_health_endpoint_exposes_provider_backed_google_calendar_readiness_when_configured() -> None:
     client, _, _ = _client()
     client.app.state.settings.google_calendar_access_token = "google-calendar-token"
     client.app.state.settings.google_calendar_calendar_id = "primary"
+    client.app.state.settings.google_calendar_timezone = "Europe/Warsaw"
 
     response = client.get("/health")
 
@@ -2286,6 +2325,13 @@ def test_health_endpoint_exposes_provider_backed_google_calendar_readiness_when_
         "task_system.clickup_update_task",
         "cloud_drive.google_drive_list_files",
     ]
+    activation = organizer_stack["activation_snapshot"]
+    assert activation["provider_activation_ready"] == 1
+    assert activation["provider_requirements"]["google_calendar"]["ready"] is True
+    assert activation["provider_requirements"]["google_calendar"]["missing_settings"] == []
+    assert activation["provider_requirements"]["google_calendar"]["next_action"] == (
+        "ready_for_google_calendar_operator_acceptance"
+    )
 
 
 def test_health_endpoint_exposes_provider_backed_google_drive_readiness_when_configured() -> None:
@@ -2312,6 +2358,13 @@ def test_health_endpoint_exposes_provider_backed_google_drive_readiness_when_con
         "task_system.clickup_update_task",
         "calendar.google_calendar_read_availability",
     ]
+    activation = organizer_stack["activation_snapshot"]
+    assert activation["provider_activation_ready"] == 1
+    assert activation["provider_requirements"]["google_drive"]["ready"] is True
+    assert activation["provider_requirements"]["google_drive"]["missing_settings"] == []
+    assert activation["provider_requirements"]["google_drive"]["next_action"] == (
+        "ready_for_google_drive_operator_acceptance"
+    )
 
 
 def test_health_endpoint_exposes_ready_organizer_tool_stack_when_all_providers_are_configured() -> None:
@@ -2320,6 +2373,7 @@ def test_health_endpoint_exposes_ready_organizer_tool_stack_when_all_providers_a
     client.app.state.settings.clickup_list_id = "list-123"
     client.app.state.settings.google_calendar_access_token = "google-calendar-token"
     client.app.state.settings.google_calendar_calendar_id = "primary"
+    client.app.state.settings.google_calendar_timezone = "Europe/Warsaw"
     client.app.state.settings.google_drive_access_token = "google-drive-token"
     client.app.state.settings.google_drive_folder_id = "folder-123"
 
@@ -2332,6 +2386,10 @@ def test_health_endpoint_exposes_ready_organizer_tool_stack_when_all_providers_a
     assert organizer_stack["credential_gap_operations"] == []
     assert organizer_stack["readiness_state"] == "provider_stack_ready"
     assert organizer_stack["readiness_hint"] == "organizer_tool_stack_ready_for_operator_acceptance"
+    activation = organizer_stack["activation_snapshot"]
+    assert activation["provider_activation_ready"] == 3
+    assert activation["provider_activation_state"] == "all_providers_ready_for_operator_acceptance"
+    assert activation["next_actions"] == []
 
 
 def test_health_endpoint_exposes_local_hybrid_embedding_provider_as_ready_owner() -> None:

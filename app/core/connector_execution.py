@@ -7,12 +7,14 @@ def clickup_task_create_ready(settings) -> bool:
 def google_calendar_read_ready(settings) -> bool:
     access_token = str(getattr(settings, "google_calendar_access_token", "") or "").strip()
     calendar_id = str(getattr(settings, "google_calendar_calendar_id", "") or "").strip()
-    return bool(access_token and calendar_id)
+    timezone_name = str(getattr(settings, "google_calendar_timezone", "") or "").strip()
+    return bool(access_token and calendar_id and timezone_name)
 
 
 def google_drive_list_ready(settings) -> bool:
     access_token = str(getattr(settings, "google_drive_access_token", "") or "").strip()
-    return bool(access_token)
+    folder_id = str(getattr(settings, "google_drive_folder_id", "") or "").strip()
+    return bool(access_token and folder_id)
 
 
 def connector_execution_baseline_snapshot(settings) -> dict[str, object]:
@@ -182,6 +184,119 @@ def organizer_tool_stack_snapshot(settings) -> dict[str, object]:
     credential_gap_operations = [
         operation_id for operation_id in approved_operations if not bool(readiness_entries[operation_id].get("ready", False))
     ]
+    activation_requirements = {
+        "clickup": {
+            "provider": "clickup",
+            "required_settings": [
+                "CLICKUP_API_TOKEN",
+                "CLICKUP_LIST_ID",
+            ],
+            "optional_settings": [],
+            "activation_scope": [
+                "task_system.clickup_create_task",
+                "task_system.clickup_list_tasks",
+                "task_system.clickup_update_task",
+            ],
+            "ready": bool(clickup_create.get("ready", False)),
+            "missing_settings": [
+                name
+                for name, value in (
+                    ("CLICKUP_API_TOKEN", str(getattr(settings, "clickup_api_token", "") or "").strip()),
+                    ("CLICKUP_LIST_ID", str(getattr(settings, "clickup_list_id", "") or "").strip()),
+                )
+                if not value
+            ],
+            "user_opt_in_required": True,
+            "confirmation_required_operations": [
+                "task_system.clickup_create_task",
+                "task_system.clickup_update_task",
+            ],
+            "next_action": (
+                "ready_for_clickup_operator_acceptance"
+                if bool(clickup_create.get("ready", False))
+                else "configure_clickup_api_token_and_clickup_list_id"
+            ),
+        },
+        "google_calendar": {
+            "provider": "google_calendar",
+            "required_settings": [
+                "GOOGLE_CALENDAR_ACCESS_TOKEN",
+                "GOOGLE_CALENDAR_CALENDAR_ID",
+                "GOOGLE_CALENDAR_TIMEZONE",
+            ],
+            "optional_settings": [],
+            "activation_scope": [
+                "calendar.google_calendar_read_availability",
+            ],
+            "ready": bool(calendar_read.get("ready", False)),
+            "missing_settings": [
+                name
+                for name, value in (
+                    (
+                        "GOOGLE_CALENDAR_ACCESS_TOKEN",
+                        str(getattr(settings, "google_calendar_access_token", "") or "").strip(),
+                    ),
+                    (
+                        "GOOGLE_CALENDAR_CALENDAR_ID",
+                        str(getattr(settings, "google_calendar_calendar_id", "") or "").strip(),
+                    ),
+                    (
+                        "GOOGLE_CALENDAR_TIMEZONE",
+                        str(getattr(settings, "google_calendar_timezone", "") or "").strip(),
+                    ),
+                )
+                if not value
+            ],
+            "user_opt_in_required": True,
+            "confirmation_required_operations": [],
+            "next_action": (
+                "ready_for_google_calendar_operator_acceptance"
+                if bool(calendar_read.get("ready", False))
+                else "configure_google_calendar_access_token_calendar_id_and_timezone"
+            ),
+        },
+        "google_drive": {
+            "provider": "google_drive",
+            "required_settings": [
+                "GOOGLE_DRIVE_ACCESS_TOKEN",
+                "GOOGLE_DRIVE_FOLDER_ID",
+            ],
+            "optional_settings": [],
+            "activation_scope": [
+                "cloud_drive.google_drive_list_files",
+            ],
+            "ready": bool(drive_list.get("ready", False)),
+            "missing_settings": [
+                name
+                for name, value in (
+                    (
+                        "GOOGLE_DRIVE_ACCESS_TOKEN",
+                        str(getattr(settings, "google_drive_access_token", "") or "").strip(),
+                    ),
+                    (
+                        "GOOGLE_DRIVE_FOLDER_ID",
+                        str(getattr(settings, "google_drive_folder_id", "") or "").strip(),
+                    ),
+                )
+                if not value
+            ],
+            "user_opt_in_required": True,
+            "confirmation_required_operations": [],
+            "next_action": (
+                "ready_for_google_drive_operator_acceptance"
+                if bool(drive_list.get("ready", False))
+                else "configure_google_drive_access_token_and_folder_id"
+            ),
+        },
+    }
+    activation_ready_provider_count = sum(
+        1 for provider_entry in activation_requirements.values() if bool(provider_entry["ready"])
+    )
+    activation_next_actions = [
+        provider_entry["next_action"]
+        for provider_entry in activation_requirements.values()
+        if not bool(provider_entry["ready"])
+    ]
     return {
         "policy_owner": "production_organizer_tool_stack",
         "stack_name": "clickup_calendar_drive_first_stack",
@@ -212,5 +327,19 @@ def organizer_tool_stack_snapshot(settings) -> dict[str, object]:
             if not credential_gap_operations
             else "configure_clickup_google_calendar_and_google_drive_credentials_for_full_stack_readiness"
         ),
+        "activation_snapshot": {
+            "policy_owner": "production_organizer_tool_activation",
+            "provider_activation_total": len(activation_requirements),
+            "provider_activation_ready": activation_ready_provider_count,
+            "provider_activation_state": (
+                "all_providers_ready_for_operator_acceptance"
+                if activation_ready_provider_count == len(activation_requirements)
+                else "provider_activation_incomplete"
+            ),
+            "user_opt_in_required": True,
+            "mutation_confirmation_required": True,
+            "provider_requirements": activation_requirements,
+            "next_actions": activation_next_actions,
+        },
         "provider_readiness": readiness_entries,
     }

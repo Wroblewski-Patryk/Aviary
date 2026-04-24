@@ -386,10 +386,19 @@ Last updated: 2026-04-24
   runbook notes, planning docs, and repository context now freeze one explicit
   production credential-activation baseline for the first organizer-tool stack
   across ClickUp, Google Calendar, and Google Drive.
-- 2026-04-24: `PRJ-601` is now the first `READY` task; the next slice should
-  expose one actionable operator-facing activation snapshot so the frozen
-  organizer baseline is visible in one place instead of being reconstructed
-  across multiple provider-specific readiness fields.
+- 2026-04-24: `PRJ-612` is complete: canonical architecture now allows durable
+  role presets with prompt-oriented definitions, durable skill descriptions
+  with evolving usage guidance, and per-user tool authorization records for
+  future UI/admin activation, while keeping raw secrets externalized and tool
+  execution inside the existing planning -> permission-gate -> action
+  boundary.
+- 2026-04-24: `PRJ-601` is complete: `/health.connectors.organizer_tool_stack`
+  now exposes one actionable activation snapshot with provider-specific
+  required settings, missing settings, opt-in/confirmation posture, and next
+  actions for the frozen organizer-tool stack.
+- 2026-04-24: `PRJ-602` is now the first `READY` task; the next slice should
+  prove that same activation posture through release smoke and incident
+  evidence so provider readiness no longer depends on `/health` alone.
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.

@@ -219,7 +219,12 @@ Last updated: 2026-04-24
   - bounded search/browser/tool reads still lack an explicit durable
     tool-grounded learning capture contract
   - future UI/admin work still needs one clearer backend capability catalog for
-    tools, roles, and metadata-only skills
+    tools, role presets, and registry-backed skills
+- `PRJ-612` is complete: canonical architecture now allows durable role
+  presets with prompt-oriented definitions, durable skill descriptions with
+  evolving usage guidance, and per-user tool authorization records, while
+  keeping tools user-authorized, secrets externalized, and execution inside
+  the existing planning -> permission-gate -> action boundary.
 - `PRJ-597` is complete: repo-driven Coolify deployment automation now has one
   explicit frozen baseline with canonical app identity, primary automation
   path, bounded fallback path, and operator proof surfaces.
@@ -233,27 +238,52 @@ Last updated: 2026-04-24
 - `PRJ-600` is complete: canonical contracts, env/config guidance, ops notes,
   and planning/context truth now freeze one production credential-activation
   baseline for the first organizer-tool stack.
-- `PRJ-601` is now the first `READY` slice because the baseline is frozen and
-  the next step is to expose one actionable operator-facing activation
-  snapshot instead of leaving activation spread across multiple health fields.
+- `PRJ-601` is complete: `/health.connectors.organizer_tool_stack` now exposes
+  one activation snapshot with provider-specific missing settings, opt-in or
+  confirmation posture, and next actions for ClickUp, Google Calendar, and
+  Google Drive.
+- `PRJ-602` is now the first `READY` slice because activation posture is now
+  actionable in `/health`, so the next step is to prove that same distinction
+  through release smoke and incident evidence.
 
 ## READY
 
-- [ ] PRJ-601 Expose one actionable onboarding surface for organizer-tool activation
+- [ ] PRJ-602 Add release and incident evidence for organizer-tool activation posture
+  - Owner: QA/Test
+  - Group: Organizer-Tool Credential Activation
+  - Depends on: PRJ-601
+  - Priority: P1
+  - Status: READY
+  - Why now:
+    - activation is now actionable in `/health.connectors.organizer_tool_stack`,
+      but release and incident evidence still only distinguish the frozen stack
+      from a provider-ready stack at a coarser level
+  - Done when:
+    - smoke and incident evidence distinguish a frozen organizer baseline from
+      a fully provider-ready organizer stack using the shared activation
+      snapshot
+  - Validation:
+    - targeted pytest coverage
+    - smoke or incident-evidence checks
+
+- [x] PRJ-601 Expose one actionable onboarding surface for organizer-tool activation
   - Owner: Backend Builder
   - Group: Organizer-Tool Credential Activation
   - Depends on: PRJ-600
   - Priority: P1
-  - Status: READY
+  - Status: DONE
   - Why now:
     - the credential baseline is now frozen, but operators still have to infer
       activation steps from multiple provider-specific fields
   - Done when:
     - backend surfaces expose one operator-facing activation snapshot with
       credential gaps, opt-in posture, and provider-specific next actions
+  - Result:
+    - `/health.connectors.organizer_tool_stack.activation_snapshot` now gives
+      one shared onboarding view with provider-specific required settings,
+      missing settings, readiness, confirmation posture, and next actions
   - Validation:
-    - relevant pytest coverage
-    - `/health.connectors` checks
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py` -> `87 passed`
 
 - [x] PRJ-600 Freeze the production credential-activation baseline for organizer tools
   - Owner: Planner
@@ -295,6 +325,27 @@ Last updated: 2026-04-24
     - doc-and-context sync
     - release-smoke wording cross-check against the current production failure
       mode before redeploy
+
+- [x] PRJ-612 Freeze the durable role/skill/tool-authorization architecture baseline
+  - Owner: Product Docs Agent
+  - Group: Future UI/Admin Capability Catalog
+  - Depends on: none
+  - Priority: P1
+  - Status: DONE
+  - Why now:
+    - future UI/admin work needs one explicit architecture baseline for
+      prompt-backed role presets, revisable skill descriptions, and
+      per-user tool activation without reopening action-boundary or secret
+      ownership rules later
+  - Done when:
+    - canonical architecture defines durable role presets with prompt-oriented
+      definitions and runtime selection ownership
+    - canonical architecture defines durable skill descriptions with bounded
+      revision posture and linked approved tool families
+    - canonical architecture defines per-user tool authorization posture while
+      preserving external secret ownership and action-owned execution
+  - Validation:
+    - architecture cross-review
 
 - [x] PRJ-598 Add machine-visible release evidence for deployment automation posture
   - Owner: Ops/Release
