@@ -77,6 +77,10 @@ function Validate-DeploymentEvidence {
         path        = $Path
         age_minutes = $null
         status_code = $null
+        policy_owner = $null
+        trigger_mode = $null
+        trigger_class = $null
+        canonical_application_id = $null
     }
 
     if (-not $Path) {
@@ -97,6 +101,36 @@ function Validate-DeploymentEvidence {
 
     if ([string]$evidence.kind -ne "coolify_deploy_webhook_evidence") {
         throw "Deployment evidence verification failed: unexpected kind '$($evidence.kind)'."
+    }
+    if ([string]$evidence.policy_owner -ne "coolify_repo_deploy_automation") {
+        throw "Deployment evidence verification failed: unexpected policy_owner '$($evidence.policy_owner)'."
+    }
+
+    $validTriggerModes = @(
+        "source_automation",
+        "webhook_manual_fallback",
+        "ui_manual_fallback"
+    )
+    $triggerMode = [string]$evidence.trigger_mode
+    if ($validTriggerModes -notcontains $triggerMode) {
+        throw "Deployment evidence verification failed: unexpected trigger_mode '$triggerMode'."
+    }
+
+    $validTriggerClasses = @(
+        "primary_automation",
+        "manual_fallback"
+    )
+    $triggerClass = [string]$evidence.trigger_class
+    if ($validTriggerClasses -notcontains $triggerClass) {
+        throw "Deployment evidence verification failed: unexpected trigger_class '$triggerClass'."
+    }
+
+    if ($null -eq $evidence.canonical_coolify_app) {
+        throw "Deployment evidence verification failed: canonical_coolify_app is missing."
+    }
+    $canonicalApplicationId = [string]$evidence.canonical_coolify_app.application_id
+    if (-not $canonicalApplicationId) {
+        throw "Deployment evidence verification failed: canonical_coolify_app.application_id is missing."
     }
 
     if ($null -eq $evidence.response) {
@@ -138,6 +172,10 @@ function Validate-DeploymentEvidence {
         path        = $Path
         age_minutes = [math]::Round($ageMinutes, 2)
         status_code = $statusCode
+        policy_owner = [string]$evidence.policy_owner
+        trigger_mode = $triggerMode
+        trigger_class = $triggerClass
+        canonical_application_id = $canonicalApplicationId
     }
 }
 
@@ -165,6 +203,8 @@ function Validate-IncidentEvidenceBundle {
         proactive_policy_owner = $null
         proactive_enabled = $null
         proactive_production_baseline_state = $null
+        deployment_automation_policy_owner = $null
+        deployment_primary_trigger_mode = $null
         organizer_tool_stack_policy_owner = $null
         organizer_tool_stack_readiness_state = $null
         organizer_tool_stack_ready_operations = @()
@@ -337,6 +377,22 @@ function Validate-IncidentEvidenceBundle {
     if ([string]$v1Readiness.learned_state_gate_state -ne "inspection_surface_ready") {
         throw "Incident evidence bundle verification failed: unexpected v1_readiness learned_state_gate_state '$($v1Readiness.learned_state_gate_state)'."
     }
+    $incidentDeployment = $incidentEvidence.policy_posture.deployment
+    if ($null -eq $incidentDeployment) {
+        throw "Incident evidence bundle verification failed: deployment posture is missing."
+    }
+    if ([string]$incidentDeployment.deployment_automation_policy_owner -ne "coolify_repo_deploy_automation") {
+        throw "Incident evidence bundle verification failed: unexpected deployment_automation_policy_owner '$($incidentDeployment.deployment_automation_policy_owner)'."
+    }
+    if ([string]$incidentDeployment.deployment_automation_baseline.primary_trigger_mode -ne "source_automation") {
+        throw "Incident evidence bundle verification failed: unexpected deployment primary_trigger_mode '$($incidentDeployment.deployment_automation_baseline.primary_trigger_mode)'."
+    }
+    $incidentDeploymentFallbackModes = @($incidentDeployment.deployment_automation_baseline.fallback_trigger_modes)
+    foreach ($requiredFallbackMode in @("webhook_manual_fallback", "ui_manual_fallback")) {
+        if ($incidentDeploymentFallbackModes -notcontains $requiredFallbackMode) {
+            throw "Incident evidence bundle verification failed: deployment posture is missing fallback trigger mode '$requiredFallbackMode'."
+        }
+    }
     $healthConnectors = $healthSnapshot.connectors
     if ($null -eq $healthConnectors) {
         throw "Incident evidence bundle verification failed: health snapshot connectors surface is missing."
@@ -369,6 +425,8 @@ function Validate-IncidentEvidenceBundle {
         proactive_policy_owner = [string]$proactive.policy_owner
         proactive_enabled = [bool]$proactive.enabled
         proactive_production_baseline_state = [string]$proactive.production_baseline_state
+        deployment_automation_policy_owner = [string]$incidentDeployment.deployment_automation_policy_owner
+        deployment_primary_trigger_mode = [string]$incidentDeployment.deployment_automation_baseline.primary_trigger_mode
         organizer_tool_stack_policy_owner = [string]$organizerToolStackContract.policy_owner
         organizer_tool_stack_readiness_state = [string]$organizerToolStackContract.readiness_state
         organizer_tool_stack_ready_operations = @($organizerToolStackContract.ready_operations)
@@ -1142,6 +1200,31 @@ if (-not (Has-Property -Object $deployment -Name "hosting_baseline")) {
 if (-not (Has-Property -Object $deployment -Name "deployment_trigger_slo")) {
     throw "Health check failed: deployment is missing deployment_trigger_slo."
 }
+if (-not (Has-Property -Object $deployment -Name "deployment_automation_policy_owner")) {
+    throw "Health check failed: deployment is missing deployment_automation_policy_owner."
+}
+if (-not (Has-Property -Object $deployment -Name "canonical_coolify_app")) {
+    throw "Health check failed: deployment is missing canonical_coolify_app."
+}
+if (-not (Has-Property -Object $deployment -Name "deployment_automation_baseline")) {
+    throw "Health check failed: deployment is missing deployment_automation_baseline."
+}
+if ([string]$deployment.deployment_automation_policy_owner -ne "coolify_repo_deploy_automation") {
+    throw "Health check failed: unexpected deployment_automation_policy_owner '$($deployment.deployment_automation_policy_owner)'."
+}
+if (-not (Has-Property -Object $deployment.canonical_coolify_app -Name "application_id")) {
+    throw "Health check failed: deployment canonical_coolify_app is missing application_id."
+}
+if ([string]$deployment.deployment_automation_baseline.primary_trigger_mode -ne "source_automation") {
+    throw "Health check failed: unexpected deployment_automation_baseline.primary_trigger_mode '$($deployment.deployment_automation_baseline.primary_trigger_mode)'."
+}
+$validDeploymentFallbackModes = @("webhook_manual_fallback", "ui_manual_fallback")
+$fallbackModes = @($deployment.deployment_automation_baseline.fallback_trigger_modes)
+foreach ($requiredFallbackMode in $validDeploymentFallbackModes) {
+    if ($fallbackModes -notcontains $requiredFallbackMode) {
+        throw "Health check failed: deployment_automation_baseline is missing fallback trigger mode '$requiredFallbackMode'."
+    }
+}
 $scheduler = $health.scheduler
 if ($null -eq $scheduler) {
     throw "Health check failed: response is missing scheduler."
@@ -1500,6 +1583,22 @@ if ($IncludeDebug) {
     if ([string]$incidentV1Readiness.learned_state_gate_state -ne "inspection_surface_ready") {
         throw "Smoke request failed: unexpected incident_evidence v1_readiness learned_state_gate_state '$($incidentV1Readiness.learned_state_gate_state)'."
     }
+    $incidentDeployment = $incidentEvidence.policy_posture.deployment
+    if ($null -eq $incidentDeployment) {
+        throw "Smoke request failed: incident_evidence is missing deployment posture."
+    }
+    if ([string]$incidentDeployment.deployment_automation_policy_owner -ne "coolify_repo_deploy_automation") {
+        throw "Smoke request failed: unexpected incident_evidence deployment_automation_policy_owner '$($incidentDeployment.deployment_automation_policy_owner)'."
+    }
+    if ([string]$incidentDeployment.deployment_automation_baseline.primary_trigger_mode -ne "source_automation") {
+        throw "Smoke request failed: unexpected incident_evidence deployment primary_trigger_mode '$($incidentDeployment.deployment_automation_baseline.primary_trigger_mode)'."
+    }
+    $incidentDeploymentFallbackModes = @($incidentDeployment.deployment_automation_baseline.fallback_trigger_modes)
+    foreach ($requiredFallbackMode in @("webhook_manual_fallback", "ui_manual_fallback")) {
+        if ($incidentDeploymentFallbackModes -notcontains $requiredFallbackMode) {
+            throw "Smoke request failed: incident_evidence deployment is missing fallback trigger mode '$requiredFallbackMode'."
+        }
+    }
     $incidentRequiredV1Scenarios = @("T13.1", "T14.1", "T14.2", "T14.3", "T15.1", "T15.2", "T16.1", "T16.2", "T16.3")
     $incidentActualV1Scenarios = @()
     if ($incidentV1Readiness.PSObject.Properties.Name -contains "required_behavior_scenarios" -and $null -ne $incidentV1Readiness.required_behavior_scenarios) {
@@ -1586,6 +1685,10 @@ $summary = @{
     proactive_production_baseline_ready = [bool]$proactive.production_baseline_ready
     proactive_production_baseline_state = [string]$proactive.production_baseline_state
     deployment_hosting_baseline = [string]$deployment.hosting_baseline
+    deployment_automation_policy_owner = [string]$deployment.deployment_automation_policy_owner
+    deployment_primary_trigger_mode = [string]$deployment.deployment_automation_baseline.primary_trigger_mode
+    deployment_fallback_trigger_modes = @($deployment.deployment_automation_baseline.fallback_trigger_modes)
+    deployment_canonical_application_id = [string]$deployment.canonical_coolify_app.application_id
     deployment_manual_fallback_exception_rate_percent = [double]$deployment.deployment_trigger_slo.manual_redeploy_exception_rate_percent
     scheduler_external_policy_owner = [string]$externalSchedulerPolicy.policy_owner
     scheduler_external_cutover_proof_owner = [string]$externalSchedulerPolicy.cutover_proof_owner
@@ -1643,6 +1746,8 @@ $summary = @{
     incident_evidence_learned_state_internal_inspection_path = if ($null -ne $incidentLearnedStateContract) { [string]$incidentLearnedStateContract.internal_inspection_path } else { $null }
     incident_evidence_learned_state_inspection_sections = if ($null -ne $incidentLearnedStateContract) { @($incidentLearnedStateContract.inspection_sections) } else { @() }
     incident_evidence_learned_state_growth_summary_sections = if ($null -ne $incidentLearnedStateContract) { @($incidentLearnedStateContract.growth_summary_sections) } else { @() }
+    incident_evidence_deployment_automation_policy_owner = if ($null -ne $incidentDeployment) { [string]$incidentDeployment.deployment_automation_policy_owner } else { $null }
+    incident_evidence_deployment_primary_trigger_mode = if ($null -ne $incidentDeployment) { [string]$incidentDeployment.deployment_automation_baseline.primary_trigger_mode } else { $null }
     organizer_tool_stack_policy_owner = [string]$organizerToolStackContract.policy_owner
     organizer_tool_stack_readiness_state = [string]$organizerToolStackContract.readiness_state
     organizer_tool_stack_ready_operations = @($organizerToolStackContract.ready_operations)
@@ -1674,6 +1779,8 @@ $summary = @{
     incident_bundle_proactive_policy_owner = $incidentEvidenceBundleCheck.proactive_policy_owner
     incident_bundle_proactive_enabled = $incidentEvidenceBundleCheck.proactive_enabled
     incident_bundle_proactive_production_baseline_state = $incidentEvidenceBundleCheck.proactive_production_baseline_state
+    incident_bundle_deployment_automation_policy_owner = $incidentEvidenceBundleCheck.deployment_automation_policy_owner
+    incident_bundle_deployment_primary_trigger_mode = $incidentEvidenceBundleCheck.deployment_primary_trigger_mode
     incident_bundle_organizer_tool_stack_policy_owner = $incidentEvidenceBundleCheck.organizer_tool_stack_policy_owner
     incident_bundle_organizer_tool_stack_readiness_state = $incidentEvidenceBundleCheck.organizer_tool_stack_readiness_state
     incident_bundle_organizer_tool_stack_ready_operations = $incidentEvidenceBundleCheck.organizer_tool_stack_ready_operations
@@ -1693,6 +1800,10 @@ $summary = @{
     deployment_evidence_path = [string]$deploymentEvidenceCheck.path
     deployment_evidence_age_minutes = $deploymentEvidenceCheck.age_minutes
     deployment_evidence_status_code = $deploymentEvidenceCheck.status_code
+    deployment_evidence_policy_owner = [string]$deploymentEvidenceCheck.policy_owner
+    deployment_evidence_trigger_mode = [string]$deploymentEvidenceCheck.trigger_mode
+    deployment_evidence_trigger_class = [string]$deploymentEvidenceCheck.trigger_class
+    deployment_evidence_canonical_application_id = [string]$deploymentEvidenceCheck.canonical_application_id
 }
 
 $summary | ConvertTo-Json -Depth 6

@@ -373,10 +373,15 @@ Last updated: 2026-04-24
   automation now has one explicit baseline with the canonical app identity,
   intended primary automation path, bounded webhook/UI fallback path, and
   operator proof surfaces.
-- 2026-04-24: `PRJ-598` is now the first `READY` task; the next slice should
-  make deployment provenance machine-visible in release evidence so production
-  does not depend on manual operator inference about whether source automation
-  or fallback triggered the current deploy.
+- 2026-04-24: `PRJ-598` is complete: `/health.deployment`, deploy webhook
+  evidence, exported incident evidence, and release smoke now describe one
+  shared deployment-automation provenance contract, including the canonical
+  Coolify app identity and explicit `source_automation` versus
+  `webhook_manual_fallback|ui_manual_fallback` trigger posture.
+- 2026-04-24: `PRJ-599` is now the first `READY` task; the next slice should
+  synchronize runbook, planning truth, and repository context around the new
+  deployment provenance contract before organizer-tool credential activation
+  begins.
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.

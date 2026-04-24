@@ -67,6 +67,7 @@ def test_build_runtime_incident_evidence_tracks_stage_timings_and_policy_surface
         memory_retrieval={"retrieval_lifecycle_policy_owner": "retrieval_lifecycle_policy"},
         learned_state={"policy_owner": "learned_state_inspection_policy"},
         v1_readiness={"policy_owner": "v1_release_readiness_policy"},
+        deployment={"deployment_automation_policy_owner": "coolify_repo_deploy_automation"},
         attention={
             "attention_policy_owner": "durable_attention_inbox_policy",
             "coordination_mode": "durable_inbox",
@@ -84,6 +85,7 @@ def test_build_runtime_incident_evidence_tracks_stage_timings_and_policy_surface
         scheduler_external_owner_policy={"policy_owner": "external_scheduler_cadence_policy"},
         reflection_supervision={"policy_owner": "deferred_reflection_supervision_policy"},
         connectors_execution_baseline={"policy_owner": "connector_execution_baseline"},
+        connectors_organizer_tool_stack={"policy_owner": "production_organizer_tool_stack"},
         telegram_conversation_channel={"policy_owner": "telegram_conversation_reliability_telemetry"},
     )
 
@@ -100,12 +102,14 @@ def test_build_runtime_incident_evidence_tracks_stage_timings_and_policy_surface
             "memory_retrieval",
             "learned_state",
             "v1_readiness",
+            "deployment",
             "attention",
             "runtime_topology.attention_switch",
             "proactive",
             "scheduler.external_owner_policy",
             "reflection.supervision",
             "connectors.execution_baseline",
+            "connectors.organizer_tool_stack",
             "conversation_channels.telegram",
         ],
         "missing": [],

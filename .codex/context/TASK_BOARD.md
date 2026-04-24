@@ -223,18 +223,38 @@ Last updated: 2026-04-24
 - `PRJ-597` is complete: repo-driven Coolify deployment automation now has one
   explicit frozen baseline with canonical app identity, primary automation
   path, bounded fallback path, and operator proof surfaces.
-- `PRJ-598` is now the first `READY` slice because the next missing piece is
-  machine-visible evidence that distinguishes healthy source automation from
-  webhook/UI fallback.
+- `PRJ-598` is complete: `/health.deployment`, deploy webhook evidence,
+  exported incident evidence, and release smoke now share one machine-visible
+  deployment-automation posture with explicit provenance fields for primary
+  source automation versus webhook/UI fallback.
+- `PRJ-599` is now the first `READY` slice because the new deployment
+  provenance contract is implemented in runtime and smoke, but canonical docs
+  and planning/context truth still need to describe the same baseline.
 
 ## READY
 
-- [ ] PRJ-598 Add machine-visible release evidence for deployment automation posture
+- [ ] PRJ-599 Sync docs/context for the deployment-automation baseline
+  - Owner: Ops/Release
+  - Group: Coolify Deployment Automation Reliability
+  - Depends on: PRJ-598
+  - Priority: P1
+  - Status: READY
+  - Why now:
+    - runtime and release smoke now expose deployment provenance through one
+      shared contract, but the runbook and planning truth still need the same
+      vocabulary and proof path
+  - Done when:
+    - runbook, planning truth, and repository context describe the same
+      repo-driven Coolify automation posture and bounded fallback evidence path
+  - Validation:
+    - doc-and-context sync
+
+- [x] PRJ-598 Add machine-visible release evidence for deployment automation posture
   - Owner: Ops/Release
   - Group: Coolify Deployment Automation Reliability
   - Depends on: PRJ-597
   - Priority: P0
-  - Status: READY
+  - Status: DONE
   - Why now:
     - the repo now has a frozen deploy baseline, but production still lacks
       one machine-visible proof that distinguishes source-automation success
@@ -246,8 +266,17 @@ Last updated: 2026-04-24
       the primary automation path or from bounded fallback
     - smoke or deploy evidence can fail clearly when deployment provenance is
       missing or ambiguous
+  - Result:
+    - `/health.deployment` now exposes the shared deployment-automation owner,
+      canonical Coolify app identity, and primary/fallback trigger baseline
+    - deploy webhook evidence now records provenance fields
+      (`policy_owner`, `trigger_mode`, `trigger_class`,
+      `canonical_coolify_app`)
+    - exported incident evidence and release smoke now validate the same
+      deployment provenance contract instead of relying on manual operator
+      inference
   - Validation:
-    - targeted pytest coverage plus release-smoke or deploy-evidence checks
+    - `.\.venv\Scripts\python -m pytest -q tests/test_observability_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py` -> `115 passed`
 
 - [x] PRJ-575 Analyze post-v1 architecture gaps and seed the next execution queue
   - Owner: Planning Agent

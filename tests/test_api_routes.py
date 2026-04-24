@@ -2210,6 +2210,21 @@ def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() ->
     assert browser_baseline["ready"] is True
     assert browser_baseline["state"] == "provider_backed_ready"
     assert body["deployment"]["hosting_baseline"] == "coolify_medium_term_standard"
+    assert body["deployment"]["deployment_automation_policy_owner"] == "coolify_repo_deploy_automation"
+    assert body["deployment"]["canonical_coolify_app"] == {
+        "project_id": "icmgqml9uw3slzch9m9ok23z",
+        "environment_id": "qxooi9coxat272krzjx221fv",
+        "application_id": "jr1oehwlzl8tcn3h8gh2vvih",
+    }
+    assert body["deployment"]["deployment_automation_baseline"] == {
+        "primary_trigger_mode": "source_automation",
+        "fallback_trigger_modes": [
+            "webhook_manual_fallback",
+            "ui_manual_fallback",
+        ],
+        "provenance_evidence_state": "fallback_artifact_supported_primary_history_required",
+        "provenance_evidence_hint": "verify_coolify_history_and_attach_fallback_artifact_when_primary_automation_is_not_used",
+    }
 
 
 def test_health_endpoint_exposes_provider_backed_clickup_connector_readiness_when_configured() -> None:
@@ -3226,6 +3241,21 @@ def test_event_debug_endpoint_exposes_runtime_incident_evidence_export() -> None
     assert incident_evidence["policy_posture"]["memory_retrieval"]["retrieval_lifecycle_policy_owner"] == (
         "retrieval_lifecycle_policy"
     )
+    assert incident_evidence["policy_posture"]["deployment"]["deployment_automation_policy_owner"] == (
+        "coolify_repo_deploy_automation"
+    )
+    assert incident_evidence["policy_posture"]["deployment"]["canonical_coolify_app"]["application_id"] == (
+        "jr1oehwlzl8tcn3h8gh2vvih"
+    )
+    assert incident_evidence["policy_posture"]["deployment"]["deployment_automation_baseline"] == {
+        "primary_trigger_mode": "source_automation",
+        "fallback_trigger_modes": [
+            "webhook_manual_fallback",
+            "ui_manual_fallback",
+        ],
+        "provenance_evidence_state": "fallback_artifact_supported_primary_history_required",
+        "provenance_evidence_hint": "verify_coolify_history_and_attach_fallback_artifact_when_primary_automation_is_not_used",
+    }
     assert incident_evidence["policy_posture"]["attention"]["attention_policy_owner"] == (
         "durable_attention_inbox_policy"
     )
@@ -3463,15 +3493,16 @@ def test_health_endpoint_exposes_observability_export_policy_baseline() -> None:
         "bundle_entrypoint_path": "scripts/export_incident_evidence_bundle.py",
         "bundle_helper_available": True,
             "required_policy_posture_surfaces": [
-                "runtime_policy",
-                "memory_retrieval",
-                "learned_state",
-                "v1_readiness",
-                "attention",
-                "runtime_topology.attention_switch",
-                "proactive",
-                "scheduler.external_owner_policy",
-                "reflection.supervision",
+            "runtime_policy",
+            "memory_retrieval",
+            "learned_state",
+            "v1_readiness",
+            "deployment",
+            "attention",
+            "runtime_topology.attention_switch",
+            "proactive",
+            "scheduler.external_owner_policy",
+            "reflection.supervision",
                 "connectors.execution_baseline",
                 "connectors.organizer_tool_stack",
                 "conversation_channels.telegram",

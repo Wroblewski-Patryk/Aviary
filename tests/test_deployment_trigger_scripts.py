@@ -220,7 +220,22 @@ def stub_aion_server() -> _StubAionServer:
             "production_baseline_state": "external_scheduler_target_owner",
         },
         "deployment": {
+            "deployment_automation_policy_owner": "coolify_repo_deploy_automation",
             "hosting_baseline": "coolify_medium_term_standard",
+            "canonical_coolify_app": {
+                "project_id": "icmgqml9uw3slzch9m9ok23z",
+                "environment_id": "qxooi9coxat272krzjx221fv",
+                "application_id": "jr1oehwlzl8tcn3h8gh2vvih",
+            },
+            "deployment_automation_baseline": {
+                "primary_trigger_mode": "source_automation",
+                "fallback_trigger_modes": [
+                    "webhook_manual_fallback",
+                    "ui_manual_fallback",
+                ],
+                "provenance_evidence_state": "fallback_artifact_supported_primary_history_required",
+                "provenance_evidence_hint": "verify_coolify_history_and_attach_fallback_artifact_when_primary_automation_is_not_used",
+            },
             "deployment_trigger_slo": {
                 "delivery_success_rate_percent": 99.0,
                 "manual_redeploy_exception_rate_percent": 5.0,
@@ -364,6 +379,7 @@ def stub_aion_server() -> _StubAionServer:
                 "memory_retrieval",
                 "learned_state",
                 "v1_readiness",
+                "deployment",
                 "attention",
                 "runtime_topology.attention_switch",
                 "proactive",
@@ -420,6 +436,21 @@ def stub_aion_server() -> _StubAionServer:
                     "required_behavior_scenarios": V1_REQUIRED_BEHAVIOR_SCENARIOS,
                     "approved_tool_slices": V1_APPROVED_TOOL_SLICES,
                 },
+            "deployment": {
+                "deployment_automation_policy_owner": "coolify_repo_deploy_automation",
+                "canonical_coolify_app": {
+                    "project_id": "icmgqml9uw3slzch9m9ok23z",
+                    "environment_id": "qxooi9coxat272krzjx221fv",
+                    "application_id": "jr1oehwlzl8tcn3h8gh2vvih",
+                },
+                "deployment_automation_baseline": {
+                    "primary_trigger_mode": "source_automation",
+                    "fallback_trigger_modes": [
+                        "webhook_manual_fallback",
+                        "ui_manual_fallback",
+                    ],
+                },
+            },
             "attention": {
                 "attention_policy_owner": "durable_attention_inbox_policy",
                 "coordination_mode": "durable_inbox",
@@ -516,7 +547,15 @@ def _write_evidence(path: Path, *, minutes_ago: int = 0, ok: bool = True, status
     generated_at = datetime.now(timezone.utc) - timedelta(minutes=minutes_ago)
     payload = {
         "kind": "coolify_deploy_webhook_evidence",
+        "policy_owner": "coolify_repo_deploy_automation",
         "generated_at": generated_at.isoformat(),
+        "trigger_mode": "webhook_manual_fallback",
+        "trigger_class": "manual_fallback",
+        "canonical_coolify_app": {
+            "project_id": "icmgqml9uw3slzch9m9ok23z",
+            "environment_id": "qxooi9coxat272krzjx221fv",
+            "application_id": "jr1oehwlzl8tcn3h8gh2vvih",
+        },
         "triggered_at": generated_at.isoformat(),
         "finished_at": generated_at.isoformat(),
         "response": {
@@ -571,6 +610,7 @@ def _write_incident_bundle(
                 "memory_retrieval",
                 "learned_state",
                 "v1_readiness",
+                "deployment",
                 "attention",
                 "runtime_topology.attention_switch",
                 "proactive",
@@ -619,19 +659,34 @@ def _write_incident_bundle(
                 "planning_continuity_sections": LEARNED_STATE_PLANNING_CONTINUITY_SECTIONS,
                 "reflection_growth_signal_kinds": LEARNED_STATE_REFLECTION_GROWTH_SIGNAL_KINDS,
             },
-                "v1_readiness": {
-                    "policy_owner": "v1_release_readiness_policy",
-                    "product_stage": "v1_no_ui_life_assistant",
-                    "conversation_gate_state": "conversation_surface_ready",
-                    "learned_state_gate_state": "inspection_surface_ready",
-                    "required_behavior_scenarios": V1_REQUIRED_BEHAVIOR_SCENARIOS,
-                    "approved_tool_slices": V1_APPROVED_TOOL_SLICES,
+            "v1_readiness": {
+                "policy_owner": "v1_release_readiness_policy",
+                "product_stage": "v1_no_ui_life_assistant",
+                "conversation_gate_state": "conversation_surface_ready",
+                "learned_state_gate_state": "inspection_surface_ready",
+                "required_behavior_scenarios": V1_REQUIRED_BEHAVIOR_SCENARIOS,
+                "approved_tool_slices": V1_APPROVED_TOOL_SLICES,
+            },
+            "deployment": {
+                "deployment_automation_policy_owner": "coolify_repo_deploy_automation",
+                "canonical_coolify_app": {
+                    "project_id": "icmgqml9uw3slzch9m9ok23z",
+                    "environment_id": "qxooi9coxat272krzjx221fv",
+                    "application_id": "jr1oehwlzl8tcn3h8gh2vvih",
                 },
-                "attention": {
-                    "attention_policy_owner": "durable_attention_inbox_policy",
-                    "coordination_mode": "durable_inbox",
-                    "deployment_readiness": {
-                        "selected_coordination_mode": "durable_inbox",
+                "deployment_automation_baseline": {
+                    "primary_trigger_mode": "source_automation",
+                    "fallback_trigger_modes": [
+                        "webhook_manual_fallback",
+                        "ui_manual_fallback",
+                    ],
+                },
+            },
+            "attention": {
+                "attention_policy_owner": "durable_attention_inbox_policy",
+                "coordination_mode": "durable_inbox",
+                "deployment_readiness": {
+                    "selected_coordination_mode": "durable_inbox",
                         "contract_store_state": "repository_backed_contract_store_active",
                         "store_available": True,
                     },
@@ -782,6 +837,14 @@ def test_trigger_main_writes_success_evidence_file(monkeypatch, tmp_path: Path) 
     assert evidence["branch"] == "main"
     assert evidence["before_sha"] == "a" * 40
     assert evidence["after_sha"] == "b" * 40
+    assert evidence["policy_owner"] == "coolify_repo_deploy_automation"
+    assert evidence["trigger_mode"] == "webhook_manual_fallback"
+    assert evidence["trigger_class"] == "manual_fallback"
+    assert evidence["canonical_coolify_app"] == {
+        "project_id": "icmgqml9uw3slzch9m9ok23z",
+        "environment_id": "qxooi9coxat272krzjx221fv",
+        "application_id": "jr1oehwlzl8tcn3h8gh2vvih",
+    }
     assert evidence["response"] == {
         "ok": True,
         "status_code": 202,
@@ -819,6 +882,14 @@ def test_trigger_main_writes_failure_evidence_file_and_returns_non_zero(monkeypa
     evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
     assert exit_code == 1
     assert evidence["kind"] == "coolify_deploy_webhook_evidence"
+    assert evidence["policy_owner"] == "coolify_repo_deploy_automation"
+    assert evidence["trigger_mode"] == "webhook_manual_fallback"
+    assert evidence["trigger_class"] == "manual_fallback"
+    assert evidence["canonical_coolify_app"] == {
+        "project_id": "icmgqml9uw3slzch9m9ok23z",
+        "environment_id": "qxooi9coxat272krzjx221fv",
+        "application_id": "jr1oehwlzl8tcn3h8gh2vvih",
+    }
     assert evidence["response"] == {
         "ok": False,
         "status_code": 500,
@@ -860,6 +931,13 @@ def test_release_smoke_allows_optional_deployment_evidence_to_be_omitted(
     assert summary["proactive_production_baseline_ready"] is True
     assert summary["proactive_production_baseline_state"] == "external_scheduler_target_owner"
     assert summary["deployment_hosting_baseline"] == "coolify_medium_term_standard"
+    assert summary["deployment_automation_policy_owner"] == "coolify_repo_deploy_automation"
+    assert summary["deployment_primary_trigger_mode"] == "source_automation"
+    assert summary["deployment_fallback_trigger_modes"] == [
+        "webhook_manual_fallback",
+        "ui_manual_fallback",
+    ]
+    assert summary["deployment_canonical_application_id"] == "jr1oehwlzl8tcn3h8gh2vvih"
     assert summary["deployment_manual_fallback_exception_rate_percent"] == 5.0
     assert summary["scheduler_external_policy_owner"] == "external_scheduler_cadence_policy"
     assert summary["scheduler_external_maintenance_entrypoint"] == "scripts/run_maintenance_tick_once.py"
@@ -1026,6 +1104,10 @@ def test_release_smoke_verifies_fresh_successful_deployment_evidence(
     assert summary["deployment_evidence_status_code"] == 200
     assert isinstance(summary["deployment_evidence_age_minutes"], float)
     assert summary["deployment_evidence_age_minutes"] >= 0.0
+    assert summary["deployment_evidence_policy_owner"] == "coolify_repo_deploy_automation"
+    assert summary["deployment_evidence_trigger_mode"] == "webhook_manual_fallback"
+    assert summary["deployment_evidence_trigger_class"] == "manual_fallback"
+    assert summary["deployment_evidence_canonical_application_id"] == "jr1oehwlzl8tcn3h8gh2vvih"
 
 
 def test_release_smoke_validates_exported_incident_evidence_when_debug_mode_is_requested(
@@ -1066,6 +1148,10 @@ def test_release_smoke_validates_exported_incident_evidence_when_debug_mode_is_r
     assert summary["incident_evidence_proactive_production_baseline_state"] == (
         "external_scheduler_target_owner"
     )
+    assert summary["incident_evidence_deployment_automation_policy_owner"] == (
+        "coolify_repo_deploy_automation"
+    )
+    assert summary["incident_evidence_deployment_primary_trigger_mode"] == "source_automation"
     assert summary["incident_evidence_learned_state_policy_owner"] == "learned_state_inspection_policy"
     assert summary["incident_evidence_learned_state_internal_inspection_path"] == "/internal/state/inspect"
     assert summary["incident_evidence_learned_state_inspection_sections"] == LEARNED_STATE_INSPECTION_SECTIONS
@@ -1136,6 +1222,10 @@ def test_release_smoke_verifies_incident_evidence_bundle_when_bundle_path_is_pro
     assert summary["incident_bundle_proactive_production_baseline_state"] == (
         "external_scheduler_target_owner"
     )
+    assert summary["incident_bundle_deployment_automation_policy_owner"] == (
+        "coolify_repo_deploy_automation"
+    )
+    assert summary["incident_bundle_deployment_primary_trigger_mode"] == "source_automation"
     assert summary["incident_bundle_organizer_tool_stack_policy_owner"] == "production_organizer_tool_stack"
     assert summary["incident_bundle_organizer_tool_stack_readiness_state"] == "provider_credentials_missing"
     assert summary["incident_bundle_organizer_tool_stack_ready_operations"] == [

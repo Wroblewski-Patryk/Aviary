@@ -299,6 +299,7 @@ async def _incident_evidence_from_request(
     )
     learned_state = learned_state_policy_snapshot()
     role_skill_policy = role_skill_policy_snapshot()
+    deployment = deployment_policy_snapshot()
     return build_runtime_incident_evidence(
         trace_id=result.event.meta.trace_id,
         event_id=result.event.event_id,
@@ -313,6 +314,7 @@ async def _incident_evidence_from_request(
             learned_state=learned_state,
             role_skill_policy=role_skill_policy,
         ),
+        deployment=deployment,
         attention=attention_snapshot,
         runtime_topology_attention_switch=dict(runtime_topology.get("attention_switch", {})),
         proactive=proactive_runtime_policy_snapshot(

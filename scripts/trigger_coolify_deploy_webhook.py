@@ -13,6 +13,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from app.core.deployment_policy import deployment_policy_snapshot
+
 
 def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -216,6 +218,7 @@ def main() -> int:
 
     evidence = {
         "kind": "coolify_deploy_webhook_evidence",
+        "policy_owner": deployment_policy_snapshot()["deployment_automation_policy_owner"],
         "generated_at": finished_at,
         "webhook_url": str(args.webhook_url),
         "repository": repository,
@@ -223,6 +226,9 @@ def main() -> int:
         "before_sha": before_sha,
         "after_sha": after_sha,
         "pusher_name": str(args.pusher_name),
+        "trigger_mode": "webhook_manual_fallback",
+        "trigger_class": "manual_fallback",
+        "canonical_coolify_app": deployment_policy_snapshot()["canonical_coolify_app"],
         "triggered_at": triggered_at,
         "finished_at": finished_at,
         "response": {
