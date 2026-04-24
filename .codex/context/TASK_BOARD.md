@@ -568,6 +568,24 @@ Last updated: 2026-04-24
     - architecture/product/ops cross-review against canonical contracts and
       live organizer-stack health posture
 
+- [x] PRJ-627 Implement operator-facing provider activation and user-facing readiness summaries
+  - Owner: Backend Builder
+  - Group: Organizer-Tool Daily-Use Activation
+  - Depends on: PRJ-626
+  - Priority: P1
+  - Status: DONE
+  - Why now:
+    - the frozen daily-use organizer baseline needs a clearer runtime-visible
+      readiness summary so operators and future UI callers can tell whether
+      each workflow is truly ready for daily use
+  - Result:
+    - `/health.connectors.organizer_tool_stack` now exposes workflow-level
+      daily-use readiness for ClickUp, Google Calendar, and Google Drive, and
+      `/health.v1_readiness` reuses that same truth as a simpler product-stage
+      summary
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py` -> `87 passed`
+
 - [x] PRJ-611 Sync docs/context for the capability-catalog baseline
   - Owner: Product Docs Agent
   - Group: Capability Catalog And Future-UI Bootstrap

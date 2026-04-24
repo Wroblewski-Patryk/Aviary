@@ -297,6 +297,83 @@ def organizer_tool_stack_snapshot(settings) -> dict[str, object]:
         for provider_entry in activation_requirements.values()
         if not bool(provider_entry["ready"])
     ]
+    daily_use_workflows = {
+        "clickup_task_review_and_mutation": {
+            "provider": "clickup",
+            "workflow_kind": "task_review_and_mutation",
+            "approved_operations": [
+                "task_system.clickup_list_tasks",
+                "task_system.clickup_create_task",
+                "task_system.clickup_update_task",
+            ],
+            "daily_use_ready": bool(clickup_create.get("ready", False)),
+            "daily_use_state": (
+                "ready_for_daily_use_with_opt_in_and_confirmed_mutations"
+                if bool(clickup_create.get("ready", False))
+                else "blocked_missing_provider_credentials"
+            ),
+            "user_opt_in_required": True,
+            "mutation_confirmation_required": True,
+            "planning_boundary": "internal_tasks_and_goals_remain_primary",
+            "next_action": (
+                "ready_for_clickup_daily_use"
+                if bool(clickup_create.get("ready", False))
+                else "configure_clickup_api_token_and_clickup_list_id"
+            ),
+        },
+        "google_calendar_availability_inspection": {
+            "provider": "google_calendar",
+            "workflow_kind": "availability_inspection",
+            "approved_operations": [
+                "calendar.google_calendar_read_availability",
+            ],
+            "daily_use_ready": bool(calendar_read.get("ready", False)),
+            "daily_use_state": (
+                "ready_for_daily_use_with_opt_in"
+                if bool(calendar_read.get("ready", False))
+                else "blocked_missing_provider_credentials"
+            ),
+            "user_opt_in_required": True,
+            "mutation_confirmation_required": False,
+            "planning_boundary": "availability_evidence_only_no_calendar_management",
+            "next_action": (
+                "ready_for_google_calendar_daily_use"
+                if bool(calendar_read.get("ready", False))
+                else "configure_google_calendar_access_token_calendar_id_and_timezone"
+            ),
+        },
+        "google_drive_file_space_inspection": {
+            "provider": "google_drive",
+            "workflow_kind": "file_space_inspection",
+            "approved_operations": [
+                "cloud_drive.google_drive_list_files",
+            ],
+            "daily_use_ready": bool(drive_list.get("ready", False)),
+            "daily_use_state": (
+                "ready_for_daily_use_with_opt_in"
+                if bool(drive_list.get("ready", False))
+                else "blocked_missing_provider_credentials"
+            ),
+            "user_opt_in_required": True,
+            "mutation_confirmation_required": False,
+            "planning_boundary": "metadata_only_file_evidence_no_document_body_ingestion",
+            "next_action": (
+                "ready_for_google_drive_daily_use"
+                if bool(drive_list.get("ready", False))
+                else "configure_google_drive_access_token_and_folder_id"
+            ),
+        },
+    }
+    ready_daily_use_workflows = [
+        workflow_id
+        for workflow_id, workflow in daily_use_workflows.items()
+        if bool(workflow.get("daily_use_ready", False))
+    ]
+    blocked_daily_use_workflows = [
+        workflow_id
+        for workflow_id, workflow in daily_use_workflows.items()
+        if not bool(workflow.get("daily_use_ready", False))
+    ]
     return {
         "policy_owner": "production_organizer_tool_stack",
         "stack_name": "clickup_calendar_drive_first_stack",
@@ -326,6 +403,21 @@ def organizer_tool_stack_snapshot(settings) -> dict[str, object]:
             "organizer_tool_stack_ready_for_operator_acceptance"
             if not credential_gap_operations
             else "configure_clickup_google_calendar_and_google_drive_credentials_for_full_stack_readiness"
+        ),
+        "daily_use_workflows": daily_use_workflows,
+        "daily_use_ready_workflow_count": len(ready_daily_use_workflows),
+        "daily_use_total_workflow_count": len(daily_use_workflows),
+        "daily_use_ready_workflows": ready_daily_use_workflows,
+        "daily_use_blocked_workflows": blocked_daily_use_workflows,
+        "daily_use_state": (
+            "all_daily_use_workflows_ready"
+            if not blocked_daily_use_workflows
+            else "daily_use_workflows_blocked_by_provider_activation"
+        ),
+        "daily_use_hint": (
+            "organizer_workflows_ready_for_daily_use"
+            if not blocked_daily_use_workflows
+            else "finish_provider_activation_before_treating_organizer_stack_as_daily_use_ready"
         ),
         "activation_snapshot": {
             "policy_owner": "production_organizer_tool_activation",

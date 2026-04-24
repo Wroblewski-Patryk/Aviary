@@ -325,6 +325,7 @@ async def _incident_evidence_from_request(
             telegram_conversation_channel=telegram_conversation_channel,
             learned_state=learned_state,
             role_skill_policy=role_skill_policy,
+            organizer_tool_stack=organizer_tool_stack,
         ),
         deployment=deployment,
         attention=attention_snapshot,
@@ -905,13 +906,14 @@ async def health(request: Request) -> dict[str, Any]:
         webhook_secret_configured=bool(getattr(settings, "telegram_webhook_secret", "")),
     )
     learned_state = learned_state_policy_snapshot()
+    connectors = _connectors_snapshot_from_settings(settings)
     v1_readiness = v1_readiness_policy_snapshot(
         telegram_conversation_channel=telegram_channel,
         learned_state=learned_state,
         role_skill_policy=role_skill_policy,
+        organizer_tool_stack=connectors["organizer_tool_stack"],
     )
     api_readiness = api_readiness_policy_snapshot()
-    connectors = _connectors_snapshot_from_settings(settings)
     capability_catalog = capability_catalog_snapshot(
         api_readiness=api_readiness,
         learned_state=learned_state,

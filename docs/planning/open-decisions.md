@@ -228,9 +228,14 @@ Current execution note:
   - role or skill selection still does not imply organizer execution authority
   - internal planning remains primary while external organizer tools remain
     action-owned helpers
-- `PRJ-627` is now the next active slice:
-  - the next gap is to expose one runtime-visible daily-use organizer
-    acceptance posture for that frozen workflow set
+- `PRJ-627` is now complete:
+  - runtime now exposes one clearer daily-use organizer readiness summary per
+    workflow instead of only provider activation details
+  - `v1_readiness` now reflects that same organizer readiness truth in a more
+    product-facing form
+- `PRJ-628` is now the next active slice:
+  - the next gap is to prove the daily-use organizer baseline end to end
+    through release and behavior evidence
 - `PRJ-598` is complete in repo truth: deployment provenance is now
   machine-visible in `/health.deployment`, deploy webhook evidence, exported
   incident evidence, and release smoke.

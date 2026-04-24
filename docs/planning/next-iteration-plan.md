@@ -190,8 +190,12 @@ Queue update (2026-04-24):
   - ClickUp task review and mutation
   - Google Calendar availability inspection
   - Google Drive metadata-only file inspection
-- the next active slice is `PRJ-627`, which should turn that product baseline
-  into runtime-visible daily-use acceptance posture and evidence
+- `PRJ-627` is now complete.
+- `/health.connectors.organizer_tool_stack` and `/health.v1_readiness` now
+  expose the same workflow-level daily-use readiness posture instead of only
+  raw provider activation details
+- the next active slice is `PRJ-628`, which should add end-to-end release and
+  behavior proof for that daily-use organizer baseline
 
 - `PRJ-615` Add machine-visible repo-vs-production truth and deploy-parity evidence.
   - Result:

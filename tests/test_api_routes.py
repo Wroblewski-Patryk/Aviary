@@ -2567,6 +2567,29 @@ def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() ->
     assert "task_system.clickup_update_task" in body["v1_readiness"]["approved_tool_slices"]
     assert "calendar.google_calendar_read_availability" in body["v1_readiness"]["approved_tool_slices"]
     assert "cloud_drive.google_drive_list_files" in body["v1_readiness"]["approved_tool_slices"]
+    assert (
+        body["v1_readiness"]["organizer_daily_use_state"]
+        == "daily_use_workflows_blocked_by_provider_activation"
+    )
+    assert body["v1_readiness"]["organizer_daily_use_ready_workflow_count"] == 0
+    assert body["v1_readiness"]["organizer_daily_use_total_workflow_count"] == 3
+    assert body["v1_readiness"]["organizer_daily_use_ready_workflows"] == []
+    assert body["v1_readiness"]["organizer_daily_use_blocked_workflows"] == [
+        "clickup_task_review_and_mutation",
+        "google_calendar_availability_inspection",
+        "google_drive_file_space_inspection",
+    ]
+    assert (
+        body["v1_readiness"]["organizer_daily_use_hint"]
+        == "finish_provider_activation_before_treating_organizer_stack_as_daily_use_ready"
+    )
+    assert body["v1_readiness"]["organizer_daily_use_next_actions"] == [
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files",
+    ]
     assert body["planning_governance"]["goal_task_creation_posture"] == (
         "bounded_inferred_growth_from_repeated_execution_blockers_only"
     )
@@ -2654,6 +2677,63 @@ def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() ->
         organizer_stack["readiness_hint"]
         == "configure_clickup_google_calendar_and_google_drive_credentials_for_full_stack_readiness"
     )
+    assert organizer_stack["daily_use_ready_workflow_count"] == 0
+    assert organizer_stack["daily_use_total_workflow_count"] == 3
+    assert organizer_stack["daily_use_ready_workflows"] == []
+    assert organizer_stack["daily_use_blocked_workflows"] == [
+        "clickup_task_review_and_mutation",
+        "google_calendar_availability_inspection",
+        "google_drive_file_space_inspection",
+    ]
+    assert (
+        organizer_stack["daily_use_state"]
+        == "daily_use_workflows_blocked_by_provider_activation"
+    )
+    assert (
+        organizer_stack["daily_use_hint"]
+        == "finish_provider_activation_before_treating_organizer_stack_as_daily_use_ready"
+    )
+    assert organizer_stack["daily_use_workflows"]["clickup_task_review_and_mutation"] == {
+        "provider": "clickup",
+        "workflow_kind": "task_review_and_mutation",
+        "approved_operations": [
+            "task_system.clickup_list_tasks",
+            "task_system.clickup_create_task",
+            "task_system.clickup_update_task",
+        ],
+        "daily_use_ready": False,
+        "daily_use_state": "blocked_missing_provider_credentials",
+        "user_opt_in_required": True,
+        "mutation_confirmation_required": True,
+        "planning_boundary": "internal_tasks_and_goals_remain_primary",
+        "next_action": "configure_clickup_api_token_and_clickup_list_id",
+    }
+    assert organizer_stack["daily_use_workflows"]["google_calendar_availability_inspection"] == {
+        "provider": "google_calendar",
+        "workflow_kind": "availability_inspection",
+        "approved_operations": [
+            "calendar.google_calendar_read_availability",
+        ],
+        "daily_use_ready": False,
+        "daily_use_state": "blocked_missing_provider_credentials",
+        "user_opt_in_required": True,
+        "mutation_confirmation_required": False,
+        "planning_boundary": "availability_evidence_only_no_calendar_management",
+        "next_action": "configure_google_calendar_access_token_calendar_id_and_timezone",
+    }
+    assert organizer_stack["daily_use_workflows"]["google_drive_file_space_inspection"] == {
+        "provider": "google_drive",
+        "workflow_kind": "file_space_inspection",
+        "approved_operations": [
+            "cloud_drive.google_drive_list_files",
+        ],
+        "daily_use_ready": False,
+        "daily_use_state": "blocked_missing_provider_credentials",
+        "user_opt_in_required": True,
+        "mutation_confirmation_required": False,
+        "planning_boundary": "metadata_only_file_evidence_no_document_body_ingestion",
+        "next_action": "configure_google_drive_access_token_and_folder_id",
+    }
     activation = organizer_stack["activation_snapshot"]
     assert activation["policy_owner"] == "production_organizer_tool_activation"
     assert activation["provider_activation_total"] == 3
@@ -2744,6 +2824,17 @@ def test_health_endpoint_exposes_provider_backed_clickup_connector_readiness_whe
         "task_system.clickup_list_tasks",
         "task_system.clickup_update_task",
     ]
+    assert organizer_stack["daily_use_ready_workflow_count"] == 1
+    assert organizer_stack["daily_use_ready_workflows"] == ["clickup_task_review_and_mutation"]
+    assert organizer_stack["daily_use_blocked_workflows"] == [
+        "google_calendar_availability_inspection",
+        "google_drive_file_space_inspection",
+    ]
+    assert organizer_stack["daily_use_workflows"]["clickup_task_review_and_mutation"]["daily_use_ready"] is True
+    assert (
+        organizer_stack["daily_use_workflows"]["clickup_task_review_and_mutation"]["daily_use_state"]
+        == "ready_for_daily_use_with_opt_in_and_confirmed_mutations"
+    )
     assert organizer_stack["credential_gap_operations"] == [
         "calendar.google_calendar_read_availability",
         "cloud_drive.google_drive_list_files",
@@ -2777,6 +2868,23 @@ def test_health_endpoint_exposes_provider_backed_google_calendar_readiness_when_
     organizer_stack = body["connectors"]["organizer_tool_stack"]
     assert organizer_stack["provider_ready_operation_count"] == 1
     assert organizer_stack["ready_operations"] == ["calendar.google_calendar_read_availability"]
+    assert organizer_stack["daily_use_ready_workflow_count"] == 1
+    assert organizer_stack["daily_use_ready_workflows"] == [
+        "google_calendar_availability_inspection"
+    ]
+    assert organizer_stack["daily_use_blocked_workflows"] == [
+        "clickup_task_review_and_mutation",
+        "google_drive_file_space_inspection",
+    ]
+    assert organizer_stack["daily_use_workflows"]["google_calendar_availability_inspection"][
+        "daily_use_ready"
+    ] is True
+    assert (
+        organizer_stack["daily_use_workflows"]["google_calendar_availability_inspection"][
+            "daily_use_state"
+        ]
+        == "ready_for_daily_use_with_opt_in"
+    )
     assert organizer_stack["credential_gap_operations"] == [
         "task_system.clickup_create_task",
         "task_system.clickup_list_tasks",
@@ -2810,6 +2918,23 @@ def test_health_endpoint_exposes_provider_backed_google_drive_readiness_when_con
     organizer_stack = body["connectors"]["organizer_tool_stack"]
     assert organizer_stack["provider_ready_operation_count"] == 1
     assert organizer_stack["ready_operations"] == ["cloud_drive.google_drive_list_files"]
+    assert organizer_stack["daily_use_ready_workflow_count"] == 1
+    assert organizer_stack["daily_use_ready_workflows"] == [
+        "google_drive_file_space_inspection"
+    ]
+    assert organizer_stack["daily_use_blocked_workflows"] == [
+        "clickup_task_review_and_mutation",
+        "google_calendar_availability_inspection",
+    ]
+    assert organizer_stack["daily_use_workflows"]["google_drive_file_space_inspection"][
+        "daily_use_ready"
+    ] is True
+    assert (
+        organizer_stack["daily_use_workflows"]["google_drive_file_space_inspection"][
+            "daily_use_state"
+        ]
+        == "ready_for_daily_use_with_opt_in"
+    )
     assert organizer_stack["credential_gap_operations"] == [
         "task_system.clickup_create_task",
         "task_system.clickup_list_tasks",
@@ -2844,6 +2969,16 @@ def test_health_endpoint_exposes_ready_organizer_tool_stack_when_all_providers_a
     assert organizer_stack["credential_gap_operations"] == []
     assert organizer_stack["readiness_state"] == "provider_stack_ready"
     assert organizer_stack["readiness_hint"] == "organizer_tool_stack_ready_for_operator_acceptance"
+    assert organizer_stack["daily_use_ready_workflow_count"] == 3
+    assert organizer_stack["daily_use_total_workflow_count"] == 3
+    assert organizer_stack["daily_use_blocked_workflows"] == []
+    assert organizer_stack["daily_use_ready_workflows"] == [
+        "clickup_task_review_and_mutation",
+        "google_calendar_availability_inspection",
+        "google_drive_file_space_inspection",
+    ]
+    assert organizer_stack["daily_use_state"] == "all_daily_use_workflows_ready"
+    assert organizer_stack["daily_use_hint"] == "organizer_workflows_ready_for_daily_use"
     activation = organizer_stack["activation_snapshot"]
     assert activation["provider_activation_ready"] == 3
     assert activation["provider_activation_state"] == "all_providers_ready_for_operator_acceptance"

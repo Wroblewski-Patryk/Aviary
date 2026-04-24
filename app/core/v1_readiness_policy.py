@@ -32,10 +32,14 @@ def v1_readiness_policy_snapshot(
     telegram_conversation_channel: Mapping[str, Any],
     learned_state: Mapping[str, Any],
     role_skill_policy: Mapping[str, Any],
+    organizer_tool_stack: Mapping[str, Any],
 ) -> dict[str, object]:
     telegram_state = str(telegram_conversation_channel.get("round_trip_state", "") or "")
     learned_state_path = str(learned_state.get("internal_inspection_path", "") or "")
     work_partner_state = str(role_skill_policy.get("work_partner_role_state", "available") or "available")
+    organizer_daily_use_state = str(
+        organizer_tool_stack.get("daily_use_state", "daily_use_state_unknown") or "daily_use_state_unknown"
+    )
     return {
         "policy_owner": V1_READINESS_POLICY_OWNER,
         "product_stage": "v1_no_ui_life_assistant",
@@ -54,6 +58,26 @@ def v1_readiness_policy_snapshot(
         ),
         "approved_tool_slices": list(V1_APPROVED_TOOL_SLICES),
         "approved_tooling_state": "bounded_provider_slices_live",
+        "organizer_daily_use_state": organizer_daily_use_state,
+        "organizer_daily_use_ready_workflow_count": int(
+            organizer_tool_stack.get("daily_use_ready_workflow_count", 0) or 0
+        ),
+        "organizer_daily_use_total_workflow_count": int(
+            organizer_tool_stack.get("daily_use_total_workflow_count", 0) or 0
+        ),
+        "organizer_daily_use_ready_workflows": list(
+            organizer_tool_stack.get("daily_use_ready_workflows", []) or []
+        ),
+        "organizer_daily_use_blocked_workflows": list(
+            organizer_tool_stack.get("daily_use_blocked_workflows", []) or []
+        ),
+        "organizer_daily_use_hint": str(
+            organizer_tool_stack.get("daily_use_hint", "organizer_daily_use_hint_unknown")
+            or "organizer_daily_use_hint_unknown"
+        ),
+        "organizer_daily_use_next_actions": list(
+            organizer_tool_stack.get("credential_gap_operations", []) or []
+        ),
         "required_behavior_scenarios": list(V1_REQUIRED_BEHAVIOR_SCENARIOS),
         "work_partner_role_state": work_partner_state,
         "work_partner_boundary": str(

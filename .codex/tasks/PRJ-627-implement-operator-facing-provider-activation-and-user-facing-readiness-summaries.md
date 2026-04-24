@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-627
 - Title: Implement operator-facing provider activation and user-facing readiness summaries
-- Status: BACKLOG
+- Status: DONE
 - Owner: Backend Builder
 - Depends on: PRJ-626
 - Priority: P1
@@ -21,9 +21,9 @@ Expose a clearer daily-use readiness summary for organizer providers.
 - do not duplicate logic
 
 ## Definition of Done
-- [ ] Existing backend surfaces expose clearer provider activation posture for daily use.
-- [ ] Missing credentials, opt-in, and confirmation boundaries remain explicit.
-- [ ] Regression coverage pins the richer readiness summary.
+- [x] Existing backend surfaces expose clearer provider activation posture for daily use.
+- [x] Missing credentials, opt-in, and confirmation boundaries remain explicit.
+- [x] Regression coverage pins the richer readiness summary.
 
 ## Forbidden
 - new systems without approval
@@ -32,8 +32,8 @@ Expose a clearer daily-use readiness summary for organizer providers.
 - architecture changes without explicit approval
 
 ## Validation Evidence
-- Tests: targeted pytest coverage
-- Manual checks: `/health.connectors.organizer_tool_stack` and inspection/debug checks
+- Tests: `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py`
+- Manual checks: `/health.connectors.organizer_tool_stack` and `/health.v1_readiness` contract review against organizer daily-use baseline
 - Screenshots/logs:
 - High-risk checks: do not blur provider activation with automatic authorization or hidden execution
 
@@ -46,13 +46,13 @@ Expose a clearer daily-use readiness summary for organizer providers.
 - Follow-up architecture doc updates: runtime reality/testing/ops likely
 
 ## Review Checklist (mandatory)
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
 - [ ] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes
