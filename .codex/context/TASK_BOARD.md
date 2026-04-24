@@ -273,11 +273,36 @@ Last updated: 2026-04-24
   inspection, release smoke, and incident-evidence bundle validation now share
   one bounded backend capability-catalog contract, and the queue seeded
   through `PRJ-611` is complete.
-- no seeded `READY`, `BACKLOG`, or `FUTURE` slice remains after the
-  capability-catalog and future-UI bootstrap lane; the next slice should come
-  from fresh analysis rather than synthetic queue growth.
+- `PRJ-613` is complete: fresh analysis now seeds a final operational
+  `v1`-closure queue through `PRJ-633`.
+- the next queue intentionally targets the remaining product-to-production
+  gaps that still block everyday use:
+  - repo truth versus live production truth and deploy automation
+  - bounded website/search/browser workflows as real user-facing behavior
+  - durable role/skill/tool-authorization visibility for future UI/admin
+  - organizer-tool provider activation for actual daily use
+  - one final no-UI `v1` acceptance bundle for day-to-day conversation and
+    external-tool use
 
 ## READY
+
+- [ ] PRJ-614 Freeze the final operational V1-closure baseline
+  - Owner: Planning Agent
+  - Group: Production Truth And Deploy Automation Closure
+  - Depends on: PRJ-613
+  - Priority: P0
+  - Status: READY
+  - Why now:
+    - the repo already meets the no-UI `v1` contract on paper, but the user
+      still needs one explicit final closure baseline that distinguishes
+      healthy backend contracts from truly daily-usable production behavior
+  - Result:
+    - one explicit `v1` operational-closure contract records what must be
+      green in live production before the personality is treated as truly
+      ready for daily conversation, bounded web reading, and external-tool
+      onboarding
+  - Validation:
+    - architecture/product/ops cross-review against live production `/health`
 
 - [x] PRJ-611 Sync docs/context for the capability-catalog baseline
   - Owner: Product Docs Agent

@@ -7,6 +7,233 @@ This plan translates the repo analysis into an execution roadmap that brings the
 The goal is not to add more features first.
 The goal is to make the current AION runtime more correct, more inspectable, and easier to extend without architectural drift.
 
+## Planned On 2026-04-24 For Final Operational V1 Closure
+
+`PRJ-597..PRJ-611` closed the last broad post-`v1` visibility and introspection
+gaps. Fresh analysis now shows a narrower but more important target: make the
+existing personality feel truly daily-usable on production Telegram/API, with
+bounded internet reading and authorized external tools.
+
+### Fresh Operational Gap Snapshot
+
+Observed from canonical contracts, repository truth, and live production
+health:
+
+- the core runtime is healthy:
+  - Telegram round-trip is healthy
+  - durable attention is active
+  - reflection and cadence are externalized
+  - proactive is active
+  - retrieval is aligned
+- however, `v1` is still not fully "felt" as complete in daily use because:
+  - repo truth and live production truth can still drift after pushes
+  - Coolify auto-deploy is not yet a trusted primary path
+  - bounded web search/browser exists, but the user-facing website-reading
+    workflow is not yet frozen as a first-class production behavior baseline
+  - organizer tools are visible and bounded, but daily-use activation still
+    depends on provider-ready operator setup
+  - architecture now allows durable role presets, durable skill descriptions,
+    and per-user tool authorization records, but runtime has not yet turned
+    those into one fuller operator-facing catalog
+  - final `v1` acceptance should prove daily use end to end:
+    conversation, planning/follow-up, bounded internet reading, truthful
+    learning, and authorized tool use
+
+### New Queue
+
+The next queue is now seeded through `PRJ-633`.
+
+New groups:
+
+- `PRJ-614..PRJ-617` Production Truth And Deploy Automation Closure
+- `PRJ-618..PRJ-621` Live Web-Knowledge Workflow Activation
+- `PRJ-622..PRJ-625` Durable Role/Skill/Tool-Authorization Catalog
+- `PRJ-626..PRJ-629` Organizer-Tool Daily-Use Activation
+- `PRJ-630..PRJ-633` Final No-UI V1 Acceptance Closure
+
+Why this order:
+
+- production truth and deploy reliability come first, because the user should
+  not have to guess whether the personality they talk to is the one described
+  by repo truth
+- live web-knowledge workflows come next, because "check something on the
+  internet and tell me what you found" is one of the clearest product-facing
+  expectations now
+- durable role/skill/tool authorization catalog comes before broader tool
+  onboarding, so future UI/admin and operator flows consume one truthful
+  backend picture
+- organizer-tool daily-use activation follows once the capability and
+  authorization picture is clearer
+- final no-UI `v1` acceptance comes last, because it should summarize live
+  backend truth after deploy, website-reading, capability-catalog, and
+  organizer-tool lanes are actually settled
+
+### Group 99 - Production Truth And Deploy Automation Closure
+
+- `PRJ-614` Freeze the final operational V1-closure baseline.
+  - Result:
+    - one explicit contract records when no-UI `v1` should be treated as
+      daily-usable in live production rather than merely healthy in repo truth
+  - Validation:
+    - architecture/product/ops cross-review plus live production `/health`
+
+- `PRJ-615` Add machine-visible repo-vs-production truth and deploy-parity evidence.
+  - Result:
+    - production-facing surfaces and release evidence distinguish
+      repository-intended baseline from last-deployed baseline and fallback
+      deploy provenance
+  - Validation:
+    - targeted pytest coverage
+    - live release-smoke evidence
+
+- `PRJ-616` Harden the Coolify primary deploy path and explicit fallback workflow.
+  - Result:
+    - repo-driven deploy becomes the explicit primary operational path, with
+      bounded webhook/UI fallback and machine-visible proof that the fallback
+      was used
+  - Validation:
+    - targeted pytest coverage
+    - live deploy/release-smoke verification
+
+- `PRJ-617` Sync docs/context for production truth and deploy automation closure.
+  - Result:
+    - runbook, planning truth, and repository context align on how repo truth
+      becomes live production truth for day-to-day operation
+  - Validation:
+    - doc-and-context sync
+
+### Group 100 - Live Web-Knowledge Workflow Activation
+
+- `PRJ-618` Freeze the first live website-reading workflow baseline.
+  - Result:
+    - one explicit production contract defines the bounded user-facing workflow
+      "ask the personality to inspect a website or page and report back"
+  - Validation:
+    - architecture/product/runtime cross-review
+
+- `PRJ-619` Implement operator-visible website-reading readiness and guardrails.
+  - Result:
+    - backend truth exposes the selected search/browser provider posture,
+      allowed bounded page-read semantics, and operator-visible next actions or
+      blockers for live website reading
+  - Validation:
+    - targeted pytest coverage
+    - `/health.connectors` checks
+
+- `PRJ-620` Add behavior and release proof for live web-knowledge workflows.
+  - Result:
+    - behavior validation and release smoke prove that the personality can
+      search, read a bounded page, and answer without bypassing planning/action
+  - Validation:
+    - targeted pytest coverage
+    - behavior-validation and release-smoke evidence
+
+- `PRJ-621` Sync docs/context for live web-knowledge workflows.
+  - Result:
+    - runtime reality, testing guidance, ops notes, and planning truth all
+      describe the same bounded website-reading and web-knowledge baseline
+  - Validation:
+    - doc-and-context sync
+
+### Group 101 - Durable Role/Skill/Tool-Authorization Catalog
+
+- `PRJ-622` Freeze the durable capability-record baseline.
+  - Result:
+    - one explicit contract defines how durable role presets, skill
+      descriptions, and per-user tool authorizations should exist without
+      expanding the execution boundary
+  - Validation:
+    - architecture/product cross-review
+
+- `PRJ-623` Implement runtime-backed role, skill, and tool-authorization catalog surfaces.
+  - Result:
+    - backend surfaces expose a truthful catalog of approved role presets,
+      durable skill descriptions, and per-user tool authorization posture
+  - Validation:
+    - targeted pytest coverage
+    - internal inspection and `/health` checks
+
+- `PRJ-624` Add release and behavior evidence for capability-record truthfulness.
+  - Result:
+    - release and regression evidence prove the catalog shows what is merely
+      described, what is selectable, and what is actually authorized/executable
+  - Validation:
+    - targeted pytest coverage
+    - release-smoke or incident-evidence checks
+
+- `PRJ-625` Sync docs/context for the durable capability-record baseline.
+  - Result:
+    - canonical docs and repository context align on the truthful growth model
+      for roles, skills, and tool authorization
+  - Validation:
+    - doc-and-context sync
+
+### Group 102 - Organizer-Tool Daily-Use Activation
+
+- `PRJ-626` Freeze the daily-use organizer workflow baseline.
+  - Result:
+    - one explicit product contract defines the first real daily-use organizer
+      workflows for ClickUp, Google Calendar, and Google Drive
+  - Validation:
+    - architecture/product/ops cross-review
+
+- `PRJ-627` Implement operator-facing provider activation and user-facing readiness summaries.
+  - Result:
+    - backend surfaces expose a clearer daily-use activation picture for each
+      organizer provider, including opt-in, missing credentials, and next
+      actions
+  - Validation:
+    - targeted pytest coverage
+    - `/health.connectors.organizer_tool_stack` checks
+
+- `PRJ-628` Add end-to-end proof for organizer daily-use workflows.
+  - Result:
+    - behavior validation and release smoke prove the first practical organizer
+      flows such as task review/update, availability inspection, and file
+      listing in one shared daily-use baseline
+  - Validation:
+    - targeted pytest coverage
+    - behavior-validation and release-smoke evidence
+
+- `PRJ-629` Sync docs/context for organizer daily-use activation.
+  - Result:
+    - runtime reality, testing guidance, ops notes, and planning/context truth
+      describe the same organizer daily-use activation baseline
+  - Validation:
+    - doc-and-context sync
+
+### Group 103 - Final No-UI V1 Acceptance Closure
+
+- `PRJ-630` Freeze the final no-UI V1 daily-use acceptance bundle.
+  - Result:
+    - one explicit acceptance contract records what must be green before the
+      repo can honestly say "v1 is real for everyday use"
+  - Validation:
+    - product/runtime/ops cross-review
+
+- `PRJ-631` Add end-to-end daily-use scenarios for conversation, web reading, learning, and organizer posture.
+  - Result:
+    - scenario-level proof covers the main everyday use cases the user expects
+      from the personality on Telegram/API
+  - Validation:
+    - targeted pytest coverage
+    - behavior-validation evidence
+
+- `PRJ-632` Capture live production acceptance evidence for final V1 closure.
+  - Result:
+    - production release smoke and incident-evidence artifacts prove that the
+      live system matches the final no-UI `v1` acceptance contract
+  - Validation:
+    - live release-smoke and incident-evidence bundle checks
+
+- `PRJ-633` Sync docs/context for final no-UI V1 closure.
+  - Result:
+    - product docs, runtime reality, testing guidance, ops notes, planning
+      truth, and repository context all describe the same final no-UI `v1`
+      state
+  - Validation:
+    - doc-and-context sync
+
 ## Planned On 2026-04-24 After Organizer-Tool Production Readiness
 
 `PRJ-576..PRJ-595` closed the main architecture-to-production gaps for the

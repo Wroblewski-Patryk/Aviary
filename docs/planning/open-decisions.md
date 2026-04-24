@@ -4,6 +4,77 @@
 
 The current repo already works as an MVP slice, but several architecture-level docs describe systems that are not implemented yet. This file keeps the next real decisions visible and tied to the current codebase.
 
+## Final Operational V1 Closure Analysis (2026-04-24)
+
+Fresh comparison of canonical docs, repository truth, and live production
+health now shows that the remaining work is no longer "make the runtime
+exist". It is "make the personality truly daily-usable through Telegram/API
+with bounded external knowledge and organizer tools".
+
+1. production truth and deploy automation
+   - not yet fully resolved
+   - live production can be healthy, but repo truth and deployed truth can
+     still drift
+   - user-observed Coolify behavior still shows that auto-deploy is not yet a
+     trusted primary path
+   - the repo now needs one explicit final operator baseline for:
+     - which surfaces must match between repo and live production
+     - how deploy provenance is verified
+     - when manual redeploy remains an exception rather than routine behavior
+2. live web-knowledge workflows
+   - partially resolved
+   - bounded search/browser slices already exist and are behavior-proven at the
+     contract level
+   - but the repo still lacks one explicit production workflow baseline for:
+     - asking the personality to inspect a website
+     - reading bounded page content
+     - turning that into a useful answer
+     - optionally retaining bounded learned knowledge through the existing
+       action -> memory path
+3. durable role/skill/tool-authorization catalog
+   - partially resolved
+   - canonical architecture now allows durable role presets, durable skill
+     descriptions, and per-user tool authorization records
+   - backend capability catalog now exists, but runtime still lacks the fuller
+     operator-facing catalog of:
+     - approved role presets
+     - skill-description metadata
+     - per-user tool authorization posture
+     - what is merely described versus actually executable
+4. organizer-tool provider activation
+   - partially resolved
+   - organizer-tool stack and activation snapshot already exist
+   - the missing step is to make this stack feel production-real for the user:
+     - provider credentials and opt-in posture must be visible and actionable
+     - acceptance must cover actual daily-use flows, not only abstract provider
+       readiness
+5. final no-UI `v1` closure
+   - not yet explicitly resolved
+   - canonical `v1` is backend-first and no-UI, but still should feel like a
+     usable personality:
+     - stable conversation
+     - reminder/planning/follow-up continuity
+     - bounded internet reading
+     - live organizer/tool posture
+     - truthful learned-state and capability introspection
+
+Queue seeded from this analysis:
+
+- `PRJ-614..PRJ-617` Production Truth And Deploy Automation Closure
+- `PRJ-618..PRJ-621` Live Web-Knowledge Workflow Activation
+- `PRJ-622..PRJ-625` Durable Role/Skill/Tool-Authorization Catalog
+- `PRJ-626..PRJ-629` Organizer-Tool Daily-Use Activation
+- `PRJ-630..PRJ-633` Final No-UI V1 Acceptance Closure
+
+Current execution note:
+
+- `PRJ-613` is complete:
+  - the remaining queue is now explicitly about final operational `v1`
+    closure, not generic hardening
+  - the personality is already architecturally coherent, but the next slices
+    must close the remaining gap between healthy backend contracts and actual
+    daily use through Telegram/API plus authorized external reads/tools
+
 ## Post-V1 Tool Activation And Deployment Automation Analysis (2026-04-24)
 
 Fresh comparison of canonical docs, runtime reality, live production release

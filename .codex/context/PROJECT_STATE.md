@@ -9,7 +9,27 @@ Last updated: 2026-04-24
   structured pipeline, replies through API or Telegram, and learns lightweight
   user preferences over time
 - Commercial model: TBD
-- Current phase: no-UI V1 baseline achieved; post-v1 queues currently clear after capability-catalog bootstrap
+- Current phase: no-UI V1 baseline achieved in repo; final operational V1-closure queue now seeded for live tool onboarding and daily-use readiness
+- 2026-04-24: `PRJ-613` is complete: fresh analysis now reframes the remaining
+  work as final operational `v1` closure rather than another generic
+  post-`v1` hardening wave. The next queue is seeded through `PRJ-633` and
+  targets:
+  - production truth and deploy-automation closure
+  - live web-knowledge workflow activation
+  - durable role/skill/tool-authorization catalog runtime
+  - organizer-tool provider activation for daily use
+  - final daily-use acceptance proof for no-UI `v1`
+- 2026-04-24: the biggest remaining gap is no longer core cognition. It is the
+  distance between healthy backend contracts and a production setup where the
+  user can reliably talk to the personality, have it inspect bounded web
+  content, and use authorized external tools in everyday life.
+- 2026-04-24: architecture truth remains explicit for this lane:
+  - external reads may become durable learned knowledge only through the
+    existing action -> memory boundary
+  - skills may evolve as metadata and guidance, but not as self-modifying
+    executable tool logic
+  - work-partner remains a role of the same personality, not a separate agent
+    or persona
 - 2026-04-24: `PRJ-609..PRJ-611` are complete: `/health.capability_catalog`,
   internal `GET /internal/state/inspect?user_id=...`, release smoke, and
   incident-evidence bundle validation now share one bounded backend
