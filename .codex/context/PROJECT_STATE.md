@@ -19,6 +19,9 @@ Last updated: 2026-04-24
 - 2026-04-24: `PRJ-630` is complete: `/health.v1_readiness` now carries the
   final no-UI `v1` acceptance-bundle contract with named gate states and
   canonical runtime surfaces.
+- 2026-04-24: `PRJ-631` is complete: final `T18.1..T18.2` daily-use scenarios
+  now prove website-reading recall and organizer follow-up as part of the
+  no-UI `v1` acceptance bundle.
 - 2026-04-24: `PRJ-627` is complete: organizer-tool runtime truth now exposes
   workflow-level daily-use readiness, and `v1_readiness` reuses that same
   backend truth to summarize whether ClickUp task review and mutation, Google

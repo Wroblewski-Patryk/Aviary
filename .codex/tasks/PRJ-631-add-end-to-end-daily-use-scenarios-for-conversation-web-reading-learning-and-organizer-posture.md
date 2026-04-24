@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-631
 - Title: Add end-to-end daily-use scenarios for conversation, web reading, learning, and organizer posture
-- Status: BACKLOG
+- Status: DONE
 - Owner: QA/Test
 - Depends on: PRJ-630
 - Priority: P0
@@ -21,9 +21,9 @@ Add final end-to-end no-UI `v1` daily-use scenarios.
 - do not duplicate logic
 
 ## Definition of Done
-- [ ] Behavior validation covers final daily-use `v1` scenarios.
-- [ ] The scenarios include conversation, website reading, bounded learning reuse, and organizer help.
-- [ ] Evidence is suitable for final no-UI `v1` acceptance.
+- [x] Behavior validation covers final daily-use `v1` scenarios.
+- [x] The scenarios include conversation, website reading, bounded learning reuse, and organizer help.
+- [x] Evidence is suitable for final no-UI `v1` acceptance.
 
 ## Forbidden
 - new systems without approval
@@ -32,8 +32,8 @@ Add final end-to-end no-UI `v1` daily-use scenarios.
 - architecture changes without explicit approval
 
 ## Validation Evidence
-- Tests: targeted pytest coverage
-- Manual checks: behavior-validation evidence
+- Tests: `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py -k "tool_grounded_learning_scenarios or final_v1_daily_use_scenarios"` and `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_api_routes.py`
+- Manual checks: `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
 - Screenshots/logs:
 - High-risk checks: keep scenarios within approved provider/tool boundaries and truthful learning semantics
 
@@ -46,13 +46,13 @@ Add final end-to-end no-UI `v1` daily-use scenarios.
 - Follow-up architecture doc updates: testing guidance and possibly product docs
 
 ## Review Checklist (mandatory)
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
 - [ ] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes

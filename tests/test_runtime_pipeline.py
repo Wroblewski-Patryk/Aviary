@@ -6414,6 +6414,116 @@ async def test_runtime_behavior_tool_grounded_learning_scenarios() -> None:
     assert {result.status for result in results} == {"pass"}
 
 
+async def test_runtime_behavior_final_v1_daily_use_scenarios() -> None:
+    async def website_read_then_recall_scenario() -> BehaviorScenarioCheck:
+        memory = PersistingFakeMemoryRepository(recent_memory=[])
+        runtime = _build_behavior_runtime(
+            memory,
+            web_browser_client=FakeGenericHttpPageClient(),
+        )
+
+        read_result = await runtime.run(
+            _behavior_event(
+                event_id="evt-final-v1-daily-use-1",
+                trace_id="t-final-v1-daily-use-1",
+                user_id="daily-user",
+                text="Read page https://example.com/release-notes and explain the important changes.",
+            )
+        )
+        recall_result = await runtime.run(
+            _behavior_event(
+                event_id="evt-final-v1-daily-use-2",
+                trace_id="t-final-v1-daily-use-2",
+                user_id="daily-user",
+                text="What did you learn from that page earlier and what should I remember?",
+            )
+        )
+
+        recalled_kinds = {
+            str(item.get("kind", ""))
+            for item in (recall_result.system_debug.memory_bundle.semantic if recall_result.system_debug else [])
+        }
+        passed = (
+            bool(read_result.expression.message.strip())
+            and bool(recall_result.expression.message.strip())
+            and "generic_http_read_page" in read_result.action_result.actions
+            and "tool_grounded_page_knowledge" in recalled_kinds
+            and "generic_http_read_page" not in recall_result.action_result.actions
+        )
+        return BehaviorScenarioCheck(
+            passed=passed,
+            reason="final_v1_website_read_and_recall"
+            if passed
+            else "final_v1_website_read_and_recall_regression",
+            trace_id=recall_result.event.meta.trace_id,
+            notes=(
+                f"read_actions={','.join(read_result.action_result.actions)};"
+                f"recall_actions={','.join(recall_result.action_result.actions)};"
+                f"recalled={','.join(sorted(recalled_kinds))};"
+                f"message_present={bool(recall_result.expression.message.strip())}"
+            ),
+        )
+
+    async def organizer_review_then_focus_scenario() -> BehaviorScenarioCheck:
+        memory = PersistingFakeMemoryRepository(recent_memory=[])
+        runtime = _build_behavior_runtime(
+            memory,
+            clickup_task_client=FakeClickUpTaskClient(),
+        )
+
+        review_result = await runtime.run(
+            _behavior_event(
+                event_id="evt-final-v1-daily-use-3",
+                trace_id="t-final-v1-daily-use-3",
+                user_id="daily-user",
+                text="Be my work partner and list tasks in ClickUp for today's release work.",
+            )
+        )
+        followup_result = await runtime.run(
+            _behavior_event(
+                event_id="evt-final-v1-daily-use-4",
+                trace_id="t-final-v1-daily-use-4",
+                user_id="daily-user",
+                text="Based on that task list, what should I focus on first today?",
+            )
+        )
+
+        recalled_kinds = {
+            str(item.get("kind", ""))
+            for item in (followup_result.system_debug.memory_bundle.semantic if followup_result.system_debug else [])
+        }
+        passed = (
+            review_result.role.selected == "work_partner"
+            and bool(review_result.expression.message.strip())
+            and bool(followup_result.expression.message.strip())
+            and "clickup_list_tasks" in review_result.action_result.actions
+            and "tool_grounded_task_snapshot" in recalled_kinds
+            and "clickup_list_tasks" not in followup_result.action_result.actions
+        )
+        return BehaviorScenarioCheck(
+            passed=passed,
+            reason="final_v1_organizer_review_and_focus"
+            if passed
+            else "final_v1_organizer_review_and_focus_regression",
+            trace_id=followup_result.event.meta.trace_id,
+            notes=(
+                f"review_actions={','.join(review_result.action_result.actions)};"
+                f"followup_actions={','.join(followup_result.action_result.actions)};"
+                f"recalled={','.join(sorted(recalled_kinds))};"
+                f"message_present={bool(followup_result.expression.message.strip())}"
+            ),
+        )
+
+    results = await execute_behavior_scenarios(
+        [
+            BehaviorScenarioDefinition(test_id="T18.1", run=website_read_then_recall_scenario),
+            BehaviorScenarioDefinition(test_id="T18.2", run=organizer_review_then_focus_scenario),
+        ]
+    )
+    assert len(results) == 2
+    assert {result.status for result in results} == {"pass"}
+
+
 @pytest.mark.asyncio()
 async def test_runtime_behavior_capability_record_truthfulness_boundary() -> None:
     memory = PersistingFakeMemoryRepository(recent_memory=[])

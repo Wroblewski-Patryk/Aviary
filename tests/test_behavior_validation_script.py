@@ -49,6 +49,8 @@ VALID_V1_REQUIRED_BEHAVIOR_SCENARIOS = [
     "T16.3",
     "T17.1",
     "T17.2",
+    "T18.1",
+    "T18.2",
 ]
 VALID_V1_APPROVED_TOOL_SLICES = [
     "knowledge_search.search_web",

@@ -356,6 +356,8 @@ Current scenario anchors:
   conclusions
 - `T17.2`: organizer-tool snapshot recall through persisted tool-grounded
   conclusions
+- `T18.1`: final no-UI `v1` website-reading then recall flow
+- `T18.2`: final no-UI `v1` organizer review then follow-up focus flow
 - durable-attention burst-coalescing regression in API/runtime integration
   coverage, paired with:
   - `incident_evidence.policy_posture["attention"]`

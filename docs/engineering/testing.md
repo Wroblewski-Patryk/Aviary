@@ -285,6 +285,11 @@ For meaningful repo changes, leave behind:
     - explicit reminder phrasing creates a bounded internal task anchor
     - explicit reminder/check-in phrasing persists `proactive_opt_in` through
       the action-owned conclusion path
+    - `T18.1` website-reading plus later recall without re-running the page
+      read
+    - `T18.2` organizer review plus later focus guidance without re-running
+      the organizer read
+    - `v1_readiness.required_behavior_scenarios` includes `T18.1..T18.2`
     - explicit planning phrasing creates the bounded task anchor
       `plan tomorrow`
     - scenario-level proof that reminder capture, planning continuity, and

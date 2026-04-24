@@ -563,6 +563,8 @@ def _evaluate_incident_evidence_input(
             "T16.3",
             "T17.1",
             "T17.2",
+            "T18.1",
+            "T18.2",
         }.issubset(required_behavior_scenarios)
         and {
             "knowledge_search.search_web",

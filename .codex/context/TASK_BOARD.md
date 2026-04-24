@@ -639,6 +639,24 @@ Last updated: 2026-04-24
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py` -> `87 passed`
 
+- [x] PRJ-631 Add end-to-end daily-use scenarios for conversation, web reading, learning, and organizer posture
+  - Owner: QA/Test
+  - Group: Final No-UI V1 Acceptance Closure
+  - Depends on: PRJ-630
+  - Priority: P0
+  - Status: DONE
+  - Why now:
+    - the final acceptance bundle needs scenario-level proof that the
+      personality can actually help in a believable day-to-day no-UI flow, not
+      just expose many healthy runtime surfaces
+  - Result:
+    - final `T18.1..T18.2` scenarios now prove website-reading recall and
+      organizer follow-up inside the no-UI `v1` acceptance lane
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py -k "tool_grounded_learning_scenarios or final_v1_daily_use_scenarios"` -> `2 passed`
+    - `.\.venv\Scripts\python -m pytest -q tests/test_behavior_validation_script.py tests/test_api_routes.py` -> `108 passed`
+    - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json` -> `16 passed`
+
 - [x] PRJ-611 Sync docs/context for the capability-catalog baseline
   - Owner: Product Docs Agent
   - Group: Capability Catalog And Future-UI Bootstrap

@@ -243,9 +243,12 @@ Current execution note:
 - `PRJ-630` is now complete:
   - `/health.v1_readiness` now exposes the final no-UI `v1` acceptance bundle
     contract with named gate states and canonical runtime surfaces
-- `PRJ-631` is now the next active slice:
-  - the next gap is to prove that final acceptance bundle with scenario-level
-    daily-use behavior
+- `PRJ-631` is now complete:
+  - final `T18.1..T18.2` scenarios now prove website-reading recall and
+    organizer follow-up inside the no-UI `v1` acceptance lane
+- `PRJ-632` is now the next active slice:
+  - the next gap is to capture live production evidence for that final
+    acceptance contract
 - `PRJ-598` is complete in repo truth: deployment provenance is now
   machine-visible in `/health.deployment`, deploy webhook evidence, exported
   incident evidence, and release smoke.

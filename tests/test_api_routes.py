@@ -2565,6 +2565,8 @@ def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() ->
     assert "T16.3" in body["v1_readiness"]["required_behavior_scenarios"]
     assert "T17.1" in body["v1_readiness"]["required_behavior_scenarios"]
     assert "T17.2" in body["v1_readiness"]["required_behavior_scenarios"]
+    assert "T18.1" in body["v1_readiness"]["required_behavior_scenarios"]
+    assert "T18.2" in body["v1_readiness"]["required_behavior_scenarios"]
     assert "task_system.clickup_list_tasks" in body["v1_readiness"]["approved_tool_slices"]
     assert "task_system.clickup_update_task" in body["v1_readiness"]["approved_tool_slices"]
     assert "calendar.google_calendar_read_availability" in body["v1_readiness"]["approved_tool_slices"]
