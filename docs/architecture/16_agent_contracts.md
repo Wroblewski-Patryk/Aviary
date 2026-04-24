@@ -640,6 +640,27 @@ Rules:
    and must stay machine-visible through one shared
    `/health.connectors.organizer_tool_stack` acceptance surface plus matching
    smoke, incident-evidence, and behavior-validation proof.
+7. the production credential-activation baseline for that stack is explicit:
+   - ClickUp activation requires:
+     - `CLICKUP_API_TOKEN`
+     - `CLICKUP_LIST_ID`
+   - Google Calendar activation requires:
+     - `GOOGLE_CALENDAR_ACCESS_TOKEN`
+     - `GOOGLE_CALENDAR_CALENDAR_ID`
+     - `GOOGLE_CALENDAR_TIMEZONE`
+   - Google Drive activation requires:
+     - `GOOGLE_DRIVE_ACCESS_TOKEN`
+     - `GOOGLE_DRIVE_FOLDER_ID`
+   - read-only operations (`list_tasks`, `read_availability`, `list_files`)
+     still require explicit user opt-in before production use
+   - mutation operations (`create_task`, `update_task`) require both explicit
+     user opt-in and per-action confirmation
+8. partial provider configuration is valid bounded posture, but it is not the
+   same as full organizer-stack activation:
+   - `/health.connectors.organizer_tool_stack.readiness_state` remains the
+     shared operator summary for credential gaps across the frozen stack
+   - later activation surfaces may add actionable next steps, but they must
+     reuse this baseline rather than invent a second readiness model
 
 Machine-visible expectation:
 

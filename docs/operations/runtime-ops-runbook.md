@@ -1317,6 +1317,26 @@ Important health surfaces for current release checks:
     action may execute only bounded `list_files` typed intents through the
     Google Drive metadata adapter
   - `cloud_drive.other_operations` should remain policy-only after this slice
+ - production credential-activation baseline for the frozen organizer stack:
+   - ClickUp:
+     - requires `CLICKUP_API_TOKEN`
+     - requires `CLICKUP_LIST_ID`
+     - `list_tasks` remains `read_only` and opt-in gated
+     - `create_task` and `update_task` remain confirmation-bound mutations
+   - Google Calendar:
+     - requires `GOOGLE_CALENDAR_ACCESS_TOKEN`
+     - requires `GOOGLE_CALENDAR_CALENDAR_ID`
+     - requires `GOOGLE_CALENDAR_TIMEZONE`
+     - only bounded `read_availability` is eligible for provider-backed
+       execution in this lane
+   - Google Drive:
+     - requires `GOOGLE_DRIVE_ACCESS_TOKEN`
+     - requires `GOOGLE_DRIVE_FOLDER_ID`
+     - only bounded metadata `list_files` is eligible for provider-backed
+       execution in this lane
+ - partial provider readiness is valid bounded posture, but treat full
+   organizer-stack activation as incomplete until `/health.connectors.organizer_tool_stack`
+   no longer reports credential-gap operations for the frozen stack
   - `knowledge_search.search_web.state=provider_backed_ready` means the
     DuckDuckGo HTML adapter is live and action may execute bounded web-search
     intents without extra credentials

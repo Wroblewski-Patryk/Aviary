@@ -230,18 +230,37 @@ Last updated: 2026-04-24
 - `PRJ-599` is complete: runbook, planning truth, and repository context now
   describe the same repo-driven Coolify deployment-provenance baseline as the
   runtime and smoke contract.
-- `PRJ-600` is now the first `READY` slice because deployment provenance is
-  frozen end-to-end and the next live product gap is still organizer-tool
-  credential activation in production.
+- `PRJ-600` is complete: canonical contracts, env/config guidance, ops notes,
+  and planning/context truth now freeze one production credential-activation
+  baseline for the first organizer-tool stack.
+- `PRJ-601` is now the first `READY` slice because the baseline is frozen and
+  the next step is to expose one actionable operator-facing activation
+  snapshot instead of leaving activation spread across multiple health fields.
 
 ## READY
 
-- [ ] PRJ-600 Freeze the production credential-activation baseline for organizer tools
+- [ ] PRJ-601 Expose one actionable onboarding surface for organizer-tool activation
+  - Owner: Backend Builder
+  - Group: Organizer-Tool Credential Activation
+  - Depends on: PRJ-600
+  - Priority: P1
+  - Status: READY
+  - Why now:
+    - the credential baseline is now frozen, but operators still have to infer
+      activation steps from multiple provider-specific fields
+  - Done when:
+    - backend surfaces expose one operator-facing activation snapshot with
+      credential gaps, opt-in posture, and provider-specific next actions
+  - Validation:
+    - relevant pytest coverage
+    - `/health.connectors` checks
+
+- [x] PRJ-600 Freeze the production credential-activation baseline for organizer tools
   - Owner: Planner
   - Group: Organizer-Tool Credential Activation
   - Depends on: PRJ-599
   - Priority: P0
-  - Status: READY
+  - Status: DONE
   - Why now:
     - the first organizer-tool stack is already behavior-proven and
       machine-visible, but production still cannot treat it as truly live
@@ -250,6 +269,12 @@ Last updated: 2026-04-24
   - Done when:
     - one explicit operator baseline records required secrets, opt-ins, and
       provider-specific readiness checks for the first organizer-tool stack
+  - Result:
+    - the frozen production organizer stack now has one explicit credential
+      baseline for ClickUp, Google Calendar, and Google Drive
+    - read-only activation versus confirmation-bound mutation posture is now
+      explicit in canonical docs instead of being implied from scattered
+      runtime fields
   - Validation:
     - architecture/product/ops cross-review
 

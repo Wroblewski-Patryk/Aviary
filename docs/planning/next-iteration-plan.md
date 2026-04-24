@@ -125,9 +125,9 @@ Queue update (2026-04-24):
 
 - `PRJ-600` Freeze the production credential-activation baseline for organizer tools.
   - Result:
-    - one explicit operator baseline records which secrets, opt-ins, and
-      provider-specific readiness checks are required before the first
-      organizer-tool stack is considered live
+    - one explicit operator baseline records which secrets, opt-ins,
+      confirmation boundaries, and provider-specific readiness checks are
+      required before the first organizer-tool stack is considered live
   - Validation:
     - architecture/product/ops cross-review
 

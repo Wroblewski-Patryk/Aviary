@@ -382,10 +382,14 @@ Last updated: 2026-04-24
   context, and task records now describe the same deployment-provenance
   baseline and explicitly note that release smoke should fail fast on older
   production until the new contract is deployed.
-- 2026-04-24: `PRJ-600` is now the first `READY` task; the next slice should
-  freeze the production credential-activation baseline for the first
-  organizer-tool stack before trying to make ClickUp, Calendar, and Drive
-  fully live in production.
+- 2026-04-24: `PRJ-600` is complete: canonical contracts, env/config guidance,
+  runbook notes, planning docs, and repository context now freeze one explicit
+  production credential-activation baseline for the first organizer-tool stack
+  across ClickUp, Google Calendar, and Google Drive.
+- 2026-04-24: `PRJ-601` is now the first `READY` task; the next slice should
+  expose one actionable operator-facing activation snapshot so the frozen
+  organizer baseline is visible in one place instead of being reconstructed
+  across multiple provider-specific readiness fields.
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.

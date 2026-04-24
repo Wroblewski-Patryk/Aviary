@@ -58,8 +58,10 @@ Current execution note:
 - `PRJ-598` is complete in repo truth: deployment provenance is now
   machine-visible in `/health.deployment`, deploy webhook evidence, exported
   incident evidence, and release smoke.
-- `PRJ-599` is the current docs/context sync slice before organizer-tool
-  credential activation begins.
+- `PRJ-599` is complete as the docs/context sync slice for deployment
+  provenance.
+- `PRJ-600` is the current baseline-freezing slice before organizer-tool
+  credential activation surfaces become more actionable.
 
 ## Post-V1 Architecture Gap Analysis (2026-04-23)
 

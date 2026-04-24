@@ -177,6 +177,49 @@ Without both ClickUp fields present, `/health.connectors.execution_baseline`
 must remain in `credentials_missing` posture and task-system execution stays
 policy-only at runtime.
 
+`GOOGLE_CALENDAR_ACCESS_TOKEN`
+
+Optional provider credential for the bounded Google Calendar availability-read
+adapter.
+
+When this field, `GOOGLE_CALENDAR_CALENDAR_ID`, and
+`GOOGLE_CALENDAR_TIMEZONE` are all configured, action may execute
+`calendar:read_availability` for `provider_hint=google_calendar` through the
+provider-backed adapter.
+
+`GOOGLE_CALENDAR_CALENDAR_ID`
+
+Optional calendar target for the bounded Google Calendar availability-read
+adapter.
+
+`GOOGLE_CALENDAR_TIMEZONE`
+
+Optional timezone context for the bounded Google Calendar availability-read
+adapter.
+
+Without all three Google Calendar fields present,
+`/health.connectors.execution_baseline.calendar.google_calendar_read_availability`
+must remain in `credentials_missing` posture and calendar execution stays
+bounded to policy-only planning plus health visibility.
+
+`GOOGLE_DRIVE_ACCESS_TOKEN`
+
+Optional provider credential for the bounded Google Drive metadata-read
+adapter.
+
+When this field and `GOOGLE_DRIVE_FOLDER_ID` are both configured, action may
+execute `cloud_drive:list_files` for `provider_hint=google_drive` through the
+provider-backed metadata adapter.
+
+`GOOGLE_DRIVE_FOLDER_ID`
+
+Optional folder target for the bounded Google Drive metadata-read adapter.
+
+Without both Google Drive fields present,
+`/health.connectors.execution_baseline.cloud_drive.google_drive_list_files`
+must remain in `credentials_missing` posture and cloud-drive execution stays
+bounded to policy-only planning plus health visibility.
+
 `SEMANTIC_VECTOR_ENABLED`
 
 Controls whether semantic retrieval and embedding persistence use vector
