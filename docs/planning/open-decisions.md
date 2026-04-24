@@ -210,9 +210,16 @@ Current execution note:
     posture
   - authorization truth remains bound to existing connector permission gates
     and provider-readiness posture instead of becoming a second action engine
-- `PRJ-624` is now the next active slice:
-  - the next gap is to prove that this fuller catalog stays truthful through
-    release and regression evidence
+- `PRJ-624` is now complete:
+  - release smoke now validates the capability-record truth model and the
+    distinction between public read operations versus confirmation-gated
+    organizer mutations
+  - runtime behavior coverage now proves that selected work-partner skill
+    metadata does not imply unrelated organizer write authority during bounded
+    website-reading
+- `PRJ-625` is now the next active slice:
+  - the next gap is to synchronize canonical docs and context around this
+    durable capability-record truth model and evidence path
 - `PRJ-598` is complete in repo truth: deployment provenance is now
   machine-visible in `/health.deployment`, deploy webhook evidence, exported
   incident evidence, and release smoke.

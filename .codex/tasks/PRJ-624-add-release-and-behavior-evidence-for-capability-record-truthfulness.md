@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-624
 - Title: Add release and behavior evidence for capability-record truthfulness
-- Status: BACKLOG
+- Status: DONE
 - Owner: QA/Test
 - Depends on: PRJ-623
 - Priority: P1
@@ -21,9 +21,9 @@ Pin the capability-record truthfulness contract through regression and release e
 - do not duplicate logic
 
 ## Definition of Done
-- [ ] Regression coverage proves catalog truthfulness semantics.
-- [ ] Release or incident evidence consumes the same contract.
-- [ ] Behavior-level proof exists for at least one described-versus-authorized distinction.
+- [x] Regression coverage proves catalog truthfulness semantics.
+- [x] Release or incident evidence consumes the same contract.
+- [x] Behavior-level proof exists for at least one described-versus-authorized distinction.
 
 ## Forbidden
 - new systems without approval
@@ -32,8 +32,8 @@ Pin the capability-record truthfulness contract through regression and release e
 - architecture changes without explicit approval
 
 ## Validation Evidence
-- Tests: targeted pytest coverage
-- Manual checks: release-smoke or incident-evidence checks
+- Tests: `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_deployment_trigger_scripts.py` -> `131 passed`
+- Manual checks: release-smoke contract cross-review in `scripts/run_release_smoke.ps1` against capability-catalog truthfulness semantics
 - Screenshots/logs:
 - High-risk checks: avoid evidence that only checks shape while ignoring truthfulness semantics
 
@@ -46,13 +46,13 @@ Pin the capability-record truthfulness contract through regression and release e
 - Follow-up architecture doc updates: testing guidance and ops notes likely
 
 ## Review Checklist (mandatory)
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
 - [ ] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes

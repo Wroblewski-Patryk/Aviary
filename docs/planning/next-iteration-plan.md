@@ -174,8 +174,15 @@ Queue update (2026-04-24):
   - described skill records
   - runtime selection surfaces
   - authorization posture for approved tool families and operations
-- the next active slice is `PRJ-624`, which should add release and behavior
-  evidence proving this catalog stays truthful
+- `PRJ-624` is now complete.
+- release smoke and runtime behavior coverage now prove the same truthfulness
+  contract:
+  - described role and skill metadata remain distinct from authorized tool use
+  - public website-reading stays allowed without opt-in
+  - organizer mutations stay confirmation-gated instead of becoming implied by
+    selected skill metadata
+- the next active slice is `PRJ-625`, which should synchronize docs and
+  context for this durable capability-record baseline
 
 - `PRJ-615` Add machine-visible repo-vs-production truth and deploy-parity evidence.
   - Result:

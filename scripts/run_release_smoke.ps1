@@ -820,6 +820,18 @@ function Assert-CapabilityCatalogContract {
     if ([string]$CapabilityCatalog.authorization_authority -ne "unchanged_connector_permission_gates") {
         throw "${FailurePrefix}: unexpected capability_catalog authorization_authority '$($CapabilityCatalog.authorization_authority)'."
     }
+    if ($null -eq $CapabilityCatalog.capability_record_truth_model) {
+        throw "${FailurePrefix}: capability_catalog capability_record_truth_model is missing."
+    }
+    if ([string]$CapabilityCatalog.capability_record_truth_model.description_boundary -ne "durable_role_and_skill_metadata_plus_tool_authorization_records") {
+        throw "${FailurePrefix}: capability_catalog description boundary is unexpected."
+    }
+    if ([string]$CapabilityCatalog.capability_record_truth_model.selection_boundary -ne "runtime_turn_selection_and_selected_skill_metadata") {
+        throw "${FailurePrefix}: capability_catalog selection boundary is unexpected."
+    }
+    if ([string]$CapabilityCatalog.capability_record_truth_model.authorization_boundary -ne "connector_permission_gates_plus_provider_readiness") {
+        throw "${FailurePrefix}: capability_catalog authorization boundary is unexpected."
+    }
     if ($null -eq $CapabilityCatalog.source_surfaces) {
         throw "${FailurePrefix}: capability_catalog source_surfaces are missing."
     }
@@ -847,6 +859,15 @@ function Assert-CapabilityCatalogContract {
     if (-not [bool]$CapabilityCatalog.role_posture.work_partner_role_available) {
         throw "${FailurePrefix}: capability_catalog role_posture.work_partner_role_available is not true."
     }
+    $describedRoleNames = @($CapabilityCatalog.role_posture.described_role_names)
+    foreach ($requiredRole in @("friend", "advisor", "analyst", "executor", "mentor", "work_partner")) {
+        if ($describedRoleNames -notcontains $requiredRole) {
+            throw "${FailurePrefix}: capability_catalog role_posture is missing described role '$requiredRole'."
+        }
+    }
+    if ($describedRoleNames.Count -ne @($CapabilityCatalog.role_posture.selectable_role_names).Count) {
+        throw "${FailurePrefix}: capability_catalog role_posture described and selectable role counts drift."
+    }
     if ($null -eq $CapabilityCatalog.skill_catalog_posture) {
         throw "${FailurePrefix}: capability_catalog skill_catalog_posture is missing."
     }
@@ -862,13 +883,40 @@ function Assert-CapabilityCatalogContract {
     if ([int]$CapabilityCatalog.skill_catalog_posture.catalog_count -lt 1) {
         throw "${FailurePrefix}: capability_catalog skill_catalog_posture.catalog_count must be positive."
     }
+    $describedSkillIds = @($CapabilityCatalog.skill_catalog_posture.described_skill_ids)
+    foreach ($requiredSkillId in @("emotional_support", "structured_reasoning", "execution_planning", "memory_recall", "connector_boundary_review")) {
+        if ($describedSkillIds -notcontains $requiredSkillId) {
+            throw "${FailurePrefix}: capability_catalog skill_catalog_posture is missing described skill '$requiredSkillId'."
+        }
+    }
     if ($null -eq $CapabilityCatalog.tool_and_connector_posture) {
         throw "${FailurePrefix}: capability_catalog tool_and_connector_posture is missing."
+    }
+    if ([string]$CapabilityCatalog.tool_and_connector_posture.authorization_record_owner -ne "connector_execution_policy") {
+        throw "${FailurePrefix}: capability_catalog tool_and_connector_posture.authorization_record_owner is unexpected."
     }
     $actualApprovedToolFamilies = @($CapabilityCatalog.tool_and_connector_posture.approved_tool_families)
     foreach ($requiredToolFamily in $expectedApprovedToolFamilies) {
         if ($actualApprovedToolFamilies -notcontains $requiredToolFamily) {
             throw "${FailurePrefix}: capability_catalog tool_and_connector_posture is missing approved tool family '$requiredToolFamily'."
+        }
+    }
+    $actualSelectableToolFamilies = @($CapabilityCatalog.tool_and_connector_posture.selectable_tool_families)
+    foreach ($requiredSelectableToolFamily in $expectedApprovedToolFamilies) {
+        if ($actualSelectableToolFamilies -notcontains $requiredSelectableToolFamily) {
+            throw "${FailurePrefix}: capability_catalog tool_and_connector_posture is missing selectable tool family '$requiredSelectableToolFamily'."
+        }
+    }
+    $authorizedWithoutOptInOperations = @($CapabilityCatalog.tool_and_connector_posture.authorized_without_opt_in_operations)
+    foreach ($requiredAuthorizedRead in @("knowledge_search.search_web", "web_browser.read_page")) {
+        if ($authorizedWithoutOptInOperations -notcontains $requiredAuthorizedRead) {
+            throw "${FailurePrefix}: capability_catalog tool_and_connector_posture is missing authorized public read '$requiredAuthorizedRead'."
+        }
+    }
+    $authorizedWithConfirmationOperations = @($CapabilityCatalog.tool_and_connector_posture.authorized_with_confirmation_operations)
+    foreach ($requiredConfirmedOperation in @("task_system.create_task", "task_system.update_task")) {
+        if ($authorizedWithConfirmationOperations -notcontains $requiredConfirmedOperation) {
+            throw "${FailurePrefix}: capability_catalog tool_and_connector_posture is missing confirmation-gated operation '$requiredConfirmedOperation'."
         }
     }
     if ([string]$CapabilityCatalog.tool_and_connector_posture.execution_baseline_owner -ne "connector_execution_registry") {
@@ -905,8 +953,13 @@ function Assert-CapabilityCatalogContract {
     return @{
         policy_owner = [string]$CapabilityCatalog.policy_owner
         approved_tool_families = $actualApprovedToolFamilies
+        described_role_names = $describedRoleNames
+        described_skill_ids = $describedSkillIds
         skill_execution_boundary = [string]$CapabilityCatalog.skill_catalog_posture.skill_execution_boundary
         catalog_count = [int]$CapabilityCatalog.skill_catalog_posture.catalog_count
+        authorization_record_owner = [string]$CapabilityCatalog.tool_and_connector_posture.authorization_record_owner
+        authorized_without_opt_in_operations = $authorizedWithoutOptInOperations
+        authorized_with_confirmation_operations = $authorizedWithConfirmationOperations
         organizer_stack_state = [string]$CapabilityCatalog.tool_and_connector_posture.organizer_stack_state
         organizer_activation_state = [string]$CapabilityCatalog.tool_and_connector_posture.organizer_activation_state
         execution_baseline_owner = [string]$CapabilityCatalog.tool_and_connector_posture.execution_baseline_owner

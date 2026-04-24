@@ -6412,3 +6412,39 @@ async def test_runtime_behavior_tool_grounded_learning_scenarios() -> None:
     )
     assert len(results) == 2
     assert {result.status for result in results} == {"pass"}
+
+
+@pytest.mark.asyncio()
+async def test_runtime_behavior_capability_record_truthfulness_boundary() -> None:
+    memory = PersistingFakeMemoryRepository(recent_memory=[])
+    runtime = _build_behavior_runtime(
+        memory,
+        web_browser_client=FakeGenericHttpPageClient(),
+    )
+
+    result = await runtime.run(
+        Event(
+            event_id="evt-capability-record-truthfulness",
+            source="api",
+            subsource="http",
+            timestamp=datetime.now(timezone.utc),
+            payload={
+                "text": "Be my work partner and read page https://luckysparrow.ch so we can decide what is on that page.",
+            },
+            meta=EventMeta(user_id="u-1", trace_id="trace-capability-record-truthfulness"),
+        )
+    )
+
+    selected_skill_ids = [skill.skill_id for skill in result.role.selected_skills]
+    actions = list(result.action_result.actions)
+    intent_types = [intent.intent_type for intent in result.plan.domain_intents]
+
+    assert result.role.selected == "work_partner"
+    assert "structured_reasoning" in selected_skill_ids
+    assert "execution_planning" in selected_skill_ids
+    assert "connector_boundary_review" in selected_skill_ids
+    assert "web_browser_access_intent" in intent_types
+    assert "generic_http_read_page" in actions
+    assert "clickup_create_task" not in actions
+    assert "clickup_update_task" not in actions
+    assert "google_calendar_read_availability" not in actions

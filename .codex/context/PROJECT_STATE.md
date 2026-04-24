@@ -10,6 +10,11 @@ Last updated: 2026-04-24
   user preferences over time
 - Commercial model: TBD
 - Current phase: no-UI V1 baseline achieved in repo; final operational V1-closure queue now active for live tool onboarding and daily-use readiness
+- 2026-04-24: `PRJ-624` is complete: release-smoke and runtime behavior
+  coverage now prove that capability-record truth stays honest. The backend
+  catalog distinguishes described records from authorization posture, and a
+  work-partner website-reading turn now pins that selected skill metadata does
+  not imply unrelated organizer mutation authority.
 - 2026-04-24: `PRJ-623` is complete: backend `capability_catalog` now exposes
   the durable capability-record model through both `/health` and internal
   inspection. The catalog now distinguishes described role presets, described

@@ -510,6 +510,26 @@ Last updated: 2026-04-24
   - Validation:
     - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py` -> `87 passed`
 
+- [x] PRJ-624 Add release and behavior evidence for capability-record truthfulness
+  - Owner: QA/Test
+  - Group: Durable Role/Skill/Tool-Authorization Catalog
+  - Depends on: PRJ-623
+  - Priority: P1
+  - Status: DONE
+  - Why now:
+    - capability records are now visible in runtime, so release and behavior
+      evidence must prove the catalog does not blur described metadata into
+      executable or authorized authority
+  - Result:
+    - release smoke now checks the capability-record truth model, described
+      role and skill coverage, and the distinction between public read
+      operations and confirmation-gated organizer mutations
+    - runtime behavior coverage now proves that described work-partner skill
+      metadata does not magically grant unrelated organizer mutations during a
+      bounded website-reading turn
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_deployment_trigger_scripts.py` -> `131 passed`
+
 - [x] PRJ-611 Sync docs/context for the capability-catalog baseline
   - Owner: Product Docs Agent
   - Group: Capability Catalog And Future-UI Bootstrap
