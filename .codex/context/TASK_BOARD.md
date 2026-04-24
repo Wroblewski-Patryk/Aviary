@@ -549,6 +549,25 @@ Last updated: 2026-04-24
     - doc/context cross-review against `PRJ-622..PRJ-624` architecture,
       runtime, tests, and release-smoke contract
 
+- [x] PRJ-626 Freeze the daily-use organizer workflow baseline
+  - Owner: Planning Agent
+  - Group: Organizer-Tool Daily-Use Activation
+  - Depends on: PRJ-625
+  - Priority: P1
+  - Status: DONE
+  - Why now:
+    - the organizer stack is already machine-visible and technically frozen,
+      but `v1` still needs one explicit product baseline for what daily-use
+      organizer help really means in practice
+  - Result:
+    - one bounded daily-use organizer workflow set is now frozen for ClickUp
+      task review and mutation, Google Calendar availability inspection, and
+      Google Drive metadata-only file inspection, together with explicit
+      provider boundaries, opt-in posture, and confirmation posture
+  - Validation:
+    - architecture/product/ops cross-review against canonical contracts and
+      live organizer-stack health posture
+
 - [x] PRJ-611 Sync docs/context for the capability-catalog baseline
   - Owner: Product Docs Agent
   - Group: Capability Catalog And Future-UI Bootstrap

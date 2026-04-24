@@ -185,8 +185,13 @@ Queue update (2026-04-24):
 - architecture, runtime reality, testing guidance, ops notes, planning, and
   repository context now describe the same durable capability-record truth
   model and its proof path
-- the next active slice is `PRJ-626`, which should freeze the first real
-  daily-use organizer workflows for ClickUp, Google Calendar, and Google Drive
+- `PRJ-626` is now complete.
+- no-UI `v1` now has one explicit daily-use organizer baseline:
+  - ClickUp task review and mutation
+  - Google Calendar availability inspection
+  - Google Drive metadata-only file inspection
+- the next active slice is `PRJ-627`, which should turn that product baseline
+  into runtime-visible daily-use acceptance posture and evidence
 
 - `PRJ-615` Add machine-visible repo-vs-production truth and deploy-parity evidence.
   - Result:

@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-626
 - Title: Freeze the daily-use organizer workflow baseline
-- Status: BACKLOG
+- Status: DONE
 - Owner: Planning Agent
 - Depends on: PRJ-625
 - Priority: P1
@@ -21,9 +21,9 @@ Define the first daily-use organizer workflows for ClickUp, Calendar, and Drive.
 - do not duplicate logic
 
 ## Definition of Done
-- [ ] One explicit daily-use organizer workflow set is documented.
-- [ ] The workflow set names provider boundaries, opt-ins, and confirmation posture.
-- [ ] Planning docs and context agree on the same baseline.
+- [x] One explicit daily-use organizer workflow set is documented.
+- [x] The workflow set names provider boundaries, opt-ins, and confirmation posture.
+- [x] Planning docs and context agree on the same baseline.
 
 ## Forbidden
 - new systems without approval
@@ -33,7 +33,7 @@ Define the first daily-use organizer workflows for ClickUp, Calendar, and Drive.
 
 ## Validation Evidence
 - Tests:
-- Manual checks: architecture/product/ops cross-review
+- Manual checks: architecture/product/ops cross-review against `docs/architecture/10_future_vision.md`, `docs/architecture/16_agent_contracts.md`, organizer-tool runtime truth, and current `/health.connectors.organizer_tool_stack`
 - Screenshots/logs:
 - High-risk checks: keep internal planning state primary and external tools action-owned
 
@@ -46,13 +46,13 @@ Define the first daily-use organizer workflows for ClickUp, Calendar, and Drive.
 - Follow-up architecture doc updates: likely contracts/runtime reality if wording is tightened
 
 ## Review Checklist (mandatory)
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
 - [ ] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes

@@ -753,6 +753,62 @@ Rules:
    - later activation surfaces may add actionable next steps, but they must
      reuse this baseline rather than invent a second readiness model
 
+First practical daily-use organizer workflows for no-UI `v1`:
+
+1. task review and triage
+   - user-facing prompt examples:
+     - "show me my ClickUp tasks"
+     - "what is still blocked?"
+     - "what should I focus on today?"
+   - permitted external action posture:
+     - bounded `task_system:list_tasks`
+   - architectural rule:
+     - internal goals and tasks remain primary planning state; external task
+       reads may inform answers and planning, but do not replace internal
+       planning ownership
+2. task capture and status update
+   - user-facing prompt examples:
+     - "create a task for this"
+     - "mark that task as done"
+     - "move this to in progress"
+   - permitted external action posture:
+     - bounded `task_system:create_task`
+     - bounded `task_system:update_task`
+   - architectural rule:
+     - these remain confirmation-gated mutations even when the selected role
+       is `work_partner` or selected skills suggest execution support
+3. availability inspection
+   - user-facing prompt examples:
+     - "am I free tomorrow morning?"
+     - "check whether 15:00 looks open"
+   - permitted external action posture:
+     - bounded `calendar:read_availability`
+   - architectural rule:
+     - output stays availability evidence only and does not widen into event
+       creation or calendar-grade scheduling semantics
+4. file-space inspection
+   - user-facing prompt examples:
+     - "what files are in that folder?"
+     - "show me recent documents"
+   - permitted external action posture:
+     - bounded `cloud_drive:list_files`
+   - architectural rule:
+     - output stays metadata-only and does not widen into upload, edit, or
+       raw document-body ingestion
+
+Shared boundary rules for that daily-use baseline:
+
+1. provider boundaries stay explicit:
+   - ClickUp owns task review and mutation slices
+   - Google Calendar owns availability inspection
+   - Google Drive owns metadata-only file inspection
+2. opt-in remains required for organizer connector families
+3. confirmation remains required for organizer mutations
+4. role or skill selection must not imply organizer execution authority on its
+   own
+5. external organizer data supports internal planning state; it does not
+   become a second planning system
+
 ---
 
 ## Tool-Grounded Learning Capture Baseline

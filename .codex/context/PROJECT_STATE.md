@@ -10,6 +10,12 @@ Last updated: 2026-04-24
   user preferences over time
 - Commercial model: TBD
 - Current phase: no-UI V1 baseline achieved in repo; final operational V1-closure queue now active for live tool onboarding and daily-use readiness
+- 2026-04-24: `PRJ-626` is complete: no-UI `v1` now has one explicit
+  daily-use organizer workflow baseline. ClickUp task review and mutation,
+  Google Calendar availability inspection, and Google Drive metadata-only
+  file inspection are now described as real daily helpers around
+  internal-first planning state instead of just raw connector capability
+  slices.
 - 2026-04-24: `PRJ-625` is complete: runtime reality, testing guidance, ops
   notes, planning, and repository context now all describe the same durable
   capability-record truth model. Future callers no longer need to guess

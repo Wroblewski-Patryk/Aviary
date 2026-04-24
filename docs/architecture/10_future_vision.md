@@ -145,6 +145,43 @@ life-assistant workflows end to end through the existing runtime:
 dedicated reminder UI. Those richer surfaces belong to later tool-expansion or
 `v2` work.
 
+#### v1 daily-use organizer baseline
+
+No-UI `v1` daily use also includes one explicit bounded organizer baseline for
+the same personality:
+
+1. task review and triage
+   - the user may ask what is pending, blocked, or already tracked in the
+     linked task system
+   - runtime may use bounded `task_system:list_tasks` reads to compare
+     external task state with internal planning state
+   - internal goals and tasks remain the primary planning anchor; external
+     task reads are supporting evidence, not a second planner
+2. task capture or status update with confirmation
+   - the user may ask to add a task or update task status in the linked task
+     system
+   - runtime may use bounded `task_system:create_task` and
+     `task_system:update_task`
+   - those mutations remain explicit confirmation-gated actions rather than
+     implicit side effects of role or skill selection
+3. availability inspection
+   - the user may ask whether a time window looks free or busy
+   - runtime may use bounded `calendar:read_availability` to return
+     availability evidence only
+   - this does not yet imply calendar event creation, rescheduling, or full
+     calendar management
+4. file-space inspection
+   - the user may ask what files are present in the linked drive workspace
+   - runtime may use bounded `cloud_drive:list_files` to return metadata-only
+     file evidence
+   - this does not yet imply file upload, document editing, or document-body
+     ingestion
+
+This organizer baseline is intentionally practical but narrow: it supports
+daily organization and work review while preserving the architecture rule that
+external tools remain action-owned helpers around primary internal planning
+state.
+
 #### v1 release gate
 
 No-UI `v1` is release-ready only when one explicit backend acceptance bundle is

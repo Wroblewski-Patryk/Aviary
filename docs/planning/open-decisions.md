@@ -222,10 +222,15 @@ Current execution note:
     all describe the same capability-record truth model and evidence path
   - no remaining docs wording in this lane should imply self-modifying
     executable skill learning or hidden tool authorization
-- `PRJ-626` is now the next active slice:
-  - the next gap is to freeze the first practical daily-use organizer
-    workflows on top of the already visible ClickUp, Calendar, and Drive
-    production stack
+- `PRJ-626` is now complete:
+  - the first practical daily-use organizer workflows are now frozen on top of
+    the existing ClickUp, Calendar, and Drive production stack
+  - role or skill selection still does not imply organizer execution authority
+  - internal planning remains primary while external organizer tools remain
+    action-owned helpers
+- `PRJ-627` is now the next active slice:
+  - the next gap is to expose one runtime-visible daily-use organizer
+    acceptance posture for that frozen workflow set
 - `PRJ-598` is complete in repo truth: deployment provenance is now
   machine-visible in `/health.deployment`, deploy webhook evidence, exported
   incident evidence, and release smoke.
