@@ -20,6 +20,14 @@ Last updated: 2026-04-24
   - scheduler-owned reevaluation with foreground delivery through the existing
     action boundary
   - bounded autonomous research windows built on that same model
+- 2026-04-24: a delivery-specific follow-up queue is now seeded through
+  `PRJ-646` after the core time-aware-planning lane:
+  - Telegram length limits should be handled by channel-aware delivery
+    segmentation rather than expression-stage truncation
+  - Telegram formatting should be handled by explicit delivery formatting
+    policy rather than raw markdown leaking through by accident
+  - future UI/API channels must remain free to use different length and
+    formatting capabilities
 - 2026-04-24: `PRJ-628` is complete: organizer daily-use posture is now proven
   through release smoke, incident-evidence bundles, and behavior validation,
   not only through `/health` or provider-activation summaries.

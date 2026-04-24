@@ -119,6 +119,36 @@ Why this order:
   - Validation:
     - doc-and-context sync
 
+### Group 106 - Channel-Aware Delivery Adaptation
+
+- `PRJ-643` Freeze the channel-aware delivery constraint baseline.
+  - Result:
+    - one explicit delivery contract says channel limits and formatting belong
+      to action/delivery adaptation, not to planning or expression heuristics
+  - Validation:
+    - architecture and delivery-contract cross-review
+
+- `PRJ-644` Implement channel-aware Telegram segmentation and formatting.
+  - Result:
+    - Telegram delivery segments long content and applies explicit formatting
+      policy while leaving API and future UI free to use different limits
+  - Validation:
+    - targeted delivery-router and Telegram client coverage
+
+- `PRJ-645` Add proof for long-message and markdown delivery.
+  - Result:
+    - regression and release evidence prove long-message handling and markdown
+      adaptation instead of leaving them as transport accidents
+  - Validation:
+    - targeted pytest plus release-evidence checks
+
+- `PRJ-646` Sync docs for channel-aware delivery.
+  - Result:
+    - docs/context describe one shared channel-aware delivery contract without
+      implying Telegram limits for UI or API
+  - Validation:
+    - doc-and-context sync
+
 ## Planned On 2026-04-24 For Final Operational V1 Closure
 
 `PRJ-597..PRJ-611` closed the last broad post-`v1` visibility and introspection

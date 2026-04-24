@@ -37,6 +37,11 @@ Current execution note:
   - they assumed organizer daily-use should stay part of the final core `v1`
     gate
   - that is no longer the approved product boundary
+- a delivery-specific follow-up is now also seeded after `PRJ-642`:
+  - Telegram length and formatting problems should be fixed as a
+    channel-aware delivery concern
+  - future UI/API channels must remain free to declare different output limits
+    and rendering capabilities
 
 ## Final Operational V1 Closure Analysis (2026-04-24)
 

@@ -305,6 +305,12 @@ Last updated: 2026-04-24
   - scheduler-owned reevaluation with foreground delivery through the existing
     attention -> planning -> expression -> action path
   - bounded autonomous research windows built on the same future-work model
+- after that queue, a delivery-adaptation fix lane is seeded through
+  `PRJ-646`:
+  - Telegram length limits and formatting should be handled in the delivery
+    layer
+  - API and future UI channels must remain free to declare different limits
+    and rendering capabilities
 
 ## READY
 
@@ -372,6 +378,34 @@ Last updated: 2026-04-24
   - Group: Bounded Autonomous Research Windows
   - Depends on: PRJ-641
   - Priority: P1
+  - Status: BACKLOG
+
+- [ ] PRJ-643 Freeze the channel-aware delivery constraint baseline
+  - Owner: Planning Agent
+  - Group: Channel-Aware Delivery Adaptation
+  - Depends on: PRJ-642
+  - Priority: P1
+  - Status: BACKLOG
+
+- [ ] PRJ-644 Implement channel-aware Telegram segmentation and formatting
+  - Owner: Backend Builder
+  - Group: Channel-Aware Delivery Adaptation
+  - Depends on: PRJ-643
+  - Priority: P1
+  - Status: BACKLOG
+
+- [ ] PRJ-645 Add proof for long-message and markdown delivery
+  - Owner: QA/Test
+  - Group: Channel-Aware Delivery Adaptation
+  - Depends on: PRJ-644
+  - Priority: P1
+  - Status: BACKLOG
+
+- [ ] PRJ-646 Sync docs for channel-aware delivery
+  - Owner: Product Docs Agent
+  - Group: Channel-Aware Delivery Adaptation
+  - Depends on: PRJ-645
+  - Priority: P2
   - Status: BACKLOG
 
 - [x] PRJ-614 Freeze the final operational V1-closure baseline
