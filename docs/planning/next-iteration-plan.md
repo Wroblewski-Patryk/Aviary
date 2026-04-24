@@ -234,6 +234,19 @@ Queue update (2026-04-24):
   - Validation:
     - architecture/product cross-review
 
+Queue update (2026-04-24):
+
+- `PRJ-608` is complete: canonical architecture now freezes one bounded
+  backend capability-catalog contract composed from existing health,
+  internal-inspection, role-skill, and connector surfaces.
+- the capability catalog is explicitly:
+  - an aggregation contract over existing backend truth
+  - not a new execution owner
+  - not a second authorization matrix
+  - not a self-modifying skill-learning claim
+- the next active slice is `PRJ-609`, which should expose one bounded backend
+  capability-catalog payload from those already approved source surfaces.
+
 - `PRJ-609` Expose one backend capability catalog for future UI/admin callers.
   - Result:
     - backend inspection surfaces expose a bounded capability catalog instead

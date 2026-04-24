@@ -265,26 +265,48 @@ Last updated: 2026-04-24
 - `PRJ-607` is complete: runtime reality, testing guidance, ops notes,
   planning truth, and repository context now describe the same bounded
   tool-grounded learning baseline and its evidence path.
-- `PRJ-608` is now the first `READY` slice because tool-grounded learning is
-  fully live and proven, so the next smallest useful step is to freeze one
-  backend capability-catalog contract for future UI/admin work.
+- `PRJ-608` is complete: canonical architecture now freezes one bounded
+  backend capability-catalog contract composed from existing health, internal
+  inspection, role-skill, and connector surfaces instead of leaving future UI
+  or admin work to reconstruct capability truth client-side.
+- `PRJ-609` is now the first `READY` slice because the capability-catalog
+  target contract is frozen and the next smallest useful step is to expose one
+  bounded backend catalog payload from those already approved source surfaces.
 
 ## READY
 
-- [ ] PRJ-608 Freeze the backend capability-catalog baseline
+- [ ] PRJ-609 Expose one backend capability catalog for future UI/admin callers
+  - Owner: Backend Builder
+  - Group: Capability Catalog And Future-UI Bootstrap
+  - Depends on: PRJ-608
+  - Priority: P1
+  - Status: READY
+  - Why now:
+    - the capability-catalog contract is now frozen, so the backend can expose
+      one bounded catalog payload without inventing new source-of-truth rules
+  - Done when:
+    - backend inspection surfaces expose one capability catalog that composes
+      existing role, skill, tool, and provider-readiness truth for future
+      UI/admin callers
+  - Validation:
+    - relevant pytest coverage
+    - internal inspection checks
+
+- [x] PRJ-608 Freeze the backend capability-catalog baseline
   - Owner: Planner
   - Group: Capability Catalog And Future-UI Bootstrap
   - Depends on: PRJ-607
   - Priority: P1
-  - Status: READY
+  - Status: DONE
   - Why now:
     - deploy automation, organizer activation, and tool-grounded learning are
       now machine-visible, but future UI/admin work still lacks one combined
       backend contract for capability, role, skill, and provider readiness
-  - Done when:
-    - one explicit backend contract defines how future UI/admin callers should
-      inspect tools, role posture, metadata-only skills, and provider
-      readiness without reconstructing that truth client-side
+  - Result:
+    - canonical architecture now defines one bounded backend
+      capability-catalog contract that composes existing health,
+      internal-inspection, role-skill, and connector surfaces without creating
+      a parallel execution or authorization system
   - Validation:
     - architecture/product cross-review
 

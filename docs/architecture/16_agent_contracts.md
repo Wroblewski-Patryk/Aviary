@@ -903,6 +903,70 @@ Canonical introspection surfaces for that baseline:
 
 ---
 
+## Backend Capability Catalog Baseline
+
+Future UI or admin work must not reconstruct capability truth by stitching
+together ad hoc health fields client-side.
+
+Instead, one bounded backend capability catalog should compose already approved
+backend-owned truth.
+
+Canonical source surfaces for that catalog:
+
+1. `/health.api_readiness`
+   - declares the stable backend readiness owner and canonical source surfaces
+     for later UI consumers
+2. `/health.learned_state`
+   - exposes the learned-state and tool-grounded-learning posture used to
+     explain what the personality has learned
+3. `/health.role_skill`
+   - exposes the shared role/skill boundary owner, work-partner posture, and
+     metadata-only skill boundary
+4. `/health.connectors`
+   - exposes connector execution baseline, web-knowledge tooling posture,
+     organizer-tool activation snapshot, and provider-readiness truth
+5. internal inspection and current-turn debug surfaces
+   - `GET /internal/state/inspect?user_id=...`
+   - `system_debug.role`
+   - `system_debug.adaptive_state.selected_skills`
+   - `system_debug.plan`
+
+Canonical bounded sections for that catalog:
+
+1. role posture
+   - current role-selection boundary owner
+   - current role visibility for internal callers
+   - durable role-registry posture when registry-backed presets exist
+2. skill catalog posture
+   - metadata-only skill boundary owner
+   - registry-backed skill catalog visibility
+   - currently selected skill metadata for the turn or active plan
+3. tool and connector posture
+   - approved tool families
+   - approved organizer-tool stack
+   - provider activation and readiness posture
+   - confirmation or opt-in boundaries
+4. learned-state linkage
+   - learned-state posture and tool-grounded-learning posture may be referenced
+     so future UI can distinguish capability from learned knowledge
+
+Guardrails:
+
+1. the backend capability catalog is an aggregation contract over existing
+   backend truth, not a new execution owner
+2. the catalog must not become a second authorization matrix; connector
+   permission gates and action-owned policies remain canonical
+3. the catalog must not expose provider secrets, raw external payloads, or
+   self-modifying executable skill-learning claims
+4. role presets and skill catalog entries may be durable and inspectable, but
+   they remain descriptive metadata unless planning and action explicitly use
+   them through existing contracts
+5. future UI or admin work may consume one backend capability-catalog surface,
+   but the underlying source surfaces remain the canonical owners of truth
+   until an explicit architecture change says otherwise
+
+---
+
 ## Relation Retrieval Completion Baseline
 
 Relation memory remains a first-class adaptive influence family, but relation

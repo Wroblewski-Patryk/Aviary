@@ -296,6 +296,13 @@ Core observability expectations:
 - failure visibility
 - runtime policy visibility
 
+Future UI or admin surfaces should consume one backend capability catalog that
+is composed from existing health and internal-inspection truth.
+
+That catalog must summarize role posture, metadata-only skills, approved tool
+families, and provider readiness without creating a parallel execution or
+authorization system outside planning and action.
+
 Without observability, architecture degrades into guesswork.
 
 ---

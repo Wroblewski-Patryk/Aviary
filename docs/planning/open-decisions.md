@@ -86,8 +86,17 @@ Current execution note:
     tool-grounded learning contract
   - runtime reality, testing guidance, ops notes, and context truth now
     describe that proof path consistently
-- `PRJ-608` is now the current slice and should freeze one backend
-  capability-catalog contract for future UI/admin bootstrap.
+- `PRJ-608` is complete:
+  - canonical architecture now freezes one bounded backend
+    capability-catalog contract
+  - the catalog is defined as an aggregation over existing backend truth from
+    `/health.api_readiness`, `/health.learned_state`, `/health.role_skill`,
+    `/health.connectors`, and bounded internal inspection/debug surfaces
+  - the catalog is explicitly not a new execution owner, a second
+    authorization matrix, or a self-modifying skill-learning path
+- `PRJ-609` is now the current slice and should expose one backend
+  capability-catalog payload for future UI/admin bootstrap from those already
+  approved source surfaces.
 
 ## Post-V1 Architecture Gap Analysis (2026-04-23)
 
