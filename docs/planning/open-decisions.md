@@ -169,9 +169,24 @@ Current execution note:
     environment
   - live `runtime_build_revision` now matches local repo `HEAD` through release
     smoke
-- `PRJ-618` is now the next active slice:
-  - repo-driven deployment truth is repaired, so the next gap is bounded live
-    web-knowledge workflow activation rather than deploy automation ambiguity
+- `PRJ-618` is now complete:
+  - the first live website-reading workflow is frozen as one bounded no-UI
+    `v1` behavior baseline
+  - direct URL review and search-first review now share the same canonical
+    planning -> permission-gate -> action -> tool-grounded-learning path
+  - bounded outputs, safety boundaries, and durable-learning posture are now
+    explicit in architecture truth instead of inferred from existing tests
+- `PRJ-619` is now complete:
+  - backend truth now exposes one shared `website_reading_workflow` posture in
+    `/health.connectors.web_knowledge_tools` and runtime
+    `system_debug.adaptive_state["web_knowledge_tools"]`
+  - that posture distinguishes direct URL review, search-first page review,
+    selected provider path, bounded read semantics, and blockers or next
+    actions without introducing a new browsing subsystem
+- `PRJ-620` is now the next active slice:
+  - the workflow is now frozen and machine-visible, so the next gap is proof:
+    behavior validation and release evidence should pin the same website-reading
+    contract instead of relying on `/health` only
 - `PRJ-598` is complete in repo truth: deployment provenance is now
   machine-visible in `/health.deployment`, deploy webhook evidence, exported
   incident evidence, and release smoke.

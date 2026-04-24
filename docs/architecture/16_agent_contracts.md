@@ -604,25 +604,60 @@ Rules:
       - task id
       - task name preview
       - updated status or field summary
-19. these slices must not execute JavaScript, submit forms, follow login flows,
+19. the first live website-reading workflow is now frozen as one bounded
+    user-facing behavior baseline:
+    - direct page review when the turn already contains a URL
+    - search-first page review when the turn contains only a topic, site
+      hint, or "check this website" style request without a final URL
+    - canonical execution path remains:
+      - planning
+      - connector permission gates
+      - `knowledge_search:search_web` when discovery is needed
+      - `web_browser:read_page` for the selected page
+      - expression
+      - action-owned delivery
+20. bounded website-reading input, output, and safety boundaries are explicit:
+    - allowed bounded inputs:
+      - explicit URL
+      - explicit site or domain hint
+      - explicit answer focus for what should be checked on the page
+    - required bounded outputs:
+      - final page URL
+      - page title when available
+      - bounded summary of what was found
+      - source note pointing back to the page that was read
+      - explicit blocker or uncertainty note when the read was incomplete
+    - forbidden outputs:
+      - raw full-page dumps
+      - hidden-auth or paywall bypass claims
+      - implicit multi-page crawling presented as one page review
+      - pretending a page was read when the provider path was unavailable
+    - website reading stays read-only and must not click, submit, log in, or
+      mutate external systems as part of this workflow
+21. tool-grounded memory posture for website reading remains explicit:
+    - search or page-read evidence may become durable learned knowledge only
+      through the existing action-owned tool-grounded learning path
+    - durable capture must stay bounded to summary-level semantic conclusions,
+      not raw provider payloads or raw HTML persistence
+22. these slices must not execute JavaScript, submit forms, follow login flows,
     widen memory retrieval ownership, or expose raw provider payloads beyond
     the bounded evidence contract
-20. the live execution path for these slices remains unchanged architecturally:
+23. the live execution path for these slices remains unchanged architecturally:
     - role and selected skills may shape planning posture
     - planning must emit explicit typed intents
     - permission gates and execution envelopes remain authoritative
     - action remains the only provider-call owner
-21. behavior validation for this lane should prove the live bounded slices as:
+24. behavior validation for this lane should prove the live bounded slices as:
     - `T14.1` analyst-driven web search via `duckduckgo_html`
     - `T14.2` analyst-driven page read via `generic_http`
     - `T14.3` executor-aligned ClickUp task update through the action layer
-22. user authorization remains the owner of tool activation:
+25. user authorization remains the owner of tool activation:
     - a tool family or provider path may be available only when the user has
       enabled it through the approved authorization surface
     - `v1` may keep that activation backend-managed for the single-user
       baseline
     - later UI may manage the same per-user authorization records directly
-23. user authorization does not change secret ownership:
+26. user authorization does not change secret ownership:
     - raw provider credentials remain external configuration unless a later
       credential-storage contract is approved explicitly
     - durable authorization records exist to express consent, readiness, and

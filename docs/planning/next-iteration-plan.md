@@ -128,8 +128,28 @@ Queue update (2026-04-24):
     environment
   - live `runtime_build_revision` now matches local repo `HEAD` through release
     smoke
-- the next active slice is `PRJ-618`, which can now build bounded live
-  web-reading workflows on top of a repaired repo-driven deployment baseline
+- `PRJ-618` is now complete.
+- the first live website-reading workflow is now frozen as one bounded
+  no-UI `v1` behavior baseline:
+  - direct page review when the user already provides a URL
+  - search-first page review when the user provides only a topic or site hint
+  - bounded output limited to source-backed page summary rather than raw page
+    dumps or unbounded crawling
+  - durable learning still goes only through the existing action-owned
+    tool-grounded learning path
+- `PRJ-619` is now complete.
+- backend truth now exposes one shared `website_reading_workflow` contract
+  through:
+  - `/health.connectors.web_knowledge_tools`
+  - runtime `system_debug.adaptive_state["web_knowledge_tools"]`
+- that contract now includes:
+  - direct URL review readiness
+  - search-first review readiness
+  - selected provider path
+  - bounded read semantics
+  - blockers and next actions
+- the next active slice is `PRJ-620`, which should prove the same contract
+  through behavior validation and release evidence
 
 - `PRJ-615` Add machine-visible repo-vs-production truth and deploy-parity evidence.
   - Result:

@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-619
 - Title: Implement operator-visible website-reading readiness and guardrails
-- Status: BACKLOG
+- Status: DONE
 - Owner: Backend Builder
 - Depends on: PRJ-618
 - Priority: P0
@@ -21,9 +21,9 @@ Expose one truthful readiness and guardrail surface for website reading.
 - do not duplicate logic
 
 ## Definition of Done
-- [ ] Existing health/debug surfaces expose website-reading readiness and blocker posture.
-- [ ] The same surfaces encode bounded read semantics and allowed provider path.
-- [ ] Regression coverage pins the new guardrail contract.
+- [x] Existing health/debug surfaces expose website-reading readiness and blocker posture.
+- [x] The same surfaces encode bounded read semantics and allowed provider path.
+- [x] Regression coverage pins the new guardrail contract.
 
 ## Forbidden
 - new systems without approval
@@ -32,7 +32,7 @@ Expose one truthful readiness and guardrail surface for website reading.
 - architecture changes without explicit approval
 
 ## Validation Evidence
-- Tests: targeted pytest coverage for API/runtime/deployment scripts as needed
+- Tests: `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_pipeline.py` -> `187 passed`
 - Manual checks: `/health.connectors` plus internal inspection/debug checks
 - Screenshots/logs:
 - High-risk checks: do not add a second browser/search subsystem outside connector/action ownership
@@ -46,14 +46,30 @@ Expose one truthful readiness and guardrail surface for website reading.
 - Follow-up architecture doc updates: runtime reality/testing/ops if visibility widens
 
 ## Review Checklist (mandatory)
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
-- [ ] Learning journal was updated if a recurring pitfall was confirmed.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
+- [x] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes
 The operator should be able to tell whether "read my site" is available, bounded, and safe.
+
+Completion notes:
+
+- `/health.connectors.web_knowledge_tools` now exposes
+  `website_reading_workflow`
+- `system_debug.adaptive_state["web_knowledge_tools"]` exposes the same
+  readiness or blocker contract for turn-level traces
+- the workflow now reports:
+  - direct URL review availability
+  - search-first review availability
+  - allowed entry modes
+  - bounded read semantics
+  - selected provider path
+  - blockers and next actions
+- next slice `PRJ-620` should prove the same contract through behavior and
+  release evidence

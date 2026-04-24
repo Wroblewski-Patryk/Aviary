@@ -127,6 +127,19 @@ life-assistant workflows end to end through the existing runtime:
 4. reflection-backed continuity over time
    - memory and reflection outputs must influence later reminder, planning, and
      check-in turns
+5. bounded website reading
+   - explicit user phrasing such as "check this website", "read this page", or
+     "find information on this site" may activate the existing bounded
+     `knowledge_search -> web_browser -> action` path
+   - if the user already provides a URL, the runtime may go straight to bounded
+     page reading without inventing a separate browsing subsystem
+   - if the user provides only a topic or site hint, the runtime may search
+     first and then inspect a selected page through the same action-owned
+     boundary
+   - the answer must stay bounded to useful page-level evidence and summary,
+     not raw page dumps, hidden-auth bypasses, or multi-page crawling
+   - any durable learning from that read must still go through the existing
+     tool-grounded action -> memory path
 
 `v1` does not require full calendar-grade scheduling, due-date parsing, or a
 dedicated reminder UI. Those richer surfaces belong to later tool-expansion or
@@ -145,8 +158,8 @@ green across:
    - backend inspection surfaces must expose what the personality learned,
      selected, and planned
 4. approved tooling posture
-   - bounded search, browser, organization tools, and work-partner posture
-     must remain machine-visible and behavior-validated
+   - bounded search, browser, website-reading, organization tools, and
+     work-partner posture must remain machine-visible and behavior-validated
 
 That acceptance bundle belongs to backend runtime truth, incident evidence,
 release smoke, and behavior validation. It does not require a dedicated UI.

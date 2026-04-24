@@ -2326,6 +2326,24 @@ def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() ->
         body["connectors"]["web_knowledge_tools"]["provider_execution_posture"]
         == "first_bounded_provider_slices_selected"
     )
+    website_reading = body["connectors"]["web_knowledge_tools"]["website_reading_workflow"]
+    assert website_reading["policy_owner"] == "website_reading_workflow_policy"
+    assert website_reading["workflow_state"] == "ready_for_direct_and_search_first_review"
+    assert website_reading["direct_url_review_available"] is True
+    assert website_reading["search_then_page_review_available"] is True
+    assert website_reading["allowed_entry_modes"] == [
+        "direct_url_review",
+        "search_then_page_review",
+    ]
+    assert website_reading["selected_provider_path"] == {
+        "search_provider_hint": "duckduckgo_html",
+        "page_read_provider_hint": "generic_http",
+    }
+    assert website_reading["memory_capture_boundary"] == "tool_grounded_summary_only_via_action_then_memory"
+    assert "single_page_read_only" in website_reading["bounded_read_semantics"]
+    assert "no_login_or_form_submission" in website_reading["bounded_read_semantics"]
+    assert website_reading["blockers"] == []
+    assert website_reading["next_actions"] == []
     assert body["connectors"]["execution_baseline"]["task_system"]["clickup_create_task"]["ready"] is False
     assert (
         body["connectors"]["execution_baseline"]["task_system"]["clickup_create_task"]["state"]

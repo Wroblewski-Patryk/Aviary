@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-620
 - Title: Add behavior and release proof for live web-knowledge workflows
-- Status: BACKLOG
+- Status: READY
 - Owner: QA/Test
 - Depends on: PRJ-619
 - Priority: P0

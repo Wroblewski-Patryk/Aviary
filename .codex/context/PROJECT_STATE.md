@@ -10,6 +10,16 @@ Last updated: 2026-04-24
   user preferences over time
 - Commercial model: TBD
 - Current phase: no-UI V1 baseline achieved in repo; final operational V1-closure queue now active for live tool onboarding and daily-use readiness
+- 2026-04-24: `PRJ-619` is complete: `/health.connectors.web_knowledge_tools`
+  and runtime `system_debug.adaptive_state["web_knowledge_tools"]` now expose
+  one bounded `website_reading_workflow` contract with selected provider path,
+  direct-versus-search-first readiness, bounded read semantics, and
+  operator-visible blockers or next actions.
+- 2026-04-24: `PRJ-618` is complete: the first live website-reading workflow
+  is now frozen as an explicit no-UI `v1` product contract. The personality
+  may either read a provided URL directly or search first and then inspect a
+  selected page, but the workflow stays bounded to source-backed page
+  summaries, read-only safety, and action-owned tool-grounded learning.
 - 2026-04-24: `PRJ-634` is complete: deploy parity is now fully green on live
   production. The compose contract uses application-owned
   `${APP_BUILD_REVISION:-unknown}`, the canonical Coolify app maps

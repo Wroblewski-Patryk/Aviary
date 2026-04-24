@@ -5240,8 +5240,18 @@ async def test_runtime_pipeline_exposes_system_debug_surface_for_behavior_valida
         "web_knowledge_tooling_policy"
     )
     assert result.system_debug.adaptive_state["web_knowledge_tools"]["knowledge_search"]["state"] == (
-        "provider_backed_ready"
+        "provider_not_ready"
     )
+    website_reading = result.system_debug.adaptive_state["web_knowledge_tools"]["website_reading_workflow"]
+    assert website_reading["policy_owner"] == "website_reading_workflow_policy"
+    assert website_reading["workflow_state"] == "website_reading_blocked"
+    assert website_reading["direct_url_review_available"] is False
+    assert website_reading["search_then_page_review_available"] is False
+    assert website_reading["allowed_entry_modes"] == []
+    assert website_reading["blockers"] == [
+        "page_read_provider_not_ready",
+        "search_provider_not_ready",
+    ]
     assert result.system_debug.adaptive_state["affective_input_policy"] == {
         "policy_owner": "perception_affective_input",
         "input_kind": "heuristic_turn_signal",

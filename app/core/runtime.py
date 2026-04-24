@@ -898,7 +898,56 @@ class RuntimeOrchestrator:
             ),
             "connector_authorization_matrix": connector_authorization_matrix_snapshot(),
             "connector_capability_proposal": connector_capability_proposal_snapshot(),
-            "web_knowledge_tools": web_knowledge_tooling_snapshot(),
+            "web_knowledge_tools": web_knowledge_tooling_snapshot(
+                knowledge_search={
+                    "provider": "duckduckgo_html",
+                    "execution_mode": "provider_backed_without_credentials",
+                    "ready": bool(
+                        self.action_executor.knowledge_search_client is not None
+                        and getattr(self.action_executor.knowledge_search_client, "ready", False)
+                    ),
+                    "state": (
+                        "provider_backed_ready"
+                        if (
+                            self.action_executor.knowledge_search_client is not None
+                            and getattr(self.action_executor.knowledge_search_client, "ready", False)
+                        )
+                        else "provider_not_ready"
+                    ),
+                    "hint": (
+                        "duckduckgo_html_search_live"
+                        if (
+                            self.action_executor.knowledge_search_client is not None
+                            and getattr(self.action_executor.knowledge_search_client, "ready", False)
+                        )
+                        else "knowledge_search_client_not_ready"
+                    ),
+                },
+                web_browser={
+                    "provider": "generic_http",
+                    "execution_mode": "provider_backed_without_credentials",
+                    "ready": bool(
+                        self.action_executor.web_browser_client is not None
+                        and getattr(self.action_executor.web_browser_client, "ready", False)
+                    ),
+                    "state": (
+                        "provider_backed_ready"
+                        if (
+                            self.action_executor.web_browser_client is not None
+                            and getattr(self.action_executor.web_browser_client, "ready", False)
+                        )
+                        else "provider_not_ready"
+                    ),
+                    "hint": (
+                        "generic_http_read_page_live"
+                        if (
+                            self.action_executor.web_browser_client is not None
+                            and getattr(self.action_executor.web_browser_client, "ready", False)
+                        )
+                        else "web_browser_client_not_ready"
+                    ),
+                },
+            ),
             "runtime_topology": runtime_topology_policy_snapshot(
                 reflection_runtime_mode=self.reflection_runtime_mode,
                 reflection_readiness={

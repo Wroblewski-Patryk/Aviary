@@ -389,6 +389,58 @@ Last updated: 2026-04-24
     - `docker compose -f docker-compose.coolify.yml config` -> OK
     - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'` -> passed
 
+- [x] PRJ-618 Freeze the first live website-reading workflow baseline
+  - Owner: Planning Agent
+  - Group: Live Web-Knowledge Workflow Activation
+  - Depends on: PRJ-617
+  - Priority: P0
+  - Status: DONE
+  - Why now:
+    - deploy parity is now repaired, so the next blocker is no longer
+      production ambiguity but the missing explicit product contract for
+      "check this website and tell me what it says"
+  - Result:
+    - canonical architecture now freezes one bounded website-reading workflow
+      that allows either direct URL review or search-first page review through
+      the existing planning -> permission-gate -> action boundary
+    - input, output, safety, and memory-capture boundaries are explicit and do
+      not rely on test inference alone
+  - Validation:
+    - architecture/product/runtime cross-review
+
+- [x] PRJ-619 Implement operator-visible website-reading readiness and guardrails
+  - Owner: Backend Builder
+  - Group: Live Web-Knowledge Workflow Activation
+  - Depends on: PRJ-618
+  - Priority: P0
+  - Status: DONE
+  - Why now:
+    - the workflow contract is now frozen, so backend truth should expose
+      whether live website reading is available, bounded, and blocked by
+      provider or policy posture
+  - Result:
+    - existing health/debug surfaces expose website-reading readiness,
+      bounded read semantics, and operator-visible blockers or next actions
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_pipeline.py` -> `187 passed`
+
+- [ ] PRJ-620 Add behavior and release proof for live web-knowledge workflows
+  - Owner: QA/Test
+  - Group: Live Web-Knowledge Workflow Activation
+  - Depends on: PRJ-619
+  - Priority: P0
+  - Status: READY
+  - Why now:
+    - the workflow is now frozen and machine-visible, so the next slice should
+      prove the same website-reading contract through behavior-validation and
+      release evidence instead of `/health` only
+  - Result:
+    - behavior validation and release smoke prove search-first and direct-page
+      review without bypassing planning/action or bounded read guardrails
+  - Validation:
+    - targeted pytest coverage
+    - behavior-validation and release-smoke evidence
+
 - [x] PRJ-611 Sync docs/context for the capability-catalog baseline
   - Owner: Product Docs Agent
   - Group: Capability Catalog And Future-UI Bootstrap

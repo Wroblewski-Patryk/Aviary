@@ -345,12 +345,16 @@ async def _incident_evidence_from_request(
 
 
 def _connectors_snapshot_from_settings(settings) -> dict[str, Any]:
+    execution_baseline = connector_execution_baseline_snapshot(settings)
     return {
         **connector_authorization_matrix_snapshot(),
         "capability_proposal": connector_capability_proposal_snapshot(),
-        "execution_baseline": connector_execution_baseline_snapshot(settings),
+        "execution_baseline": execution_baseline,
         "organizer_tool_stack": organizer_tool_stack_snapshot(settings),
-        "web_knowledge_tools": web_knowledge_tooling_snapshot(),
+        "web_knowledge_tools": web_knowledge_tooling_snapshot(
+            knowledge_search=execution_baseline["knowledge_search"]["search_web"],
+            web_browser=execution_baseline["web_browser"]["read_page"],
+        ),
     }
 
 
