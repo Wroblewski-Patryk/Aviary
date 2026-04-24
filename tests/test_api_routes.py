@@ -1055,6 +1055,7 @@ def test_health_endpoint_exposes_learned_state_introspection_posture() -> None:
         "product_stage": "v2_backend_surface_seed",
         "readiness_state": "stable_backend_surfaces_available",
         "health_surfaces": {
+            "capability_catalog": "/health.capability_catalog",
             "learned_state": "/health.learned_state",
             "role_skill": "/health.role_skill",
             "connectors": "/health.connectors",
@@ -1062,10 +1063,17 @@ def test_health_endpoint_exposes_learned_state_introspection_posture() -> None:
         },
         "internal_inspection_path": "/internal/state/inspect",
         "internal_inspection_sections": [
+            "capability_catalog",
             "identity_state",
             "learned_knowledge",
             "role_skill_state",
             "planning_state",
+        ],
+        "capability_catalog_sections": [
+            "role_posture",
+            "skill_catalog_posture",
+            "tool_and_connector_posture",
+            "learned_state_linkage",
         ],
         "planning_state_sections": [
             "active_goals",
@@ -1079,6 +1087,73 @@ def test_health_endpoint_exposes_learned_state_introspection_posture() -> None:
         "current_turn_plan_surface": "system_debug.plan",
         "connector_posture_surface": "/health.connectors",
     }
+    assert body["capability_catalog"]["policy_owner"] == "backend_capability_catalog_policy"
+    assert body["capability_catalog"]["catalog_posture"] == "aggregated_backend_truth_surface"
+    assert body["capability_catalog"]["execution_authority"] == "unchanged_action_boundary"
+    assert body["capability_catalog"]["authorization_authority"] == "unchanged_connector_permission_gates"
+    assert body["capability_catalog"]["source_surfaces"] == {
+        "api_readiness": "/health.api_readiness",
+        "learned_state": "/health.learned_state",
+        "role_skill": "/health.role_skill",
+        "connectors": "/health.connectors",
+        "internal_inspection": "/internal/state/inspect",
+        "current_turn_role": "system_debug.role",
+        "current_turn_selected_skills": "system_debug.adaptive_state.selected_skills",
+        "current_turn_plan": "system_debug.plan",
+    }
+    assert body["capability_catalog"]["role_posture"] == {
+        "role_selection_owner": "role_selection_policy",
+        "current_role_name": "",
+        "work_partner_role_available": True,
+        "work_partner_role_state": "available",
+        "work_partner_scope": "work_organization_and_decision_support",
+        "work_partner_mutation_boundary": "respect_existing_confirmation_and_opt_in_policies",
+    }
+    assert body["capability_catalog"]["skill_catalog_posture"]["selection_visibility_summary"] == {}
+    assert body["capability_catalog"]["skill_catalog_posture"]["catalog_count"] == 5
+    assert body["capability_catalog"]["skill_catalog_posture"]["learning_posture"] == "registry_metadata_only"
+    assert body["capability_catalog"]["tool_and_connector_posture"]["approved_tool_families"] == [
+        "calendar",
+        "cloud_drive",
+        "knowledge_search",
+        "task_system",
+        "web_browser",
+    ]
+    assert body["capability_catalog"]["tool_and_connector_posture"]["approved_operations"] == [
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files",
+    ]
+    assert body["capability_catalog"]["tool_and_connector_posture"]["ready_operations"] == []
+    assert body["capability_catalog"]["tool_and_connector_posture"]["credential_gap_operations"] == [
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files",
+    ]
+    assert body["capability_catalog"]["tool_and_connector_posture"]["organizer_stack_state"] == (
+        "provider_credentials_missing"
+    )
+    assert body["capability_catalog"]["tool_and_connector_posture"]["organizer_activation_state"] == (
+        "provider_activation_incomplete"
+    )
+    assert body["capability_catalog"]["tool_and_connector_posture"]["organizer_activation_next_actions"] == [
+        "configure_clickup_api_token_and_clickup_list_id",
+        "configure_google_calendar_access_token_calendar_id_and_timezone",
+        "configure_google_drive_access_token_and_folder_id",
+    ]
+    assert body["capability_catalog"]["tool_and_connector_posture"]["web_knowledge_tools"]["policy_owner"] == (
+        "web_knowledge_tooling_policy"
+    )
+    assert body["capability_catalog"]["learned_state_linkage"] == {
+        "learned_state_policy_owner": "learned_state_inspection_policy",
+        "tool_grounded_learning_policy_owner": "tool_grounded_learning_policy",
+        "skill_learning_posture": "selected_skill_metadata_only",
+        "internal_inspection_path": "/internal/state/inspect",
+    }
 
 
 def test_internal_state_inspection_endpoint_exposes_learned_and_planning_state() -> None:
@@ -1091,10 +1166,69 @@ def test_internal_state_inspection_endpoint_exposes_learned_and_planning_state()
     assert body["policy_owner"] == "learned_state_inspection_policy"
     assert body["api_readiness"]["policy_owner"] == "v2_backend_api_readiness_policy"
     assert body["api_readiness"]["product_stage"] == "v2_backend_surface_seed"
+    assert body["api_readiness"]["health_surfaces"]["capability_catalog"] == "/health.capability_catalog"
     assert body["api_readiness"]["health_surfaces"]["learned_state"] == "/health.learned_state"
     assert body["api_readiness"]["health_surfaces"]["role_skill"] == "/health.role_skill"
     assert body["api_readiness"]["internal_inspection_path"] == "/internal/state/inspect"
+    assert body["api_readiness"]["internal_inspection_sections"][0] == "capability_catalog"
+    assert body["api_readiness"]["capability_catalog_sections"] == [
+        "role_posture",
+        "skill_catalog_posture",
+        "tool_and_connector_posture",
+        "learned_state_linkage",
+    ]
     assert body["api_readiness"]["current_turn_debug_surface_path"] == "/internal/event/debug"
+    assert body["capability_catalog"]["policy_owner"] == "backend_capability_catalog_policy"
+    assert body["capability_catalog"]["source_surfaces"]["internal_inspection"] == "/internal/state/inspect"
+    assert body["capability_catalog"]["role_posture"] == {
+        "role_selection_owner": "role_selection_policy",
+        "current_role_name": "",
+        "work_partner_role_available": True,
+        "work_partner_role_state": "available",
+        "work_partner_scope": "work_organization_and_decision_support",
+        "work_partner_mutation_boundary": "respect_existing_confirmation_and_opt_in_policies",
+    }
+    assert body["capability_catalog"]["skill_catalog_posture"]["selection_visibility_summary"] == {
+        "current_turn_selected_role_available_via": "system_debug.role",
+        "current_turn_selected_skills_available_via": "system_debug.adaptive_state.selected_skills",
+        "catalog_skill_count": 5,
+        "catalog_skill_ids": [
+            "emotional_support",
+            "structured_reasoning",
+            "execution_planning",
+            "memory_recall",
+            "connector_boundary_review",
+        ],
+        "metadata_only_skill_boundary": True,
+        "work_partner_role_available": True,
+    }
+    assert body["capability_catalog"]["tool_and_connector_posture"]["approved_tool_families"] == [
+        "calendar",
+        "cloud_drive",
+        "knowledge_search",
+        "task_system",
+        "web_browser",
+    ]
+    assert body["capability_catalog"]["tool_and_connector_posture"]["organizer_stack_state"] == (
+        "provider_credentials_missing"
+    )
+    assert body["capability_catalog"]["tool_and_connector_posture"]["organizer_activation_state"] == (
+        "provider_activation_incomplete"
+    )
+    assert body["capability_catalog"]["tool_and_connector_posture"]["organizer_activation_next_actions"] == [
+        "configure_clickup_api_token_and_clickup_list_id",
+        "configure_google_calendar_access_token_calendar_id_and_timezone",
+        "configure_google_drive_access_token_and_folder_id",
+    ]
+    assert body["capability_catalog"]["tool_and_connector_posture"]["web_knowledge_tools"]["policy_owner"] == (
+        "web_knowledge_tooling_policy"
+    )
+    assert body["capability_catalog"]["learned_state_linkage"] == {
+        "learned_state_policy_owner": "learned_state_inspection_policy",
+        "tool_grounded_learning_policy_owner": "tool_grounded_learning_policy",
+        "skill_learning_posture": "selected_skill_metadata_only",
+        "internal_inspection_path": "/internal/state/inspect",
+    }
     assert body["identity_state"]["profile"]["preferred_language"] == "pl"
     assert body["identity_state"]["learned_preferences"]["response_style"] == "concise"
     assert body["identity_state"]["learned_preferences"]["proactive_opt_in"] is True

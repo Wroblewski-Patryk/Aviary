@@ -10,6 +10,7 @@ def api_readiness_policy_snapshot() -> dict[str, object]:
         "product_stage": "v2_backend_surface_seed",
         "readiness_state": "stable_backend_surfaces_available",
         "health_surfaces": {
+            "capability_catalog": "/health.capability_catalog",
             "learned_state": "/health.learned_state",
             "role_skill": "/health.role_skill",
             "connectors": "/health.connectors",
@@ -17,10 +18,17 @@ def api_readiness_policy_snapshot() -> dict[str, object]:
         },
         "internal_inspection_path": "/internal/state/inspect",
         "internal_inspection_sections": [
+            "capability_catalog",
             "identity_state",
             "learned_knowledge",
             "role_skill_state",
             "planning_state",
+        ],
+        "capability_catalog_sections": [
+            "role_posture",
+            "skill_catalog_posture",
+            "tool_and_connector_posture",
+            "learned_state_linkage",
         ],
         "planning_state_sections": [
             "active_goals",

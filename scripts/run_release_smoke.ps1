@@ -220,6 +220,14 @@ function Validate-IncidentEvidenceBundle {
         retrieval_alignment_state = $null
         learned_state_tool_grounded_policy_owner = $null
         learned_state_tool_grounded_allowed_read_operations = @()
+        capability_catalog_policy_owner = $null
+        capability_catalog_approved_tool_families = @()
+        capability_catalog_skill_execution_boundary = $null
+        capability_catalog_catalog_count = $null
+        capability_catalog_organizer_stack_state = $null
+        capability_catalog_organizer_activation_state = $null
+        capability_catalog_execution_baseline_owner = $null
+        capability_catalog_tool_grounded_learning_policy_owner = $null
     }
 
     if (-not $Path) {
@@ -405,6 +413,10 @@ function Validate-IncidentEvidenceBundle {
     $organizerToolStackContract = Assert-OrganizerToolStackContract `
         -OrganizerToolStack $healthOrganizerToolStack `
         -FailurePrefix "Incident evidence bundle verification failed"
+    $healthCapabilityCatalog = $healthSnapshot.capability_catalog
+    $capabilityCatalogContract = Assert-CapabilityCatalogContract `
+        -CapabilityCatalog $healthCapabilityCatalog `
+        -FailurePrefix "Incident evidence bundle verification failed"
     $incidentOrganizerToolStack = $incidentEvidence.policy_posture."connectors.organizer_tool_stack"
     $incidentOrganizerToolStackContract = Assert-OrganizerToolStackContract `
         -OrganizerToolStack $incidentOrganizerToolStack `
@@ -450,6 +462,14 @@ function Validate-IncidentEvidenceBundle {
         learned_state_growth_summary_sections = @($learnedStateContract.growth_summary_sections)
         learned_state_tool_grounded_policy_owner = [string]$learnedStateContract.tool_grounded_policy_owner
         learned_state_tool_grounded_allowed_read_operations = @($learnedStateContract.tool_grounded_allowed_read_operations)
+        capability_catalog_policy_owner = [string]$capabilityCatalogContract.policy_owner
+        capability_catalog_approved_tool_families = @($capabilityCatalogContract.approved_tool_families)
+        capability_catalog_skill_execution_boundary = [string]$capabilityCatalogContract.skill_execution_boundary
+        capability_catalog_catalog_count = [int]$capabilityCatalogContract.catalog_count
+        capability_catalog_organizer_stack_state = [string]$capabilityCatalogContract.organizer_stack_state
+        capability_catalog_organizer_activation_state = [string]$capabilityCatalogContract.organizer_activation_state
+        capability_catalog_execution_baseline_owner = [string]$capabilityCatalogContract.execution_baseline_owner
+        capability_catalog_tool_grounded_learning_policy_owner = [string]$capabilityCatalogContract.tool_grounded_learning_policy_owner
         incident_organizer_tool_stack_policy_owner = [string]$incidentOrganizerToolStackContract.policy_owner
         incident_organizer_tool_stack_readiness_state = [string]$incidentOrganizerToolStackContract.readiness_state
         incident_organizer_tool_activation_state = [string]$incidentOrganizerToolStackContract.activation_state
@@ -690,6 +710,129 @@ function Assert-LearnedStateContract {
         reflection_growth_signal_kinds = $reflectionGrowthSignalKinds
         tool_grounded_policy_owner = [string]$toolGroundedLearning.policy_owner
         tool_grounded_allowed_read_operations = $toolGroundedReadOperations
+    }
+}
+
+function Assert-CapabilityCatalogContract {
+    param(
+        [object]$CapabilityCatalog,
+        [Parameter(Mandatory = $true)][string]$FailurePrefix
+    )
+
+    $expectedApprovedToolFamilies = @(
+        "calendar",
+        "cloud_drive",
+        "knowledge_search",
+        "task_system",
+        "web_browser"
+    )
+
+    if ($null -eq $CapabilityCatalog) {
+        throw "${FailurePrefix}: capability_catalog posture is missing."
+    }
+    if ([string]$CapabilityCatalog.policy_owner -ne "backend_capability_catalog_policy") {
+        throw "${FailurePrefix}: unexpected capability_catalog policy_owner '$($CapabilityCatalog.policy_owner)'."
+    }
+    if ([string]$CapabilityCatalog.catalog_posture -ne "aggregated_backend_truth_surface") {
+        throw "${FailurePrefix}: unexpected capability_catalog catalog_posture '$($CapabilityCatalog.catalog_posture)'."
+    }
+    if ([string]$CapabilityCatalog.execution_authority -ne "unchanged_action_boundary") {
+        throw "${FailurePrefix}: unexpected capability_catalog execution_authority '$($CapabilityCatalog.execution_authority)'."
+    }
+    if ([string]$CapabilityCatalog.authorization_authority -ne "unchanged_connector_permission_gates") {
+        throw "${FailurePrefix}: unexpected capability_catalog authorization_authority '$($CapabilityCatalog.authorization_authority)'."
+    }
+    if ($null -eq $CapabilityCatalog.source_surfaces) {
+        throw "${FailurePrefix}: capability_catalog source_surfaces are missing."
+    }
+    $requiredSourceSurfaces = @{
+        api_readiness = "/health.api_readiness"
+        learned_state = "/health.learned_state"
+        role_skill = "/health.role_skill"
+        connectors = "/health.connectors"
+        internal_inspection = "/internal/state/inspect"
+        current_turn_role = "system_debug.role"
+        current_turn_selected_skills = "system_debug.adaptive_state.selected_skills"
+        current_turn_plan = "system_debug.plan"
+    }
+    foreach ($sourceSurface in $requiredSourceSurfaces.GetEnumerator()) {
+        if ([string]$CapabilityCatalog.source_surfaces.($sourceSurface.Key) -ne $sourceSurface.Value) {
+            throw "${FailurePrefix}: capability_catalog source_surfaces.$($sourceSurface.Key) is unexpected."
+        }
+    }
+    if ($null -eq $CapabilityCatalog.role_posture) {
+        throw "${FailurePrefix}: capability_catalog role_posture is missing."
+    }
+    if ([string]$CapabilityCatalog.role_posture.role_selection_owner -ne "role_selection_policy") {
+        throw "${FailurePrefix}: capability_catalog role_posture.role_selection_owner is unexpected."
+    }
+    if (-not [bool]$CapabilityCatalog.role_posture.work_partner_role_available) {
+        throw "${FailurePrefix}: capability_catalog role_posture.work_partner_role_available is not true."
+    }
+    if ($null -eq $CapabilityCatalog.skill_catalog_posture) {
+        throw "${FailurePrefix}: capability_catalog skill_catalog_posture is missing."
+    }
+    if ([string]$CapabilityCatalog.skill_catalog_posture.skill_selection_owner -ne "skill_registry") {
+        throw "${FailurePrefix}: capability_catalog skill_catalog_posture.skill_selection_owner is unexpected."
+    }
+    if ([string]$CapabilityCatalog.skill_catalog_posture.skill_execution_boundary -ne "metadata_only_capability_hints") {
+        throw "${FailurePrefix}: capability_catalog skill_catalog_posture.skill_execution_boundary is unexpected."
+    }
+    if ([bool]$CapabilityCatalog.skill_catalog_posture.action_skill_execution_allowed) {
+        throw "${FailurePrefix}: capability_catalog skill_catalog_posture.action_skill_execution_allowed must be false."
+    }
+    if ([int]$CapabilityCatalog.skill_catalog_posture.catalog_count -lt 1) {
+        throw "${FailurePrefix}: capability_catalog skill_catalog_posture.catalog_count must be positive."
+    }
+    if ($null -eq $CapabilityCatalog.tool_and_connector_posture) {
+        throw "${FailurePrefix}: capability_catalog tool_and_connector_posture is missing."
+    }
+    $actualApprovedToolFamilies = @($CapabilityCatalog.tool_and_connector_posture.approved_tool_families)
+    foreach ($requiredToolFamily in $expectedApprovedToolFamilies) {
+        if ($actualApprovedToolFamilies -notcontains $requiredToolFamily) {
+            throw "${FailurePrefix}: capability_catalog tool_and_connector_posture is missing approved tool family '$requiredToolFamily'."
+        }
+    }
+    if ([string]$CapabilityCatalog.tool_and_connector_posture.execution_baseline_owner -ne "connector_execution_registry") {
+        throw "${FailurePrefix}: capability_catalog tool_and_connector_posture.execution_baseline_owner is unexpected."
+    }
+    if (-not [string]$CapabilityCatalog.tool_and_connector_posture.organizer_stack_state) {
+        throw "${FailurePrefix}: capability_catalog tool_and_connector_posture.organizer_stack_state is missing."
+    }
+    if (-not [string]$CapabilityCatalog.tool_and_connector_posture.organizer_activation_state) {
+        throw "${FailurePrefix}: capability_catalog tool_and_connector_posture.organizer_activation_state is missing."
+    }
+    if ($null -eq $CapabilityCatalog.tool_and_connector_posture.web_knowledge_tools) {
+        throw "${FailurePrefix}: capability_catalog tool_and_connector_posture.web_knowledge_tools is missing."
+    }
+    if ([string]$CapabilityCatalog.tool_and_connector_posture.web_knowledge_tools.policy_owner -ne "web_knowledge_tooling_policy") {
+        throw "${FailurePrefix}: capability_catalog tool_and_connector_posture.web_knowledge_tools.policy_owner is unexpected."
+    }
+    if ($null -eq $CapabilityCatalog.learned_state_linkage) {
+        throw "${FailurePrefix}: capability_catalog learned_state_linkage is missing."
+    }
+    if ([string]$CapabilityCatalog.learned_state_linkage.learned_state_policy_owner -ne "learned_state_inspection_policy") {
+        throw "${FailurePrefix}: capability_catalog learned_state_linkage.learned_state_policy_owner is unexpected."
+    }
+    if ([string]$CapabilityCatalog.learned_state_linkage.tool_grounded_learning_policy_owner -ne "tool_grounded_learning_policy") {
+        throw "${FailurePrefix}: capability_catalog learned_state_linkage.tool_grounded_learning_policy_owner is unexpected."
+    }
+    if ([string]$CapabilityCatalog.learned_state_linkage.skill_learning_posture -ne "selected_skill_metadata_only") {
+        throw "${FailurePrefix}: capability_catalog learned_state_linkage.skill_learning_posture is unexpected."
+    }
+    if ([string]$CapabilityCatalog.learned_state_linkage.internal_inspection_path -ne "/internal/state/inspect") {
+        throw "${FailurePrefix}: capability_catalog learned_state_linkage.internal_inspection_path is unexpected."
+    }
+
+    return @{
+        policy_owner = [string]$CapabilityCatalog.policy_owner
+        approved_tool_families = $actualApprovedToolFamilies
+        skill_execution_boundary = [string]$CapabilityCatalog.skill_catalog_posture.skill_execution_boundary
+        catalog_count = [int]$CapabilityCatalog.skill_catalog_posture.catalog_count
+        organizer_stack_state = [string]$CapabilityCatalog.tool_and_connector_posture.organizer_stack_state
+        organizer_activation_state = [string]$CapabilityCatalog.tool_and_connector_posture.organizer_activation_state
+        execution_baseline_owner = [string]$CapabilityCatalog.tool_and_connector_posture.execution_baseline_owner
+        tool_grounded_learning_policy_owner = [string]$CapabilityCatalog.learned_state_linkage.tool_grounded_learning_policy_owner
     }
 }
 
@@ -1485,6 +1628,10 @@ $learnedState = $health.learned_state
 $learnedStateContract = Assert-LearnedStateContract `
     -LearnedState $learnedState `
     -FailurePrefix "Health check failed"
+$capabilityCatalog = $health.capability_catalog
+$capabilityCatalogContract = Assert-CapabilityCatalogContract `
+    -CapabilityCatalog $capabilityCatalog `
+    -FailurePrefix "Health check failed"
 $v1Readiness = $health.v1_readiness
 if ($null -eq $v1Readiness) {
     throw "Health check failed: response is missing v1_readiness."
@@ -1841,6 +1988,14 @@ $summary = @{
     incident_evidence_learned_state_internal_inspection_path = if ($null -ne $incidentLearnedStateContract) { [string]$incidentLearnedStateContract.internal_inspection_path } else { $null }
     incident_evidence_learned_state_inspection_sections = if ($null -ne $incidentLearnedStateContract) { @($incidentLearnedStateContract.inspection_sections) } else { @() }
     incident_evidence_learned_state_growth_summary_sections = if ($null -ne $incidentLearnedStateContract) { @($incidentLearnedStateContract.growth_summary_sections) } else { @() }
+    capability_catalog_policy_owner = [string]$capabilityCatalogContract.policy_owner
+    capability_catalog_approved_tool_families = @($capabilityCatalogContract.approved_tool_families)
+    capability_catalog_skill_execution_boundary = [string]$capabilityCatalogContract.skill_execution_boundary
+    capability_catalog_catalog_count = [int]$capabilityCatalogContract.catalog_count
+    capability_catalog_organizer_stack_state = [string]$capabilityCatalogContract.organizer_stack_state
+    capability_catalog_organizer_activation_state = [string]$capabilityCatalogContract.organizer_activation_state
+    capability_catalog_execution_baseline_owner = [string]$capabilityCatalogContract.execution_baseline_owner
+    capability_catalog_tool_grounded_learning_policy_owner = [string]$capabilityCatalogContract.tool_grounded_learning_policy_owner
     incident_evidence_deployment_automation_policy_owner = if ($null -ne $incidentDeployment) { [string]$incidentDeployment.deployment_automation_policy_owner } else { $null }
     incident_evidence_deployment_primary_trigger_mode = if ($null -ne $incidentDeployment) { [string]$incidentDeployment.deployment_automation_baseline.primary_trigger_mode } else { $null }
     organizer_tool_stack_policy_owner = [string]$organizerToolStackContract.policy_owner
@@ -1890,6 +2045,14 @@ $summary = @{
     incident_bundle_learned_state_internal_inspection_path = $incidentEvidenceBundleCheck.learned_state_internal_inspection_path
     incident_bundle_learned_state_inspection_sections = $incidentEvidenceBundleCheck.learned_state_inspection_sections
     incident_bundle_learned_state_growth_summary_sections = $incidentEvidenceBundleCheck.learned_state_growth_summary_sections
+    incident_bundle_capability_catalog_policy_owner = $incidentEvidenceBundleCheck.capability_catalog_policy_owner
+    incident_bundle_capability_catalog_approved_tool_families = $incidentEvidenceBundleCheck.capability_catalog_approved_tool_families
+    incident_bundle_capability_catalog_skill_execution_boundary = $incidentEvidenceBundleCheck.capability_catalog_skill_execution_boundary
+    incident_bundle_capability_catalog_catalog_count = $incidentEvidenceBundleCheck.capability_catalog_catalog_count
+    incident_bundle_capability_catalog_organizer_stack_state = $incidentEvidenceBundleCheck.capability_catalog_organizer_stack_state
+    incident_bundle_capability_catalog_organizer_activation_state = $incidentEvidenceBundleCheck.capability_catalog_organizer_activation_state
+    incident_bundle_capability_catalog_execution_baseline_owner = $incidentEvidenceBundleCheck.capability_catalog_execution_baseline_owner
+    incident_bundle_capability_catalog_tool_grounded_learning_policy_owner = $incidentEvidenceBundleCheck.capability_catalog_tool_grounded_learning_policy_owner
     incident_bundle_retrieval_policy_owner = $incidentEvidenceBundleCheck.retrieval_policy_owner
     incident_bundle_retrieval_provider_requested = $incidentEvidenceBundleCheck.retrieval_provider_requested
     incident_bundle_retrieval_provider_effective = $incidentEvidenceBundleCheck.retrieval_provider_effective

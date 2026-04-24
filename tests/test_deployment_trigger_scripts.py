@@ -72,6 +72,13 @@ TOOL_GROUNDED_LEARNING_CONTRACT = {
     "execution_bypass_allowed": False,
     "self_modifying_skill_learning_allowed": False,
 }
+CAPABILITY_CATALOG_APPROVED_TOOL_FAMILIES = [
+    "calendar",
+    "cloud_drive",
+    "knowledge_search",
+    "task_system",
+    "web_browser",
+]
 V1_REQUIRED_BEHAVIOR_SCENARIOS = [
     "T13.1",
     "T14.1",
@@ -181,6 +188,126 @@ def _organizer_tool_activation_snapshot() -> dict[str, object]:
             },
         },
         "next_actions": ORGANIZER_TOOL_ACTIVATION_NEXT_ACTIONS,
+    }
+
+
+def _capability_catalog_snapshot() -> dict[str, object]:
+    return {
+        "policy_owner": "backend_capability_catalog_policy",
+        "catalog_posture": "aggregated_backend_truth_surface",
+        "aggregation_boundary": "composed_from_existing_health_and_internal_inspection_surfaces",
+        "execution_authority": "unchanged_action_boundary",
+        "authorization_authority": "unchanged_connector_permission_gates",
+        "future_ui_posture": "consume_catalog_without_reconstructing_backend_truth_client_side",
+        "source_surfaces": {
+            "api_readiness": "/health.api_readiness",
+            "learned_state": "/health.learned_state",
+            "role_skill": "/health.role_skill",
+            "connectors": "/health.connectors",
+            "internal_inspection": "/internal/state/inspect",
+            "current_turn_role": "system_debug.role",
+            "current_turn_selected_skills": "system_debug.adaptive_state.selected_skills",
+            "current_turn_plan": "system_debug.plan",
+        },
+        "role_posture": {
+            "role_selection_owner": "role_selection_policy",
+            "current_role_name": "",
+            "work_partner_role_available": True,
+            "work_partner_role_state": "available",
+            "work_partner_scope": "work_organization_and_decision_support",
+            "work_partner_mutation_boundary": "respect_existing_confirmation_and_opt_in_policies",
+        },
+        "skill_catalog_posture": {
+            "skill_selection_owner": "skill_registry",
+            "skill_execution_boundary": "metadata_only_capability_hints",
+            "action_skill_execution_allowed": False,
+            "selection_visibility_summary": {},
+            "catalog_count": 5,
+            "catalog": [
+                {
+                    "skill_id": "emotional_support",
+                    "label": "Emotional support",
+                    "capability_family": "support",
+                    "side_effect_posture": "metadata_only",
+                },
+                {
+                    "skill_id": "structured_reasoning",
+                    "label": "Structured reasoning",
+                    "capability_family": "analysis",
+                    "side_effect_posture": "metadata_only",
+                },
+                {
+                    "skill_id": "execution_planning",
+                    "label": "Execution planning",
+                    "capability_family": "execution",
+                    "side_effect_posture": "metadata_only",
+                },
+                {
+                    "skill_id": "memory_recall",
+                    "label": "Memory recall",
+                    "capability_family": "memory",
+                    "side_effect_posture": "metadata_only",
+                },
+                {
+                    "skill_id": "connector_boundary_review",
+                    "label": "Connector boundary review",
+                    "capability_family": "connector_boundary",
+                    "side_effect_posture": "metadata_only",
+                },
+            ],
+            "learning_posture": "registry_metadata_only",
+            "learning_hint": "selected_skill_metadata_is_inspectable_but_not_self_modifying_code",
+        },
+        "tool_and_connector_posture": {
+            "approved_tool_families": CAPABILITY_CATALOG_APPROVED_TOOL_FAMILIES,
+            "approved_operations": ORGANIZER_TOOL_STACK_APPROVED_OPERATIONS,
+            "ready_operations": [
+                "task_system.clickup_create_task",
+                "task_system.clickup_list_tasks",
+                "task_system.clickup_update_task",
+            ],
+            "credential_gap_operations": [
+                "calendar.google_calendar_read_availability",
+                "cloud_drive.google_drive_list_files",
+            ],
+            "organizer_stack_state": "provider_credentials_missing",
+            "organizer_stack_hint": "configure_clickup_google_calendar_and_google_drive_credentials_for_full_stack_readiness",
+            "organizer_activation_state": "provider_activation_incomplete",
+            "organizer_activation_next_actions": ORGANIZER_TOOL_ACTIVATION_NEXT_ACTIONS,
+            "confirmation_required_operations": ORGANIZER_TOOL_STACK_CONFIRMATION_REQUIRED_OPERATIONS,
+            "user_opt_in_required_operations": ORGANIZER_TOOL_STACK_APPROVED_OPERATIONS,
+            "web_knowledge_tools": {
+                "policy_owner": "web_knowledge_tooling_policy",
+                "tool_boundary": "action_owned_external_capability",
+                "skill_execution_boundary": "metadata_only_capability_hints",
+                "provider_execution_posture": "first_bounded_provider_slices_selected",
+                "fallback_posture": "respond_without_external_tool_execution",
+                "knowledge_search": {
+                    "capability_kind": "knowledge_search",
+                    "selected_provider_hint": "duckduckgo_html",
+                    "authorized_operations": ["search_web", "suggest_search"],
+                    "execution_mode": "provider_backed_without_credentials",
+                    "state": "provider_backed_ready",
+                    "hint": "duckduckgo_html_search_live",
+                },
+                "web_browser": {
+                    "capability_kind": "web_browser",
+                    "selected_provider_hint": "generic_http",
+                    "authorized_operations": ["read_page", "suggest_page_review"],
+                    "execution_mode": "provider_backed_without_credentials",
+                    "state": "provider_backed_ready",
+                    "hint": "generic_http_read_page_live",
+                },
+            },
+            "execution_baseline_owner": "connector_execution_registry",
+            "execution_baseline_boundary": "clickup_task_create_list_update_plus_google_calendar_google_drive_duckduckgo_and_generic_http_first_live_paths",
+        },
+        "learned_state_linkage": {
+            "learned_state_policy_owner": "learned_state_inspection_policy",
+            "tool_grounded_learning_policy_owner": "tool_grounded_learning_policy",
+            "skill_learning_posture": "selected_skill_metadata_only",
+            "internal_inspection_path": "/internal/state/inspect",
+        },
     }
 
 
@@ -360,6 +487,7 @@ def stub_aion_server() -> _StubAionServer:
             "reflection_growth_signal_kinds": LEARNED_STATE_REFLECTION_GROWTH_SIGNAL_KINDS,
             "tool_grounded_learning": TOOL_GROUNDED_LEARNING_CONTRACT,
         },
+        "capability_catalog": _capability_catalog_snapshot(),
         "connectors": {
             "organizer_tool_stack": {
                 "policy_owner": "production_organizer_tool_stack",
@@ -858,6 +986,7 @@ def _write_incident_bundle(
             "reflection_growth_signal_kinds": LEARNED_STATE_REFLECTION_GROWTH_SIGNAL_KINDS,
             "tool_grounded_learning": TOOL_GROUNDED_LEARNING_CONTRACT,
         },
+        "capability_catalog": _capability_catalog_snapshot(),
         "v1_readiness": {
             "policy_owner": "v1_release_readiness_policy",
             "product_stage": "v1_no_ui_life_assistant",
@@ -1065,6 +1194,14 @@ def test_release_smoke_allows_optional_deployment_evidence_to_be_omitted(
     assert summary["telegram_conversation_policy_owner"] == "telegram_conversation_reliability_telemetry"
     assert summary["telegram_conversation_round_trip_state"] == "provider_backed_ready"
     assert summary["telegram_conversation_bot_token_configured"] is True
+    assert summary["capability_catalog_policy_owner"] == "backend_capability_catalog_policy"
+    assert summary["capability_catalog_approved_tool_families"] == CAPABILITY_CATALOG_APPROVED_TOOL_FAMILIES
+    assert summary["capability_catalog_skill_execution_boundary"] == "metadata_only_capability_hints"
+    assert summary["capability_catalog_catalog_count"] == 5
+    assert summary["capability_catalog_organizer_stack_state"] == "provider_credentials_missing"
+    assert summary["capability_catalog_organizer_activation_state"] == "provider_activation_incomplete"
+    assert summary["capability_catalog_execution_baseline_owner"] == "connector_execution_registry"
+    assert summary["capability_catalog_tool_grounded_learning_policy_owner"] == "tool_grounded_learning_policy"
     assert summary["deployment_evidence_checked"] is False
     assert summary["deployment_evidence_path"] == ""
     assert summary["deployment_evidence_status_code"] is None
@@ -1348,6 +1485,26 @@ def test_release_smoke_verifies_incident_evidence_bundle_when_bundle_path_is_pro
     assert summary["incident_bundle_learned_state_growth_summary_sections"] == (
         LEARNED_STATE_GROWTH_SUMMARY_SECTIONS
     )
+    assert summary["incident_bundle_capability_catalog_policy_owner"] == "backend_capability_catalog_policy"
+    assert summary["incident_bundle_capability_catalog_approved_tool_families"] == (
+        CAPABILITY_CATALOG_APPROVED_TOOL_FAMILIES
+    )
+    assert summary["incident_bundle_capability_catalog_skill_execution_boundary"] == (
+        "metadata_only_capability_hints"
+    )
+    assert summary["incident_bundle_capability_catalog_catalog_count"] == 5
+    assert summary["incident_bundle_capability_catalog_organizer_stack_state"] == (
+        "provider_credentials_missing"
+    )
+    assert summary["incident_bundle_capability_catalog_organizer_activation_state"] == (
+        "provider_activation_incomplete"
+    )
+    assert summary["incident_bundle_capability_catalog_execution_baseline_owner"] == (
+        "connector_execution_registry"
+    )
+    assert summary["incident_bundle_capability_catalog_tool_grounded_learning_policy_owner"] == (
+        "tool_grounded_learning_policy"
+    )
     assert summary["incident_bundle_retrieval_policy_owner"] == "retrieval_lifecycle_policy"
     assert summary["incident_bundle_retrieval_provider_requested"] == "openai"
     assert summary["incident_bundle_retrieval_provider_effective"] == "openai"
@@ -1402,6 +1559,31 @@ def test_release_smoke_fails_when_incident_evidence_bundle_organizer_tool_stack_
     combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
     assert "Incident evidence bundle verification failed" in combined_output
     assert "organizer_tool_stack is missing approved_operations" in combined_output
+
+
+def test_release_smoke_fails_when_incident_evidence_bundle_capability_catalog_is_partial(
+    stub_aion_server: _StubAionServer,
+    tmp_path: Path,
+) -> None:
+    bundle_dir = tmp_path / "incident-bundle"
+    _write_incident_bundle(bundle_dir)
+    health_snapshot_path = bundle_dir / "health_snapshot.json"
+    health_snapshot = json.loads(health_snapshot_path.read_text(encoding="utf-8"))
+    health_snapshot["capability_catalog"].pop("tool_and_connector_posture", None)
+    health_snapshot_path.write_text(json.dumps(health_snapshot), encoding="utf-8")
+
+    result = _run_release_smoke(
+        "-BaseUrl",
+        stub_aion_server.base_url,
+        "-IncidentEvidenceBundlePath",
+        str(bundle_dir),
+        cwd=ROOT,
+    )
+
+    assert result.returncode != 0
+    combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
+    assert "Incident evidence bundle verification failed" in combined_output
+    assert "capability_catalog tool_and_connector_posture is missing" in combined_output
 
 
 def test_release_smoke_fails_when_incident_evidence_debug_posture_is_not_dedicated_admin_only(
@@ -1527,6 +1709,23 @@ def test_release_smoke_fails_when_learned_state_tool_grounded_contract_is_missin
     assert result.returncode != 0
     combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
     assert "learned_state is missing tool_grounded_learning" in combined_output
+
+
+def test_release_smoke_fails_when_capability_catalog_health_contract_is_missing(
+    stub_aion_server: _StubAionServer,
+) -> None:
+    original = dict(_StubAionHandler.health_payload)
+    broken = dict(original)
+    broken.pop("capability_catalog", None)
+    _StubAionHandler.health_payload = broken
+    try:
+        result = _run_release_smoke("-BaseUrl", stub_aion_server.base_url, cwd=ROOT)
+    finally:
+        _StubAionHandler.health_payload = original
+
+    assert result.returncode != 0
+    combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
+    assert "capability_catalog posture is missing" in combined_output
 
 
 def test_release_smoke_fails_when_incident_evidence_organizer_tool_stack_contract_is_partial(

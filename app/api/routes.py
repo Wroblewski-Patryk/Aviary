@@ -9,6 +9,7 @@ from app.core.attention import (
     attention_timing_policy_snapshot,
 )
 from app.core.api_readiness_policy import api_readiness_policy_snapshot
+from app.core.capability_catalog import capability_catalog_snapshot
 from app.core.debug_compat import (
     DebugQueryCompatTelemetry,
     debug_query_compat_activity_snapshot,
@@ -337,6 +338,16 @@ async def _incident_evidence_from_request(
     )
 
 
+def _connectors_snapshot_from_settings(settings) -> dict[str, Any]:
+    return {
+        **connector_authorization_matrix_snapshot(),
+        "capability_proposal": connector_capability_proposal_snapshot(),
+        "execution_baseline": connector_execution_baseline_snapshot(settings),
+        "organizer_tool_stack": organizer_tool_stack_snapshot(settings),
+        "web_knowledge_tools": web_knowledge_tooling_snapshot(),
+    }
+
+
 def _debug_query_compat_telemetry_from_request(request: Request) -> DebugQueryCompatTelemetry:
     telemetry = getattr(request.app.state, "debug_query_compat_telemetry", None)
     if isinstance(telemetry, DebugQueryCompatTelemetry):
@@ -362,6 +373,7 @@ def _enforce_debug_access(*, request: Request, settings) -> None:
 
 
 async def _build_learned_state_snapshot(*, request: Request, user_id: str) -> dict[str, Any]:
+    settings = _settings_from_request(request)
     memory_repository = _memory_repository_from_request(request)
     profile = await memory_repository.get_user_profile(user_id=user_id)
     preferences = await memory_repository.get_user_runtime_preferences(user_id=user_id)
@@ -456,6 +468,8 @@ async def _build_learned_state_snapshot(*, request: Request, user_id: str) -> di
     )
     skill_registry = skill_registry_snapshot()
     role_skill_policy = role_skill_policy_snapshot()
+    api_readiness = api_readiness_policy_snapshot()
+    connectors = _connectors_snapshot_from_settings(settings)
     planning_continuity_summary = {
         "active_goal_count": len(active_goals),
         "active_task_count": len(active_tasks),
@@ -504,11 +518,20 @@ async def _build_learned_state_snapshot(*, request: Request, user_id: str) -> di
         "metadata_only_skill_boundary": True,
         "work_partner_role_available": bool(role_skill_policy.get("work_partner_role_available", False)),
     }
+    capability_catalog = capability_catalog_snapshot(
+        api_readiness=api_readiness,
+        learned_state=learned_state_policy_snapshot(),
+        role_skill_policy=role_skill_policy,
+        skill_registry=skill_registry,
+        connectors=connectors,
+        selection_visibility_summary=selection_visibility_summary,
+    )
 
     return {
         **learned_state_policy_snapshot(),
-        "api_readiness": api_readiness_policy_snapshot(),
+        "api_readiness": api_readiness,
         "user_id": user_id,
+        "capability_catalog": capability_catalog,
         "identity_state": {
             "identity_policy": identity_policy_snapshot(),
             "profile": dict(profile or {}) if isinstance(profile, dict) else {},
@@ -871,12 +894,22 @@ async def health(request: Request) -> dict[str, Any]:
         learned_state=learned_state,
         role_skill_policy=role_skill_policy,
     )
+    api_readiness = api_readiness_policy_snapshot()
+    connectors = _connectors_snapshot_from_settings(settings)
+    capability_catalog = capability_catalog_snapshot(
+        api_readiness=api_readiness,
+        learned_state=learned_state,
+        role_skill_policy=role_skill_policy,
+        skill_registry=skill_registry_snapshot(),
+        connectors=connectors,
+    )
     return {
         "status": "ok",
         "runtime_policy": runtime_policy,
         "release_readiness": release_readiness,
         "v1_readiness": v1_readiness,
-        "api_readiness": api_readiness_policy_snapshot(),
+        "api_readiness": api_readiness,
+        "capability_catalog": capability_catalog,
         "runtime_topology": topology_policy,
         "observability": observability,
         "identity": {
@@ -891,13 +924,7 @@ async def health(request: Request) -> dict[str, Any]:
         "memory_retrieval": memory_retrieval_snapshot,
         "planning_governance": planning_governance_snapshot(),
         "learned_state": learned_state,
-        "connectors": {
-            **connector_authorization_matrix_snapshot(),
-            "capability_proposal": connector_capability_proposal_snapshot(),
-            "execution_baseline": connector_execution_baseline_snapshot(settings),
-            "organizer_tool_stack": organizer_tool_stack_snapshot(settings),
-            "web_knowledge_tools": web_knowledge_tooling_snapshot(),
-        },
+        "connectors": connectors,
         "deployment": deployment_policy_snapshot(),
         "conversation_channels": {
             "telegram": telegram_channel,
