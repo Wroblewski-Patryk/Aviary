@@ -74,7 +74,7 @@ def test_coolify_compose_maps_app_build_revision_to_coolify_source_commit() -> N
 
     app_environment = compose["services"]["app"]["environment"]
 
-    assert app_environment["APP_BUILD_REVISION"] == "${SOURCE_COMMIT:-unknown}"
+    assert app_environment["APP_BUILD_REVISION"] == "$SOURCE_COMMIT"
 
 
 def test_coolify_compose_defaults_deployment_trigger_mode_to_source_automation() -> None:

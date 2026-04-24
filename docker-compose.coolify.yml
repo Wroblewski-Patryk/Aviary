@@ -1,6 +1,6 @@
 x-aion-runtime-env: &aion-runtime-env
   APP_ENV: production
-  APP_BUILD_REVISION: ${SOURCE_COMMIT:-unknown}
+  APP_BUILD_REVISION: $SOURCE_COMMIT
   DEPLOYMENT_TRIGGER_MODE: ${DEPLOYMENT_TRIGGER_MODE:-source_automation}
   APP_PORT: 8000
   LOG_LEVEL: INFO
