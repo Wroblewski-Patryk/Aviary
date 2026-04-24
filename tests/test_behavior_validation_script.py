@@ -37,6 +37,25 @@ VALID_RETRIEVAL_INCIDENT_POSTURE = {
     "retrieval_lifecycle_alignment_state": "aligned_with_defined_lifecycle_baseline",
     "retrieval_lifecycle_pending_gaps": [],
 }
+VALID_V1_REQUIRED_BEHAVIOR_SCENARIOS = [
+    "T13.1",
+    "T14.1",
+    "T14.2",
+    "T14.3",
+    "T15.1",
+    "T15.2",
+    "T16.1",
+    "T16.2",
+    "T16.3",
+]
+VALID_V1_APPROVED_TOOL_SLICES = [
+    "knowledge_search.search_web",
+    "web_browser.read_page",
+    "task_system.clickup_list_tasks",
+    "task_system.clickup_update_task",
+    "calendar.google_calendar_read_availability",
+    "cloud_drive.google_drive_list_files",
+]
 
 
 def test_ci_gate_fails_when_no_tests_collected_and_tests_are_required() -> None:
@@ -480,19 +499,8 @@ def test_main_records_incident_evidence_summary_when_valid_input_is_provided(
                         "product_stage": "v1_no_ui_life_assistant",
                         "conversation_gate_state": "conversation_surface_ready",
                         "learned_state_gate_state": "inspection_surface_ready",
-                        "required_behavior_scenarios": [
-                            "T13.1",
-                            "T14.1",
-                            "T14.2",
-                            "T14.3",
-                            "T15.1",
-                            "T15.2",
-                        ],
-                        "approved_tool_slices": [
-                            "knowledge_search.search_web",
-                            "web_browser.read_page",
-                            "task_system.clickup_update_task",
-                        ],
+                        "required_behavior_scenarios": VALID_V1_REQUIRED_BEHAVIOR_SCENARIOS,
+                        "approved_tool_slices": VALID_V1_APPROVED_TOOL_SLICES,
                     },
                     "attention": {
                         "attention_policy_owner": "durable_attention_inbox_policy",
@@ -659,19 +667,8 @@ def test_main_fails_when_incident_evidence_durable_attention_posture_is_missing(
                         "product_stage": "v1_no_ui_life_assistant",
                         "conversation_gate_state": "conversation_surface_ready",
                         "learned_state_gate_state": "inspection_surface_ready",
-                        "required_behavior_scenarios": [
-                            "T13.1",
-                            "T14.1",
-                            "T14.2",
-                            "T14.3",
-                            "T15.1",
-                            "T15.2",
-                        ],
-                        "approved_tool_slices": [
-                            "knowledge_search.search_web",
-                            "web_browser.read_page",
-                            "task_system.clickup_update_task",
-                        ],
+                        "required_behavior_scenarios": VALID_V1_REQUIRED_BEHAVIOR_SCENARIOS,
+                        "approved_tool_slices": VALID_V1_APPROVED_TOOL_SLICES,
                     },
                     "proactive": {
                         "policy_owner": "proactive_runtime_policy",
@@ -769,19 +766,8 @@ def test_main_fails_when_incident_evidence_policy_surface_is_incomplete(
                         "product_stage": "v1_no_ui_life_assistant",
                         "conversation_gate_state": "conversation_surface_ready",
                         "learned_state_gate_state": "inspection_surface_ready",
-                        "required_behavior_scenarios": [
-                            "T13.1",
-                            "T14.1",
-                            "T14.2",
-                            "T14.3",
-                            "T15.1",
-                            "T15.2",
-                        ],
-                        "approved_tool_slices": [
-                            "knowledge_search.search_web",
-                            "web_browser.read_page",
-                            "task_system.clickup_update_task",
-                        ],
+                        "required_behavior_scenarios": VALID_V1_REQUIRED_BEHAVIOR_SCENARIOS,
+                        "approved_tool_slices": VALID_V1_APPROVED_TOOL_SLICES,
                     },
                     "attention": {
                         "attention_policy_owner": "durable_attention_inbox_policy",
@@ -893,19 +879,8 @@ def test_main_fails_when_incident_evidence_debug_posture_does_not_match_dedicate
                         "product_stage": "v1_no_ui_life_assistant",
                         "conversation_gate_state": "conversation_surface_ready",
                         "learned_state_gate_state": "inspection_surface_ready",
-                        "required_behavior_scenarios": [
-                            "T13.1",
-                            "T14.1",
-                            "T14.2",
-                            "T14.3",
-                            "T15.1",
-                            "T15.2",
-                        ],
-                        "approved_tool_slices": [
-                            "knowledge_search.search_web",
-                            "web_browser.read_page",
-                            "task_system.clickup_update_task",
-                        ],
+                        "required_behavior_scenarios": VALID_V1_REQUIRED_BEHAVIOR_SCENARIOS,
+                        "approved_tool_slices": VALID_V1_APPROVED_TOOL_SLICES,
                     },
                     "attention": {
                         "attention_policy_owner": "durable_attention_inbox_policy",
@@ -1008,19 +983,8 @@ def test_main_fails_when_incident_evidence_external_cadence_cutover_proof_is_mis
                         "product_stage": "v1_no_ui_life_assistant",
                         "conversation_gate_state": "conversation_surface_ready",
                         "learned_state_gate_state": "inspection_surface_ready",
-                        "required_behavior_scenarios": [
-                            "T13.1",
-                            "T14.1",
-                            "T14.2",
-                            "T14.3",
-                            "T15.1",
-                            "T15.2",
-                        ],
-                        "approved_tool_slices": [
-                            "knowledge_search.search_web",
-                            "web_browser.read_page",
-                            "task_system.clickup_update_task",
-                        ],
+                        "required_behavior_scenarios": VALID_V1_REQUIRED_BEHAVIOR_SCENARIOS,
+                        "approved_tool_slices": VALID_V1_APPROVED_TOOL_SLICES,
                     },
                     "attention": {
                         "attention_policy_owner": "durable_attention_inbox_policy",
@@ -1123,19 +1087,8 @@ def test_main_fails_when_incident_evidence_telegram_conversation_surface_is_miss
                         "product_stage": "v1_no_ui_life_assistant",
                         "conversation_gate_state": "conversation_surface_ready",
                         "learned_state_gate_state": "inspection_surface_ready",
-                        "required_behavior_scenarios": [
-                            "T13.1",
-                            "T14.1",
-                            "T14.2",
-                            "T14.3",
-                            "T15.1",
-                            "T15.2",
-                        ],
-                        "approved_tool_slices": [
-                            "knowledge_search.search_web",
-                            "web_browser.read_page",
-                            "task_system.clickup_update_task",
-                        ],
+                        "required_behavior_scenarios": VALID_V1_REQUIRED_BEHAVIOR_SCENARIOS,
+                        "approved_tool_slices": VALID_V1_APPROVED_TOOL_SLICES,
                     },
                     "attention": {
                         "attention_policy_owner": "durable_attention_inbox_policy",
@@ -1247,19 +1200,8 @@ def test_main_fails_when_incident_evidence_proactive_posture_is_missing(
                         "product_stage": "v1_no_ui_life_assistant",
                         "conversation_gate_state": "conversation_surface_ready",
                         "learned_state_gate_state": "inspection_surface_ready",
-                        "required_behavior_scenarios": [
-                            "T13.1",
-                            "T14.1",
-                            "T14.2",
-                            "T14.3",
-                            "T15.1",
-                            "T15.2",
-                        ],
-                        "approved_tool_slices": [
-                            "knowledge_search.search_web",
-                            "web_browser.read_page",
-                            "task_system.clickup_update_task",
-                        ],
+                        "required_behavior_scenarios": VALID_V1_REQUIRED_BEHAVIOR_SCENARIOS,
+                        "approved_tool_slices": VALID_V1_APPROVED_TOOL_SLICES,
                     },
                     "attention": {
                         "attention_policy_owner": "durable_attention_inbox_policy",
@@ -1372,19 +1314,8 @@ def test_main_fails_when_incident_evidence_retrieval_alignment_drifts(
                         "product_stage": "v1_no_ui_life_assistant",
                         "conversation_gate_state": "conversation_surface_ready",
                         "learned_state_gate_state": "inspection_surface_ready",
-                        "required_behavior_scenarios": [
-                            "T13.1",
-                            "T14.1",
-                            "T14.2",
-                            "T14.3",
-                            "T15.1",
-                            "T15.2",
-                        ],
-                        "approved_tool_slices": [
-                            "knowledge_search.search_web",
-                            "web_browser.read_page",
-                            "task_system.clickup_update_task",
-                        ],
+                        "required_behavior_scenarios": VALID_V1_REQUIRED_BEHAVIOR_SCENARIOS,
+                        "approved_tool_slices": VALID_V1_APPROVED_TOOL_SLICES,
                     },
                     "attention": {
                         "attention_policy_owner": "durable_attention_inbox_policy",

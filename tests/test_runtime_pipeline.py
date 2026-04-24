@@ -5126,6 +5126,8 @@ def _build_behavior_runtime(
     memory_repository: FakeMemoryRepository,
     *,
     clickup_task_client: FakeClickUpTaskClient | None = None,
+    google_calendar_client: FakeGoogleCalendarClient | None = None,
+    google_drive_client: FakeGoogleDriveClient | None = None,
     knowledge_search_client: FakeDuckDuckGoSearchClient | None = None,
     web_browser_client: FakeGenericHttpPageClient | None = None,
 ) -> RuntimeOrchestrator:
@@ -5140,6 +5142,8 @@ def _build_behavior_runtime(
             memory_repository=memory_repository,
             telegram_client=FakeTelegramClient(),
             clickup_task_client=clickup_task_client,
+            google_calendar_client=google_calendar_client,
+            google_drive_client=google_drive_client,
             knowledge_search_client=knowledge_search_client,
             web_browser_client=web_browser_client,
         ),
@@ -6097,4 +6101,111 @@ async def test_runtime_behavior_work_partner_scenarios() -> None:
         ]
     )
     assert len(results) == 2
+    assert {result.status for result in results} == {"pass"}
+
+
+async def test_runtime_behavior_work_partner_organizer_tool_stack_scenarios() -> None:
+    async def work_partner_clickup_list_scenario() -> BehaviorScenarioCheck:
+        memory = PersistingFakeMemoryRepository(recent_memory=[])
+        runtime = _build_behavior_runtime(
+            memory,
+            clickup_task_client=FakeClickUpTaskClient(),
+        )
+        result = await runtime.run(
+            _behavior_event(
+                event_id="evt-work-partner-organizer-1",
+                trace_id="t-work-partner-organizer-1",
+                text="Be my work partner and list tasks in ClickUp for today's release work.",
+            )
+        )
+        selected_skill_ids = [skill.skill_id for skill in result.role.selected_skills]
+        passed = (
+            result.role.selected == "work_partner"
+            and "clickup_list_tasks" in result.action_result.actions
+            and "structured_reasoning" in selected_skill_ids
+            and "connector_boundary_review" in selected_skill_ids
+        )
+        return BehaviorScenarioCheck(
+            passed=passed,
+            reason="work_partner_clickup_list_boundary" if passed else "work_partner_clickup_list_regression",
+            trace_id=result.event.meta.trace_id,
+            notes=(
+                f"role={result.role.selected};"
+                f"actions={','.join(result.action_result.actions)};"
+                f"skills={','.join(selected_skill_ids)}"
+            ),
+        )
+
+    async def work_partner_calendar_availability_scenario() -> BehaviorScenarioCheck:
+        memory = PersistingFakeMemoryRepository(recent_memory=[])
+        runtime = _build_behavior_runtime(
+            memory,
+            google_calendar_client=FakeGoogleCalendarClient(),
+        )
+        result = await runtime.run(
+            _behavior_event(
+                event_id="evt-work-partner-organizer-2",
+                trace_id="t-work-partner-organizer-2",
+                text="Be my work partner and check calendar availability next week for a release sync.",
+            )
+        )
+        selected_skill_ids = [skill.skill_id for skill in result.role.selected_skills]
+        passed = (
+            result.role.selected == "work_partner"
+            and "google_calendar_read_availability" in result.action_result.actions
+            and "structured_reasoning" in selected_skill_ids
+            and "connector_boundary_review" in selected_skill_ids
+        )
+        return BehaviorScenarioCheck(
+            passed=passed,
+            reason="work_partner_calendar_availability_boundary"
+            if passed
+            else "work_partner_calendar_availability_regression",
+            trace_id=result.event.meta.trace_id,
+            notes=(
+                f"role={result.role.selected};"
+                f"actions={','.join(result.action_result.actions)};"
+                f"skills={','.join(selected_skill_ids)}"
+            ),
+        )
+
+    async def work_partner_drive_metadata_scenario() -> BehaviorScenarioCheck:
+        memory = PersistingFakeMemoryRepository(recent_memory=[])
+        runtime = _build_behavior_runtime(
+            memory,
+            google_drive_client=FakeGoogleDriveClient(),
+        )
+        result = await runtime.run(
+            _behavior_event(
+                event_id="evt-work-partner-organizer-3",
+                trace_id="t-work-partner-organizer-3",
+                text="Be my work partner and list files in Google Drive for release notes.",
+            )
+        )
+        selected_skill_ids = [skill.skill_id for skill in result.role.selected_skills]
+        passed = (
+            result.role.selected == "work_partner"
+            and "google_drive_list_files" in result.action_result.actions
+            and "structured_reasoning" in selected_skill_ids
+            and "connector_boundary_review" in selected_skill_ids
+        )
+        return BehaviorScenarioCheck(
+            passed=passed,
+            reason="work_partner_drive_metadata_boundary" if passed else "work_partner_drive_metadata_regression",
+            trace_id=result.event.meta.trace_id,
+            notes=(
+                f"role={result.role.selected};"
+                f"actions={','.join(result.action_result.actions)};"
+                f"skills={','.join(selected_skill_ids)}"
+            ),
+        )
+
+    results = await execute_behavior_scenarios(
+        [
+            BehaviorScenarioDefinition(test_id="T16.1", run=work_partner_clickup_list_scenario),
+            BehaviorScenarioDefinition(test_id="T16.2", run=work_partner_calendar_availability_scenario),
+            BehaviorScenarioDefinition(test_id="T16.3", run=work_partner_drive_metadata_scenario),
+        ]
+    )
+    assert len(results) == 3
     assert {result.status for result in results} == {"pass"}

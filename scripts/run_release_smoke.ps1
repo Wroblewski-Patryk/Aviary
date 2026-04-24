@@ -165,6 +165,10 @@ function Validate-IncidentEvidenceBundle {
         proactive_policy_owner = $null
         proactive_enabled = $null
         proactive_production_baseline_state = $null
+        organizer_tool_stack_policy_owner = $null
+        organizer_tool_stack_readiness_state = $null
+        organizer_tool_stack_ready_operations = @()
+        organizer_tool_stack_credential_gap_operations = @()
         retrieval_policy_owner = $null
         retrieval_provider_requested = $null
         retrieval_provider_effective = $null
@@ -333,6 +337,18 @@ function Validate-IncidentEvidenceBundle {
     if ([string]$v1Readiness.learned_state_gate_state -ne "inspection_surface_ready") {
         throw "Incident evidence bundle verification failed: unexpected v1_readiness learned_state_gate_state '$($v1Readiness.learned_state_gate_state)'."
     }
+    $healthConnectors = $healthSnapshot.connectors
+    if ($null -eq $healthConnectors) {
+        throw "Incident evidence bundle verification failed: health snapshot connectors surface is missing."
+    }
+    $healthOrganizerToolStack = $healthConnectors.organizer_tool_stack
+    $organizerToolStackContract = Assert-OrganizerToolStackContract `
+        -OrganizerToolStack $healthOrganizerToolStack `
+        -FailurePrefix "Incident evidence bundle verification failed"
+    $incidentOrganizerToolStack = $incidentEvidence.policy_posture."connectors.organizer_tool_stack"
+    $incidentOrganizerToolStackContract = Assert-OrganizerToolStackContract `
+        -OrganizerToolStack $incidentOrganizerToolStack `
+        -FailurePrefix "Incident evidence bundle verification failed"
 
     return @{
         checked                  = $true
@@ -353,6 +369,10 @@ function Validate-IncidentEvidenceBundle {
         proactive_policy_owner = [string]$proactive.policy_owner
         proactive_enabled = [bool]$proactive.enabled
         proactive_production_baseline_state = [string]$proactive.production_baseline_state
+        organizer_tool_stack_policy_owner = [string]$organizerToolStackContract.policy_owner
+        organizer_tool_stack_readiness_state = [string]$organizerToolStackContract.readiness_state
+        organizer_tool_stack_ready_operations = @($organizerToolStackContract.ready_operations)
+        organizer_tool_stack_credential_gap_operations = @($organizerToolStackContract.credential_gap_operations)
         retrieval_policy_owner = [string]$retrievalAlignment.retrieval_policy_owner
         retrieval_provider_requested = [string]$retrievalAlignment.provider_requested
         retrieval_provider_effective = [string]$retrievalAlignment.provider_effective
@@ -364,6 +384,8 @@ function Validate-IncidentEvidenceBundle {
         learned_state_internal_inspection_path = [string]$learnedStateContract.internal_inspection_path
         learned_state_inspection_sections = @($learnedStateContract.inspection_sections)
         learned_state_growth_summary_sections = @($learnedStateContract.growth_summary_sections)
+        incident_organizer_tool_stack_policy_owner = [string]$incidentOrganizerToolStackContract.policy_owner
+        incident_organizer_tool_stack_readiness_state = [string]$incidentOrganizerToolStackContract.readiness_state
     }
 }
 
@@ -561,6 +583,99 @@ function Assert-LearnedStateContract {
         role_skill_metadata_sections = $roleSkillMetadataSections
         planning_continuity_sections = $planningContinuitySections
         reflection_growth_signal_kinds = $reflectionGrowthSignalKinds
+    }
+}
+
+function Assert-OrganizerToolStackContract {
+    param(
+        [object]$OrganizerToolStack,
+        [Parameter(Mandatory = $true)][string]$FailurePrefix
+    )
+
+    $expectedConnectorKinds = @("task_system", "calendar", "cloud_drive")
+    $expectedApprovedOperations = @(
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files"
+    )
+    $expectedReadOnlyOperations = @(
+        "task_system.clickup_list_tasks",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files"
+    )
+    $expectedConfirmationRequiredOperations = @(
+        "task_system.clickup_create_task",
+        "task_system.clickup_update_task"
+    )
+
+    if ($null -eq $OrganizerToolStack) {
+        throw "${FailurePrefix}: organizer_tool_stack posture is missing."
+    }
+    if ([string]$OrganizerToolStack.policy_owner -ne "production_organizer_tool_stack") {
+        throw "${FailurePrefix}: unexpected organizer_tool_stack policy_owner '$($OrganizerToolStack.policy_owner)'."
+    }
+    if ([string]$OrganizerToolStack.stack_name -ne "clickup_calendar_drive_first_stack") {
+        throw "${FailurePrefix}: unexpected organizer_tool_stack stack_name '$($OrganizerToolStack.stack_name)'."
+    }
+    foreach ($propertyName in @(
+        "approved_connector_kinds",
+        "approved_operations",
+        "read_only_operations",
+        "confirmation_required_operations",
+        "user_opt_in_required_operations",
+        "ready_operations",
+        "credential_gap_operations",
+        "readiness_state"
+    )) {
+        if (-not (Has-Property -Object $OrganizerToolStack -Name $propertyName)) {
+            throw "${FailurePrefix}: organizer_tool_stack is missing $propertyName."
+        }
+    }
+
+    $actualConnectorKinds = @($OrganizerToolStack.approved_connector_kinds)
+    if (@(Compare-Object -ReferenceObject $expectedConnectorKinds -DifferenceObject $actualConnectorKinds -SyncWindow 0).Count -gt 0) {
+        throw "${FailurePrefix}: organizer_tool_stack approved_connector_kinds drifted."
+    }
+    $actualApprovedOperations = @($OrganizerToolStack.approved_operations)
+    if (@(Compare-Object -ReferenceObject $expectedApprovedOperations -DifferenceObject $actualApprovedOperations -SyncWindow 0).Count -gt 0) {
+        throw "${FailurePrefix}: organizer_tool_stack approved_operations drifted."
+    }
+    $actualReadOnlyOperations = @($OrganizerToolStack.read_only_operations)
+    if (@(Compare-Object -ReferenceObject $expectedReadOnlyOperations -DifferenceObject $actualReadOnlyOperations -SyncWindow 0).Count -gt 0) {
+        throw "${FailurePrefix}: organizer_tool_stack read_only_operations drifted."
+    }
+    $actualConfirmationRequiredOperations = @($OrganizerToolStack.confirmation_required_operations)
+    if (@(Compare-Object -ReferenceObject $expectedConfirmationRequiredOperations -DifferenceObject $actualConfirmationRequiredOperations -SyncWindow 0).Count -gt 0) {
+        throw "${FailurePrefix}: organizer_tool_stack confirmation_required_operations drifted."
+    }
+    $actualOptInRequiredOperations = @($OrganizerToolStack.user_opt_in_required_operations)
+    if (@(Compare-Object -ReferenceObject $expectedApprovedOperations -DifferenceObject $actualOptInRequiredOperations -SyncWindow 0).Count -gt 0) {
+        throw "${FailurePrefix}: organizer_tool_stack user_opt_in_required_operations drifted."
+    }
+
+    $validReadinessStates = @("provider_stack_ready", "provider_credentials_missing")
+    $readinessState = [string]$OrganizerToolStack.readiness_state
+    if ($validReadinessStates -notcontains $readinessState) {
+        throw "${FailurePrefix}: unexpected organizer_tool_stack readiness_state '$readinessState'."
+    }
+
+    $readyOperations = @($OrganizerToolStack.ready_operations)
+    $credentialGapOperations = @($OrganizerToolStack.credential_gap_operations)
+    if ($readinessState -eq "provider_stack_ready" -and $credentialGapOperations.Count -ne 0) {
+        throw "${FailurePrefix}: organizer_tool_stack readiness_state is provider_stack_ready but credential_gap_operations is not empty."
+    }
+    if ($readinessState -eq "provider_credentials_missing" -and $credentialGapOperations.Count -eq 0) {
+        throw "${FailurePrefix}: organizer_tool_stack readiness_state is provider_credentials_missing but credential_gap_operations is empty."
+    }
+
+    return @{
+        policy_owner = [string]$OrganizerToolStack.policy_owner
+        stack_name = [string]$OrganizerToolStack.stack_name
+        readiness_state = $readinessState
+        ready_operations = $readyOperations
+        credential_gap_operations = $credentialGapOperations
     }
 }
 
@@ -1208,7 +1323,7 @@ if ([string]$v1Readiness.conversation_gate_state -ne "conversation_surface_ready
 if ([string]$v1Readiness.learned_state_gate_state -ne "inspection_surface_ready") {
     throw "Health check failed: unexpected v1_readiness.learned_state_gate_state '$($v1Readiness.learned_state_gate_state)'."
 }
-$requiredV1Scenarios = @("T13.1", "T14.1", "T14.2", "T14.3", "T15.1", "T15.2")
+$requiredV1Scenarios = @("T13.1", "T14.1", "T14.2", "T14.3", "T15.1", "T15.2", "T16.1", "T16.2", "T16.3")
 $actualV1Scenarios = @()
 if ($v1Readiness.PSObject.Properties.Name -contains "required_behavior_scenarios" -and $null -ne $v1Readiness.required_behavior_scenarios) {
     $actualV1Scenarios = @($v1Readiness.required_behavior_scenarios)
@@ -1221,7 +1336,10 @@ foreach ($requiredScenario in $requiredV1Scenarios) {
 $requiredV1ToolSlices = @(
     "knowledge_search.search_web",
     "web_browser.read_page",
-    "task_system.clickup_update_task"
+    "task_system.clickup_list_tasks",
+    "task_system.clickup_update_task",
+    "calendar.google_calendar_read_availability",
+    "cloud_drive.google_drive_list_files"
 )
 $actualV1ToolSlices = @()
 if ($v1Readiness.PSObject.Properties.Name -contains "approved_tool_slices" -and $null -ne $v1Readiness.approved_tool_slices) {
@@ -1232,6 +1350,13 @@ foreach ($requiredToolSlice in $requiredV1ToolSlices) {
         throw "Health check failed: v1_readiness is missing approved tool slice '$requiredToolSlice'."
     }
 }
+$connectors = $health.connectors
+if ($null -eq $connectors) {
+    throw "Health check failed: response is missing connectors."
+}
+$organizerToolStackContract = Assert-OrganizerToolStackContract `
+    -OrganizerToolStack $connectors.organizer_tool_stack `
+    -FailurePrefix "Health check failed"
 
 $response = Invoke-JsonUtf8 -Method POST -Uri $eventUrl -BodyBytes $bodyBytes
 
@@ -1375,6 +1500,36 @@ if ($IncludeDebug) {
     if ([string]$incidentV1Readiness.learned_state_gate_state -ne "inspection_surface_ready") {
         throw "Smoke request failed: unexpected incident_evidence v1_readiness learned_state_gate_state '$($incidentV1Readiness.learned_state_gate_state)'."
     }
+    $incidentRequiredV1Scenarios = @("T13.1", "T14.1", "T14.2", "T14.3", "T15.1", "T15.2", "T16.1", "T16.2", "T16.3")
+    $incidentActualV1Scenarios = @()
+    if ($incidentV1Readiness.PSObject.Properties.Name -contains "required_behavior_scenarios" -and $null -ne $incidentV1Readiness.required_behavior_scenarios) {
+        $incidentActualV1Scenarios = @($incidentV1Readiness.required_behavior_scenarios)
+    }
+    foreach ($requiredScenario in $incidentRequiredV1Scenarios) {
+        if ($incidentActualV1Scenarios -notcontains $requiredScenario) {
+            throw "Smoke request failed: incident_evidence v1_readiness is missing required behavior scenario '$requiredScenario'."
+        }
+    }
+    $incidentRequiredV1ToolSlices = @(
+        "knowledge_search.search_web",
+        "web_browser.read_page",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files"
+    )
+    $incidentActualV1ToolSlices = @()
+    if ($incidentV1Readiness.PSObject.Properties.Name -contains "approved_tool_slices" -and $null -ne $incidentV1Readiness.approved_tool_slices) {
+        $incidentActualV1ToolSlices = @($incidentV1Readiness.approved_tool_slices)
+    }
+    foreach ($requiredToolSlice in $incidentRequiredV1ToolSlices) {
+        if ($incidentActualV1ToolSlices -notcontains $requiredToolSlice) {
+            throw "Smoke request failed: incident_evidence v1_readiness is missing approved tool slice '$requiredToolSlice'."
+        }
+    }
+    $incidentOrganizerToolStackContract = Assert-OrganizerToolStackContract `
+        -OrganizerToolStack $incidentEvidence.policy_posture."connectors.organizer_tool_stack" `
+        -FailurePrefix "Smoke request failed"
 }
 
 $summary = @{
@@ -1488,6 +1643,12 @@ $summary = @{
     incident_evidence_learned_state_internal_inspection_path = if ($null -ne $incidentLearnedStateContract) { [string]$incidentLearnedStateContract.internal_inspection_path } else { $null }
     incident_evidence_learned_state_inspection_sections = if ($null -ne $incidentLearnedStateContract) { @($incidentLearnedStateContract.inspection_sections) } else { @() }
     incident_evidence_learned_state_growth_summary_sections = if ($null -ne $incidentLearnedStateContract) { @($incidentLearnedStateContract.growth_summary_sections) } else { @() }
+    organizer_tool_stack_policy_owner = [string]$organizerToolStackContract.policy_owner
+    organizer_tool_stack_readiness_state = [string]$organizerToolStackContract.readiness_state
+    organizer_tool_stack_ready_operations = @($organizerToolStackContract.ready_operations)
+    organizer_tool_stack_credential_gap_operations = @($organizerToolStackContract.credential_gap_operations)
+    incident_evidence_organizer_tool_stack_policy_owner = if ($null -ne $incidentOrganizerToolStackContract) { [string]$incidentOrganizerToolStackContract.policy_owner } else { $null }
+    incident_evidence_organizer_tool_stack_readiness_state = if ($null -ne $incidentOrganizerToolStackContract) { [string]$incidentOrganizerToolStackContract.readiness_state } else { $null }
     incident_evidence_retrieval_policy_owner = if ($null -ne $incidentRetrievalAlignment) { [string]$incidentRetrievalAlignment.retrieval_policy_owner } else { $null }
     incident_evidence_retrieval_provider_requested = if ($null -ne $incidentRetrievalAlignment) { [string]$incidentRetrievalAlignment.provider_requested } else { $null }
     incident_evidence_retrieval_provider_effective = if ($null -ne $incidentRetrievalAlignment) { [string]$incidentRetrievalAlignment.provider_effective } else { $null }
@@ -1513,6 +1674,10 @@ $summary = @{
     incident_bundle_proactive_policy_owner = $incidentEvidenceBundleCheck.proactive_policy_owner
     incident_bundle_proactive_enabled = $incidentEvidenceBundleCheck.proactive_enabled
     incident_bundle_proactive_production_baseline_state = $incidentEvidenceBundleCheck.proactive_production_baseline_state
+    incident_bundle_organizer_tool_stack_policy_owner = $incidentEvidenceBundleCheck.organizer_tool_stack_policy_owner
+    incident_bundle_organizer_tool_stack_readiness_state = $incidentEvidenceBundleCheck.organizer_tool_stack_readiness_state
+    incident_bundle_organizer_tool_stack_ready_operations = $incidentEvidenceBundleCheck.organizer_tool_stack_ready_operations
+    incident_bundle_organizer_tool_stack_credential_gap_operations = $incidentEvidenceBundleCheck.organizer_tool_stack_credential_gap_operations
     incident_bundle_learned_state_policy_owner = $incidentEvidenceBundleCheck.learned_state_policy_owner
     incident_bundle_learned_state_internal_inspection_path = $incidentEvidenceBundleCheck.learned_state_internal_inspection_path
     incident_bundle_learned_state_inspection_sections = $incidentEvidenceBundleCheck.learned_state_inspection_sections

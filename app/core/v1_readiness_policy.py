@@ -11,11 +11,17 @@ V1_REQUIRED_BEHAVIOR_SCENARIOS = (
     "T14.3",
     "T15.1",
     "T15.2",
+    "T16.1",
+    "T16.2",
+    "T16.3",
 )
 V1_APPROVED_TOOL_SLICES = (
     "knowledge_search.search_web",
     "web_browser.read_page",
+    "task_system.clickup_list_tasks",
     "task_system.clickup_update_task",
+    "calendar.google_calendar_read_availability",
+    "cloud_drive.google_drive_list_files",
 )
 
 

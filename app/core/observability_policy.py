@@ -22,6 +22,7 @@ REQUIRED_POLICY_POSTURE_SURFACES = (
     "scheduler.external_owner_policy",
     "reflection.supervision",
     "connectors.execution_baseline",
+    "connectors.organizer_tool_stack",
     "conversation_channels.telegram",
 )
 
@@ -102,6 +103,7 @@ def build_runtime_incident_evidence(
     scheduler_external_owner_policy: dict[str, object],
     reflection_supervision: dict[str, object],
     connectors_execution_baseline: dict[str, object],
+    connectors_organizer_tool_stack: dict[str, object],
     telegram_conversation_channel: dict[str, object],
 ) -> dict[str, object]:
     policy_posture = {
@@ -115,6 +117,7 @@ def build_runtime_incident_evidence(
         "scheduler.external_owner_policy": dict(scheduler_external_owner_policy),
         "reflection.supervision": dict(reflection_supervision),
         "connectors.execution_baseline": dict(connectors_execution_baseline),
+        "connectors.organizer_tool_stack": dict(connectors_organizer_tool_stack),
         "conversation_channels.telegram": dict(telegram_conversation_channel),
     }
     present_surface_names = [name for name, value in policy_posture.items() if value]

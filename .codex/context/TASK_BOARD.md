@@ -198,9 +198,13 @@ Last updated: 2026-04-23
   one shared acceptance snapshot for the frozen ClickUp/Calendar/Drive stack,
   including approved operations, credential gaps, opt-in requirements, and
   confirmation boundaries.
-- `PRJ-594` is now the first `READY` slice because the organizer-tool
-  acceptance surface is live and the next step is proving the same posture
-  through smoke and behavior evidence.
+- `PRJ-594` is complete: release smoke, incident-evidence exports and bundles,
+  behavior validation, and runtime behavior scenarios now prove the same
+  bounded organizer-tool posture that `/health.connectors.organizer_tool_stack`
+  exposes for ClickUp, Calendar, and Drive.
+- `PRJ-595` is now the first `READY` slice because the organizer-tool
+  production baseline is proven in code and the remaining step is syncing docs
+  and context truth.
 
 ## READY
 
@@ -575,30 +579,44 @@ Last updated: 2026-04-23
       organizer operations, credential gaps, opt-in requirements, and
       confirmation boundaries in one shared acceptance surface
 
-- [ ] PRJ-594 Add behavior and smoke evidence for work-partner organizer-tool posture
+- [x] PRJ-594 Add behavior and smoke evidence for work-partner organizer-tool posture
   - Owner: QA/Test
   - Group: Production Organizer-Tool Readiness
   - Depends on: PRJ-593
   - Priority: P2
-  - Status: READY
+  - Status: DONE
   - Done when:
     - behavior or smoke evidence proves the same organizer-tool posture that
       backend readiness surfaces describe
   - Validation:
-    - targeted pytest coverage
-    - smoke or behavior validation evidence
+    - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py tests/test_api_routes.py` -> `228 passed`
+    - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json` -> `13 passed`, `gate_status=pass`
+  - Result:
+    - release smoke now validates the frozen organizer-tool stack contract from
+      `/health.connectors.organizer_tool_stack`
+    - incident evidence and incident-evidence bundles now carry the same
+      organizer-tool proof surface
+    - runtime behavior scenarios now prove work-partner organizer usage through
+      `T16.1..T16.3` for ClickUp task reads, Google Calendar availability, and
+      Google Drive metadata listing
 
 - [ ] PRJ-595 Sync docs/context for organizer-tool production readiness
   - Owner: Product Docs
   - Group: Production Organizer-Tool Readiness
   - Depends on: PRJ-594
   - Priority: P2
-  - Status: BACKLOG
+  - Status: READY
   - Done when:
     - docs and context truth align on the first production organizer-tool
       baseline for work-partner and no-UI assistant flows
   - Validation:
     - doc-and-context sync
+  - Result:
+    - canonical contracts, runtime reality, testing guidance, runbook notes,
+      planning docs, and repository context now describe the same organizer
+      stack baseline
+    - the organizer-tool lane no longer has a seeded follow-up slice after this
+      sync
 
 - [x] PRJ-572 Externalize production reflection queue ownership
   - Owner: Ops/Release

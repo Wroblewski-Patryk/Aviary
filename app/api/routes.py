@@ -292,6 +292,7 @@ async def _incident_evidence_from_request(
         attention_snapshot=attention_snapshot,
     )
     connectors_execution_baseline = connector_execution_baseline_snapshot(settings)
+    organizer_tool_stack = organizer_tool_stack_snapshot(settings)
     telegram_conversation_channel = _telegram_telemetry_from_request(request).snapshot(
         bot_token_configured=bool(getattr(settings, "telegram_bot_token", "")),
         webhook_secret_configured=bool(getattr(settings, "telegram_webhook_secret", "")),
@@ -328,6 +329,7 @@ async def _incident_evidence_from_request(
         scheduler_external_owner_policy=scheduler_external_owner_policy,
         reflection_supervision=reflection_supervision,
         connectors_execution_baseline=connectors_execution_baseline,
+        connectors_organizer_tool_stack=organizer_tool_stack,
         telegram_conversation_channel=telegram_conversation_channel,
     )
 

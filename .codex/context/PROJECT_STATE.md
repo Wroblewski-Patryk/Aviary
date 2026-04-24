@@ -344,8 +344,14 @@ Last updated: 2026-04-23
   now exposes one shared acceptance snapshot for the frozen organizer-tool
   stack, covering approved operations, credential gaps, opt-in requirements,
   and confirmation boundaries.
-- 2026-04-23: `PRJ-594` is now the first `READY` task; the next slice should
-  add smoke and behavior evidence for the same organizer-tool posture.
+- 2026-04-24: `PRJ-594` is complete: release smoke, incident evidence,
+  incident-evidence bundles, and runtime behavior scenarios now prove the same
+  organizer-tool posture that `/health.connectors.organizer_tool_stack`
+  exposes, including `T16.1..T16.3` for ClickUp list, Google Calendar
+  availability, and Google Drive metadata reads under work-partner selection.
+- 2026-04-24: `PRJ-595` is now the first `READY` task; the remaining slice
+  should synchronize canonical docs and repository context for the now-proven
+  organizer-tool production baseline.
 - 2026-04-22: `PRJ-560` is now the first `READY` task; the next slice should
   freeze the backend work-partner role baseline so future orchestration can
   grow from one explicit role contract instead of diffuse product wording.

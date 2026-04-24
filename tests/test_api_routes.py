@@ -2127,7 +2127,11 @@ def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() ->
     assert body["v1_readiness"]["learned_state_gate_state"] == "inspection_surface_ready"
     assert "T13.1" in body["v1_readiness"]["required_behavior_scenarios"]
     assert "T15.2" in body["v1_readiness"]["required_behavior_scenarios"]
+    assert "T16.3" in body["v1_readiness"]["required_behavior_scenarios"]
+    assert "task_system.clickup_list_tasks" in body["v1_readiness"]["approved_tool_slices"]
     assert "task_system.clickup_update_task" in body["v1_readiness"]["approved_tool_slices"]
+    assert "calendar.google_calendar_read_availability" in body["v1_readiness"]["approved_tool_slices"]
+    assert "cloud_drive.google_drive_list_files" in body["v1_readiness"]["approved_tool_slices"]
     assert body["planning_governance"]["goal_task_creation_posture"] == (
         "bounded_inferred_growth_from_repeated_execution_blockers_only"
     )
@@ -3469,6 +3473,7 @@ def test_health_endpoint_exposes_observability_export_policy_baseline() -> None:
                 "scheduler.external_owner_policy",
                 "reflection.supervision",
                 "connectors.execution_baseline",
+                "connectors.organizer_tool_stack",
                 "conversation_channels.telegram",
             ],
         "local_surfaces": [

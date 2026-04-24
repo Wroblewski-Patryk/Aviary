@@ -518,11 +518,14 @@ def _evaluate_incident_evidence_input(
         and v1_readiness_policy.get("product_stage") == "v1_no_ui_life_assistant"
         and v1_readiness_policy.get("conversation_gate_state") == "conversation_surface_ready"
         and v1_readiness_policy.get("learned_state_gate_state") == "inspection_surface_ready"
-        and {"T13.1", "T14.1", "T14.2", "T14.3", "T15.1", "T15.2"}.issubset(required_behavior_scenarios)
+        and {"T13.1", "T14.1", "T14.2", "T14.3", "T15.1", "T15.2", "T16.1", "T16.2", "T16.3"}.issubset(required_behavior_scenarios)
         and {
             "knowledge_search.search_web",
             "web_browser.read_page",
+            "task_system.clickup_list_tasks",
             "task_system.clickup_update_task",
+            "calendar.google_calendar_read_availability",
+            "cloud_drive.google_drive_list_files",
         }.issubset(approved_tool_slices)
     )
     if not v1_readiness_valid:

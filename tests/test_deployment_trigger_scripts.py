@@ -56,6 +56,41 @@ LEARNED_STATE_REFLECTION_GROWTH_SIGNAL_KINDS = [
     "adaptive_outputs",
     "relations",
 ]
+V1_REQUIRED_BEHAVIOR_SCENARIOS = [
+    "T13.1",
+    "T14.1",
+    "T14.2",
+    "T14.3",
+    "T15.1",
+    "T15.2",
+    "T16.1",
+    "T16.2",
+    "T16.3",
+]
+V1_APPROVED_TOOL_SLICES = [
+    "knowledge_search.search_web",
+    "web_browser.read_page",
+    "task_system.clickup_list_tasks",
+    "task_system.clickup_update_task",
+    "calendar.google_calendar_read_availability",
+    "cloud_drive.google_drive_list_files",
+]
+ORGANIZER_TOOL_STACK_APPROVED_OPERATIONS = [
+    "task_system.clickup_create_task",
+    "task_system.clickup_list_tasks",
+    "task_system.clickup_update_task",
+    "calendar.google_calendar_read_availability",
+    "cloud_drive.google_drive_list_files",
+]
+ORGANIZER_TOOL_STACK_READ_ONLY_OPERATIONS = [
+    "task_system.clickup_list_tasks",
+    "calendar.google_calendar_read_availability",
+    "cloud_drive.google_drive_list_files",
+]
+ORGANIZER_TOOL_STACK_CONFIRMATION_REQUIRED_OPERATIONS = [
+    "task_system.clickup_create_task",
+    "task_system.clickup_update_task",
+]
 
 
 def _powershell_exe() -> str | None:
@@ -156,19 +191,8 @@ def stub_aion_server() -> _StubAionServer:
             "product_stage": "v1_no_ui_life_assistant",
             "conversation_gate_state": "conversation_surface_ready",
             "learned_state_gate_state": "inspection_surface_ready",
-            "required_behavior_scenarios": [
-                "T13.1",
-                "T14.1",
-                "T14.2",
-                "T14.3",
-                "T15.1",
-                "T15.2",
-            ],
-            "approved_tool_slices": [
-                "knowledge_search.search_web",
-                "web_browser.read_page",
-                "task_system.clickup_update_task",
-            ],
+            "required_behavior_scenarios": V1_REQUIRED_BEHAVIOR_SCENARIOS,
+            "approved_tool_slices": V1_APPROVED_TOOL_SLICES,
         },
         "runtime_topology": {
             "policy_owner": "runtime_topology_finalization",
@@ -232,6 +256,27 @@ def stub_aion_server() -> _StubAionServer:
             "role_skill_metadata_sections": LEARNED_STATE_ROLE_SKILL_METADATA_SECTIONS,
             "planning_continuity_sections": LEARNED_STATE_PLANNING_CONTINUITY_SECTIONS,
             "reflection_growth_signal_kinds": LEARNED_STATE_REFLECTION_GROWTH_SIGNAL_KINDS,
+        },
+        "connectors": {
+            "organizer_tool_stack": {
+                "policy_owner": "production_organizer_tool_stack",
+                "stack_name": "clickup_calendar_drive_first_stack",
+                "approved_connector_kinds": ["task_system", "calendar", "cloud_drive"],
+                "approved_operations": ORGANIZER_TOOL_STACK_APPROVED_OPERATIONS,
+                "read_only_operations": ORGANIZER_TOOL_STACK_READ_ONLY_OPERATIONS,
+                "confirmation_required_operations": ORGANIZER_TOOL_STACK_CONFIRMATION_REQUIRED_OPERATIONS,
+                "user_opt_in_required_operations": ORGANIZER_TOOL_STACK_APPROVED_OPERATIONS,
+                "ready_operations": [
+                    "task_system.clickup_create_task",
+                    "task_system.clickup_list_tasks",
+                    "task_system.clickup_update_task",
+                ],
+                "credential_gap_operations": [
+                    "calendar.google_calendar_read_availability",
+                    "cloud_drive.google_drive_list_files",
+                ],
+                "readiness_state": "provider_credentials_missing",
+            }
         },
         "conversation_channels": {
             "telegram": {
@@ -325,6 +370,7 @@ def stub_aion_server() -> _StubAionServer:
                 "scheduler.external_owner_policy",
                 "reflection.supervision",
                 "connectors.execution_baseline",
+                "connectors.organizer_tool_stack",
                 "conversation_channels.telegram",
             ],
                 "missing": [],
@@ -367,24 +413,13 @@ def stub_aion_server() -> _StubAionServer:
                     "reflection_growth_signal_kinds": LEARNED_STATE_REFLECTION_GROWTH_SIGNAL_KINDS,
                 },
             "v1_readiness": {
-                "policy_owner": "v1_release_readiness_policy",
-                "product_stage": "v1_no_ui_life_assistant",
-                "conversation_gate_state": "conversation_surface_ready",
+                    "policy_owner": "v1_release_readiness_policy",
+                    "product_stage": "v1_no_ui_life_assistant",
+                    "conversation_gate_state": "conversation_surface_ready",
                     "learned_state_gate_state": "inspection_surface_ready",
-                    "required_behavior_scenarios": [
-                        "T13.1",
-                        "T14.1",
-                        "T14.2",
-                        "T14.3",
-                        "T15.1",
-                        "T15.2",
-                    ],
-                    "approved_tool_slices": [
-                        "knowledge_search.search_web",
-                        "web_browser.read_page",
-                    "task_system.clickup_update_task",
-                ],
-            },
+                    "required_behavior_scenarios": V1_REQUIRED_BEHAVIOR_SCENARIOS,
+                    "approved_tool_slices": V1_APPROVED_TOOL_SLICES,
+                },
             "attention": {
                 "attention_policy_owner": "durable_attention_inbox_policy",
                 "coordination_mode": "durable_inbox",
@@ -425,6 +460,25 @@ def stub_aion_server() -> _StubAionServer:
                 },
                 "connectors.execution_baseline": {
                     "execution_owner": "connector_execution_registry",
+                },
+                "connectors.organizer_tool_stack": {
+                    "policy_owner": "production_organizer_tool_stack",
+                    "stack_name": "clickup_calendar_drive_first_stack",
+                    "approved_connector_kinds": ["task_system", "calendar", "cloud_drive"],
+                    "approved_operations": ORGANIZER_TOOL_STACK_APPROVED_OPERATIONS,
+                    "read_only_operations": ORGANIZER_TOOL_STACK_READ_ONLY_OPERATIONS,
+                    "confirmation_required_operations": ORGANIZER_TOOL_STACK_CONFIRMATION_REQUIRED_OPERATIONS,
+                    "user_opt_in_required_operations": ORGANIZER_TOOL_STACK_APPROVED_OPERATIONS,
+                    "ready_operations": [
+                        "task_system.clickup_create_task",
+                        "task_system.clickup_list_tasks",
+                        "task_system.clickup_update_task",
+                    ],
+                    "credential_gap_operations": [
+                        "calendar.google_calendar_read_availability",
+                        "cloud_drive.google_drive_list_files",
+                    ],
+                    "readiness_state": "provider_credentials_missing",
                 },
                 "conversation_channels.telegram": {
                     "policy_owner": "telegram_conversation_reliability_telemetry",
@@ -523,6 +577,7 @@ def _write_incident_bundle(
                 "scheduler.external_owner_policy",
                 "reflection.supervision",
                 "connectors.execution_baseline",
+                "connectors.organizer_tool_stack",
                 "conversation_channels.telegram",
             ],
             "missing": [],
@@ -568,20 +623,9 @@ def _write_incident_bundle(
                     "policy_owner": "v1_release_readiness_policy",
                     "product_stage": "v1_no_ui_life_assistant",
                     "conversation_gate_state": "conversation_surface_ready",
-                "learned_state_gate_state": "inspection_surface_ready",
-                "required_behavior_scenarios": [
-                    "T13.1",
-                    "T14.1",
-                    "T14.2",
-                    "T14.3",
-                    "T15.1",
-                    "T15.2",
-                ],
-                "approved_tool_slices": [
-                    "knowledge_search.search_web",
-                    "web_browser.read_page",
-                        "task_system.clickup_update_task",
-                    ],
+                    "learned_state_gate_state": "inspection_surface_ready",
+                    "required_behavior_scenarios": V1_REQUIRED_BEHAVIOR_SCENARIOS,
+                    "approved_tool_slices": V1_APPROVED_TOOL_SLICES,
                 },
                 "attention": {
                     "attention_policy_owner": "durable_attention_inbox_policy",
@@ -624,6 +668,25 @@ def _write_incident_bundle(
             "connectors.execution_baseline": {
                 "execution_owner": "connector_execution_registry",
             },
+            "connectors.organizer_tool_stack": {
+                "policy_owner": "production_organizer_tool_stack",
+                "stack_name": "clickup_calendar_drive_first_stack",
+                "approved_connector_kinds": ["task_system", "calendar", "cloud_drive"],
+                "approved_operations": ORGANIZER_TOOL_STACK_APPROVED_OPERATIONS,
+                "read_only_operations": ORGANIZER_TOOL_STACK_READ_ONLY_OPERATIONS,
+                "confirmation_required_operations": ORGANIZER_TOOL_STACK_CONFIRMATION_REQUIRED_OPERATIONS,
+                "user_opt_in_required_operations": ORGANIZER_TOOL_STACK_APPROVED_OPERATIONS,
+                "ready_operations": [
+                    "task_system.clickup_create_task",
+                    "task_system.clickup_list_tasks",
+                    "task_system.clickup_update_task",
+                ],
+                "credential_gap_operations": [
+                    "calendar.google_calendar_read_availability",
+                    "cloud_drive.google_drive_list_files",
+                ],
+                "readiness_state": "provider_credentials_missing",
+            },
             "conversation_channels.telegram": {
                 "policy_owner": "telegram_conversation_reliability_telemetry",
                 "round_trip_state": "provider_backed_ready",
@@ -651,6 +714,29 @@ def _write_incident_bundle(
             "product_stage": "v1_no_ui_life_assistant",
             "conversation_gate_state": "conversation_surface_ready",
             "learned_state_gate_state": "inspection_surface_ready",
+            "required_behavior_scenarios": V1_REQUIRED_BEHAVIOR_SCENARIOS,
+            "approved_tool_slices": V1_APPROVED_TOOL_SLICES,
+        },
+        "connectors": {
+            "organizer_tool_stack": {
+                "policy_owner": "production_organizer_tool_stack",
+                "stack_name": "clickup_calendar_drive_first_stack",
+                "approved_connector_kinds": ["task_system", "calendar", "cloud_drive"],
+                "approved_operations": ORGANIZER_TOOL_STACK_APPROVED_OPERATIONS,
+                "read_only_operations": ORGANIZER_TOOL_STACK_READ_ONLY_OPERATIONS,
+                "confirmation_required_operations": ORGANIZER_TOOL_STACK_CONFIRMATION_REQUIRED_OPERATIONS,
+                "user_opt_in_required_operations": ORGANIZER_TOOL_STACK_APPROVED_OPERATIONS,
+                "ready_operations": [
+                    "task_system.clickup_create_task",
+                    "task_system.clickup_list_tasks",
+                    "task_system.clickup_update_task",
+                ],
+                "credential_gap_operations": [
+                    "calendar.google_calendar_read_availability",
+                    "cloud_drive.google_drive_list_files",
+                ],
+                "readiness_state": "provider_credentials_missing",
+            },
         },
     }
     (bundle_dir / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
@@ -899,6 +985,23 @@ def test_release_smoke_fails_when_proactive_health_surface_is_missing(
     assert "response is missing proactive" in combined_output
 
 
+def test_release_smoke_fails_when_organizer_tool_stack_health_surface_is_missing(
+    stub_aion_server: _StubAionServer,
+) -> None:
+    original = dict(_StubAionHandler.health_payload)
+    broken = dict(original)
+    broken["connectors"] = {}
+    _StubAionHandler.health_payload = broken
+    try:
+        result = _run_release_smoke("-BaseUrl", stub_aion_server.base_url, cwd=ROOT)
+    finally:
+        _StubAionHandler.health_payload = original
+
+    assert result.returncode != 0
+    combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
+    assert "organizer_tool_stack posture is missing" in combined_output
+
+
 def test_release_smoke_verifies_fresh_successful_deployment_evidence(
     stub_aion_server: _StubAionServer,
     tmp_path: Path,
@@ -969,6 +1072,19 @@ def test_release_smoke_validates_exported_incident_evidence_when_debug_mode_is_r
     assert summary["incident_evidence_learned_state_growth_summary_sections"] == (
         LEARNED_STATE_GROWTH_SUMMARY_SECTIONS
     )
+    assert summary["organizer_tool_stack_policy_owner"] == "production_organizer_tool_stack"
+    assert summary["organizer_tool_stack_readiness_state"] == "provider_credentials_missing"
+    assert summary["organizer_tool_stack_ready_operations"] == [
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+    ]
+    assert summary["organizer_tool_stack_credential_gap_operations"] == [
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files",
+    ]
+    assert summary["incident_evidence_organizer_tool_stack_policy_owner"] == "production_organizer_tool_stack"
+    assert summary["incident_evidence_organizer_tool_stack_readiness_state"] == "provider_credentials_missing"
     assert summary["incident_evidence_retrieval_policy_owner"] == "retrieval_lifecycle_policy"
     assert summary["incident_evidence_retrieval_provider_requested"] == "openai"
     assert summary["incident_evidence_retrieval_provider_effective"] == "openai"
@@ -1020,6 +1136,17 @@ def test_release_smoke_verifies_incident_evidence_bundle_when_bundle_path_is_pro
     assert summary["incident_bundle_proactive_production_baseline_state"] == (
         "external_scheduler_target_owner"
     )
+    assert summary["incident_bundle_organizer_tool_stack_policy_owner"] == "production_organizer_tool_stack"
+    assert summary["incident_bundle_organizer_tool_stack_readiness_state"] == "provider_credentials_missing"
+    assert summary["incident_bundle_organizer_tool_stack_ready_operations"] == [
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+    ]
+    assert summary["incident_bundle_organizer_tool_stack_credential_gap_operations"] == [
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files",
+    ]
     assert summary["incident_bundle_learned_state_policy_owner"] == "learned_state_inspection_policy"
     assert summary["incident_bundle_learned_state_internal_inspection_path"] == "/internal/state/inspect"
     assert summary["incident_bundle_learned_state_inspection_sections"] == LEARNED_STATE_INSPECTION_SECTIONS
@@ -1055,6 +1182,31 @@ def test_release_smoke_fails_when_incident_evidence_bundle_is_partial(
     combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
     assert "Incident evidence bundle verification failed" in combined_output
     assert "required file missing" in combined_output
+
+
+def test_release_smoke_fails_when_incident_evidence_bundle_organizer_tool_stack_is_partial(
+    stub_aion_server: _StubAionServer,
+    tmp_path: Path,
+) -> None:
+    bundle_dir = tmp_path / "incident-bundle"
+    _write_incident_bundle(bundle_dir)
+    health_snapshot_path = bundle_dir / "health_snapshot.json"
+    health_snapshot = json.loads(health_snapshot_path.read_text(encoding="utf-8"))
+    health_snapshot["connectors"]["organizer_tool_stack"].pop("approved_operations", None)
+    health_snapshot_path.write_text(json.dumps(health_snapshot), encoding="utf-8")
+
+    result = _run_release_smoke(
+        "-BaseUrl",
+        stub_aion_server.base_url,
+        "-IncidentEvidenceBundlePath",
+        str(bundle_dir),
+        cwd=ROOT,
+    )
+
+    assert result.returncode != 0
+    combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
+    assert "Incident evidence bundle verification failed" in combined_output
+    assert "organizer_tool_stack is missing approved_operations" in combined_output
 
 
 def test_release_smoke_fails_when_incident_evidence_debug_posture_is_not_dedicated_admin_only(
@@ -1163,6 +1315,33 @@ def test_release_smoke_fails_when_incident_evidence_learned_state_contract_is_pa
     combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
     assert "Smoke request failed" in combined_output
     assert "learned_state is missing growth_summary_sections" in combined_output
+
+
+def test_release_smoke_fails_when_incident_evidence_organizer_tool_stack_contract_is_partial(
+    stub_aion_server: _StubAionServer,
+) -> None:
+    incident_evidence = _StubAionHandler.event_payload["incident_evidence"]
+    assert isinstance(incident_evidence, dict)
+    policy_posture = dict(incident_evidence["policy_posture"])
+    organizer_tool_stack = dict(policy_posture["connectors.organizer_tool_stack"])
+    organizer_tool_stack.pop("approved_operations", None)
+    policy_posture["connectors.organizer_tool_stack"] = organizer_tool_stack
+    _StubAionHandler.event_payload["incident_evidence"] = {
+        **incident_evidence,
+        "policy_posture": policy_posture,
+    }
+
+    result = _run_release_smoke(
+        "-BaseUrl",
+        stub_aion_server.base_url,
+        "-IncludeDebug",
+        cwd=ROOT,
+    )
+
+    assert result.returncode != 0
+    combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
+    assert "Smoke request failed" in combined_output
+    assert "organizer_tool_stack is missing approved_operations" in combined_output
 
 
 def test_release_smoke_fails_when_deployment_evidence_is_stale(
