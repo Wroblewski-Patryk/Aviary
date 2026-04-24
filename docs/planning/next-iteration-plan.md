@@ -7,6 +7,118 @@ This plan translates the repo analysis into an execution roadmap that brings the
 The goal is not to add more features first.
 The goal is to make the current AION runtime more correct, more inspectable, and easier to extend without architectural drift.
 
+## Planned On 2026-04-24 For Core V1 Time-Aware Planning
+
+The previous final no-UI `v1` closure lane assumed that organizer-tool
+activation should become part of the final `v1` claim.
+
+That is no longer the approved product boundary.
+
+The revised architecture now treats:
+
+- stable conversation
+- bounded web search and page reading
+- tool-grounded learning
+- internal time-aware planned work
+
+as core no-UI `v1`, while organizer tools remain a later extension or sync
+layer.
+
+### Fresh Architecture Gap Snapshot
+
+Observed from canonical architecture, repo truth, and the approved product
+revision:
+
+- the runtime already has goals, tasks, proactive cadence, externalized
+  scheduler ownership, and bounded web reading
+- but future work is still described too much through "reminder" language
+  instead of one internal planned-work model
+- there is not yet one durable contract for time-aware planned work that can
+  be reevaluated by the background cadence and delivered only through the
+  normal foreground pipeline
+- organizer tools are prepared and valuable, but they should not block core
+  `v1`
+- bounded autonomous research should eventually build on the same planned-work
+  model instead of inventing a separate autonomy engine
+
+### New Queue
+
+The next queue is now seeded through `PRJ-642`.
+
+New groups:
+
+- `PRJ-635..PRJ-640` Core V1 Time-Aware Planned Work
+- `PRJ-641..PRJ-642` Bounded Autonomous Research Windows
+
+Why this order:
+
+- the architecture should first define and then implement one future-work
+  model instead of layering a reminder feature on top of existing planning
+- proof for time-aware planned work belongs to core `v1`
+- only after that should spare cadence windows be allowed to support bounded
+  autonomous research
+
+### Group 104 - Core V1 Time-Aware Planned Work
+
+- `PRJ-635` Freeze the time-aware planned-work baseline for core no-UI V1.
+  - Result:
+    - one explicit architecture contract says that reminders, check-ins,
+      routines, and future follow-ups are all variants of internal planned
+      work
+  - Validation:
+    - architecture and planning cross-review
+
+- `PRJ-636` Add the durable planned-work contract and storage shape.
+  - Result:
+    - runtime and storage gain one canonical future-work entity instead of a
+      separate reminder subsystem
+  - Validation:
+    - targeted repository and contract coverage
+
+- `PRJ-637` Implement scheduler reevaluation and due-item attention handoff.
+  - Result:
+    - background cadence reevaluates due work and hands it to the existing
+      attention or proposal boundary
+  - Validation:
+    - targeted scheduler and runtime coverage
+
+- `PRJ-638` Implement foreground delivery for due planned work.
+  - Result:
+    - due future work reaches Telegram or API only through
+      planning -> expression -> action
+  - Validation:
+    - targeted runtime pipeline and action coverage
+
+- `PRJ-639` Add recurring work and context-aware delivery rules.
+  - Result:
+    - recurring routines and delivery-window logic stay explainable and
+      bounded instead of becoming a second scheduler
+  - Validation:
+    - targeted scheduler and planning coverage
+
+- `PRJ-640` Add behavior and release proof for time-aware planned work.
+  - Result:
+    - behavior validation, health or incident evidence, and release smoke now
+      prove the same future-work contract
+  - Validation:
+    - targeted pytest, behavior validation, and release smoke
+
+### Group 105 - Bounded Autonomous Research Windows
+
+- `PRJ-641` Freeze the bounded autonomous research-window policy.
+  - Result:
+    - spare cadence windows may support bounded web research only through the
+      same planned-work and tool-grounded-learning model
+  - Validation:
+    - architecture and product cross-review
+
+- `PRJ-642` Sync docs and context for core V1 time-aware planning.
+  - Result:
+    - product, runtime, testing, ops, planning, and context truth all describe
+      the same revised core `v1` boundary and later organizer extension
+  - Validation:
+    - doc-and-context sync
+
 ## Planned On 2026-04-24 For Final Operational V1 Closure
 
 `PRJ-597..PRJ-611` closed the last broad post-`v1` visibility and introspection

@@ -4,6 +4,40 @@
 
 The current repo already works as an MVP slice, but several architecture-level docs describe systems that are not implemented yet. This file keeps the next real decisions visible and tied to the current codebase.
 
+## Core V1 Time-Aware Planning Revision (2026-04-24)
+
+The approved product and architecture revision now treats core no-UI `v1` as:
+
+- stable Telegram or API conversation
+- bounded web search and page reading
+- tool-grounded learning
+- internal time-aware planned work
+
+Organizer-tool activation remains valuable but moves out of the core `v1`
+closure gate and into a later extension or sync lane.
+
+Key consequences:
+
+1. future work should be modeled as internal planned work, not a standalone
+   reminder subsystem
+2. scheduler cadence should wake reevaluation, not become a second planner
+3. if planned work becomes due, it still crosses the normal
+   attention -> planning -> expression -> action boundary
+4. bounded autonomous research should later build on the same planned-work
+   model instead of inventing a separate autonomy engine
+
+Queue seeded from this revision:
+
+- `PRJ-635..PRJ-640` Core V1 Time-Aware Planned Work
+- `PRJ-641..PRJ-642` Bounded Autonomous Research Windows
+
+Current execution note:
+
+- `PRJ-632..PRJ-633` are superseded by this revision:
+  - they assumed organizer daily-use should stay part of the final core `v1`
+    gate
+  - that is no longer the approved product boundary
+
 ## Final Operational V1 Closure Analysis (2026-04-24)
 
 Fresh comparison of canonical docs, repository truth, and live production

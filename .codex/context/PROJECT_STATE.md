@@ -9,7 +9,17 @@ Last updated: 2026-04-24
   structured pipeline, replies through API or Telegram, and learns lightweight
   user preferences over time
 - Commercial model: TBD
-- Current phase: no-UI V1 baseline achieved in repo; final operational V1-closure queue now active for live tool onboarding and daily-use readiness
+- Current phase: no-UI V1 baseline achieved in repo; core-V1 time-aware planning revision now active before later organizer-tool onboarding
+- 2026-04-24: core no-UI `v1` is now explicitly reinterpreted around stable
+  conversation, bounded internet reading, tool-grounded learning, and
+  internal time-aware planned work. Organizer-tool activation remains prepared
+  but is no longer the blocking core-`v1` gate.
+- 2026-04-24: `PRJ-632..PRJ-633` are superseded by the approved architecture
+  revision. The next queue is now seeded through `PRJ-642` and targets:
+  - durable planned future work as an internal-first planning model
+  - scheduler-owned reevaluation with foreground delivery through the existing
+    action boundary
+  - bounded autonomous research windows built on that same model
 - 2026-04-24: `PRJ-628` is complete: organizer daily-use posture is now proven
   through release smoke, incident-evidence bundles, and behavior validation,
   not only through `/health` or provider-activation summaries.

@@ -51,6 +51,7 @@ Handles delayed cognition.
 Examples:
 
 - reflection
+- planned-work reevaluation
 - conclusion maintenance
 - theta adjustment
 - relation updates
@@ -96,6 +97,7 @@ This boundary owns:
 - attention inbox intake (`pending|claimed|answered|deferred`)
 - conversation-key grouping for burst traffic
 - pending-turn assembly (`item_ids`, `assembled_text`, ownership state)
+- intake of due planned-work prompts after background reevaluation
 
 This boundary does not own side effects.
 It only prepares the conscious turn input contract.
@@ -215,6 +217,7 @@ Planning should answer:
 - what ordered steps make sense?
 - is response needed?
 - is side-effect execution needed?
+- should future work be scheduled, updated, snoozed, cancelled, or completed?
 - which subconscious proposals are accepted, deferred, merged, or discarded?
 - which connector permission gates apply to proposed external operations?
 - which explicit domain intents (if any) should action execute?
@@ -335,8 +338,34 @@ The background loop starts because:
 - a new episode was stored
 - a reflection schedule fires
 - explicit reflection was requested
+- a scheduler cadence tick reopens time-aware planned work for reevaluation
 
-### Step 2. Reflection Scope Load
+### Step 2. Planned-Work Reevaluation
+
+Before slower reflection-only work, the background runtime may reevaluate
+durable planned work against current context and current time.
+
+Typical inputs:
+
+- current timestamp and timezone posture
+- active goals and tasks
+- existing planned-work items
+- quiet-hour or delivery-boundary policy
+- recent user activity
+
+Typical outcomes:
+
+- keep the item pending
+- mark the item due
+- reschedule the item
+- cancel the item
+- emit a bounded attention item or proposal for later foreground handling
+
+Background reevaluation must not send user-visible messages directly.
+If something becomes due, it still crosses into the normal attention ->
+planning -> expression -> action path.
+
+### Step 3. Reflection Scope Load
 
 The system loads the material needed for pattern analysis:
 
@@ -346,7 +375,7 @@ The system loads the material needed for pattern analysis:
 - relation state
 - goal and task progress
 
-### Step 3. Pattern Analysis
+### Step 4. Pattern Analysis
 
 The background loop searches for:
 
@@ -356,7 +385,7 @@ The background loop searches for:
 - failure patterns
 - friction and blockers
 
-### Step 4. Conclusion Generation
+### Step 5. Conclusion Generation
 
 Patterns are converted into more stable conclusions.
 
@@ -367,7 +396,7 @@ Examples:
 - role tendencies
 - goal progress conclusions
 
-### Step 5. Adaptive State Update
+### Step 6. Adaptive State Update
 
 When justified, reflection updates slower-changing adaptive state such as:
 
@@ -378,7 +407,7 @@ When justified, reflection updates slower-changing adaptive state such as:
 
 These updates should be gradual and evidence-based.
 
-### Step 6. Reflection Persistence
+### Step 7. Reflection Persistence
 
 The system persists the conclusions and updated adaptive state so future foreground turns can use them.
 
@@ -394,7 +423,7 @@ Foreground:
 
 Background:
 
-`trigger -> load reflection scope -> analyze patterns -> update conclusions and adaptive state -> persist reflection outputs`
+`trigger -> reevaluate planned work -> load reflection scope -> analyze patterns -> update conclusions and adaptive state -> persist reflection outputs`
 
 ---
 

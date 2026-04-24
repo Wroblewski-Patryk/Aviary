@@ -1,18 +1,20 @@
 # Task
 
 ## Header
-- ID: PRJ-633
-- Title: Sync docs/context for final no-UI V1 closure
-- Status: BLOCKED
+- ID: PRJ-642
+- Title: Sync docs and context for core V1 time-aware planning
+- Status: BACKLOG
 - Owner: Product Docs Agent
-- Depends on: PRJ-632
+- Depends on: PRJ-641
 - Priority: P1
 
 ## Context
-Once final no-UI `v1` acceptance is proven, the repo should say that cleanly and consistently across product docs, runtime reality, ops, testing, and context truth.
+Once the revised core `v1` path is implemented, repository truth should say the
+same thing across product, runtime, testing, ops, and planning docs.
 
 ## Goal
-Synchronize docs/context for final no-UI `v1` closure.
+Synchronize docs/context for time-aware planned work as part of core `v1` and
+for organizer tools as a later extension.
 
 ## Constraints
 - use existing systems and approved mechanisms
@@ -21,8 +23,8 @@ Synchronize docs/context for final no-UI `v1` closure.
 - do not duplicate logic
 
 ## Definition of Done
-- [ ] Product, runtime, testing, ops, planning, and context docs all describe the same final no-UI `v1` closure state.
-- [ ] Repository truth clearly distinguishes `v1` complete from later `v2` work.
+- [ ] Product, runtime, testing, ops, planning, and context docs all describe the same core `v1` state.
+- [ ] Organizer tools are clearly described as post-`v1` extension or sync layer.
 - [ ] The next queue is left to fresh analysis instead of backlog residue.
 
 ## Forbidden
@@ -33,12 +35,12 @@ Synchronize docs/context for final no-UI `v1` closure.
 
 ## Validation Evidence
 - Tests: doc-and-context sync
-- Manual checks: cross-review against final acceptance evidence
+- Manual checks: cross-review against final planned-work and research-window evidence
 - Screenshots/logs:
-- High-risk checks: avoid declaring `v1` closed if any final acceptance gate still depends on unrecorded live work
+- High-risk checks: avoid leaving the repo half on old reminder or organizer-blocking language
 
 ## Architecture Evidence (required for architecture-impacting tasks)
-- Architecture source reviewed: `docs/architecture/10_future_vision.md`, `docs/architecture/02_architecture.md`, `docs/architecture/16_agent_contracts.md`
+- Architecture source reviewed: `docs/architecture/02_architecture.md`, `docs/architecture/10_future_vision.md`, `docs/architecture/15_runtime_flow.md`, `docs/architecture/16_agent_contracts.md`
 - Fits approved architecture: yes
 - Mismatch discovered: no
 - Decision required from user: no
@@ -56,8 +58,5 @@ Synchronize docs/context for final no-UI `v1` closure.
 - [ ] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes
-This slice should make the repository speak with one voice about the final no-UI `v1` state.
-
-This task was superseded on 2026-04-24 by the approved architecture revision
-that makes internal time-aware planned work part of core `v1` and moves
-organizer-tool activation to a later extension lane.
+This slice should make the repository speak with one voice about core `v1`
+time-aware planning and later organizer activation.

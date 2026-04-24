@@ -127,6 +127,27 @@ Fields:
 - status
 - priority
 
+### planned_work_items
+
+Stores time-aware future work derived from planning.
+
+Fields:
+
+- id
+- user_id
+- goal_id
+- task_id
+- kind
+- summary
+- status
+- not_before
+- preferred_at
+- expires_at
+- recurrence_mode
+- delivery_channel
+- provenance
+- last_evaluated_at
+
 ### metrics
 
 Stores measurable runtime or behavioral data.
@@ -218,6 +239,9 @@ Fields:
 - user -> user_tool_authorizations (1:N)
 - user -> goals (1:N)
 - goals -> tasks (1:N)
+- user -> planned_work_items (1:N)
+- goals -> planned_work_items (1:N)
+- tasks -> planned_work_items (1:N)
 - tool_registry -> user_tool_authorizations (1:N)
 
 ---
@@ -275,6 +299,7 @@ Goals and tasks may be introduced early, but the minimal architecture only requi
 - memory_links
 - theta_history
 - proactive_triggers
+- planned_work_history
 - role_revision_history
 - skill_revision_history
 - tool_credential_references

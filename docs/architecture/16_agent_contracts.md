@@ -49,6 +49,7 @@ Canonical shared runtime state may include:
   "affective": {},
   "goals": [],
   "tasks": [],
+  "planned_work": [],
   "attention_inbox": [],
   "pending_turn": {},
   "background_adaptive_outputs": {},
@@ -355,7 +356,7 @@ Minimum contract fields:
   "attention_inbox": [
     {
       "item_id": "attn-1",
-      "source": "user_event|scheduler_tick|subconscious_proposal",
+      "source": "user_event|scheduler_tick|planned_work_due|subconscious_proposal",
       "conversation_key": "telegram:123456",
       "status": "pending|claimed|answered|deferred",
       "priority": 0.0,
@@ -452,6 +453,67 @@ External cadence cutover proof baseline:
 5. until that evidence is present, `/health.scheduler.external_owner_policy`
    remains target-policy posture only and production must treat app-local
    cadence ownership as the active fallback baseline.
+
+## Time-Aware Planned Work Contract
+
+Time-aware planned work is the canonical future-work layer for no-UI `v1`.
+
+It extends existing goals, tasks, proactive cadence, and scheduler ownership
+without introducing a separate reminder engine.
+
+Minimum durable shape:
+
+```json
+{
+  "planned_work": [
+    {
+      "work_id": "pw-1",
+      "user_id": "...",
+      "goal_id": "optional-goal-id",
+      "task_id": "optional-task-id",
+      "kind": "follow_up|check_in|reminder|routine|research_window",
+      "status": "pending|due|snoozed|completed|cancelled",
+      "summary": "...",
+      "delivery_window": {
+        "not_before": "ISO-8601",
+        "preferred_at": "ISO-8601",
+        "expires_at": "ISO-8601"
+      },
+      "recurrence": {
+        "mode": "none|daily|weekly|custom"
+      },
+      "delivery_policy": {
+        "channel": "telegram|api|none",
+        "requires_foreground_execution": true,
+        "quiet_hours_policy": "respect_user_context"
+      },
+      "provenance": "explicit_user_request|planning_inference|reflection_inference",
+      "last_evaluated_at": "ISO-8601"
+    }
+  ]
+}
+```
+
+Rules:
+
+1. planned work is an extension of internal planning state, not a separate
+   reminder subsystem
+2. background cadence may reevaluate planned work against current time and
+   context, but it must not deliver user-visible output directly
+3. if a planned item becomes due, background ownership may only:
+   - update durable planned-work state
+   - emit an attention item
+   - emit a bounded proposal for foreground handling
+4. any later message, notification, or side effect still goes through
+   planning -> expression -> action
+5. planned work may be one-time or recurring, but recurrence remains bounded
+   data plus reevaluation rules rather than a second scheduler outside the
+   existing cadence owner
+6. planned work may support reminders, check-ins, routines, and bounded
+   research windows, but those are all variants of one future-work model
+7. current time, timezone posture, quiet-hour posture, active goals, and
+   recent user context are valid reevaluation inputs; they do not by
+   themselves grant direct delivery authority
 
 Durable attention rollout baseline:
 
@@ -1298,6 +1360,7 @@ Decide what should happen next.
   "connector_capabilities": [],
   "goals": [],
   "tasks": [],
+  "planned_work": [],
   "theta": {}
 }
 ```
@@ -1320,6 +1383,39 @@ Decide what should happen next.
     "selected_skills": [],
     "connector_permission_gates": [],
     "domain_intents": [
+      {
+        "intent_type": "upsert_planned_work_item",
+        "work_kind": "follow_up|check_in|reminder|routine|research_window",
+        "summary": "...",
+        "delivery_window": {
+          "not_before": "ISO-8601",
+          "preferred_at": "ISO-8601",
+          "expires_at": "ISO-8601"
+        },
+        "recurrence_mode": "none|daily|weekly|custom",
+        "channel_hint": "telegram|api",
+        "provenance": "explicit_user_request|planning_inference|reflection_inference"
+      },
+      {
+        "intent_type": "reschedule_planned_work_item",
+        "work_id": "pw-1",
+        "delivery_window": {
+          "not_before": "ISO-8601",
+          "preferred_at": "ISO-8601",
+          "expires_at": "ISO-8601"
+        },
+        "reason": "..."
+      },
+      {
+        "intent_type": "cancel_planned_work_item",
+        "work_id": "pw-1",
+        "reason": "..."
+      },
+      {
+        "intent_type": "complete_planned_work_item",
+        "work_id": "pw-1",
+        "reason": "..."
+      },
       {
         "intent_type": "upsert_goal",
         "name": "...",

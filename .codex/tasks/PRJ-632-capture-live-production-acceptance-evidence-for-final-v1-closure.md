@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-632
 - Title: Capture live production acceptance evidence for final V1 closure
-- Status: BACKLOG
+- Status: BLOCKED
 - Owner: Ops/Release
 - Depends on: PRJ-631
 - Priority: P0
@@ -57,3 +57,14 @@ Capture live production evidence for final no-UI `v1` closure.
 
 ## Notes
 This task is intentionally live-production-focused.
+
+This task was superseded on 2026-04-24 by the approved architecture revision
+that redefines core no-UI `v1` around:
+
+- stable conversation
+- bounded web reading
+- tool-grounded learning
+- time-aware planned future work
+
+Organizer-tool activation remains a prepared post-`v1` extension and no longer
+blocks core `v1` closure.

@@ -63,6 +63,7 @@ The subconscious loop handles delayed cognition:
 - detects recurring patterns
 - updates conclusions
 - adjusts theta and relation state
+- reevaluates time-aware planned work during scheduler-owned cadence windows
 
 ---
 
@@ -154,6 +155,7 @@ Questions answered:
 - what should happen next?
 - what needs response?
 - what needs action?
+- what future work should be scheduled, updated, or cancelled?
 
 ### Expression
 
@@ -187,6 +189,69 @@ Store the finished episode for future retrieval and learning.
 ### Reflection
 
 Analyze patterns across episodes and update future behavior.
+
+---
+
+## Time-Aware Planned Work
+
+AION should not treat reminders as a standalone subsystem.
+
+Instead, future-facing behavior belongs to one shared planned-work model that
+extends existing planning, goals, tasks, proactive cadence, and scheduler
+ownership.
+
+Examples of planned work:
+
+- one-time follow-up
+- morning check-in
+- recurring routine
+- delayed research pass
+- time-bound action window
+
+The core rule is:
+
+- "reminder" is only one possible outward expression of planned work
+- planned work stays internal until runtime decides it is due or newly relevant
+- user-visible delivery still goes through the normal foreground pipeline
+
+This keeps AION closer to human-like time reasoning:
+
+- context plus current time shape what should happen now
+- the system may defer, advance, skip, or deliver a planned action
+- the scheduler only wakes reevaluation; it does not become a second planner
+
+---
+
+## Trigger Model
+
+The architecture keeps one explicit split between triggers for conscious
+foreground processing and triggers for subconscious or background processing.
+
+Conscious foreground triggers:
+
+- direct user events from Telegram or API
+- due planned-work items that cross the attention boundary
+- accepted subconscious proposals that require user-visible handling
+- explicit admin or system requests that enter the foreground event contract
+
+Subconscious or background triggers:
+
+- reflection enqueue after completed turns
+- scheduler or cron cadence ticks
+- maintenance windows
+- proactive reevaluation windows
+- planned-work reevaluation windows
+
+Background processing may decide that something is due.
+It must not bypass the action boundary.
+
+If a due item should reach the user, background ownership may only:
+
+- emit an attention item
+- create a bounded proposal
+- update durable planned-work state
+
+Foreground runtime remains the owner of any later user-visible response.
 
 ---
 

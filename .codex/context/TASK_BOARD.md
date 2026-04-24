@@ -289,16 +289,90 @@ Last updated: 2026-04-24
   runtime-only variable, shadowing `SOURCE_COMMIT=unknown` variables were
   removed, and release smoke now proves that production `runtime_build_revision`
   matches local repo `HEAD`.
-- the next queue intentionally targets the remaining product-to-production
-  gaps that still block everyday use:
-  - bounded website/search/browser workflows must become real user-facing
-    behavior
-  - durable role/skill/tool-authorization visibility for future UI/admin
-  - organizer-tool provider activation for actual daily use
-  - one final no-UI `v1` acceptance bundle for day-to-day conversation and
-    external-tool use
+- the previously seeded final no-UI `v1` closure lane through `PRJ-633` is now
+  superseded by the approved architecture revision for core time-aware planned
+  work.
+- core no-UI `v1` is now defined around:
+  - stable conversation
+  - bounded internet reading
+  - tool-grounded learning
+  - internal time-aware planned work
+- organizer tools remain prepared and valuable, but they now belong to a later
+  extension lane instead of blocking core `v1`.
+- the next queue is now seeded through `PRJ-642` and intentionally targets:
+  - a durable internal planned-work model instead of a standalone reminder
+    subsystem
+  - scheduler-owned reevaluation with foreground delivery through the existing
+    attention -> planning -> expression -> action path
+  - bounded autonomous research windows built on the same future-work model
 
 ## READY
+
+- [ ] PRJ-635 Freeze the time-aware planned-work baseline for core no-UI V1
+  - Owner: Planning Agent
+  - Group: Core V1 Time-Aware Planned Work
+  - Depends on: PRJ-631
+  - Priority: P0
+  - Status: READY
+  - Why now:
+    - the approved architecture revision should become canonical repo truth
+      before runtime work starts, otherwise reminder-like behavior will keep
+      drifting between docs and implementation
+  - Result:
+    - one explicit architecture contract says that reminders, check-ins,
+      routines, and future follow-ups are all variants of internal planned
+      work
+  - Validation:
+    - architecture and planning cross-review
+
+- [ ] PRJ-636 Add the durable planned-work contract and storage shape
+  - Owner: Backend Builder
+  - Group: Core V1 Time-Aware Planned Work
+  - Depends on: PRJ-635
+  - Priority: P0
+  - Status: BACKLOG
+
+- [ ] PRJ-637 Implement scheduler reevaluation and due-item attention handoff
+  - Owner: Backend Builder
+  - Group: Core V1 Time-Aware Planned Work
+  - Depends on: PRJ-636
+  - Priority: P0
+  - Status: BACKLOG
+
+- [ ] PRJ-638 Implement foreground delivery for due planned work
+  - Owner: Backend Builder
+  - Group: Core V1 Time-Aware Planned Work
+  - Depends on: PRJ-637
+  - Priority: P0
+  - Status: BACKLOG
+
+- [ ] PRJ-639 Add recurring work and context-aware delivery rules
+  - Owner: Backend Builder
+  - Group: Core V1 Time-Aware Planned Work
+  - Depends on: PRJ-638
+  - Priority: P1
+  - Status: BACKLOG
+
+- [ ] PRJ-640 Add behavior and release proof for time-aware planned work
+  - Owner: QA/Test
+  - Group: Core V1 Time-Aware Planned Work
+  - Depends on: PRJ-639
+  - Priority: P0
+  - Status: BACKLOG
+
+- [ ] PRJ-641 Freeze the bounded autonomous research-window policy
+  - Owner: Planning Agent
+  - Group: Bounded Autonomous Research Windows
+  - Depends on: PRJ-640
+  - Priority: P1
+  - Status: BACKLOG
+
+- [ ] PRJ-642 Sync docs and context for core V1 time-aware planning
+  - Owner: Product Docs Agent
+  - Group: Bounded Autonomous Research Windows
+  - Depends on: PRJ-641
+  - Priority: P1
+  - Status: BACKLOG
 
 - [x] PRJ-614 Freeze the final operational V1-closure baseline
   - Owner: Planning Agent

@@ -98,7 +98,7 @@ Goal: network of cognitive systems.
 - backend-first, no dedicated UI yet  
 - production-stable conversation through Telegram or API  
 - daily support  
-- reminders  
+- time-aware planning and follow-up
 - planning  
 - reflection  
 
@@ -107,14 +107,16 @@ Goal: network of cognitive systems.
 No-UI `v1` is considered real only when the backend can execute these bounded
 life-assistant workflows end to end through the existing runtime:
 
-1. reminder capture and follow-up
+1. time-aware planned future work
    - explicit user phrasing may create or update internal active work
-   - explicit reminder or check-in preference may opt the user into bounded
-     proactive follow-up
-   - later reminder or check-in delivery must still go through scheduler ->
+   - that future-facing work may be one-time or recurring
+   - "reminder" is only one possible outward expression of that planned work,
+     not a separate subsystem
+   - later due-item delivery must still go through scheduler -> attention ->
      planning -> expression -> action
-   - production baseline for that lane is bounded opt-in follow-up, not
-     permanently policy-disabled proactive outreach
+   - production baseline for that lane is bounded opt-in follow-up and
+     time-aware planned work, not permanently policy-disabled proactive
+     outreach
 2. daily planning activation
    - explicit "plan today/tomorrow/this week" style turns may create an
      operational planning anchor in goals or tasks
@@ -141,14 +143,16 @@ life-assistant workflows end to end through the existing runtime:
    - any durable learning from that read must still go through the existing
      tool-grounded action -> memory path
 
-`v1` does not require full calendar-grade scheduling, due-date parsing, or a
-dedicated reminder UI. Those richer surfaces belong to later tool-expansion or
-`v2` work.
+`v1` does not require full calendar-grade scheduling, external organizer
+credentials, or a dedicated reminder UI. Those richer surfaces belong to later
+tool-expansion or `v2` work.
 
-#### v1 daily-use organizer baseline
+#### Post-v1 organizer extension baseline
 
-No-UI `v1` daily use also includes one explicit bounded organizer baseline for
-the same personality:
+Organizer tools remain an approved extension of the same personality, but they
+are not required for core no-UI `v1` closure.
+
+When activated later, the first bounded organizer baseline is:
 
 1. task review and triage
    - the user may ask what is pending, blocked, or already tracked in the
@@ -195,8 +199,11 @@ green across:
    - backend inspection surfaces must expose what the personality learned,
      selected, and planned
 4. approved tooling posture
-   - bounded search, browser, website-reading, organization tools, and
-     work-partner posture must remain machine-visible and behavior-validated
+   - bounded search, browser, website-reading, and work-partner posture must
+     remain machine-visible and behavior-validated
+5. time-aware planned work posture
+   - internal planned future work and follow-up reevaluation must remain
+     machine-visible and behavior-validated
 
 That acceptance bundle belongs to backend runtime truth, incident evidence,
 release smoke, and behavior validation. It does not require a dedicated UI.
@@ -222,9 +229,10 @@ Canonical final no-UI `v1` acceptance bundle gates:
 4. tool-grounded learning reuse
    - `/health.learned_state.tool_grounded_learning`
    - `/health.v1_readiness.tool_grounded_learning_state`
-5. organizer daily use
-   - `/health.connectors.organizer_tool_stack`
-   - `/health.v1_readiness.organizer_daily_use_state`
+5. time-aware planned work
+   - planned future-work health or runtime surface defined by the planning and
+     scheduler contract
+   - matching `v1_readiness` gate state for planned future work
 6. deploy parity and provenance
    - `/health.deployment`
    - `/health.v1_readiness.deploy_parity_state`
