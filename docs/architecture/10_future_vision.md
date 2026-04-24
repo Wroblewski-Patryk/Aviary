@@ -208,6 +208,31 @@ Canonical no-UI `v1` readiness surfaces:
 - `/health.learned_state`
 - debug or exported `incident_evidence.policy_posture["v1_readiness"]`
 
+Canonical final no-UI `v1` acceptance bundle gates:
+
+1. conversation reliability
+   - `/health.conversation_channels.telegram`
+   - `/health.v1_readiness.conversation_gate_state`
+2. learned-state inspection
+   - `/health.learned_state`
+   - `/health.v1_readiness.learned_state_gate_state`
+3. website reading
+   - `/health.connectors.web_knowledge_tools.website_reading_workflow`
+   - `/health.v1_readiness.website_reading_workflow_state`
+4. tool-grounded learning reuse
+   - `/health.learned_state.tool_grounded_learning`
+   - `/health.v1_readiness.tool_grounded_learning_state`
+5. organizer daily use
+   - `/health.connectors.organizer_tool_stack`
+   - `/health.v1_readiness.organizer_daily_use_state`
+6. deploy parity and provenance
+   - `/health.deployment`
+   - `/health.v1_readiness.deploy_parity_state`
+
+The final no-UI `v1` claim is valid only when these gates are green in live
+production and the matching behavior scenarios remain in the required scenario
+set.
+
 ---
 
 ### v2 – UI And Work / Business Partner Surface

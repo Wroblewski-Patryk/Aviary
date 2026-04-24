@@ -241,6 +241,19 @@ Canonical evidence surfaces for that bundle may include:
 - debug/exported `incident_evidence.policy_posture["v1_readiness"]`
 - behavior-validation scenario anchors for the current `v1` baseline
 
+`/health.v1_readiness` is also the final no-UI `v1` acceptance-bundle surface.
+It should expose:
+
+- one explicit bundle owner
+- named final gate states for:
+  - conversation reliability
+  - learned-state inspection
+  - website reading
+  - tool-grounded learning reuse
+  - organizer daily use
+  - deploy parity
+- canonical runtime surfaces for each gate
+
 ---
 
 ## Tools

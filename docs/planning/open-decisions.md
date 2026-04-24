@@ -240,8 +240,12 @@ Current execution note:
   - runtime reality, testing guidance, ops, planning, and repository context
     now describe the same organizer daily-use proof path and its parity with
     `/health.v1_readiness`
-- `PRJ-630` is now the next active slice:
-  - the next gap is to freeze the final no-UI `v1` daily-use acceptance bundle
+- `PRJ-630` is now complete:
+  - `/health.v1_readiness` now exposes the final no-UI `v1` acceptance bundle
+    contract with named gate states and canonical runtime surfaces
+- `PRJ-631` is now the next active slice:
+  - the next gap is to prove that final acceptance bundle with scenario-level
+    daily-use behavior
 - `PRJ-598` is complete in repo truth: deployment provenance is now
   machine-visible in `/health.deployment`, deploy webhook evidence, exported
   incident evidence, and release smoke.

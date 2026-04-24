@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-630
 - Title: Freeze the final no-UI V1 daily-use acceptance bundle
-- Status: BACKLOG
+- Status: DONE
 - Owner: Planning Agent
 - Depends on: PRJ-629
 - Priority: P0
@@ -21,9 +21,9 @@ Define the final daily-use acceptance bundle for no-UI `v1`.
 - do not duplicate logic
 
 ## Definition of Done
-- [ ] One explicit acceptance bundle records all final no-UI `v1` gates.
-- [ ] The bundle names the exact runtime, evidence, and scenario surfaces.
-- [ ] Planning docs and context agree on the same closure contract.
+- [x] One explicit acceptance bundle records all final no-UI `v1` gates.
+- [x] The bundle names the exact runtime, evidence, and scenario surfaces.
+- [x] Planning docs and context agree on the same closure contract.
 
 ## Forbidden
 - new systems without approval
@@ -32,8 +32,8 @@ Define the final daily-use acceptance bundle for no-UI `v1`.
 - architecture changes without explicit approval
 
 ## Validation Evidence
-- Tests:
-- Manual checks: product/runtime/ops cross-review
+- Tests: `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py`
+- Manual checks: product/runtime/ops cross-review against `v1_readiness`, architecture docs, and planning truth
 - Screenshots/logs:
 - High-risk checks: do not redefine `v1`; express closure using existing approved backend truth and evidence systems
 
@@ -46,13 +46,13 @@ Define the final daily-use acceptance bundle for no-UI `v1`.
 - Follow-up architecture doc updates: planning/context and possibly product docs
 
 ## Review Checklist (mandatory)
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
 - [ ] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes

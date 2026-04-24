@@ -201,8 +201,11 @@ Queue update (2026-04-24):
 - `PRJ-629` is now complete.
 - runtime reality, testing guidance, ops notes, planning, and repository
   context now describe the same organizer daily-use proof path and parity
-- the next active slice is `PRJ-630`, which should freeze the final no-UI `v1`
-  daily-use acceptance bundle
+- `PRJ-630` is now complete.
+- `/health.v1_readiness` now exposes the final no-UI `v1` acceptance bundle
+  contract with named gate states and canonical runtime surfaces
+- the next active slice is `PRJ-631`, which should add scenario-level proof
+  for that final daily-use acceptance bundle
 
 - `PRJ-615` Add machine-visible repo-vs-production truth and deploy-parity evidence.
   - Result:

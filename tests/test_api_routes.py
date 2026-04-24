@@ -2556,6 +2556,8 @@ def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() ->
     ]
     assert body["v1_readiness"]["policy_owner"] == "v1_release_readiness_policy"
     assert body["v1_readiness"]["product_stage"] == "v1_no_ui_life_assistant"
+    assert body["v1_readiness"]["final_acceptance_bundle_owner"] == "no_ui_v1_daily_use_acceptance_bundle"
+    assert body["v1_readiness"]["final_acceptance_target"] == "all_final_gates_green_in_live_production"
     assert body["v1_readiness"]["conversation_gate_state"] == "conversation_surface_ready"
     assert body["v1_readiness"]["learned_state_gate_state"] == "inspection_surface_ready"
     assert "T13.1" in body["v1_readiness"]["required_behavior_scenarios"]
@@ -2590,6 +2592,25 @@ def test_health_endpoint_shows_strict_rollout_hint_when_production_is_ready() ->
         "calendar.google_calendar_read_availability",
         "cloud_drive.google_drive_list_files",
     ]
+    assert body["v1_readiness"]["website_reading_workflow_state"] == "ready_for_direct_and_search_first_review"
+    assert body["v1_readiness"]["tool_grounded_learning_state"] == "tool_grounded_learning_surface_ready"
+    assert body["v1_readiness"]["deploy_parity_state"] == "deploy_parity_surface_ready"
+    assert body["v1_readiness"]["final_acceptance_gate_states"] == {
+        "conversation_reliability": "conversation_surface_ready",
+        "learned_state_inspection": "inspection_surface_ready",
+        "website_reading": "ready_for_direct_and_search_first_review",
+        "tool_grounded_learning": "tool_grounded_learning_surface_ready",
+        "organizer_daily_use": "daily_use_workflows_blocked_by_provider_activation",
+        "deploy_parity": "deploy_parity_surface_ready",
+    }
+    assert body["v1_readiness"]["final_acceptance_surfaces"] == {
+        "conversation_reliability": "/health.conversation_channels.telegram",
+        "learned_state_inspection": "/health.learned_state",
+        "website_reading": "/health.connectors.web_knowledge_tools.website_reading_workflow",
+        "tool_grounded_learning": "/health.learned_state.tool_grounded_learning",
+        "organizer_daily_use": "/health.connectors.organizer_tool_stack",
+        "deploy_parity": "/health.deployment",
+    }
     assert body["planning_governance"]["goal_task_creation_posture"] == (
         "bounded_inferred_growth_from_repeated_execution_blockers_only"
     )

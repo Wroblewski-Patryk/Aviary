@@ -621,6 +621,24 @@ Last updated: 2026-04-24
   - Validation:
     - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json` -> `15 passed`
 
+- [x] PRJ-630 Freeze the final no-UI V1 daily-use acceptance bundle
+  - Owner: Planning Agent
+  - Group: Final No-UI V1 Acceptance Closure
+  - Depends on: PRJ-629
+  - Priority: P0
+  - Status: DONE
+  - Why now:
+    - the repo needs one explicit final contract that says when no-UI `v1`
+      is genuinely real for daily use, rather than only implying it from many
+      separate healthy surfaces
+  - Result:
+    - `/health.v1_readiness` now exposes one final acceptance bundle contract
+      with named gate states and canonical runtime surfaces for conversation,
+      learned-state inspection, website reading, tool-grounded learning,
+      organizer daily use, and deploy parity
+  - Validation:
+    - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py` -> `87 passed`
+
 - [x] PRJ-611 Sync docs/context for the capability-catalog baseline
   - Owner: Product Docs Agent
   - Group: Capability Catalog And Future-UI Bootstrap

@@ -326,6 +326,8 @@ async def _incident_evidence_from_request(
             learned_state=learned_state,
             role_skill_policy=role_skill_policy,
             organizer_tool_stack=organizer_tool_stack,
+            web_knowledge_tools=web_knowledge_tools,
+            deployment=deployment,
         ),
         deployment=deployment,
         attention=attention_snapshot,
@@ -907,11 +909,20 @@ async def health(request: Request) -> dict[str, Any]:
     )
     learned_state = learned_state_policy_snapshot()
     connectors = _connectors_snapshot_from_settings(settings)
+    deployment = deployment_policy_snapshot(
+        runtime_build_revision=str(getattr(settings, "app_build_revision", "unknown") or "unknown"),
+        trigger_mode=str(
+            getattr(settings, "deployment_trigger_mode", "source_automation")
+            or "source_automation"
+        ),
+    )
     v1_readiness = v1_readiness_policy_snapshot(
         telegram_conversation_channel=telegram_channel,
         learned_state=learned_state,
         role_skill_policy=role_skill_policy,
         organizer_tool_stack=connectors["organizer_tool_stack"],
+        web_knowledge_tools=connectors["web_knowledge_tools"],
+        deployment=deployment,
     )
     api_readiness = api_readiness_policy_snapshot()
     capability_catalog = capability_catalog_snapshot(
@@ -943,13 +954,7 @@ async def health(request: Request) -> dict[str, Any]:
         "planning_governance": planning_governance_snapshot(),
         "learned_state": learned_state,
         "connectors": connectors,
-        "deployment": deployment_policy_snapshot(
-            runtime_build_revision=str(getattr(settings, "app_build_revision", "unknown") or "unknown"),
-            trigger_mode=str(
-                getattr(settings, "deployment_trigger_mode", "source_automation")
-                or "source_automation"
-            ),
-        ),
+        "deployment": deployment,
         "conversation_channels": {
             "telegram": telegram_channel,
         },
