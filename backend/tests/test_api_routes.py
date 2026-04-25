@@ -4708,6 +4708,63 @@ def test_app_patch_settings_updates_profile_preferences_and_display_name() -> No
     me_body = me_response.json()
     assert me_body["user"]["display_name"] == "AION Pilot"
     assert me_body["settings"]["preferred_language"] == "en"
+    assert me_body["settings"]["proactive_opt_in"] is False
+
+
+def test_app_patch_settings_persists_proactive_opt_in_without_semantic_side_effects() -> None:
+    client, _, _ = _client()
+    client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+
+    response = client.patch(
+        "/app/me/settings",
+        json={"proactive_opt_in": True},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["proactive_opt_in"] is True
+
+    me_response = client.get("/app/me")
+    assert me_response.status_code == 200
+    assert me_response.json()["settings"]["proactive_opt_in"] is True
+
+
+def test_app_chat_history_returns_recent_memory_entries_for_authenticated_user() -> None:
+    client, _, repository = _client()
+    register_response = client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+    user_id = register_response.json()["user"]["id"]
+    repository.recent_memory = [
+        {
+            "event_id": "evt-1",
+            "source": "api",
+            "user_id": user_id,
+            "event_timestamp": datetime.now(timezone.utc),
+            "summary": "User shared a preference update.",
+            "payload": {"text": "please stay concise"},
+            "importance": 0.7,
+        }
+    ]
+
+    response = client.get("/app/chat/history")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert len(body["items"]) == 1
+    assert body["items"][0]["event_id"] == "evt-1"
+    assert body["items"][0]["source"] == "api"
+    assert body["items"][0]["payload"] == {"text": "please stay concise"}
 
 
 def test_app_chat_message_runs_runtime_under_authenticated_user() -> None:

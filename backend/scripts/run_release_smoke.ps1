@@ -68,6 +68,34 @@ function Invoke-TextUtf8 {
     }
 }
 
+function Assert-WebShellRouteBuildRevision {
+    param(
+        [Parameter(Mandatory = $true)][string]$BaseUrl,
+        [Parameter(Mandatory = $true)][string]$RoutePath,
+        [Parameter(Mandatory = $true)][string]$ExpectedRevision
+    )
+
+    $normalizedRoute = if ([string]::IsNullOrWhiteSpace($RoutePath)) { "/" } else { $RoutePath }
+    $routeUri = if ($normalizedRoute -eq "/") { "$BaseUrl/" } else { "$BaseUrl$normalizedRoute" }
+    $routeHtml = Invoke-TextUtf8 -Uri $routeUri
+    $routeRevisionMatch = [regex]::Match(
+        $routeHtml,
+        '<meta\s+name="aion-web-build-revision"\s+content="(?<revision>[^"]*)"\s*/?>',
+        [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+    )
+    if (-not $routeRevisionMatch.Success) {
+        throw "Health check failed: web shell build revision meta tag is missing from '$normalizedRoute'."
+    }
+
+    $routeRevision = [string]$routeRevisionMatch.Groups["revision"].Value
+    if (-not $routeRevision) {
+        throw "Health check failed: web shell build revision is empty on '$normalizedRoute'."
+    }
+    if ($routeRevision -ne $ExpectedRevision) {
+        throw "Health check failed: web shell build revision '$routeRevision' on '$normalizedRoute' does not match deployment runtime_build_revision '$ExpectedRevision'."
+    }
+}
+
 function Has-Property {
     param(
         [object]$Object,
@@ -1814,22 +1842,14 @@ if ([bool]$deploymentEvidenceCheck.checked) {
         throw "Health check failed: deployment runtime_build_revision '$($deployment.runtime_build_revision)' does not match deployment evidence after_sha '$($deploymentEvidenceCheck.after_sha)'."
     }
 }
-$webIndexHtml = Invoke-TextUtf8 -Uri "$trimmedBaseUrl/"
-$webBuildRevisionMatch = [regex]::Match(
-    $webIndexHtml,
-    '<meta\s+name="aion-web-build-revision"\s+content="(?<revision>[^"]*)"\s*/?>',
-    [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
-)
-if (-not $webBuildRevisionMatch.Success) {
-    throw "Health check failed: web shell build revision meta tag is missing from '/'."
+$webShellRoutes = @("/", "/chat", "/settings", "/tools", "/personality")
+foreach ($webShellRoute in $webShellRoutes) {
+    Assert-WebShellRouteBuildRevision `
+        -BaseUrl $trimmedBaseUrl `
+        -RoutePath $webShellRoute `
+        -ExpectedRevision ([string]$deployment.runtime_build_revision)
 }
-$webBuildRevision = [string]$webBuildRevisionMatch.Groups["revision"].Value
-if (-not $webBuildRevision) {
-    throw "Health check failed: web shell build revision is empty."
-}
-if ([string]$deployment.runtime_build_revision -ne $webBuildRevision) {
-    throw "Health check failed: web shell build revision '$webBuildRevision' does not match deployment runtime_build_revision '$($deployment.runtime_build_revision)'."
-}
+$webBuildRevision = [string]$deployment.runtime_build_revision
 $scheduler = $health.scheduler
 if ($null -eq $scheduler) {
     throw "Health check failed: response is missing scheduler."

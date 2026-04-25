@@ -190,6 +190,13 @@ For first-party `web` triage, treat the browser tools screen as a thin client
 over backend-owned truth rather than an independent source of readiness.
 When a deploy or incident touches tools/channels visibility, confirm:
 
+- the deployed SPA shell routes still resolve to the same web build revision:
+  - `/`
+  - `/chat`
+  - `/settings`
+  - `/tools`
+  - `/personality`
+
 - the authenticated backend contract:
   - `GET /app/tools/overview`
 - the bounded user-preference mutation path:

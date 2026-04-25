@@ -123,6 +123,22 @@ export type AppTelegramLinkStartResponse = {
 
 type JsonBody = Record<string, unknown> | undefined;
 
+function parseJsonIfPossible(text: string): unknown {
+  const trimmed = text.trim();
+  if (!trimmed) {
+    return {};
+  }
+  if (!(trimmed.startsWith("{") || trimmed.startsWith("["))) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    return null;
+  }
+}
+
 async function requestJson<T>(path: string, init: RequestInit = {}, body?: JsonBody): Promise<T> {
   const response = await fetch(path, {
     credentials: "include",
@@ -139,17 +155,19 @@ async function requestJson<T>(path: string, init: RequestInit = {}, body?: JsonB
   }
 
   const text = await response.text();
-  const payload = text ? JSON.parse(text) : {};
+  const payload = parseJsonIfPossible(text);
 
   if (!response.ok) {
     const detail =
-      typeof payload?.detail === "string"
+      payload && typeof payload === "object" && "detail" in payload && typeof payload.detail === "string"
         ? payload.detail
-        : `Request failed with status ${response.status}.`;
+        : text.trim()
+          ? text.trim()
+          : `Request failed with status ${response.status}.`;
     throw new ApiError(response.status, detail);
   }
 
-  return payload as T;
+  return ((payload ?? {}) as T);
 }
 
 export const api = {

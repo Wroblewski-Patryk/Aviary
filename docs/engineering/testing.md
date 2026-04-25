@@ -93,6 +93,9 @@ Incident-evidence bundle export helper:
 - Web client shell changes:
   - keep `web/` as a thin client over backend-owned contracts
   - require at least one successful production build
+  - when the shell route topology changes, confirm release smoke still proves
+    `"/"`, `"/chat"`, `"/settings"`, `"/tools"`, and `"/personality"` all
+    resolve to the same deployed web revision
   - when the change touches tools or channels truth, run focused backend route
     coverage for `/app/tools/overview`, `/app/tools/preferences`, and
     Telegram link-state transitions
@@ -148,10 +151,17 @@ For meaningful repo changes, leave behind:
   evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "tools_overview or tools_preferences or telegram_link"`
   - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py`
+  - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py -k "release_smoke"`
   - `.\web\npm run build`
 - coverage should pin:
     - authenticated `GET /app/tools/overview` grouped payload truth
     - user-owned toggle persistence through `PATCH /app/tools/preferences`
+    - web-shell route proof for:
+      - `/`
+      - `/chat`
+      - `/settings`
+      - `/tools`
+      - `/personality`
     - Telegram link-state transitions:
       - `not_linked`
       - `pending_confirmation`

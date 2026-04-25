@@ -126,6 +126,22 @@ Last updated: 2026-04-25
   - the next queue should therefore repair backend contract health first, then
     the client-side loading and error boundary behavior, then add regression
     and smoke proof for the repaired baseline
+- 2026-04-25: local implementation now covers the first repair slice of that
+  stabilization lane:
+  - `backend/app/memory/repository.py` now serializes chat-memory `source`
+    for the app history route and keeps `proactive_opt_in` plus current tool
+    toggles in the operational preference family
+  - `web/src/lib/api.ts` now handles plain-text backend failures without
+    surfacing misleading JSON parser exceptions
+  - `web/src/App.tsx` now allows successful `Tools` and `Personality` loads to
+    complete and clears stale route-level errors on navigation
+  - `backend/scripts/run_release_smoke.ps1` now verifies that `/`, `/chat`,
+    `/settings`, `/tools`, and `/personality` all resolve to the same deployed
+    web build revision instead of proving only the root route
+  - targeted backend route tests, web route tests, release-smoke regressions,
+    and a production web build now pass locally
+  - deployment and live production verification remain pending because the
+    repaired code is not deployed yet
 - 2026-04-24: `PRJ-635` is complete: canonical architecture now freezes one
   explicit core-`v1` time-aware planned-work baseline. Reminders, check-ins,
   routines, and future follow-ups are variants of one internal planned-work

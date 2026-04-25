@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-678
 - Title: Harden web-shell loading, error, empty, and success states across the current routes
-- Status: READY
+- Status: IN_PROGRESS
 - Owner: Frontend Builder
 - Depends on: PRJ-677
 - Priority: P1
@@ -25,9 +25,9 @@ have coherent user-visible state handling aligned with backend truth.
 - do not duplicate logic
 
 ## Definition of Done
-- [ ] Each current route has a truthful loading, error, empty, and success
+- [x] Each current route has a truthful loading, error, empty, and success
       state where applicable.
-- [ ] Stale global errors do not incorrectly dominate later healthy screens.
+- [x] Stale global errors do not incorrectly dominate later healthy screens.
 - [ ] The repaired shell feels coherent without inventing new product
       subsystems or UI-only truth.
 
@@ -39,7 +39,10 @@ have coherent user-visible state handling aligned with backend truth.
 
 ## Validation Evidence
 - Tests:
+  - `Push-Location web; npm run build; Pop-Location`
 - Manual checks:
+  - route navigation now clears stale errors and successful tool/personality
+    loads can complete
 - Screenshots/logs:
 - High-risk checks:
 
@@ -53,12 +56,12 @@ have coherent user-visible state handling aligned with backend truth.
 - Follow-up architecture doc updates:
 
 ## Review Checklist (mandatory)
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
 - [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
+- [x] Relevant validations were run.
 - [ ] Docs or context were updated if repository truth changed.
 - [ ] Learning journal was updated if a recurring pitfall was confirmed.
 

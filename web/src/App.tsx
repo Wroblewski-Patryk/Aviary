@@ -161,6 +161,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    setError(null);
+  }, [route]);
+
+  useEffect(() => {
     let cancelled = false;
 
     async function bootstrap() {
@@ -227,6 +231,7 @@ export default function App() {
       .getChatHistory()
       .then((payload) => {
         if (!cancelled) {
+          setError(null);
           setHistory(payload.items);
         }
       })
@@ -247,7 +252,7 @@ export default function App() {
   }, [me, route]);
 
   useEffect(() => {
-    if (!me || route !== "/personality" || overviewLoading || overview) {
+    if (!me || route !== "/personality" || overview) {
       return;
     }
 
@@ -257,6 +262,7 @@ export default function App() {
       .getPersonalityOverview()
       .then((payload) => {
         if (!cancelled) {
+          setError(null);
           setOverview(payload);
         }
       })
@@ -274,10 +280,10 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [me, route, overview, overviewLoading]);
+  }, [me, route, overview]);
 
   useEffect(() => {
-    if (!me || route !== "/tools" || toolsLoading || toolsOverview) {
+    if (!me || route !== "/tools" || toolsOverview) {
       return;
     }
 
@@ -287,6 +293,7 @@ export default function App() {
       .getToolsOverview()
       .then((payload) => {
         if (!cancelled) {
+          setError(null);
           setToolsOverview(payload);
         }
       })
@@ -304,7 +311,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [me, route, toolsLoading, toolsOverview]);
+  }, [me, route, toolsOverview]);
 
   const overviewSections = useMemo(() => {
     if (!overview) {

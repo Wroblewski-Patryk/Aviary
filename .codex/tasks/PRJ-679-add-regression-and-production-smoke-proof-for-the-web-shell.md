@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-679
 - Title: Add regression and production smoke proof for the repaired web shell
-- Status: READY
+- Status: IN_PROGRESS
 - Owner: QA/Test
 - Depends on: PRJ-675, PRJ-676, PRJ-677, PRJ-678
 - Priority: P0
@@ -24,9 +24,9 @@ current product-critical user flows.
 - do not duplicate logic
 
 ## Definition of Done
-- [ ] Regression coverage protects chat history, settings persistence, tools
+- [x] Regression coverage protects chat history, settings persistence, tools
       loading, and personality loading.
-- [ ] Release or smoke guidance includes the current first-party web shell
+- [x] Release or smoke guidance includes the current first-party web shell
       route checks.
 - [ ] The repaired baseline is proven locally and in production-oriented smoke
       evidence.
@@ -39,7 +39,11 @@ current product-critical user flows.
 
 ## Validation Evidence
 - Tests:
+  - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_web_routes.py tests/test_deployment_trigger_scripts.py; Pop-Location`
+  - `Push-Location web; npm run build; Pop-Location`
 - Manual checks:
+  - deploy-time production smoke remains pending until the repaired code is
+    shipped
 - Screenshots/logs:
 - High-risk checks:
 
@@ -53,13 +57,13 @@ current product-critical user flows.
 - Follow-up architecture doc updates:
 
 ## Review Checklist (mandatory)
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
 - [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
 - [ ] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes

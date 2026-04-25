@@ -58,6 +58,26 @@ Last updated: 2026-04-25
 - `PRJ-675` is now the first `READY` slice:
   - restore `GET /app/chat/history` and `PATCH /app/me/settings` so the
     current production shell is functionally complete before further UI polish
+- implementation progress on 2026-04-25:
+  - `PRJ-675` is complete locally:
+    - app chat history now serializes `source` correctly instead of failing
+      during response shaping
+    - app settings writes now treat `proactive_opt_in` and tool toggles as
+      operational preferences instead of sending them through semantic
+      embedding paths
+  - `PRJ-676` is complete locally:
+    - local web transport now handles plain-text backend failures
+    truthfully instead of surfacing JSON parser errors
+  - `PRJ-677` is complete locally:
+    - local web route lifecycle no longer self-cancels successful
+    `Tools` and `Personality` loads
+  - `PRJ-678` is in progress:
+    - stale route-level errors now clear on navigation, but final post-deploy
+      UX validation is still pending
+  - `PRJ-679` is in progress:
+    - local regression and release-smoke coverage now include the first-party
+      web shell routes `/`, `/chat`, `/settings`, `/tools`, and `/personality`
+    - live production smoke for the repaired shell remains pending until deploy
 
 ## Agent Workflow Refresh (2026-04-18)
 

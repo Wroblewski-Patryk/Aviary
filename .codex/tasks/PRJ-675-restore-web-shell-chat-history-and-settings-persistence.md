@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-675
 - Title: Restore web-shell chat history and settings persistence through the app-facing backend contract
-- Status: READY
+- Status: DONE
 - Owner: Backend Builder
 - Depends on:
 - Priority: P0
@@ -28,11 +28,11 @@ approved `/app/*` boundary.
 - do not duplicate logic
 
 ## Definition of Done
-- [ ] `GET /app/chat/history` returns `200` for an authenticated user and the
+- [x] `GET /app/chat/history` returns `200` for an authenticated user and the
       payload matches the existing contract.
-- [ ] `PATCH /app/me/settings` persists values and returns the expected
+- [x] `PATCH /app/me/settings` persists values and returns the expected
       settings payload without introducing a parallel settings path.
-- [ ] Targeted backend regression coverage protects both routes and their
+- [x] Targeted backend regression coverage protects both routes and their
       current production failure mode.
 
 ## Forbidden
@@ -43,9 +43,14 @@ approved `/app/*` boundary.
 
 ## Validation Evidence
 - Tests:
+  - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "app_patch_settings or app_chat_history or app_chat_message"; Pop-Location`
+  - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_web_routes.py tests/test_deployment_trigger_scripts.py; Pop-Location`
 - Manual checks:
+  - production endpoint probing confirmed the live `500` scope before the fix:
+    `proactive_opt_in` writes and chat history response shaping
 - Screenshots/logs:
 - High-risk checks:
+  - kept the existing `/app/*` response model boundary intact
 
 ## Architecture Evidence (required for architecture-impacting tasks)
 - Architecture source reviewed: docs/architecture/16_agent_contracts.md;
@@ -57,13 +62,13 @@ approved `/app/*` boundary.
 - Follow-up architecture doc updates:
 
 ## Review Checklist (mandatory)
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
 - [ ] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes

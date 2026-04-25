@@ -529,6 +529,7 @@ class _StubAionHandler(BaseHTTPRequestHandler):
     health_payload: dict[str, object] = {}
     event_payload: dict[str, object] = {}
     web_build_revision: str = LOCAL_REPO_HEAD_SHA
+    web_routes_missing_revision: set[str] = set()
 
     def _write_json(self, payload: dict[str, object], *, status: int = 200) -> None:
         body = json.dumps(payload).encode("utf-8")
@@ -550,11 +551,14 @@ class _StubAionHandler(BaseHTTPRequestHandler):
         return
 
     def do_GET(self) -> None:  # noqa: N802
-        if self.path == "/":
+        if self.path in {"/", "/chat", "/settings", "/tools", "/personality"}:
+            revision = type(self).web_build_revision
+            if self.path in type(self).web_routes_missing_revision:
+                revision = ""
             self._write_html(
                 (
                     "<!doctype html><html><head>"
-                    f'<meta name="aion-web-build-revision" content="{type(self).web_build_revision}" />'
+                    f'<meta name="aion-web-build-revision" content="{revision}" />'
                     "</head><body><div id=\"root\"></div></body></html>"
                 )
             )
@@ -604,6 +608,7 @@ class _StubAionServer:
 @pytest.fixture
 def stub_aion_server() -> _StubAionServer:
     _StubAionHandler.web_build_revision = LOCAL_REPO_HEAD_SHA
+    _StubAionHandler.web_routes_missing_revision = set()
     _StubAionHandler.health_payload = {
         "status": "ok",
         "runtime_policy": {
@@ -2497,17 +2502,17 @@ def test_release_smoke_fails_when_runtime_build_revision_does_not_match_local_re
 def test_release_smoke_fails_when_web_shell_build_revision_meta_tag_is_missing(
     stub_aion_server: _StubAionServer,
 ) -> None:
-    original = _StubAionHandler.web_build_revision
-    _StubAionHandler.web_build_revision = ""
+    original_routes = set(_StubAionHandler.web_routes_missing_revision)
+    _StubAionHandler.web_routes_missing_revision = {"/tools"}
 
     try:
         result = _run_release_smoke("-BaseUrl", stub_aion_server.base_url, cwd=ROOT)
     finally:
-        _StubAionHandler.web_build_revision = original
+        _StubAionHandler.web_routes_missing_revision = original_routes
 
     assert result.returncode != 0
     combined_output = "\n".join(part for part in (result.stdout, result.stderr) if part)
-    assert "web shell build revision is empty" in combined_output
+    assert "web shell build revision is empty on '/tools'" in combined_output
 
 
 def test_release_smoke_fails_when_web_shell_build_revision_drifts_from_runtime_build_revision(
