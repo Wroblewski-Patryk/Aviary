@@ -189,6 +189,7 @@ class MemoryRepository:
             target_row = AionProfile(
                 user_id=target_user_id,
                 preferred_language="en",
+                ui_language="system",
                 language_confidence=0.0,
                 language_source="default",
             )
@@ -202,6 +203,8 @@ class MemoryRepository:
             target_row.preferred_language = source_row.preferred_language
             target_row.language_confidence = source_row.language_confidence
             target_row.language_source = source_row.language_source
+        if str(target_row.ui_language or "system").strip() == "system" and str(source_row.ui_language or "").strip():
+            target_row.ui_language = source_row.ui_language
         await session.delete(source_row)
 
     async def _merge_theta_state(
@@ -448,6 +451,7 @@ class MemoryRepository:
                 source_user_id=normalized_source_user_id,
                 target_user_id=normalized_target_user_id,
             )
+
     async def get_recent_episodic_memory(self, user_id: str, limit: int = 5) -> list[dict]:
         return await self.get_recent_for_user(user_id=user_id, limit=limit)
 
@@ -2364,6 +2368,7 @@ class MemoryRepository:
                 row = AionProfile(
                     user_id=user_id,
                     preferred_language=language_code,
+                    ui_language="system",
                     language_confidence=confidence,
                     language_source=source,
                 )
@@ -2390,6 +2395,7 @@ class MemoryRepository:
         return {
             "user_id": row.user_id,
             "preferred_language": row.preferred_language,
+            "ui_language": row.ui_language,
             "language_confidence": row.language_confidence,
             "language_source": row.language_source,
             "updated_at": row.updated_at,
@@ -2409,6 +2415,7 @@ class MemoryRepository:
                 row = AionProfile(
                     user_id=user_id,
                     preferred_language=normalized_language,
+                    ui_language="system",
                     language_confidence=1.0,
                     language_source=source,
                 )
@@ -2422,6 +2429,7 @@ class MemoryRepository:
         return {
             "user_id": row.user_id,
             "preferred_language": row.preferred_language,
+            "ui_language": row.ui_language,
             "language_confidence": row.language_confidence,
             "language_source": row.language_source,
             "telegram_chat_id": row.telegram_chat_id,
@@ -2431,6 +2439,32 @@ class MemoryRepository:
             "telegram_linked_at": row.telegram_linked_at,
             "updated_at": row.updated_at,
         }
+
+    async def set_user_profile_ui_language(
+        self,
+        *,
+        user_id: str,
+        ui_language: str,
+    ) -> dict:
+        normalized_ui_language = str(ui_language or "").strip().lower() or "system"
+        if normalized_ui_language not in {"system", "en", "pl", "de"}:
+            normalized_ui_language = "system"
+        async with self.session_factory() as session:
+            row = await session.get(AionProfile, user_id)
+            if row is None:
+                row = AionProfile(
+                    user_id=user_id,
+                    preferred_language="en",
+                    ui_language=normalized_ui_language,
+                    language_confidence=0.0,
+                    language_source="default",
+                )
+                session.add(row)
+            else:
+                row.ui_language = normalized_ui_language
+            await session.commit()
+            await session.refresh(row)
+        return self._serialize_profile(row) or {}
 
     async def create_or_rotate_telegram_link_code(
         self,
@@ -2446,6 +2480,7 @@ class MemoryRepository:
                 row = AionProfile(
                     user_id=user_id,
                     preferred_language="en",
+                    ui_language="system",
                     language_confidence=0.0,
                     language_source="default",
                 )
@@ -2457,6 +2492,7 @@ class MemoryRepository:
         return {
             "user_id": row.user_id,
             "preferred_language": row.preferred_language,
+            "ui_language": row.ui_language,
             "language_confidence": row.language_confidence,
             "language_source": row.language_source,
             "telegram_chat_id": row.telegram_chat_id,
@@ -2506,6 +2542,7 @@ class MemoryRepository:
                 row = AionProfile(
                     user_id=user_id,
                     preferred_language="en",
+                    ui_language="system",
                     language_confidence=0.0,
                     language_source="default",
                 )
@@ -3554,6 +3591,7 @@ class MemoryRepository:
         return {
             "user_id": row.user_id,
             "preferred_language": row.preferred_language,
+            "ui_language": row.ui_language,
             "language_confidence": row.language_confidence,
             "language_source": row.language_source,
             "telegram_chat_id": row.telegram_chat_id,

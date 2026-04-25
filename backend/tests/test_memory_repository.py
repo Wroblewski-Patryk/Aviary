@@ -274,7 +274,6 @@ async def test_memory_repository_reassigns_telegram_link_ownership_to_latest_use
     await engine.dispose()
 
 
-
 async def test_memory_repository_merges_legacy_telegram_state_into_linked_auth_user(tmp_path) -> None:
     database_path = tmp_path / "memory-telegram-link-merge.db"
     engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
@@ -301,7 +300,7 @@ async def test_memory_repository_merges_legacy_telegram_state_into_linked_auth_u
         user_id="123456789",
         event_timestamp=datetime.now(timezone.utc),
         summary="User said their name is Patryk.",
-        payload={"text": "Mam na imiê Patryk"},
+        payload={"text": "Mam na imiÄ™ Patryk"},
         importance=0.9,
     )
 
@@ -326,6 +325,7 @@ async def test_memory_repository_merges_legacy_telegram_state_into_linked_auth_u
     assert linked_recent[0]["summary"] == "User said their name is Patryk."
 
     await engine.dispose()
+
 
 async def test_memory_repository_persists_scheduler_cadence_evidence_contract_store(tmp_path) -> None:
     database_path = tmp_path / "memory-scheduler-cadence-evidence.db"
@@ -2329,6 +2329,34 @@ async def test_memory_repository_appends_and_reads_goal_progress_history(tmp_pat
         rows = (await session.execute(select(AionGoalProgress).order_by(AionGoalProgress.id.asc()))).scalars().all()
 
     assert len(rows) == 2
+
+    await engine.dispose()
+
+
+async def test_memory_repository_can_persist_ui_language_separately_from_preferred_language(tmp_path) -> None:
+    database_path = tmp_path / "memory-ui-language.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    await repository.set_user_profile_language(
+        user_id="u-1",
+        language_code="pl",
+        source="app_settings",
+    )
+    profile = await repository.set_user_profile_ui_language(
+        user_id="u-1",
+        ui_language="de",
+    )
+
+    assert profile["preferred_language"] == "pl"
+    assert profile["ui_language"] == "de"
+
+    roundtrip = await repository.get_user_profile("u-1")
+    assert roundtrip is not None
+    assert roundtrip["preferred_language"] == "pl"
+    assert roundtrip["ui_language"] == "de"
 
     await engine.dispose()
 

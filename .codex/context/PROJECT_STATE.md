@@ -240,8 +240,20 @@ Last updated: 2026-04-25
       `pl`, and `de`, rendered as `flag + language label`
     - `response_style` and `collaboration_preference` remain runtime-shaped
       and should not return as manual product-facing settings controls
-  - the next `READY` slice is now `PRJ-687`, focused on chat-first mobile
-    route priority inside the new shell
+  - `PRJ-687..PRJ-691` are now complete:
+    - `Chat` now prioritizes the thread and sticky composer on mobile while
+      keeping continuity as supporting context
+    - `Settings` now center on profile, `ui_language`, and proactive
+      preferences, and the app-facing contract persists `ui_language`
+      separately from conversation continuity
+    - `Tools` now frame each capability around state, next step, and optional
+      technical detail instead of inspection-heavy density
+    - `Personality` now surfaces summary-first insights before raw payload
+      inspection
+    - the authenticated shell now shares one coherent copy and responsive
+      posture across login, chat, settings, tools, and personality
+  - the UX/UI lane seeded through `PRJ-691` is now complete; next work should
+    come from fresh browser feedback or a new product direction
 - 2026-04-24: `PRJ-635` is complete: canonical architecture now freezes one
   explicit core-`v1` time-aware planned-work baseline. Reminders, check-ins,
   routines, and future follow-ups are variants of one internal planned-work

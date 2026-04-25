@@ -280,6 +280,17 @@ Why this order:
   product changes are stable enough to prove across mobile, tablet, and
   desktop screenshots
 
+Implementation status on 2026-04-25:
+
+- `PRJ-685..PRJ-691` are now complete in the repo baseline
+- the authenticated shell now has mobile-first navigation and reduced chrome
+- app-facing settings now persist separate `ui_language` and no longer expose
+  manual `response_style` / `collaboration_preference` controls in the web UI
+- `Chat`, `Tools`, and `Personality` now follow a more product-facing
+  hierarchy with technical detail pushed lower in the flow
+- any next UX/UI work should derive from a fresh browser pass instead of this
+  original queue
+
 ## Planned On 2026-04-24 For Core V1 Time-Aware Planning
 
 The previous final no-UI `v1` closure lane assumed that organizer-tool

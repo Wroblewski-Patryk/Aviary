@@ -129,3 +129,13 @@ def test_alembic_head_includes_attention_and_proposal_contracts(tmp_path, monkey
         "decided_at",
     }.issubset(proposal_columns)
     assert "uq_aion_attention_turn_user_conversation" in attention_constraint_names
+
+
+def test_alembic_head_includes_ui_language_on_profile(tmp_path, monkeypatch) -> None:
+    engine = _upgrade_schema_with_alembic(tmp_path, monkeypatch)
+    inspector = inspect(engine)
+
+    profile_columns = {column["name"] for column in inspector.get_columns("aion_profile")}
+
+    assert "preferred_language" in profile_columns
+    assert "ui_language" in profile_columns

@@ -169,9 +169,21 @@ Last updated: 2026-04-25
       and `de` plus a `flag + label` UI pattern
     - `response_style` and `collaboration_preference` remain runtime-shaped
       and should leave the product-facing settings form
-  - `PRJ-687` is now the first `READY` slice:
-    - redesign chat so the new mobile-first shell immediately leads into a
-      conversation-first route
+  - `PRJ-687..PRJ-691` are now complete:
+    - `Chat` now leads with conversation-first hierarchy, a mobile-friendly
+      sticky composer, and a supporting continuity panel
+    - `Settings` now focus on profile, `ui_language`, and proactive follow-up
+      control, while manual `response_style` and
+      `collaboration_preference` inputs are gone from the product shell
+    - app-facing settings now persist `ui_language` separately from
+      `preferred_language`
+    - `Tools` now emphasize current state, next action, and on-demand
+      technical detail instead of inspection-heavy payload density
+    - `Personality` now shows summary-first insights with raw payload behind
+      explicit inspect affordances
+    - shared copy and mobile/tablet/desktop class posture now align across the
+      authenticated shell
+  - the product-facing UX/UI lane seeded through `PRJ-691` is now complete
 - planned execution order for this lane:
   - `PRJ-685` Mobile-First App Shell Baseline
   - `PRJ-686` UI Language Boundary And Locale Switcher Plan

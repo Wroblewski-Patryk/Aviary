@@ -12,19 +12,422 @@ import {
 
 type RoutePath = "/login" | "/chat" | "/settings" | "/personality" | "/tools";
 type AuthMode = "login" | "register";
+type UiLanguageCode = "system" | "en" | "pl" | "de";
 type SessionMessage =
   | { id: string; role: "user"; text: string }
   | { id: string; role: "assistant"; text: string; meta?: string };
 
 const BUILD_REVISION = String(import.meta.env.VITE_APP_BUILD_REVISION ?? "dev");
 const ROUTES: RoutePath[] = ["/chat", "/settings", "/tools", "/personality"];
-const ROUTE_LABELS: Record<RoutePath, string> = {
-  "/login": "Login",
-  "/chat": "Chat",
-  "/settings": "Settings",
-  "/tools": "Tools",
-  "/personality": "Personality",
-};
+const UI_LANGUAGE_OPTIONS: Array<{
+  value: UiLanguageCode;
+  flag: string;
+  label: Record<Exclude<UiLanguageCode, "system">, string>;
+}> = [
+  { value: "system", flag: "🌐", label: { en: "System", pl: "System", de: "System" } },
+  { value: "en", flag: "🇺🇸", label: { en: "English", pl: "Angielski", de: "Englisch" } },
+  { value: "pl", flag: "🇵🇱", label: { en: "Polish", pl: "Polski", de: "Polnisch" } },
+  { value: "de", flag: "🇩🇪", label: { en: "German", pl: "Niemiecki", de: "Deutsch" } },
+];
+
+const UI_COPY = {
+  en: {
+    routes: {
+      "/login": "Login",
+      "/chat": "Chat",
+      "/settings": "Settings",
+      "/tools": "Tools",
+      "/personality": "Personality",
+    } satisfies Record<RoutePath, string>,
+    routeDescriptions: {
+      "/login": "Authenticate into the product shell.",
+      "/chat": "Conversation-first workspace with recent continuity and live runtime replies.",
+      "/settings": "Profile, interface language, and proactive preferences backed by backend truth.",
+      "/tools": "Tools and channels framed around state, action, and progress instead of raw backend wording.",
+      "/personality": "Product-facing overview of identity, knowledge, planning, and capabilities.",
+    } satisfies Record<RoutePath, string>,
+    common: {
+      workspace: "Workspace",
+      currentSurface: "Current surface",
+      account: "Account",
+      signedInAs: "Signed in as",
+      signOut: "Sign out",
+      build: "build",
+      uiLanguage: "UI language",
+      conversationLanguage: "Conversation language",
+      proactive: "Proactive",
+      on: "On",
+      off: "Off",
+      save: "Save settings",
+      saving: "Saving...",
+      loading: "Loading...",
+      interfaceOnly: "Interface only",
+      details: "Details",
+      inspectPayload: "Inspect raw payload",
+      noData: "No data yet.",
+      user: "You",
+      assistant: "AION",
+      sourceOfTruth: "Source of truth",
+      notSet: "not set",
+      system: "System",
+    },
+    auth: {
+      badge: "AION Web v2",
+      heroTitle: "A mobile-first shell for the personality.",
+      heroBody:
+        "Login, chat, settings, tools, and personality insights now share one cleaner product shell built on the existing backend.",
+      sessionEntry: "Session entry",
+      login: "Log in",
+      register: "Create account",
+      email: "Email",
+      password: "Password",
+      displayName: "Display name",
+      enterWorkspace: "Enter workspace",
+      createAccount: "Create account",
+      tabsLogin: "Login",
+      tabsRegister: "Register",
+    },
+    chat: {
+      eyebrow: "Conversation",
+      title: "Talk to the personality",
+      subtitle: "Keep the conversation front and center. Continuity stays available without pushing the chat off screen.",
+      emptyThread:
+        "Start the conversation here. Recent continuity stays available below, but the main thread remains the primary surface.",
+      placeholder: "Send a message to AION...",
+      composerHint: "Replies come from the existing backend runtime via `/app/chat/message`.",
+      send: "Send message",
+      sending: "Sending...",
+      continuity: "Continuity",
+      timeline: "Recent memory",
+      noHistory: "No persisted conversation events yet.",
+      sessionCount: "Current session",
+      memoryCount: "Memory items",
+      latestLanguage: "Live language",
+      payload: "Event payload",
+    },
+    settings: {
+      eyebrow: "Settings",
+      title: "Personalize the shell",
+      subtitle: "Short, mobile-first settings focused on your profile, interface language, and proactive follow-ups.",
+      profileTitle: "Profile",
+      profileBody: "Choose how the shell identifies you.",
+      uiLanguageTitle: "Interface language",
+      uiLanguageBody: "Changes labels, copy, and navigation in the app shell only.",
+      uiLanguageHelp: "This does not control the language used when talking with AION.",
+      conversationTitle: "Conversation language",
+      conversationBody: "AION adapts live from context, history, and the current conversation.",
+      proactiveTitle: "Proactive follow-ups",
+      proactiveBody: "Let AION send bounded proactive nudges when runtime policy allows it.",
+      saveHint: "Settings are persisted through `/app/me/settings`.",
+      conversationRuntimeOwned: "Runtime-owned and adaptive",
+      savedState: "Saved in backend truth",
+    },
+    tools: {
+      eyebrow: "Tools",
+      title: "Ready tools and channels",
+      subtitle: "See what is available now, what needs action, and what is still blocked.",
+      groupCount: "Tool groups",
+      integral: "Always on",
+      ready: "Ready now",
+      linkRequired: "Needs linking",
+      loading: "Loading tools overview from backend.",
+      empty: "No tools overview payload is loaded yet.",
+      currentStatus: "Current status",
+      nextStep: "Next step",
+      technicalDetails: "Technical details",
+      availability: "Availability",
+      provider: "Provider",
+      control: "Control",
+      linkState: "Link state",
+      readOnly: "Read only",
+      enabledByUser: "Enabled by you",
+      disabledByUser: "Disabled by you",
+      saving: "Saving...",
+      noAction: "No action needed.",
+      telegramLinking: "Telegram linking",
+      generateCode: "Generate code",
+      rotateCode: "Rotate code",
+      generating: "Generating...",
+      linkCode: "Link code",
+      instruction: "Instruction",
+      noLinkCode: "No active link code yet. Generate one when you are ready to confirm the chat.",
+      capabilities: "Capabilities",
+    },
+    personality: {
+      eyebrow: "Personality",
+      title: "Personality overview",
+      subtitle: "High-level insight first, raw payload only when you want to inspect it.",
+      goals: "Goals",
+      tasks: "Tasks",
+      knowledge: "Knowledge",
+      preferences: "Preferences",
+      filter: "Filter sections",
+      loading: "Loading personality overview from backend.",
+      empty: "No matching overview sections for this filter.",
+      highlights: "Highlights",
+    },
+  },
+  pl: {
+    routes: { "/login": "Logowanie", "/chat": "Czat", "/settings": "Ustawienia", "/tools": "Narzędzia", "/personality": "Osobowość" },
+    routeDescriptions: {
+      "/login": "Zaloguj się do powłoki produktu.",
+      "/chat": "Widok rozmowy ustawiony mobile-first z pamięcią pod ręką.",
+      "/settings": "Profil, język interfejsu i zgoda na proaktywność oparte o backend truth.",
+      "/tools": "Narzędzia i kanały pokazane przez stan, akcję i gotowość zamiast surowego backendowego słownictwa.",
+      "/personality": "Produktowy przegląd tożsamości, wiedzy, planowania i możliwości.",
+    },
+    common: {
+      workspace: "Przestrzeń",
+      currentSurface: "Bieżący ekran",
+      account: "Konto",
+      signedInAs: "Zalogowano jako",
+      signOut: "Wyloguj",
+      build: "build",
+      uiLanguage: "Język UI",
+      conversationLanguage: "Język rozmowy",
+      proactive: "Proaktywność",
+      on: "Wł.",
+      off: "Wył.",
+      save: "Zapisz ustawienia",
+      saving: "Zapisywanie...",
+      loading: "Ładowanie...",
+      interfaceOnly: "Tylko interfejs",
+      details: "Szczegóły",
+      inspectPayload: "Pokaż surowy payload",
+      noData: "Brak danych.",
+      user: "Ty",
+      assistant: "AION",
+      sourceOfTruth: "Źródło prawdy",
+      notSet: "brak",
+      system: "System",
+    },
+    auth: {
+      badge: "AION Web v2",
+      heroTitle: "Mobile-first shell dla osobowości.",
+      heroBody:
+        "Logowanie, czat, ustawienia, narzędzia i wgląd w osobowość działają teraz w jednej, czystszej powłoce produktu nad istniejącym backendem.",
+      sessionEntry: "Wejście do sesji",
+      login: "Zaloguj się",
+      register: "Załóż konto",
+      email: "Email",
+      password: "Hasło",
+      displayName: "Nazwa wyświetlana",
+      enterWorkspace: "Wejdź do aplikacji",
+      createAccount: "Utwórz konto",
+      tabsLogin: "Logowanie",
+      tabsRegister: "Rejestracja",
+    },
+    chat: {
+      eyebrow: "Rozmowa",
+      title: "Porozmawiaj z osobowością",
+      subtitle: "Rozmowa jest na pierwszym planie. Ciągłość pozostaje dostępna, ale nie spycha czatu z ekranu.",
+      emptyThread:
+        "Zacznij rozmowę tutaj. Ostatnia ciągłość jest dostępna niżej, ale główny wątek pozostaje najważniejszą powierzchnią.",
+      placeholder: "Napisz wiadomość do AION...",
+      composerHint: "Odpowiedzi pochodzą z istniejącego runtime backendu przez `/app/chat/message`.",
+      send: "Wyślij wiadomość",
+      sending: "Wysyłanie...",
+      continuity: "Ciągłość",
+      timeline: "Ostatnia pamięć",
+      noHistory: "Brak zapisanych zdarzeń rozmowy.",
+      sessionCount: "Bieżąca sesja",
+      memoryCount: "Elementy pamięci",
+      latestLanguage: "Język live",
+      payload: "Payload zdarzenia",
+    },
+    settings: {
+      eyebrow: "Ustawienia",
+      title: "Dopasuj powłokę",
+      subtitle: "Krótki, mobile-first widok ustawień skupiony na profilu, języku interfejsu i proaktywnych follow-upach.",
+      profileTitle: "Profil",
+      profileBody: "Wybierz, jak aplikacja ma Cię opisywać.",
+      uiLanguageTitle: "Język interfejsu",
+      uiLanguageBody: "Zmienia etykiety, copy i nawigację tylko w powłoce aplikacji.",
+      uiLanguageHelp: "To nie steruje językiem rozmowy z AION.",
+      conversationTitle: "Język rozmowy",
+      conversationBody: "AION dopasowuje go live na podstawie kontekstu, historii i bieżącej rozmowy.",
+      proactiveTitle: "Proaktywne follow-upy",
+      proactiveBody: "Pozwól AION wysyłać ograniczone proaktywne przypomnienia, gdy pozwala na to polityka runtime.",
+      saveHint: "Ustawienia zapisują się przez `/app/me/settings`.",
+      conversationRuntimeOwned: "Sterowane przez runtime i adaptacyjne",
+      savedState: "Zapisane w backend truth",
+    },
+    tools: {
+      eyebrow: "Narzędzia",
+      title: "Gotowe narzędzia i kanały",
+      subtitle: "Zobacz, co działa już teraz, co wymaga działania, a co nadal jest zablokowane.",
+      groupCount: "Grupy narzędzi",
+      integral: "Zawsze aktywne",
+      ready: "Gotowe teraz",
+      linkRequired: "Wymaga podpięcia",
+      loading: "Ładowanie widoku narzędzi z backendu.",
+      empty: "Brak załadowanego payloadu narzędzi.",
+      currentStatus: "Obecny stan",
+      nextStep: "Następny krok",
+      technicalDetails: "Szczegóły techniczne",
+      availability: "Dostępność",
+      provider: "Provider",
+      control: "Sterowanie",
+      linkState: "Stan podpięcia",
+      readOnly: "Tylko podgląd",
+      enabledByUser: "Włączone przez Ciebie",
+      disabledByUser: "Wyłączone przez Ciebie",
+      saving: "Zapisywanie...",
+      noAction: "Brak wymaganej akcji.",
+      telegramLinking: "Podpinanie Telegrama",
+      generateCode: "Wygeneruj kod",
+      rotateCode: "Obróć kod",
+      generating: "Generowanie...",
+      linkCode: "Kod podpięcia",
+      instruction: "Instrukcja",
+      noLinkCode: "Brak aktywnego kodu. Wygeneruj go, gdy będziesz gotowy potwierdzić czat.",
+      capabilities: "Możliwości",
+    },
+    personality: {
+      eyebrow: "Osobowość",
+      title: "Przegląd osobowości",
+      subtitle: "Najpierw wgląd produktowy, a surowy payload tylko wtedy, gdy chcesz go sprawdzić.",
+      goals: "Cele",
+      tasks: "Zadania",
+      knowledge: "Wiedza",
+      preferences: "Preferencje",
+      filter: "Filtruj sekcje",
+      loading: "Ładowanie przeglądu osobowości z backendu.",
+      empty: "Brak sekcji pasujących do filtra.",
+      highlights: "Najważniejsze punkty",
+    },
+  },
+  de: {
+    routes: { "/login": "Login", "/chat": "Chat", "/settings": "Einstellungen", "/tools": "Tools", "/personality": "Persönlichkeit" },
+    routeDescriptions: {
+      "/login": "Melde dich in der Produkthülle an.",
+      "/chat": "Konversationsfokus mit mobile-first Layout und sofort sichtbarer Kontinuität.",
+      "/settings": "Profil, Oberflächensprache und proaktive Präferenzen mit Backend-Truth als Grundlage.",
+      "/tools": "Tools und Kanäle über Status, Aktion und Fortschritt statt roher Backend-Terminologie.",
+      "/personality": "Produktorientierter Überblick über Identität, Wissen, Planung und Fähigkeiten.",
+    },
+    common: {
+      workspace: "Workspace",
+      currentSurface: "Aktuelle Ansicht",
+      account: "Konto",
+      signedInAs: "Angemeldet als",
+      signOut: "Abmelden",
+      build: "build",
+      uiLanguage: "UI-Sprache",
+      conversationLanguage: "Gesprächssprache",
+      proactive: "Proaktiv",
+      on: "An",
+      off: "Aus",
+      save: "Einstellungen speichern",
+      saving: "Speichern...",
+      loading: "Lädt...",
+      interfaceOnly: "Nur Oberfläche",
+      details: "Details",
+      inspectPayload: "Rohdaten anzeigen",
+      noData: "Noch keine Daten.",
+      user: "Du",
+      assistant: "AION",
+      sourceOfTruth: "Quelle der Wahrheit",
+      notSet: "nicht gesetzt",
+      system: "System",
+    },
+    auth: {
+      badge: "AION Web v2",
+      heroTitle: "Eine mobile-first Hülle für die Persönlichkeit.",
+      heroBody:
+        "Login, Chat, Einstellungen, Tools und Persönlichkeits-Einblicke teilen jetzt eine klarere Produkthülle über dem bestehenden Backend.",
+      sessionEntry: "Sitzung",
+      login: "Einloggen",
+      register: "Konto erstellen",
+      email: "E-Mail",
+      password: "Passwort",
+      displayName: "Anzeigename",
+      enterWorkspace: "Zum Workspace",
+      createAccount: "Konto erstellen",
+      tabsLogin: "Login",
+      tabsRegister: "Registrieren",
+    },
+    chat: {
+      eyebrow: "Gespräch",
+      title: "Sprich mit der Persönlichkeit",
+      subtitle: "Die Unterhaltung steht im Vordergrund. Kontinuität bleibt sichtbar, verdrängt den Chat aber nicht.",
+      emptyThread:
+        "Starte die Unterhaltung hier. Die letzte Kontinuität bleibt darunter verfügbar, aber der Haupt-Thread bleibt die primäre Fläche.",
+      placeholder: "Sende eine Nachricht an AION...",
+      composerHint: "Antworten kommen aus der bestehenden Backend-Runtime über `/app/chat/message`.",
+      send: "Nachricht senden",
+      sending: "Senden...",
+      continuity: "Kontinuität",
+      timeline: "Letzter Verlauf",
+      noHistory: "Noch keine gespeicherten Gesprächsereignisse.",
+      sessionCount: "Aktuelle Sitzung",
+      memoryCount: "Erinnerungseinträge",
+      latestLanguage: "Live-Sprache",
+      payload: "Ereignis-Payload",
+    },
+    settings: {
+      eyebrow: "Einstellungen",
+      title: "Hülle anpassen",
+      subtitle: "Kurzer mobile-first Bereich für Profil, Oberflächensprache und proaktive Follow-ups.",
+      profileTitle: "Profil",
+      profileBody: "Lege fest, wie dich die App anzeigen soll.",
+      uiLanguageTitle: "Oberflächensprache",
+      uiLanguageBody: "Ändert nur Labels, Copy und Navigation der App-Hülle.",
+      uiLanguageHelp: "Das steuert nicht die Sprache des Gesprächs mit AION.",
+      conversationTitle: "Gesprächssprache",
+      conversationBody: "AION passt sie live aus Kontext, Verlauf und aktueller Unterhaltung an.",
+      proactiveTitle: "Proaktive Follow-ups",
+      proactiveBody: "Erlaube AION begrenzte proaktive Hinweise, wenn die Runtime-Richtlinie es zulässt.",
+      saveHint: "Einstellungen werden über `/app/me/settings` gespeichert.",
+      conversationRuntimeOwned: "Runtime-gesteuert und adaptiv",
+      savedState: "In Backend-Truth gespeichert",
+    },
+    tools: {
+      eyebrow: "Tools",
+      title: "Verfügbare Tools und Kanäle",
+      subtitle: "Sieh, was jetzt bereit ist, was Aktion braucht und was noch blockiert ist.",
+      groupCount: "Tool-Gruppen",
+      integral: "Immer aktiv",
+      ready: "Jetzt bereit",
+      linkRequired: "Benötigt Verknüpfung",
+      loading: "Tool-Übersicht wird aus dem Backend geladen.",
+      empty: "Noch keine Tool-Übersicht geladen.",
+      currentStatus: "Aktueller Status",
+      nextStep: "Nächster Schritt",
+      technicalDetails: "Technische Details",
+      availability: "Verfügbarkeit",
+      provider: "Provider",
+      control: "Steuerung",
+      linkState: "Verknüpfungsstatus",
+      readOnly: "Nur lesen",
+      enabledByUser: "Von dir aktiviert",
+      disabledByUser: "Von dir deaktiviert",
+      saving: "Speichern...",
+      noAction: "Keine Aktion nötig.",
+      telegramLinking: "Telegram verknüpfen",
+      generateCode: "Code erzeugen",
+      rotateCode: "Code erneuern",
+      generating: "Erzeugen...",
+      linkCode: "Verknüpfungscode",
+      instruction: "Anleitung",
+      noLinkCode: "Noch kein aktiver Code. Erzeuge ihn, wenn du den Chat bestätigen willst.",
+      capabilities: "Fähigkeiten",
+    },
+    personality: {
+      eyebrow: "Persönlichkeit",
+      title: "Persönlichkeitsübersicht",
+      subtitle: "Zuerst produktorientierte Einblicke, Rohdaten nur bei Bedarf.",
+      goals: "Ziele",
+      tasks: "Aufgaben",
+      knowledge: "Wissen",
+      preferences: "Präferenzen",
+      filter: "Sektionen filtern",
+      loading: "Persönlichkeitsübersicht wird aus dem Backend geladen.",
+      empty: "Keine passenden Sektionen für diesen Filter.",
+      highlights: "Highlights",
+    },
+  },
+} as const;
 
 function normalizeRoute(pathname: string): RoutePath {
   if (pathname === "/settings") {
@@ -48,7 +451,28 @@ function navigate(path: RoutePath) {
   }
 }
 
-function formatTimestamp(value: string | undefined) {
+function normalizeUiLanguage(value: string | null | undefined): UiLanguageCode {
+  if (value === "en" || value === "pl" || value === "de" || value === "system") {
+    return value;
+  }
+  return "system";
+}
+
+function resolveUiLanguage(value: UiLanguageCode): Exclude<UiLanguageCode, "system"> {
+  if (value !== "system") {
+    return value;
+  }
+  const browserLanguage = typeof window !== "undefined" ? window.navigator.language.toLowerCase() : "en";
+  if (browserLanguage.startsWith("pl")) {
+    return "pl";
+  }
+  if (browserLanguage.startsWith("de")) {
+    return "de";
+  }
+  return "en";
+}
+
+function formatTimestamp(value: string | undefined, locale: string | undefined) {
   if (!value) {
     return "unknown time";
   }
@@ -58,7 +482,7 @@ function formatTimestamp(value: string | undefined) {
     return value;
   }
 
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(date);
@@ -78,20 +502,16 @@ function stringValue(value: unknown, fallback = "not set") {
   return fallback;
 }
 
-function routeDescription(route: RoutePath) {
-  if (route === "/chat") {
-    return "Main conversation surface with recent continuity and runtime-aware replies.";
-  }
-  if (route === "/settings") {
-    return "User-owned preferences stored by backend truth, not browser-only drafts.";
-  }
-  if (route === "/tools") {
-    return "Grouped tools and channels rendered from backend truth so the product shell never guesses integration state.";
-  }
-  if (route === "/personality") {
-    return "Structured insight into identity, learned knowledge, plans, capabilities, and continuity.";
-  }
-  return "Authenticate into the product shell.";
+function routeDescription(route: RoutePath, locale: Exclude<UiLanguageCode, "system">) {
+  return UI_COPY[locale].routeDescriptions[route];
+}
+
+function routeLabel(route: RoutePath, locale: Exclude<UiLanguageCode, "system">) {
+  return UI_COPY[locale].routes[route];
+}
+
+function localeLanguageLabel(option: (typeof UI_LANGUAGE_OPTIONS)[number], locale: Exclude<UiLanguageCode, "system">) {
+  return option.label[locale];
 }
 
 function titleCaseFromStatus(value: string) {
@@ -113,6 +533,77 @@ function toolStatusClass(status: string) {
     return "badge-ghost";
   }
   return "badge-outline";
+}
+
+function formatToolState(status: string) {
+  if (status === "integral_active") {
+    return "Always on";
+  }
+  if (status === "provider_ready") {
+    return "Ready to use";
+  }
+  if (status === "provider_ready_link_required") {
+    return "Link required";
+  }
+  if (status === "planned_placeholder") {
+    return "Planned";
+  }
+  return titleCaseFromStatus(status);
+}
+
+function summarizeToolAction(nextActions: string[], fallback: string) {
+  const action = nextActions[0];
+  if (!action) {
+    return fallback;
+  }
+  return action.replaceAll("_", " ");
+}
+
+function summaryLines(sectionKey: string, payload: unknown): string[] {
+  const record = payload && typeof payload === "object" ? (payload as Record<string, unknown>) : {};
+  if (sectionKey === "identity_state") {
+    const profile = (record.profile as Record<string, unknown> | undefined) ?? {};
+    const preferenceSummary = (record.preference_summary as Record<string, unknown> | undefined) ?? {};
+    return [
+      `Conversation continuity language: ${stringValue(profile.preferred_language, "unknown")}`,
+      `Resolved learned preferences: ${stringValue(preferenceSummary.learned_preference_count, "0")}`,
+    ];
+  }
+  if (sectionKey === "learned_knowledge") {
+    const knowledgeSummary = (record.knowledge_summary as Record<string, unknown> | undefined) ?? {};
+    return [
+      `Semantic conclusions: ${stringValue(knowledgeSummary.semantic_conclusion_count, "0")}`,
+      `Affective conclusions: ${stringValue(knowledgeSummary.affective_conclusion_count, "0")}`,
+    ];
+  }
+  if (sectionKey === "planning_state") {
+    const continuitySummary = (record.continuity_summary as Record<string, unknown> | undefined) ?? {};
+    return [
+      `Active goals: ${stringValue(continuitySummary.active_goal_count, "0")}`,
+      `Active tasks: ${stringValue(continuitySummary.active_task_count, "0")}`,
+    ];
+  }
+  if (sectionKey === "role_skill_state") {
+    const selectionSummary = (record.selection_visibility_summary as Record<string, unknown> | undefined) ?? {};
+    return [
+      `Catalog skills: ${stringValue(selectionSummary.catalog_skill_count, "0")}`,
+      `Runtime surface: ${stringValue(selectionSummary.runtime_selection_surface, "system_debug")}`,
+    ];
+  }
+  if (sectionKey === "capability_catalog") {
+    const posture = (record.tool_and_connector_posture as Record<string, unknown> | undefined) ?? {};
+    return [
+      `Organizer stack state: ${stringValue(posture.organizer_stack_state, "unknown")}`,
+      `Selectable tool families: ${Array.isArray(posture.selectable_tool_families) ? posture.selectable_tool_families.length : 0}`,
+    ];
+  }
+  if (sectionKey === "api_readiness") {
+    return [
+      `Product stage: ${stringValue(record.product_stage, "unknown")}`,
+      `Inspection path: ${stringValue(record.internal_inspection_path, "/internal/state/inspect")}`,
+    ];
+  }
+  return [prettyJson(payload).slice(0, 140)];
 }
 
 export default function App() {
@@ -144,9 +635,7 @@ export default function App() {
   });
   const [settingsDraft, setSettingsDraft] = useState({
     displayName: "",
-    preferredLanguage: "en",
-    responseStyle: "",
-    collaborationPreference: "",
+    uiLanguage: "system" as UiLanguageCode,
     proactiveOptIn: false,
   });
   const [savingSettings, setSavingSettings] = useState(false);
@@ -178,9 +667,7 @@ export default function App() {
         setMe(snapshot);
         setSettingsDraft({
           displayName: snapshot.user.display_name ?? "",
-          preferredLanguage: snapshot.settings.preferred_language ?? "en",
-          responseStyle: snapshot.settings.response_style ?? "",
-          collaborationPreference: snapshot.settings.collaboration_preference ?? "",
+          uiLanguage: normalizeUiLanguage(snapshot.settings.ui_language),
           proactiveOptIn: Boolean(snapshot.settings.proactive_opt_in),
         });
         if (route === "/login") {
@@ -379,15 +866,23 @@ export default function App() {
   const preferenceSummary = (overview?.identity_state as Record<string, unknown> | undefined)?.preference_summary as
     | Record<string, unknown>
     | undefined;
+  const selectedUiLanguage = normalizeUiLanguage(
+    route === "/settings" ? settingsDraft.uiLanguage : me?.settings.ui_language ?? settingsDraft.uiLanguage,
+  );
+  const resolvedUiLanguage = resolveUiLanguage(selectedUiLanguage);
+  const copy = UI_COPY[resolvedUiLanguage];
   const currentUserLabel = me?.user.display_name || me?.user.email || "Account";
   const accountSummaryItems = [
     {
-      label: "UI language",
-      value: stringValue(me?.settings.preferred_language ?? settingsDraft.preferredLanguage, "auto"),
+      label: copy.common.uiLanguage,
+      value: localeLanguageLabel(
+        UI_LANGUAGE_OPTIONS.find((option) => option.value === selectedUiLanguage) ?? UI_LANGUAGE_OPTIONS[0],
+        resolvedUiLanguage,
+      ),
     },
     {
-      label: "Proactive",
-      value: Boolean(me?.settings.proactive_opt_in) ? "On" : "Off",
+      label: copy.common.proactive,
+      value: Boolean(me?.settings.proactive_opt_in) ? copy.common.on : copy.common.off,
     },
   ];
 
@@ -425,9 +920,7 @@ export default function App() {
       setMe(snapshot);
       setSettingsDraft({
         displayName: snapshot.user.display_name ?? "",
-        preferredLanguage: snapshot.settings.preferred_language ?? "en",
-        responseStyle: snapshot.settings.response_style ?? "",
-        collaborationPreference: snapshot.settings.collaboration_preference ?? "",
+        uiLanguage: normalizeUiLanguage(snapshot.settings.ui_language),
         proactiveOptIn: Boolean(snapshot.settings.proactive_opt_in),
       });
       setAuthForm({ email: authForm.email, password: "", displayName: authForm.displayName });
@@ -474,20 +967,16 @@ export default function App() {
     try {
       const nextSettings: AppSettings = await api.patchSettings({
         display_name: settingsDraft.displayName || null,
-        preferred_language: settingsDraft.preferredLanguage || null,
-        response_style: settingsDraft.responseStyle || null,
-        collaboration_preference: settingsDraft.collaborationPreference || null,
+        ui_language: settingsDraft.uiLanguage,
         proactive_opt_in: settingsDraft.proactiveOptIn,
       });
       const freshMe = await refreshMe();
       setSettingsDraft({
         displayName: freshMe.user.display_name ?? "",
-        preferredLanguage: nextSettings.preferred_language ?? "en",
-        responseStyle: nextSettings.response_style ?? "",
-        collaborationPreference: nextSettings.collaboration_preference ?? "",
+        uiLanguage: normalizeUiLanguage(nextSettings.ui_language),
         proactiveOptIn: Boolean(nextSettings.proactive_opt_in),
       });
-      setToast("Settings saved to backend memory.");
+      setToast("Settings saved.");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Failed to save settings.");
     } finally {
@@ -605,15 +1094,14 @@ export default function App() {
             <div className="grid gap-8 px-6 py-8 lg:grid-cols-[1.2fr_0.9fr] lg:px-10">
               <div className="space-y-5">
                 <span className="badge badge-lg border-none bg-base-900 px-4 py-3 font-display text-signal-gold">
-                  AION Web v2
+                  {copy.auth.badge}
                 </span>
                 <div className="space-y-3">
                   <h1 className="font-display text-4xl leading-tight text-base-900 md:text-6xl">
-                    Dedicated product shell for the personality.
+                    {copy.auth.heroTitle}
                   </h1>
                   <p className="max-w-2xl text-base leading-7 text-base-800 md:text-lg">
-                    Browser auth, user settings, conversation, and deep personality inspection now sit on top of the
-                    existing Python backend instead of debug-only surfaces.
+                    {copy.auth.heroBody}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3">
@@ -642,12 +1130,14 @@ export default function App() {
             <section className="rounded-[2rem] border border-base-300 bg-base-200 p-6">
               <div className="mb-6 flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">Session entry</p>
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.auth.sessionEntry}</p>
                   <h2 className="font-display text-3xl text-base-900">
-                    {authMode === "login" ? "Log in" : "Create account"}
+                    {authMode === "login" ? copy.auth.login : copy.auth.register}
                   </h2>
                 </div>
-                <div className="badge badge-outline">build {BUILD_REVISION.slice(0, 12)}</div>
+                <div className="badge badge-outline">
+                  {copy.common.build} {BUILD_REVISION.slice(0, 12)}
+                </div>
               </div>
 
               <div className="tabs tabs-boxed mb-5 w-fit bg-base-100">
@@ -656,22 +1146,22 @@ export default function App() {
                   onClick={() => setAuthMode("login")}
                   type="button"
                 >
-                  Login
+                  {copy.auth.tabsLogin}
                 </button>
                 <button
                   className={`tab ${authMode === "register" ? "tab-active" : ""}`}
                   onClick={() => setAuthMode("register")}
                   type="button"
                 >
-                  Register
+                  {copy.auth.tabsRegister}
                 </button>
               </div>
 
               <form className="space-y-4" onSubmit={(event) => void handleAuthSubmit(event)}>
                 <label className="form-control w-full">
-                  <div className="label">
-                    <span className="label-text text-base-900">Email</span>
-                  </div>
+                    <div className="label">
+                    <span className="label-text text-base-900">{copy.auth.email}</span>
+                    </div>
                   <input
                     className="input input-bordered w-full"
                     type="email"
@@ -683,9 +1173,9 @@ export default function App() {
                 </label>
 
                 <label className="form-control w-full">
-                  <div className="label">
-                    <span className="label-text text-base-900">Password</span>
-                  </div>
+                    <div className="label">
+                    <span className="label-text text-base-900">{copy.auth.password}</span>
+                    </div>
                   <input
                     className="input input-bordered w-full"
                     type="password"
@@ -699,7 +1189,7 @@ export default function App() {
                 {authMode === "register" ? (
                   <label className="form-control w-full">
                     <div className="label">
-                      <span className="label-text text-base-900">Display name</span>
+                      <span className="label-text text-base-900">{copy.auth.displayName}</span>
                     </div>
                     <input
                       className="input input-bordered w-full"
@@ -712,7 +1202,7 @@ export default function App() {
                 ) : null}
 
                 <button className="btn btn-primary btn-block" disabled={authBusy} type="submit">
-                  {authBusy ? "Working..." : authMode === "login" ? "Enter workspace" : "Create account"}
+                  {authBusy ? copy.common.loading : authMode === "login" ? copy.auth.enterWorkspace : copy.auth.createAccount}
                 </button>
               </form>
 
@@ -765,12 +1255,12 @@ export default function App() {
               <div className="flex flex-wrap items-center gap-2">
                 <span className="badge border-none bg-base-900 px-3 py-3 font-display text-signal-gold">AION Web</span>
                 <span className="badge badge-outline hidden sm:inline-flex">
-                  build {BUILD_REVISION.slice(0, 12)}
+                  {copy.common.build} {BUILD_REVISION.slice(0, 12)}
                 </span>
               </div>
               <div className="mt-3">
-                <p className="text-xs uppercase tracking-[0.24em] text-base-800">Workspace</p>
-                <h1 className="font-display text-2xl text-base-900 sm:text-3xl">{ROUTE_LABELS[route]}</h1>
+                <p className="text-xs uppercase tracking-[0.24em] text-base-800">{copy.common.workspace}</p>
+                <h1 className="font-display text-2xl text-base-900 sm:text-3xl">{routeLabel(route, resolvedUiLanguage)}</h1>
               </div>
             </div>
 
@@ -782,7 +1272,7 @@ export default function App() {
                   onClick={() => changeRoute(entry)}
                   type="button"
                 >
-                  {ROUTE_LABELS[entry]}
+                  {routeLabel(entry, resolvedUiLanguage)}
                 </button>
               ))}
             </div>
@@ -793,7 +1283,7 @@ export default function App() {
                 onClick={() => setAccountPanelOpen((value) => !value)}
                 type="button"
               >
-                Account
+                {copy.common.account}
               </button>
             </div>
           </div>
@@ -802,7 +1292,7 @@ export default function App() {
             <div className="border-t border-base-300 px-4 py-4 sm:px-5">
               <div className="grid gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
                 <div className="rounded-[1.4rem] bg-base-200 p-4">
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">Signed in as</p>
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.common.signedInAs}</p>
                   <p className="mt-2 font-display text-2xl text-base-900">{currentUserLabel}</p>
                   <p className="mt-1 text-sm text-base-800">{me.user.email}</p>
                 </div>
@@ -816,7 +1306,7 @@ export default function App() {
                     ))}
                   </div>
                   <button className="btn btn-outline sm:self-end xl:self-center" onClick={() => void handleLogout()} type="button">
-                    Sign out
+                    {copy.common.signOut}
                   </button>
                 </div>
               </div>
@@ -827,10 +1317,12 @@ export default function App() {
         <section className="mb-4 rounded-[1.5rem] border border-base-300 bg-base-200/80 px-4 py-4 shadow-sm sm:px-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="max-w-3xl">
-              <p className="text-xs uppercase tracking-[0.24em] text-base-800">Current surface</p>
-              <p className="mt-2 text-sm leading-7 text-base-800 sm:text-base">{routeDescription(route)}</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-base-800">{copy.common.currentSurface}</p>
+              <p className="mt-2 text-sm leading-7 text-base-800 sm:text-base">
+                {routeDescription(route, resolvedUiLanguage)}
+              </p>
             </div>
-            <div className="badge badge-outline">{ROUTE_LABELS[route]}</div>
+            <div className="badge badge-outline">{routeLabel(route, resolvedUiLanguage)}</div>
           </div>
         </section>
 
@@ -848,34 +1340,49 @@ export default function App() {
 
         <main className="flex-1">
           {route === "/chat" ? (
-            <div className="grid gap-6 lg:grid-cols-[1.3fr_0.9fr]">
+            <div className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(22rem,0.8fr)]">
               <section className="rounded-[2rem] border border-base-300 bg-base-100 p-5 shadow-sm">
-                <div className="mb-5 flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">Conversation</p>
-                    <h2 className="font-display text-3xl text-base-900">Talk to the personality</h2>
+                <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+                  <div className="max-w-2xl">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.chat.eyebrow}</p>
+                    <h2 className="font-display text-3xl text-base-900">{copy.chat.title}</h2>
+                    <p className="mt-3 text-sm leading-7 text-base-800">{copy.chat.subtitle}</p>
                   </div>
-                  <div className="badge badge-outline">cookie session</div>
+                  <div className="grid min-w-[12rem] gap-3 sm:grid-cols-3 xl:grid-cols-1">
+                    <div className="rounded-[1.3rem] bg-base-200 p-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.chat.sessionCount}</p>
+                      <p className="mt-2 text-xl font-semibold text-base-900">{sessionMessages.length}</p>
+                    </div>
+                    <div className="rounded-[1.3rem] bg-base-200 p-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.chat.memoryCount}</p>
+                      <p className="mt-2 text-xl font-semibold text-base-900">{history.length}</p>
+                    </div>
+                    <div className="rounded-[1.3rem] bg-base-200 p-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.chat.latestLanguage}</p>
+                      <p className="mt-2 text-xl font-semibold text-base-900">
+                        {stringValue(me.settings.preferred_language, copy.common.system)}
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="mb-5 flex max-h-[28rem] min-h-[20rem] flex-col gap-4 overflow-y-auto rounded-[1.5rem] bg-base-200 p-4">
+                <div className="mb-4 flex max-h-[32rem] min-h-[22rem] flex-col gap-4 overflow-y-auto rounded-[1.6rem] bg-base-200 p-4">
                   {sessionMessages.length === 0 ? (
                     <div className="rounded-2xl border border-dashed border-base-300 bg-base-100 p-5 text-sm leading-7 text-base-800">
-                      Start a conversation. This panel keeps the current browser session thread, while the timeline on the
-                      right shows recent backend memory entries.
+                      {copy.chat.emptyThread}
                     </div>
                   ) : null}
                   {sessionMessages.map((message) => (
                     <article
                       key={message.id}
-                      className={`max-w-[85%] rounded-[1.5rem] px-4 py-3 text-sm leading-7 ${
+                      className={`max-w-[92%] rounded-[1.5rem] px-4 py-3 text-sm leading-7 shadow-sm sm:max-w-[85%] ${
                         message.role === "user"
                           ? "ml-auto bg-base-900 text-base-100"
                           : "border border-base-300 bg-base-100 text-base-900"
                       }`}
                     >
                       <p className="mb-2 text-xs uppercase tracking-[0.22em] opacity-70">
-                        {message.role === "user" ? "You" : "AION"}
+                        {message.role === "user" ? copy.common.user : copy.common.assistant}
                       </p>
                       <p>{message.text}</p>
                       {"meta" in message && message.meta ? (
@@ -885,19 +1392,20 @@ export default function App() {
                   ))}
                 </div>
 
-                <form className="space-y-3" onSubmit={(event) => void handleSendMessage(event)}>
+                <form
+                  className="sticky bottom-[4.5rem] rounded-[1.6rem] border border-base-300 bg-base-100/95 p-4 shadow-sm backdrop-blur lg:bottom-0"
+                  onSubmit={(event) => void handleSendMessage(event)}
+                >
                   <textarea
-                    className="textarea textarea-bordered h-32 w-full"
-                    placeholder="Send a message to AION..."
+                    className="textarea textarea-bordered h-28 w-full"
+                    placeholder={copy.chat.placeholder}
                     value={chatText}
                     onChange={(event) => setChatText(event.target.value)}
                   />
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <p className="text-sm text-base-800">
-                      Replies are generated by the existing backend runtime via `/app/chat/message`.
-                    </p>
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                    <p className="text-sm text-base-800">{copy.chat.composerHint}</p>
                     <button className="btn btn-primary" disabled={sendingMessage} type="submit">
-                      {sendingMessage ? "Sending..." : "Send message"}
+                      {sendingMessage ? copy.chat.sending : copy.chat.send}
                     </button>
                   </div>
                 </form>
@@ -906,29 +1414,29 @@ export default function App() {
               <aside className="rounded-[2rem] border border-base-300 bg-base-200 p-5">
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">Continuity</p>
-                    <h2 className="font-display text-2xl text-base-900">Recent memory timeline</h2>
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.chat.continuity}</p>
+                    <h2 className="font-display text-2xl text-base-900">{copy.chat.timeline}</h2>
                   </div>
                   {historyLoading ? <span className="loading loading-dots loading-sm text-primary" /> : null}
                 </div>
 
                 <div className="space-y-3">
                   {history.length === 0 ? (
-                    <div className="rounded-2xl bg-base-100 p-4 text-sm text-base-800">
-                      No persisted conversation events yet.
-                    </div>
+                    <div className="rounded-2xl bg-base-100 p-4 text-sm text-base-800">{copy.chat.noHistory}</div>
                   ) : null}
                   {history.map((item) => (
                     <article key={item.event_id} className="rounded-2xl bg-base-100 p-4 text-sm shadow-sm">
                       <div className="mb-2 flex items-center justify-between gap-2">
                         <span className="badge badge-outline">{item.source}</span>
-                        <span className="text-xs text-base-800">{formatTimestamp(item.event_timestamp)}</span>
+                        <span className="text-xs text-base-800">
+                          {formatTimestamp(item.event_timestamp, resolvedUiLanguage)}
+                        </span>
                       </div>
                       <p className="font-semibold text-base-900">{item.summary}</p>
                       {item.payload ? (
                         <details className="collapse collapse-arrow mt-3 rounded-box border border-base-300 bg-base-100">
                           <summary className="collapse-title min-h-0 px-4 py-3 text-sm font-medium text-base-900">
-                            Event payload
+                            {copy.chat.payload}
                           </summary>
                           <div className="collapse-content px-4 pb-4">
                             <pre className="overflow-x-auto rounded-xl bg-base-200 p-3 text-xs leading-6 text-base-900">
@@ -945,78 +1453,84 @@ export default function App() {
           ) : null}
 
           {route === "/settings" ? (
-            <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-              <section className="rounded-[2rem] border border-base-300 bg-base-100 p-5 shadow-sm">
-                <div className="mb-6">
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">User settings</p>
-                  <h2 className="font-display text-3xl text-base-900">Preference ownership</h2>
-                </div>
+            <section className="rounded-[2rem] border border-base-300 bg-base-100 p-5 shadow-sm">
+              <div className="mb-6 max-w-3xl">
+                <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.settings.eyebrow}</p>
+                <h2 className="font-display text-3xl text-base-900">{copy.settings.title}</h2>
+                <p className="mt-3 text-sm leading-7 text-base-800">{copy.settings.subtitle}</p>
+              </div>
 
-                <form className="grid gap-4" onSubmit={(event) => void handleSaveSettings(event)}>
-                  <label className="form-control">
-                    <div className="label">
-                      <span className="label-text text-base-900">Display name</span>
-                    </div>
+              <form className="grid gap-4 xl:grid-cols-2" onSubmit={(event) => void handleSaveSettings(event)}>
+                <section className="rounded-[1.6rem] border border-base-300 bg-base-200 p-4">
+                  <p className="text-sm uppercase tracking-[0.2em] text-base-800">{copy.settings.profileTitle}</p>
+                  <h3 className="mt-2 font-display text-2xl text-base-900">{copy.auth.displayName}</h3>
+                  <p className="mt-2 text-sm leading-7 text-base-800">{copy.settings.profileBody}</p>
+                  <label className="form-control mt-4">
                     <input
                       className="input input-bordered"
                       value={settingsDraft.displayName}
                       onChange={(event) =>
                         setSettingsDraft((draft) => ({ ...draft, displayName: event.target.value }))
                       }
+                      placeholder={copy.auth.displayName}
                     />
                   </label>
+                </section>
 
-                  <label className="form-control">
-                    <div className="label">
-                      <span className="label-text text-base-900">Preferred language</span>
+                <section className="rounded-[1.6rem] border border-base-300 bg-base-200 p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.2em] text-base-800">{copy.settings.uiLanguageTitle}</p>
+                      <h3 className="mt-2 font-display text-2xl text-base-900">{copy.common.uiLanguage}</h3>
                     </div>
+                    <div className="badge badge-outline">{copy.common.interfaceOnly}</div>
+                  </div>
+                  <p className="mt-2 text-sm leading-7 text-base-800">{copy.settings.uiLanguageBody}</p>
+                  <label className="form-control mt-4">
                     <select
                       className="select select-bordered"
-                      value={settingsDraft.preferredLanguage}
-                      onChange={(event) =>
-                        setSettingsDraft((draft) => ({ ...draft, preferredLanguage: event.target.value }))
-                      }
-                    >
-                      <option value="en">English</option>
-                      <option value="pl">Polish</option>
-                      <option value="de">German</option>
-                    </select>
-                  </label>
-
-                  <label className="form-control">
-                    <div className="label">
-                      <span className="label-text text-base-900">Response style</span>
-                    </div>
-                    <input
-                      className="input input-bordered"
-                      placeholder="concise, reflective, direct..."
-                      value={settingsDraft.responseStyle}
-                      onChange={(event) =>
-                        setSettingsDraft((draft) => ({ ...draft, responseStyle: event.target.value }))
-                      }
-                    />
-                  </label>
-
-                  <label className="form-control">
-                    <div className="label">
-                      <span className="label-text text-base-900">Collaboration preference</span>
-                    </div>
-                    <input
-                      className="input input-bordered"
-                      placeholder="hands-on, strategic, coaching..."
-                      value={settingsDraft.collaborationPreference}
+                      value={settingsDraft.uiLanguage}
                       onChange={(event) =>
                         setSettingsDraft((draft) => ({
                           ...draft,
-                          collaborationPreference: event.target.value,
+                          uiLanguage: normalizeUiLanguage(event.target.value),
                         }))
                       }
-                    />
+                    >
+                      {UI_LANGUAGE_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.flag} {localeLanguageLabel(option, resolvedUiLanguage)}
+                        </option>
+                      ))}
+                    </select>
                   </label>
+                  <p className="mt-3 text-sm text-base-800">{copy.settings.uiLanguageHelp}</p>
+                </section>
 
-                  <label className="label cursor-pointer justify-start gap-3 rounded-2xl border border-base-300 bg-base-200 px-4 py-4">
+                <section className="rounded-[1.6rem] border border-base-300 bg-base-200 p-4">
+                  <p className="text-sm uppercase tracking-[0.2em] text-base-800">{copy.settings.conversationTitle}</p>
+                  <h3 className="mt-2 font-display text-2xl text-base-900">{copy.common.conversationLanguage}</h3>
+                  <p className="mt-2 text-sm leading-7 text-base-800">{copy.settings.conversationBody}</p>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-[1.2rem] bg-base-100 p-4">
+                      <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.common.sourceOfTruth}</p>
+                      <p className="mt-2 text-base font-semibold text-base-900">
+                        {stringValue(me.settings.preferred_language, copy.common.notSet)}
+                      </p>
+                    </div>
+                    <div className="rounded-[1.2rem] bg-base-100 p-4">
+                      <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.common.details}</p>
+                      <p className="mt-2 text-base font-semibold text-base-900">{copy.settings.conversationRuntimeOwned}</p>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="rounded-[1.6rem] border border-base-300 bg-base-200 p-4">
+                  <p className="text-sm uppercase tracking-[0.2em] text-base-800">{copy.settings.proactiveTitle}</p>
+                  <h3 className="mt-2 font-display text-2xl text-base-900">{copy.common.proactive}</h3>
+                  <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-[1.2rem] bg-base-100 px-4 py-4">
                     <input
-                      className="toggle toggle-primary"
+                      className="toggle toggle-primary mt-1"
                       type="checkbox"
                       checked={settingsDraft.proactiveOptIn}
                       onChange={(event) =>
@@ -1024,65 +1538,59 @@ export default function App() {
                       }
                     />
                     <div>
-                      <span className="label-text text-base-900">Allow proactive follow-ups</span>
-                      <p className="mt-1 text-sm text-base-800">
-                        This writes a user-owned preference into backend conclusions, not just browser state.
-                      </p>
+                      <span className="text-base font-semibold text-base-900">{copy.settings.proactiveTitle}</span>
+                      <p className="mt-1 text-sm leading-7 text-base-800">{copy.settings.proactiveBody}</p>
                     </div>
                   </label>
+                </section>
 
-                  <button className="btn btn-primary w-full sm:w-fit" disabled={savingSettings} type="submit">
-                    {savingSettings ? "Saving..." : "Save settings"}
-                  </button>
-                </form>
-              </section>
-
-              <aside className="rounded-[2rem] border border-base-300 bg-base-200 p-5">
-                <div className="mb-4">
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">Current backend snapshot</p>
-                  <h2 className="font-display text-2xl text-base-900">Resolved values</h2>
-                </div>
-                <div className="grid gap-3">
-                  {[
-                    ["Display name", me.user.display_name || "not set"],
-                    ["Preferred language", me.settings.preferred_language || "not set"],
-                    ["Response style", me.settings.response_style || "not set"],
-                    ["Collaboration preference", me.settings.collaboration_preference || "not set"],
-                    ["Proactive opt-in", Boolean(me.settings.proactive_opt_in) ? "enabled" : "disabled"],
-                  ].map(([label, value]) => (
-                    <div key={label} className="rounded-2xl bg-base-100 p-4">
-                      <p className="text-xs uppercase tracking-[0.18em] text-base-800">{label}</p>
-                      <p className="mt-2 text-base font-semibold text-base-900">{value}</p>
+                <div className="xl:col-span-2">
+                  <div className="sticky bottom-[4.5rem] rounded-[1.6rem] border border-base-300 bg-base-100/95 p-4 shadow-sm backdrop-blur lg:bottom-0">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-base-900">{copy.settings.savedState}</p>
+                        <p className="text-sm text-base-800">{copy.settings.saveHint}</p>
+                      </div>
+                      <button className="btn btn-primary w-full sm:w-fit" disabled={savingSettings} type="submit">
+                        {savingSettings ? copy.common.saving : copy.common.save}
+                      </button>
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </aside>
-            </div>
+              </form>
+            </section>
           ) : null}
 
           {route === "/tools" ? (
             <div className="grid gap-6">
-              <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <section className="rounded-[2rem] border border-base-300 bg-base-100 p-5 shadow-sm">
+                <div className="mb-5 max-w-3xl">
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.tools.eyebrow}</p>
+                  <h2 className="font-display text-3xl text-base-900">{copy.tools.title}</h2>
+                  <p className="mt-3 text-sm leading-7 text-base-800">{copy.tools.subtitle}</p>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 {[
                   {
-                    title: "Tool groups",
+                    title: copy.tools.groupCount,
                     value: stringValue(toolsOverview?.summary.total_groups, "0"),
-                    note: "grouped backend-owned categories",
+                    note: "Grouped backend-owned categories",
                   },
                   {
-                    title: "Integral",
+                    title: copy.tools.integral,
                     value: stringValue(toolsOverview?.summary.integral_enabled_count, "0"),
-                    note: "always-on product capabilities",
+                    note: "Always-on product capabilities",
                   },
                   {
-                    title: "Provider ready",
+                    title: copy.tools.ready,
                     value: stringValue(toolsOverview?.summary.provider_ready_count, "0"),
-                    note: "tools with a live provider path today",
+                    note: "Tools with a live provider path today",
                   },
                   {
-                    title: "Link required",
+                    title: copy.tools.linkRequired,
                     value: stringValue(toolsOverview?.summary.link_required_count, "0"),
-                    note: "channels awaiting user identity linking",
+                    note: "Channels awaiting user identity linking",
                   },
                 ].map((card) => (
                   <article key={card.title} className="rounded-[1.75rem] border border-base-300 bg-base-100 p-5 shadow-sm">
@@ -1091,13 +1599,14 @@ export default function App() {
                     <p className="mt-2 text-sm text-base-800">{card.note}</p>
                   </article>
                 ))}
+                </div>
               </section>
 
               <section className="rounded-[2rem] border border-base-300 bg-base-100 p-5 shadow-sm">
                 <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
                   <div>
-                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">Tools overview</p>
-                    <h2 className="font-display text-3xl text-base-900">Runtime-visible integrations and channels</h2>
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.tools.eyebrow}</p>
+                    <h2 className="font-display text-3xl text-base-900">{copy.tools.title}</h2>
                   </div>
                   <div className="badge badge-outline">
                     {toolsOverview ? `${toolsOverview.summary.total_items} items` : "backend snapshot"}
@@ -1107,13 +1616,13 @@ export default function App() {
                 {toolsLoading ? (
                   <div className="flex items-center gap-3 rounded-2xl bg-base-200 px-4 py-5 text-base-900">
                     <span className="loading loading-spinner loading-sm text-primary" />
-                    Loading tools overview from backend.
+                    {copy.tools.loading}
                   </div>
                 ) : null}
 
                 {!toolsLoading && !toolsOverview ? (
                   <div className="rounded-2xl bg-base-200 px-4 py-5 text-sm text-base-800">
-                    No tools overview payload is loaded yet.
+                    {copy.tools.empty}
                   </div>
                 ) : null}
 
@@ -1128,7 +1637,7 @@ export default function App() {
                         <span className="badge badge-outline">{group.item_count} items</span>
                       </div>
 
-                      <div className="grid gap-4 lg:grid-cols-2">
+                      <div className="grid gap-4 xl:grid-cols-2">
                         {group.items.map((item) => (
                           <section key={item.id} className="rounded-[1.4rem] border border-base-300 bg-base-100 p-4">
                             <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
@@ -1139,18 +1648,18 @@ export default function App() {
                                 </div>
                                 <p className="mt-2 text-sm leading-7 text-base-800">{item.description}</p>
                               </div>
-                              <div className={`badge ${toolStatusClass(item.status)}`}>
-                                {titleCaseFromStatus(item.status)}
-                              </div>
+                              <div className={`badge ${toolStatusClass(item.status)}`}>{formatToolState(item.status)}</div>
                             </div>
 
-                            <div className="mb-4 grid gap-3 sm:grid-cols-2">
+                            <div className="mb-4 grid gap-3 lg:grid-cols-2">
                               <div className="rounded-2xl bg-base-200 p-3">
-                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">Enabled</p>
-                                <p className="mt-2 text-base font-semibold text-base-900">{item.enabled ? "On" : "Off"}</p>
+                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.availability}</p>
+                                <p className="mt-2 text-base font-semibold text-base-900">
+                                  {item.enabled ? copy.common.on : copy.common.off}
+                                </p>
                               </div>
                               <div className="rounded-2xl bg-base-200 p-3">
-                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">Provider</p>
+                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.provider}</p>
                                 <p className="mt-2 text-base font-semibold text-base-900">
                                   {item.provider.name.replaceAll("_", " ")}
                                 </p>
@@ -1163,7 +1672,7 @@ export default function App() {
                                 </p>
                               </div>
                               <div className="rounded-2xl bg-base-200 p-3">
-                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">User control</p>
+                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.control}</p>
                                 {item.user_control.toggle_allowed ? (
                                   <label className="mt-2 flex items-center gap-3">
                                     <input
@@ -1177,18 +1686,18 @@ export default function App() {
                                     />
                                     <span className="text-base font-semibold text-base-900">
                                       {savingToolId === item.id
-                                        ? "Saving..."
+                                        ? copy.tools.saving
                                         : item.user_control.requested_enabled
-                                          ? "Enabled by user"
-                                          : "Disabled by user"}
+                                          ? copy.tools.enabledByUser
+                                          : copy.tools.disabledByUser}
                                     </span>
                                   </label>
                                 ) : (
-                                  <p className="mt-2 text-base font-semibold text-base-900">Read only</p>
+                                  <p className="mt-2 text-base font-semibold text-base-900">{copy.tools.readOnly}</p>
                                 )}
                               </div>
                               <div className="rounded-2xl bg-base-200 p-3">
-                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">Link state</p>
+                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.linkState}</p>
                                 <p className="mt-2 text-base font-semibold text-base-900">
                                   {titleCaseFromStatus(item.link_state)}
                                 </p>
@@ -1197,8 +1706,15 @@ export default function App() {
 
                             <div className="space-y-3">
                               <div className="rounded-2xl border border-base-300 px-4 py-3">
-                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">Current status</p>
+                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.currentStatus}</p>
                                 <p className="mt-2 text-sm leading-7 text-base-900">{item.status_reason}</p>
+                              </div>
+
+                              <div className="rounded-2xl border border-base-300 px-4 py-3">
+                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.nextStep}</p>
+                                <p className="mt-2 text-sm leading-7 text-base-900">
+                                  {summarizeToolAction(item.next_actions, copy.tools.noAction)}
+                                </p>
                               </div>
 
                               {item.id === "telegram" &&
@@ -1209,7 +1725,7 @@ export default function App() {
                                   <div className="flex flex-wrap items-start justify-between gap-3">
                                     <div>
                                       <p className="text-xs uppercase tracking-[0.18em] text-base-800">
-                                        Telegram linking
+                                        {copy.tools.telegramLinking}
                                       </p>
                                       <p className="mt-2 max-w-2xl text-sm leading-7 text-base-900">
                                         Generate a short code, then send it to the configured AION Telegram bot from
@@ -1225,17 +1741,17 @@ export default function App() {
                                       }}
                                     >
                                       {telegramLinkBusy
-                                        ? "Generating..."
+                                        ? copy.tools.generating
                                         : telegramLinkStart
-                                          ? "Rotate code"
-                                          : "Generate code"}
+                                          ? copy.tools.rotateCode
+                                          : copy.tools.generateCode}
                                     </button>
                                   </div>
 
                                   {telegramLinkStart ? (
                                     <div className="mt-4 grid gap-3 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)]">
                                       <div className="rounded-2xl bg-base-200 p-3">
-                                        <p className="text-xs uppercase tracking-[0.18em] text-base-800">Link code</p>
+                                        <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.linkCode}</p>
                                         <p className="mt-2 font-display text-3xl tracking-[0.18em] text-base-900">
                                           {telegramLinkStart.link_code}
                                         </p>
@@ -1245,7 +1761,7 @@ export default function App() {
                                       </div>
                                       <div className="rounded-2xl bg-base-200 p-3">
                                         <p className="text-xs uppercase tracking-[0.18em] text-base-800">
-                                          Instruction
+                                          {copy.tools.instruction}
                                         </p>
                                         <p className="mt-2 text-sm leading-7 text-base-900">
                                           {telegramLinkStart.instruction_text}
@@ -1254,43 +1770,47 @@ export default function App() {
                                     </div>
                                   ) : (
                                     <p className="mt-4 text-sm text-base-800">
-                                      No active link code yet. Generate one when you are ready to confirm the chat.
+                                      {copy.tools.noLinkCode}
                                     </p>
                                   )}
                                 </div>
                               ) : null}
 
-                              <div className="grid gap-3 sm:grid-cols-2">
-                                <div className="rounded-2xl border border-base-300 px-4 py-3">
-                                  <p className="text-xs uppercase tracking-[0.18em] text-base-800">Capabilities</p>
-                                  <div className="mt-3 flex flex-wrap gap-2">
-                                    {item.capabilities.length > 0 ? (
-                                      item.capabilities.map((capability) => (
-                                        <span key={capability} className="badge badge-outline">
-                                          {capability}
-                                        </span>
-                                      ))
-                                    ) : (
-                                      <span className="text-sm text-base-800">No live capability ids yet.</span>
-                                    )}
+                              <details className="rounded-2xl border border-base-300 bg-base-100">
+                                <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-base-900">
+                                  {copy.tools.technicalDetails}
+                                </summary>
+                                <div className="grid gap-3 px-4 pb-4 sm:grid-cols-2">
+                                  <div className="rounded-2xl bg-base-200 p-3">
+                                    <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.capabilities}</p>
+                                    <div className="mt-3 flex flex-wrap gap-2">
+                                      {item.capabilities.length > 0 ? (
+                                        item.capabilities.map((capability) => (
+                                          <span key={capability} className="badge badge-outline">
+                                            {capability}
+                                          </span>
+                                        ))
+                                      ) : (
+                                        <span className="text-sm text-base-800">{copy.common.noData}</span>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="rounded-2xl bg-base-200 p-3">
+                                    <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.common.sourceOfTruth}</p>
+                                    <div className="mt-3 flex flex-wrap gap-2">
+                                      {item.source_of_truth.length > 0 ? (
+                                        item.source_of_truth.map((source) => (
+                                          <span key={source} className="badge badge-ghost">
+                                            {source}
+                                          </span>
+                                        ))
+                                      ) : (
+                                        <span className="text-sm text-base-800">{copy.common.noData}</span>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
-
-                                <div className="rounded-2xl border border-base-300 px-4 py-3">
-                                  <p className="text-xs uppercase tracking-[0.18em] text-base-800">Next actions</p>
-                                  <div className="mt-3 flex flex-wrap gap-2">
-                                    {item.next_actions.length > 0 ? (
-                                      item.next_actions.map((action) => (
-                                        <span key={action} className="badge badge-ghost">
-                                          {action.replaceAll("_", " ")}
-                                        </span>
-                                      ))
-                                    ) : (
-                                      <span className="text-sm text-base-800">No action needed.</span>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
+                              </details>
                             </div>
                           </section>
                         ))}
@@ -1304,27 +1824,34 @@ export default function App() {
 
           {route === "/personality" ? (
             <div className="grid gap-6">
-              <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <section className="rounded-[2rem] border border-base-300 bg-base-100 p-5 shadow-sm">
+                <div className="mb-5 max-w-3xl">
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.personality.eyebrow}</p>
+                  <h2 className="font-display text-3xl text-base-900">{copy.personality.title}</h2>
+                  <p className="mt-3 text-sm leading-7 text-base-800">{copy.personality.subtitle}</p>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 {[
                   {
-                    title: "Goals",
+                    title: copy.personality.goals,
                     value: stringValue(planningSummary?.active_goal_count, "0"),
-                    note: "active goals in planning continuity",
+                    note: "Active goals in planning continuity",
                   },
                   {
-                    title: "Tasks",
+                    title: copy.personality.tasks,
                     value: stringValue(planningSummary?.active_task_count, "0"),
-                    note: "current tracked task count",
+                    note: "Current tracked task count",
                   },
                   {
-                    title: "Knowledge",
+                    title: copy.personality.knowledge,
                     value: stringValue(knowledgeSummary?.semantic_conclusion_count, "0"),
-                    note: "semantic conclusions stored",
+                    note: "Semantic conclusions stored",
                   },
                   {
-                    title: "Preferences",
+                    title: copy.personality.preferences,
                     value: stringValue(preferenceSummary?.learned_preference_count, "0"),
-                    note: "resolved preference keys",
+                    note: "Resolved runtime preference keys",
                   },
                 ].map((card) => (
                   <article key={card.title} className="rounded-[1.75rem] border border-base-300 bg-base-100 p-5 shadow-sm">
@@ -1333,18 +1860,19 @@ export default function App() {
                     <p className="mt-2 text-sm text-base-800">{card.note}</p>
                   </article>
                 ))}
+                </div>
               </section>
 
               <section className="rounded-[2rem] border border-base-300 bg-base-100 p-5 shadow-sm">
                 <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
                   <div>
-                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">Inspector</p>
-                    <h2 className="font-display text-3xl text-base-900">All major personality sections</h2>
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.personality.eyebrow}</p>
+                    <h2 className="font-display text-3xl text-base-900">{copy.personality.title}</h2>
                   </div>
                   <label className="input input-bordered flex w-full items-center gap-2 sm:max-w-sm">
                     <input
                       className="grow"
-                      placeholder="Filter sections or payload text"
+                      placeholder={copy.personality.filter}
                       value={inspectorQuery}
                       onChange={(event) => setInspectorQuery(event.target.value)}
                     />
@@ -1354,17 +1882,17 @@ export default function App() {
                 {overviewLoading ? (
                   <div className="flex items-center gap-3 rounded-2xl bg-base-200 px-4 py-5 text-base-900">
                     <span className="loading loading-spinner loading-sm text-primary" />
-                    Loading personality overview from backend.
+                    {copy.personality.loading}
                   </div>
                 ) : null}
 
                 {!overviewLoading && overviewSections.length === 0 ? (
                   <div className="rounded-2xl bg-base-200 px-4 py-5 text-sm text-base-800">
-                    No matching inspector sections for this filter.
+                    {copy.personality.empty}
                   </div>
                 ) : null}
 
-                <div className="grid gap-4 lg:grid-cols-2">
+                <div className="grid gap-4 xl:grid-cols-2">
                   {overviewSections.map((section) => (
                     <article key={section.key} className="rounded-[1.6rem] border border-base-300 bg-base-200 p-4">
                       <div className="mb-3 flex items-center justify-between gap-3">
@@ -1374,9 +1902,24 @@ export default function App() {
                         </div>
                         <span className="badge badge-outline">{section.key}</span>
                       </div>
-                      <pre className="max-h-[24rem] overflow-auto rounded-2xl bg-base-100 p-4 text-xs leading-6 text-base-900">
-                        {prettyJson(section.payload)}
-                      </pre>
+                      <div className="rounded-2xl bg-base-100 p-4">
+                        <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.personality.highlights}</p>
+                        <div className="mt-3 space-y-2">
+                          {summaryLines(section.key, section.payload).map((line) => (
+                            <p key={line} className="text-sm leading-7 text-base-900">
+                              {line}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                      <details className="mt-3 rounded-2xl border border-base-300 bg-base-100">
+                        <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-base-900">
+                          {copy.common.inspectPayload}
+                        </summary>
+                        <pre className="max-h-[24rem] overflow-auto px-4 pb-4 text-xs leading-6 text-base-900">
+                          {prettyJson(section.payload)}
+                        </pre>
+                      </details>
                     </article>
                   ))}
                 </div>
@@ -1398,7 +1941,7 @@ export default function App() {
                 onClick={() => changeRoute(entry)}
                 type="button"
               >
-                {ROUTE_LABELS[entry]}
+                {routeLabel(entry, resolvedUiLanguage)}
               </button>
             ))}
           </div>

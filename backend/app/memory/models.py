@@ -68,6 +68,7 @@ class AionProfile(Base):
 
     user_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     preferred_language: Mapped[str] = mapped_column(String(8), nullable=False)
+    ui_language: Mapped[str] = mapped_column(String(16), nullable=False, default="system")
     language_confidence: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     language_source: Mapped[str] = mapped_column(String(32), nullable=False, default="default")
     telegram_chat_id: Mapped[str | None] = mapped_column(String(64), nullable=True)

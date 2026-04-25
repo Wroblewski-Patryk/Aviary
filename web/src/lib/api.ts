@@ -18,8 +18,7 @@ export type AppAuthUser = {
 
 export type AppSettings = {
   preferred_language?: string | null;
-  response_style?: string | null;
-  collaboration_preference?: string | null;
+  ui_language?: string | null;
   proactive_opt_in?: boolean | null;
 };
 
@@ -189,8 +188,7 @@ export const api = {
   },
   patchSettings(body: {
     preferred_language?: string | null;
-    response_style?: string | null;
-    collaboration_preference?: string | null;
+    ui_language?: string | null;
     proactive_opt_in?: boolean | null;
     display_name?: string | null;
   }): Promise<AppSettings> {

@@ -223,8 +223,7 @@ def _app_settings_payload(*, profile: dict | None, preferences: dict | None) -> 
     preferences = preferences or {}
     return {
         "preferred_language": profile.get("preferred_language"),
-        "response_style": preferences.get("response_style"),
-        "collaboration_preference": preferences.get("collaboration_preference"),
+        "ui_language": profile.get("ui_language", "system"),
         "proactive_opt_in": preferences.get("proactive_opt_in"),
     }
 
@@ -1402,21 +1401,10 @@ async def app_patch_me_settings(
             language_code=body.preferred_language,
             source="app_settings",
         )
-    if body.response_style is not None:
-        await memory_repository.upsert_conclusion(
+    if body.ui_language is not None:
+        await memory_repository.set_user_profile_ui_language(
             user_id=user_id,
-            kind="response_style",
-            content=body.response_style.strip(),
-            confidence=1.0,
-            source="app_settings",
-        )
-    if body.collaboration_preference is not None:
-        await memory_repository.upsert_conclusion(
-            user_id=user_id,
-            kind="collaboration_preference",
-            content=body.collaboration_preference.strip(),
-            confidence=1.0,
-            source="app_settings",
+            ui_language=body.ui_language,
         )
     if body.proactive_opt_in is not None:
         await memory_repository.upsert_conclusion(

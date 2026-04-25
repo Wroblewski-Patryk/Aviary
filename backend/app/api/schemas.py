@@ -55,8 +55,7 @@ class AppLoginRequest(BaseModel):
 
 class AppSettingsPatchRequest(BaseModel):
     preferred_language: str | None = Field(default=None, min_length=2, max_length=8)
-    response_style: str | None = Field(default=None, min_length=2, max_length=64)
-    collaboration_preference: str | None = Field(default=None, min_length=2, max_length=64)
+    ui_language: str | None = Field(default=None, min_length=2, max_length=16)
     proactive_opt_in: bool | None = None
     display_name: str | None = Field(default=None, max_length=120)
 
@@ -73,8 +72,7 @@ class AppAuthUserResponse(BaseModel):
 
 class AppSettingsResponse(BaseModel):
     preferred_language: str | None = None
-    response_style: str | None = None
-    collaboration_preference: str | None = None
+    ui_language: str | None = None
     proactive_opt_in: bool | None = None
 
 

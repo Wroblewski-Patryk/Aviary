@@ -383,6 +383,7 @@ class FakeMemoryRepository:
         self.attention_turns: dict[tuple[str, str], dict] = {}
         self.user_profile = {
             "preferred_language": "pl",
+            "ui_language": "system",
             "telegram_chat_id": None,
             "telegram_user_id": None,
             "telegram_link_code": None,
@@ -709,6 +710,15 @@ class FakeMemoryRepository:
         self.user_profile["preferred_language"] = language_code
         self.user_profile["language_source"] = source
         self.user_profile["language_confidence"] = 1.0
+        return dict(self.user_profile)
+
+    async def set_user_profile_ui_language(
+        self,
+        *,
+        user_id: str,
+        ui_language: str,
+    ) -> dict:
+        self.user_profile["ui_language"] = ui_language
         return dict(self.user_profile)
 
     async def create_or_rotate_telegram_link_code(
@@ -4658,6 +4668,7 @@ def test_app_auth_register_sets_session_cookie_and_returns_user_snapshot() -> No
     assert body["user"]["email"] == "user@example.com"
     assert body["user"]["display_name"] == "Lucky Sparrow"
     assert body["settings"]["preferred_language"] == "pl"
+    assert body["settings"]["ui_language"] == "system"
 
 
 def test_app_me_requires_authenticated_session() -> None:
@@ -4701,7 +4712,8 @@ def test_app_login_logout_and_me_roundtrip() -> None:
     assert me_response.status_code == 200
     body = me_response.json()
     assert body["user"]["email"] == "user@example.com"
-    assert body["settings"]["response_style"] == "concise"
+    assert body["settings"]["ui_language"] == "system"
+    assert body["settings"]["proactive_opt_in"] is True
 
 
 def test_app_patch_settings_updates_profile_preferences_and_display_name() -> None:
@@ -4719,8 +4731,7 @@ def test_app_patch_settings_updates_profile_preferences_and_display_name() -> No
         "/app/me/settings",
         json={
             "preferred_language": "en",
-            "response_style": "detailed",
-            "collaboration_preference": "hands_on",
+            "ui_language": "de",
             "proactive_opt_in": False,
             "display_name": "AION Pilot",
         },
@@ -4729,8 +4740,7 @@ def test_app_patch_settings_updates_profile_preferences_and_display_name() -> No
     assert response.status_code == 200
     body = response.json()
     assert body["preferred_language"] == "en"
-    assert body["response_style"] == "detailed"
-    assert body["collaboration_preference"] == "hands_on"
+    assert body["ui_language"] == "de"
     assert body["proactive_opt_in"] is False
 
     me_response = client.get("/app/me")
@@ -4738,6 +4748,7 @@ def test_app_patch_settings_updates_profile_preferences_and_display_name() -> No
     me_body = me_response.json()
     assert me_body["user"]["display_name"] == "AION Pilot"
     assert me_body["settings"]["preferred_language"] == "en"
+    assert me_body["settings"]["ui_language"] == "de"
     assert me_body["settings"]["proactive_opt_in"] is False
 
 
