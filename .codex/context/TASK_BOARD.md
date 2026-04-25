@@ -31,9 +31,12 @@ Last updated: 2026-04-25
     authenticated app user
   - the web tools screen now exposes the link-code flow instead of pretending
     Telegram is ready without user linking
-- `PRJ-674` is now the next `READY` slice:
-  - add durable proof and docs alignment so tools and channels UI remains
-    truthful against backend state over time
+- `PRJ-674` is complete:
+  - tools/channels validations now pin backend truth, Telegram link-state
+    transitions, and provider-blocked posture
+  - testing, overview, ops, and env/config docs now describe the same
+    backend-owned product boundary
+- the tools-and-channels web lane is now complete through `PRJ-674`
 - `PRJ-667` remains planned as the next mobile foundation slice after the tools
   and channels lane is frozen
 

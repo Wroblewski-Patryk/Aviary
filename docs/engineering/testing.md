@@ -93,6 +93,9 @@ Incident-evidence bundle export helper:
 - Web client shell changes:
   - keep `web/` as a thin client over backend-owned contracts
   - require at least one successful production build
+  - when the change touches tools or channels truth, run focused backend route
+    coverage for `/app/tools/overview`, `/app/tools/preferences`, and
+    Telegram link-state transitions
   - when deploy parity is affected, extend release smoke or deployment-script coverage
 - Memory or database changes:
   - add repository or integration coverage
@@ -141,6 +144,22 @@ For meaningful repo changes, leave behind:
   from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py`
   - `.\web\npm run build`
+- for app-facing tools and channels slices, regression and deploy-readiness
+  evidence from:
+  - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "tools_overview or tools_preferences or telegram_link"`
+  - `.\.venv\Scripts\python -m pytest -q tests/test_api_routes.py`
+  - `.\web\npm run build`
+- coverage should pin:
+    - authenticated `GET /app/tools/overview` grouped payload truth
+    - user-owned toggle persistence through `PATCH /app/tools/preferences`
+    - Telegram link-state transitions:
+      - `not_linked`
+      - `pending_confirmation`
+      - `linked`
+      - invalid or expired link code rejection
+    - provider-blocked posture when Telegram is not configured
+    - web build success for the tools screen consuming only backend-owned
+      contract fields
 - for observability-export and incident-evidence slices, regression and gate
   evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_observability_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py`

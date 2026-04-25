@@ -3,7 +3,7 @@
 ## Header
 - ID: PRJ-674
 - Title: Add proof that tools and channels UI stays aligned with backend truth
-- Status: READY
+- Status: DONE
 - Owner: QA/Test
 - Depends on: PRJ-670, PRJ-671, PRJ-672, PRJ-673
 - Priority: P1
@@ -25,11 +25,11 @@ remain aligned across backend API, web UI, and deployment truth.
 - reuse existing release and regression patterns where possible
 
 ## Definition of Done
-- [ ] Focused backend and web validations cover the tools overview flow.
-- [ ] Release or smoke guidance includes the tools and channels truth checks
+- [x] Focused backend and web validations cover the tools overview flow.
+- [x] Release or smoke guidance includes the tools and channels truth checks
   when relevant to deploy scope.
-- [ ] Canonical docs describe the new app-facing tools boundary and its limits.
-- [ ] Context files are synchronized with the delivered baseline.
+- [x] Canonical docs describe the new app-facing tools boundary and its limits.
+- [x] Context files are synchronized with the delivered baseline.
 
 ## Forbidden
 - new systems without approval
@@ -39,7 +39,13 @@ remain aligned across backend API, web UI, and deployment truth.
 
 ## Validation Evidence
 - Tests:
+  - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "tools_overview or tools_preferences or telegram_link"; Pop-Location`
+  - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py; Pop-Location`
+  - `Push-Location web; npm run build; Pop-Location`
 - Manual checks:
+  - docs now direct operators to verify `/app/tools/overview`,
+    `/app/tools/preferences`, and `/app/tools/telegram/link/start` as the
+    backend-owned product boundary when a release touches tools/channels
 - Screenshots/logs:
 - High-risk checks: ensure no UI state claims provider readiness or linkage
   that backend does not confirm
@@ -53,13 +59,13 @@ remain aligned across backend API, web UI, and deployment truth.
 - Follow-up architecture doc updates: testing and product-shell docs
 
 ## Review Checklist (mandatory)
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
 - [ ] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes

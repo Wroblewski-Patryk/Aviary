@@ -84,6 +84,15 @@ Last updated: 2026-04-25
   - the web `Tools` route now shows a real Telegram linking panel with code
     generation and confirmation instructions only when backend truth says the
     channel is enabled and still requires linking
+- 2026-04-25: `PRJ-674` is complete:
+  - tools/channels proof now includes focused backend regression coverage for
+    grouped overview truth, toggle persistence, provider-blocked Telegram
+    start posture, and expired Telegram link-code rejection
+  - engineering testing guidance now defines the canonical validation commands
+    and truth checks for app-facing tools/channels slices
+  - overview, ops, and env/config docs now describe the same backend-owned
+    tools boundary where provider secrets stay outside product UI and the web
+    client remains a thin consumer of backend truth
 - 2026-04-24: `PRJ-635` is complete: canonical architecture now freezes one
   explicit core-`v1` time-aware planned-work baseline. Reminders, check-ins,
   routines, and future follow-ups are variants of one internal planned-work

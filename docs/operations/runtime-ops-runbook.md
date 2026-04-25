@@ -186,6 +186,33 @@ you whether the webhook reached the service, whether the secret was rejected,
 whether the turn was coalesced into a queue, and whether outbound delivery
 ever ran.
 
+For first-party `web` triage, treat the browser tools screen as a thin client
+over backend-owned truth rather than an independent source of readiness.
+When a deploy or incident touches tools/channels visibility, confirm:
+
+- the authenticated backend contract:
+  - `GET /app/tools/overview`
+- the bounded user-preference mutation path:
+  - `PATCH /app/tools/preferences`
+- the Telegram identity-linking entrypoint:
+  - `POST /app/tools/telegram/link/start`
+
+Expected operator posture:
+
+- integral capabilities (`internal_chat`, `web_search`, `web_browser`) should
+  remain visible as always-on product posture, not user-configured providers
+- provider-backed tools should distinguish:
+  - provider readiness
+  - user-requested enablement
+  - effective enabled state
+- Telegram should distinguish:
+  - provider configured but not linked
+  - pending confirmation after link-code generation
+  - fully linked after Telegram-side `/link CODE` confirmation
+- browser UI must not claim Telegram or other connectors are usable when
+  backend truth still reports missing provider config, missing user enablement,
+  or missing link confirmation
+
 If `last_ingress.state=runtime_failed` and the reason shows a runtime
 exception before any delivery attempt, treat the incident as a foreground
 pipeline failure rather than a Telegram transport outage. For PostgreSQL

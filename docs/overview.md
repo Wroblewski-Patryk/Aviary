@@ -26,6 +26,9 @@ The repository already ships a real multi-stage runtime, not just a skeleton:
 - `GET /app/chat/history`
 - `POST /app/chat/message`
 - `GET /app/personality/overview`
+- `GET /app/tools/overview`
+- `PATCH /app/tools/preferences`
+- `POST /app/tools/telegram/link/start`
 - event normalization for API and Telegram payloads
 - conscious-loop orchestration with structured stage outputs
 - episodic memory persistence plus lightweight semantic conclusions
@@ -74,6 +77,12 @@ Important current-runtime notes:
   policy-gated transitional surfaces
 - first-party product clients now authenticate through backend-owned sessions
   instead of relying on `X-AION-User-Id` as their primary identity boundary
+- the `web` tools screen is now a thin client over backend-owned tools truth:
+  - integral capabilities such as internal chat, web search, and web browser
+    are exposed as always-on product posture
+  - user-owned toggles exist only where backend contracts support them
+  - Telegram linking uses a backend-issued short code and Telegram-side
+    confirmation instead of browser-managed provider secrets
 
 ## Runtime Stage Ownership
 

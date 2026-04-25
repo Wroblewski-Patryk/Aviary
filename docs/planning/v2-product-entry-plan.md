@@ -71,11 +71,15 @@ Completed on 2026-04-25:
   - the web tools screen now shows truthful code-generation and confirmation
     guidance only when backend state says Telegram is enabled and still
     awaiting user linking
+- `PRJ-674`
+  - focused route regressions now pin tools overview truth, Telegram provider
+    gating, and bounded link-code lifecycle behavior
+  - testing, ops, overview, and env/config docs now describe one shared
+    backend-owned tools/channels boundary for the first-party web client
 
 Next active lane:
 
-- `PRJ-674` tools and channels proof and alignment
-- `PRJ-667..PRJ-668` mobile foundation remains planned after that lane
+- `PRJ-667..PRJ-668` mobile foundation
 
 ## Target Repository Topology
 

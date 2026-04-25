@@ -4971,6 +4971,22 @@ def test_app_start_telegram_link_creates_pending_link_code() -> None:
     assert telegram["status"] == "provider_ready_link_required"
 
 
+def test_app_start_telegram_link_requires_configured_provider() -> None:
+    client, _, _ = _client(telegram_bot_token=None)
+    client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+
+    response = client.post("/app/tools/telegram/link/start")
+
+    assert response.status_code == 409
+    assert response.json()["detail"] == "Telegram provider is not configured."
+
+
 def test_event_endpoint_confirms_telegram_link_code_and_updates_tools_overview() -> None:
     client, _, telegram_client = _client(secret="expected-secret")
     client.post(
@@ -5006,3 +5022,33 @@ def test_event_endpoint_confirms_telegram_link_code_and_updates_tools_overview()
     assert telegram["status"] == "provider_ready"
     assert telegram["enabled"] is True
     assert telegram["link_required"] is False
+
+
+def test_event_endpoint_rejects_expired_telegram_link_code() -> None:
+    client, _, telegram_client = _client(secret="expected-secret")
+    client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+    link_start = client.post("/app/tools/telegram/link/start")
+    link_code = link_start.json()["link_code"]
+    memory_repository = client.app.state.memory_repository
+    memory_repository.user_profile["telegram_link_code_issued_at"] = datetime.now(timezone.utc) - timedelta(
+        seconds=901
+    )
+
+    response = client.post(
+        "/event",
+        json=_telegram_update(34, f"/link {link_code}"),
+        headers={"X-Telegram-Bot-Api-Secret-Token": "expected-secret"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["runtime"]["action_status"] == "telegram_link_invalid"
+    assert telegram_client.calls[-1] == {
+        "chat_id": "123",
+        "text": "This Telegram link code is invalid or has already been used.",
+    }

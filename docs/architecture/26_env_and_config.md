@@ -36,6 +36,19 @@ Those records may control consent and availability posture, but raw provider
 secrets remain external configuration unless a later architecture change
 explicitly approves a credential-storage subsystem.
 
+For first-party product clients, this means:
+
+- browser or mobile UI may expose backend-owned tool availability, user-owned
+  enablement, and bounded identity-linking flows
+- browser or mobile UI must not become a secret-entry surface for provider
+  credentials such as Telegram bot tokens, ClickUp tokens, or Google access
+  tokens
+- app-facing configuration surfaces must stay truthful about the difference
+  between:
+  - provider configuration in environment
+  - user consent or enablement
+  - effective ready-to-use posture after any required identity linking
+
 ---
 
 ## Environment File
