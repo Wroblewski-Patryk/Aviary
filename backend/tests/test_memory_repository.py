@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from app.memory.models import (
     AionAttentionTurn,
+    AionAuthSession,
     AionAuthUser,
     AionConclusion,
     AionGoal,
@@ -20,6 +21,7 @@ from app.memory.models import (
     AionSemanticEmbedding,
     AionSubconsciousProposal,
     AionTask,
+    AionTheta,
 )
 from app.memory.repository import MemoryRepository
 
@@ -2491,5 +2493,345 @@ async def test_memory_repository_snoozes_and_advances_recurring_planned_work(tmp
     assert advanced["status"] == "pending"
     assert advanced["preferred_at"] == datetime(2026, 4, 26, 10, 0, tzinfo=timezone.utc)
     assert advanced["recurrence_mode"] == "daily"
+
+    await engine.dispose()
+
+
+async def test_memory_repository_resets_single_user_runtime_data_and_preserves_managed_settings(tmp_path) -> None:
+    database_path = tmp_path / "memory-runtime-reset-single-user.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    now = datetime.now(timezone.utc)
+    await repository.create_auth_user(
+        user_id="usr_reset",
+        email="reset@example.com",
+        password_hash="hash",
+        display_name="Reset User",
+    )
+    await repository.set_user_profile_language(
+        user_id="usr_reset",
+        language_code="pl",
+        source="app_settings",
+    )
+    await repository.set_user_profile_ui_language(
+        user_id="usr_reset",
+        ui_language="de",
+    )
+    await repository.set_user_telegram_link(
+        user_id="usr_reset",
+        chat_id="123",
+        telegram_user_id="999",
+        linked_at=now,
+    )
+    await repository.create_auth_session(
+        session_id="sess-reset-1",
+        user_id="usr_reset",
+        session_token_hash="hash-1",
+        expires_at=now + timedelta(days=30),
+    )
+    await repository.create_auth_session(
+        session_id="sess-reset-2",
+        user_id="usr_reset",
+        session_token_hash="hash-2",
+        expires_at=now + timedelta(days=30),
+    )
+    await repository.write_episode(
+        event_id="evt-reset",
+        trace_id="trace-reset",
+        source="api",
+        user_id="usr_reset",
+        event_timestamp=now,
+        summary="Runtime memory that should be cleared.",
+        payload={"text": "remember this"},
+        importance=0.8,
+    )
+    await repository.upsert_conclusion(
+        user_id="usr_reset",
+        kind="proactive_opt_in",
+        content="true",
+        confidence=1.0,
+        source="app_settings",
+    )
+    await repository.upsert_conclusion(
+        user_id="usr_reset",
+        kind="response_style",
+        content="structured",
+        confidence=0.9,
+        source="app_settings",
+    )
+
+    async with session_factory() as session:
+        session.add(
+            AionSemanticEmbedding(
+                user_id="usr_reset",
+                source_kind="episodic",
+                source_id="mem-reset",
+                source_event_id="evt-reset",
+                scope_type="global",
+                scope_key="global",
+                content="Runtime memory embedding",
+                embedding=[0.1, 0.2, 0.3],
+                embedding_model="test-v1",
+                embedding_dimensions=3,
+                metadata_json={},
+            )
+        )
+        session.add(
+            AionRelation(
+                user_id="usr_reset",
+                relation_type="collaboration_dynamic",
+                relation_value="guided",
+                confidence=0.8,
+                source="background_reflection",
+            )
+        )
+        session.add(AionTheta(user_id="usr_reset", support_bias=0.7, analysis_bias=0.2, execution_bias=0.1))
+        session.add(AionGoal(user_id="usr_reset", name="Ship reset", priority="high", status="active"))
+        await session.flush()
+        goal_row = (
+            await session.execute(
+                select(AionGoal).where(AionGoal.user_id == "usr_reset").limit(1)
+            )
+        ).scalar_one()
+        session.add(
+            AionTask(
+                user_id="usr_reset",
+                goal_id=goal_row.id,
+                name="Task reset",
+                priority="high",
+                status="todo",
+            )
+        )
+        session.add(
+            AionPlannedWorkItem(
+                user_id="usr_reset",
+                goal_id=goal_row.id,
+                kind="follow_up",
+                summary="Follow up after reset",
+                status="pending",
+            )
+        )
+        session.add(
+            AionGoalProgress(
+                user_id="usr_reset",
+                goal_id=goal_row.id,
+                score=0.5,
+                execution_state="active",
+                progress_trend="steady",
+                source_event_id="evt-goal-progress",
+            )
+        )
+        session.add(
+            AionGoalMilestone(
+                user_id="usr_reset",
+                goal_id=goal_row.id,
+                name="Reset milestone",
+                phase="execution_phase",
+                status="active",
+                source_event_id="evt-goal-milestone",
+            )
+        )
+        session.add(
+            AionGoalMilestoneHistory(
+                user_id="usr_reset",
+                goal_id=goal_row.id,
+                milestone_name="Reset milestone",
+                phase="execution_phase",
+                risk_level="medium",
+                completion_criteria="done",
+                source_event_id="evt-goal-history",
+            )
+        )
+        session.add(
+            AionAttentionTurn(
+                user_id="usr_reset",
+                conversation_key="api:reset",
+                turn_id="turn-reset",
+                status="pending",
+                source_count=1,
+                messages_json=["hello"],
+                event_ids_json=["evt-reset"],
+                update_keys_json=["update:1"],
+                owner_mode="in_process",
+            )
+        )
+        session.add(
+            AionReflectionTask(
+                user_id="usr_reset",
+                event_id="evt-reset",
+                status="pending",
+            )
+        )
+        session.add(
+            AionSubconsciousProposal(
+                user_id="usr_reset",
+                proposal_type="ask_user",
+                summary="Need clarification",
+                status="pending",
+            )
+        )
+        await session.commit()
+
+    summary = await repository.reset_user_runtime_data(user_id="usr_reset")
+
+    assert summary["status"] == "ok"
+    assert summary["scope"] == "single_user_runtime_reset"
+    assert summary["target_user_id"] == "usr_reset"
+    assert summary["revoked_session_count"] == 2
+    assert "proactive_opt_in" in summary["preserved_conclusion_kinds"]
+    assert "response_style" not in summary["preserved_conclusion_kinds"]
+
+    profile = await repository.get_user_profile("usr_reset")
+    preferences = await repository.get_user_runtime_preferences("usr_reset")
+    auth_user = await repository.get_auth_user_by_id("usr_reset")
+    sessions = []
+    async with session_factory() as session:
+        sessions = (
+            await session.execute(
+                select(AionAuthSession).where(AionAuthSession.user_id == "usr_reset")
+            )
+        ).scalars().all()
+
+        assert (await session.execute(select(AionMemory).where(AionMemory.user_id == "usr_reset"))).scalars().all() == []
+        assert (
+            await session.execute(
+                select(AionSemanticEmbedding).where(AionSemanticEmbedding.user_id == "usr_reset")
+            )
+        ).scalars().all() == []
+        assert (await session.execute(select(AionRelation).where(AionRelation.user_id == "usr_reset"))).scalars().all() == []
+        assert await session.get(AionTheta, "usr_reset") is None
+        assert (await session.execute(select(AionGoal).where(AionGoal.user_id == "usr_reset"))).scalars().all() == []
+        assert (await session.execute(select(AionTask).where(AionTask.user_id == "usr_reset"))).scalars().all() == []
+        assert (
+            await session.execute(
+                select(AionPlannedWorkItem).where(AionPlannedWorkItem.user_id == "usr_reset")
+            )
+        ).scalars().all() == []
+        assert (
+            await session.execute(
+                select(AionGoalProgress).where(AionGoalProgress.user_id == "usr_reset")
+            )
+        ).scalars().all() == []
+        assert (
+            await session.execute(
+                select(AionGoalMilestone).where(AionGoalMilestone.user_id == "usr_reset")
+            )
+        ).scalars().all() == []
+        assert (
+            await session.execute(
+                select(AionGoalMilestoneHistory).where(AionGoalMilestoneHistory.user_id == "usr_reset")
+            )
+        ).scalars().all() == []
+        assert (
+            await session.execute(
+                select(AionAttentionTurn).where(AionAttentionTurn.user_id == "usr_reset")
+            )
+        ).scalars().all() == []
+        assert (
+            await session.execute(
+                select(AionReflectionTask).where(AionReflectionTask.user_id == "usr_reset")
+            )
+        ).scalars().all() == []
+        assert (
+            await session.execute(
+                select(AionSubconsciousProposal).where(AionSubconsciousProposal.user_id == "usr_reset")
+            )
+        ).scalars().all() == []
+
+    assert auth_user is not None
+    assert profile is not None
+    assert profile["preferred_language"] == "pl"
+    assert profile["ui_language"] == "de"
+    assert profile["telegram_chat_id"] == "123"
+    assert preferences["proactive_opt_in"] is True
+    assert "response_style" not in preferences
+    assert len(sessions) == 2
+    assert all(row.revoked_at is not None for row in sessions)
+
+    await engine.dispose()
+
+
+async def test_memory_repository_cleans_runtime_data_for_all_users_while_preserving_auth_and_profiles(tmp_path) -> None:
+    database_path = tmp_path / "memory-runtime-cleanup-all-users.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    now = datetime.now(timezone.utc)
+    for user_id in ("usr_a", "usr_b"):
+        await repository.create_auth_user(
+            user_id=user_id,
+            email=f"{user_id}@example.com",
+            password_hash="hash",
+        )
+        await repository.set_user_profile_language(
+            user_id=user_id,
+            language_code="en",
+            source="app_settings",
+        )
+        await repository.create_auth_session(
+            session_id=f"sess-{user_id}",
+            user_id=user_id,
+            session_token_hash=f"hash-{user_id}",
+            expires_at=now + timedelta(days=30),
+        )
+        await repository.write_episode(
+            event_id=f"evt-{user_id}",
+            trace_id=f"trace-{user_id}",
+            source="api",
+            user_id=user_id,
+            event_timestamp=now,
+            summary=f"Runtime entry for {user_id}",
+            payload={"text": user_id},
+            importance=0.7,
+        )
+        await repository.upsert_conclusion(
+            user_id=user_id,
+            kind="proactive_opt_in",
+            content="true",
+            confidence=1.0,
+            source="app_settings",
+        )
+        await repository.upsert_conclusion(
+            user_id=user_id,
+            kind="response_style",
+            content="structured",
+            confidence=0.9,
+            source="app_settings",
+        )
+
+    async with session_factory() as session:
+        session.add(AionGoal(user_id="usr_a", name="Goal A", priority="high", status="active"))
+        session.add(AionTask(user_id="usr_b", name="Task B", priority="high", status="todo"))
+        await session.commit()
+
+    summary = await repository.cleanup_runtime_data_preserving_auth()
+
+    assert summary["status"] == "ok"
+    assert summary["scope"] == "runtime_only_preserve_auth"
+    assert summary["target_user_id"] is None
+    assert summary["revoked_session_count"] == 2
+
+    async with session_factory() as session:
+        auth_users = (await session.execute(select(AionAuthUser))).scalars().all()
+        profiles = (await session.execute(select(AionProfile))).scalars().all()
+        auth_sessions = (await session.execute(select(AionAuthSession))).scalars().all()
+        memories = (await session.execute(select(AionMemory))).scalars().all()
+        goals = (await session.execute(select(AionGoal))).scalars().all()
+        tasks = (await session.execute(select(AionTask))).scalars().all()
+        conclusions = (await session.execute(select(AionConclusion).order_by(AionConclusion.user_id.asc()))).scalars().all()
+
+    assert len(auth_users) == 2
+    assert len(profiles) == 2
+    assert len(auth_sessions) == 2
+    assert all(row.revoked_at is not None for row in auth_sessions)
+    assert memories == []
+    assert goals == []
+    assert tasks == []
+    assert [row.kind for row in conclusions] == ["proactive_opt_in", "proactive_opt_in"]
 
     await engine.dispose()

@@ -94,6 +94,27 @@ Why this order:
 - finish with regression proof, runbook guidance, and source-of-truth sync so
   destructive behavior is operationally safe rather than implicit
 
+Queue update (2026-04-25):
+
+- `PRJ-719` is now complete.
+- the reset retention boundary is now explicit across architecture, planning,
+  and context truth:
+  - self-service reset preserves auth identity, profile settings, linked
+    integrations, linked channels, and user-managed operational preferences
+  - self-service reset clears per-user runtime continuity and revokes all auth
+    sessions, including the current session
+  - production-wide cleanup remains operator-only and outside product UI
+- `PRJ-720` is now complete:
+  - `MemoryRepository` owns one shared runtime-cleanup contract reused by the
+    self-service reset endpoint and operator scripts
+  - `POST /app/me/reset-data` now clears runtime continuity, preserves the
+    frozen auth/profile/settings boundary, and revokes all sessions
+  - operator scripts now support:
+    - `single_user_runtime_reset`
+    - `runtime_only_preserve_auth`
+- `PRJ-721` is now the next implementation slice for the account-settings
+  reset UX and confirmation flow.
+
 ## Planned On 2026-04-25 For V2 Product Entry
 
 Fresh user-approved product direction now defines the next post-no-UI product

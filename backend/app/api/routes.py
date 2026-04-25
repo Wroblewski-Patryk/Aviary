@@ -17,6 +17,8 @@ from app.api.schemas import (
     AppMeResponse,
     AppPersonalityOverviewResponse,
     AppRegisterRequest,
+    AppResetDataRequest,
+    AppResetDataResponse,
     AppSettingsPatchRequest,
     AppSettingsResponse,
     AppTelegramLinkStartResponse,
@@ -122,6 +124,7 @@ AUTH_SESSION_COOKIE_DEFAULT = "aion_session"
 AUTH_SESSION_TTL_HOURS_DEFAULT = 24 * 30
 AUTH_PBKDF2_ITERATIONS = 200_000
 TELEGRAM_LINK_CODE_TTL_SECONDS = 900
+RESET_DATA_CONFIRMATION_TEXT = "RESET MY DATA"
 
 
 def _runtime_from_request(request: Request) -> RuntimeOrchestrator:
@@ -1419,6 +1422,35 @@ async def app_patch_me_settings(
         profile=await memory_repository.get_user_profile(user_id),
         preferences=await memory_repository.get_user_runtime_preferences(user_id),
     )
+
+
+@router.post("/app/me/reset-data", response_model=AppResetDataResponse)
+async def app_reset_me_data(
+    body: AppResetDataRequest,
+    request: Request,
+    response: Response,
+) -> dict[str, Any]:
+    user, _ = await _require_app_auth(request)
+    if str(body.confirmation_text or "").strip() != RESET_DATA_CONFIRMATION_TEXT:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Confirmation text must be exactly '{RESET_DATA_CONFIRMATION_TEXT}'.",
+        )
+
+    summary = await _memory_repository_from_request(request).reset_user_runtime_data(
+        user_id=str(user["id"])
+    )
+    _clear_auth_cookie(response=response, settings=_settings_from_request(request))
+    return {
+        "status": summary["status"],
+        "scope": summary["scope"],
+        "target_user_id": summary["target_user_id"],
+        "total_deleted_records": summary["total_deleted_records"],
+        "revoked_session_count": summary["revoked_session_count"],
+        "cleared_categories": summary["cleared_categories"],
+        "preserved_categories": summary["preserved_categories"],
+        "preserved_conclusion_kinds": summary["preserved_conclusion_kinds"],
+    }
 
 
 @router.get("/app/chat/history", response_model=AppChatHistoryResponse)

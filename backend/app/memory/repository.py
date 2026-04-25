@@ -1,7 +1,7 @@
 import re
 from datetime import datetime, timedelta, timezone
 
-from sqlalchemy import and_, or_, select
+from sqlalchemy import and_, delete, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from app.core.contracts import MemoryLayerKind
@@ -87,6 +87,30 @@ class MemoryRepository:
             "proactive_outreach_state",
             "proactive_outreach_trigger",
         }
+    )
+    USER_MANAGED_OPERATIONAL_CONCLUSION_KINDS = frozenset(
+        {
+            "proactive_opt_in",
+            "telegram_enabled",
+            "clickup_enabled",
+            "google_calendar_enabled",
+            "google_drive_enabled",
+        }
+    )
+    RUNTIME_RESET_USER_SCOPED_MODELS = (
+        ("memory", AionMemory),
+        ("semantic_embeddings", AionSemanticEmbedding),
+        ("relations", AionRelation),
+        ("theta", AionTheta),
+        ("goals", AionGoal),
+        ("tasks", AionTask),
+        ("planned_work_items", AionPlannedWorkItem),
+        ("goal_progress_entries", AionGoalProgress),
+        ("goal_milestones", AionGoalMilestone),
+        ("goal_milestone_history_entries", AionGoalMilestoneHistory),
+        ("attention_turns", AionAttentionTurn),
+        ("reflection_tasks", AionReflectionTask),
+        ("subconscious_proposals", AionSubconsciousProposal),
     )
     GLOBAL_SCOPE_TYPE = GLOBAL_SCOPE_TYPE
     GLOBAL_SCOPE_KEY = GLOBAL_SCOPE_KEY
@@ -1250,6 +1274,47 @@ class MemoryRepository:
             await session.refresh(row)
         return self._serialize_auth_session(row)
 
+    async def reset_user_runtime_data(self, *, user_id: str) -> dict[str, object]:
+        normalized_user_id = str(user_id or "").strip()
+        if not normalized_user_id:
+            raise ValueError("user_id is required for runtime reset.")
+
+        async with self.session_factory() as session:
+            deleted_counts = await self._delete_runtime_state_for_user(
+                session,
+                user_id=normalized_user_id,
+            )
+            deleted_counts["conclusions"] = await self._delete_non_preserved_conclusions_for_user(
+                session,
+                user_id=normalized_user_id,
+            )
+            revoked_session_count = await self._revoke_auth_sessions_for_user(
+                session,
+                user_id=normalized_user_id,
+            )
+            await session.commit()
+
+        return self._runtime_reset_summary(
+            scope="single_user_runtime_reset",
+            target_user_id=normalized_user_id,
+            deleted_counts=deleted_counts,
+            revoked_session_count=revoked_session_count,
+        )
+
+    async def cleanup_runtime_data_preserving_auth(self) -> dict[str, object]:
+        async with self.session_factory() as session:
+            deleted_counts = await self._delete_runtime_state_for_all_users(session)
+            deleted_counts["conclusions"] = await self._delete_all_non_preserved_conclusions(session)
+            revoked_session_count = await self._revoke_all_auth_sessions(session)
+            await session.commit()
+
+        return self._runtime_reset_summary(
+            scope="runtime_only_preserve_auth",
+            target_user_id=None,
+            deleted_counts=deleted_counts,
+            revoked_session_count=revoked_session_count,
+        )
+
     async def get_user_theta(self, user_id: str) -> dict | None:
         async with self.session_factory() as session:
             row = await session.get(AionTheta, user_id)
@@ -2279,6 +2344,101 @@ class MemoryRepository:
                 set_preference("proactive_outreach_trigger", row.content, row)
 
         return preferences
+
+    async def _delete_runtime_state_for_user(
+        self,
+        session: AsyncSession,
+        *,
+        user_id: str,
+    ) -> dict[str, int]:
+        deleted_counts: dict[str, int] = {}
+        for label, model in self.RUNTIME_RESET_USER_SCOPED_MODELS:
+            result = await session.execute(delete(model).where(model.user_id == user_id))
+            deleted_counts[label] = int(result.rowcount or 0)
+        return deleted_counts
+
+    async def _delete_runtime_state_for_all_users(self, session: AsyncSession) -> dict[str, int]:
+        deleted_counts: dict[str, int] = {}
+        for label, model in self.RUNTIME_RESET_USER_SCOPED_MODELS:
+            result = await session.execute(delete(model))
+            deleted_counts[label] = int(result.rowcount or 0)
+        return deleted_counts
+
+    async def _delete_non_preserved_conclusions_for_user(
+        self,
+        session: AsyncSession,
+        *,
+        user_id: str,
+    ) -> int:
+        result = await session.execute(
+            delete(AionConclusion).where(
+                AionConclusion.user_id == user_id,
+                ~AionConclusion.kind.in_(self.USER_MANAGED_OPERATIONAL_CONCLUSION_KINDS),
+            )
+        )
+        return int(result.rowcount or 0)
+
+    async def _delete_all_non_preserved_conclusions(self, session: AsyncSession) -> int:
+        result = await session.execute(
+            delete(AionConclusion).where(
+                ~AionConclusion.kind.in_(self.USER_MANAGED_OPERATIONAL_CONCLUSION_KINDS)
+            )
+        )
+        return int(result.rowcount or 0)
+
+    async def _revoke_auth_sessions_for_user(
+        self,
+        session: AsyncSession,
+        *,
+        user_id: str,
+    ) -> int:
+        result = await session.execute(
+            update(AionAuthSession)
+            .where(
+                AionAuthSession.user_id == user_id,
+                AionAuthSession.revoked_at.is_(None),
+            )
+            .values(revoked_at=datetime.now(timezone.utc))
+        )
+        return int(result.rowcount or 0)
+
+    async def _revoke_all_auth_sessions(self, session: AsyncSession) -> int:
+        result = await session.execute(
+            update(AionAuthSession)
+            .where(AionAuthSession.revoked_at.is_(None))
+            .values(revoked_at=datetime.now(timezone.utc))
+        )
+        return int(result.rowcount or 0)
+
+    def _runtime_reset_summary(
+        self,
+        *,
+        scope: str,
+        target_user_id: str | None,
+        deleted_counts: dict[str, int],
+        revoked_session_count: int,
+    ) -> dict[str, object]:
+        return {
+            "status": "ok",
+            "scope": scope,
+            "target_user_id": target_user_id,
+            "deleted_counts": dict(deleted_counts),
+            "total_deleted_records": sum(int(count) for count in deleted_counts.values()),
+            "revoked_session_count": int(revoked_session_count),
+            "cleared_categories": [
+                label
+                for label, count in deleted_counts.items()
+                if int(count) > 0
+            ],
+            "preserved_categories": [
+                "auth_users",
+                "profiles",
+                "linked_integrations",
+                "linked_channels",
+                "user_managed_operational_preferences",
+            ],
+            "preserved_conclusion_kinds": sorted(self.USER_MANAGED_OPERATIONAL_CONCLUSION_KINDS),
+        }
 
     async def get_user_conclusions(
         self,

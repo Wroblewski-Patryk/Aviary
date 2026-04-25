@@ -30,6 +30,30 @@ Last updated: 2026-04-25
   - `PRJ-720` Shared Backend Cleanup Owner And Operator Script
   - `PRJ-721` Account Settings Reset UX And Confirmation Flow
   - `PRJ-722` Regression Proof, Ops Runbook, And Context Sync
+- `PRJ-719` is now complete:
+  - the reset retention boundary is now frozen around one explicit split:
+    - preserve auth identity, profile settings, linked integrations, linked
+      channels, and user-managed operational preferences
+    - remove per-user runtime continuity, adaptive state, internal planning
+      state, and queue/proposal state
+  - the first implementation also now freezes session posture:
+    - self-service reset revokes all auth sessions, including the current one
+  - operator-owned production cleanup remains separate from product UI and
+    still targets runtime-only cleanup first
+- `PRJ-720` is now complete:
+  - backend now has one shared runtime-cleanup owner in
+    `MemoryRepository` reused by:
+    - `POST /app/me/reset-data`
+    - operator cleanup scripts
+  - self-service reset now clears runtime continuity, preserves auth/profile
+    boundary fields, preserves user-managed operational preferences, and
+    revokes all auth sessions
+  - operator entrypoints now exist for:
+    - `single_user_runtime_reset`
+    - `runtime_only_preserve_auth`
+- `PRJ-721` is now the first `READY` slice:
+  - add the account-settings reset UX and confirmation flow on top of the
+    now-shared backend cleanup owner
 
 ## Current Active Lane
 

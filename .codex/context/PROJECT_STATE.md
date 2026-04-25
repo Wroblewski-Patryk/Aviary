@@ -33,6 +33,32 @@ Last updated: 2026-04-25
     - `PRJ-720` Shared Backend Cleanup Owner And Operator Script
     - `PRJ-721` Account Settings Reset UX And Confirmation Flow
     - `PRJ-722` Regression Proof, Ops Runbook, And Context Sync
+  - `PRJ-719` is now complete:
+    - canonical contract truth now freezes self-service reset as a
+      runtime-continuity reset, not account deletion
+    - auth identity, profile settings, linked integrations, linked channels,
+      and user-managed operational preferences remain preserved
+    - per-user runtime continuity, adaptive state, internal planning state,
+      attention/reflection state, and proposal state are inside the destructive
+      scope
+    - the first implementation posture revokes all auth sessions, including
+      the current session, after reset
+  - `PRJ-720` is now complete:
+    - backend now has one shared cleanup owner in
+      `backend/app/memory/repository.py` for:
+      - single-user runtime reset
+      - runtime-only cleanup preserving auth/profile state
+    - `POST /app/me/reset-data` now reuses that owner instead of duplicating
+      per-table delete logic in the route layer
+    - operator entrypoints now exist in
+      `backend/scripts/run_user_data_cleanup.{py,ps1,sh}`
+    - focused regression coverage now proves:
+      - runtime continuity is cleared
+      - managed settings and linked profile state are preserved
+      - all auth sessions are revoked after reset
+  - `PRJ-721` is now the next implementation slice:
+    - the web account settings flow should expose the bounded reset action and
+      confirmation UX on top of the shared backend contract
 - 2026-04-25: approved post-no-UI `v2` entry direction is now explicit:
   - the repository should evolve toward product-facing top-level folders
     `backend/`, `web/`, and `mobile/`

@@ -60,6 +60,10 @@ class AppSettingsPatchRequest(BaseModel):
     display_name: str | None = Field(default=None, max_length=120)
 
 
+class AppResetDataRequest(BaseModel):
+    confirmation_text: str = Field(min_length=1, max_length=64)
+
+
 class AppChatMessageRequest(BaseModel):
     text: str = Field(min_length=1, max_length=4000)
 
@@ -74,6 +78,17 @@ class AppSettingsResponse(BaseModel):
     preferred_language: str | None = None
     ui_language: str | None = None
     proactive_opt_in: bool | None = None
+
+
+class AppResetDataResponse(BaseModel):
+    status: str
+    scope: str
+    target_user_id: str | None = None
+    total_deleted_records: int
+    revoked_session_count: int
+    cleared_categories: list[str]
+    preserved_categories: list[str]
+    preserved_conclusion_kinds: list[str]
 
 
 class AppMeResponse(BaseModel):

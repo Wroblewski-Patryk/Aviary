@@ -396,6 +396,13 @@ class FakeMemoryRepository:
             "preferred_role": "advisor",
             "proactive_opt_in": True,
         }
+        self.user_managed_operational_conclusion_kinds = {
+            "proactive_opt_in",
+            "telegram_enabled",
+            "clickup_enabled",
+            "google_calendar_enabled",
+            "google_drive_enabled",
+        }
         self.user_conclusions = [
             {"kind": "response_style", "content": "concise", "confidence": 0.95, "source": "explicit_request"},
             {"kind": "affective_support_pattern", "content": "supportive", "confidence": 0.78, "source": "background_reflection"},
@@ -433,6 +440,7 @@ class FakeMemoryRepository:
         self.auth_users: dict[str, dict] = {}
         self.auth_users_by_email: dict[str, str] = {}
         self.auth_sessions: dict[str, dict] = {}
+        self.runtime_reset_calls: list[dict[str, object]] = []
 
     async def get_reflection_task_stats(
         self,
@@ -471,7 +479,11 @@ class FakeMemoryRepository:
         return None
 
     async def get_recent_for_user(self, user_id: str, limit: int = 5) -> list[dict]:
-        return [dict(item) for item in self.recent_memory[:limit]]
+        return [
+            dict(item)
+            for item in self.recent_memory
+            if str(item.get("user_id", "")).strip() == str(user_id).strip()
+        ][:limit]
 
     async def get_user_runtime_preferences(self, user_id: str, **kwargs) -> dict:
         return dict(self.user_preferences)
@@ -699,6 +711,79 @@ class FakeMemoryRepository:
             return None
         row["last_seen_at"] = datetime.now(timezone.utc)
         return dict(row)
+
+    async def reset_user_runtime_data(self, *, user_id: str) -> dict[str, object]:
+        normalized_user_id = str(user_id).strip()
+        self.runtime_reset_calls.append({"user_id": normalized_user_id})
+        self.recent_memory = [
+            item
+            for item in self.recent_memory
+            if str(item.get("user_id", "")).strip() != normalized_user_id
+        ]
+        self.user_conclusions = [
+            item
+            for item in self.user_conclusions
+            if str(item.get("kind", "")).strip() in self.user_managed_operational_conclusion_kinds
+        ]
+        self.user_relations = []
+        self.active_goals = []
+        self.active_tasks = []
+        self.active_goal_milestones = []
+        self.pending_proposals = []
+        self.user_theta = {}
+        self.attention_turns = {
+            key: value
+            for key, value in self.attention_turns.items()
+            if str(value.get("user_id", "")).strip() != normalized_user_id
+        }
+        revoked_session_count = 0
+        for row in self.auth_sessions.values():
+            if str(row.get("user_id", "")).strip() != normalized_user_id:
+                continue
+            if row.get("revoked_at") is None:
+                row["revoked_at"] = datetime.now(timezone.utc)
+                revoked_session_count += 1
+        return {
+            "status": "ok",
+            "scope": "single_user_runtime_reset",
+            "target_user_id": normalized_user_id,
+            "deleted_counts": {
+                "memory": 1,
+                "semantic_embeddings": 0,
+                "relations": 1,
+                "theta": 1,
+                "goals": 1,
+                "tasks": 1,
+                "planned_work_items": 0,
+                "goal_progress_entries": 0,
+                "goal_milestones": 1,
+                "goal_milestone_history_entries": 0,
+                "attention_turns": 0,
+                "reflection_tasks": 0,
+                "subconscious_proposals": 1,
+                "conclusions": 2,
+            },
+            "total_deleted_records": 8,
+            "revoked_session_count": revoked_session_count,
+            "cleared_categories": [
+                "memory",
+                "relations",
+                "theta",
+                "goals",
+                "tasks",
+                "goal_milestones",
+                "subconscious_proposals",
+                "conclusions",
+            ],
+            "preserved_categories": [
+                "auth_users",
+                "profiles",
+                "linked_integrations",
+                "linked_channels",
+                "user_managed_operational_preferences",
+            ],
+            "preserved_conclusion_kinds": sorted(self.user_managed_operational_conclusion_kinds),
+        }
 
     async def set_user_profile_language(
         self,
@@ -4776,8 +4861,113 @@ def test_app_patch_settings_persists_proactive_opt_in_without_semantic_side_effe
     assert me_response.json()["settings"]["proactive_opt_in"] is True
 
 
+def test_app_reset_data_requires_authenticated_session() -> None:
+    client, _, _ = _client()
+
+    response = client.post(
+        "/app/me/reset-data",
+        json={"confirmation_text": "RESET MY DATA"},
+    )
+
+    assert response.status_code == 401
+
+
+def test_app_reset_data_rejects_incorrect_confirmation_text() -> None:
+    client, _, _ = _client()
+    client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+
+    response = client.post(
+        "/app/me/reset-data",
+        json={"confirmation_text": "reset my data"},
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Confirmation text must be exactly 'RESET MY DATA'."
+
+
+def test_app_reset_data_clears_runtime_state_revokes_sessions_and_preserves_settings() -> None:
+    client, _, _ = _client()
+    memory_repository = client.app.state.memory_repository
+    register_response = client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+            "display_name": "Lucky Sparrow",
+        },
+    )
+    user_id = register_response.json()["user"]["id"]
+    memory_repository.recent_memory = [
+        {
+            "event_id": "evt-reset-1",
+            "source": "api",
+            "user_id": user_id,
+            "event_timestamp": datetime.now(timezone.utc),
+            "summary": "A runtime continuity entry.",
+            "payload": {"text": "remember this"},
+            "importance": 0.8,
+        }
+    ]
+    settings_response = client.patch(
+        "/app/me/settings",
+        json={
+            "preferred_language": "en",
+            "ui_language": "de",
+            "proactive_opt_in": True,
+            "display_name": "AION Pilot",
+        },
+    )
+    assert settings_response.status_code == 200
+
+    reset_response = client.post(
+        "/app/me/reset-data",
+        json={"confirmation_text": "RESET MY DATA"},
+    )
+
+    assert reset_response.status_code == 200
+    body = reset_response.json()
+    assert body["status"] == "ok"
+    assert body["scope"] == "single_user_runtime_reset"
+    assert body["target_user_id"] == user_id
+    assert body["revoked_session_count"] == 1
+    assert "aion_session=" in reset_response.headers["set-cookie"]
+    assert "Max-Age=0" in reset_response.headers["set-cookie"]
+
+    me_unauthorized = client.get("/app/me")
+    assert me_unauthorized.status_code == 401
+
+    login_response = client.post(
+        "/app/auth/login",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+    assert login_response.status_code == 200
+
+    me_response = client.get("/app/me")
+    assert me_response.status_code == 200
+    me_body = me_response.json()
+    assert me_body["user"]["display_name"] == "AION Pilot"
+    assert me_body["settings"]["preferred_language"] == "en"
+    assert me_body["settings"]["ui_language"] == "de"
+    assert me_body["settings"]["proactive_opt_in"] is True
+
+    history_response = client.get("/app/chat/history")
+    assert history_response.status_code == 200
+    assert history_response.json()["items"] == []
+    assert memory_repository.runtime_reset_calls == [{"user_id": user_id}]
+
+
 def test_app_chat_history_returns_recent_memory_entries_for_authenticated_user() -> None:
-    client, _, repository = _client()
+    client, _, _ = _client()
+    repository = client.app.state.memory_repository
     register_response = client.post(
         "/app/auth/register",
         json={
