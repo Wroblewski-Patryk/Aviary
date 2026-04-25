@@ -25,6 +25,39 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-04-25 - Shared identity continuity does not automatically create a product-safe shared chat transcript
+- Context:
+  - fresh product planning after the linked Telegram identity repair showed
+    that Telegram and first-party app chat could already share the same
+    backend `user_id`, but the user still did not see one continuous
+    conversation in the product UI.
+- Symptom:
+  - the system can have correct cross-channel memory ownership while the chat
+    route still behaves like a split between local session bubbles and a
+    separate "recent memory" list.
+- Root cause:
+  - identity continuity and episodic memory persistence were repaired first,
+    but the app-facing chat-history contract and web rendering model still
+    exposed memory entries rather than message transcript items.
+- Guardrail:
+  - when a channel-linking flow promises one continuous conversation, verify
+    both layers:
+    - shared backend identity/memory owner
+    - shared product-facing message transcript contract
+- Preferred pattern:
+  - reuse the existing durable turn memory
+  - project it into one app-facing transcript contract
+  - render one chat thread in product UI
+  - prove behavior with linked Telegram plus app-chat regression scenarios
+- Avoid:
+  - treating shared memory ownership as sufficient proof that the user sees one
+    continuous conversation
+  - keeping product chat on local-only session state after a backend transcript
+    contract already exists
+- Evidence:
+  - `docs/planning/shared-chat-transcript-and-telegram-continuity-plan.md`
+  - `.codex/tasks/PRJ-703-plan-shared-chat-transcript-and-cross-channel-continuity.md`
+
 ### 2026-04-25 - Coolify source automation can lag after push even when deploy parity eventually converges
 - Context:
   - after `PRJ-692` pushed repo-owned auto-migration into the Coolify compose
@@ -174,6 +207,38 @@ fixes for this repository.
 - Evidence:
   - `docs/planning/web-ux-ui-productization-plan.md`
   - `docs/planning/open-decisions.md`
+
+### 2026-04-25 - Product-facing web entry should not lead with architecture language or debug trust signals
+- Context:
+  - a second browser UX/UI audit of the updated first-party shell showed that
+    the product was structurally cleaner, but the public `/login` route still
+    spent too much first-viewport space on architecture framing, debug-style
+    build chrome, and system terminology.
+- Symptom:
+  - the UI can feel polished and still fail the first-impression test because
+    the first screen reads like a systems overview rather than a trustworthy
+    product entry.
+- Root cause:
+  - implementation and copy were optimized first around truthful system
+    contracts, so backend-facing language and build/debug affordances leaked
+    into public product surfaces.
+- Guardrail:
+  - public product routes should lead with value, action, and trust; system
+    terminology or build/debug indicators should stay secondary, inspect-only,
+    or completely hidden from the main user path.
+- Preferred pattern:
+  - place the primary action in the first viewport
+  - translate backend truth into user-facing value and next steps
+  - keep build revision or debug cues out of main public chrome
+  - verify mobile, tablet, and desktop screenshots before calling the route
+    product-ready
+- Avoid:
+  - opening a public route with backend, contract, or implementation wording
+  - treating debug or deploy-truth UI as harmless just because it is accurate
+  - assuming a nicer visual theme alone fixes poor product framing
+- Evidence:
+  - `.codex/artifacts/ux-audit-2026-04-25-round2/`
+  - `web/src/App.tsx`
 
 ### 2026-04-25 - Linked channels must change runtime identity resolution, not only profile status
 - Context:

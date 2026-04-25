@@ -291,6 +291,56 @@ Implementation status on 2026-04-25:
 - any next UX/UI work should derive from a fresh browser pass instead of this
   original queue
 
+## Planned On 2026-04-25 For Web UX/UI Second-Pass Product Polish
+
+Fresh browser review of the updated shell shows real progress, but also makes
+the next quality ceiling more visible.
+
+### Fresh Gap Snapshot
+
+Observed from the live `/login` route plus code review of the current web
+shell:
+
+- the public entry route still spends too much first-viewport space on
+  architecture framing instead of immediate product value and fast session
+  entry
+- public shell copy still leaks system-facing terms such as `backend truth`,
+  `live contract`, and raw endpoint posture
+- `build` revision still behaves as user-facing chrome even though it is
+  mainly deployment/debug truth
+- tablet still behaves mostly like a scaled mobile layout rather than a
+  deliberate intermediate tier
+- loading, empty, success, and error states exist, but they still read as
+  system messages more than product guidance
+- the current `ui_language` selector proves the contract boundary, but it is
+  not yet planned as a durable web-to-mobile locale metadata foundation
+- badge density and card emphasis still flatten visual hierarchy across the
+  shell
+
+### New Queue
+
+The next UX/UI second-pass queue is now seeded through `PRJ-710`.
+
+New groups:
+
+- `PRJ-703..PRJ-704` Login Value Framing And Product Copy Cleanup
+- `PRJ-705..PRJ-706` Responsive Tier Rules And Product State Semantics
+- `PRJ-707..PRJ-708` Locale UX Foundation And Visual Hierarchy Hardening
+- `PRJ-709..PRJ-710` Acceptance Screenshot Proof And Context Sync
+
+Why this order:
+
+- first trust and first conversion still depend on the public login route, so
+  entry posture should improve before finer route polish
+- terminology cleanup should stabilize product tone before later visual
+  refactoring
+- responsive tier rules should become explicit before another round of visual
+  tuning
+- locale UX should be planned as a reusable foundation before later mobile
+  work depends on today’s selector posture
+- final screenshot proof should validate the refined shell as one product
+  system across mobile, tablet, and desktop
+
 ## Planned On 2026-04-25 For Coolify Migration-First Deploy Automation
 
 Fresh deployment review after the `ui_language` migration showed that the
@@ -449,6 +499,92 @@ The next foreground-awareness repair lane is now seeded through `PRJ-702`.
     - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; Pop-Location`
     - manual replay for linked-name recall, time answer, weather lookup, and
       website-content lookup
+
+## Planned On 2026-04-25 For Shared Chat Transcript And Linked Telegram Continuity
+
+Fresh product feedback now clarifies that linked Telegram identity continuity
+is necessary but still not sufficient for the desired chat experience.
+
+### Fresh Gap Snapshot
+
+Observed from the current backend and first-party web shell:
+
+- linked Telegram ingress already resolves to the same backend auth `user_id`
+  as first-party `/app/*` chat after linking
+- `GET /app/chat/history` still returns memory-oriented entries rather than a
+  product-facing transcript
+- the web shell keeps local `sessionMessages` separate from the backend-loaded
+  continuity list, so the user does not see one continuous cross-channel chat
+- the current chat route still frames continuity as "recent memory" instead of
+  the exchanged messages themselves
+- `mobile/` is still deferred, so the correct next step is to repair the
+  shared backend contract and web UX that future mobile will reuse
+
+### New Queue
+
+The next linked-channel chat transcript lane is now seeded through `PRJ-709`.
+
+- `PRJ-703` Plan the shared chat transcript and linked Telegram continuity
+  lane. (complete)
+  - Result:
+    - the repo now contains one execution-ready plan in
+      `docs/planning/shared-chat-transcript-and-telegram-continuity-plan.md`
+    - the next slices, validations, and product guardrails are frozen before
+      implementation begins
+  - Validation:
+    - planning and source-of-truth cross-review
+
+- `PRJ-704` Shared Chat Transcript Contract Freeze
+  - Result:
+    - one explicit contract freezes `/app/chat/history` as a message
+      transcript surface instead of a memory-entry surface
+    - the contract pins the initial load window at the latest `10` messages
+      with chronological render order
+  - Validation:
+    - architecture and app-facing contract cross-review
+
+- `PRJ-705` Backend Transcript Projection And Chat History API Update
+  - Result:
+    - backend projects existing episodic turn memory into transcript-safe
+      message items for linked Telegram and app chat
+    - the implementation reuses the current durable memory flow instead of
+      adding a second conversation store
+  - Validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_memory_repository.py; Pop-Location`
+
+- `PRJ-706` Web Chat Thread Unification And Scroll Behavior
+  - Result:
+    - the web chat route renders one backend-owned transcript thread instead of
+      split local session messages plus a memory sidebar
+    - initial transcript load scrolls to the bottom, and a new assistant reply
+      moves the viewport so the top of the reply is visible
+  - Validation:
+    - `Push-Location .\web; npm test -- --runInBand; Pop-Location`
+    - `Push-Location .\web; npm run build; Pop-Location`
+
+- `PRJ-707` Cross-Channel Regression Proof For Linked Telegram And App Chat
+  - Result:
+    - tests prove that linked Telegram and first-party app turns appear in the
+      same shared transcript continuity
+    - regressions also pin the optional-channel posture for unlinked Telegram
+      and Telegram-disabled app use
+  - Validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py tests/test_runtime_pipeline.py; Pop-Location`
+
+- `PRJ-708` Shared Client Baseline And Product Docs Sync
+  - Result:
+    - mobile baseline and product docs now point at the shared transcript
+      contract instead of a memory-list interpretation
+  - Validation:
+    - doc-and-context sync
+
+- `PRJ-709` Final validation, context sync, and learning closure
+  - Result:
+    - full lane validation, context sync, and learning closure are attached to
+      the final transcript implementation
+  - Validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; Pop-Location`
+    - `Push-Location .\web; npm run build; Pop-Location`
 
 ## Planned On 2026-04-24 For Core V1 Time-Aware Planning
 

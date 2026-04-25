@@ -22,6 +22,35 @@ It also freezes one explicit split between:
 - UI language for the web shell
 - conversation language chosen live by the personality
 
+## Second Audit Refresh On 2026-04-25
+
+Fresh browser review of the now-improved shell confirms that the first UX/UI
+lane materially raised quality, but it did not finish the product transition.
+
+Reference evidence:
+
+- screenshot set:
+  - `.codex/artifacts/ux-audit-2026-04-25-round2/`
+- live route reached without auth:
+  - `/login`
+- code surfaces reviewed:
+  - `web/src/App.tsx`
+  - `web/src/lib/api.ts`
+  - `web/src/index.css`
+  - `web/tailwind.config.ts`
+
+This second pass changes the queue focus from:
+
+- route-level rescue and basic mobile-first structure
+
+to:
+
+- product tone
+- public entry clarity
+- responsive tier discipline
+- stronger state semantics
+- locale UX foundations suitable for later mobile transfer
+
 ## Audit Evidence
 
 - Browser route review:
@@ -76,6 +105,29 @@ It also freezes one explicit split between:
     control because the product needs one explicit split between UI locale and
     conversation language continuity.
 
+## Second-Pass Findings
+
+1. The public login screen still spends too much of the first viewport on
+   architecture framing instead of immediate product value and session entry.
+2. Public-facing copy still leaks system language:
+   - backend-owned session
+   - live contract
+   - backend truth
+   - raw endpoint references
+3. `build unknown` is a trust and layout problem when visible in the user
+   shell; build revision should not act as user-facing chrome.
+4. Tablet still behaves mainly like a scaled mobile layout instead of a
+   deliberately composed intermediate tier.
+5. Decorative badges are overused across the shell, which weakens semantic
+   hierarchy and makes status feel ornamental instead of useful.
+6. Loading, empty, success, and error states are technically present, but they
+   still read as system messages more than product guidance.
+7. The current shell copy is cleaner than before, but its overall tone still
+   describes systems and contracts more than user outcomes and next actions.
+8. The current `ui_language` selector works as a contract proof, but it is not
+   yet a durable localization UX foundation for web-to-mobile transfer because
+   it still relies on emoji-flag rendering instead of explicit locale metadata.
+
 ## Product Direction Guardrails
 
 - keep `web/` as a thin consumer of backend-owned contracts
@@ -102,6 +154,45 @@ Execution order:
 5. `PRJ-689` Tools Information Architecture And Actionability
 6. `PRJ-690` Personality Productization And Inspector Split
 7. `PRJ-691` Visual System Hardening, Responsive Proof, And Context Sync
+
+Implementation status on 2026-04-25:
+
+- `PRJ-685..PRJ-691` are now complete in the repo baseline
+- the authenticated shell now has mobile-first navigation and reduced chrome
+- app-facing settings now persist separate `ui_language` and no longer expose
+  manual `response_style` / `collaboration_preference` controls in the web UI
+- `Chat`, `Tools`, and `Personality` now follow a more product-facing
+  hierarchy with technical detail pushed lower in the flow
+
+## Second-Pass Queue On 2026-04-25
+
+Fresh browser evidence now seeds one follow-up lane through `PRJ-710`.
+
+Execution order:
+
+1. `PRJ-703` Login Value Framing And Trust Cleanup
+2. `PRJ-704` Product Copy And Terminology Cleanup Across The Shell
+3. `PRJ-705` Responsive Tier Rules For Mobile Tablet Desktop
+4. `PRJ-706` Productive State System For Loading Empty Error And Success
+5. `PRJ-707` Locale Metadata Foundation For GUI Language UX
+6. `PRJ-708` Visual Hierarchy And Badge Semantics Hardening
+7. `PRJ-709` Authenticated Route Second Pass And Screenshot Proof
+8. `PRJ-710` Context Docs And Learning Sync For The Second UX/UI Lane
+
+Why this order:
+
+- public entry quality must improve first because the login route still
+  determines first trust and first conversion
+- shell copy and terminology should be cleaned before deeper visual tweaks so
+  product language becomes stable across routes
+- responsive tier rules must be explicit before visual polishing, especially
+  for tablet
+- product-state semantics should be normalized before another screenshot pass
+- locale UX should gain a durable metadata foundation before later mobile work
+- visual hierarchy hardening should happen only after structure, terminology,
+  and state posture are clear
+- final route sweep and screenshot proof should validate the refined system as
+  one product surface, not as disconnected tweaks
 
 ## Tasks
 

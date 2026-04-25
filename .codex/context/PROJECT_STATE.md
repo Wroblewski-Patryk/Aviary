@@ -279,6 +279,30 @@ Last updated: 2026-04-25
   - the deploy-proof baseline now distinguishes temporary Coolify propagation
     lag from a real deployment-trigger miss without weakening strict final
     parity checks
+- 2026-04-25: fresh second-pass browser UX/UI audit now seeds the next web
+  product-polish lane through `PRJ-710`:
+  - the first UX/UI lane clearly improved shell structure, route focus, and
+    mobile posture
+  - the public `/login` route is still too architecture-forward, with too much
+    first-viewport emphasis on system framing instead of trust and session
+    entry
+  - shared shell copy still leaks backend and contract terminology into
+    user-facing surfaces
+  - the current shell still lacks explicit tablet rules and stronger semantic
+    hierarchy for badges, state messaging, and card emphasis
+  - `ui_language` is now a correct app-facing contract, but the product still
+    needs one durable locale-metadata plan for later web-to-mobile reuse
+  - user direction now prioritizes this UX/UI second pass ahead of the
+    foreground-awareness queue through `PRJ-702`
+  - the next planned execution order is:
+    - `PRJ-703` Login Value Framing And Trust Cleanup
+    - `PRJ-704` Product Copy And Terminology Cleanup Across The Shell
+    - `PRJ-705` Responsive Tier Rules For Mobile Tablet Desktop
+    - `PRJ-706` Productive State System For Loading Empty Error And Success
+    - `PRJ-707` Locale Metadata Foundation For GUI Language UX
+    - `PRJ-708` Visual Hierarchy And Badge Semantics Hardening
+    - `PRJ-709` Authenticated Route Second Pass And Screenshot Proof
+    - `PRJ-710` Context Docs And Learning Sync For The Second UX/UI Lane
 - 2026-04-25: `PRJ-694` is complete:
   - release smoke now retries transient `/health` failures with bounded
     `HealthRetryMaxAttempts` and `HealthRetryDelaySeconds`
@@ -313,6 +337,22 @@ Last updated: 2026-04-25
 - 2026-04-25: `PRJ-696` is now the first `READY` slice for this lane:
   - it should freeze one explicit foreground-awareness contract before any code
     change expands prompts, runtime payloads, or planner heuristics
+- 2026-04-25: fresh product analysis now seeds the next linked-channel chat UX
+  lane through `PRJ-709`:
+  - linked Telegram identity continuity is already repaired at the backend
+    `user_id` owner level, so the next gap is no longer identity split
+  - the remaining product gap is that `/app/chat/history` still exposes
+    memory-oriented entries while the web shell renders local session messages
+    separately from continuity, so the user does not see one shared
+    cross-channel transcript
+  - the next lane is therefore ordered as:
+    - freeze one shared transcript contract for `/app/chat/history`
+    - project existing episodic memory into transcript-safe message items
+    - unify the web chat thread around backend transcript truth and required
+      scroll behavior
+    - add linked Telegram plus app-chat regression proof
+    - sync mobile baseline and product docs to the shared transcript contract
+    - close with final validation and context sync
 - 2026-04-24: `PRJ-635` is complete: canonical architecture now freezes one
   explicit core-`v1` time-aware planned-work baseline. Reminders, check-ins,
   routines, and future follow-ups are variants of one internal planned-work
