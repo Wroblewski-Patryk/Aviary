@@ -85,7 +85,25 @@ Completed on 2026-04-25:
 
 Next active lane:
 
-- `PRJ-668` mobile foundation
+- `web + backend` follow-up slices derived from fresh product analysis
+
+Fresh production stabilization lane seeded on 2026-04-25:
+
+- `PRJ-675..PRJ-680`
+  - restore app-facing backend health for chat history and settings writes
+  - repair shared browser API error handling so the client reports backend
+    failures truthfully instead of surfacing JSON parser noise
+  - fix the current `Tools` and `Personality` route lifecycle so successful
+    backend responses render instead of leaving the UI on a loading spinner
+  - harden loading, empty, success, and error states across the first-party
+    web shell
+  - add regression and production smoke proof for the repaired baseline
+
+Current user direction on 2026-04-25:
+
+- keep `mobile/` frozen after the stack-baseline decision
+- do not build the first mobile scaffold yet
+- use the frozen mobile baseline later as the template for future work
 
 ## Target Repository Topology
 

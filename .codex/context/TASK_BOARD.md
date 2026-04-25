@@ -42,9 +42,22 @@ Last updated: 2026-04-25
     TypeScript and Expo Router
   - the shared backend-owned client-contract baseline for `web` and `mobile`
     is now explicit
-- `PRJ-668` is now the next `READY` slice:
-  - build the first real mobile workspace foundation on the frozen stack and
-    shared backend-owned contract boundary
+- user direction on 2026-04-25 now freezes the mobile lane after `PRJ-667`:
+  - `PRJ-668` is intentionally deferred until mobile work is explicitly resumed
+  - near-term execution should stay on `web + backend` slices only
+- fresh production UI analysis on 2026-04-25 now seeds the next `web + backend`
+  stabilization lane through `PRJ-680`:
+  - restore backend-owned chat history and settings persistence for the
+    first-party web shell
+  - make app-facing API errors truthful in the browser client instead of
+    surfacing JSON parser noise
+  - fix web route lifecycle regressions so `Tools` and `Personality` finish
+    loading and render backend payloads
+  - harden loading, empty, error, and success states across the shell
+  - add end-to-end and production smoke proof for the repaired baseline
+- `PRJ-675` is now the first `READY` slice:
+  - restore `GET /app/chat/history` and `PATCH /app/me/settings` so the
+    current production shell is functionally complete before further UI polish
 
 ## Agent Workflow Refresh (2026-04-18)
 

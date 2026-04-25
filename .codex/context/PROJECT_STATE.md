@@ -103,6 +103,29 @@ Last updated: 2026-04-25
     debug surfaces out of the future app workspace
   - native auth transport details remain an explicit bounded follow-up instead
     of being falsely implied as already solved by the stack freeze
+- 2026-04-25: user direction now freezes mobile execution after `PRJ-667`:
+  - `mobile/` remains an approved future product surface
+  - active implementation should stay on `web + backend`
+  - the first mobile workspace scaffold is intentionally deferred until a later
+    explicit restart of the mobile lane
+- 2026-04-25: fresh production UI validation of
+  `https://personality.luckysparrow.ch/` now seeds the next stabilization lane
+  through `PRJ-680`:
+  - register, login, logout, and `POST /app/chat/message` are working on the
+    first-party web shell
+  - `GET /app/chat/history` currently returns `500`, leaving the continuity
+    panel empty even though live chat replies succeed
+  - `PATCH /app/me/settings` currently returns `500`, so settings edits do not
+    persist through the app-facing contract
+  - `/app/tools/overview` and `/app/personality/overview` return `200`, but
+    the `Tools` and `Personality` screens stay on loading because the current
+    route lifecycle cancels its own request path
+  - the shared web API helper currently tries to parse plain-text
+    `Internal Server Error` responses as JSON, which surfaces misleading
+    browser errors instead of truthful backend failure detail
+  - the next queue should therefore repair backend contract health first, then
+    the client-side loading and error boundary behavior, then add regression
+    and smoke proof for the repaired baseline
 - 2026-04-24: `PRJ-635` is complete: canonical architecture now freezes one
   explicit core-`v1` time-aware planned-work baseline. Reminders, check-ins,
   routines, and future follow-ups are variants of one internal planned-work

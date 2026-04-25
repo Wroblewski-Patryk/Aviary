@@ -61,6 +61,49 @@ Why this order:
 - `mobile` should inherit already-proven backend contracts instead of forcing a
   premature app-stack commitment
 
+## Planned On 2026-04-25 For V2 Web Production Stabilization
+
+Fresh production testing of `https://personality.luckysparrow.ch/` now shows
+that the first `v2` browser release is present and partly working, but not yet
+stable enough to act as a trustworthy product shell.
+
+### Fresh Gap Snapshot
+
+Observed from live production behavior and current `web/` implementation:
+
+- register, login, logout, and `POST /app/chat/message` work through the
+  backend-owned app-facing contract
+- `GET /app/chat/history` currently returns `500`, so the continuity panel
+  stays empty even when live replies succeed
+- `PATCH /app/me/settings` currently returns `500`, so user-owned settings do
+  not persist through the intended browser flow
+- the shared client API helper currently assumes every non-empty response is
+  JSON, so plain-text backend failures appear as misleading parser errors
+- `/app/tools/overview` and `/app/personality/overview` return `200`, but the
+  `Tools` and `Personality` screens remain on loading because their current
+  route lifecycle cancels the request path before the payload is committed
+- the current release proof for the web shell is too shallow to catch backend
+  `500`s and spinner-without-render regressions before or after deploy
+
+### New Queue
+
+The next `v2` web stabilization queue is now seeded through `PRJ-680`.
+
+New groups:
+
+- `PRJ-675..PRJ-677` Web Contract Health And Truthful Client Loading
+- `PRJ-678..PRJ-680` Web UX Hardening, Proof, And Context Sync
+
+Why this order:
+
+- restore backend contract health first, because broken app-facing writes and
+  reads block truthful client behavior more directly than UI polish
+- then fix the shared browser API helper and route-loading lifecycle so the
+  client stops masking backend failures and starts rendering successful
+  payloads
+- only after the real product paths work should the shell be polished with
+  stronger state handling, smoke coverage, and synced repo truth
+
 ## Planned On 2026-04-24 For Core V1 Time-Aware Planning
 
 The previous final no-UI `v1` closure lane assumed that organizer-tool

@@ -25,6 +25,34 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-04-25 - App-facing web clients must not assume every backend error is JSON
+- Context:
+  - live production testing of the first `v2` web shell showed that some
+    authenticated `/app/*` routes can still fail with plain-text
+    `Internal Server Error` responses during early rollout hardening.
+- Symptom:
+  - the browser UI shows `Unexpected token 'I'... is not valid JSON` instead
+    of surfacing the real backend failure, while affected screens may remain
+    on loading or look unrelated to the true fault.
+- Root cause:
+  - the shared web API helper parses every non-empty response body with
+    `JSON.parse(...)` before checking whether the response is successful or
+    whether the payload is actually JSON.
+- Guardrail:
+  - shared client transport helpers must branch on HTTP status and content
+    shape before parsing, and they must preserve backend failure detail
+    truthfully for app-facing UI states.
+- Preferred pattern:
+  - read response text once
+  - parse JSON only when the payload is expected or safely detectable
+  - keep non-JSON error bodies as plain failure detail instead of turning
+    them into parser noise
+- Avoid:
+  - treating every non-empty body from `/app/*` as JSON by default
+- Evidence:
+  - production test artifacts in `.codex/artifacts/ui-prod-test-2026-04-25/`
+  - `web/src/lib/api.ts`
+
 ### 2026-04-25 - Vite HTML revision placeholders should have a repo default even when Docker injects the real value
 - Context:
   - `web/` now injects the deployed build revision into the browser shell so

@@ -49,6 +49,11 @@ mobile foundation lane.
    - the exact native auth transport adapter remains an explicit follow-up
      after the shared resource baseline, not a hidden assumption inside the
      stack choice
+4. current execution direction
+   - user direction on 2026-04-25 freezes the mobile lane after this stack
+     decision
+   - near-term implementation should stay on `web + backend`
+   - the mobile scaffold should restart later using this frozen baseline
 
 ## Multimodal Telegram And App Boundary (2026-04-25)
 
