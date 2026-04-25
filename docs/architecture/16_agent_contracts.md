@@ -237,6 +237,44 @@ continuity and learned runtime preferences.
 
 ---
 
+## Self-Service Runtime Reset And Cleanup Boundary
+
+Destructive reset behavior must reuse existing backend-owned identity,
+profile, and runtime continuity owners instead of introducing a parallel
+workspace or admin-reset subsystem.
+
+Contract rules:
+
+1. self-service reset is bounded to one authenticated user's runtime
+   continuity and must not delete the auth account itself
+2. self-service reset preserves:
+   - `aion_auth_user`
+   - `aion_profile`
+   - explicit shell and continuity settings stored on the profile
+   - user-managed operational enablement preferences
+   - linked integrations and linked Telegram continuity
+3. self-service reset removes runtime continuity owned by `user_id`,
+   including memory, learned conclusions other than preserved user-managed
+   settings, relations, theta, internal planning state, attention state,
+   reflection queue state, and subconscious proposals
+4. self-service reset revokes all auth sessions, including the current
+   session, so the next authenticated foreground turn starts from a clean
+   continuity baseline instead of a mixed pre-reset/post-reset session posture
+5. operator-owned production cleanup remains a separate maintenance contract
+   and must not be exposed through normal product UI
+6. any destructive delete implementation must reuse one shared backend owner
+   across app-facing reset and operator cleanup flows rather than duplicating
+   per-table logic in endpoints or scripts
+
+This preserves the architecture boundary:
+
+- auth identity stays backend-owned
+- settings and linked-channel continuity stay profile-owned
+- runtime continuity stays explicitly resettable without turning "clear my
+  data" into account deletion
+
+---
+
 ## Durable Capability-Record Contract
 
 Durable role presets, durable skill descriptions, and per-user tool

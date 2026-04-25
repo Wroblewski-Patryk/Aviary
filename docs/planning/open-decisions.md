@@ -114,15 +114,21 @@ be kept explicit before implementation starts.
    - user-confirmed boundary:
      - connected APIs, linked integrations, and user settings should stay
        unchanged so the user can start "from new" without reconfiguration
-3. still-open bounded follow-ups
-   - whether the first destructive reset should revoke all sessions,
+3. resolved reset-session posture
+   - the first self-service runtime reset should revoke all auth sessions,
      including the current one
+   - this keeps the destructive boundary explicit and avoids mixed pre-reset
+     and post-reset continuity across multiple active sessions
+   - preserved profile settings, linked integrations, and linked channels
+     remain intact after the user signs in again
+4. still-open bounded follow-up
    - whether any later full auth-user destructive wipe is needed beyond the
      safer runtime-only production cleanup
-4. current execution direction
+5. current execution direction
    - `PRJ-718` now records the recommended plan in
      `docs/planning/user-data-reset-and-production-cleanup-plan.md`
-   - implementation should start with the bounded runtime-reset path and
+   - `PRJ-719` now freezes the reset retention policy and session boundary
+   - implementation should continue with the bounded runtime-reset path and
      shared cleanup owner, not with a product-facing production wipe feature
 
 ## Multimodal Telegram And App Boundary (2026-04-25)

@@ -115,9 +115,8 @@ The current per-user runtime footprint spans these durable owners:
   - `aion_subconscious_proposal`
 - revoke during self-service reset:
   - `aion_auth_session`
-    - open implementation detail: current session may stay active if that gives
-      the cleanest UX after reset, but reset must not silently drop preserved
-      settings or integration state
+    - revoke all sessions, including the current session, so the next
+      authenticated turn starts from a clean continuity baseline
 
 Production cleanup should be built from the same ownership map, but the lane
 must keep two distinct operator scopes:
@@ -264,8 +263,8 @@ Validation:
    - recommended: no; start with runtime-only production cleanup and single-user
      reset
 3. should self-service reset keep the current session alive?
-   - still open implementation detail; preserving the current session is
-     acceptable if it keeps the UX simple and does not blur the reset boundary
+   - resolved for the first implementation: no; revoke all auth sessions,
+     including the current session, after reset
 
 ## Risks And Guardrails
 
@@ -290,3 +289,13 @@ Validation:
 2. `PRJ-720` Shared Backend Cleanup Owner And Operator Script
 3. `PRJ-721` Account Settings Reset UX And Confirmation Flow
 4. `PRJ-722` Regression Proof, Ops Runbook, And Context Sync
+
+## Queue Update (2026-04-25)
+
+- `PRJ-719` is complete.
+- `PRJ-720` is now complete:
+  - one shared cleanup owner now lives in `MemoryRepository`
+  - `POST /app/me/reset-data` reuses that owner for self-service runtime reset
+  - operator scripts now support bounded runtime cleanup with explicit
+    confirmation guards
+- `PRJ-721` is now the next UI-facing slice.
