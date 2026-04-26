@@ -7,6 +7,102 @@ This plan translates the repo analysis into an execution roadmap that brings the
 The goal is not to add more features first.
 The goal is to make the current AION runtime more correct, more inspectable, and easier to extend without architectural drift.
 
+## Planned On 2026-04-26 For Proactive Transcript Truth And Conscious Outbound Governance
+
+Fresh production evidence now shows one bounded no-UI communication drift:
+
+- scheduler-owned proactive ticks can appear in transcript history as if they
+  were user-authored `api` turns
+- the current implementation therefore leaks internal runtime prompts into the
+  user-visible chat transcript
+- the same lane also needs one clearer communication rule between:
+  - user-originated turns that must always receive an outward reply
+  - scheduler or subconscious wakeups that may complete with no user-visible
+    message unless conscious evaluation finds real outreach value
+
+### Fresh Gap Snapshot
+
+Observed from the current production behavior and runtime code:
+
+- proactive cadence is enabled in the Coolify production baseline
+- proactive candidate generation can synthesize `time check-in follow up`
+  events for `time_checkin`
+- episodic memory persistence stores that scheduler event text as turn `event`
+- transcript projection maps stored `event` payloads to `role=user`
+- the current architecture and planning truth do not yet freeze the full
+  user-vs-scheduler communication rule strongly enough
+
+### New Queue
+
+The next bounded repair lane is now seeded through `PRJ-748`.
+
+- `PRJ-744` Plan proactive transcript truth and conscious outbound governance. (complete)
+  - Result:
+    - the repo now contains one execution-ready plan in
+      `docs/planning/proactive-transcript-truth-and-conscious-outbound-governance-plan.md`
+    - the plan freezes the repair into contract, implementation, behavior, and
+      sync slices
+    - the plan also records one explicit decision gate for future
+      cross-channel escalation instead of assuming that behavior implicitly
+  - Validation:
+    - architecture/runtime/code-path cross-review
+
+- `PRJ-745` Freeze transcript truth and communication governance contract
+  - Result:
+    - one explicit contract defines how scheduler-originated events differ from
+      user-authored transcript turns
+    - one explicit communication rule defines when user-originated turns must
+      always receive a reply and when scheduler/subconscious wakeups may remain
+      silent
+  - Validation:
+    - architecture, planning, and runtime-reality cross-review
+
+- `PRJ-746` Repair transcript projection and runtime persistence semantics
+  - Result:
+    - internal scheduler prompts stop appearing as user-authored transcript
+      messages
+    - the shared app-facing transcript remains truthful without introducing a
+      second durable chat store
+  - Validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py tests/test_api_routes.py tests/test_runtime_pipeline.py; Pop-Location`
+
+- `PRJ-747` Tighten proactive wakeup execution and anti-spam behavior
+  - Result:
+    - proactive wakeups still reach conscious analysis
+    - outward proactive delivery happens only when the conscious path finds
+      real user value in outreach
+    - no-value proactive ticks complete with no user-visible pseudo-turn
+  - Validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_planning_agent.py tests/test_scheduler_worker.py tests/test_runtime_pipeline.py tests/test_action_executor.py; Pop-Location`
+
+- `PRJ-748` Add regression proof, runbook notes, and context sync
+  - Result:
+    - regressions pin transcript truth, guaranteed user-reply posture, and
+      consciously-justified proactive delivery
+    - ops and context truth stay aligned with the repaired communication
+      boundary
+  - Validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; Pop-Location`
+
+Why this order:
+
+- freeze the transcript and communication contract first so the repair does not
+  become an ad hoc UI patch
+- fix persistence and projection second because transcript falsehood is the
+  production-visible regression
+- tighten proactive execution third so subconscious wakeups remain allowed but
+  do not force user-visible chatter
+- finish with regressions and runbook truth so the same drift does not return
+
+Decision gate before later expansion:
+
+- cross-channel escalation after silence is not yet assumed by this queue
+- valid future options are:
+  - no escalation
+  - delivery-failure-only escalation
+  - silence-window escalation with explicit preference ownership
+- implementation should not pick one of those paths until the user confirms it
+
 ## Planned On 2026-04-25 For User Data Reset And Production Cleanup
 
 Fresh user direction now asks for a detailed plan covering both destructive

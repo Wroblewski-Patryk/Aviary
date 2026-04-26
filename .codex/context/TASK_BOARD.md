@@ -2,6 +2,35 @@
 
 Last updated: 2026-04-26
 
+## Fresh Proactive Transcript Truth And Conscious Outbound Governance Plan (2026-04-26)
+
+- fresh production analysis now confirms one runtime-truth drift in the
+  no-UI conversation baseline:
+  - scheduler-owned proactive ticks can surface as `Ty/api` transcript entries
+    with synthetic text such as `time check-in follow up`
+  - the drift is not only UI-facing
+  - it also reflects a missing explicit communication-governance rule between:
+    - user-originated turns that must always receive a reply
+    - scheduler or subconscious wakeups that may stay silent unless conscious
+      evaluation finds real outreach value
+- `PRJ-744` is now complete:
+  - the repo now contains one execution-ready plan in:
+    - `docs/planning/proactive-transcript-truth-and-conscious-outbound-governance-plan.md`
+  - the plan freezes the repair into four bounded slices:
+    - `PRJ-745` Freeze transcript truth and communication governance contract
+    - `PRJ-746` Repair transcript projection and runtime persistence semantics
+    - `PRJ-747` Tighten proactive wakeup execution and anti-spam behavior
+    - `PRJ-748` Add regression proof, runbook notes, and context sync
+  - the plan also records one explicit decision gate before any
+    cross-channel proactive escalation is implemented:
+    - conservative no-escalation
+    - delivery-failure-only escalation
+    - silence-window escalation with explicit preference ownership
+- the next smallest execution slice is now `PRJ-745`:
+  - freeze the transcript-truth contract
+  - freeze the user-vs-scheduler communication rule
+  - update architecture or runtime-reality docs before implementation changes
+
 ## Fresh Dashboard Route Baseline (2026-04-26)
 
 - `PRJ-742` is now complete locally:

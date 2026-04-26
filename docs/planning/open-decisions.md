@@ -4,6 +4,44 @@
 
 The current repo already works as an MVP slice, but several architecture-level docs describe systems that are not implemented yet. This file keeps the next real decisions visible and tied to the current codebase.
 
+## Proactive Outbound Visibility And Cross-Channel Escalation (2026-04-26)
+
+Fresh production evidence now shows that proactive cadence needs one clearer
+communication boundary.
+
+1. current repo fact
+   - scheduler-owned proactive ticks may synthesize internal prompt text such
+     as `time check-in follow up`
+   - transcript projection can currently surface those internal prompts as if
+     they were user-authored turns
+   - the repo already allows proactive delivery through the normal conscious
+     `planning -> expression -> action` path when a scheduler tick carries a
+     `chat_id`
+2. approved behavior direction
+   - if the user writes to AION, AION must always answer on that source
+   - if subconscious or scheduler activity only wakes consciousness for
+     analysis and no useful outreach is justified, no user-visible message is
+     required
+   - if conscious evaluation concludes that relation-maintaining outreach is
+     genuinely valuable, proactive delivery is allowed
+3. still-open bounded decision
+   - whether later proactive escalation across linked channels is allowed after
+     first-party app silence
+4. valid options to resolve before implementation
+   - conservative:
+     - no cross-channel escalation
+   - delivery-failure escalation:
+     - escalate only after explicit delivery-failure evidence on the primary
+       channel
+   - silence-window escalation:
+     - escalate after a bounded no-reply window plus anti-spam and relation
+       checks
+5. current execution direction
+   - first repair transcript truth and proactive communication governance
+     through `PRJ-745..PRJ-748`
+   - defer cross-channel escalation until the user explicitly selects one of
+     the options above
+
 ## V2 Product Surface And Repository Topology (2026-04-25)
 
 Fresh user approval now resolves the top-level `v2` product topology.

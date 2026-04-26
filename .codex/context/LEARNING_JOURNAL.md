@@ -25,6 +25,39 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-04-26 - Scheduler-originated prompts must never impersonate user-authored transcript turns
+- Context:
+  - fresh production investigation showed repeated `Ty/api` transcript entries
+    with synthetic text `time check-in follow up` appearing before AION
+    replies.
+- Symptom:
+  - internal proactive scheduler prompts can show up in the user-visible
+    transcript as if the user had authored them.
+- Root cause:
+  - scheduler-owned synthetic event text is currently persisted as the episode
+    `event`, and transcript projection treats stored `payload.event` as a
+    `role=user` message without distinguishing internal runtime wakeups from
+    real user input.
+- Guardrail:
+  - any scheduler or subconscious wakeup that exists only to stimulate
+    conscious analysis must remain machine-distinguishable from real user input
+    and must not project into app-facing transcript history as `role=user`.
+- Preferred pattern:
+  - keep one shared transcript store
+  - mark internal runtime wakeups explicitly in persistence or transcript
+    projection
+  - require a conscious positive delivery decision before any scheduler wakeup
+    becomes user-visible outreach
+- Avoid:
+  - persisting internal runtime prompt text in a shape that the transcript
+    contract reads as normal user chat
+  - treating proactive cadence as equivalent to user-authored conversation
+    input
+- Evidence:
+  - `backend/app/memory/repository.py`
+  - `backend/app/workers/scheduler.py`
+  - `.codex/tasks/PRJ-744-plan-proactive-transcript-truth-and-conscious-outbound-governance.md`
+
 ### 2026-04-26 - Scheduler cadence tests must pin a daytime clock when quiet-hours behavior is in scope
 - Context:
   - final full-suite validation for the shared transcript lane surfaced three
