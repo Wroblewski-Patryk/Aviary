@@ -60,5 +60,5 @@ This slice should close the lane, not reopen deploy behavior as an open decision
 
 ## Evidence
 - Planning truth now records `PRJ-616` as the operational slice that corrected the canonical Coolify source wiring after the repository rename.
-- Ops guidance now explicitly treats `Public GitHub` on the canonical production app as drift and `vps-luckysparrow` plus `Wroblewski-Patryk/Personality` as the required source baseline.
+- Ops guidance now explicitly treats `Public GitHub` on the canonical production app as drift and `vps-luckysparrow` plus `Wroblewski-Patryk/Aviary` as the required source baseline.
 - Repository context now captures the recurring pitfall that team-scope selection and source-type drift can hide the real deploy failure mode even while production itself remains healthy.

@@ -1112,14 +1112,15 @@ Last updated: 2026-04-26
   repository context now all record the same deploy-closure baseline after the
   Coolify source repair. The canonical production app must stay on the GitHub
   App source `vps-luckysparrow` and the renamed repository
-  `Wroblewski-Patryk/Personality`; `Public GitHub` on that app is now explicit
-  operational drift, not an acceptable variant.
+  `Wroblewski-Patryk/Aviary`; `Public GitHub` on that app is now explicit
+  operational drift, not an acceptable variant. The current Coolify UI path is
+  project `Aviary` -> environment `production` -> application `aviary`.
 - 2026-04-24: `PRJ-616` is complete: the root cause behind missing automatic
   deploys was operational source drift in Coolify, not runtime code. The
   canonical production app `jr1oehwlzl8tcn3h8gh2vvih` was corrected from
   `Public GitHub` to the GitHub App source `vps-luckysparrow`, the repository
   path was updated from `Wroblewski-Patryk/LuckySparrow` to
-  `Wroblewski-Patryk/Personality`, and local `origin` was aligned to the same
+  `Wroblewski-Patryk/Aviary`, and local `origin` was aligned to the same
   renamed repository so repo truth and deploy-source truth match again.
 - 2026-04-24: `PRJ-615` is complete: `/health.deployment`, exported incident
   evidence, repo-driven Coolify env/build args, and release smoke now expose

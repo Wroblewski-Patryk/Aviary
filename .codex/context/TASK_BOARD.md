@@ -1164,8 +1164,9 @@ Last updated: 2026-04-26
   `v1`-closure queue through `PRJ-633`.
 - `PRJ-616` is complete: the canonical Coolify production app was corrected
   from `Public GitHub` to the GitHub App source `vps-luckysparrow`, the
-  source repository path was corrected to `Wroblewski-Patryk/Personality`, and
-  local `origin` now matches the same renamed repository.
+  source repository path was corrected to `Wroblewski-Patryk/Aviary`, local
+  `origin` now matches the same renamed repository, and the current Coolify UI
+  path is `Aviary > production > aviary`.
 - `PRJ-617` is complete: planning truth, runbook guidance, and repository
   context now treat `Public GitHub` on the canonical production app as
   deployment drift instead of an acceptable source variant.

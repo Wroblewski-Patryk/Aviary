@@ -60,7 +60,7 @@ The key rule is that fallback usage must stay explicit in evidence and operator 
 
 ## Evidence
 - Coolify canonical app `jr1oehwlzl8tcn3h8gh2vvih` was inspected from the Root Team scope and corrected from `Public GitHub` to the GitHub App source `vps-luckysparrow`.
-- The source repository drift introduced by the rename was corrected from `Wroblewski-Patryk/LuckySparrow` to `Wroblewski-Patryk/Personality` on the same canonical app.
-- Local `origin` was updated to `https://github.com/Wroblewski-Patryk/Personality.git` so repo truth and deploy source truth now match.
+- The source repository drift introduced by the rename is now tracked against the current canonical repository `Wroblewski-Patryk/Aviary`; the live Coolify UI path is `Project Aviary > production > applications > aviary`.
+- Local `origin` now targets `https://github.com/Wroblewski-Patryk/Aviary.git` so repo truth and deploy source truth match again after the GitHub rename.
 - The explicit fallback posture remains unchanged: webhook helper first, then Coolify UI redeploy only when source automation proof is missing.
 - Follow-up release-smoke verification runs after the next push/deploy cycle now that the primary source wiring is corrected.
