@@ -42,6 +42,8 @@ Read these before starting non-trivial work:
 - `docs/ux/screen-quality-checklist.md`
 - `docs/ux/anti-patterns.md`
 - `docs/ux/brand-personality-tokens.md`
+- `docs/ux/canonical-visual-implementation-workflow.md`
+- `docs/ux/background-and-decorative-asset-strategy.md`
 
 ## Core Rules
 
@@ -137,6 +139,10 @@ If any check fails, fix before closure.
   evidence, accessibility checks, and parity notes.
 - Reuse shared UI patterns before introducing screen-local style inventions.
 - When a new pattern is approved, record it in `docs/ux/design-memory.md`.
+- When a canonical web screen reference exists, treat it as a specification
+  and close the task with screenshot-comparison evidence.
+- Do not silently downgrade decorative fidelity by replacing image-based
+  backgrounds with gradient approximations.
 - When a recurring environment or execution pitfall is discovered, record it in
   `.codex/context/LEARNING_JOURNAL.md` in the same task.
 - Follow the default loop:
@@ -215,6 +221,10 @@ This repository now has active browser-shell work. For UX/UI scope:
 - keep evidence in task notes or PR notes
 - use `docs/ux/visual-direction-brief.md` before broad UI refresh work
 - use `docs/ux/screen-quality-checklist.md` before calling a screen polished
+- use `docs/ux/canonical-visual-implementation-workflow.md` for screenshot
+  driven parity tasks
+- use `docs/ux/background-and-decorative-asset-strategy.md` when route art
+  direction depends on illustration or image-rich atmosphere
 
 ## Deployment Rule
 

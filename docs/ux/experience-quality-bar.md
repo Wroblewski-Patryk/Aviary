@@ -10,3 +10,6 @@
   panel clutter.
 - Motion should orient the user and reinforce trust, never perform for its own
   sake.
+- Fidelity to approved art direction matters when a canonical visual exists.
+- Use real assets when texture or illustration matters and code would flatten
+  the result.

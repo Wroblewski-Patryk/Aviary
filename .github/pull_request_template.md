@@ -17,6 +17,8 @@
 - [ ] `GET /health` checked if runtime wiring or deployment changed
 - [ ] `POST /event` checked if API or runtime contract changed
 - [ ] Telegram flow checked if webhook or messaging behavior changed
+- [ ] If this was a canonical-visual UI task, browser screenshots were compared
+  to the approved reference and remaining mismatches were documented
 
 Flows executed:
 -
@@ -25,6 +27,7 @@ Flows executed:
 
 - Artifact folder or location:
 - Screenshots:
+- Canonical comparison notes:
 - Logs:
 
 ## Context Updated

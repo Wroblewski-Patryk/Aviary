@@ -55,3 +55,6 @@
 - Future web UX tasks should capture post-deploy screenshots and compare them
   directly against the canonical screen-set instead of relying only on memory
   or prompt descriptions.
+- When a canonical screenshot drives implementation, record background and
+  decorative fidelity rules here so future parity passes reuse them instead of
+  flattening them into generic gradients.

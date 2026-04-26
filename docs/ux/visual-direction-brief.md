@@ -35,3 +35,10 @@
 - cluttered chatbot layouts
 - sterile enterprise settings screens
 - mascot art that has no route-level information value
+
+## Canonical Asset Addendum
+- Background style:
+- Illustration or motif style:
+- Raster assets expected: yes | no
+- SVG assets preferred: yes | no
+- Approximation tolerance:

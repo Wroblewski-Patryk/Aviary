@@ -10,6 +10,8 @@ Rules:
 - Favor `pytest` plus fakes/mocks for integrations.
 - For API or runtime changes, run the full suite unless there is a strong reason not to.
 - Use manual smoke only when runtime wiring, deployment, or Telegram flows are affected.
+- For canonical-visual UI tasks, include browser screenshots compared against
+  the approved reference and report remaining visual gaps explicitly.
 - Include one negative path when validation or fallback behavior changes.
 - Capture evidence for high-risk or failing scenarios: output, logs, or screenshots if relevant.
 - For AI-assisted changes, include fail-closed or fallback-path checks.

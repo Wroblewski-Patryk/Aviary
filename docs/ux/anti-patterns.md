@@ -6,3 +6,6 @@
 - Error states that feel accusatory or vague.
 - Making mobile chat feel like a shrunk desktop app.
 - Breaking calmness with too many badges, chips, and competing accents.
+- Treating a canonical screenshot as inspiration instead of a spec.
+- Replacing approved painterly or illustrated backgrounds with cheap gradient
+  approximations.

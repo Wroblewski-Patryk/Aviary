@@ -8,3 +8,11 @@
   recovery?
 - Is hierarchy created through spacing, type, and grouping before extra color?
 - Would this still feel good during repeated daily conversations?
+
+## Canonical Asset Questions
+
+- Does the screen depend on decorative or atmospheric imagery?
+- If yes, was the correct medium chosen: code-native, SVG, or raster asset?
+- Were canonical background elements preserved instead of approximated away?
+- If a canonical reference exists, is the remaining difference documented and
+  explicitly acceptable?
