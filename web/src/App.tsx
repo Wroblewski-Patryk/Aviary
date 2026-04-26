@@ -2855,14 +2855,32 @@ export default function App() {
                 </article>
 
                 <article className="aion-panel aion-dashboard-summary-band">
-                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                    {dashboardBottomStats.map((stat) => (
-                      <div key={stat.label} className="aion-dashboard-summary-item">
-                        <p className="text-sm uppercase tracking-[0.2em] text-base-800">{stat.label}</p>
-                        <p className="mt-3 font-display text-3xl text-base-900">{stat.value}</p>
-                        <p className="mt-2 text-sm text-base-800">{stat.detail}</p>
+                  <div className="aion-dashboard-summary-layout">
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                      {dashboardBottomStats.map((stat) => (
+                        <div key={stat.label} className="aion-dashboard-summary-item">
+                          <p className="text-sm uppercase tracking-[0.2em] text-base-800">{stat.label}</p>
+                          <p className="mt-3 font-display text-3xl text-base-900">{stat.value}</p>
+                          <p className="mt-2 text-sm text-base-800">{stat.detail}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="aion-dashboard-summary-scenic">
+                      <div className="aion-dashboard-summary-scenic-copy">
+                        <p className="text-sm uppercase tracking-[0.2em] text-base-800">Weekly summary</p>
+                        <p className="mt-3 font-display text-2xl leading-tight text-base-900">
+                          Meaningful progress
+                          <br />
+                          with steadier intention.
+                        </p>
+                        <p className="mt-3 max-w-md text-sm leading-7 text-base-800">
+                          The shell now holds your goals, memory, and reflections in one calmer path.
+                        </p>
+                        <button className="aion-dashboard-action-button mt-5" type="button">
+                          See full report
+                        </button>
                       </div>
-                    ))}
+                    </div>
                   </div>
                 </article>
               </section>

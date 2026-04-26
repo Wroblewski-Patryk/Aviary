@@ -202,6 +202,23 @@ The next best dashboard-only slice should focus on:
 - bottom summary-band atmosphere
 - deploy-backed screenshot parity for authenticated desktop first
 
+## Implemented Follow-Up Since This Plan Was Written
+
+One additional local pass is now complete:
+
+- dedicated raster artwork now exists for:
+  - `docs/ux/assets/aion-dashboard-intention-background-v1.png`
+  - `docs/ux/assets/aion-dashboard-summary-band-reference-v1.png`
+- mirrored runtime assets now exist in:
+  - `web/public/aion-dashboard-intention-background-v1.png`
+  - `web/public/aion-dashboard-summary-band-reference-v1.png`
+- the dashboard now uses those assets to strengthen:
+  - the intention card
+  - the lower scenic summary closure
+
+This reduces the "CSS-only flattening" problem, but does not yet close the
+hero-stage atmosphere gap or the deploy-backed screenshot parity gap.
+
 ## Related Sources
 
 - `docs/ux/canonical-web-screen-reference-set.md`

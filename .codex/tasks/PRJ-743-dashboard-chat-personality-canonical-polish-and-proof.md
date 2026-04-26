@@ -138,6 +138,10 @@ This task is now active. The first execution pass added:
   - stronger rail support surfaces
   - recent-activity tier inside guidance
   - a more integrated flow-band layout
+- a further asset-backed dashboard slice now also exists:
+  - scenic intention-card artwork
+  - scenic summary-band artwork
+  - live wiring of those assets into the dashboard route
 
 Remaining work is still mainly visual parity quality, not architecture or
 backend contract shape.

@@ -33,6 +33,10 @@
   Use one central embodied stage with flanking signal cards, a guidance column,
   and a cognitive-flow band so `dashboard` feels like the conductor of the
   shell instead of a generic analytics grid.
+- Dashboard scenic closure:
+  When the flagship dashboard starts feeling flat, add bespoke raster artwork
+  to the intention card and the lower summary band before piling on more CSS
+  decoration.
 - Integrated composer tray:
   Keep the main chat input, send control, and low-priority support actions
   inside one shared tray so the conversation footer reads like one premium

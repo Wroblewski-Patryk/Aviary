@@ -63,6 +63,20 @@ Last updated: 2026-04-26
     - more integrated cognitive-flow band
     - selective need for bespoke artwork where CSS-only treatment flattens the
       route
+- 2026-04-26: one additional asset-backed dashboard pass is now complete
+  locally:
+  - new dashboard scenic assets now exist in:
+    - `docs/ux/assets/aion-dashboard-intention-background-v1.png`
+    - `docs/ux/assets/aion-dashboard-summary-band-reference-v1.png`
+    - `web/public/aion-dashboard-intention-background-v1.png`
+    - `web/public/aion-dashboard-summary-band-reference-v1.png`
+  - the dashboard now uses those assets to strengthen:
+    - the right-column intention card
+    - the lower scenic summary closure
+  - design memory is now updated with:
+    - dashboard scenic closure
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
 - 2026-04-26: `PRJ-733` is now complete:
   - the approved canonical web-screen set is now stored in:
     - `docs/ux/assets/aion-landing-canonical-reference-v1.png`

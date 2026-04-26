@@ -1112,13 +1112,21 @@ body {
   border-radius: 1.6rem;
   padding: 1.25rem;
   background:
-    linear-gradient(180deg, rgba(223, 236, 236, 0.56), rgba(255, 249, 240, 0.74)),
-    radial-gradient(circle at right bottom, rgba(232, 194, 134, 0.22), transparent 48%);
+    linear-gradient(180deg, rgba(255, 250, 242, 0.55), rgba(255, 247, 236, 0.72)),
+    linear-gradient(90deg, rgba(255, 250, 243, 0.88) 0%, rgba(255, 250, 243, 0.62) 46%, rgba(255, 250, 243, 0.18) 100%),
+    url("/aion-dashboard-intention-background-v1.png");
+  background-size: auto, auto, cover;
+  background-position: center, center, center bottom;
 }
 
 .aion-dashboard-flow-panel,
 .aion-dashboard-summary-band {
   padding: 1.5rem;
+}
+
+.aion-dashboard-summary-layout {
+  display: grid;
+  gap: 1.25rem;
 }
 
 .aion-dashboard-flow-header {
@@ -1275,6 +1283,27 @@ body {
 .aion-dashboard-summary-item:last-child {
   border-right: 0;
   padding-right: 0;
+}
+
+.aion-dashboard-summary-scenic {
+  position: relative;
+  min-height: 14rem;
+  border: 1px solid rgba(88, 67, 52, 0.08);
+  border-radius: 1.65rem;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(255, 250, 243, 0.92) 0%, rgba(255, 250, 243, 0.7) 42%, rgba(255, 250, 243, 0.16) 100%),
+    linear-gradient(180deg, rgba(255, 252, 248, 0.28), rgba(248, 241, 232, 0.18)),
+    url("/aion-dashboard-summary-band-reference-v1.png");
+  background-size: auto, auto, cover;
+  background-position: center, center, center;
+}
+
+.aion-dashboard-summary-scenic-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 30rem;
+  padding: 1.4rem;
 }
 
 .aion-dashboard-module-card {
@@ -1547,6 +1576,11 @@ body {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .aion-dashboard-summary-layout {
+    grid-template-columns: minmax(0, 1.1fr) minmax(22rem, 0.72fr);
+    align-items: stretch;
+  }
+
   .aion-chat-stage {
     grid-template-columns: minmax(0, 1.03fr) minmax(24rem, 0.97fr);
     align-items: start;
@@ -1583,6 +1617,10 @@ body {
   .aion-dashboard-summary-item:last-child {
     border-bottom: 0;
     padding-bottom: 0;
+  }
+
+  .aion-dashboard-summary-scenic-copy {
+    padding: 1rem;
   }
 
   .aion-chat-workspace {

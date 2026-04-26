@@ -85,6 +85,13 @@ Last updated: 2026-04-26
     - guidance-column tiering
     - cognitive-flow integration
     - bespoke art need for some dashboard surfaces
+- one additional dashboard asset pass is now complete locally:
+  - scenic intention-card artwork now exists and is wired into the route
+  - scenic summary-band artwork now exists and is wired into the route
+  - this reduces the flat CSS-only look in the dashboard closure surfaces
+  - the next most valuable dashboard gap remains:
+    - hero-stage connective detail and atmosphere
+    - real authenticated screenshot parity on deploy
 
 ## Fresh Canonical Screen-Set Freeze (2026-04-26)
 
