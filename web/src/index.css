@@ -103,7 +103,7 @@ body {
 .aion-brand-lockup {
   display: inline-flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: 1rem;
   max-width: 100%;
 }
 
@@ -112,31 +112,32 @@ body {
 }
 
 .aion-brand-mark {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.8rem;
+  height: 2.8rem;
   flex: 0 0 auto;
   object-fit: contain;
 }
 
 .aion-brand-lockup-compact .aion-brand-mark {
-  width: 2rem;
-  height: 2rem;
+  width: 2.15rem;
+  height: 2.15rem;
 }
 
 .aion-brand-word {
   color: var(--aion-ink);
   font-family: var(--font-display, ui-serif);
-  font-size: 2.3rem;
-  font-weight: 400;
-  letter-spacing: 0.42em;
-  line-height: 0.9;
+  font-size: 2.5rem;
+  font-weight: 300;
+  letter-spacing: 0.34em;
+  line-height: 0.88;
   text-transform: uppercase;
   white-space: nowrap;
+  text-wrap: nowrap;
 }
 
 .aion-brand-lockup-compact .aion-brand-word {
-  font-size: 1.55rem;
-  letter-spacing: 0.3em;
+  font-size: 1.68rem;
+  letter-spacing: 0.26em;
 }
 
 .aion-panel {

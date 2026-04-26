@@ -123,10 +123,10 @@ const UI_COPY = {
       stateDetailLabel: "Details",
     },
     auth: {
-      badge: "AION",
+      badge: "Aviary",
       heroTitle: "A calmer place to continue the conversation.",
       heroBody:
-        "Sign in to pick up where you left off, adjust your preferences, and keep AION close without digging through setup screens.",
+        "Sign in to pick up where you left off, adjust your preferences, and keep Aviary close without digging through setup screens.",
       sessionEntry: "Session entry",
       trustTitle: "What you can expect",
       login: "Log in",
@@ -193,7 +193,7 @@ const UI_COPY = {
       conversationTitle: "Conversation language",
       conversationBody: "The conversation adapts live from context, history, and the current exchange.",
       proactiveTitle: "Proactive follow-ups",
-      proactiveBody: "Let AION send occasional follow-ups when your account settings allow it.",
+      proactiveBody: "Let Aviary send occasional follow-ups when your account settings allow it.",
       saveHint: "Save your changes when you are ready.",
       conversationRuntimeOwned: "Adaptive and context-aware",
       savedState: "Ready to save",
@@ -295,10 +295,10 @@ const UI_COPY = {
       stateDetailLabel: "Szczegóły",
     },
     auth: {
-      badge: "AION",
+      badge: "Aviary",
       heroTitle: "Spokojne miejsce, żeby wrócić do rozmowy.",
       heroBody:
-        "Zaloguj się, aby wrócić do czatu, ustawić preferencje i mieć AION blisko bez przedzierania się przez techniczny ekran startowy.",
+        "Zaloguj się, aby wrócić do czatu, ustawić preferencje i mieć Aviary blisko bez przedzierania się przez techniczny ekran startowy.",
       sessionEntry: "Wejście do sesji",
       trustTitle: "Czego możesz się spodziewać",
       login: "Zaloguj się",
@@ -360,7 +360,7 @@ const UI_COPY = {
       conversationTitle: "Język rozmowy",
       conversationBody: "Język rozmowy dopasowuje się live na podstawie kontekstu, historii i bieżącej wymiany.",
       proactiveTitle: "Proaktywne follow-upy",
-      proactiveBody: "Pozwól AION wysyłać okazjonalne follow-upy, gdy pozwalają na to ustawienia Twojego konta.",
+      proactiveBody: "Pozwól Aviary wysyłać okazjonalne follow-upy, gdy pozwalają na to ustawienia Twojego konta.",
       saveHint: "Zapisz zmiany, gdy będziesz gotowy.",
       conversationRuntimeOwned: "Adaptacyjne i oparte na kontekście",
       savedState: "Gotowe do zapisania",
@@ -462,10 +462,10 @@ const UI_COPY = {
       stateDetailLabel: "Details",
     },
     auth: {
-      badge: "AION",
+      badge: "Aviary",
       heroTitle: "Ein ruhiger Ort, um das Gespräch fortzusetzen.",
       heroBody:
-        "Melde dich an, um zum Chat zurückzukehren, Einstellungen anzupassen und AION ohne technischen Ballast direkt griffbereit zu haben.",
+        "Melde dich an, um zum Chat zurückzukehren, Einstellungen anzupassen und Aviary ohne technischen Ballast direkt griffbereit zu haben.",
       sessionEntry: "Sitzung",
       trustTitle: "Was dich erwartet",
       login: "Einloggen",
@@ -527,7 +527,7 @@ const UI_COPY = {
       conversationTitle: "Gesprächssprache",
       conversationBody: "Die Gesprächssprache passt sich live aus Kontext, Verlauf und aktueller Unterhaltung an.",
       proactiveTitle: "Proaktive Follow-ups",
-      proactiveBody: "Erlaube AION gelegentliche Follow-ups, wenn deine Kontoeinstellungen es zulassen.",
+      proactiveBody: "Erlaube Aviary gelegentliche Follow-ups, wenn deine Kontoeinstellungen es zulassen.",
       saveHint: "Speichere deine Änderungen, wenn du bereit bist.",
       conversationRuntimeOwned: "Adaptiv und kontextbezogen",
       savedState: "Bereit zum Speichern",
@@ -1144,11 +1144,11 @@ function ShellNavButton({
 function AviaryWordmark({ className = "", compact = false }: { className?: string; compact?: boolean }) {
   return (
     <div
-      aria-label="AION"
+      aria-label="Aviary"
       className={`aion-brand-lockup ${compact ? "aion-brand-lockup-compact" : ""} ${className}`.trim()}
     >
       <img alt="" aria-hidden="true" className="aion-brand-mark" src="/aviary-logomark.svg" />
-      <span className="aion-brand-word">AION</span>
+      <span className="aion-brand-word">AVIARY</span>
     </div>
   );
 }
@@ -1211,13 +1211,13 @@ function ShellUtilityBar({
       <div className="aion-utility-context">
         <span className="aion-utility-context-emblem">✦</span>
         <div className="min-w-0">
-          <p className="aion-utility-context-label">AION workspace</p>
+          <p className="aion-utility-context-label">Aviary workspace</p>
           <p className="aion-utility-context-copy">{currentSurface}</p>
         </div>
       </div>
       <label className="aion-utility-search" aria-label="Search workspace">
         <span className="aion-utility-search-icon">⌕</span>
-        <input readOnly type="text" value="" placeholder="Search AION or ask anything..." />
+        <input readOnly type="text" value="" placeholder="Search Aviary or ask anything..." />
         <span className="aion-utility-search-shortcut">⌘K</span>
       </label>
       <div className="aion-utility-actions">
@@ -2364,7 +2364,7 @@ export default function App() {
                 },
                 {
                   title: "Stay oriented",
-                  body: "The product keeps the main actions close so returning to AION feels lightweight instead of procedural.",
+                  body: "The product keeps the main actions close so returning to Aviary feels lightweight instead of procedural.",
                 },
                 {
                   title: "Keep ownership",
@@ -2551,7 +2551,7 @@ export default function App() {
                         Welcome back, {currentUserLabel}
                       </h2>
                       <p className="mt-3 max-w-2xl text-sm leading-7 text-base-800">
-                        Here is what feels most alive in your AION workspace today.
+                        Here is what feels most alive in your Aviary workspace today.
                       </p>
                       <div className="mt-4 flex flex-wrap gap-2">
                         {dashboardHeroChips.map((chip) => (
@@ -3396,7 +3396,7 @@ export default function App() {
                                         {copy.tools.telegramLinking}
                                       </p>
                                       <p className="mt-2 max-w-2xl text-sm leading-7 text-base-900">
-                      Generate a short code, then send it to the configured AION Telegram bot from
+                      Generate a short code, then send it to the configured Aviary Telegram bot from
                                         the chat you want to attach to this identity.
                                       </p>
                                     </div>
