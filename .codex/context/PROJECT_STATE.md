@@ -136,6 +136,17 @@ Last updated: 2026-04-26
     - `PRJ-739` Shared Route Art, Material, And Typography Polish
     - `PRJ-740` Responsive, State, And Accessibility Proof
     - `PRJ-741` Production Screenshot Parity And Baseline Freeze
+- 2026-04-26: the first shell-convergence implementation slice is now complete locally:
+  - `web/src/App.tsx` and `web/src/index.css` now reduce authenticated shell chrome and push `chat`
+    toward a calmer premium posture:
+    - narrower, lighter left rail
+    - softer transcript cards
+    - integrated composer zone
+    - condensed right support column instead of a large explicit process rail
+  - this slice closes part of the compositional gap to the canonical `chat`
+    target, but does not yet claim parity
+  - the next smallest remaining implementation gap is:
+    - `PRJ-736` for transcript softness, top-control density, and tighter composer integration
 - 2026-04-25: `PRJ-707` is now complete:
   - the GUI-language selector now rests on one shared locale metadata model
     carrying value, native label, localized label, icon token, and explicit

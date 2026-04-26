@@ -670,6 +670,15 @@ function stringValue(value: unknown, fallback = "not set") {
   return fallback;
 }
 
+function truncateText(value: string, maxLength: number) {
+  const trimmed = value.trim();
+  if (trimmed.length <= maxLength) {
+    return trimmed;
+  }
+
+  return `${trimmed.slice(0, Math.max(0, maxLength - 1)).trimEnd()}...`;
+}
+
 function transcriptRoleLabel(role: AppChatHistoryEntry["role"], copy: (typeof UI_COPY)[ResolvedUiLanguageCode]) {
   return role === "user" ? copy.common.user : copy.common.assistant;
 }
@@ -1499,6 +1508,7 @@ export default function App() {
   const errorDetail = error && errorBody !== error ? error : null;
   const latestAssistantMessage =
     [...transcriptItems].reverse().find((entry) => entry.role === "assistant")?.text ?? copy.chat.emptyThread;
+  const latestUserMessage = [...transcriptItems].reverse().find((entry) => entry.role === "user")?.text ?? "";
   const dashboardFlowItems = [
     {
       eyebrow: "Foreground",
@@ -1668,27 +1678,69 @@ export default function App() {
       value: recentChannelsLabel,
     },
   ];
-  const chatFlowStages = [
-    { label: "E", title: "Event", detail: "You said something" },
-    { label: "P", title: "Perception", detail: "Understanding intent" },
-    { label: "C", title: "Context", detail: "Gathering relevant info" },
-    { label: "M", title: "Motivation", detail: "Aligning with goals" },
-    { label: "R", title: "Role", detail: "Planner and advisor" },
-    { label: "P", title: "Planning", detail: "Building best approach", active: true },
-    { label: "X", title: "Expression", detail: "Formulating response" },
-    { label: "A", title: "Action", detail: "Delivering to you" },
-    { label: "Y", title: "Memory", detail: "Storing key insights" },
-    { label: "F", title: "Reflection", detail: "Learning and improving" },
-  ];
   const chatQuickActions = ["Plan my day", "Summarize yesterday", "What did I learn?", "Check my goals"];
   const chatCurrentFocus =
     stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "Project planning" : "Conversation continuity";
+  const chatFlowMoments = [
+    { label: "Listen", title: "Perception", detail: "Understanding intent, tone, and what matters most right now." },
+    { label: "Shape", title: "Planning", detail: "Turning context and priorities into a steady next step." },
+    { label: "Keep", title: "Memory", detail: "Holding onto the details that deserve continuity later." },
+  ];
+  const chatSupportCards = [
+    {
+      eyebrow: "Intent",
+      title: chatCurrentFocus,
+      body:
+        chatCurrentFocus === "Project planning"
+          ? "Create a meaningful next plan around your active priorities."
+          : "Stay close to the current conversation and keep continuity steady.",
+      accent: "Clarity & planning",
+    },
+    {
+      eyebrow: "Memory highlights",
+      title: `${stringValue(preferenceSummary?.learned_preference_count, "0")} learned cues`,
+      body:
+        Boolean(preferenceSummary?.learned_preference_count)
+          ? "AION can lean on earlier preferences and remembered patterns from your shared work."
+          : "The conversation is ready to collect the first continuity signals that matter to you.",
+      accent: "Continuity",
+    },
+    {
+      eyebrow: "Notes",
+      title: latestUserMessage ? "From your latest message" : "Waiting for your next note",
+      body: latestUserMessage
+        ? truncateText(latestUserMessage, 108)
+        : "Your next message will shape what AION keeps in the foreground.",
+      accent: "Live thread",
+    },
+    {
+      eyebrow: "Suggested next step",
+      title: "Refine the plan together",
+      body: truncateText(latestAssistantMessage, 112),
+      accent: "Next move",
+    },
+  ];
   const chatFeatures = [
-    { token: "8", title: "Continuity", body: "Remembers what matters across sessions." },
-    { token: ">", title: "Linked channels", body: "Seamless context from connected conversations." },
-    { token: "M", title: "Memory", body: "Key insights stored for you, by you." },
-    { token: "R", title: "Reflection", body: "Learns and improves over time." },
-    { token: "P", title: "Privacy first", body: "Your data stays yours. Always." },
+    {
+      token: "C",
+      title: "Continuity",
+      body: "Remembers what matters between sessions without turning chat into an admin view.",
+    },
+    {
+      token: "L",
+      title: "Linked channels",
+      body: "Keeps one conversation posture across the app and connected touchpoints.",
+    },
+    {
+      token: "M",
+      title: "Memory",
+      body: "Turns useful moments into a calmer, more personal long-term context.",
+    },
+    {
+      token: "P",
+      title: "Privacy",
+      body: "Preserves a high-trust tone so the workspace stays personal, not extractive.",
+    },
   ];
   const chatActiveSummary = `${routeLabel("/chat", resolvedUiLanguage)} · Active conversation`;
 
@@ -2096,10 +2148,10 @@ export default function App() {
   return (
     <div className="aion-shell min-h-screen text-base-content">
       <div className="mx-auto max-w-[112rem] px-4 pb-24 pt-4 sm:px-5 md:px-6 md:pb-8 md:pt-5 xl:px-8">
-        <div className="grid gap-4 xl:grid-cols-[14rem_minmax(0,1fr)]">
+        <div className="grid gap-4 xl:grid-cols-[12.5rem_minmax(0,1fr)]">
           <aside className="aion-app-rail hidden xl:flex xl:min-h-[calc(100vh-3rem)] xl:flex-col">
             <div>
-              <div className="font-display text-[2rem] uppercase tracking-[0.42em] text-base-900">AION</div>
+              <div className="font-display text-[1.75rem] uppercase tracking-[0.42em] text-base-900">AION</div>
               <p className="mt-2 text-sm text-base-800">Your conscious companion</p>
             </div>
 
@@ -2116,10 +2168,11 @@ export default function App() {
               ))}
             </nav>
 
-            <div className="mt-auto grid gap-4">
+            <div className="mt-auto grid gap-3">
               <section className="aion-panel-soft rounded-[1.8rem] p-4">
-                <p className="text-sm font-semibold text-base-900">All systems aligned</p>
-                <p className="mt-2 text-sm leading-7 text-base-800">AION is ready.</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-base-800">Current posture</p>
+                <p className="mt-2 text-base font-semibold text-base-900">All systems aligned</p>
+                <p className="mt-2 text-sm leading-6 text-base-800">AION is ready for a calm, continuous conversation.</p>
               </section>
 
               <section className="aion-panel-soft rounded-[1.8rem] p-4">
@@ -2329,76 +2382,93 @@ export default function App() {
                       ))}
                     </div>
 
-                    <form className="aion-chat-composer" onSubmit={(event) => void handleSendMessage(event)}>
-                      <button className="aion-chat-icon-button" type="button" aria-label="Add context">
-                        +
-                      </button>
-                      <textarea
-                        className="aion-chat-input"
-                        placeholder={copy.chat.placeholder}
-                        value={chatText}
-                        onChange={(event) => setChatText(event.target.value)}
-                      />
-                      <button className="aion-chat-icon-button hidden sm:inline-flex" type="button" aria-label="Voice input">
-                        M
-                      </button>
-                      <button className="aion-chat-send" disabled={sendingMessage} type="submit">
-                        {sendingMessage ? "..." : ">"}
-                      </button>
-                    </form>
-                    <p className="px-2 text-sm text-base-800">{copy.chat.composerHint}</p>
+                    <div className="aion-chat-composer-zone">
+                      <form className="aion-chat-composer" onSubmit={(event) => void handleSendMessage(event)}>
+                        <button className="aion-chat-icon-button" type="button" aria-label="Add context">
+                          +
+                        </button>
+                        <textarea
+                          className="aion-chat-input"
+                          placeholder={copy.chat.placeholder}
+                          value={chatText}
+                          onChange={(event) => setChatText(event.target.value)}
+                        />
+                        <button className="aion-chat-icon-button hidden sm:inline-flex" type="button" aria-label="Voice input">
+                          M
+                        </button>
+                        <button className="aion-chat-send" disabled={sendingMessage} type="submit">
+                          {sendingMessage ? "..." : ">"}
+                        </button>
+                      </form>
+                      <p className="px-2 text-sm text-base-800">{copy.chat.composerHint}</p>
+                    </div>
                   </div>
 
-                  <aside className="aion-chat-flow-panel">
-                    <div className="mb-5 flex items-center justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-base-900">Cognitive flow</p>
-                        <p className="mt-1 text-sm text-[#5f8f93]">Live</p>
-                      </div>
-                      <span className="aion-chat-live-dot" />
-                    </div>
-                    <div className="grid gap-2">
-                      {chatFlowStages.map((stage) => (
-                        <ChatFlowStage
-                          key={stage.title}
-                          label={stage.label}
-                          title={stage.title}
-                          detail={stage.detail}
-                          active={stage.active}
-                        />
-                      ))}
-                    </div>
-
-                    <div className="aion-panel-soft mt-6 rounded-[1.4rem] p-4">
-                      <p className="text-xs uppercase tracking-[0.18em] text-base-800">Current focus</p>
-                      <p className="mt-3 font-display text-2xl text-base-900">{chatCurrentFocus}</p>
-                      <p className="mt-2 text-sm text-base-800">Priority: high</p>
-                    </div>
-                  </aside>
-
-                  <aside className="aion-chat-portrait-panel">
-                    <div className="aion-chat-portrait-overlay">
-                      <p className="text-[11px] uppercase tracking-[0.22em] text-[#5f8f93]">Planning</p>
-                      <p className="mt-2 font-display text-2xl text-base-900">{chatCurrentFocus}</p>
-                      <div className="mt-4 space-y-2 text-sm text-base-800">
-                        <div className="flex items-center justify-between gap-3">
-                          <span>Current focus</span>
-                          <span className="font-semibold text-base-900">High</span>
+                  <aside className="aion-chat-support-column">
+                    <section className="aion-chat-context-panel">
+                      <div className="mb-4 flex items-center justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-semibold text-base-900">Conversation context</p>
+                          <p className="mt-1 text-sm text-[#5f8f93]">Live support</p>
                         </div>
-                        <div className="flex items-center justify-between gap-3">
-                          <span>Knowledge bridge</span>
-                          <span className="font-semibold text-[#5f8f93]">72%</span>
+                        <span className="aion-chat-live-dot" />
+                      </div>
+                      <div className="grid gap-3">
+                        {chatSupportCards.map((card) => (
+                          <article key={card.eyebrow} className="aion-chat-support-card">
+                            <p className="text-[11px] uppercase tracking-[0.18em] text-base-800">{card.eyebrow}</p>
+                            <div className="mt-2 flex items-start justify-between gap-3">
+                              <h3 className="font-display text-xl text-base-900">{card.title}</h3>
+                              <span className="aion-chat-support-accent">{card.accent}</span>
+                            </div>
+                            <p className="mt-2 text-sm leading-6 text-base-800">{card.body}</p>
+                          </article>
+                        ))}
+                      </div>
+                    </section>
+
+                    <aside className="aion-chat-portrait-panel">
+                      <div className="aion-chat-portrait-overlay">
+                        <p className="text-[11px] uppercase tracking-[0.22em] text-[#5f8f93]">Planning</p>
+                        <p className="mt-2 font-display text-2xl text-base-900">{chatCurrentFocus}</p>
+                        <div className="mt-4 space-y-2 text-sm text-base-800">
+                          <div className="flex items-center justify-between gap-3">
+                            <span>Current focus</span>
+                            <span className="font-semibold text-base-900">High</span>
+                          </div>
+                          <div className="flex items-center justify-between gap-3">
+                            <span>Knowledge bridge</span>
+                            <span className="font-semibold text-[#5f8f93]">72%</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="aion-chat-portrait-copy">
-                      <span className="aion-chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-base-900">
-                        Embodied cognition
-                      </span>
-                      <p className="mt-4 max-w-[13rem] text-sm leading-7 text-base-800">
-                        Understanding leads to clarity. Clarity leads to action.
-                      </p>
-                    </div>
+                      <div className="aion-chat-portrait-copy">
+                        <span className="aion-chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-base-900">
+                          Embodied cognition
+                        </span>
+                        <p className="mt-4 max-w-[13rem] text-sm leading-7 text-base-800">
+                          Understanding leads to clarity. Clarity leads to action.
+                        </p>
+                      </div>
+                    </aside>
+
+                    <section className="aion-chat-context-panel aion-chat-context-panel-compact">
+                      <div className="mb-4">
+                        <p className="text-sm font-semibold text-base-900">Response path</p>
+                        <p className="mt-1 text-sm text-[#5f8f93]">Calm cognitive summary</p>
+                      </div>
+                      <div className="grid gap-3">
+                        {chatFlowMoments.map((moment) => (
+                          <article key={moment.title} className="aion-chat-mini-flow">
+                            <span className="aion-chat-mini-flow-label">{moment.label}</span>
+                            <div>
+                              <p className="text-sm font-semibold text-base-900">{moment.title}</p>
+                              <p className="mt-1 text-sm leading-6 text-base-800">{moment.detail}</p>
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+                    </section>
                   </aside>
                 </div>
               </section>

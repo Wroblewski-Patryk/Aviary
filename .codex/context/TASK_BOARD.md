@@ -50,6 +50,21 @@ Last updated: 2026-04-26
   - `PRJ-739` Shared Route Art, Material, And Typography Polish
   - `PRJ-740` Responsive, State, And Accessibility Proof
   - `PRJ-741` Production Screenshot Parity And Baseline Freeze
+- implementation progress on 2026-04-26:
+  - `PRJ-735` is now complete locally:
+    - the authenticated shell rail is lighter, narrower, and less visually dominant
+    - `chat` now replaces the large explicit process rail with a calmer support-column structure
+    - the right side now combines:
+      - smaller conversation-context cards
+      - a softer portrait block
+      - a condensed response-path summary
+    - the composer zone now reads more like one integrated premium tray
+    - focused validation passed:
+      - `Push-Location .\web; npm run build; Pop-Location`
+  - the next smallest visual gap is now `PRJ-736`:
+    - transcript cards still need to feel softer and less inspector-like
+    - top controls are still slightly denser than the canonical target
+    - the quick-action plus composer area still has room for tighter premium integration
 
 ## Fresh Profile Local-Time Fix (2026-04-26)
 
