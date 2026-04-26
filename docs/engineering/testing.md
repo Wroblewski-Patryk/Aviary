@@ -207,7 +207,7 @@ For meaningful repo changes, leave behind:
   checks from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_observability_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py`
   - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
-  - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'`
+  - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://aviary.luckysparrow.ch'`
   - coverage should pin:
     - public `/health.attention` durable owner plus repository-backed
       contract-store posture
@@ -299,7 +299,7 @@ For meaningful repo changes, leave behind:
   evidence from:
 - `.\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py tests/test_api_routes.py`
 - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
-- `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'`
+- `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://aviary.luckysparrow.ch'`
 - coverage should pin the shared `/health.connectors.organizer_tool_stack`
   contract plus matching incident-evidence and bundle proof
 - organizer daily-use coverage should also pin:
@@ -455,7 +455,7 @@ For meaningful repo changes, leave behind:
 - for proactive production-evidence slices, regression and evidence checks from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_observability_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py`
   - `.\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
-  - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'`
+  - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://aviary.luckysparrow.ch'`
   - coverage should pin:
     - exported `incident_evidence.policy_posture["proactive"]`
     - release-smoke failure when proactive health or incident-evidence posture
@@ -480,7 +480,7 @@ For meaningful repo changes, leave behind:
 - for external-scheduler ownership slices, regression evidence from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py tests/test_runtime_pipeline.py tests/test_api_routes.py`
   - `.\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py`
-  - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'`
+  - `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://aviary.luckysparrow.ch'`
   - coverage should pin both:
     - `/health.scheduler.external_owner_policy` cutover-proof fields
       (`maintenance_run_evidence`, `proactive_run_evidence`,

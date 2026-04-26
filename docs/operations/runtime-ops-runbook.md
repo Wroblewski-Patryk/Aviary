@@ -4,6 +4,17 @@
 
 This runbook covers the currently implemented AION MVP service, not the full long-term architecture described in the numbered docs.
 
+## Current Production Host Baseline
+
+- canonical first-party production host:
+  - `https://aviary.luckysparrow.ch`
+- deploy shape remains same-origin:
+  - the same host serves the web shell plus backend routes such as `/app`,
+    `/health`, and `/event`
+- no separate API subdomain is part of the approved baseline for this repo
+- Telegram webhook target should therefore remain:
+  - `https://aviary.luckysparrow.ch/event`
+
 ## Service Responsibilities
 
 - accept incoming events through FastAPI
@@ -124,6 +135,18 @@ Transcript-truth triage rule for proactive incidents:
   - `unanswered_proactive_count`
   - the latest scheduler-owned episodic rows for `assistant_visibility` and
     `proactive_state_update`
+
+Canonical multi-channel operator rule:
+
+- the authenticated app transcript is the source-of-truth conversation history
+- linked-channel messages such as Telegram should be understandable as mirrors
+  of that canonical history, not separate chat systems
+- when verifying a linked-channel incident, confirm both:
+  - canonical transcript truth through `/app/chat/history`
+  - transport execution truth through `conversation_channels.telegram`
+- segmented Telegram delivery is acceptable when transport limits require it,
+  as long as the canonical app reply remains complete and the Telegram
+  segments preserve the same meaning in order
 
 `GET /health` now also includes a `role_skill` object with the current
 role-versus-skill maturity baseline:
@@ -1700,8 +1723,8 @@ Windows PowerShell:
 
 ```powershell
 .\scripts\run_telegram_mode_smoke.ps1 `
-  -ExpectedWebhookUrl "https://your-domain.tld/event" `
-  -RestoreWebhookUrl "https://your-domain.tld/event" `
+  -ExpectedWebhookUrl "https://aviary.luckysparrow.ch/event" `
+  -RestoreWebhookUrl "https://aviary.luckysparrow.ch/event" `
   -SecretToken "<telegram_webhook_secret>" `
   -RequiredChatId "<chat_id>"
 ```
@@ -1710,8 +1733,8 @@ Debian / bash:
 
 ```bash
 ./scripts/run_telegram_mode_smoke.sh \
-  --expected-webhook-url "https://your-domain.tld/event" \
-  --restore-webhook-url "https://your-domain.tld/event" \
+  --expected-webhook-url "https://aviary.luckysparrow.ch/event" \
+  --restore-webhook-url "https://aviary.luckysparrow.ch/event" \
   --secret-token "<telegram_webhook_secret>" \
   --required-chat-id "<chat_id>"
 ```

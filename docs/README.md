@@ -90,6 +90,7 @@ near-term coordination direction without rewriting the canonical architecture.
 
 ## UX Sources Of Truth
 
+- `ux/brand-personality-tokens.md`
 - `ux/aion-visual-motif-system.md`
 - `ux/canonical-web-screen-reference-set.md`
 - `ux/design-memory.md`

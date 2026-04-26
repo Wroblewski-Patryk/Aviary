@@ -270,6 +270,28 @@ Proactivity must consider:
 - user activity patterns  
 - current context  
 - recent interactions  
+- likely sleep windows  
+- preferred conversation channel  
+- inferred response cadence and relation tolerance  
+
+## Multi-Channel Relational Outreach Baseline
+
+The canonical app chat remains the primary conversation owner.
+
+Linked channels such as Telegram may also receive proactive outreach when
+runtime judges that propagation improves the chance of constructive contact.
+
+Rules:
+
+- no fixed global silence window is required for every user
+- silence interpretation may adapt from relation evidence, habits, and explicit
+  preference cues
+- night-time silence should not be treated as a delivery problem by default
+- a user message on any linked channel counts as contact and should reset
+  silence posture
+- if there is no grounded value in speaking, the system should stay silent
+- if there is grounded value, outreach may happen on the app alone or on the
+  app plus linked channels depending on inferred channel fit
 
 ---
 

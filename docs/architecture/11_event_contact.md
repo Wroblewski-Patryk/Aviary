@@ -179,6 +179,24 @@ After normalization, event becomes runtime state.
 - no direct raw input processing  
 - no exceptions  
 
+## Linked-Channel Continuity Baseline
+
+The first-party authenticated app remains the canonical conversation surface.
+
+Linked channels such as Telegram are ingress and egress transports that attach
+to the same backend-owned user continuity after explicit account linking.
+
+Contract implications:
+
+1. a linked-channel inbound user message must still normalize into one shared
+   event and one shared `user_id` continuity owner
+2. linked-channel ingress must enrich the canonical app transcript rather than
+   create a parallel conversation history
+3. channel-specific transport metadata may exist in payload or delivery layers,
+   but it must not fork event semantics into separate cognitive contracts
+4. future linked channels should reuse this same normalization posture instead
+   of introducing per-channel reasoning pipelines
+
 ---
 
 ## Benefits

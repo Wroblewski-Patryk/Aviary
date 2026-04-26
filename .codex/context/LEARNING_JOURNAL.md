@@ -25,6 +25,26 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-04-26 - Canonical conversation truth must stay app-owned even when external transports segment or mirror replies
+- Context:
+  - product direction now expands AION into canonical app chat plus mirrored
+    linked transports such as Telegram.
+- Guardrail:
+  - keep one canonical assistant reply in shared transcript truth
+  - let external transports segment or reformat only inside the action or
+    integration boundary
+- Preferred pattern:
+  - expression produces one canonical message
+  - action adapts that message for transport limits
+  - transcript remains canonical-message oriented, not transport-segment
+    oriented
+- Avoid:
+  - storing one separate transcript reply per transport segment
+  - letting channel transport become a second conversation source of truth
+- Evidence:
+  - `backend/app/integrations/delivery_router.py`
+  - `docs/planning/canonical-multi-channel-conversation-and-relational-outreach-plan.md`
+
 ### 2026-04-26 - Anti-spam counters must ignore internal memory rows when proactive streaks depend on conversation truth
 - Context:
   - proactive cadence repeated outreach more often than expected even though

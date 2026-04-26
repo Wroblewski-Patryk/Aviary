@@ -341,8 +341,66 @@ Contract rules:
    `planning -> expression -> action` path positively authorizes it
 4. a scheduler wakeup may stimulate analysis, relation maintenance, or
    planned-work reevaluation without becoming a pseudo-user transcript turn
-5. future cross-channel escalation after silence remains a separate explicit
-   product decision; no implementation may assume it implicitly
+5. the first-party authenticated app remains the canonical conversation owner;
+   linked channels are transport surfaces that enrich and mirror that same
+   continuity rather than replace it
+6. when a user writes on a linked channel, the inbound turn must still become
+   one canonical shared transcript turn and the reply must be written to the
+   canonical app transcript before any linked-channel propagation completes
+7. proactive propagation to linked channels may occur after technical
+   delivery-failure evidence or relationally interpreted silence, but the
+   decision remains runtime-owned and relation-sensitive rather than fixed to a
+   global timeout
+8. channel preference, sleep posture, response cadence, and interruption
+   tolerance may be inferred and adapted through relation or preference owners,
+   but the user may also state explicit preferences that runtime should honor
+9. any user-authored message on any linked channel counts as contact and
+   resets silence posture for proactive escalation logic
+10. transcript history should show only real exchanged user or assistant
+    messages; transport attempts, escalation bookkeeping, and propagation
+    metadata stay outside the app-facing transcript
+
+## Canonical Multi-Channel Conversation Contract
+
+Linked transports now follow one canonical conversation-owner rule.
+
+Contract rules:
+
+1. the internal authenticated app chat is the source-of-truth conversation
+   surface for the user
+2. Telegram and future linked communicators are bounded transport mirrors over
+   that same conversation owner after explicit account linking
+3. inbound linked-channel user messages must be persisted into the canonical
+   shared transcript under the same `user_id`
+4. outbound replies triggered by a linked-channel inbound message must remain
+   semantically consistent across:
+   - the canonical app transcript
+   - the originating linked channel
+5. transport adaptation may change segmentation or formatting, but it must not
+   change message meaning
+6. the app transcript should store one canonical assistant reply, not one
+   separate transcript row per transport segment
+7. future linked channels must integrate through the same canonical transcript
+   owner, not by creating channel-local chat truth
+
+## Channel Propagation And Adaptation Contract
+
+Outbound propagation follows one explicit semantic-preservation rule.
+
+Contract rules:
+
+1. expression produces one canonical assistant message for the turn
+2. action and integration layers may adapt that canonical message for
+   transport constraints such as Telegram length limits
+3. transport adaptation must preserve semantic completeness; it may split or
+   reformat, but it must not silently drop meaning
+4. when a transport requires multiple segments, those segments must be sent in
+   order so the user can reconstruct the full canonical reply
+5. transport segmentation or formatting detail is an execution concern, not a
+   second expression pass that rewrites the answer into a different message
+6. future observability may expose propagation metadata, but app-facing chat
+   history remains canonical-message-oriented rather than transport-segment-
+   oriented
 
 Illustrative contract shape:
 

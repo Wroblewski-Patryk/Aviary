@@ -184,6 +184,15 @@ Used for:
 
 These actions affect the user directly.
 
+Transport adaptation rule:
+
+- action may adapt one canonical assistant reply to fit transport limits or
+  formatting constraints
+- adaptation may split a message into ordered segments, but it must preserve
+  semantic completeness relative to the canonical app-owned reply
+- action must not silently replace the canonical reply with a materially
+  different transport-specific rewrite
+
 ---
 
 ### 3. External Tool Actions

@@ -7,6 +7,56 @@ This plan translates the repo analysis into an execution roadmap that brings the
 The goal is not to add more features first.
 The goal is to make the current AION runtime more correct, more inspectable, and easier to extend without architectural drift.
 
+## Planned On 2026-04-26 For Canonical Multi-Channel Conversation And Relational Outreach
+
+Fresh user direction now resolves the previously open channel-escalation
+question into one broader product contract:
+
+- internal authenticated app chat is the canonical conversation owner
+- linked Telegram is an ingress/egress transport mirror over that same
+  continuity after explicit registration and linking
+- user-authored turns always deserve a reply
+- scheduler or subconscious wakeups may stay silent
+- proactive propagation may adapt by relation, habits, and channel fit
+- transport adaptation may segment long Telegram delivery, but it must preserve
+  one canonical reply meaning
+
+### Fresh Gap Snapshot
+
+Observed from the current repo:
+
+- shared transcript and Telegram linking already exist
+- Telegram delivery segmentation already exists in the action/integration layer
+- relation-aware proactive logic already exists
+- but the repo does not yet fully implement:
+  - canonical mirrored multi-channel replies from one app-owned answer
+  - inferred channel preference and response cadence
+  - sleep-aware silence interpretation
+  - proactive channel-choice policy
+
+### New Queue
+
+- `PRJ-764` Plan canonical multi-channel conversation and relational outreach. (complete)
+  - Result:
+    - architecture and ops docs now freeze the approved channel model
+    - one detailed implementation plan now lives in
+      `docs/planning/canonical-multi-channel-conversation-and-relational-outreach-plan.md`
+
+- `PRJ-750` Freeze canonical multi-channel conversation contract
+- `PRJ-751` Freeze relational outreach governance contract
+- `PRJ-752` Add channel-affinity and response-cadence adaptive outputs
+- `PRJ-753` Add sleep and quiet-pattern inference boundary
+- `PRJ-754` Add explicit user channel-preference posture
+- `PRJ-755` Canonicalize linked-channel ingress into app-owned continuity
+- `PRJ-756` Mirror linked-channel replies from one canonical answer
+- `PRJ-757` Preserve canonical semantics during transport segmentation
+- `PRJ-758` Add channel-choice policy for proactive outreach
+- `PRJ-759` Add adaptive silence interpretation
+- `PRJ-760` Preserve mandatory reply posture for user-authored turns
+- `PRJ-761` Expand tests for canonical multi-channel continuity
+- `PRJ-762` Expand observability for channel-fit and propagation posture
+- `PRJ-763` Update runbook, planning truth, and learning journal
+
 ## Planned On 2026-04-26 For Proactive Transcript Truth And Conscious Outbound Governance
 
 Fresh production evidence now shows one bounded no-UI communication drift:
@@ -2372,7 +2422,7 @@ Verified production baseline:
 
 Release evidence baseline:
 
-- `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://personality.luckysparrow.ch'`
+- `.\scripts\run_release_smoke.ps1 -BaseUrl 'https://aviary.luckysparrow.ch'`
 - production `/health`
 - Coolify deploy evidence:
   - `nlcp1kpmxxhvq094fssz7qfk` (`PRJ-572`)
