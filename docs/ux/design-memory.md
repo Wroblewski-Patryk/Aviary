@@ -29,6 +29,10 @@
   Use one calm top utility band with search, compact actions, and account
   posture to give authenticated routes dashboard-grade framing without
   inventing route-local chrome.
+- Flagship overview stage:
+  Use one central embodied stage with flanking signal cards, a guidance column,
+  and a cognitive-flow band so `dashboard` feels like the conductor of the
+  shell instead of a generic analytics grid.
 - Integrated composer tray:
   Keep the main chat input, send control, and low-priority support actions
   inside one shared tray so the conversation footer reads like one premium

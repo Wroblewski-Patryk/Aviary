@@ -10,6 +10,24 @@ Last updated: 2026-04-26
   user preferences over time
 - Commercial model: TBD
 - Current phase: no-UI V1 baseline achieved in repo; core-V1 time-aware planning revision now active before later organizer-tool onboarding
+- 2026-04-26: `PRJ-742` is now complete locally:
+  - the authenticated shell now exposes `/dashboard` as a first-class route
+    and the default post-login destination
+  - `web/src/App.tsx` now reuses existing shell-owned data to render one new
+    flagship overview surface with:
+    - central embodied figure stage
+    - flanking signal cards
+    - insights and guidance column
+    - cognitive-flow band
+    - lower overview cards for goals, focus, memory, reflection, and module
+      entry
+  - `web/src/index.css` now carries one shared flagship overview pattern for
+    future authenticated surfaces rather than introducing a parallel dashboard
+    style family
+  - design-memory is now updated with:
+    - flagship overview stage
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
 - 2026-04-26: `PRJ-733` is now complete:
   - the approved canonical web-screen set is now stored in:
     - `docs/ux/assets/aion-landing-canonical-reference-v1.png`

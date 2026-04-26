@@ -877,6 +877,369 @@ body {
   font-weight: 700;
 }
 
+.aion-route-hero-dashboard {
+  position: relative;
+  overflow: hidden;
+}
+
+.aion-route-hero-dashboard::after {
+  content: "";
+  position: absolute;
+  inset: auto 2rem -3rem auto;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(111, 149, 146, 0.16), transparent 70%);
+  pointer-events: none;
+}
+
+.aion-dashboard-stage {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at top, rgba(255, 246, 232, 0.9), rgba(255, 251, 245, 0.88) 52%, rgba(240, 231, 218, 0.78) 100%);
+}
+
+.aion-dashboard-stage-main {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.aion-dashboard-stage-copy {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.aion-dashboard-hero-grid {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+}
+
+.aion-dashboard-signal-column {
+  display: grid;
+  gap: 1rem;
+}
+
+.aion-dashboard-signal-card {
+  border: 1px solid rgba(88, 67, 52, 0.08);
+  border-radius: 1.45rem;
+  padding: 1rem 1rem 0.95rem;
+  background: rgba(255, 251, 245, 0.82);
+  box-shadow: 0 16px 28px rgba(78, 58, 43, 0.055);
+  backdrop-filter: blur(12px);
+}
+
+.aion-dashboard-signal-eyebrow {
+  margin: 0;
+  color: rgba(110, 98, 88, 0.82);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.aion-dashboard-signal-value {
+  margin: 0.45rem 0 0;
+  color: var(--aion-ink);
+  font-family: var(--font-display, ui-serif);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.aion-dashboard-signal-detail,
+.aion-dashboard-signal-note {
+  margin: 0.35rem 0 0;
+  color: var(--aion-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.aion-dashboard-signal-wave {
+  margin-top: 0.85rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 0.3rem center, rgba(111, 149, 146, 0.62) 0.14rem, transparent 0.15rem),
+    linear-gradient(90deg, rgba(111, 149, 146, 0.22), rgba(232, 194, 134, 0.22));
+  background-size: 1.4rem 100%, 100% 100%;
+}
+
+.aion-dashboard-figure-stage {
+  position: relative;
+  min-height: 34rem;
+  border-radius: 2rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 28%, rgba(255, 252, 248, 0.96), rgba(247, 238, 225, 0.7) 48%, rgba(233, 220, 204, 0.62));
+}
+
+.aion-dashboard-figure-halo {
+  position: absolute;
+  inset: 12% 10% auto;
+  height: 72%;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.88), rgba(232, 194, 134, 0.14) 45%, transparent 72%);
+}
+
+.aion-dashboard-figure-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  mix-blend-mode: multiply;
+}
+
+.aion-dashboard-figure-badge {
+  position: absolute;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(255, 247, 232, 0.96), rgba(232, 194, 134, 0.56));
+  box-shadow:
+    0 0 0 0.28rem rgba(255, 248, 236, 0.82),
+    0 18px 38px rgba(197, 145, 78, 0.22);
+}
+
+.aion-dashboard-figure-badge-core {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  border: 1px solid rgba(197, 145, 78, 0.28);
+  background: rgba(255, 255, 255, 0.72);
+  color: #9f7d4c;
+  font-size: 1.3rem;
+}
+
+.aion-dashboard-guidance-panel {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid rgba(88, 67, 52, 0.08);
+  border-radius: 1.8rem;
+  padding: 1.25rem;
+  background: rgba(255, 251, 245, 0.84);
+}
+
+.aion-dashboard-guidance-card {
+  display: grid;
+  gap: 0.9rem;
+  align-items: center;
+  border: 1px solid rgba(88, 67, 52, 0.08);
+  border-radius: 1.35rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.aion-dashboard-mini-action,
+.aion-dashboard-link,
+.aion-dashboard-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  border: 1px solid rgba(88, 67, 52, 0.1);
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  background: rgba(255, 251, 245, 0.82);
+  color: var(--aion-ink);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.aion-dashboard-side-story {
+  min-height: 12rem;
+  border-radius: 1.6rem;
+  padding: 1.25rem;
+  background:
+    linear-gradient(180deg, rgba(223, 236, 236, 0.56), rgba(255, 249, 240, 0.74)),
+    radial-gradient(circle at right bottom, rgba(232, 194, 134, 0.22), transparent 48%);
+}
+
+.aion-dashboard-flow-panel,
+.aion-dashboard-summary-band {
+  padding: 1.5rem;
+}
+
+.aion-dashboard-flow-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.aion-dashboard-flow-track {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.25rem;
+}
+
+.aion-dashboard-flow-step {
+  position: relative;
+  border: 1px solid rgba(88, 67, 52, 0.08);
+  border-radius: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 251, 245, 0.8);
+  text-align: center;
+}
+
+.aion-dashboard-flow-step-active {
+  background:
+    linear-gradient(180deg, rgba(222, 241, 238, 0.92), rgba(255, 251, 245, 0.86));
+  box-shadow: 0 18px 34px rgba(111, 149, 146, 0.12);
+}
+
+.aion-dashboard-flow-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  border: 1px solid rgba(197, 145, 78, 0.24);
+  background: rgba(255, 255, 255, 0.92);
+  color: #9f7d4c;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.aion-dashboard-flow-notes {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.aion-dashboard-flow-note,
+.aion-dashboard-card,
+.aion-dashboard-module-card {
+  border: 1px solid rgba(88, 67, 52, 0.08);
+  border-radius: 1.65rem;
+  background: rgba(255, 251, 245, 0.78);
+}
+
+.aion-dashboard-flow-note,
+.aion-dashboard-card {
+  padding: 1.25rem;
+}
+
+.aion-dashboard-progress {
+  height: 0.45rem;
+  border-radius: 999px;
+  background: rgba(111, 149, 146, 0.16);
+  overflow: hidden;
+}
+
+.aion-dashboard-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #79b7b9, #d9b476);
+}
+
+.aion-dashboard-focus-orb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 13rem;
+  margin: 1.2rem auto 1.4rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 42% 36%, rgba(255, 255, 255, 0.96), rgba(162, 198, 193, 0.54) 36%, rgba(222, 196, 151, 0.7) 72%, rgba(246, 238, 226, 0.88)),
+    linear-gradient(180deg, rgba(255, 251, 245, 0.8), rgba(236, 225, 208, 0.86));
+  box-shadow:
+    inset 0 0 0 0.3rem rgba(255, 251, 245, 0.84),
+    0 20px 36px rgba(78, 58, 43, 0.08);
+}
+
+.aion-dashboard-bar-chart {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.55rem;
+  align-items: end;
+  min-height: 10rem;
+}
+
+.aion-dashboard-bar-item {
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+}
+
+.aion-dashboard-bar-fill {
+  display: block;
+  width: 100%;
+  min-height: 1.2rem;
+  border-radius: 999px 999px 0.7rem 0.7rem;
+  background: linear-gradient(180deg, rgba(121, 183, 185, 0.9), rgba(217, 180, 118, 0.78));
+}
+
+.aion-dashboard-bar-label {
+  color: var(--aion-muted);
+  font-size: 0.76rem;
+}
+
+.aion-dashboard-reflection-row,
+.aion-dashboard-highlight-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(88, 67, 52, 0.08);
+  padding-bottom: 0.85rem;
+}
+
+.aion-dashboard-reflection-row:last-child,
+.aion-dashboard-highlight-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.aion-dashboard-summary-item {
+  min-height: 8rem;
+  border-right: 1px solid rgba(88, 67, 52, 0.08);
+  padding-right: 1rem;
+}
+
+.aion-dashboard-summary-item:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+
+.aion-dashboard-module-card {
+  display: block;
+  padding: 1.2rem;
+  text-align: left;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.aion-dashboard-module-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 30px rgba(78, 58, 43, 0.07);
+}
+
+.aion-dashboard-module-label {
+  color: rgba(110, 98, 88, 0.82);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
 .aion-personality-hero {
   display: grid;
   gap: 1.4rem;
@@ -1103,6 +1466,23 @@ body {
 }
 
 @media (min-width: 900px) {
+  .aion-dashboard-stage {
+    grid-template-columns: minmax(0, 1.28fr) minmax(22rem, 0.72fr);
+    align-items: start;
+  }
+
+  .aion-dashboard-hero-grid {
+    grid-template-columns: minmax(13rem, 0.55fr) minmax(0, 1fr) minmax(13rem, 0.55fr);
+  }
+
+  .aion-dashboard-flow-track {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .aion-dashboard-flow-notes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .aion-chat-stage {
     grid-template-columns: minmax(0, 1.03fr) minmax(24rem, 0.97fr);
     align-items: start;
@@ -1114,6 +1494,33 @@ body {
 }
 
 @media (max-width: 899px) {
+  .aion-dashboard-stage,
+  .aion-dashboard-flow-panel,
+  .aion-dashboard-summary-band {
+    padding: 1rem;
+  }
+
+  .aion-dashboard-stage-copy {
+    gap: 0.75rem;
+  }
+
+  .aion-dashboard-figure-stage {
+    min-height: 24rem;
+  }
+
+  .aion-dashboard-summary-item {
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid rgba(88, 67, 52, 0.08);
+    padding-right: 0;
+    padding-bottom: 0.9rem;
+  }
+
+  .aion-dashboard-summary-item:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
   .aion-chat-workspace {
     padding: 0.9rem;
   }

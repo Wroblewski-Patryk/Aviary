@@ -11,7 +11,7 @@ import {
   type AppToolsOverviewResponse,
 } from "./lib/api";
 
-type RoutePath = "/login" | "/chat" | "/settings" | "/personality" | "/tools";
+type RoutePath = "/login" | "/dashboard" | "/chat" | "/settings" | "/personality" | "/tools";
 type AuthMode = "login" | "register";
 type UiLanguageCode = "system" | "en" | "pl" | "de";
 type ResolvedUiLanguageCode = Exclude<UiLanguageCode, "system">;
@@ -22,7 +22,7 @@ type UtcOffsetOption = {
 
 const BUILD_REVISION = String(import.meta.env.VITE_APP_BUILD_REVISION ?? "dev");
 const RESET_DATA_CONFIRMATION_TEXT = "RESET MY DATA";
-const ROUTES: RoutePath[] = ["/chat", "/settings", "/tools", "/personality"];
+const ROUTES: RoutePath[] = ["/dashboard", "/chat", "/personality", "/tools", "/settings"];
 const UI_LANGUAGE_OPTIONS: Array<{
   value: UiLanguageCode;
   iconToken: string;
@@ -77,6 +77,7 @@ const UI_COPY = {
   en: {
     routes: {
       "/login": "Login",
+      "/dashboard": "Dashboard",
       "/chat": "Chat",
       "/settings": "Settings",
       "/tools": "Tools",
@@ -84,6 +85,7 @@ const UI_COPY = {
     } satisfies Record<RoutePath, string>,
     routeDescriptions: {
       "/login": "Authenticate into the product shell.",
+      "/dashboard": "Flagship overview of your current goals, signals, flow, and next best actions.",
       "/chat": "One shared conversation thread with your latest exchanged messages and fresh replies from AION.",
       "/settings": "Profile, interface language, and proactive preferences in one clear place.",
       "/tools": "See what is ready, what needs attention, and what you can use next.",
@@ -150,6 +152,11 @@ const UI_COPY = {
           body: "You can reset runtime continuity later without deleting the account itself.",
         },
       ],
+    },
+    dashboard: {
+      eyebrow: "Dashboard",
+      title: "Your living overview",
+      subtitle: "A calm flagship surface for goals, guidance, memory, and the embodied flow behind your next move.",
     },
     chat: {
       eyebrow: "Conversation",
@@ -584,6 +591,9 @@ const UI_COPY = {
 } as const;
 
 function normalizeRoute(pathname: string): RoutePath {
+  if (pathname === "/dashboard" || pathname === "/") {
+    return "/dashboard";
+  }
   if (pathname === "/settings") {
     return "/settings";
   }
@@ -593,7 +603,7 @@ function normalizeRoute(pathname: string): RoutePath {
   if (pathname === "/personality") {
     return "/personality";
   }
-  if (pathname === "/chat" || pathname === "/") {
+  if (pathname === "/chat") {
     return "/chat";
   }
   return "/login";
@@ -711,11 +721,13 @@ function transcriptMetadataSummary(entry: AppChatHistoryEntry) {
 }
 
 function routeDescription(route: RoutePath, locale: ResolvedUiLanguageCode) {
-  return UI_COPY[locale].routeDescriptions[route];
+  const localized = UI_COPY[locale].routeDescriptions as Record<string, string>;
+  return localized[route] ?? UI_COPY.en.routeDescriptions[route];
 }
 
 function routeLabel(route: RoutePath, locale: ResolvedUiLanguageCode) {
-  return UI_COPY[locale].routes[route];
+  const localized = UI_COPY[locale].routes as Record<string, string>;
+  return localized[route] ?? UI_COPY.en.routes[route];
 }
 
 function localeLanguageLabel(option: (typeof UI_LANGUAGE_OPTIONS)[number], locale: ResolvedUiLanguageCode) {
@@ -1319,8 +1331,8 @@ export default function App() {
         });
         if (route === "/login") {
           startTransition(() => {
-            navigate("/chat");
-            setRoute("/chat");
+            navigate("/dashboard");
+            setRoute("/dashboard");
           });
         }
       } catch (caught) {
@@ -1357,7 +1369,7 @@ export default function App() {
   }, [toast]);
 
   useEffect(() => {
-    if (!me || route !== "/chat") {
+    if (!me || (route !== "/chat" && route !== "/dashboard")) {
       setPendingChatMessage(null);
       initialTranscriptScrollDoneRef.current = false;
       pendingAssistantScrollIdRef.current = null;
@@ -1427,7 +1439,7 @@ export default function App() {
   }, [route, transcriptItems]);
 
   useEffect(() => {
-    if (!me || (route !== "/personality" && route !== "/chat") || overview) {
+    if (!me || (route !== "/personality" && route !== "/chat" && route !== "/dashboard") || overview) {
       return;
     }
 
@@ -1458,7 +1470,7 @@ export default function App() {
   }, [me, route, overview]);
 
   useEffect(() => {
-    if (!me || (route !== "/tools" && route !== "/chat") || toolsOverview) {
+    if (!me || (route !== "/tools" && route !== "/chat" && route !== "/dashboard") || toolsOverview) {
       return;
     }
 
@@ -1648,6 +1660,120 @@ export default function App() {
       value: recentChannelsLabel,
     },
   ];
+  const dashboardHeroChips = [
+    `${stringValue(planningSummary?.active_goal_count, "0")} goals`,
+    `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} memories`,
+    `${stringValue(preferenceSummary?.learned_preference_count, "0")} learned cues`,
+  ];
+  const dashboardSignalCards = [
+    {
+      placement: "left",
+      eyebrow: "Memory",
+      value: stringValue(knowledgeSummary?.semantic_conclusion_count, "0"),
+      detail: "Total memories",
+      note: "Continuity held across recent sessions.",
+    },
+    {
+      placement: "left",
+      eyebrow: "Reflection",
+      value: stringValue(knowledgeSummary?.affective_conclusion_count, "0"),
+      detail: "Insights gained",
+      note: "Slower learning shaping future replies.",
+    },
+    {
+      placement: "left",
+      eyebrow: "Context",
+      value: recentChannelsLabel === copy.common.noData ? "Ready" : "Live",
+      detail: "Relevance",
+      note: recentChannelsLabel,
+    },
+    {
+      placement: "right",
+      eyebrow: "Motivation",
+      value: stringValue(planningSummary?.active_goal_count, "0") === "0" ? "Steady" : "Aligned",
+      detail: "Current posture",
+      note: "Goals and values stay in the foreground.",
+    },
+    {
+      placement: "right",
+      eyebrow: "Planning",
+      value: `${stringValue(planningSummary?.active_goal_count, "0")} / ${stringValue(planningSummary?.active_task_count, "0")}`,
+      detail: "Goals / tasks",
+      note: "Visible focus instead of hidden process.",
+    },
+    {
+      placement: "right",
+      eyebrow: "Action",
+      value: stringValue(toolsOverview?.summary.provider_ready_count, "0"),
+      detail: "Ready capabilities",
+      note: "Execution stays safely product-bounded.",
+    },
+  ];
+  const dashboardGuidanceCards = [
+    {
+      title: "Deep work window",
+      body: stringValue(planningSummary?.active_goal_count, "0") === "0"
+        ? "Shape one meaningful goal to give the day a stronger center."
+        : "Your active goals are ready for a focused work block.",
+      action: "Focus",
+    },
+    {
+      title: "Build momentum",
+      body: latestUserMessage
+        ? `Stay close to your latest thread: ${truncateText(latestUserMessage, 72)}`
+        : "The next message can become the anchor for a clearer plan.",
+      action: "View goal",
+    },
+    {
+      title: "Reflect and integrate",
+      body: stringValue(knowledgeSummary?.affective_conclusion_count, "0") === "0"
+        ? "A short reflection can start your first layer of deeper learning."
+        : "Recent reflections are ready to inform the next response.",
+      action: "Reflect",
+    },
+    {
+      title: "Connection opportunity",
+      body: recentChannelsLabel === copy.common.noData
+        ? "Link another surface when you want continuity outside the web shell."
+        : `Continuity is already alive across: ${recentChannelsLabel}.`,
+      action: "See context",
+    },
+  ];
+  const dashboardCognitiveSteps = [
+    { token: "O", title: "Observe", detail: "Taking in" },
+    { token: "U", title: "Understand", detail: "Making sense" },
+    { token: "C", title: "Connect", detail: "Finding patterns" },
+    { token: "R", title: "Reflect", detail: "Generating insight", active: true },
+    { token: "P", title: "Plan", detail: "Designing path" },
+    { token: "A", title: "Act", detail: "Creating impact" },
+  ];
+  const dashboardGoalRows = [
+    { title: "Build a stronger daily rhythm", value: "72%" },
+    { title: "Improve continuity across channels", value: "58%" },
+    { title: "Capture reusable insights", value: "41%" },
+    { title: "Shape a more embodied personality", value: "33%" },
+  ];
+  const dashboardMemoryBars = [
+    { label: "Mon", height: "18%" },
+    { label: "Tue", height: "30%" },
+    { label: "Wed", height: "52%" },
+    { label: "Thu", height: "44%" },
+    { label: "Fri", height: "68%" },
+    { label: "Sat", height: "90%" },
+    { label: "Sun", height: "76%" },
+  ];
+  const dashboardReflectionRows = [
+    { title: "Clarity on the next chapter", tag: "Clarity" },
+    { title: "Decision framework update", tag: "Growth" },
+    { title: "Values realignment", tag: "Alignment" },
+    { title: "Letting go of distractions", tag: "Awareness" },
+  ];
+  const dashboardBottomStats = [
+    { label: "System harmony", value: "92%", detail: "Optimal" },
+    { label: "Conscious", value: "High", detail: "Balance across layers" },
+    { label: "Subconscious", value: "Strong", detail: "Pattern depth" },
+    { label: "Creative", value: "Energized", detail: "Weekly pulse" },
+  ];
   const personalityLayers = [
     {
       zone: "Head · identity",
@@ -1717,6 +1843,12 @@ export default function App() {
     Boolean(me?.settings.proactive_opt_in) ? copy.common.on : copy.common.off,
   ];
   const shellNavItems = [
+    {
+      route: "/dashboard" as const,
+      label: routeLabel("/dashboard", resolvedUiLanguage),
+      description: "Flagship overview",
+      token: "D",
+    },
     {
       route: "/chat" as const,
       label: routeLabel("/chat", resolvedUiLanguage),
@@ -1957,8 +2089,8 @@ export default function App() {
       setAuthForm({ email: authForm.email, password: "", displayName: authForm.displayName });
       setToast(authMode === "login" ? "You're back in." : "Your account is ready.");
       startTransition(() => {
-        navigate("/chat");
-        setRoute("/chat");
+        navigate("/dashboard");
+        setRoute("/dashboard");
       });
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Authentication failed.");
@@ -2458,6 +2590,283 @@ export default function App() {
             ) : null}
 
             <main className="flex-1">
+          {route === "/dashboard" ? (
+            <section className="grid gap-5">
+              <RouteHeroPanel
+                eyebrow="Dashboard"
+                title={routeLabel("/dashboard", resolvedUiLanguage)}
+                body={routeDescription("/dashboard", resolvedUiLanguage)}
+                chips={dashboardHeroChips}
+                className="aion-route-hero aion-route-hero-dashboard"
+              />
+
+              <section className="aion-panel aion-dashboard-stage">
+                <div className="aion-dashboard-stage-main">
+                  <div className="aion-dashboard-stage-copy">
+                    <span className="aion-chat-headline-emblem">✦</span>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.24em] text-[#8d785f]">Good morning</p>
+                      <h2 className="mt-2 font-display text-4xl text-base-900">
+                        Welcome back, {currentUserLabel}
+                      </h2>
+                      <p className="mt-3 max-w-2xl text-sm leading-7 text-base-800">
+                        Here is what feels most alive in your AION workspace today.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="aion-dashboard-hero-grid">
+                    <div className="aion-dashboard-signal-column">
+                      {dashboardSignalCards
+                        .filter((card) => card.placement === "left")
+                        .map((card) => (
+                          <article key={card.eyebrow} className="aion-dashboard-signal-card">
+                            <p className="aion-dashboard-signal-eyebrow">{card.eyebrow}</p>
+                            <p className="aion-dashboard-signal-value">{card.value}</p>
+                            <p className="aion-dashboard-signal-detail">{card.detail}</p>
+                            <div className="aion-dashboard-signal-wave" aria-hidden="true" />
+                            <p className="aion-dashboard-signal-note">{card.note}</p>
+                          </article>
+                        ))}
+                    </div>
+
+                    <div className="aion-dashboard-figure-stage">
+                      <div className="aion-dashboard-figure-halo" aria-hidden="true" />
+                      <img
+                        className="aion-dashboard-figure-image"
+                        src="/aion-personality-figure-reference-v1.png"
+                        alt="Embodied AION overview"
+                      />
+                      <div className="aion-dashboard-figure-badge">
+                        <span className="aion-dashboard-figure-badge-core">✦</span>
+                      </div>
+                    </div>
+
+                    <div className="aion-dashboard-signal-column">
+                      {dashboardSignalCards
+                        .filter((card) => card.placement === "right")
+                        .map((card) => (
+                          <article key={card.eyebrow} className="aion-dashboard-signal-card">
+                            <p className="aion-dashboard-signal-eyebrow">{card.eyebrow}</p>
+                            <p className="aion-dashboard-signal-value">{card.value}</p>
+                            <p className="aion-dashboard-signal-detail">{card.detail}</p>
+                            <div className="aion-dashboard-signal-wave" aria-hidden="true" />
+                            <p className="aion-dashboard-signal-note">{card.note}</p>
+                          </article>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+
+                <aside className="aion-dashboard-guidance-panel">
+                  <div className="mb-5">
+                    <p className="text-sm uppercase tracking-[0.22em] text-base-800">Insights and guidance</p>
+                    <h3 className="mt-2 font-display text-2xl text-base-900">Curated for you</h3>
+                  </div>
+                  <div className="grid gap-3">
+                    {dashboardGuidanceCards.map((card) => (
+                      <article key={card.title} className="aion-dashboard-guidance-card">
+                        <div>
+                          <p className="text-base font-semibold text-base-900">{card.title}</p>
+                          <p className="mt-2 text-sm leading-6 text-base-800">{card.body}</p>
+                        </div>
+                        <button className="aion-dashboard-mini-action" type="button">
+                          {card.action}
+                        </button>
+                      </article>
+                    ))}
+                  </div>
+
+                  <section className="aion-dashboard-side-story">
+                    <p className="text-sm uppercase tracking-[0.22em] text-base-800">Today's intention</p>
+                    <p className="mt-4 font-display text-2xl leading-tight text-base-900">
+                      Create with clarity.
+                      <br />
+                      Serve with purpose.
+                    </p>
+                  </section>
+                </aside>
+              </section>
+
+              <section className="aion-panel aion-dashboard-flow-panel">
+                <div className="aion-dashboard-flow-header">
+                  <div>
+                    <p className="text-sm uppercase tracking-[0.22em] text-base-800">AION cognitive flow</p>
+                    <h3 className="mt-2 font-display text-2xl text-base-900">Live orchestration</h3>
+                  </div>
+                  <div className="aion-chip-ghost rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em]">
+                    Current phase: Reflect
+                  </div>
+                </div>
+                <div className="aion-dashboard-flow-track">
+                  {dashboardCognitiveSteps.map((step) => (
+                    <article
+                      key={step.title}
+                      className={`aion-dashboard-flow-step ${step.active ? "aion-dashboard-flow-step-active" : ""}`}
+                    >
+                      <span className="aion-dashboard-flow-icon">{step.token}</span>
+                      <p className="mt-3 text-base font-semibold text-base-900">{step.title}</p>
+                      <p className="mt-1 text-sm text-base-800">{step.detail}</p>
+                    </article>
+                  ))}
+                </div>
+                <div className="aion-dashboard-flow-notes">
+                  {dashboardFlowItems.map((item) => (
+                    <article key={item.title} className="aion-dashboard-flow-note">
+                      <p className="text-[11px] uppercase tracking-[0.2em] text-base-800">{item.eyebrow}</p>
+                      <p className="mt-2 text-base font-semibold text-base-900">{item.title}</p>
+                      <p className="mt-2 text-sm leading-6 text-base-800">{item.body}</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,0.9fr)]">
+                <article className="aion-panel-soft aion-dashboard-card">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.2em] text-base-800">Active goals</p>
+                      <h3 className="mt-2 font-display text-2xl text-base-900">What is in motion</h3>
+                    </div>
+                    <button className="aion-dashboard-link" type="button">
+                      View all
+                    </button>
+                  </div>
+                  <div className="mt-5 grid gap-4">
+                    {dashboardGoalRows.map((goal) => (
+                      <div key={goal.title}>
+                        <div className="flex items-center justify-between gap-3 text-sm text-base-900">
+                          <span>{goal.title}</span>
+                          <span>{goal.value}</span>
+                        </div>
+                        <div className="aion-dashboard-progress mt-2">
+                          <span style={{ width: goal.value }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+
+                <article className="aion-panel-soft aion-dashboard-card">
+                  <p className="text-sm uppercase tracking-[0.2em] text-base-800">Current focus</p>
+                  <div className="aion-dashboard-focus-orb" aria-hidden="true" />
+                  <p className="font-display text-2xl text-base-900">{chatCurrentFocus}</p>
+                  <p className="mt-3 text-sm leading-7 text-base-800">
+                    Building a coherent next step from your active conversation, memory, and planning posture.
+                  </p>
+                  <button className="aion-dashboard-action-button mt-5" type="button">
+                    Enter focus
+                  </button>
+                </article>
+
+                <article className="aion-panel-soft aion-dashboard-card">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.2em] text-base-800">Memory growth</p>
+                      <h3 className="mt-2 font-display text-2xl text-base-900">
+                        {stringValue(knowledgeSummary?.semantic_conclusion_count, "0")}
+                      </h3>
+                    </div>
+                    <span className="aion-chip-ghost rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em]">
+                      This week
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm text-[#5f8f93]">Useful memories stored and made easier to reuse.</p>
+                  <div className="aion-dashboard-bar-chart mt-6">
+                    {dashboardMemoryBars.map((bar) => (
+                      <div key={bar.label} className="aion-dashboard-bar-item">
+                        <span className="aion-dashboard-bar-fill" style={{ height: bar.height }} />
+                        <span className="aion-dashboard-bar-label">{bar.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              </section>
+
+              <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+                <article className="aion-panel-soft aion-dashboard-card">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.2em] text-base-800">Reflection highlights</p>
+                      <h3 className="mt-2 font-display text-2xl text-base-900">Signals worth keeping</h3>
+                    </div>
+                    <button className="aion-dashboard-link" type="button">
+                      View all
+                    </button>
+                  </div>
+                  <div className="mt-5 grid gap-3">
+                    {dashboardReflectionRows.map((row) => (
+                      <article key={row.title} className="aion-dashboard-reflection-row">
+                        <div>
+                          <p className="text-base font-semibold text-base-900">{row.title}</p>
+                          <p className="mt-1 text-sm text-base-800">Shaped by recent memory and reflective loops.</p>
+                        </div>
+                        <span className="aion-chip-ghost rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em]">
+                          {row.tag}
+                        </span>
+                      </article>
+                    ))}
+                  </div>
+                </article>
+
+                <article className="aion-panel aion-dashboard-summary-band">
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    {dashboardBottomStats.map((stat) => (
+                      <div key={stat.label} className="aion-dashboard-summary-item">
+                        <p className="text-sm uppercase tracking-[0.2em] text-base-800">{stat.label}</p>
+                        <p className="mt-3 font-display text-3xl text-base-900">{stat.value}</p>
+                        <p className="mt-2 text-sm text-base-800">{stat.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              </section>
+
+              <section className="grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+                <InsightPanel
+                  eyebrow="Module entry"
+                  title="Continue into the right surface"
+                  body="The dashboard should feel like the calm conductor for the rest of the shell, not a dead-end overview."
+                >
+                  <div className="grid gap-3 lg:grid-cols-3">
+                    {dashboardModuleCards.map((card) => (
+                      <button
+                        key={card.route}
+                        className="aion-dashboard-module-card"
+                        onClick={() => changeRoute(card.route)}
+                        type="button"
+                      >
+                        <span className="aion-dashboard-module-label">{card.label}</span>
+                        <span className="mt-3 block font-display text-2xl text-base-900">{card.title}</span>
+                        <span className="mt-3 block text-sm leading-6 text-base-800">{card.body}</span>
+                        <span className="mt-4 inline-flex rounded-full bg-base-100/85 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-base-900">
+                          {card.meta}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </InsightPanel>
+
+                <article className="aion-panel-soft aion-dashboard-card">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.2em] text-base-800">Route highlights</p>
+                      <h3 className="mt-2 font-display text-2xl text-base-900">What stays visible</h3>
+                    </div>
+                  </div>
+                  <div className="mt-5 grid gap-3">
+                    {motifHighlights.map((item) => (
+                      <div key={item.label} className="aion-dashboard-highlight-row">
+                        <span className="text-sm uppercase tracking-[0.18em] text-base-800">{item.label}</span>
+                        <span className="text-sm font-semibold text-base-900">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              </section>
+            </section>
+          ) : null}
+
           {route === "/chat" ? (
             <section className="grid gap-4">
               <section className="aion-chat-workspace">
@@ -3374,7 +3783,7 @@ export default function App() {
 
         {route !== "/chat" ? (
           <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-base-300 bg-base-100/95 px-3 py-3 backdrop-blur md:hidden">
-            <div className="mx-auto grid max-w-lg grid-cols-4 gap-2">
+            <div className="mx-auto grid max-w-2xl grid-cols-5 gap-2">
               {ROUTES.map((entry) => (
                 <button
                   key={entry}

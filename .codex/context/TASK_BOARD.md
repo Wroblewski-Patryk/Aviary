@@ -2,6 +2,32 @@
 
 Last updated: 2026-04-26
 
+## Fresh Dashboard Route Baseline (2026-04-26)
+
+- `PRJ-742` is now complete locally:
+  - the authenticated shell now has one real `/dashboard` route as the first
+    post-login destination
+  - default route normalization now lands authenticated users on
+    `dashboard` instead of dropping directly into `chat`
+  - shell navigation and mobile route navigation now include:
+    - `dashboard`
+    - `chat`
+    - `personality`
+    - `tools`
+    - `settings`
+  - the new flagship dashboard reuses existing shell data and motifs through:
+    - central embodied figure stage
+    - left and right signal cards
+    - insights and guidance side column
+    - cognitive-flow band
+    - lower goal, focus, memory, and reflection surfaces
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+- the next explicit parity task is now `PRJ-743`:
+  - route-family material polish across `dashboard`, `chat`, and `personality`
+  - responsive and accessibility proof
+  - local and deployed screenshot parity against the canonical route assets
+
 ## Fresh Canonical Screen-Set Freeze (2026-04-26)
 
 - fresh user direction now freezes four route-level web references as the
