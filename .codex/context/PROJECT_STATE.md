@@ -4,6 +4,25 @@ Last updated: 2026-04-28
 
 ## Product Snapshot
 
+- 2026-04-28: `PRJ-775` completed a planning-grade master audit for the next
+  major flagship lane:
+  - `docs/planning/layout-dashboard-public-home-canonical-master-audit.md`
+  - focus narrowed to:
+    - shared authenticated parent layout
+    - public layout
+    - public home / landing
+    - dashboard
+  - the audit concludes that the biggest remaining drift is still structural:
+    - public home is still login-first instead of landing-first
+    - the authenticated shell is still product-shell-first instead of
+      flagship-frame-first
+    - dashboard still reads as stacked sections instead of one composed
+      overview tableau
+  - recommended execution order is now:
+    - parent layout contract freeze
+    - public layout/home rebuild
+    - dashboard structural convergence
+
 - 2026-04-28: production deploy drift check is current:
   - `GET https://aviary.luckysparrow.ch/health` returned `status=ok`
   - `release_readiness.ready=true`

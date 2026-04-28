@@ -2,6 +2,28 @@
 
 Last updated: 2026-04-28
 
+## Fresh Layout, Public Home, Dashboard Master Audit (2026-04-28)
+
+- `PRJ-775` is now DONE as a planning slice:
+  - `.codex/tasks/PRJ-775-freeze-layout-dashboard-public-home-canonical-master-plan.md`
+- one detailed master audit now exists in:
+  - `docs/planning/layout-dashboard-public-home-canonical-master-audit.md`
+- the audit focuses on the highest-value remaining structural drift:
+  - shared authenticated parent layout
+  - public layout
+  - public home / landing
+  - dashboard
+- the main conclusion is that current drift is still primarily structural, not
+  cosmetic:
+  - the public surface is still auth-first instead of landing-first
+  - the parent shell is still app-first instead of flagship-frame-first
+  - dashboard still needs one coordinated structural pass, not only local
+    polish
+- the recommended next implementation lane is now explicit:
+  - authenticated parent layout contract freeze
+  - public layout + public home canonical rebuild
+  - dashboard structural canonical convergence
+
 ## Fresh Production Deploy Drift Check (2026-04-28)
 
 - production health was rechecked after the latest local flagship and chat UI
