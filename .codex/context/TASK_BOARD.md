@@ -2,6 +2,37 @@
 
 Last updated: 2026-04-28
 
+## Fresh Internal Chat Send Responsiveness Fix (2026-04-28)
+
+- `PRJ-774` is now DONE:
+  - root cause was isolated to frontend send-state timing, not the backend chat
+    contract:
+    - the old UI only added an assistant pending item after
+      `api.sendChatMessage(text)` returned
+    - the user-authored message therefore stayed invisible until the later
+      `/app/chat/history` refresh, making the user message and assistant answer
+      appear together
+  - `web/src/App.tsx` now appends a transient local user turn immediately on
+    submit, marks it `sending`, marks it `delivered` when the real
+    `/app/chat/message` response returns, appends the real assistant reply, and
+    then reconciles local items away against `/app/chat/history`
+  - `web/src/index.css` adds compact localized delivery-status treatment for
+    sending, delivered, and failed local user turns
+  - the durable source of truth remains the existing backend-owned
+    `/app/chat/history` transcript; no second chat store, backend route, or
+    persistence path was added
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "chat"; Pop-Location`
+      - result: `8 passed, 109 deselected`
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-774-fix-internal-chat-optimistic-turn-status.md`
+  - browser-client UI verification was attempted against
+    `http://127.0.0.1:5177/chat` but is blocked locally because the available
+    Node runtime is `v22.13.0` and the in-app browser client requires
+    `>= v22.22.0`
+  - task file:
+    - `.codex/tasks/PRJ-774-fix-internal-chat-optimistic-turn-status.md`
+
 ## Fresh Production Conversation Silence Triage (2026-04-28)
 
 - production triage was run after the user reported sending messages and

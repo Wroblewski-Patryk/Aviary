@@ -25,6 +25,34 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-04-28 - Chat UI must render the user-authored turn before waiting for assistant completion
+- Context:
+  - authenticated app chat uses backend-owned `/app/chat/history` as the
+    canonical transcript, but the frontend still needs immediate send feedback.
+- Symptom:
+  - after submitting an internal chat message, the user-authored message stayed
+    invisible until the assistant reply and history refresh completed, so both
+    messages appeared together.
+- Root cause:
+  - the UI only added a pending assistant item after `api.sendChatMessage(text)`
+    returned and had no optimistic user-turn item for the in-flight request.
+- Guardrail:
+  - keep durable conversation truth in `/app/chat/history`, but render
+    transient local user turns immediately with explicit delivery state.
+- Preferred pattern:
+  - append local user turn before awaiting `/app/chat/message`
+  - update that local turn when the real event id returns
+  - append the real assistant reply from the response
+  - reconcile local items away when `/app/chat/history` contains the event
+- Avoid:
+  - waiting for backend history refresh before showing the user's own submitted
+    turn
+  - creating a second durable chat store to solve a responsiveness issue
+- Evidence:
+  - `PRJ-774`
+  - `web/src/App.tsx`
+  - `web/src/index.css`
+
 ### 2026-04-26 - Canonical conversation truth must stay app-owned even when external transports segment or mirror replies
 - Context:
   - product direction now expands AION into canonical app chat plus mirrored

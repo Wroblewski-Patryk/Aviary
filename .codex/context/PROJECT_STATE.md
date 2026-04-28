@@ -4,6 +4,31 @@ Last updated: 2026-04-28
 
 ## Product Snapshot
 
+- 2026-04-28: `PRJ-774` repaired internal app chat send responsiveness:
+  - the issue was frontend-local timing rather than a backend transcript
+    contract failure
+  - before the fix, the web chat UI waited for `api.sendChatMessage(text)` and
+    then added an assistant pending item, so the user-authored message only
+    appeared after the `/app/chat/history` refresh
+  - `web/src/App.tsx` now appends the user turn immediately as transient UI
+    state with `delivery_state=sending`, updates that turn to
+    `delivery_state=delivered` when the real `/app/chat/message` response
+    arrives, appends the real assistant reply, and reconciles local items away
+    once `/app/chat/history` contains the same event
+  - `web/src/index.css` adds compact delivery-status indicators for sending,
+    delivered, and failed local user turns
+  - the durable chat source of truth remains `/app/chat/history`; no second
+    chat store, backend route, schema, prompt, memory, or action-layer path was
+    introduced
+  - validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "chat"; Pop-Location`
+      - `8 passed, 109 deselected`
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-774-fix-internal-chat-optimistic-turn-status.md`
+  - in-app browser proof remains blocked in this local environment because the
+    browser-client runtime requires Node `>= v22.22.0`, while the available
+    runtime is `v22.13.0`
+
 - 2026-04-28: production conversation-silence triage found that the current
   production host is up and the foreground runtime path answers normally:
   - `GET https://aviary.luckysparrow.ch/health` returned `status=ok`
