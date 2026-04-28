@@ -327,3 +327,42 @@ Latest proportion-and-density pass now also complete:
 - validation after this pass:
   - `Push-Location .\web; npm run build; Pop-Location`
   - result: passed on 2026-04-28
+
+Production deploy drift check:
+
+- `GET https://aviary.luckysparrow.ch/health` returned `status=ok` and
+  `release_readiness.ready=true`
+- production runtime build revision:
+  - `35727c8f0451d9c7f95f338c345e67021084c219`
+- local `HEAD`:
+  - `38960d9555ea40359623d978f48bce4fa43b5f48`
+- `origin/main`:
+  - `35727c8f0451d9c7f95f338c345e67021084c219`
+- conclusion:
+  - production currently matches `origin/main`, not the latest local web
+    commits
+  - the next deployed screenshot comparison should wait until the latest local
+    commits are pushed and deployed
+
+Latest shell-spine-and-route-calm pass now also complete:
+
+- shared shell now reads less admin-like and more inset/premium:
+  - the desktop rail was narrowed slightly
+  - the utility bar, search surface, and account controls were compacted
+  - flagship routes now begin under calmer chrome that yields more authority
+    to the route surfaces themselves
+- `dashboard` now keeps the editorial sidebar quieter:
+  - stage and sidebar padding are denser
+  - guidance and recent surfaces are more compact
+  - the route reads closer to one continuous flagship composition instead of a
+    hero next to a looser card stack
+- `chat` now subordinates support context more clearly:
+  - transcript rhythm is denser
+  - support-column spacing and card padding are quieter
+  - the portrait crop sits slightly higher and calmer relative to the overlay
+- `personality` now keeps the side stack more ceremonial:
+  - side-panel spacing is tighter
+  - the right column competes less with the embodied stage
+- validation after this pass:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed on 2026-04-28

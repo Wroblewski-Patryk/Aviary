@@ -2,6 +2,28 @@
 
 Last updated: 2026-04-28
 
+## Fresh Production Deploy Drift Check (2026-04-28)
+
+- production health was rechecked after the latest local flagship and chat UI
+  slices:
+  - `GET https://aviary.luckysparrow.ch/health` returned `status=ok`
+  - `release_readiness.ready=true`
+  - `/health.deployment.runtime_build_revision=35727c8f0451d9c7f95f338c345e67021084c219`
+  - local `HEAD=38960d9555ea40359623d978f48bce4fa43b5f48`
+  - `origin/main=35727c8f0451d9c7f95f338c345e67021084c219`
+- current deploy drift:
+  - production matches `origin/main`
+  - production does not yet include local commits through `38960d9`
+  - therefore deployed screenshot parity for `PRJ-743` should wait until the
+    latest local web changes are pushed/deployed
+- Telegram health in the same check showed provider-ready posture but zero
+  process-local counters after the current deployed process start:
+  - `round_trip_state=provider_backed_ready`
+  - `ingress_attempts=0`
+  - `delivery_attempts=0`
+  - this is a live-process telemetry state, not proof by itself of webhook
+    failure
+
 ## Fresh Internal Chat Send Responsiveness Fix (2026-04-28)
 
 - `PRJ-774` is now DONE:
@@ -11140,12 +11162,19 @@ Final Flagship Detail Loop Freeze (2026-04-28)
 
 - a detailed last-mile checklist now lives in:
   - `docs/planning/final-flagship-canonical-detail-checklist.md`
-- `PRJ-772` is now in progress:
+- `PRJ-772` is now DONE:
   - `.codex/tasks/PRJ-772-final-flagship-canonical-detail-loops.md`
-- the latest implementation slice covered:
+- the verified implementation slice covered:
   - dashboard lower-rhythm and sidebar pacing
   - chat support-column hierarchy tightening
   - personality side-stack ordering and quieter recent-activity closure
+  - later route proportion/density tuning for:
+    - dashboard center-stage authority
+    - chat transcript width hierarchy
+    - personality embodied-stage balance and mobile callout compression
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
 - next smallest parity loop after deploy:
   - dashboard hero-to-lower transition and scenic closure proportion
   - chat portrait crop versus support-panel spacing
@@ -11179,3 +11208,23 @@ Fresh Proportion And Density Pass (2026-04-28)
   - dashboard screenshot proof for hero crop and scenic closure authority
   - chat screenshot proof with a longer real conversation
   - personality tablet/mobile proof for callout readability and overlap safety
+
+Fresh Shell Spine And Route Calm Pass (2026-04-28)
+
+- shared authenticated chrome is now calmer and more premium:
+  - the desktop rail was narrowed slightly
+  - utility bar controls were compacted
+  - flagship routes now sit under lighter inset chrome
+- `dashboard` now uses denser stage/sidebar spacing so the route reads more
+  like one composed flagship scene
+- `chat` now uses tighter transcript rhythm and quieter support-column spacing
+  so context behaves more like supporting atmosphere than a second dashboard
+- `personality` now keeps the side stack tighter so the embodied stage remains
+  the ceremonial center
+- validation after this pass:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+- next smallest parity loop after deploy:
+  - dashboard screenshot proof for hero dominance versus sidebar pacing
+  - chat proof with a longer real transcript against the support column
+  - personality proof for tablet/mobile side-stack calmness

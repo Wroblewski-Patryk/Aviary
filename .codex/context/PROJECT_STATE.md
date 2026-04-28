@@ -4,6 +4,21 @@ Last updated: 2026-04-28
 
 ## Product Snapshot
 
+- 2026-04-28: production deploy drift check is current:
+  - `GET https://aviary.luckysparrow.ch/health` returned `status=ok`
+  - `release_readiness.ready=true`
+  - production runtime build revision:
+    - `35727c8f0451d9c7f95f338c345e67021084c219`
+  - local `HEAD`:
+    - `38960d9555ea40359623d978f48bce4fa43b5f48`
+  - `origin/main`:
+    - `35727c8f0451d9c7f95f338c345e67021084c219`
+  - conclusion:
+    - production matches `origin/main`
+    - production does not yet contain the latest local flagship/chat UI commits
+    - deployed screenshot parity for `PRJ-743` should wait until the latest
+      local web changes are pushed and deployed
+
 - 2026-04-28: `PRJ-774` repaired internal app chat send responsiveness:
   - the issue was frontend-local timing rather than a backend transcript
     contract failure
@@ -54,9 +69,10 @@ Last updated: 2026-04-28
 - 2026-04-28: the flagship canonical convergence lane now has a detail-level
   final checklist in:
   - `docs/planning/final-flagship-canonical-detail-checklist.md`
-  - `PRJ-772` continues the last-mile execution loop for `dashboard`, `chat`,
-    and `personality` through bounded rhythm, hierarchy, crop, and mobile
-    compression passes instead of any new route topology changes
+  - `PRJ-772` is now complete as the bounded last-mile execution loop for
+    `dashboard`, `chat`, and `personality`
+  - the completed slice used rhythm, hierarchy, crop, and mobile compression
+    passes instead of any new route topology changes
   - deeper verification then sent one synthetic Telegram-shaped request without
     the webhook secret and observed the expected production rejection:
     - `403 Invalid Telegram webhook secret token.`
@@ -4103,6 +4119,21 @@ Last updated: 2026-04-28
     intentional message-width hierarchy
   - `personality` now uses a slightly taller embodied stage with tighter
     mobile callout compression
+  - validation after this pass:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+  - `PRJ-772` is closed locally with deploy-backed screenshot comparison left
+    to the broader `PRJ-743` parity loop
+- 2026-04-28: another flagship calmness pass then refined shell and route
+  pacing:
+  - the shared desktop chrome is slightly narrower and quieter, so the route
+    surfaces retain first-read authority
+  - `dashboard` now uses denser sidebar/stage spacing for a more unified
+    flagship composition
+  - `chat` now tightens transcript rhythm and support-column padding so the
+    conversation remains the dominant instrument
+  - `personality` now uses a tighter side stack so the embodied preview keeps
+    its ceremonial center
   - validation after this pass:
     - `Push-Location .\web; npm run build; Pop-Location`
     - result: passed

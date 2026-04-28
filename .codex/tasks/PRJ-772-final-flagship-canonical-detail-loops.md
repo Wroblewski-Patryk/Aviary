@@ -4,8 +4,8 @@
 - ID: PRJ-772
 - Title: Final Flagship Canonical Detail Loops
 - Task Type: design
-- Current Stage: implementation
-- Status: IN_PROGRESS
+- Current Stage: verification
+- Status: DONE
 - Owner: Frontend Builder
 - Depends on: PRJ-743
 - Priority: P1
@@ -30,7 +30,7 @@ reference screens.
 - `.codex/context/PROJECT_STATE.md`
 
 ## Deliverable For This Stage
-One implementation slice that tightens route rhythm and hierarchy plus a
+Verified implementation slice that tightens route rhythm and hierarchy plus a
 detailed checklist file that breaks the remaining flagship parity work into
 route-specific detail loops.
 
@@ -65,10 +65,10 @@ route-specific detail loops.
 - Validation evidence is recorded for the touched frontend scope.
 
 ## Definition of Done
-- [ ] A detailed route-by-route checklist exists for final canonical parity.
-- [ ] One additional flagship implementation slice is merged into the web shell.
-- [ ] `Push-Location .\web; npm run build; Pop-Location` passes.
-- [ ] Task and project context files are updated for the latest parity loop.
+- [x] A detailed route-by-route checklist exists for final canonical parity.
+- [x] One additional flagship implementation slice is merged into the web shell.
+- [x] `Push-Location .\web; npm run build; Pop-Location` passes.
+- [x] Task and project context files are updated for the latest parity loop.
 
 ## Stage Exit Criteria
 - [x] The output matches the declared `Current Stage`.
@@ -132,7 +132,9 @@ route-specific detail loops.
 - Background or decorative asset strategy:
   - existing raster-backed route surfaces remain the source of atmosphere
 - Canonical asset extraction required: no
-- Screenshot comparison pass completed: no
+- Screenshot comparison pass completed: no, deferred to deploy-backed
+  `PRJ-743` compare loop because local browser automation is blocked by the
+  Node runtime version
 - Remaining mismatches:
   - dashboard lower pacing
   - chat support-column spacing after deploy
@@ -162,7 +164,7 @@ route-specific detail loops.
 - [x] Definition of Done evidence is attached.
 - [x] Relevant validations were run.
 - [x] Docs or context were updated if repository truth changed.
-- [ ] Learning journal was updated if a recurring pitfall was confirmed.
+- [x] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes
 This task intentionally stays within shared route polish. Any remaining final
@@ -230,6 +232,8 @@ or `IN_PROGRESS`:
 - What is incomplete:
   - deploy-backed screenshot comparison
   - final tablet parity proof
+  - these remain in the broader `PRJ-743` parity lane rather than blocking this
+    bounded implementation slice
 - Next steps:
   - compare the new route rhythm on deploy and run the next crop/spacing loop
 - Decisions made:

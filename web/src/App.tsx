@@ -2608,8 +2608,8 @@ export default function App() {
 
   return (
     <div className="aion-shell min-h-screen text-base-content">
-      <div className="mx-auto max-w-[112rem] px-4 pb-24 pt-4 sm:px-5 md:px-6 md:pb-8 md:pt-5 xl:px-8">
-        <div className="aion-shell-frame grid gap-4 xl:grid-cols-[13rem_minmax(0,1fr)]">
+      <div className="mx-auto max-w-[112rem] px-4 pb-24 pt-4 sm:px-5 md:px-6 md:pb-8 md:pt-5 xl:px-7">
+        <div className="aion-shell-frame grid gap-4 xl:grid-cols-[12.5rem_minmax(0,1fr)]">
           <aside className="aion-app-rail hidden xl:flex xl:min-h-[calc(100vh-3rem)] xl:flex-col">
             <div>
               <AviaryWordmark className="max-w-full" />
