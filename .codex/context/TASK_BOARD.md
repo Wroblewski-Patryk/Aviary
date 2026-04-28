@@ -11244,3 +11244,19 @@ Fresh Closure Ceremony And Composer Unification Pass (2026-04-28)
   - dashboard proof for one-screen read versus lower-grid drag
   - chat proof for empty-state and long-transcript elegance
   - personality proof for connector visibility and mobile ceremonial balance
+
+Fresh One-Screen Read And Embodied Continuity Pass (2026-04-28)
+
+- `dashboard` lower-grid and summary closure are now tighter so the route is
+  closer to a one-screen flagship read
+- `chat` preview transcript now feels more intentionally designed and less like
+  a plain fallback state
+- `personality` now links hero and timeline more explicitly through tighter
+  shell rhythm and a more integrated timeline panel
+- validation after this pass:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+- next smallest parity loop after deploy:
+  - dashboard proof for lower-half drag versus canonical one-screen pacing
+  - chat proof for preview state and long transcript density
+  - personality proof for hero-to-timeline continuity and mobile balance

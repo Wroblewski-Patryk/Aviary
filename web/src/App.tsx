@@ -2962,7 +2962,7 @@ export default function App() {
                 </div>
               </section>
 
-              <section className="aion-dashboard-lower-grid aion-dashboard-lower-grid-condensed grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,0.9fr)]">
+              <section className="aion-dashboard-lower-grid aion-dashboard-lower-grid-condensed grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.78fr)_minmax(0,0.88fr)]">
                 <article className="aion-panel-soft aion-dashboard-card aion-dashboard-card-primary">
                   <div className="flex items-center justify-between gap-3">
                     <div>
@@ -3143,7 +3143,7 @@ export default function App() {
                           >
                             {!isUser ? <span className="aion-chat-avatar">A</span> : null}
                             <article className={`aion-chat-message ${isUser ? "aion-chat-message-user" : "aion-chat-message-assistant"}`}>
-                              <div className="aion-chat-message-meta">
+                              <div className={`aion-chat-message-meta ${transcriptIsPreview ? "aion-chat-message-meta-preview" : ""}`}>
                                 <span>{formatTimestamp(message.timestamp, resolvedUiLanguage)}</span>
                                 {deliveryState && deliveryLabel ? (
                                   <span
@@ -3152,9 +3152,9 @@ export default function App() {
                                     title={deliveryLabel}
                                   />
                                 ) : null}
-                                {transcriptIsPreview ? <span>Starter preview</span> : null}
+                                {transcriptIsPreview ? <span>Starter conversation</span> : null}
                               </div>
-                              <p className="aion-chat-message-copy">{message.text}</p>
+                              <p className={`aion-chat-message-copy ${transcriptIsPreview ? "aion-chat-message-copy-preview" : ""}`}>{message.text}</p>
                               {metadataSummary && !transcriptIsPreview ? (
                                 <p className="aion-chat-message-summary">{metadataSummary}</p>
                               ) : null}
@@ -3787,7 +3787,7 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="aion-personality-timeline-panel">
+                    <div className="aion-personality-timeline-panel aion-personality-timeline-panel-integrated">
                       <div className="mb-4">
                         <p className="text-sm uppercase tracking-[0.24em] text-base-800">Mind layers timeline</p>
                         <h3 className="mt-2 font-display text-2xl text-base-900">Embodied personality layers in motion</h3>

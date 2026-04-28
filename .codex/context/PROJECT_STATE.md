@@ -4148,3 +4148,13 @@ Last updated: 2026-04-28
   - validation after this pass:
     - `Push-Location .\web; npm run build; Pop-Location`
     - result: passed
+- 2026-04-28: another flagship parity pass then improved one-screen read and
+  embodied continuity:
+  - `dashboard` lower rhythm and summary closure were tightened so the route
+    stays closer to a single flagship read
+  - `chat` preview transcript now feels more designed and less fallback-like
+  - `personality` now links the embodied figure and timeline more clearly
+    through a tighter hero shell and integrated timeline panel treatment
+  - validation after this pass:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed

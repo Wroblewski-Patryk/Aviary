@@ -385,3 +385,22 @@ Latest closure-ceremony-and-composer-unification pass now also complete:
 - validation after this pass:
   - `Push-Location .\web; npm run build; Pop-Location`
   - result: passed on 2026-04-28
+
+Latest one-screen-read-and-embodied-continuity pass now also complete:
+
+- `dashboard` now reads shorter and more flagship-like:
+  - the lower condensed grid is tighter
+  - the summary closure uses a denser internal layout
+  - summary stat copy is constrained so the lower half does not sprawl
+- `chat` now treats the empty-history preview more intentionally:
+  - preview metadata is calmer
+  - starter messages read more like a designed opening conversation than a raw
+    fallback transcript
+- `personality` now better links hero and timeline:
+  - the hero shell is slightly tighter
+  - the timeline panel now reads more like an integrated continuation of the
+    figure stage
+  - callout copy and connector visibility are slightly stronger
+- validation after this pass:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed on 2026-04-28
