@@ -306,3 +306,21 @@ Latest closure-and-mobile-compression pass now also complete:
   - callout cards are narrower and lighter
   - planning and skills are pulled inward
   - the role card and knowledge card now avoid the heavier stacked-card feel
+
+Latest proportion-and-density pass now also complete:
+
+- `dashboard` now reinforces central-stage authority:
+  - the middle hero scene is slightly larger
+  - side signal columns are tighter
+  - connectors now travel farther toward the figure so the composition reads
+    more like one system
+- `chat` now stays more transcript-first during longer reads:
+  - assistant and user bubbles now use more intentional max widths
+  - desktop allocates a little more room to the transcript than the support
+    column
+  - portrait crop on mobile is slightly calmer around the face and overlay
+- `personality` now gains extra embodied balance:
+  - the hero stage is slightly taller
+  - mobile callouts compress further inward
+  - planning, skills, and role are less likely to overpower the figure at
+    smaller widths

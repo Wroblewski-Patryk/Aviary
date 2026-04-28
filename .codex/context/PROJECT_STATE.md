@@ -4094,6 +4094,15 @@ Last updated: 2026-04-28
   - `dashboard` now uses a calmer bridge from hero to lower cards and a more
     explicit scenic ending
   - `chat` portrait crop and planning inset were rebalanced for both desktop
-    and mobile
+  and mobile
   - `personality` mobile callouts were compressed inward to preserve a more
     ceremonial figure stage
+- 2026-04-28: the latest flagship polish pass then tuned route proportions:
+  - `dashboard` now gives slightly more authority to the center hero scene
+  - `chat` now reserves more desktop width for transcript reading and uses more
+    intentional message-width hierarchy
+  - `personality` now uses a slightly taller embodied stage with tighter
+    mobile callout compression
+  - validation after this pass:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed

@@ -11163,3 +11163,19 @@ Fresh Closure And Mobile Compression Pass (2026-04-28)
   - dashboard hero-scene crop and signal-card connector proportion
   - chat support-column proof against real transcript length
   - personality tablet/mobile screenshot proof for callout readability
+
+Fresh Proportion And Density Pass (2026-04-28)
+
+- `dashboard` center-stage authority was increased through a slightly larger
+  hero figure area and longer signal connectors
+- `chat` now gives more desktop room back to the transcript and uses tighter
+  message-width hierarchy for longer reading comfort
+- `personality` now uses a slightly taller hero and more inward mobile callout
+  compression to preserve the ceremonial read
+- validation after this pass:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+- next smallest parity loop after deploy:
+  - dashboard screenshot proof for hero crop and scenic closure authority
+  - chat screenshot proof with a longer real conversation
+  - personality tablet/mobile proof for callout readability and overlap safety
