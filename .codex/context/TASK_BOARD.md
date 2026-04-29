@@ -2,6 +2,27 @@
 
 Last updated: 2026-04-29
 
+## Fresh Public-Home Structural Convergence Pass (2026-04-29)
+
+- `PRJ-800C` is now DONE as the next execution slice after shell and sidebar:
+  - `.codex/tasks/PRJ-800C-public-home-structural-convergence-pass.md`
+- purpose:
+  - move the landing closer to the canonical editorial story by strengthening
+    the hero, calming the bridge band, and demoting auth below the product narrative
+- implemented:
+  - public nav density and hero proportion were tightened
+  - the bridge band now reads more like one continuation of the hero and less
+    like a row of equal cards
+  - the lower public story now leads with proof/editorial content while auth
+    behaves more like a supporting entry module
+  - the bottom trust closure now carries a stronger dark-teal canonical mood
+- focused validation passed:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/App.tsx web/src/index.css .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .codex/tasks/PRJ-800C-public-home-structural-convergence-pass.md`
+- highest-value remaining drift after this slice:
+  - deploy screenshot tuning for the public landing
+  - the next major route-level pass is now `dashboard`
+
 ## Fresh Sidebar Pixel-Close Refinement Pass (2026-04-29)
 
 - `PRJ-800B` is now DONE as the next execution slice after shell-frame

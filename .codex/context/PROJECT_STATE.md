@@ -4,6 +4,28 @@ Last updated: 2026-04-29
 
 ## Product Snapshot
 
+- 2026-04-29: `PRJ-800C` completed the next canonical landing-convergence
+  slice:
+  - `web/src/App.tsx` now:
+    - gives the public hero a clearer product-story lead-in
+    - reframes the bridge band with a calmer editorial lead and lighter feature cadence
+    - moves the lower story toward proof-first composition, with auth as a
+      supporting module rather than a co-equal screen
+  - `web/src/index.css` now:
+    - tightens public nav density and hero proportions
+    - strengthens the embodied hero-stage authority
+    - rebuilds the bridge band into a more unified continuation of the hero
+    - gives the trust closure a stronger dark-teal canonical ending
+  - result:
+    - the landing reads more like one purpose-built editorial surface
+    - auth remains reachable but no longer dominates the page story
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .codex/tasks/PRJ-800C-public-home-structural-convergence-pass.md`
+  - highest-value next steps:
+    - deploy screenshot tuning for the public landing
+    - then execute the next dashboard structural convergence pass
+
 - 2026-04-29: `PRJ-800B` completed the next canonical desktop-sidebar
   refinement pass:
   - `web/src/App.tsx` now:

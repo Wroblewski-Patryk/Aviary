@@ -2687,6 +2687,7 @@ export default function App() {
               <main className="aion-public-home" id="aviary-home">
                 <section className="aion-public-hero">
                   <div className="aion-public-hero-copy">
+                    <p className="aion-public-section-label aion-public-hero-label">{copy.auth.badge}</p>
                     <h1 className="aion-public-hero-title">{publicHomeSurface.quote}</h1>
                     <p className="aion-public-hero-body">{publicHomeSurface.subquote}</p>
                     <div className="aion-public-cta-row">
@@ -2731,9 +2732,14 @@ export default function App() {
                 </section>
 
                 <section className="aion-public-feature-bridge aion-panel-soft rounded-[2rem] p-4 md:p-5">
+                  <div className="aion-public-feature-bridge-lead">
+                    <p className="aion-public-section-label">{publicHomeSurface.proofLine}</p>
+                    <p className="aion-public-feature-bridge-title">{publicHomeSurface.quote}</p>
+                  </div>
                   <div className="aion-public-feature-strip">
-                    {publicHomeSurface.pillars.map((pillar) => (
+                    {publicHomeSurface.pillars.map((pillar, index) => (
                       <article key={pillar.title} className="aion-public-feature-card">
+                        <span className="aion-public-feature-index">{String(index + 1).padStart(2, "0")}</span>
                         <p className="aion-public-feature-title">{pillar.title}</p>
                         <p className="aion-public-feature-body">{pillar.body}</p>
                       </article>
@@ -2757,6 +2763,23 @@ export default function App() {
                 </section>
 
                 <section className="aion-public-story-grid">
+                  <aside className="aion-public-proof-column">
+                    <article className="aion-panel-soft aion-public-quote-card rounded-[2rem] p-6">
+                      <p className="aion-public-section-label">{publicHomeSurface.proofLine}</p>
+                      <p className="aion-public-quote">{publicHomeSurface.quote}</p>
+                      <p className="aion-public-quote-body">{publicHomeSurface.subquote}</p>
+                    </article>
+
+                    <div className="aion-public-story-card-grid">
+                      {copy.auth.trustCards.map((card) => (
+                        <article key={card.title} className="aion-panel-soft aion-public-story-card rounded-[1.7rem] p-5">
+                          <p className="aion-public-feature-title">{card.title}</p>
+                          <p className="mt-2 text-sm leading-7 text-base-800">{card.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  </aside>
+
                   <section className="aion-public-auth-panel aion-panel-soft" id="aviary-auth">
                     <div className="aion-public-auth-header">
                       <div>
@@ -2782,6 +2805,8 @@ export default function App() {
                         </button>
                       </div>
                     </div>
+
+                    <p className="aion-public-auth-intro">{copy.auth.heroBody}</p>
 
                     <form className="space-y-4" onSubmit={(event) => void handleAuthSubmit(event)}>
                       <label className="form-control w-full">
@@ -2848,23 +2873,6 @@ export default function App() {
                       </div>
                     ) : null}
                   </section>
-
-                  <aside className="aion-public-proof-column">
-                    <article className="aion-panel-soft aion-public-quote-card rounded-[2rem] p-6">
-                      <p className="aion-public-section-label">{publicHomeSurface.proofLine}</p>
-                      <p className="aion-public-quote">{publicHomeSurface.quote}</p>
-                      <p className="aion-public-quote-body">{publicHomeSurface.subquote}</p>
-                    </article>
-
-                    <div className="grid gap-4">
-                      {copy.auth.trustCards.map((card) => (
-                        <article key={card.title} className="aion-panel-soft rounded-[1.7rem] p-5">
-                          <p className="aion-public-feature-title">{card.title}</p>
-                          <p className="mt-2 text-sm leading-7 text-base-800">{card.body}</p>
-                        </article>
-                      ))}
-                    </div>
-                  </aside>
                 </section>
 
                 <section className="aion-public-trust-band">
