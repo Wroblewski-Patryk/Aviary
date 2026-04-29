@@ -4,6 +4,59 @@ Last updated: 2026-04-29
 
 ## Product Snapshot
 
+- 2026-04-29: `PRJ-795` froze a shared canonical Aviary persona figure for
+  flagship web routes and started the first cross-route reuse pass:
+  - the supplied figure is now stored as:
+    - `docs/ux/assets/aviary-persona-figure-canonical-reference-v1.png`
+    - `web/public/aviary-persona-figure-canonical-reference-v1.png`
+  - UX source-of-truth now explicitly says the same embodied persona should be
+    reused across `landing`, `dashboard`, `chat`, `personality`, and future
+    flagship modules, with route-specific adaptation through crop, callouts,
+    and support objects rather than a different humanoid per screen
+  - the current web shell now begins swapping old figure references for the
+    new canonical persona asset in:
+    - landing motif stage
+    - sidebar identity card
+    - dashboard hero stage
+    - personality hero background
+  - the dashboard hero also now starts a route-specific adaptation pass with
+    anchored notes for identity, learned knowledge, and planning posture
+  - highest-value follow-up after this slice:
+    - chat-specific persona adaptation using the same being
+    - deploy screenshot tuning for dashboard crop and note placement
+
+- 2026-04-29: `PRJ-785` completed a backend architecture quality audit and
+  improvement plan:
+  - audit artifact:
+    - `.codex/tasks/PRJ-785-backend-architecture-quality-audit-and-improvement-plan.md`
+  - source-of-truth reviewed:
+    - `docs/architecture/02_architecture.md`
+    - `docs/architecture/15_runtime_flow.md`
+    - `docs/architecture/16_agent_contracts.md`
+    - `docs/architecture/29_runtime_behavior_testing.md`
+    - `DEFINITION_OF_DONE.md`
+    - `AI_TESTING_PROTOCOL.md`
+  - production health checked:
+    - `status=ok`
+    - `release_readiness.ready=true`
+    - runtime build revision
+      `9f04a928f907afaa30d0bdeced6e21ce4b2dce53`
+    - `proactive.communication_boundary_contract` is present
+    - semantic retrieval reports provider-backed `ready` posture
+    - Telegram reports `provider_backed_ready`
+  - conclusion:
+    - the backend is architecturally coherent
+    - no replacement memory/subconscious/proactive subsystem is needed
+    - the highest-value backend work is behavior evidence, operator closure,
+      and behavior-neutral ownership reduction in large modules
+  - recommended next backend queue:
+    - `PRJ-786` production communication-boundary backfill closure
+    - `PRJ-787` behavior validation expansion for backend continuity
+    - `PRJ-788..PRJ-791` health, memory, planning, and action owner extraction
+    - `PRJ-792` proactive/subconscious decision evidence
+    - `PRJ-793` governed affective assessment rollout
+    - `PRJ-794` runtime script entrypoint and ops consistency audit
+
 - 2026-04-29: `PRJ-784` pushed the public landing first viewport materially
   closer to the canonical landing:
   - `web/src/App.tsx` now removes the extra hero kicker, uses a real embodied

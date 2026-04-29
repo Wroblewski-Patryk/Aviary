@@ -24,6 +24,7 @@ type UtcOffsetOption = {
 };
 
 const BUILD_REVISION = String(import.meta.env.VITE_APP_BUILD_REVISION ?? "dev");
+const CANONICAL_PERSONA_FIGURE_SRC = "/aviary-persona-figure-canonical-reference-v1.png";
 const RESET_DATA_CONFIRMATION_TEXT = "RESET MY DATA";
 const ROUTES: RoutePath[] = ["/dashboard", "/chat", "/personality", "/tools", "/settings"];
 const UI_LANGUAGE_OPTIONS: Array<{
@@ -1141,7 +1142,7 @@ function MotifFigurePanel({
           alt=""
           aria-hidden="true"
           className="aion-landing-motif-art"
-          src="/aion-personality-figure-reference-v1.png"
+          src={CANONICAL_PERSONA_FIGURE_SRC}
         />
         {highlights.map((item, index) => (
           <article
@@ -1972,6 +1973,29 @@ export default function App() {
     title: "Reflect",
     body: "Generating insight from recent experiences, active goals, and the latest conversation context.",
   };
+  const dashboardFigureNotes = [
+    {
+      key: "identity",
+      className: "aion-dashboard-figure-note aion-dashboard-figure-note-identity",
+      eyebrow: "Identity",
+      title: currentUserLabel,
+      body: "The same persona remains visible across the shell, so guidance feels relational instead of generic.",
+    },
+    {
+      key: "knowledge",
+      className: "aion-dashboard-figure-note aion-dashboard-figure-note-knowledge",
+      eyebrow: "Learned knowledge",
+      title: `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} patterns`,
+      body: "The book stays as a memory anchor for what Aviary has already learned well enough to reuse.",
+    },
+    {
+      key: "planning",
+      className: "aion-dashboard-figure-note aion-dashboard-figure-note-planning",
+      eyebrow: "Planning posture",
+      title: `${stringValue(planningSummary?.active_goal_count, "0")} active goals`,
+      body: "The pen and luminous slate frame the next move before it becomes action or message delivery.",
+    },
+  ];
   const dashboardConversationStatus = conversationChannelStatus(healthSnapshot, {
     loading: healthLoading,
     error: healthError,
@@ -2860,7 +2884,7 @@ export default function App() {
                 type="button"
               >
                 <span className="aion-sidebar-avatar">
-                  <img alt="" aria-hidden="true" src="/aion-personality-figure-reference-v1.png" />
+                  <img alt="" aria-hidden="true" src={CANONICAL_PERSONA_FIGURE_SRC} />
                 </span>
                 <span className="aion-sidebar-identity-copy">
                   <span className="aion-sidebar-identity-name">{currentUserLabel}</span>
@@ -3044,9 +3068,16 @@ export default function App() {
                     <div className="aion-dashboard-figure-stage">
                       <div className="aion-dashboard-figure-atmosphere" aria-hidden="true" />
                       <div className="aion-dashboard-figure-halo" aria-hidden="true" />
+                      {dashboardFigureNotes.map((note) => (
+                        <article key={note.key} className={note.className}>
+                          <p className="aion-dashboard-figure-note-eyebrow">{note.eyebrow}</p>
+                          <p className="aion-dashboard-figure-note-title">{note.title}</p>
+                          <p className="aion-dashboard-figure-note-body">{note.body}</p>
+                        </article>
+                      ))}
                       <img
                         className="aion-dashboard-figure-image"
-                        src="/aion-personality-figure-reference-v1.png"
+                        src={CANONICAL_PERSONA_FIGURE_SRC}
                         alt="Embodied personality overview"
                       />
                       <div className="aion-dashboard-figure-caption">

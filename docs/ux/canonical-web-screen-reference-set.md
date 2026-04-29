@@ -11,6 +11,21 @@ They define the UX/UI target that future implementation should move toward.
 
 ## Approved Canonical Screen Set
 
+### Shared Canonical Persona Figure
+
+- Asset:
+  - `docs/ux/assets/aviary-persona-figure-canonical-reference-v1.png`
+- Role:
+  - shared embodied persona anchor reused across landing, dashboard, chat,
+    personality, and future flagship modules
+- Must preserve:
+  - one humane synthetic identity across routes
+  - recognizable book, writing instrument, and luminous interface language
+  - module-specific adaptation through crop, callouts, and support objects
+  - no route-local replacement with a different humanoid or unrelated mascot
+
+![Aviary shared canonical persona figure](./assets/aviary-persona-figure-canonical-reference-v1.png)
+
 ### Authenticated Sidebar Layout
 
 - Asset:
@@ -96,6 +111,8 @@ They define the UX/UI target that future implementation should move toward.
 
 ## Route Translation Rules
 
+- all flagship routes should reuse the shared canonical persona figure and
+  adapt it to route context before introducing a different embodied being
 - `landing` should converge toward the landing reference, not toward the
   dashboard shell.
 - `dashboard` should converge toward the dashboard reference even if some

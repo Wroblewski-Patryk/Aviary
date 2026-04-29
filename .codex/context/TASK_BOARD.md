@@ -2,6 +2,60 @@
 
 Last updated: 2026-04-29
 
+## Fresh Shared Canonical Persona Figure Freeze (2026-04-29)
+
+- `PRJ-795` is now IN_PROGRESS as the next flagship persona-continuity slice:
+  - `.codex/tasks/PRJ-795-freeze-shared-canonical-persona-figure-and-dashboard-pass.md`
+- purpose:
+  - freeze one shared canonical persona figure across flagship routes and stop
+    route drift toward different humanoid artwork
+- implementation in progress:
+  - the supplied figure is now stored in:
+    - `docs/ux/assets/aviary-persona-figure-canonical-reference-v1.png`
+    - `web/public/aviary-persona-figure-canonical-reference-v1.png`
+  - UX source-of-truth now requires reusing the same embodied persona across
+    flagship modules
+  - `landing`, `dashboard`, `sidebar`, and `personality` are being moved away
+    from the older figure asset to the shared canonical persona
+  - dashboard now begins a route-specific adaptation pass with anchored notes
+    for identity, learned knowledge, and planning posture
+- highest-value remaining drift after this slice:
+  - chat-specific use of the same persona
+  - deploy screenshot tuning for dashboard note rhythm and crop balance
+
+## Fresh Backend Architecture Quality Audit And Improvement Plan (2026-04-29)
+
+- `PRJ-785` is now READY as a planning/audit slice:
+  - `.codex/tasks/PRJ-785-backend-architecture-quality-audit-and-improvement-plan.md`
+- purpose:
+  - compare the current backend against the canonical architecture and convert
+    remaining quality risks into small, architecture-aligned follow-up tasks
+- audit conclusion:
+  - the backend is architecturally coherent and production health is green
+  - no new memory, subconscious, proactive, or communication-preference
+    subsystem is recommended
+  - the next improvements should strengthen behavior proof, close remaining
+    production follow-up evidence, and reduce the blast radius of large backend
+    owners through behavior-neutral extraction
+- production evidence checked:
+  - `GET https://aviary.luckysparrow.ch/health` returned `status=ok`
+  - deployed runtime build revision:
+    `9f04a928f907afaa30d0bdeced6e21ce4b2dce53`
+  - `release_readiness.ready=true`
+  - `proactive.communication_boundary_contract` is present
+  - semantic retrieval reports provider-backed `ready` posture
+  - Telegram reports `provider_backed_ready`
+- proposed follow-up order:
+  - `PRJ-786` production communication-boundary backfill closure
+  - `PRJ-787` behavior validation expansion for backend continuity
+  - `PRJ-788` health surface ownership refactor
+  - `PRJ-789` memory repository domain interface extraction
+  - `PRJ-790` planning intent builder extraction
+  - `PRJ-791` action domain executor extraction
+  - `PRJ-792` proactive and subconscious decision evidence
+  - `PRJ-793` governed affective assessment rollout
+  - `PRJ-794` runtime script entrypoint and ops consistency audit
+
 ## Fresh Communication Boundary Backfill And Health Contract (2026-04-29)
 
 - `PRJ-783` is now DONE as the architecture-completion slice after

@@ -14,6 +14,8 @@ Aviary product shell without breaking the existing calm product posture.
 
 - Primary approved snapshot:
   - `docs/ux/assets/aion-visual-motif-reference.png`
+- Shared canonical persona figure:
+  - `docs/ux/assets/aviary-persona-figure-canonical-reference-v1.png`
 - Canonical brand logomark:
   - `docs/ux/assets/aviary-logomark.svg`
 - Canonical brand preview:
@@ -25,7 +27,7 @@ Aviary product shell without breaking the existing calm product posture.
 
 ## Core Thesis
 
-Use one symbolic embodied figure as the anchor of the product language.
+Use one shared symbolic embodied figure as the anchor of the product language.
 
 That figure is not a literal robot mascot.
 It is a humane synthetic presence that helps users understand the system as an
@@ -154,6 +156,7 @@ Canonical implementation target:
 - right or below: session entry
 - keep the first action visible in the first viewport
 - trust copy should describe outcomes, not architecture
+- derive the visible figure fragment from the shared canonical persona asset
 
 ### Chat
 
@@ -167,6 +170,8 @@ Canonical implementation target:
 - timeline rails can echo transcript continuity
 - the main figure should appear as a background anchor or side illustration
 - composer and latest messages remain the primary focus
+- the chat adaptation should still read as the same persona, only reframed for
+  conversation context
 
 ### Personality
 
@@ -181,6 +186,8 @@ Canonical implementation target:
 - identity, role, knowledge, skills, and planning can all map visibly here
 - expandable metadata can live beside the illustration
 - technical payloads stay below the product layer or behind progressive detail
+- use the shared canonical persona as the base figure before adding route-local
+  callouts
 
 ### Tools
 
@@ -217,6 +224,8 @@ Canonical implementation target:
 - surround it with usable cards, goals, reflection, memory, and guidance
 - use the motif to explain internal cognition rather than to decorate empty
   space
+- adapt the shared canonical persona into a more orchestration-oriented crop,
+  with dashboard-specific callouts instead of a different character
 
 ## Responsive Interpretation
 
@@ -274,7 +283,7 @@ V1 asset family for web:
      `docs/ux/assets/aion-chat-background-reference-v1.png`
 5. personality route embodied figure preview
    - current approved reference:
-     `docs/ux/assets/aion-personality-figure-reference-v1.png`
+     `docs/ux/assets/aviary-persona-figure-canonical-reference-v1.png`
 6. settings route light trust illustration
 
 V2 concept direction:

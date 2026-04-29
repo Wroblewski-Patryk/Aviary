@@ -34,8 +34,19 @@ decision, not improvised with generic gradients.
 - the decorative layer contains texture that matters to the brand feel
 - repeated gradient experimentation is replacing straightforward asset use
 
+### Prefer Shared Persona Derivatives When
+
+- the route needs an embodied figure that is already defined canonically
+- the design goal is continuity across modules, not novelty
+- crop, posture emphasis, or surrounding props can communicate the route
+  context without inventing a different character
+
 ## Anti-Approximation Rule
 
 Do not replace a canonical image-based background with generic radial
 gradients, blur blobs, or washed-out tint overlays unless the task explicitly
 allows adaptation instead of fidelity.
+
+Do not replace the approved shared persona with route-local humanoids when the
+same narrative can be achieved by reusing the canonical figure and adapting the
+surrounding composition.

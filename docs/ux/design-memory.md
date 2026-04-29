@@ -25,6 +25,11 @@
   Use one route-specific embodied figure asset with enough negative space for
   anchored callouts and side panels, instead of relying on generic CSS-only
   humanoid placeholders.
+- Shared canonical persona figure:
+  Reuse one approved Aviary persona figure across `landing`, `dashboard`,
+  `chat`, `personality`, and other flagship modules. Adapt the crop, callout
+  map, and supporting objects to the route context instead of inventing a
+  different being per screen.
 - Flagship utility bar:
   Use one calm top utility band with search, compact actions, and account
   posture to give authenticated routes dashboard-grade framing without
@@ -75,7 +80,7 @@
 - The current approved chat art direction reference now also includes
   `docs/ux/assets/aion-chat-background-reference-v1.png`.
 - The current approved personality route preview now also includes
-  `docs/ux/assets/aion-personality-figure-reference-v1.png`.
+  `docs/ux/assets/aviary-persona-figure-canonical-reference-v1.png`.
 - The current approved flagship-shell pattern now includes a shared utility
   top bar reused across premium authenticated routes.
 - The current approved canonical web screen-set now lives in
