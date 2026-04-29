@@ -51,6 +51,376 @@ body {
   color: #1f1a17;
 }
 
+.aion-window-chrome {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(88, 67, 52, 0.1);
+  background:
+    linear-gradient(180deg, rgba(255, 251, 245, 0.96) 0%, rgba(247, 239, 228, 0.84) 100%);
+  padding: 0.95rem 1.35rem;
+}
+
+.aion-window-chrome-lights {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.aion-window-chrome-lights span {
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(88, 67, 52, 0.14);
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.92), rgba(226, 205, 178, 0.88));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.aion-window-chrome-title {
+  min-width: 0;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(88, 67, 52, 0.74);
+}
+
+.aion-window-chrome-right {
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.aion-window-chrome-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.aion-window-chrome-meta span {
+  border-radius: 999px;
+  border: 1px solid rgba(88, 67, 52, 0.1);
+  background: rgba(255, 252, 247, 0.92);
+  padding: 0.42rem 0.72rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(88, 67, 52, 0.76);
+}
+
+.aion-public-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 248, 236, 0.7), transparent 0 22%),
+    radial-gradient(circle at 84% 18%, rgba(111, 149, 146, 0.12), transparent 0 20%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent 44%);
+}
+
+.aion-public-window {
+  position: relative;
+}
+
+.aion-public-window-body {
+  display: grid;
+  gap: 2rem;
+  padding: 1.5rem;
+}
+
+.aion-public-nav {
+  display: grid;
+  align-items: center;
+  gap: 1rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.aion-public-nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.aion-public-nav-link {
+  border-radius: 999px;
+  padding: 0.6rem 0.95rem;
+  color: var(--aion-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    color 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.aion-public-nav-link:hover {
+  background: rgba(255, 250, 243, 0.82);
+  color: var(--aion-ink);
+}
+
+.aion-public-nav-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.aion-public-nav-button,
+.aion-public-cta {
+  border-radius: 999px;
+  border: 1px solid rgba(88, 67, 52, 0.12);
+  padding: 0.8rem 1.2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.aion-public-nav-button:hover,
+.aion-public-cta:hover {
+  transform: translateY(-1px);
+}
+
+.aion-public-nav-button {
+  background: rgba(255, 251, 245, 0.92);
+  color: var(--aion-ink);
+  box-shadow: 0 12px 28px rgba(84, 66, 52, 0.06);
+}
+
+.aion-public-nav-button-ghost,
+.aion-public-cta-secondary {
+  background: rgba(255, 248, 239, 0.65);
+  color: var(--aion-muted);
+}
+
+.aion-public-cta-primary {
+  background: linear-gradient(135deg, rgba(104, 151, 147, 0.98), rgba(88, 133, 129, 0.96));
+  border-color: rgba(88, 133, 129, 0.3);
+  color: #fbfbf8;
+  box-shadow: 0 18px 32px rgba(63, 110, 107, 0.2);
+}
+
+.aion-public-home {
+  display: grid;
+  gap: 1.8rem;
+}
+
+.aion-public-hero {
+  display: grid;
+  gap: 1.5rem;
+  align-items: center;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1.08fr);
+}
+
+.aion-public-hero-copy {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  padding: 0.6rem 0.4rem 0.6rem 0.1rem;
+}
+
+.aion-public-kicker,
+.aion-public-section-label {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(111, 93, 77, 0.72);
+}
+
+.aion-public-hero-title {
+  margin: 0;
+  max-width: 12ch;
+  font-family: var(--font-display, ui-serif);
+  font-size: clamp(3.4rem, 4vw, 5.75rem);
+  line-height: 0.92;
+  color: var(--aion-ink);
+}
+
+.aion-public-hero-body {
+  margin: 0;
+  max-width: 37rem;
+  font-size: 1rem;
+  line-height: 1.95;
+  color: var(--aion-muted);
+}
+
+.aion-public-cta-row,
+.aion-public-pillar-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.aion-public-pillar-pill {
+  border-radius: 999px;
+  border: 1px solid rgba(88, 67, 52, 0.12);
+  background: rgba(255, 252, 247, 0.8);
+  padding: 0.72rem 0.96rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(88, 67, 52, 0.74);
+}
+
+.aion-public-hero-stage {
+  display: grid;
+  gap: 1rem;
+}
+
+.aion-public-hero-notes {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.aion-public-hero-card {
+  display: grid;
+  gap: 0.75rem;
+  align-items: start;
+  grid-template-columns: auto minmax(0, 1fr);
+  border: 1px solid rgba(88, 67, 52, 0.1);
+  border-radius: 1.45rem;
+  background: rgba(255, 251, 245, 0.82);
+  padding: 1rem;
+  box-shadow: 0 16px 28px rgba(84, 66, 52, 0.05);
+}
+
+.aion-public-hero-card-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  background: rgba(196, 147, 89, 0.14);
+  color: rgba(140, 94, 40, 0.86);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.aion-public-hero-card-title,
+.aion-public-feature-title {
+  margin: 0;
+  font-family: var(--font-display, ui-serif);
+  font-size: 1.36rem;
+  color: var(--aion-ink);
+}
+
+.aion-public-hero-card-body,
+.aion-public-feature-body,
+.aion-public-quote-body {
+  margin: 0.35rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--aion-muted);
+}
+
+.aion-public-feature-strip {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.aion-public-feature-card {
+  border: 1px solid rgba(88, 67, 52, 0.1);
+  border-radius: 1.7rem;
+  background: rgba(255, 250, 243, 0.8);
+  padding: 1.3rem 1.4rem;
+  box-shadow: 0 14px 30px rgba(84, 66, 52, 0.05);
+}
+
+.aion-public-story-grid {
+  display: grid;
+  gap: 1rem;
+  align-items: start;
+  grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
+}
+
+.aion-public-auth-panel {
+  padding: 1.6rem;
+  border-radius: 2rem;
+}
+
+.aion-public-auth-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.aion-public-proof-column {
+  display: grid;
+  gap: 1rem;
+}
+
+.aion-public-quote-card {
+  min-height: 15rem;
+}
+
+.aion-public-quote {
+  margin: 0.75rem 0 0;
+  max-width: 14ch;
+  font-family: var(--font-display, ui-serif);
+  font-size: clamp(2.1rem, 3vw, 3.4rem);
+  line-height: 0.98;
+  color: var(--aion-ink);
+}
+
+.aion-public-trust-band {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid rgba(88, 67, 52, 0.1);
+  border-radius: 2rem;
+  background: linear-gradient(180deg, rgba(255, 250, 243, 0.9), rgba(244, 235, 223, 0.82));
+  padding: 1.2rem 1.3rem;
+}
+
+.aion-public-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.aion-public-trust-item p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--aion-muted);
+}
+
+.aion-public-trust-dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(111, 149, 146, 0.92), rgba(96, 128, 124, 0.92));
+  box-shadow: 0 0 0 6px rgba(111, 149, 146, 0.12);
+}
+
+.aion-shell-window-body {
+  padding: 1.35rem;
+}
+
 .aion-shell {
   position: relative;
 }
@@ -87,6 +457,76 @@ body {
     radial-gradient(circle at 20% 18%, rgba(255, 249, 240, 0.75), transparent 0 24%),
     radial-gradient(circle at 80% 12%, rgba(247, 233, 208, 0.28), transparent 0 20%);
   opacity: 0.8;
+}
+
+@media (max-width: 1199px) {
+  .aion-window-chrome {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .aion-window-chrome-right {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
+  .aion-public-nav {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+  }
+
+  .aion-public-nav-links,
+  .aion-public-nav-actions {
+    justify-content: flex-start;
+  }
+
+  .aion-public-hero,
+  .aion-public-story-grid,
+  .aion-public-feature-strip,
+  .aion-public-trust-band,
+  .aion-public-hero-notes {
+    grid-template-columns: 1fr;
+  }
+
+  .aion-public-hero-title {
+    max-width: 14ch;
+  }
+}
+
+@media (max-width: 899px) {
+  .aion-window-chrome {
+    padding: 0.82rem 1rem;
+  }
+
+  .aion-window-chrome-meta span {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.64rem;
+  }
+
+  .aion-public-window-body,
+  .aion-shell-window-body {
+    padding: 1rem;
+  }
+
+  .aion-public-hero-copy,
+  .aion-public-auth-panel {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .aion-public-hero-title {
+    font-size: clamp(2.8rem, 11vw, 4rem);
+  }
+
+  .aion-public-nav-button,
+  .aion-public-cta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .aion-public-nav-actions,
+  .aion-public-cta-row {
+    width: 100%;
+  }
 }
 
 .aion-wordmark-mobile-badge {

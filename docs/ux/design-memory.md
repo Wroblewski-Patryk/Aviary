@@ -41,6 +41,14 @@
   When the central dashboard hero still feels too generic, add one dedicated
   scenic atmosphere asset behind the figure and use light connective ornament
   before adding more standalone cards.
+- Window-chrome shell framing:
+  Use one premium browser-like top chrome to frame both the public landing and
+  the authenticated shell so flagship routes feel like composed product
+  environments, not bare app containers.
+- Landing-first public entry:
+  Keep authentication as one conversion module inside a broader trust-led
+  landing story with hero, embodied motif, feature strip, and trust closure
+  instead of making sign-in the whole page.
 - Integrated composer tray:
   Keep the main chat input, send control, and low-priority support actions
   inside one shared tray so the conversation footer reads like one premium

@@ -1,8 +1,30 @@
 # PROJECT_STATE
 
-Last updated: 2026-04-28
+Last updated: 2026-04-29
 
 ## Product Snapshot
+
+- 2026-04-29: `PRJ-776` started the first real implementation slice from the
+  layout/dashboard/public-home master audit:
+  - unauthenticated entry is no longer structured as a standalone auth page
+  - `web/src/App.tsx` now renders a landing-first public shell with:
+    - browser-like top chrome
+    - integrated public nav
+    - embodied hero stage
+    - feature strip
+    - integrated auth module
+    - trust closure band
+  - authenticated routes now render inside a reusable shared `WindowChrome`
+    frame before route-local content begins
+  - `docs/ux/design-memory.md` now records:
+    - window-chrome shell framing
+    - landing-first public entry
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - `git diff --check -- web/src/App.tsx web/src/index.css`
+  - the highest-value next lane is now narrower:
+    - dashboard structural convergence on top of the new parent frame
+    - then browser screenshot parity for public home and dashboard
 
 - 2026-04-28: `PRJ-775` completed a planning-grade master audit for the next
   major flagship lane:

@@ -1297,6 +1297,28 @@ function AviaryWordmark({ className = "", compact = false }: { className?: strin
   );
 }
 
+function WindowChrome({
+  title,
+  rightSlot,
+  className = "",
+}: {
+  title: string;
+  rightSlot?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`aion-window-chrome ${className}`.trim()}>
+      <div className="aion-window-chrome-lights" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="aion-window-chrome-title">{title}</div>
+      <div className="aion-window-chrome-right">{rightSlot}</div>
+    </div>
+  );
+}
+
 function ChatFlowStage({
   label,
   title,
@@ -2162,6 +2184,83 @@ export default function App() {
     { title: "Learned preference captured", when: "Yesterday" },
   ];
   const personalityPreviewTabs = ["Overview", "Knowledge", "Skills", "Memories", "Settings"];
+  const publicNavLabels = {
+    en: ["Features", "How it works", "Privacy", "Resources"],
+    pl: ["Funkcje", "Jak to dziala", "Prywatnosc", "Zasoby"],
+    de: ["Funktionen", "So funktioniert es", "Privatsphare", "Ressourcen"],
+  } satisfies Record<ResolvedUiLanguageCode, string[]>;
+  const publicHeroCards = {
+    en: [
+      { title: "Memory", body: "Everything meaningful stays visible." },
+      { title: "Cognition", body: "Understand context before acting." },
+      { title: "Planning", body: "Turn goals into calm next steps." },
+      { title: "Reflection", body: "Learn and evolve over time." },
+    ],
+    pl: [
+      { title: "Pamiec", body: "To, co wazne, pozostaje widoczne." },
+      { title: "Poznanie", body: "Najpierw zrozum kontekst, potem dzialaj." },
+      { title: "Planowanie", body: "Zamieniaj cele w spokojne kolejne kroki." },
+      { title: "Refleksja", body: "Ucz sie i rozwijaj w czasie." },
+    ],
+    de: [
+      { title: "Gedachtnis", body: "Wichtiges bleibt sichtbar." },
+      { title: "Kognition", body: "Kontext verstehen, bevor gehandelt wird." },
+      { title: "Planung", body: "Ziele in ruhige nachste Schritte uberfuhren." },
+      { title: "Reflexion", body: "Lernen und sich mit der Zeit weiterentwickeln." },
+    ],
+  } satisfies Record<ResolvedUiLanguageCode, Array<{ title: string; body: string }>>;
+  const publicFeaturePillars = {
+    en: [
+      { title: "Deep understanding", body: "Understands your current state, values, and pace." },
+      { title: "Memory that grows", body: "Important insights are remembered and reused." },
+      { title: "Clarity and focus", body: "Helps you decide calmly and move with intention." },
+      { title: "Plans and execution", body: "Turns ideas into structure and next actions." },
+      { title: "Companion for life", body: "Present in your journey of work and growth." },
+    ],
+    pl: [
+      { title: "Glebokie zrozumienie", body: "Rozumie Twoj stan, wartosci i rytm." },
+      { title: "Pamiec, ktora rosnie", body: "Wazne wnioski sa zapamietywane i wracaja." },
+      { title: "Jasnosc i skupienie", body: "Pomaga wybierac spokojnie i dzialac z intencja." },
+      { title: "Plan i wykonanie", body: "Zamienia pomysly w strukture i kolejne kroki." },
+      { title: "Towarzysz na co dzien", body: "Obecny w pracy, refleksji i rozwoju." },
+    ],
+    de: [
+      { title: "Tiefes Verstehen", body: "Versteht deinen Zustand, deine Werte und dein Tempo." },
+      { title: "Wachsende Erinnerung", body: "Wichtige Einsichten bleiben verfugbar." },
+      { title: "Klarheit und Fokus", body: "Hilft ruhig zu entscheiden und bewusst zu handeln." },
+      { title: "Plan und Ausfuhrung", body: "Macht aus Ideen Struktur und nachste Schritte." },
+      { title: "Begleiter im Alltag", body: "Prasent in Arbeit, Reflexion und Wachstum." },
+    ],
+  } satisfies Record<ResolvedUiLanguageCode, Array<{ title: string; body: string }>>;
+  const publicTrustBandItems = {
+    en: ["Privacy first", "End-to-end encryption", "Local-first storage", "You own your data"],
+    pl: ["Prywatnosc przede wszystkim", "Szyfrowanie end-to-end", "Przechowywanie local-first", "To Ty kontrolujesz dane"],
+    de: ["Privacy first", "Ende-zu-Ende-Verschlusselung", "Local-first Speicher", "Deine Daten gehoren dir"],
+  } satisfies Record<ResolvedUiLanguageCode, string[]>;
+  const publicProofLine = {
+    en: "Trusted by thoughtful people worldwide",
+    pl: "Zaufany przez uwaznych ludzi na calym swiecie",
+    de: "Vertraut von achtsamen Menschen weltweit",
+  } satisfies Record<ResolvedUiLanguageCode, string>;
+  const publicQuote = {
+    en: "Powerful by design. Personal by nature.",
+    pl: "Mocny z zalozenia. Osobisty z natury.",
+    de: "Kraftvoll im Design. Personlich im Wesen.",
+  } satisfies Record<ResolvedUiLanguageCode, string>;
+  const publicSubquote = {
+    en: "Aviary helps hold memory, plan with calm, and move with meaningful intention.",
+    pl: "Aviary pomaga trzymac pamiec, planowac spokojnie i poruszac sie z intencja.",
+    de: "Aviary hilft, Erinnerung zu halten, ruhig zu planen und mit Intention voranzugehen.",
+  } satisfies Record<ResolvedUiLanguageCode, string>;
+  const publicHomeSurface = {
+    nav: publicNavLabels[resolvedUiLanguage],
+    heroCards: publicHeroCards[resolvedUiLanguage],
+    pillars: publicFeaturePillars[resolvedUiLanguage],
+    trustBand: publicTrustBandItems[resolvedUiLanguage],
+    proofLine: publicProofLine[resolvedUiLanguage],
+    quote: publicQuote[resolvedUiLanguage],
+    subquote: publicSubquote[resolvedUiLanguage],
+  };
 
   function changeRoute(nextRoute: RoutePath) {
     startTransition(() => {
@@ -2439,168 +2538,244 @@ export default function App() {
 
   if (!me) {
     return (
-      <div className="min-h-screen bg-base-100 text-base-content">
-        <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-5 py-6 sm:px-6 md:px-8 md:py-8 xl:px-10">
-          <header className="mb-8 overflow-hidden rounded-[2rem] border border-base-300 bg-hero-glow shadow-halo">
-            <div className="grid gap-6 px-5 py-6 md:gap-8 md:px-8 md:py-8 lg:grid-cols-[1.2fr_0.9fr] xl:px-10">
-              <div className="space-y-5">
-                <p className="text-sm uppercase tracking-[0.24em] text-base-900">{copy.auth.badge}</p>
-                <div className="space-y-3">
-                  <h1 className="font-display text-4xl leading-tight text-base-900 md:text-6xl">
-                    {copy.auth.heroTitle}
-                  </h1>
-                  <p className="max-w-2xl text-base leading-7 text-base-800 md:text-lg">
-                    {copy.auth.heroBody}
-                  </p>
+      <div className="aion-public-shell min-h-screen text-base-content">
+        <div className="mx-auto max-w-[112rem] px-4 py-4 sm:px-5 md:px-6 md:py-5 xl:px-7">
+          <section className="aion-public-window aion-panel overflow-hidden rounded-[2.35rem]">
+            <WindowChrome
+              title="aviary.luckysparrow.ch"
+              rightSlot={
+                <div className="aion-window-chrome-meta">
+                  <span>{publicHomeSurface.proofLine}</span>
+                  <span>{copy.auth.trustTitle}</span>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-3">
-                  {copy.auth.trustCards.map((card) => (
-                    <article key={card.title} className="rounded-[1.5rem] bg-base-100/75 p-4 backdrop-blur">
-                      <p className="font-display text-lg text-base-900">{card.title}</p>
-                      <p className="mt-2 text-sm leading-7 text-base-800">{card.body}</p>
+              }
+            />
+
+            <div className="aion-public-window-body">
+              <header className="aion-public-nav">
+                <AviaryWordmark compact />
+                <nav className="aion-public-nav-links" aria-label="Public navigation">
+                  {publicHomeSurface.nav.map((item) => (
+                    <a key={item} className="aion-public-nav-link" href="#aviary-home">
+                      {item}
+                    </a>
+                  ))}
+                </nav>
+                <div className="aion-public-nav-actions">
+                  <button
+                    className="aion-public-nav-button aion-public-nav-button-ghost"
+                    onClick={() => {
+                      setAuthMode("login");
+                      document.getElementById("aviary-auth")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }}
+                    type="button"
+                  >
+                    {copy.auth.tabsLogin}
+                  </button>
+                  <button
+                    className="aion-public-nav-button"
+                    onClick={() => {
+                      setAuthMode("register");
+                      document.getElementById("aviary-auth")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }}
+                    type="button"
+                  >
+                    {copy.auth.tabsRegister}
+                  </button>
+                </div>
+              </header>
+
+              <main className="aion-public-home" id="aviary-home">
+                <section className="aion-public-hero">
+                  <div className="aion-public-hero-copy">
+                    <p className="aion-public-kicker">{copy.auth.badge}</p>
+                    <h1 className="aion-public-hero-title">{publicHomeSurface.quote}</h1>
+                    <p className="aion-public-hero-body">{publicHomeSurface.subquote}</p>
+                    <div className="aion-public-cta-row">
+                      <button
+                        className="aion-public-cta aion-public-cta-primary"
+                        onClick={() => {
+                          setAuthMode("register");
+                          document.getElementById("aviary-auth")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }}
+                        type="button"
+                      >
+                        {copy.auth.createAccount}
+                      </button>
+                      <button
+                        className="aion-public-cta aion-public-cta-secondary"
+                        onClick={() => {
+                          setAuthMode("login");
+                          document.getElementById("aviary-auth")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }}
+                        type="button"
+                      >
+                        {copy.auth.enterWorkspace}
+                      </button>
+                    </div>
+                    <div className="aion-public-pillar-row">
+                      {publicHomeSurface.pillars.map((pillar) => (
+                        <span key={pillar.title} className="aion-public-pillar-pill">
+                          {pillar.title}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="aion-public-hero-stage">
+                    <MotifFigurePanel
+                      title={copy.auth.heroTitle}
+                      body={copy.auth.heroBody}
+                      highlights={publicHomeSurface.heroCards.map((card) => ({
+                        label: card.title,
+                        value: card.body,
+                      }))}
+                    />
+                    <div className="aion-public-hero-notes">
+                      {publicHomeSurface.heroCards.map((card, index) => (
+                        <article key={card.title} className="aion-public-hero-card">
+                          <span className="aion-public-hero-card-index">{`0${index + 1}`}</span>
+                          <div>
+                            <p className="aion-public-hero-card-title">{card.title}</p>
+                            <p className="aion-public-hero-card-body">{card.body}</p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+
+                <section className="aion-public-feature-strip">
+                  {publicHomeSurface.pillars.map((pillar) => (
+                    <article key={pillar.title} className="aion-public-feature-card">
+                      <p className="aion-public-feature-title">{pillar.title}</p>
+                      <p className="aion-public-feature-body">{pillar.body}</p>
                     </article>
                   ))}
-                </div>
-              </div>
+                </section>
 
-              <div className="grid gap-4 rounded-[1.5rem] border border-base-300 bg-base-100/80 p-4 backdrop-blur">
-                <div className="rounded-2xl bg-base-200 p-5">
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.auth.trustTitle}</p>
-                  <div className="mt-4 grid gap-3">
-                    {copy.auth.trustCards.map((card, index) => (
-                      <div key={card.title} className="rounded-[1.25rem] bg-base-100 px-4 py-4">
-                        <div className="flex items-start gap-3">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-base-900 font-display text-sm text-signal-gold">
-                            {index + 1}
-                          </span>
-                          <div>
-                            <p className="font-display text-xl text-base-900">{card.title}</p>
-                            <p className="mt-2 text-sm leading-7 text-base-800">{card.body}</p>
-                          </div>
-                        </div>
+                <section className="aion-public-story-grid">
+                  <section className="aion-public-auth-panel aion-panel-soft" id="aviary-auth">
+                    <div className="aion-public-auth-header">
+                      <div>
+                        <p className="aion-public-section-label">{copy.auth.sessionEntry}</p>
+                        <h2 className="font-display text-3xl text-base-900">
+                          {authMode === "login" ? copy.auth.login : copy.auth.register}
+                        </h2>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                      <div className="tabs tabs-boxed w-fit bg-base-100">
+                        <button
+                          className={`tab ${authMode === "login" ? "tab-active" : ""}`}
+                          onClick={() => setAuthMode("login")}
+                          type="button"
+                        >
+                          {copy.auth.tabsLogin}
+                        </button>
+                        <button
+                          className={`tab ${authMode === "register" ? "tab-active" : ""}`}
+                          onClick={() => setAuthMode("register")}
+                          type="button"
+                        >
+                          {copy.auth.tabsRegister}
+                        </button>
+                      </div>
+                    </div>
+
+                    <form className="space-y-4" onSubmit={(event) => void handleAuthSubmit(event)}>
+                      <label className="form-control w-full">
+                        <div className="label">
+                          <span className="label-text text-base-900">{copy.auth.email}</span>
+                        </div>
+                        <input
+                          className="input input-bordered w-full"
+                          type="email"
+                          value={authForm.email}
+                          onChange={(event) => setAuthForm((form) => ({ ...form, email: event.target.value }))}
+                          placeholder="you@example.com"
+                          required
+                        />
+                      </label>
+
+                      <label className="form-control w-full">
+                        <div className="label">
+                          <span className="label-text text-base-900">{copy.auth.password}</span>
+                        </div>
+                        <input
+                          className="input input-bordered w-full"
+                          type="password"
+                          value={authForm.password}
+                          onChange={(event) => setAuthForm((form) => ({ ...form, password: event.target.value }))}
+                          placeholder="At least 8 characters"
+                          required
+                        />
+                      </label>
+
+                      {authMode === "register" ? (
+                        <label className="form-control w-full">
+                          <div className="label">
+                            <span className="label-text text-base-900">{copy.auth.displayName}</span>
+                          </div>
+                          <input
+                            className="input input-bordered w-full"
+                            type="text"
+                            value={authForm.displayName}
+                            onChange={(event) => setAuthForm((form) => ({ ...form, displayName: event.target.value }))}
+                            placeholder="How the personality should address you"
+                          />
+                        </label>
+                      ) : null}
+
+                      <button className="btn btn-primary btn-block" disabled={authBusy} type="submit">
+                        {authBusy
+                          ? copy.common.loading
+                          : authMode === "login"
+                            ? copy.auth.enterWorkspace
+                            : copy.auth.createAccount}
+                      </button>
+                    </form>
+
+                    {errorBody ? (
+                      <div className="mt-4">
+                        <FeedbackBanner
+                          tone="error"
+                          title={copy.common.stateErrorTitle}
+                          body={errorBody}
+                          detail={errorDetail}
+                          detailLabel={copy.common.stateDetailLabel}
+                        />
+                      </div>
+                    ) : null}
+                  </section>
+
+                  <aside className="aion-public-proof-column">
+                    <article className="aion-panel-soft aion-public-quote-card rounded-[2rem] p-6">
+                      <p className="aion-public-section-label">{publicHomeSurface.proofLine}</p>
+                      <p className="aion-public-quote">{publicHomeSurface.quote}</p>
+                      <p className="aion-public-quote-body">{publicHomeSurface.subquote}</p>
+                    </article>
+
+                    <div className="grid gap-4">
+                      {copy.auth.trustCards.map((card) => (
+                        <article key={card.title} className="aion-panel-soft rounded-[1.7rem] p-5">
+                          <p className="aion-public-feature-title">{card.title}</p>
+                          <p className="mt-2 text-sm leading-7 text-base-800">{card.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  </aside>
+                </section>
+
+                <section className="aion-public-trust-band">
+                  {publicHomeSurface.trustBand.map((item) => (
+                    <article key={item} className="aion-public-trust-item">
+                      <span className="aion-public-trust-dot" aria-hidden="true" />
+                      <p>{item}</p>
+                    </article>
+                  ))}
+                </section>
+              </main>
             </div>
-          </header>
-
-          <main className="grid gap-5 md:gap-6 lg:grid-cols-[1.05fr_1.15fr]">
-            <section className="rounded-[2rem] border border-base-300 bg-base-200 p-6">
-              <div className="mb-6">
-                <div>
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.auth.sessionEntry}</p>
-                  <h2 className="font-display text-3xl text-base-900">
-                    {authMode === "login" ? copy.auth.login : copy.auth.register}
-                  </h2>
-                </div>
-              </div>
-
-              <div className="tabs tabs-boxed mb-5 w-fit bg-base-100">
-                <button
-                  className={`tab ${authMode === "login" ? "tab-active" : ""}`}
-                  onClick={() => setAuthMode("login")}
-                  type="button"
-                >
-                  {copy.auth.tabsLogin}
-                </button>
-                <button
-                  className={`tab ${authMode === "register" ? "tab-active" : ""}`}
-                  onClick={() => setAuthMode("register")}
-                  type="button"
-                >
-                  {copy.auth.tabsRegister}
-                </button>
-              </div>
-
-              <form className="space-y-4" onSubmit={(event) => void handleAuthSubmit(event)}>
-                <label className="form-control w-full">
-                    <div className="label">
-                    <span className="label-text text-base-900">{copy.auth.email}</span>
-                    </div>
-                  <input
-                    className="input input-bordered w-full"
-                    type="email"
-                    value={authForm.email}
-                    onChange={(event) => setAuthForm((form) => ({ ...form, email: event.target.value }))}
-                    placeholder="you@example.com"
-                    required
-                  />
-                </label>
-
-                <label className="form-control w-full">
-                    <div className="label">
-                    <span className="label-text text-base-900">{copy.auth.password}</span>
-                    </div>
-                  <input
-                    className="input input-bordered w-full"
-                    type="password"
-                    value={authForm.password}
-                    onChange={(event) => setAuthForm((form) => ({ ...form, password: event.target.value }))}
-                    placeholder="At least 8 characters"
-                    required
-                  />
-                </label>
-
-                {authMode === "register" ? (
-                  <label className="form-control w-full">
-                    <div className="label">
-                      <span className="label-text text-base-900">{copy.auth.displayName}</span>
-                    </div>
-                    <input
-                      className="input input-bordered w-full"
-                      type="text"
-                      value={authForm.displayName}
-                      onChange={(event) => setAuthForm((form) => ({ ...form, displayName: event.target.value }))}
-                      placeholder="How the personality should address you"
-                    />
-                  </label>
-                ) : null}
-
-                <button className="btn btn-primary btn-block" disabled={authBusy} type="submit">
-                  {authBusy ? copy.common.loading : authMode === "login" ? copy.auth.enterWorkspace : copy.auth.createAccount}
-                </button>
-              </form>
-
-              {errorBody ? (
-                <div className="mt-4">
-                  <FeedbackBanner
-                    tone="error"
-                    title={copy.common.stateErrorTitle}
-                    body={errorBody}
-                    detail={errorDetail}
-                    detailLabel={copy.common.stateDetailLabel}
-                  />
-                </div>
-              ) : null}
-            </section>
-
-            <section className="grid gap-4">
-              {[
-                {
-                  title: "Continue in one place",
-                  body: "Move from sign-in straight into chat, settings, tools, and personality context without a fragmented shell.",
-                },
-                {
-                  title: "Stay oriented",
-                  body: "The product keeps the main actions close so returning to Aviary feels lightweight instead of procedural.",
-                },
-                {
-                  title: "Keep ownership",
-                  body: "Your account remains yours: preferences are editable and runtime data can be reset later when needed.",
-                },
-              ].map((section) => (
-                <article
-                  key={section.title}
-                  className="rounded-[1.75rem] border border-base-300 bg-base-100 p-6 transition-transform duration-200 hover:-translate-y-1"
-                >
-                  <h2 className="mb-3 font-display text-2xl text-base-900">{section.title}</h2>
-                  <p className="text-sm leading-7 text-base-800">{section.body}</p>
-                </article>
-              ))}
-            </section>
-          </main>
+          </section>
         </div>
       </div>
     );
@@ -2609,6 +2784,20 @@ export default function App() {
   return (
     <div className="aion-shell min-h-screen text-base-content">
       <div className="mx-auto max-w-[112rem] px-4 pb-24 pt-4 sm:px-5 md:px-6 md:pb-8 md:pt-5 xl:px-7">
+        <section className="aion-shell-window aion-panel overflow-hidden rounded-[2.35rem]">
+          <WindowChrome
+            title={`aviary workspace / ${routeLabel(route, resolvedUiLanguage)}`}
+            rightSlot={
+              <div className="aion-window-chrome-meta">
+                <span>
+                  {copy.common.build} {BUILD_REVISION.slice(0, 12)}
+                </span>
+                <span>{currentUserLabel}</span>
+              </div>
+            }
+          />
+
+          <div className="aion-shell-window-body">
         <div className="aion-shell-frame grid gap-4 xl:grid-cols-[12.5rem_minmax(0,1fr)]">
           <aside className="aion-app-rail hidden xl:flex xl:min-h-[calc(100vh-3rem)] xl:flex-col">
             <div>
@@ -3924,6 +4113,8 @@ export default function App() {
             ) : null}
           </div>
         </div>
+          </div>
+        </section>
 
         {route !== "/chat" ? (
           <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-base-300 bg-base-100/95 px-3 py-3 backdrop-blur md:hidden">

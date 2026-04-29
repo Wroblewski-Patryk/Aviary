@@ -1,6 +1,31 @@
 # TASK_BOARD
 
-Last updated: 2026-04-28
+Last updated: 2026-04-29
+
+## Fresh Public Home And Parent Shell Frame Pass (2026-04-29)
+
+- `PRJ-776` is now IN_PROGRESS as the first execution slice from the
+  `PRJ-775` master audit:
+  - `.codex/tasks/PRJ-776-implement-public-home-and-authenticated-shell-frame-pass.md`
+- `web/src/App.tsx` now:
+  - converts the unauthenticated `!me` branch from auth-first to landing-first
+  - introduces a shared `WindowChrome` primitive
+  - wraps authenticated routes in a flagship framed shell
+- `web/src/index.css` now:
+  - adds the shared browser-like chrome treatment
+  - adds the new public-home layout system
+  - adds responsive support for the new public and parent shell framing
+- `docs/ux/design-memory.md` now records:
+  - window-chrome shell framing
+  - landing-first public entry
+- focused validation passed:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/App.tsx web/src/index.css`
+- highest-value remaining drift after this slice:
+  - dashboard still needs its dedicated structural convergence pass on top of
+    the new parent frame
+  - browser screenshot parity is still required before calling the shell or
+    landing final
 
 ## Fresh Layout, Public Home, Dashboard Master Audit (2026-04-28)
 
