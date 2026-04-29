@@ -1129,35 +1129,29 @@ function FlowRail({
 }
 
 function MotifFigurePanel({
-  title,
-  body,
   highlights,
 }: {
-  title: string;
-  body: string;
   highlights: Array<{ label: string; value: string }>;
 }) {
   return (
-    <div className="aion-panel aion-halo aion-motif-panel rounded-[2rem] p-5">
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center">
-        <div className="aion-figure">
-          <div className="aion-figure-grid" />
-        </div>
-        <div className="space-y-4">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.24em] text-base-800">Embodied cognition</p>
-            <h3 className="mt-2 font-display text-3xl text-base-900">{title}</h3>
-            <p className="mt-3 text-sm leading-7 text-base-800">{body}</p>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {highlights.map((item) => (
-              <div key={item.label} className="aion-chip rounded-[1.3rem] px-4 py-3">
-                <p className="text-[11px] uppercase tracking-[0.22em] text-base-800">{item.label}</p>
-                <p className="mt-2 text-sm font-semibold leading-6 text-base-900">{item.value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+    <div className="aion-panel aion-halo aion-motif-panel aion-landing-motif-panel rounded-[2.15rem] p-4 md:p-5">
+      <div className="aion-landing-motif-stage">
+        <div className="aion-landing-motif-orbit" aria-hidden="true" />
+        <img
+          alt=""
+          aria-hidden="true"
+          className="aion-landing-motif-art"
+          src="/aion-personality-figure-reference-v1.png"
+        />
+        {highlights.map((item, index) => (
+          <article
+            key={item.label}
+            className={`aion-landing-motif-note aion-landing-motif-note-${index + 1}`}
+          >
+            <p className="aion-landing-motif-note-label">{item.label}</p>
+            <p className="aion-landing-motif-note-value">{item.value}</p>
+          </article>
+        ))}
       </div>
     </div>
   );
@@ -2630,7 +2624,6 @@ export default function App() {
               <main className="aion-public-home" id="aviary-home">
                 <section className="aion-public-hero">
                   <div className="aion-public-hero-copy">
-                    <p className="aion-public-kicker">{copy.auth.badge}</p>
                     <h1 className="aion-public-hero-title">{publicHomeSurface.quote}</h1>
                     <p className="aion-public-hero-body">{publicHomeSurface.subquote}</p>
                     <div className="aion-public-cta-row">
@@ -2666,34 +2659,38 @@ export default function App() {
 
                   <div className="aion-public-hero-stage">
                     <MotifFigurePanel
-                      title={copy.auth.heroTitle}
-                      body={copy.auth.heroBody}
                       highlights={publicHomeSurface.heroCards.map((card) => ({
                         label: card.title,
                         value: card.body,
                       }))}
                     />
-                    <div className="aion-public-hero-notes">
-                      {publicHomeSurface.heroCards.map((card, index) => (
-                        <article key={card.title} className="aion-public-hero-card">
-                          <span className="aion-public-hero-card-index">{`0${index + 1}`}</span>
-                          <div>
-                            <p className="aion-public-hero-card-title">{card.title}</p>
-                            <p className="aion-public-hero-card-body">{card.body}</p>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
                   </div>
                 </section>
 
-                <section className="aion-public-feature-strip">
-                  {publicHomeSurface.pillars.map((pillar) => (
-                    <article key={pillar.title} className="aion-public-feature-card">
-                      <p className="aion-public-feature-title">{pillar.title}</p>
-                      <p className="aion-public-feature-body">{pillar.body}</p>
-                    </article>
-                  ))}
+                <section className="aion-public-feature-bridge aion-panel-soft rounded-[2rem] p-4 md:p-5">
+                  <div className="aion-public-feature-strip">
+                    {publicHomeSurface.pillars.map((pillar) => (
+                      <article key={pillar.title} className="aion-public-feature-card">
+                        <p className="aion-public-feature-title">{pillar.title}</p>
+                        <p className="aion-public-feature-body">{pillar.body}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="aion-public-proof-bridge">
+                    <div className="aion-public-proof-bridge-copy">
+                      <p className="aion-public-section-label">{publicHomeSurface.proofLine}</p>
+                      <p className="aion-public-proof-bridge-body">
+                        {publicHomeSurface.subquote}
+                      </p>
+                    </div>
+                    <div className="aion-public-proof-bridge-list">
+                      {publicHomeSurface.trustBand.map((item) => (
+                        <span key={item} className="aion-public-proof-bridge-pill">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </section>
 
                 <section className="aion-public-story-grid">

@@ -4,6 +4,28 @@ Last updated: 2026-04-29
 
 ## Product Snapshot
 
+- 2026-04-29: `PRJ-784` pushed the public landing first viewport materially
+  closer to the canonical landing:
+  - `web/src/App.tsx` now removes the extra hero kicker, uses a real embodied
+    figure stage in the landing hero, and integrates the cognition cards
+    directly into that stage
+  - `web/src/index.css` now:
+    - rebalances the hero grid toward a stronger right-side scene
+    - adds landing-specific figure-stage styling based on the approved figure
+      asset already in `web/public`
+    - turns the first strip under the hero into a connected bridge band with a
+      quieter proof/trust closure
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-784-public-home-first-viewport-canonical-pass.md`
+  - screenshot evidence captured:
+    - `.codex/artifacts/local-public-home-hero-pass-v2-2026-04-29.png`
+  - the highest-value remaining landing drift is now:
+    - a closer canonical bust-scale / atmosphere relationship in the hero
+    - a calmer editorial treatment of the lower public story grid
+  - once the public-home story grid is steadier, the next biggest route-level
+    opportunity remains the dashboard structural pass
+
 - 2026-04-29: `PRJ-783` completed the communication-boundary architecture
   repair with historical backfill and health visibility:
   - `PRJ-778` made new turns model communication boundaries correctly

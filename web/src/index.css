@@ -157,16 +157,16 @@ body {
 
 .aion-public-hero {
   display: grid;
-  gap: 1.5rem;
+  gap: 1.35rem;
   align-items: center;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1.08fr);
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.16fr);
 }
 
 .aion-public-hero-copy {
   display: grid;
-  gap: 1rem;
+  gap: 1.15rem;
   align-content: start;
-  padding: 0.6rem 0.4rem 0.6rem 0.1rem;
+  padding: 0.4rem 0.35rem 0.3rem 0.1rem;
 }
 
 .aion-public-kicker,
@@ -181,18 +181,18 @@ body {
 
 .aion-public-hero-title {
   margin: 0;
-  max-width: 12ch;
+  max-width: 8ch;
   font-family: var(--font-display, ui-serif);
-  font-size: clamp(3.4rem, 4vw, 5.75rem);
-  line-height: 0.92;
+  font-size: clamp(3.6rem, 4.4vw, 6rem);
+  line-height: 0.9;
   color: var(--aion-ink);
 }
 
 .aion-public-hero-body {
   margin: 0;
-  max-width: 37rem;
+  max-width: 31rem;
   font-size: 1rem;
-  line-height: 1.95;
+  line-height: 1.85;
   color: var(--aion-muted);
 }
 
@@ -216,51 +216,21 @@ body {
 }
 
 .aion-public-hero-stage {
-  display: grid;
-  gap: 1rem;
+  position: relative;
 }
 
-.aion-public-hero-notes {
-  display: grid;
-  gap: 0.85rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.aion-public-hero-card {
-  display: grid;
-  gap: 0.75rem;
-  align-items: start;
-  grid-template-columns: auto minmax(0, 1fr);
-  border: 1px solid rgba(88, 67, 52, 0.1);
-  border-radius: 1.45rem;
-  background: rgba(255, 251, 245, 0.82);
-  padding: 1rem;
-  box-shadow: 0 16px 28px rgba(84, 66, 52, 0.05);
-}
-
-.aion-public-hero-card-index {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 999px;
-  background: rgba(196, 147, 89, 0.14);
-  color: rgba(140, 94, 40, 0.86);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.aion-public-hero-card-title,
-.aion-public-feature-title {
+.aion-public-feature-title,
+.aion-landing-motif-note-value,
+.aion-public-proof-bridge-body {
   margin: 0;
-  font-family: var(--font-display, ui-serif);
-  font-size: 1.36rem;
   color: var(--aion-ink);
 }
 
-.aion-public-hero-card-body,
+.aion-public-feature-title {
+  font-family: var(--font-display, ui-serif);
+  font-size: 1.36rem;
+}
+
 .aion-public-feature-body,
 .aion-public-quote-body {
   margin: 0.35rem 0 0;
@@ -269,18 +239,67 @@ body {
   color: var(--aion-muted);
 }
 
+.aion-public-feature-bridge {
+  display: grid;
+  gap: 1rem;
+  padding-top: 0.65rem;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 254, 251, 0.88), transparent 0 28%),
+    linear-gradient(180deg, rgba(255, 250, 243, 0.84), rgba(245, 236, 224, 0.72));
+}
+
 .aion-public-feature-strip {
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .aion-public-feature-card {
   border: 1px solid rgba(88, 67, 52, 0.1);
-  border-radius: 1.7rem;
-  background: rgba(255, 250, 243, 0.8);
-  padding: 1.3rem 1.4rem;
-  box-shadow: 0 14px 30px rgba(84, 66, 52, 0.05);
+  border-radius: 1.5rem;
+  background: rgba(255, 251, 246, 0.78);
+  padding: 1.15rem 1.1rem;
+  box-shadow: 0 12px 22px rgba(84, 66, 52, 0.04);
+}
+
+.aion-public-proof-bridge {
+  display: grid;
+  gap: 0.9rem;
+  align-items: center;
+  border-top: 1px solid rgba(88, 67, 52, 0.08);
+  padding-top: 1rem;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+}
+
+.aion-public-proof-bridge-copy {
+  max-width: 30rem;
+}
+
+.aion-public-proof-bridge-body {
+  margin-top: 0.55rem;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--aion-muted);
+}
+
+.aion-public-proof-bridge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: flex-end;
+}
+
+.aion-public-proof-bridge-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(88, 67, 52, 0.1);
+  background: rgba(255, 251, 245, 0.8);
+  padding: 0.55rem 0.95rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: rgba(88, 67, 52, 0.8);
 }
 
 .aion-public-story-grid {
@@ -311,6 +330,86 @@ body {
 
 .aion-public-quote-card {
   min-height: 15rem;
+}
+
+.aion-landing-motif-panel {
+  padding: 0;
+  background:
+    radial-gradient(circle at 54% 20%, rgba(255, 250, 242, 0.94), transparent 0 42%),
+    linear-gradient(180deg, rgba(255, 251, 245, 0.88), rgba(246, 238, 226, 0.76));
+}
+
+.aion-landing-motif-stage {
+  position: relative;
+  min-height: 30rem;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.aion-landing-motif-orbit {
+  position: absolute;
+  inset: 8% 11% 12% 10%;
+  border-radius: 50%;
+  border: 1px solid rgba(196, 147, 89, 0.12);
+  box-shadow:
+    0 0 0 1.4rem rgba(255, 248, 236, 0.42),
+    0 0 0 4.5rem rgba(255, 248, 236, 0.16);
+  opacity: 0.9;
+}
+
+.aion-landing-motif-art {
+  position: absolute;
+  right: 15%;
+  bottom: -1%;
+  width: min(22rem, 56%);
+  max-width: none;
+  filter: drop-shadow(0 26px 40px rgba(84, 66, 52, 0.12));
+}
+
+.aion-landing-motif-note {
+  position: absolute;
+  display: grid;
+  gap: 0.35rem;
+  max-width: 12.5rem;
+  border: 1px solid rgba(88, 67, 52, 0.09);
+  border-radius: 1.4rem;
+  background: rgba(255, 252, 247, 0.88);
+  padding: 0.9rem 1rem;
+  box-shadow: 0 14px 26px rgba(84, 66, 52, 0.05);
+}
+
+.aion-landing-motif-note-label {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(111, 93, 77, 0.72);
+}
+
+.aion-landing-motif-note-value {
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.aion-landing-motif-note-1 {
+  left: 4.5%;
+  top: 20%;
+}
+
+.aion-landing-motif-note-2 {
+  left: 5.8%;
+  top: 43%;
+}
+
+.aion-landing-motif-note-3 {
+  right: 4.5%;
+  top: 18%;
+}
+
+.aion-landing-motif-note-4 {
+  right: 5.3%;
+  top: 41%;
 }
 
 .aion-public-quote {
@@ -416,12 +515,16 @@ body {
   .aion-public-story-grid,
   .aion-public-feature-strip,
   .aion-public-trust-band,
-  .aion-public-hero-notes {
+  .aion-public-proof-bridge {
     grid-template-columns: 1fr;
   }
 
   .aion-public-hero-title {
-    max-width: 14ch;
+    max-width: 9ch;
+  }
+
+  .aion-public-proof-bridge-list {
+    justify-content: flex-start;
   }
 }
 
@@ -450,6 +553,58 @@ body {
   .aion-public-nav-actions,
   .aion-public-cta-row {
     width: 100%;
+  }
+
+  .aion-public-feature-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .aion-landing-motif-stage {
+    min-height: 24rem;
+  }
+
+  .aion-landing-motif-art {
+    right: 50%;
+    bottom: -3%;
+    width: min(24rem, 94%);
+    transform: translateX(50%);
+  }
+
+  .aion-landing-motif-orbit {
+    inset: 14% 18% 12%;
+  }
+
+  .aion-landing-motif-note {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    max-width: none;
+  }
+
+  .aion-landing-motif-stage {
+    display: grid;
+    align-content: end;
+    gap: 0.8rem;
+    padding: 1rem;
+  }
+
+  .aion-landing-motif-note-1,
+  .aion-landing-motif-note-2,
+  .aion-landing-motif-note-3,
+  .aion-landing-motif-note-4 {
+    width: min(14rem, 78%);
+  }
+
+  .aion-landing-motif-note-1,
+  .aion-landing-motif-note-2 {
+    justify-self: start;
+  }
+
+  .aion-landing-motif-note-3,
+  .aion-landing-motif-note-4 {
+    justify-self: end;
   }
 }
 
