@@ -2,6 +2,28 @@
 
 Last updated: 2026-04-29
 
+## Fresh Sidebar Pixel-Close Refinement Pass (2026-04-29)
+
+- `PRJ-800B` is now DONE as the next execution slice after shell-frame
+  calming:
+  - `.codex/tasks/PRJ-800B-sidebar-pixel-close-refinement-pass.md`
+- purpose:
+  - move the authenticated desktop rail closer to the frozen canonical sidebar
+    through tighter brand, nav, and support-card anatomy
+- implemented:
+  - the sidebar brand lockup is now more delicate and left-anchored
+  - nav rows are calmer, denser, and closer to the canonical active-pill
+    treatment
+  - the health, identity, and quote cards now read more like one coherent
+    support family and less like appended widgets
+- focused validation passed:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/App.tsx web/src/index.css .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .codex/tasks/PRJ-800B-sidebar-pixel-close-refinement-pass.md`
+- highest-value remaining drift after this slice:
+  - deploy screenshot tuning for the sidebar
+  - structural convergence of `public home`
+  - later dashboard composition pass on top of the improved shell and rail
+
 ## Fresh Authenticated Shell Frame Exactness Pass (2026-04-29)
 
 - `PRJ-800A` is now DONE as the first execution slice from the master parity

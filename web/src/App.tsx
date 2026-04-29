@@ -1366,7 +1366,10 @@ function SidebarBrandBlock() {
   return (
     <div className="aion-sidebar-brand">
       <AviaryWordmark compact className="aion-sidebar-brand-lockup" />
-      <p className="aion-sidebar-brand-subtitle">Your conscious companion</p>
+      <p className="aion-sidebar-brand-subtitle">
+        <span>Your conscious</span>
+        <span>companion</span>
+      </p>
     </div>
   );
 }

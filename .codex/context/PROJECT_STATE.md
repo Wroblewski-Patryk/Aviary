@@ -4,6 +4,31 @@ Last updated: 2026-04-29
 
 ## Product Snapshot
 
+- 2026-04-29: `PRJ-800B` completed the next canonical desktop-sidebar
+  refinement pass:
+  - `web/src/App.tsx` now:
+    - left-anchors the sidebar subtitle block more like the frozen canonical
+      reference
+    - keeps the quote closure structure aligned with a quieter editorial end
+      stop
+  - `web/src/index.css` now:
+    - narrows and softens the rail again
+    - refines brand lockup spacing and subtitle anchoring
+    - calms nav row height, icon posture, and active-pill material
+    - rebalances the health, identity, and quote cards toward a more coherent
+      canonical support stack
+  - result:
+    - the authenticated sidebar is now materially closer to the canonical rail
+      at a glance
+    - the shell is in a stronger place for the next `public home` and later
+      `dashboard` convergence passes
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .codex/tasks/PRJ-800B-sidebar-pixel-close-refinement-pass.md`
+  - highest-value next steps:
+    - deploy screenshot tuning for the sidebar
+    - then public-home structural convergence on the stabilized shell
+
 - 2026-04-29: `PRJ-800A` completed the first execution slice from the
   `layout + sidebar + home + dashboard` canonical parity ledger:
   - `web/src/App.tsx` now:
