@@ -1967,7 +1967,7 @@ export default function App() {
   ];
   const dashboardCurrentPhase = {
     title: "Reflect",
-    body: "Generating insight from recent experiences, active goals, and the latest conversation context.",
+    body: "Generating insight from recent experiences and the goals that matter now.",
   };
   const dashboardFigureNotes = [
     {
@@ -3096,10 +3096,10 @@ export default function App() {
                     <div>
                       <p className="text-xs uppercase tracking-[0.24em] text-[#8d785f]">Good morning</p>
                       <h2 className="mt-2 font-display text-[2.55rem] leading-[1.08] text-base-900">
-                        Welcome back, {currentUserLabel}
+                        Good morning, {currentUserLabel}
                       </h2>
                       <p className="mt-2 max-w-xl text-sm leading-7 text-base-800">
-                        Here is what feels most alive in your Aviary workspace today.
+                        Here is what is quietly ready to move in your Aviary workspace today.
                       </p>
                     </div>
                   </div>
@@ -3192,7 +3192,7 @@ export default function App() {
                     <div className="mb-4 flex items-center justify-between gap-3">
                       <div>
                         <p className="text-sm uppercase tracking-[0.22em] text-base-800">Recent activity</p>
-                        <h4 className="mt-2 font-display text-xl text-base-900">Recent Activity</h4>
+                        <h4 className="mt-2 font-display text-xl text-base-900">What just changed</h4>
                       </div>
                       <button className="aion-dashboard-link" type="button">
                         View all
@@ -3219,7 +3219,7 @@ export default function App() {
                       Serve with purpose.
                     </p>
                     <p className="mt-3 text-sm leading-7 text-base-800">
-                      Let the next action feel coherent with your memory, current goals, and inner rhythm.
+                      Let the next action stay coherent with memory, active goals, and inner rhythm.
                     </p>
                   </section>
                 </aside>
@@ -3262,7 +3262,7 @@ export default function App() {
                 </div>
               </section>
 
-              <section className="aion-dashboard-lower-grid aion-dashboard-lower-grid-condensed grid gap-3 xl:grid-cols-[minmax(0,1.08fr)_minmax(0,0.88fr)_minmax(0,0.82fr)_minmax(0,0.92fr)]">
+              <section className="aion-dashboard-lower-grid aion-dashboard-lower-grid-condensed grid gap-3 xl:grid-cols-[minmax(0,1.04fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_minmax(0,0.9fr)]">
                 <article className="aion-panel-soft aion-dashboard-card aion-dashboard-card-primary">
                   <div className="flex items-center justify-between gap-3">
                     <div>
@@ -3376,7 +3376,7 @@ export default function App() {
                           with steadier intention.
                         </p>
                         <p className="mt-3 max-w-md text-sm leading-7 text-base-800">
-                          The shell now holds your goals, memory, and reflections in one calmer path.
+                          Goals, memory, and reflection now hold together in one calmer path.
                         </p>
                         <button className="aion-dashboard-action-button mt-5" type="button">
                           See full report

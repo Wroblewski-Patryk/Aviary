@@ -4,6 +4,29 @@ Last updated: 2026-04-30
 
 ## Product Snapshot
 
+- 2026-04-30: `PRJ-800F` continued with a tighter dashboard composition pass:
+  - `web/src/App.tsx` now:
+    - calms the dashboard hero lead copy
+    - makes the recent-activity panel heading more editorial
+    - shortens the intention and weekly-summary supporting copy slightly
+  - `web/src/index.css` now:
+    - widens the figure stage relative to side cards
+    - calms signal-card density and note-card scale
+    - reduces editorial-rail and lower-closure heaviness through tighter spacing and proportions
+  - result so far:
+    - the dashboard should now read closer to one flagship tableau and less
+      like premium cards stacked around a figure
+    - deploy-side screenshot proof is still required for this exact continuation
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+  - parity evidence used:
+    - `docs/ux/assets/aion-dashboard-canonical-reference-v2.png`
+    - `.codex/artifacts/production-audit-2026-04-26/dashboard-desktop.png`
+  - highest-value next steps:
+    - inspect deployed `/dashboard` against the canonical screen
+    - close `PRJ-800F` if the remaining drift is only micro-level, otherwise do one last targeted pass
+
 - 2026-04-30: `PRJ-800L` started the next public-home lower-story and auth-priority pass:
   - `web/src/App.tsx` now:
     - moves the trust band directly below the public bridge

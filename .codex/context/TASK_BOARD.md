@@ -2,6 +2,30 @@
 
 Last updated: 2026-04-30
 
+## Fresh Dashboard Hero And Rail Tightening Continuation (2026-04-30)
+
+- `PRJ-800F` remains IN_PROGRESS as the current dashboard parity lane:
+  - `.codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md`
+- purpose:
+  - keep pushing the authenticated dashboard toward the canonical flagship
+    tableau after `home` became calmer again
+- implemented in this continuation:
+  - increased center-stage authority through a wider figure column and calmer
+    signal-card density
+  - softened the editorial rail by shrinking row/token weight and tightening
+    `guidance / recent / intention` cadence
+  - compressed the lower dashboard closure so it reads less like stacked cards
+    and more like one panoramic ending
+- focused validation passed:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+- parity evidence:
+  - `docs/ux/assets/aion-dashboard-canonical-reference-v2.png`
+  - `.codex/artifacts/production-audit-2026-04-26/dashboard-desktop.png`
+- remaining work before DONE:
+  - deploy-side screenshot proof for the exact tightened dashboard slice
+  - then decide whether `dashboard` is finally ready for closure or needs one last micro-pass
+
 ## Fresh Public-Home Lower Story And Auth Priority Pass (2026-04-30)
 
 - `PRJ-800L` is now IN_PROGRESS as the next landing refinement slice:

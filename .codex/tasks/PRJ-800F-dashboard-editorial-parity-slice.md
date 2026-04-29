@@ -210,7 +210,8 @@ paths, placeholders, fake data, and temporary fixes are forbidden.
   - authenticated screenshot parity is still pending and must happen after deploy
 - Next steps:
   - compare the deployed dashboard to `docs/ux/assets/aion-dashboard-canonical-reference-v2.png`
-  - use that evidence for the next micro-tuning loop
+  - verify whether the latest hero-dominance, rail-calmness, and lower-closure compaction pass is enough to close `PRJ-800F`
 - Decisions made:
   - kept the existing dashboard information architecture and improved the
     composition through proportion and material tuning only
+  - continued tightening the same dashboard task instead of inventing a second dashboard route structure
