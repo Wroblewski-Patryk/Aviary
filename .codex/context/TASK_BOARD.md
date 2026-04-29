@@ -2,9 +2,33 @@
 
 Last updated: 2026-04-29
 
+## Fresh Public-Home First Viewport Live Closure Pass (2026-04-29)
+
+- `PRJ-800J` is now IN_PROGRESS as the next viewport-only landing refinement:
+  - `.codex/tasks/PRJ-800J-public-home-first-viewport-live-closure-pass.md`
+- purpose:
+  - close the next visible gaps in the first landing viewport after live proof
+    from `PRJ-800I`
+- implemented in this slice:
+  - reduced headline dominance again through proportion tuning
+  - increased persona-stage authority and pushed the shared figure closer to a
+    central scenic read
+  - tightened the bridge band so it ends the hero more cleanly and delays the
+    lower auth surface from entering the first read
+- focused validation passed:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/index.css .codex/tasks/PRJ-800I-public-home-live-hero-bridge-parity-pass.md .codex/tasks/PRJ-800J-public-home-first-viewport-live-closure-pass.md`
+- parity evidence:
+  - `.codex/artifacts/prod-login-live-after-prj800i-wait.png`
+  - `.codex/artifacts/local-login-after-prj800j.png`
+  - `docs/ux/assets/aion-landing-canonical-reference-v1.png`
+- remaining work before DONE:
+  - deploy-side confirmation for this exact slice
+  - later lower-story/auth-priority tuning if live evidence still shows drift
+
 ## Fresh Public-Home Live Hero And Bridge Parity Pass (2026-04-29)
 
-- `PRJ-800I` is now IN_PROGRESS as the next live-driven landing refinement:
+- `PRJ-800I` is now DONE as the previous live-driven landing refinement:
   - `.codex/tasks/PRJ-800I-public-home-live-hero-bridge-parity-pass.md`
 - purpose:
   - reduce remaining first-viewport drift after the landing-first entry fix by
@@ -22,9 +46,9 @@ Last updated: 2026-04-29
 - focused validation passed:
   - `Push-Location .\web; npm run build; Pop-Location`
   - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-800I-public-home-live-hero-bridge-parity-pass.md`
-- remaining work before DONE:
-  - deploy-side screenshot proof for `/` and `/login`
-  - one more micro-pass if live evidence still shows hero or bridge-band drift
+- closed with parity evidence:
+  - `.codex/artifacts/prod-login-live-after-prj800i-wait.png`
+  - the next remaining drift is intentionally carried forward into `PRJ-800J`
 
 ## Fresh Public Entry Landing-First Fix (2026-04-29)
 

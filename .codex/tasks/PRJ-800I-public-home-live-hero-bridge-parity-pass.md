@@ -5,7 +5,7 @@
 - Title: Public home live hero and bridge parity pass
 - Task Type: design
 - Current Stage: verification
-- Status: IN_PROGRESS
+- Status: DONE
 - Owner: Frontend Builder
 - Depends on: PRJ-800G, PRJ-800H
 - Priority: P1
@@ -73,14 +73,14 @@ systems or route-local inventions.
 - stay within the declared current stage unless explicit approval changes it
 
 ## Definition of Done
-- [ ] Public-home hero hierarchy is calmer and closer to canonical rhythm.
-- [ ] Persona stage and bridge band drift are reduced through code, not notes.
-- [ ] Validation and context updates match the changed scope.
+- [x] Public-home hero hierarchy is calmer and closer to canonical rhythm.
+- [x] Persona stage and bridge band drift are reduced through code, not notes.
+- [x] Validation and context updates match the changed scope.
 
 ## Stage Exit Criteria
-- [ ] The output matches the declared `Current Stage`.
-- [ ] Work from later stages was not mixed in without explicit approval.
-- [ ] Risks and assumptions for this stage are stated clearly.
+- [x] The output matches the declared `Current Stage`.
+- [x] Work from later stages was not mixed in without explicit approval.
+- [x] Risks and assumptions for this stage are stated clearly.
 
 ## Forbidden
 - new systems without approval
@@ -128,10 +128,10 @@ systems or route-local inventions.
 - Visual gap audit completed: yes
 - Background or decorative asset strategy: reuse the shared canonical persona asset and existing painterly route art
 - Canonical asset extraction required: no
-- Screenshot comparison pass completed: no
+- Screenshot comparison pass completed: yes
 - Remaining mismatches:
-  - fresh deploy-side screenshot is still needed to confirm the new hero scale
-    and bridge-band density
+  - the next slice still needs to further reduce headline dominance and make
+    the first viewport feel more like one central scene
   - the lower public story and auth-priority relationship still need a later
     pass if live evidence shows continued drift
 - State checks: loading | empty | error | success
@@ -150,15 +150,15 @@ systems or route-local inventions.
 - Rollback note: revert this slice if public landing hierarchy regresses
 
 ## Review Checklist (mandatory)
-- [ ] Current stage is declared and respected.
-- [ ] Deliverable for the current stage is complete.
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
+- [x] Current stage is declared and respected.
+- [x] Deliverable for the current stage is complete.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
 - [x] Definition of Done evidence is attached.
 - [x] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
+- [x] Docs or context were updated if repository truth changed.
 - [ ] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes
@@ -219,12 +219,9 @@ paths, placeholders, fake data, and temporary fixes are forbidden.
   - `npm run build`
   - focused `git diff --check`
 - What is incomplete:
-  - fresh screenshot proof after deploy
-  - final live micro-tuning if the hero or bridge band still read too heavy
+  - final live micro-tuning still needed for headline dominance and viewport closure
 - Next steps:
-  - update repo truth with this slice
-  - deploy and compare `/` and `/login`
-  - then continue the next home/dashboard parity loop
+  - continue the next viewport-only parity slice from fresh live evidence
 - Decisions made:
   - used shorter public-home copy instead of inventing new surfaces
   - removed bridge-band quote repetition rather than adding new proof widgets

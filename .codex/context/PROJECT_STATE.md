@@ -4,7 +4,28 @@ Last updated: 2026-04-29
 
 ## Product Snapshot
 
-- 2026-04-29: `PRJ-800I` started the next live-driven landing parity loop:
+- 2026-04-29: `PRJ-800J` started the next first-viewport-only landing closure loop:
+  - `web/src/index.css` now:
+    - further reduces headline dominance
+    - gives the shared persona more authority in the hero stage
+    - compresses the bridge band into a cleaner first-viewport closure
+  - result so far:
+    - the first landing viewport reads closer to one canonical scene both in
+      fresh production evidence and local preview
+    - deploy-side confirmation is still required for this exact slice
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - `git diff --check -- web/src/index.css .codex/tasks/PRJ-800I-public-home-live-hero-bridge-parity-pass.md .codex/tasks/PRJ-800J-public-home-first-viewport-live-closure-pass.md`
+  - parity evidence used:
+    - `.codex/artifacts/prod-login-live-after-prj800i-wait.png`
+    - `.codex/artifacts/local-login-after-prj800j.png`
+    - `docs/ux/assets/aion-landing-canonical-reference-v1.png`
+  - highest-value next steps:
+    - confirm this exact slice on production
+    - then decide whether public-home needs one final lower-story pass or we
+      return to dashboard parity
+
+- 2026-04-29: `PRJ-800I` completed the next live-driven landing parity loop:
   - `web/src/App.tsx` now:
     - shortens the public-home feature-strip copy
     - replaces bridge-band quote repetition with a calmer editorial lead
@@ -15,11 +36,11 @@ Last updated: 2026-04-29
     - re-centers the persona crop and softens motif-note scale and placement
     - compresses the bridge band so it reads more like one continuation of the
       hero
-  - result so far:
+  - result:
     - the public landing is materially closer to the canonical first-viewport
       rhythm on the code side
-    - deploy-side screenshot proof is still required before the slice can be
-      called closed
+    - fresh production evidence was captured and used to define the next
+      narrower slice
   - focused validation passed:
     - `Push-Location .\web; npm run build; Pop-Location`
     - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-800I-public-home-live-hero-bridge-parity-pass.md`
@@ -27,9 +48,7 @@ Last updated: 2026-04-29
     - `.codex/artifacts/prod-login-live-after-prj800h-healthy.png`
     - `docs/ux/assets/aion-landing-canonical-reference-v1.png`
   - highest-value next steps:
-    - compare the deployed `/` and `/login` landing against the canonical
-      reference
-    - then continue the next dashboard/public-home parity loop from live
+    - continue the next viewport-only parity slice from the captured live
       evidence
 
 - 2026-04-29: `PRJ-800H` completed the structural public-entry correction:
