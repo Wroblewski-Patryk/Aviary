@@ -2,6 +2,29 @@
 
 Last updated: 2026-04-29
 
+## Fresh Dashboard Canonical Convergence Pass (2026-04-29)
+
+- `PRJ-800D` is now DONE as the next execution slice after `public home`:
+  - `.codex/tasks/PRJ-800D-dashboard-canonical-convergence-pass.md`
+- purpose:
+  - compress the dashboard into a more canonical one-screen flagship read
+- implemented:
+  - removed the extra hero-note bridge and the non-canonical dashboard
+    conversation-channel card
+  - rebuilt the right rail into one editorial guidance surface plus quieter
+    recent activity and scenic intention closure
+  - converted the flow band into a track-plus-phase instrument instead of a
+    stack of flow cards
+  - rebuilt the bottom summary closure toward the canonical
+    `system harmony / balance across layers / weekly summary` composition
+- focused validation passed:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-800D-dashboard-canonical-convergence-pass.md`
+- highest-value remaining drift after this slice:
+  - deploy screenshot tuning for dashboard hero crop and editorial-rail spacing
+  - tablet/mobile proof for dashboard parity
+  - then the next screenshot-driven closure loop across `layout + sidebar + home + dashboard`
+
 ## Fresh Public-Home Structural Convergence Pass (2026-04-29)
 
 - `PRJ-800C` is now DONE as the next execution slice after shell and sidebar:

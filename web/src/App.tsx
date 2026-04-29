@@ -1859,28 +1859,6 @@ export default function App() {
   const latestAssistantMessage =
     [...transcriptItems].reverse().find((entry) => entry.role === "assistant")?.text ?? copy.chat.emptyThread;
   const latestUserMessage = [...transcriptItems].reverse().find((entry) => entry.role === "user")?.text ?? "";
-  const dashboardFlowItems = [
-    {
-      eyebrow: "Foreground",
-      title: "Event to context",
-      body: "New turns are normalized first, then anchored in perception and context before anything is expressed.",
-    },
-    {
-      eyebrow: "Decision",
-      title: "Motivation, role, planning",
-      body: "The personality chooses the right posture, priorities, and plan instead of replying from an empty shell.",
-    },
-    {
-      eyebrow: "Continuity",
-      title: "Expression, action, memory, reflection",
-      body: "Replies land in the shared transcript while memory and reflection keep continuity alive in the background.",
-    },
-  ];
-  const dashboardHeroChips = [
-    `${stringValue(planningSummary?.active_goal_count, "0")} goals`,
-    `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} memories`,
-    `${stringValue(preferenceSummary?.learned_preference_count, "0")} learned cues`,
-  ];
   const dashboardSignalCards = [
     {
       placement: "left",
@@ -2011,14 +1989,16 @@ export default function App() {
       body: "The pen and luminous slate frame the next move before it becomes action or message delivery.",
     },
   ];
-  const dashboardConversationStatus = conversationChannelStatus(healthSnapshot, {
-    loading: healthLoading,
-    error: healthError,
-  });
-  const dashboardBottomStats = [
-    { label: "System harmony", value: "92%", detail: "Optimal" },
-    { label: "Conscious", value: "High", detail: "Balance across layers" },
-    { label: "Subconscious", value: "Strong", detail: "Pattern depth" },
+  const dashboardSystemHarmony = {
+    value: "92%",
+    label: "Optimal",
+    body: "All systems are aligned and in harmony.",
+  };
+  const dashboardBalanceRows = [
+    { label: "Conscious", value: "High" },
+    { label: "Creative", value: "Energized" },
+    { label: "Subconscious", value: "Strong" },
+    { label: "Emotional", value: "Balanced" },
   ];
   const personalityLayers = [
     {
@@ -3091,22 +3071,12 @@ export default function App() {
                     <span className="aion-chat-headline-emblem">✦</span>
                     <div>
                       <p className="text-xs uppercase tracking-[0.24em] text-[#8d785f]">Good morning</p>
-                      <h2 className="mt-2 font-display text-4xl text-base-900">
+                      <h2 className="mt-2 font-display text-[2.55rem] leading-[1.08] text-base-900">
                         Welcome back, {currentUserLabel}
                       </h2>
-                      <p className="mt-3 max-w-2xl text-sm leading-7 text-base-800">
+                      <p className="mt-2 max-w-xl text-sm leading-7 text-base-800">
                         Here is what feels most alive in your Aviary workspace today.
                       </p>
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {dashboardHeroChips.map((chip) => (
-                          <span
-                            key={chip}
-                            className="aion-chip-ghost rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em]"
-                          >
-                            {chip}
-                          </span>
-                        ))}
-                      </div>
                     </div>
                   </div>
 
@@ -3166,74 +3136,32 @@ export default function App() {
                     </div>
                   </div>
 
-                  <section className="aion-dashboard-hero-note">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-base-800">Embodied field</p>
-                    <p className="mt-2 text-sm leading-7 text-base-800">
-                      Memory, motivation, planning, and reflection remain visible together so the workspace reads like one
-                      living cognition scene instead of separate tools.
-                    </p>
-                  </section>
                 </div>
 
-                <aside className="aion-dashboard-guidance-panel aion-dashboard-guidance-column">
-                  <div className="mb-5">
+                <aside className="aion-dashboard-guidance-column">
+                  <section className="aion-dashboard-guidance-panel">
                     <p className="text-sm uppercase tracking-[0.22em] text-base-800">Insights and guidance</p>
                     <h3 className="mt-2 font-display text-2xl text-base-900">Curated for you</h3>
-                  </div>
-                  <div className="aion-dashboard-guidance-card-stack">
-                    {dashboardGuidanceCards.slice(0, 3).map((card, index) => (
-                      <article
-                        key={card.title}
-                        className={`aion-dashboard-guidance-card ${
-                          index === 0
-                            ? "aion-dashboard-guidance-card-primary"
-                            : index === 1
-                              ? "aion-dashboard-guidance-card-secondary"
-                              : "aion-dashboard-guidance-card-tertiary"
-                        }`}
-                      >
-                        <div>
-                          <p className="text-base font-semibold text-base-900">{card.title}</p>
-                          <p className="mt-2 text-sm leading-6 text-base-800">{card.body}</p>
-                        </div>
-                        <button className="aion-dashboard-mini-action" type="button">
-                          {card.action}
-                        </button>
-                      </article>
-                    ))}
-                  </div>
-
-                  <section className="aion-dashboard-side-story aion-dashboard-side-story-lead aion-dashboard-guidance-intention">
-                    <p className="text-sm uppercase tracking-[0.22em] text-base-800">Today's intention</p>
-                    <p className="mt-4 font-display text-2xl leading-tight text-base-900">
-                      Create with clarity.
-                      <br />
-                      Serve with purpose.
-                    </p>
-                    <p className="mt-3 text-sm leading-7 text-base-800">
-                      Let the next action feel coherent with your memory, current goals, and inner rhythm.
-                    </p>
-                  </section>
-
-                  <section
-                    className={`aion-dashboard-channel-status aion-dashboard-channel-status-compact aion-dashboard-channel-status-${dashboardConversationStatus.tone}`}
-                  >
-                    <div className="aion-dashboard-channel-status-copy">
-                      <p className="text-[11px] uppercase tracking-[0.2em] text-base-800">Conversation channel</p>
-                      <div className="mt-2 flex flex-wrap items-center gap-2">
-                        <p className="font-display text-xl text-base-900">{dashboardConversationStatus.title}</p>
-                        <span className="aion-dashboard-channel-status-pill">{dashboardConversationStatus.label}</span>
-                      </div>
-                      <p className="mt-2 text-sm leading-6 text-base-800">{dashboardConversationStatus.body}</p>
-                    </div>
-                    <div className="aion-dashboard-channel-status-facts aion-dashboard-channel-status-facts-compact">
-                      {dashboardConversationStatus.facts.slice(0, 2).map((fact) => (
-                        <div key={fact.label} className="aion-dashboard-channel-status-fact aion-dashboard-channel-status-fact-compact">
-                          <p>{fact.label}</p>
-                          <strong>{fact.value}</strong>
-                        </div>
+                    <div className="aion-dashboard-guidance-list">
+                      {dashboardGuidanceCards.slice(0, 4).map((card, index) => (
+                        <article
+                          key={card.title}
+                          className={`aion-dashboard-guidance-row ${index === 0 ? "aion-dashboard-guidance-row-lead" : ""}`}
+                        >
+                          <span className="aion-dashboard-guidance-token" aria-hidden="true" />
+                          <div className="aion-dashboard-guidance-row-copy">
+                            <p className="aion-dashboard-guidance-row-title">{card.title}</p>
+                            <p className="aion-dashboard-guidance-row-body">{card.body}</p>
+                          </div>
+                          <button className="aion-dashboard-mini-action aion-dashboard-mini-action-quiet" type="button">
+                            {card.action}
+                          </button>
+                        </article>
                       ))}
                     </div>
+                    <button className="aion-dashboard-action-button aion-dashboard-guidance-cta" type="button">
+                      View all insights
+                    </button>
                   </section>
 
                   <section className="aion-dashboard-recent-panel aion-dashboard-recent-panel-compact">
@@ -3258,49 +3186,59 @@ export default function App() {
                       ))}
                     </div>
                   </section>
+
+                  <section className="aion-dashboard-side-story aion-dashboard-side-story-lead aion-dashboard-guidance-intention">
+                    <p className="text-sm uppercase tracking-[0.22em] text-base-800">Today's intention</p>
+                    <p className="mt-4 font-display text-2xl leading-tight text-base-900">
+                      Create with clarity.
+                      <br />
+                      Serve with purpose.
+                    </p>
+                    <p className="mt-3 text-sm leading-7 text-base-800">
+                      Let the next action feel coherent with your memory, current goals, and inner rhythm.
+                    </p>
+                  </section>
                 </aside>
               </section>
 
               <section className="aion-panel aion-dashboard-flow-panel aion-dashboard-flow-panel-bridge">
-                <div className="aion-dashboard-flow-header">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.22em] text-base-800">Cognitive flow</p>
-                    <h3 className="mt-2 font-display text-2xl text-base-900">Live orchestration</h3>
+                <div className="aion-dashboard-flow-shell">
+                  <div className="aion-dashboard-flow-intro">
+                    <div className="aion-dashboard-flow-header">
+                      <div>
+                        <p className="text-sm uppercase tracking-[0.22em] text-base-800">Aviary cognitive flow</p>
+                        <h3 className="mt-2 font-display text-2xl text-base-900">Live orchestration</h3>
+                      </div>
+                      <div className="aion-chip-ghost rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em]">
+                        Live
+                      </div>
+                    </div>
+                    <div className="aion-dashboard-flow-track aion-dashboard-flow-track-bridge">
+                      {dashboardCognitiveSteps.map((step) => (
+                        <article
+                          key={step.title}
+                          className={`aion-dashboard-flow-step ${step.active ? "aion-dashboard-flow-step-active" : ""}`}
+                        >
+                          <span className="aion-dashboard-flow-icon">{step.token}</span>
+                          <p className="mt-3 text-base font-semibold text-base-900">{step.title}</p>
+                          <p className="mt-1 text-sm text-base-800">{step.detail}</p>
+                        </article>
+                      ))}
+                    </div>
                   </div>
-                  <div className="aion-chip-ghost rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em]">
-                    Current phase: Reflect
-                  </div>
-                </div>
-                <div className="aion-dashboard-flow-layout">
-                  <div className="aion-dashboard-flow-bridge-copy">
-                    <p className="font-display text-3xl text-base-900">{dashboardCurrentPhase.title}</p>
-                    <p className="mt-3 max-w-2xl text-sm leading-7 text-base-800">{dashboardCurrentPhase.body}</p>
-                  </div>
-                  <div className="aion-dashboard-flow-track aion-dashboard-flow-track-bridge">
-                    {dashboardCognitiveSteps.map((step) => (
-                      <article
-                        key={step.title}
-                        className={`aion-dashboard-flow-step ${step.active ? "aion-dashboard-flow-step-active" : ""}`}
-                      >
-                        <span className="aion-dashboard-flow-icon">{step.token}</span>
-                        <p className="mt-3 text-base font-semibold text-base-900">{step.title}</p>
-                        <p className="mt-1 text-sm text-base-800">{step.detail}</p>
-                      </article>
-                    ))}
-                  </div>
-                </div>
-                <div className="aion-dashboard-flow-notes">
-                  {dashboardFlowItems.map((item) => (
-                    <article key={item.title} className="aion-dashboard-flow-note">
-                      <p className="text-[11px] uppercase tracking-[0.2em] text-base-800">{item.eyebrow}</p>
-                      <p className="mt-2 text-base font-semibold text-base-900">{item.title}</p>
-                      <p className="mt-2 text-sm leading-6 text-base-800">{item.body}</p>
-                    </article>
-                  ))}
+
+                  <aside className="aion-dashboard-flow-phase">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-base-800">Current phase</p>
+                    <p className="mt-3 font-display text-[2rem] leading-tight text-base-900">{dashboardCurrentPhase.title}</p>
+                    <p className="mt-3 text-sm leading-7 text-base-800">{dashboardCurrentPhase.body}</p>
+                    <button className="aion-dashboard-action-button mt-5" type="button">
+                      View full flow
+                    </button>
+                  </aside>
                 </div>
               </section>
 
-              <section className="aion-dashboard-lower-grid aion-dashboard-lower-grid-condensed grid gap-3 xl:grid-cols-[minmax(0,1.12fr)_minmax(0,0.72fr)_minmax(0,0.78fr)_minmax(0,0.84fr)]">
+              <section className="aion-dashboard-lower-grid aion-dashboard-lower-grid-condensed grid gap-3 xl:grid-cols-[minmax(0,1.08fr)_minmax(0,0.88fr)_minmax(0,0.82fr)_minmax(0,0.92fr)]">
                 <article className="aion-panel-soft aion-dashboard-card aion-dashboard-card-primary">
                   <div className="flex items-center justify-between gap-3">
                     <div>
@@ -3378,14 +3316,32 @@ export default function App() {
               <section className="grid gap-4">
                 <article className="aion-panel aion-dashboard-summary-band aion-dashboard-summary-band-closure">
                   <div className="aion-dashboard-summary-layout aion-dashboard-summary-layout-closure">
-                    <div className="aion-dashboard-summary-metrics">
-                      {dashboardBottomStats.map((stat) => (
-                        <div key={stat.label} className="aion-dashboard-summary-item aion-dashboard-summary-item-compact">
-                          <p className="text-sm uppercase tracking-[0.2em] text-base-800">{stat.label}</p>
-                          <p className="mt-3 font-display text-3xl text-base-900">{stat.value}</p>
-                          <p className="mt-2 text-sm text-base-800">{stat.detail}</p>
+                    <div className="aion-dashboard-summary-harmony">
+                      <div className="aion-dashboard-summary-harmony-ring" aria-hidden="true">
+                        <div className="aion-dashboard-summary-harmony-core">
+                          <strong>{dashboardSystemHarmony.value}</strong>
+                          <span>{dashboardSystemHarmony.label}</span>
                         </div>
-                      ))}
+                      </div>
+                      <div className="aion-dashboard-summary-harmony-copy">
+                        <p className="text-sm uppercase tracking-[0.2em] text-base-800">System harmony</p>
+                        <p className="mt-2 text-sm leading-7 text-base-800">{dashboardSystemHarmony.body}</p>
+                      </div>
+                    </div>
+
+                    <div className="aion-dashboard-summary-balance">
+                      <p className="text-sm uppercase tracking-[0.2em] text-base-800">Balance across layers</p>
+                      <div className="aion-dashboard-summary-balance-grid">
+                        {dashboardBalanceRows.map((row, index) => (
+                          <div key={row.label} className="aion-dashboard-summary-balance-row">
+                            <div className="aion-dashboard-summary-balance-label">
+                              <span className={`aion-dashboard-summary-balance-token aion-dashboard-summary-balance-token-${index + 1}`} />
+                              <span>{row.label}</span>
+                            </div>
+                            <strong>{row.value}</strong>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                     <div className="aion-dashboard-summary-scenic aion-dashboard-summary-scenic-closure">
                       <div className="aion-dashboard-summary-scenic-copy">
@@ -3398,16 +3354,6 @@ export default function App() {
                         <p className="mt-3 max-w-md text-sm leading-7 text-base-800">
                           The shell now holds your goals, memory, and reflections in one calmer path.
                         </p>
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          {dashboardReflectionRows.slice(0, 3).map((row) => (
-                            <span
-                              key={row.tag}
-                              className="aion-chip-ghost rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em]"
-                            >
-                              {row.tag}
-                            </span>
-                          ))}
-                        </div>
                         <button className="aion-dashboard-action-button mt-5" type="button">
                           See full report
                         </button>

@@ -4,6 +4,36 @@ Last updated: 2026-04-29
 
 ## Product Snapshot
 
+- 2026-04-29: `PRJ-800D` completed the next dashboard canonical-composition
+  slice:
+  - `web/src/App.tsx` now:
+    - removes the hero chips and extra hero-note bridge under the dashboard
+      figure stage
+    - rebuilds the right rail into one editorial guidance surface with quieter
+      recent activity and intention closure
+    - converts the flow band to a track-plus-phase instrument
+    - replaces the previous summary metric stack with a more canonical
+      `system harmony / balance across layers / weekly summary` layout
+  - `web/src/index.css` now:
+    - increases dashboard hero authority through calmer signal-card density and
+      stronger center-stage dominance
+    - styles the right rail as a single guidance family instead of multiple
+      card variants
+    - introduces dedicated flow-shell and summary-closure structures for the
+      new dashboard anatomy
+  - result:
+    - the dashboard reads less like stacked premium modules and more like one
+      flagship tableau on the stabilized shell
+    - the biggest remaining dashboard gap is now live screenshot tuning rather
+      than another structural invention pass
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-800D-dashboard-canonical-convergence-pass.md`
+  - highest-value next steps:
+    - deploy and compare the dashboard directly to
+      `docs/ux/assets/aion-dashboard-canonical-reference-v2.png`
+    - tune hero crop, right-rail spacing, and lower closure from live evidence
+
 - 2026-04-29: `PRJ-800C` completed the next canonical landing-convergence
   slice:
   - `web/src/App.tsx` now:
