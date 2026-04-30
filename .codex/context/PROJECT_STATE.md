@@ -2,6 +2,26 @@
 
 Last updated: 2026-04-30
 
+- 2026-04-30: `PRJ-821` froze the flagship canonical closure map:
+  - new planning output:
+    - `docs/planning/canonical-100-slice-closure-map.md`
+  - the remaining visual convergence work is now grouped into 100 numbered
+    slices across:
+    - `home`
+    - authenticated shell frame
+    - authenticated sidebar
+    - `dashboard`
+    - `chat`
+    - `personality`
+    - final cross-surface proof
+  - result:
+    - future flagship implementation can follow one explicit numbered closure
+      map instead of reopening surfaces opportunistically
+  - highest-value next steps:
+    - keep `home` active until the current deploy-side proof confirms the
+      `95%` gate
+    - then move to the next surface group in the map
+
 - 2026-04-30: `PRJ-820` opened a final bounded `home` crop-and-closure slice:
   - `web/src/index.css` now:
     - narrows the desktop public-nav and hero-copy width so the scenic stage

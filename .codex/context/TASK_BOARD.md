@@ -2,6 +2,37 @@
 
 Last updated: 2026-04-30
 
+## Fresh Canonical 100 Slice Closure Map (2026-04-30)
+
+- `PRJ-821` is now DONE as a planning freeze:
+  - `.codex/tasks/PRJ-821-freeze-canonical-100-slice-closure-map.md`
+- planning output:
+  - `docs/planning/canonical-100-slice-closure-map.md`
+- purpose:
+  - convert the flagship parity lane into one numbered execution map instead
+    of continuing with ad hoc micro-polish across surfaces
+- frozen closure order:
+  - public `home`
+  - authenticated shell frame
+  - authenticated sidebar
+  - `dashboard`
+  - `chat`
+  - `personality`
+  - final cross-surface proof
+- map shape:
+  - slices `1..15`: `home`
+  - slices `16..25`: authenticated shell
+  - slices `26..40`: sidebar
+  - slices `41..55`: dashboard
+  - slices `56..70`: chat
+  - slices `71..85`: personality
+  - slices `86..100`: final family-wide proof
+- focused validation:
+  - `git diff --check -- docs/planning/canonical-100-slice-closure-map.md .codex/tasks/PRJ-821-freeze-canonical-100-slice-closure-map.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+- next smallest useful task:
+  - keep `home` active until the live `95%` gate is confirmed
+  - then move to the next numbered slice group instead of reopening random lanes
+
 ## Fresh Public Home Live Crop And Closure Pass (2026-04-30)
 
 - `PRJ-820` is now IN_PROGRESS as a bounded `home` polish slice:
