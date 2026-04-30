@@ -2,6 +2,19 @@
 
 Last updated: 2026-04-30
 
+- 2026-04-30: `PRJ-817` opened a bounded web-copy encoding regression fix:
+  - `web/src/App.tsx` now:
+    - restores the damaged Polish flagship-shell strings in route labels,
+      route descriptions, auth copy, settings copy, tools copy, personality
+      copy, and the public-entry landing copy
+    - removes the remaining plain-ASCII fallback forms where Polish diacritics
+      are required for a production-quality shell
+  - new implementation task:
+    - `.codex/tasks/PRJ-817-fix-web-copy-encoding-regression.md`
+  - highest-value next steps:
+    - verify the deployed shell no longer shows broken Polish characters
+    - then return to the active flagship-route parity lane
+
 - 2026-04-30: `PRJ-816` opened a new chat-only canonical parity closure lane:
   - `web/src/App.tsx` now:
     - introduces a clearer chat-specific cognitive rail hierarchy with current

@@ -29,6 +29,8 @@ fixes for this repository.
 - Context:
   - flagship UI work on `chat` required targeted source rewrites after earlier
     edits left several visible mojibake strings inside `web/src/App.tsx`.
+  - a later shell-quality fix also confirmed that PowerShell console output can
+    make already-correct UTF-8 lines look suspicious during manual audits.
 - Symptom:
   - Polish copy, arrows, bullets, and preview-plan ranges can silently degrade
     into malformed characters, which makes an otherwise close visual surface
@@ -41,17 +43,22 @@ fixes for this repository.
   - prefer `apply_patch` for localized copy fixes, and after any fallback
     shell-based rewrite, immediately re-audit the affected route strings for
     visible encoding drift before calling the surface improved.
+  - verify suspicious lines from raw file reads or explicit Unicode inspection,
+    not from console rendering alone.
 - Preferred pattern:
   - fix only the active route copy
   - verify preview/sample strings as well as labels
   - run a focused grep for mojibake markers after the rewrite
+  - confirm the final state with raw UTF-8 reads before escalating the scope
 - Avoid:
   - assuming a successful raw text replace also repaired the rendered copy
   - leaving mojibake in preview content or UI chrome while declaring a route
     near screenshot parity
+  - trusting terminal rendering as proof that the source file itself is still broken
 - Evidence:
   - `web/src/App.tsx`
   - `.codex/tasks/PRJ-816-chat-canonical-parity-closure-lane.md`
+  - `.codex/tasks/PRJ-817-fix-web-copy-encoding-regression.md`
 
 ### 2026-04-30 - Optimistic chat reconciliation must be message-role aware
 - Context:

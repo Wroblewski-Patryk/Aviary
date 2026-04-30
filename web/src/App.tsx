@@ -40,7 +40,7 @@ const UI_LANGUAGE_OPTIONS: Array<{
     value: "system",
     iconToken: "AUTO",
     nativeLabel: "System",
-    label: { en: "System default", pl: "DomyĹ›lne systemu", de: "Systemstandard" },
+    label: { en: "System default", pl: "Domyślne systemu", de: "Systemstandard" },
     fallbackLabel: "browser",
   },
   {
@@ -244,27 +244,27 @@ const UI_COPY = {
     },
   },
   pl: {
-    routes: { "/login": "Logowanie", "/chat": "Czat", "/settings": "Ustawienia", "/tools": "NarzÄ™dzia", "/personality": "OsobowoĹ›Ä‡" },
+    routes: { "/login": "Logowanie", "/chat": "Czat", "/settings": "Ustawienia", "/tools": "Narzędzia", "/personality": "Osobowość" },
     routeDescriptions: {
-      "/login": "Zaloguj siÄ™ do powĹ‚oki produktu.",
-      "/chat": "Jeden wspĂłlny wÄ…tek rozmowy z ostatnimi wiadomoĹ›ciami i Ĺ›wieĹĽymi odpowiedziami osobowoĹ›ci.",
-      "/settings": "Profil, jÄ™zyk interfejsu i proaktywnoĹ›Ä‡ w jednym prostym miejscu.",
-      "/tools": "Zobacz, co jest gotowe, co wymaga uwagi i z czego moĹĽesz skorzystaÄ‡ dalej.",
-      "/personality": "Produktowy przeglÄ…d toĹĽsamoĹ›ci, wiedzy, planowania i moĹĽliwoĹ›ci.",
+      "/login": "Zaloguj się do powłoki produktu.",
+      "/chat": "Jeden wspólny wątek rozmowy z ostatnimi wiadomościami i świeżymi odpowiedziami osobowości.",
+      "/settings": "Profil, język interfejsu i proaktywność w jednym prostym miejscu.",
+      "/tools": "Zobacz, co jest gotowe, co wymaga uwagi i z czego możesz skorzystać dalej.",
+      "/personality": "Produktowy przegląd tożsamości, wiedzy, planowania i możliwości.",
     },
     common: {
-      workspace: "PrzestrzeĹ„",
-      currentSurface: "BieĹĽÄ…cy ekran",
+      workspace: "Przestrzeń",
+      currentSurface: "Bieżący ekran",
       account: "Konto",
       signedInAs: "Zalogowano jako",
       signOut: "Wyloguj",
       build: "build",
-      uiLanguage: "JÄ™zyk UI",
+      uiLanguage: "Język UI",
       utcOffset: "Offset UTC",
-      conversationLanguage: "JÄ™zyk rozmowy",
-      proactive: "ProaktywnoĹ›Ä‡",
-      on: "WĹ‚.",
-      off: "WyĹ‚.",
+      conversationLanguage: "Język rozmowy",
+      proactive: "Proaktywność",
+      on: "Wł.",
+      off: "Wył.",
       save: "Zapisz ustawienia",
       saving: "Zapisywanie...",
       loading: "Ładowanie...",
@@ -285,18 +285,18 @@ const UI_COPY = {
     },
     auth: {
       badge: "Aviary",
-      heroTitle: "Spokojne miejsce, ĹĽeby wrĂłciÄ‡ do rozmowy.",
+      heroTitle: "Spokojne miejsce, żeby wrócić do rozmowy.",
       heroBody:
-        "Zaloguj siÄ™, aby wrĂłciÄ‡ do czatu, ustawiÄ‡ preferencje i mieÄ‡ Aviary blisko bez przedzierania siÄ™ przez techniczny ekran startowy.",
-      sessionEntry: "WejĹ›cie do sesji",
-      trustTitle: "Czego moĹĽesz siÄ™ spodziewaÄ‡",
-      login: "Zaloguj siÄ™",
-      register: "ZaĹ‚ĂłĹĽ konto",
+        "Zaloguj się, aby wrócić do czatu, ustawić preferencje i mieć Aviary blisko bez przedzierania się przez techniczny ekran startowy.",
+      sessionEntry: "Wejście do sesji",
+      trustTitle: "Czego możesz się spodziewać",
+      login: "Zaloguj się",
+      register: "Załóż konto",
       email: "Email",
-      password: "HasĹ‚o",
-      displayName: "Nazwa wyĹ›wietlana",
-      enterWorkspace: "WejdĹş do aplikacji",
-      createAccount: "UtwĂłrz konto",
+      password: "Hasło",
+      displayName: "Nazwa wyświetlana",
+      enterWorkspace: "Wejdź do aplikacji",
+      createAccount: "Utwórz konto",
       tabsLogin: "Logowanie",
       tabsRegister: "Rejestracja",
     },
@@ -324,73 +324,73 @@ const UI_COPY = {
     },
     settings: {
       eyebrow: "Ustawienia",
-      title: "Dopasuj powĹ‚okÄ™",
-      subtitle: "KrĂłtki, mobile-first widok ustawieĹ„ skupiony na profilu, jÄ™zyku interfejsu i proaktywnych follow-upach.",
+      title: "Dopasuj powłokę",
+      subtitle: "Krótki, mobile-first widok ustawień skupiony na profilu, języku interfejsu i proaktywnych follow-upach.",
       profileTitle: "Profil",
-      profileBody: "Wybierz, jak aplikacja ma CiÄ™ opisywaÄ‡.",
-      uiLanguageTitle: "JÄ™zyk interfejsu",
-      uiLanguageBody: "Zmienia etykiety, copy i nawigacjÄ™ tylko w powĹ‚oce aplikacji.",
-      uiLanguageHelp: "To nie steruje jÄ™zykiem uĹĽywanym wewnÄ…trz samej rozmowy.",
+      profileBody: "Wybierz, jak aplikacja ma Cię opisywać.",
+      uiLanguageTitle: "Język interfejsu",
+      uiLanguageBody: "Zmienia etykiety, copy i nawigację tylko w powłoce aplikacji.",
+      uiLanguageHelp: "To nie steruje językiem używanym wewnątrz samej rozmowy.",
       utcOffsetTitle: "Lokalny offset czasu",
-      utcOffsetBody: "Ustawia jawny offset UTC, ktĂłrego runtime uĹĽywa przy wnioskowaniu o bieĹĽÄ…cej dacie i godzinie dla Twojego profilu.",
-      utcOffsetHelp: "Wybierz offset zgodny z Twoim aktualnym miejscem. Na przykĹ‚ad Polska lub Szwajcaria zimÄ… to zwykle UTC+01:00.",
-      conversationTitle: "JÄ™zyk rozmowy",
-      conversationBody: "JÄ™zyk rozmowy dopasowuje siÄ™ live na podstawie kontekstu, historii i bieĹĽÄ…cej wymiany.",
+      utcOffsetBody: "Ustawia jawny offset UTC, którego runtime używa przy wnioskowaniu o bieżącej dacie i godzinie dla Twojego profilu.",
+      utcOffsetHelp: "Wybierz offset zgodny z Twoim aktualnym miejscem. Na przykład Polska lub Szwajcaria zimą to zwykle UTC+01:00.",
+      conversationTitle: "Język rozmowy",
+      conversationBody: "Język rozmowy dopasowuje się live na podstawie kontekstu, historii i bieżącej wymiany.",
       proactiveTitle: "Proaktywne follow-upy",
-      proactiveBody: "PozwĂłl Aviary wysyĹ‚aÄ‡ okazjonalne follow-upy, gdy pozwalajÄ… na to ustawienia Twojego konta.",
-      saveHint: "Zapisz zmiany, gdy bÄ™dziesz gotowy.",
-      conversationRuntimeOwned: "Adaptacyjne i oparte na kontekĹ›cie",
+      proactiveBody: "Pozwól Aviary wysyłać okazjonalne follow-upy, gdy pozwalają na to ustawienia Twojego konta.",
+      saveHint: "Zapisz zmiany, gdy będziesz gotowy.",
+      conversationRuntimeOwned: "Adaptacyjne i oparte na kontekście",
       savedState: "Gotowe do zapisania",
       resetTitle: "Reset danych runtime",
       resetBody:
-        "Wyczysc wyuczona ciaglosc runtime, pamiec, stan planowania i kolejki dla tego konta bez usuwania konta ani ponownej konfiguracji podpietych narzedzi.",
+        "Wyczyść wyuczoną ciągłość runtime, pamięć, stan planowania i kolejki dla tego konta bez usuwania konta ani ponownej konfiguracji podpiętych narzędzi.",
       resetImpact:
-        "Profil, ustawienia UI, zgoda na proaktywnosc i podpiete integracje zostaja, a wszystkie aktywne sesje, takze ta biezaca, sa uniewazniane.",
+        "Profil, ustawienia UI, zgoda na proaktywność i podpięte integracje zostają, a wszystkie aktywne sesje, także ta bieżąca, są unieważniane.",
       resetConfirmationLabel: "Tekst potwierdzenia",
-      resetConfirmationHint: "Wpisz dokladnie ponizsza fraze, aby odblokowac reset.",
+      resetConfirmationHint: "Wpisz dokładnie poniższą frazę, aby odblokować reset.",
       resetConfirmationPlaceholder: "RESET MY DATA",
       resetAction: "Zresetuj dane runtime",
       resetting: "Resetowanie...",
-      resetSuccess: "Dane runtime zostaly zresetowane. Zaloguj sie ponownie i zacznij od nowa.",
+      resetSuccess: "Dane runtime zostały zresetowane. Zaloguj się ponownie i zacznij od nowa.",
     },
     tools: {
-      eyebrow: "NarzÄ™dzia",
-      title: "Gotowe narzÄ™dzia i kanaĹ‚y",
-      subtitle: "Zobacz, co dziaĹ‚a juĹĽ teraz, co wymaga dziaĹ‚ania, a co nadal jest zablokowane.",
-      groupCount: "Grupy narzÄ™dzi",
+      eyebrow: "Narzędzia",
+      title: "Gotowe narzędzia i kanały",
+      subtitle: "Zobacz, co działa już teraz, co wymaga działania, a co nadal jest zablokowane.",
+      groupCount: "Grupy narzędzi",
       integral: "Zawsze aktywne",
       ready: "Gotowe teraz",
-      linkRequired: "Wymaga podpiÄ™cia",
-      loading: "Ĺadowanie przeglÄ…du narzÄ™dzi.",
-      empty: "Tutaj pojawi siÄ™ przeglÄ…d Twoich narzÄ™dzi.",
+      linkRequired: "Wymaga podpięcia",
+      loading: "Ładowanie przeglądu narzędzi.",
+      empty: "Tutaj pojawi się przegląd Twoich narzędzi.",
       currentStatus: "Obecny stan",
-      nextStep: "NastÄ™pny krok",
-      technicalDetails: "SzczegĂłĹ‚y techniczne",
-      availability: "DostÄ™pnoĹ›Ä‡",
+      nextStep: "Następny krok",
+      technicalDetails: "Szczegóły techniczne",
+      availability: "Dostępność",
       provider: "Provider",
       control: "Sterowanie",
-      linkState: "Stan podpiÄ™cia",
-      readOnly: "Tylko podglÄ…d",
-      enabledByUser: "WĹ‚Ä…czone przez Ciebie",
-      disabledByUser: "WyĹ‚Ä…czone przez Ciebie",
+      linkState: "Stan podpięcia",
+      readOnly: "Tylko podgląd",
+      enabledByUser: "Włączone przez Ciebie",
+      disabledByUser: "Wyłączone przez Ciebie",
       saving: "Zapisywanie...",
       noAction: "Brak wymaganej akcji.",
       telegramLinking: "Podpinanie Telegrama",
       generateCode: "Wygeneruj kod",
-      rotateCode: "ObrĂłÄ‡ kod",
+      rotateCode: "Obróć kod",
       generating: "Generowanie...",
-      linkCode: "Kod podpiÄ™cia",
+      linkCode: "Kod podpięcia",
       instruction: "Instrukcja",
-      noLinkCode: "Brak aktywnego kodu. Wygeneruj go, gdy bÄ™dziesz gotowy potwierdziÄ‡ czat.",
-      capabilities: "MoĹĽliwoĹ›ci",
+      noLinkCode: "Brak aktywnego kodu. Wygeneruj go, gdy będziesz gotowy potwierdzić czat.",
+      capabilities: "Możliwości",
     },
     personality: {
-      eyebrow: "OsobowoĹ›Ä‡",
-      title: "PrzeglÄ…d osobowoĹ›ci",
-      subtitle: "Najpierw najwaĹĽniejsze informacje, a dodatkowe szczegĂłĹ‚y tylko wtedy, gdy ich potrzebujesz.",
+      eyebrow: "Osobowość",
+      title: "Przegląd osobowości",
+      subtitle: "Najpierw najważniejsze informacje, a dodatkowe szczegóły tylko wtedy, gdy ich potrzebujesz.",
       filter: "Filtruj sekcje",
-      loading: "Ĺadowanie przeglÄ…du osobowoĹ›ci.",
-      empty: "Brak sekcji pasujÄ…cych do filtra.",
+      loading: "Ładowanie przeglądu osobowości.",
+      empty: "Brak sekcji pasujących do filtra.",
     },
   },
   de: {
@@ -864,7 +864,7 @@ function localeLanguageLabel(option: (typeof UI_LANGUAGE_OPTIONS)[number], local
 }
 
 function localeOptionDisplay(option: (typeof UI_LANGUAGE_OPTIONS)[number], locale: ResolvedUiLanguageCode) {
-  return `${option.iconToken} ${option.nativeLabel}${localeLanguageLabel(option, locale) === option.nativeLabel ? "" : ` Â· ${localeLanguageLabel(option, locale)}`}`;
+  return `${option.iconToken} ${option.nativeLabel}${localeLanguageLabel(option, locale) === option.nativeLabel ? "" : ` · ${localeLanguageLabel(option, locale)}`}`;
 }
 
 function titleCaseFromStatus(value: string) {
@@ -1185,7 +1185,7 @@ function ModuleEntryCard({
       </div>
       <div className="mt-4 flex items-center justify-between text-sm text-base-800">
         <span>Open space</span>
-        <span className="font-semibold text-base-900 transition group-hover:translate-x-1">â†’</span>
+        <span className="font-semibold text-base-900 transition group-hover:translate-x-1">→</span>
       </div>
     </button>
   );
@@ -2245,9 +2245,9 @@ export default function App() {
       ],
     },
     {
-      zone: "Near head Â· planning",
+      zone: "Near head · planning",
       title: "Planning",
-      symbol: "âŚ",
+      symbol: "✦",
       body: "Goals, tasks, and milestones stay visible as the active foreground direction instead of remaining hidden in raw payloads.",
       highlights: [
         `${stringValue(planningSummary?.active_goal_count, "0")} goals`,
@@ -2257,7 +2257,7 @@ export default function App() {
     {
       zone: "Hand Â· learned knowledge",
       title: "Learned knowledge",
-      symbol: "âś¦",
+      symbol: "✦",
       body: "Patterns and affective takeaways become a reusable memory surface that supports future replies without overwhelming the route.",
       highlights: [
         `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} semantic conclusions`,
@@ -2505,7 +2505,7 @@ export default function App() {
   ];
   const publicNavLabels = {
     en: ["Features", "How it works", "Privacy", "Resources"],
-    pl: ["Funkcje", "Jak to dziala", "Prywatnosc", "Zasoby"],
+    pl: ["Funkcje", "Jak to działa", "Prywatność", "Zasoby"],
     de: ["Funktionen", "So funktioniert es", "Privatsphare", "Ressourcen"],
   } satisfies Record<ResolvedUiLanguageCode, string[]>;
   const publicHeroCards = {
@@ -2516,10 +2516,10 @@ export default function App() {
       { title: "Reflection", body: "Learn and evolve over time." },
     ],
     pl: [
-      { title: "Pamiec", body: "To, co wazne, pozostaje widoczne." },
-      { title: "Poznanie", body: "Najpierw zrozum kontekst, potem dzialaj." },
+      { title: "Pamięć", body: "To, co ważne, pozostaje widoczne." },
+      { title: "Poznanie", body: "Najpierw zrozum kontekst, potem działaj." },
       { title: "Planowanie", body: "Zamieniaj cele w spokojne kolejne kroki." },
-      { title: "Refleksja", body: "Ucz sie i rozwijaj w czasie." },
+      { title: "Refleksja", body: "Ucz się i rozwijaj w czasie." },
     ],
     de: [
       { title: "Gedachtnis", body: "Wichtiges bleibt sichtbar." },
@@ -2537,11 +2537,11 @@ export default function App() {
       { icon: "companion", title: "Companion for life", body: "Present in work and growth." },
     ],
     pl: [
-      { icon: "understanding", title: "Glebokie zrozumienie", body: "Rozumie Twoj stan i rytm." },
-      { icon: "memory", title: "Pamiec, ktora rosnie", body: "Wazne wnioski zostaja i wracaja." },
-      { icon: "clarity", title: "Jasnosc i skupienie", body: "Pomaga wybierac z intencja." },
-      { icon: "planning", title: "Plan i wykonanie", body: "Zamienia pomysly w kolejne kroki." },
-      { icon: "companion", title: "Towarzysz na co dzien", body: "Obecny w pracy i rozwoju." },
+      { icon: "understanding", title: "Głębokie zrozumienie", body: "Rozumie Twój stan i rytm." },
+      { icon: "memory", title: "Pamięć, która rośnie", body: "Ważne wnioski zostają i wracają." },
+      { icon: "clarity", title: "Jasność i skupienie", body: "Pomaga wybierać z intencją." },
+      { icon: "planning", title: "Plan i wykonanie", body: "Zamienia pomysły w kolejne kroki." },
+      { icon: "companion", title: "Towarzysz na co dzień", body: "Obecny w pracy i rozwoju." },
     ],
     de: [
       { icon: "understanding", title: "Tiefes Verstehen", body: "Versteht Zustand und Tempo." },
@@ -2560,11 +2560,11 @@ export default function App() {
       { icon: "clarity", label: "Transparent by default" },
     ],
     pl: [
-      { icon: "privacy", label: "Prywatnosc przede wszystkim" },
+      { icon: "privacy", label: "Prywatność przede wszystkim" },
       { icon: "encryption", label: "Szyfrowanie end-to-end" },
       { icon: "storage", label: "Przechowywanie local-first" },
       { icon: "ownership", label: "To Ty kontrolujesz dane" },
-      { icon: "clarity", label: "Przejrzystosc domyslnie" },
+      { icon: "clarity", label: "Przejrzystość domyślnie" },
     ],
     de: [
       { icon: "privacy", label: "Privacy first" },
@@ -2576,7 +2576,7 @@ export default function App() {
   } satisfies Record<ResolvedUiLanguageCode, Array<{ icon: string; label: string }>>;
   const publicProofLine = {
     en: "Trusted by thoughtful people worldwide",
-    pl: "Zaufany przez uwaznych ludzi na calym swiecie",
+    pl: "Zaufany przez uważnych ludzi na całym świecie",
     de: "Vertraut von achtsamen Menschen weltweit",
   } satisfies Record<ResolvedUiLanguageCode, string>;
   const publicHeroTitle = {
@@ -2586,17 +2586,17 @@ export default function App() {
   } satisfies Record<ResolvedUiLanguageCode, string>;
   const publicHeroBody = {
     en: "Your conscious companion for clarity, growth, and purpose.",
-    pl: "Twoj swiadomy towarzysz dla jasnosci, rozwoju i celu.",
+    pl: "Twój świadomy towarzysz dla jasności, rozwoju i celu.",
     de: "Dein bewusster Begleiter fur Klarheit, Wachstum und Sinn.",
   } satisfies Record<ResolvedUiLanguageCode, string>;
   const publicProofBridgeLead = {
     en: "Powerful by design. Personal by nature.",
-    pl: "Moca projektu. Osobiste z natury.",
+    pl: "Mocą projektu. Osobiste z natury.",
     de: "Kraftvoll im Design. Personlich im Wesen.",
   } satisfies Record<ResolvedUiLanguageCode, string>;
   const publicSessionIntro = {
     en: "Sign in or create an account to continue with memory, clarity, and calm guidance.",
-    pl: "Zaloguj sie lub utworz konto, aby wrocic do pamieci, jasnosci i spokojnego prowadzenia.",
+    pl: "Zaloguj się lub utwórz konto, aby wrócić do pamięci, jasności i spokojnego prowadzenia.",
     de: "Melde dich an oder erstelle ein Konto, um mit Erinnerung, Klarheit und ruhiger Begleitung weiterzumachen.",
   } satisfies Record<ResolvedUiLanguageCode, string>;
   const publicHomeSurface = {

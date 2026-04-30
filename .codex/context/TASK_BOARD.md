@@ -2,6 +2,30 @@
 
 Last updated: 2026-04-30
 
+## Fresh Web Copy Encoding Regression Fix (2026-04-30)
+
+- `PRJ-817` is now DONE as a bounded shell-quality fix:
+  - `.codex/tasks/PRJ-817-fix-web-copy-encoding-regression.md`
+- purpose:
+  - remove visible mojibake and broken Polish diacritics from the flagship
+    web shell before more UX/UI polishing continues
+- current audit found:
+  - the real regression is concentrated in `web/src/App.tsx`
+  - Polish route, auth, tools, settings, personality, and landing strings
+    drifted through a mix of mojibake and plain-ASCII fallback forms
+  - PowerShell console rendering can make some already-correct UTF-8 lines
+    look suspicious, so raw file inspection must be the final truth source
+- implemented in the current fix slice:
+  - repaired the broken Polish flagship-shell strings in the source file
+  - re-audited the public-entry and route-copy blocks after the repair
+  - opened a dedicated task and recorded the detection guardrail in context
+- focused validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/App.tsx .codex/tasks/PRJ-817-fix-web-copy-encoding-regression.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .codex/context/LEARNING_JOURNAL.md`
+- next smallest useful task:
+  - verify the deployed shell no longer shows broken Polish characters
+  - then return to the active flagship route lane
+
 ## Fresh Chat Canonical Parity Closure Lane (2026-04-30)
 
 - `PRJ-816` is now IN_PROGRESS as the active flagship surface:
