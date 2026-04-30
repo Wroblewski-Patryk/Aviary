@@ -51,6 +51,8 @@ Last updated: 2026-04-30
     - the first viewport is now denser and calmer, with less bridge weight and
       a later auth entry, but still needs deploy-side proof for the `95%`
       closure call
+    - the newest viewport-only compaction pass further reduced top-nav weight,
+      bridge footprint, trust-band width, and early auth exposure
   - focused validation passed:
     - `Push-Location .\web; npm run build; Pop-Location`
     - `git diff --check -- web/src/App.tsx web/src/index.css docs/ux/design-memory.md docs/ux/canonical-web-screen-reference-set.md .codex/tasks/PRJ-800L-public-home-lower-story-and-auth-priority-pass.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`

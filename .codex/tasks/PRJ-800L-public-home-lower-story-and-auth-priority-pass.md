@@ -221,6 +221,8 @@ paths, placeholders, fake data, and temporary fixes are forbidden.
   - continued the same home-only lane by tightening hero copy width, scenic
     crop, note-card density, bridge rhythm, trust-band compactness, and auth
     offset so the first viewport reads closer to one canonical scene
+  - continued once more with a stronger viewport-only compaction pass for top
+    nav density, bridge footprint, trust-band width, and auth-panel delay
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
