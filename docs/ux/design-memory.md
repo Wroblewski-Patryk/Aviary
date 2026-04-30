@@ -30,6 +30,19 @@
   `chat`, `personality`, and other flagship modules. Adapt the crop, callout
   map, and supporting objects to the route context instead of inventing a
   different being per screen.
+- Route-specific persona adaptation:
+  Keep one continuous Aviary identity across flagship routes, but do not reuse
+  the exact same pose-and-props composition everywhere. The route decides the
+  supporting objects:
+  - `personality`: knowledge-and-identity props such as book, writing tool,
+    page, symbolic mapping anchors
+  - `dashboard`: orchestration, guidance, cognition-field, and overview props
+    rather than personality-specific study props
+  - `chat`: conversation, continuity, listening, and response-shaping props
+  - `landing`: welcoming, trust, and orientation props with the calmest
+    composition
+  Route-specific adaptation is required unless the user explicitly approves a
+  repeated composition.
 - Flagship utility bar:
   Use one calm top utility band with search, compact actions, and account
   posture to give authenticated routes dashboard-grade framing without
@@ -51,6 +64,9 @@
   prefer one wide raster hero artwork that already integrates the shared
   persona, aura, and right-side cognition detail instead of layering a separate
   figure asset over a second atmosphere image.
+  For `dashboard`, do not reuse the `personality` prop family such as the book,
+  page, or writing tool. The dashboard hero should instead use guidance,
+  orchestration, overview, and cognition-field symbols.
 - Frame-first flagship shell:
   Keep the public and authenticated shells premium, inset, and composed, but
   do not simulate browser controls, title bars, or fake window chrome as part
@@ -103,7 +119,7 @@
 - The current approved canonical web screen-set now lives in
   `docs/ux/canonical-web-screen-reference-set.md`.
 - The current approved dashboard hero implementation asset now includes
-  `docs/ux/assets/aviary-dashboard-hero-canonical-reference-v3.png`.
+  `docs/ux/assets/aviary-dashboard-hero-canonical-reference-v4.png`.
 - Future web UX tasks should capture post-deploy screenshots and compare them
   directly against the canonical screen-set instead of relying only on memory
   or prompt descriptions.

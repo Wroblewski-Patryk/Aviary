@@ -2,6 +2,40 @@
 
 Last updated: 2026-04-30
 
+## Fresh Dashboard Route-Corrected Hero Artwork Pass (2026-04-30)
+
+- `PRJ-800F` remains IN_PROGRESS as the only active flagship surface:
+  - `.codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md`
+- purpose:
+  - correct the newly integrated dashboard hero so it uses dashboard-appropriate
+    props instead of repeating the `personality` book-and-writing composition
+- implemented in this continuation:
+  - generated and wired a new `v4` dashboard hero artwork based on the same
+    Aviary identity
+  - replaced the book/page/writing-tool staging with orchestration,
+    cognition-field, and overview symbolism
+  - kept the hero as one continuous scenic dashboard composition
+- focused validation:
+  - pending final rerun after this exact asset swap and truth sync
+- remaining work before DONE:
+  - final build and diff validation for the route-corrected dashboard hero
+  - deploy-side screenshot proof for the new dashboard-specific artwork
+
+## Fresh Shared Persona Adaptation Rule Freeze (2026-04-30)
+
+- purpose:
+  - prevent future flagship assets from repeating the exact `personality`
+    shot across `landing`, `dashboard`, and `chat`
+- implemented in this rule freeze:
+  - recorded that one shared Aviary identity must persist across routes
+  - recorded that props and staging must change by module context
+  - explicitly limited the book and writing-tool family to
+    `personality`-appropriate compositions unless the user approves otherwise
+- next visual implication:
+  - future `dashboard` and `chat` hero-image passes should replace
+    personality-specific props with route-specific guidance and
+    conversation-oriented symbols
+
 ## Fresh Unified Dashboard Hero Artwork And Home Continuation Pass (2026-04-30)
 
 - `PRJ-800F` remains IN_PROGRESS as the active flagship surface:

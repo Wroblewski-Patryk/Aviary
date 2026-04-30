@@ -120,6 +120,7 @@ comparison.
 - Visual gap audit completed: yes
 - Background or decorative asset strategy: reuse existing dashboard atmosphere and scenic closure assets
 - Background or decorative asset strategy: use one integrated dashboard hero artwork plus the existing scenic closure assets
+- Background or decorative asset strategy: use one integrated dashboard hero artwork with dashboard-specific guidance/orchestration props plus the existing scenic closure assets
 - Canonical asset extraction required: no
 - Screenshot comparison pass completed: partial
 - Remaining mismatches:
@@ -210,11 +211,16 @@ paths, placeholders, fake data, and temporary fixes are forbidden.
   - replaced the split dashboard hero implementation with one integrated wide
     hero artwork so the shared persona, atmosphere, and cognition details read
     as one continuous scenic stage
+  - replaced that first integrated hero with a route-corrected dashboard
+    variant that removes `personality` props and uses orchestration and
+    cognition-field symbols instead
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
   - `docs/ux/assets/aviary-dashboard-hero-canonical-reference-v3.png`
+  - `docs/ux/assets/aviary-dashboard-hero-canonical-reference-v4.png`
   - `web/public/aviary-dashboard-hero-canonical-reference-v3.png`
+  - `web/public/aviary-dashboard-hero-canonical-reference-v4.png`
   - `.codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md`
   - `.codex/context/TASK_BOARD.md`
   - `.codex/context/PROJECT_STATE.md`
@@ -223,9 +229,13 @@ paths, placeholders, fake data, and temporary fixes are forbidden.
   - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md`
 - What is incomplete:
   - authenticated screenshot parity is still pending and must happen after deploy
+  - the old `v3` dashboard hero asset can now be retired later if no historical
+    reference path still needs it
 - Next steps:
   - compare the deployed dashboard to `docs/ux/assets/aion-dashboard-canonical-reference-v2.png`
-  - verify whether the latest hero-dominance, rail-calmness, and lower-closure compaction pass is enough to close `PRJ-800F`
+  - verify whether the new route-corrected hero artwork plus the latest
+    hero-dominance, rail-calmness, and lower-closure compaction pass are
+    enough to close `PRJ-800F`
 - Decisions made:
   - kept the existing dashboard information architecture and improved the
     composition through proportion and material tuning only

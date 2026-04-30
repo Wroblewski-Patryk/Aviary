@@ -2,6 +2,36 @@
 
 Last updated: 2026-04-30
 
+- 2026-04-30: `PRJ-800F` continued with a route-corrected dashboard hero-art
+  swap:
+  - `web/src/App.tsx` now:
+    - points the dashboard hero stage at
+      `web/public/aviary-dashboard-hero-canonical-reference-v4.png`
+  - new canonical-support assets:
+    - `docs/ux/assets/aviary-dashboard-hero-canonical-reference-v4.png`
+    - `web/public/aviary-dashboard-hero-canonical-reference-v4.png`
+  - result so far:
+    - the dashboard keeps the shared Aviary identity but now avoids the
+      `personality` book-and-writing composition
+    - the hero now reads closer to route-specific guidance and orchestration
+      instead of study or self-mapping symbolism
+  - highest-value next steps:
+    - rerun final validation for this exact asset swap
+    - inspect the deployed dashboard against the canonical reference
+
+- 2026-04-30: shared persona continuity rules were refined for future flagship
+  artwork:
+  - `docs/ux/design-memory.md`,
+    `docs/ux/canonical-web-screen-reference-set.md`, and
+    `docs/ux/background-and-decorative-asset-strategy.md` now state that the
+    same Aviary being should persist across routes, but the exact
+    `personality` pose-and-props composition must not be cloned into
+    `landing`, `dashboard`, or `chat`
+  - the book and writing-tool family are now explicitly treated as
+    `personality`-appropriate props unless the user requests reuse elsewhere
+  - next route-art passes should adapt the shared persona to module context
+    through new props and staging, not through shot repetition
+
 - 2026-04-30: `PRJ-800F` continued with a unified dashboard-hero artwork pass,
   and `PRJ-800L` continued with a calmer lower landing continuation:
   - `web/src/App.tsx` now:

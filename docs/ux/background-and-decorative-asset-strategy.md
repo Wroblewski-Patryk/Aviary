@@ -40,6 +40,8 @@ decision, not improvised with generic gradients.
 - the design goal is continuity across modules, not novelty
 - crop, posture emphasis, or surrounding props can communicate the route
   context without inventing a different character
+- the same identity should remain visible, but route props should change with
+  module purpose instead of cloning the exact `personality` composition
 
 ## Anti-Approximation Rule
 
@@ -50,3 +52,7 @@ allows adaptation instead of fidelity.
 Do not replace the approved shared persona with route-local humanoids when the
 same narrative can be achieved by reusing the canonical figure and adapting the
 surrounding composition.
+
+Do not copy the exact `personality` prop set into `landing`, `dashboard`, or
+`chat` just because the shared persona is approved. Continuity means the same
+being, not the same shot.

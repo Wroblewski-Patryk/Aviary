@@ -20,8 +20,12 @@ They define the UX/UI target that future implementation should move toward.
     personality, and future flagship modules
 - Must preserve:
   - one humane synthetic identity across routes
-  - recognizable book, writing instrument, and luminous interface language
-  - module-specific adaptation through crop, callouts, and support objects
+  - luminous interface language and route-adaptable symbolic detail
+  - module-specific adaptation through crop, pose emphasis, callouts, and
+    support objects
+  - `personality` may keep the book and writing-tool family
+  - `landing`, `dashboard`, and `chat` should not inherit those exact
+    personality props unless the user explicitly asks for that repetition
   - no route-local replacement with a different humanoid or unrelated mascot
 
 ![Aviary shared canonical persona figure](./assets/aviary-persona-figure-canonical-reference-v1.png)
@@ -67,7 +71,7 @@ They define the UX/UI target that future implementation should move toward.
 - Asset:
   - `docs/ux/assets/aion-dashboard-canonical-reference-v2.png`
 - Implementation support asset:
-  - `docs/ux/assets/aviary-dashboard-hero-canonical-reference-v3.png`
+  - `docs/ux/assets/aviary-dashboard-hero-canonical-reference-v4.png`
 - Role:
   - flagship authenticated overview target
 - Must preserve:
@@ -77,6 +81,8 @@ They define the UX/UI target that future implementation should move toward.
   - premium editorial density without collapsing into analytics clutter
   - one continuous scenic hero composition when translated into production
     code, instead of visibly separate figure and atmosphere layers
+  - route-appropriate dashboard props such as cognition, orchestration,
+    guidance, and overview instead of the `personality` book-and-writing set
 
 ![AION dashboard canonical reference](./assets/aion-dashboard-canonical-reference-v2.png)
 
@@ -117,6 +123,9 @@ They define the UX/UI target that future implementation should move toward.
 
 - all flagship routes should reuse the shared canonical persona figure and
   adapt it to route context before introducing a different embodied being
+- do not repeat the full `personality` prop set on `landing`, `dashboard`, and
+  `chat`; use route-specific props that express trust, guidance, or
+  conversation instead
 - `landing` should converge toward the landing reference, not toward the
   dashboard shell.
 - `dashboard` should converge toward the dashboard reference even if some

@@ -25,7 +25,7 @@ type UtcOffsetOption = {
 
 const BUILD_REVISION = String(import.meta.env.VITE_APP_BUILD_REVISION ?? "dev");
 const CANONICAL_PERSONA_FIGURE_SRC = "/aviary-persona-figure-canonical-reference-v1.png";
-const DASHBOARD_HERO_ART_SRC = "/aviary-dashboard-hero-canonical-reference-v3.png";
+const DASHBOARD_HERO_ART_SRC = "/aviary-dashboard-hero-canonical-reference-v4.png";
 const RESET_DATA_CONFIRMATION_TEXT = "RESET MY DATA";
 const ROUTES: RoutePath[] = ["/dashboard", "/chat", "/personality", "/tools", "/settings"];
 const UI_LANGUAGE_OPTIONS: Array<{
