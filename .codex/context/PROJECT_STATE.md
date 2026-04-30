@@ -36,6 +36,8 @@ Last updated: 2026-04-30
       tightening the remaining card spacing
     - now also reduces motivation from four metrics to three and folds the
       proactive check-in into the active-goal card
+    - now also reduces motivation from three metrics to two and strips extra
+      subtitle/body copy from the right rail
   - `web/src/App.tsx` additionally now:
     - replaces rough chat composer glyphs with explicit SVG icon components
     - restores cleaner role-and-time metadata inside chat bubbles
@@ -56,6 +58,9 @@ Last updated: 2026-04-30
     - shortens the proactive check-in action label from `Modify` to `Edit`
     - removes the standalone proactive check-in section in favor of an
       integrated goal footer
+    - shortens the lead intent copy and memory descriptions
+    - simplifies suggested actions into title-first rows without extra body
+      copy
   - `web/src/index.css` now also:
     - enlarges the embodied persona crop
     - reduces portrait-note weight and connector length
@@ -66,6 +71,8 @@ Last updated: 2026-04-30
     - reduces memory/action card gaps and padding for a shorter rail
     - reduces topbar and message-meta spacing and gives the goal footer a
       responsive stacked treatment
+    - removes the dead `aion-chat-context-link` style
+    - reduces the motivation grid from three columns to two
   - new implementation task:
     - `.codex/tasks/PRJ-816-chat-canonical-parity-closure-lane.md`
   - current evidence sources:

@@ -268,6 +268,12 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
     - folded proactive check-in into the active-goal card instead of keeping a
       separate rail section
     - tightened topbar spacing and message-meta rhythm for a calmer read
+  - completed one more rail-copy simplification pass that:
+    - reduced motivation metrics from three to two
+    - removed the extra subtitle under `Cognitive context`
+    - shortened the lead-card and memory-copy text
+    - turned suggested actions into title-first rows instead of mini cards with
+      extra body copy
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`

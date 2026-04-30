@@ -2348,14 +2348,13 @@ export default function App() {
   const chatLinkedChannelsStatus = recentChannelsLabel === copy.common.noData ? "App only" : recentChannelsLabel;
   const chatIntentCard = {
     title: "Plan my day",
-    body: "Create a structured daily plan.",
+    body: "Shape the next calm step.",
     status: stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "Live" : "Ready",
     emphasis: stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "High" : "Steady",
   };
   const chatMotivationMetrics = [
     { label: "Importance", value: stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "0.80" : "0.62" },
     { label: "Urgency", value: stringValue(planningSummary?.active_task_count, "0") !== "0" ? "0.50" : "0.32" },
-    { label: "Valence", value: "+0.20" },
   ];
   const chatGoalCard = {
     title: "Project: Next meaningful step",
@@ -2368,18 +2367,18 @@ export default function App() {
   const chatRelatedMemory = [
     {
       title: `${stringValue(preferenceSummary?.learned_preference_count, "0")} learned cues`,
-      body: "Earlier preferences stay close to the thread.",
+      body: "Preferences stay close.",
       when: "Recent",
     },
     {
       title: `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} reusable patterns`,
-      body: "Helpful summaries remain close to the thread.",
+      body: "Summaries stay close.",
       when: "Today",
     },
   ];
   const chatSuggestedActions = [
-    { title: "Convert this plan to tasks", body: "Create actionable items." },
-    { title: "Schedule focus blocks", body: "Protect the next deep-work window." },
+    { title: "Convert this plan to tasks", body: "" },
+    { title: "Schedule focus blocks", body: "" },
   ];
   const chatProactiveCheckIn = {
     title: "Tomorrow 09:00",
@@ -3809,10 +3808,7 @@ export default function App() {
                   <aside className="aion-chat-context-rail">
                     <section className="aion-chat-context-panel aion-chat-context-panel-curated aion-chat-context-panel-lead">
                       <div className="mb-4 flex items-center justify-between gap-3">
-                        <div>
-                          <p className="text-sm font-semibold text-base-900">Cognitive context</p>
-                          <p className="mt-1 text-sm text-[#5f8f93]">Live support</p>
-                        </div>
+                        <p className="text-sm font-semibold text-base-900">Cognitive context</p>
                         <span className="aion-chat-live-dot" />
                       </div>
                       <article className="aion-chat-support-card aion-chat-support-card-lead">
@@ -3887,9 +3883,9 @@ export default function App() {
                       <div className="aion-chat-action-list">
                         {chatSuggestedActions.map((item) => (
                           <button key={item.title} className="aion-chat-context-action" type="button">
-                            <div>
+                            <div className="aion-chat-context-action-copy">
                               <p className="aion-chat-context-action-title">{item.title}</p>
-                              <p className="aion-chat-context-action-body">{item.body}</p>
+                              {item.body ? <p className="aion-chat-context-action-body">{item.body}</p> : null}
                             </div>
                             <span className="aion-chat-context-action-arrow" aria-hidden="true" />
                           </button>

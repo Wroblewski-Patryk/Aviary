@@ -73,6 +73,11 @@ Last updated: 2026-04-30
   - reduced motivation metrics from four to three
   - folded the proactive check-in into the active-goal card
   - tightened topbar and message-meta rhythm for a calmer flagship read
+- implemented in the latest rail-copy slice:
+  - reduced motivation metrics from three to two
+  - removed the extra `Cognitive context` subtitle
+  - shortened the lead-card and memory-copy text
+  - simplified suggested actions into title-first rows
 - focused validation:
   - `Push-Location .\web; npm run build; Pop-Location`
   - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-816-chat-canonical-parity-closure-lane.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
