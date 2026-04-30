@@ -2,6 +2,27 @@
 
 Last updated: 2026-04-30
 
+## Fresh Dashboard Figure-Caption And Rail Simplification Pass (2026-04-30)
+
+- `PRJ-800F` remains IN_PROGRESS as the only active flagship surface:
+  - `.codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md`
+- purpose:
+  - keep closing `dashboard` toward the canonical screenshot without opening a
+    second route lane before this surface reaches the new `95%` gate
+- implemented in this continuation:
+  - removed the extra dashboard figure-caption card that had no close
+    canonical counterpart
+  - expanded `recent activity` to five leaner rows and removed the extra
+    descriptive subline
+  - trimmed the intention card to the shorter, more poster-like copy structure
+    seen in the canonical dashboard
+- focused validation passed:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+- remaining work before DONE:
+  - deploy-side screenshot proof for this exact dashboard continuation
+  - then one last decision whether only crop/spacing drift remains
+
 ## Fresh Pixel-Perfect Surface Closure Workflow Freeze (2026-04-30)
 
 - `PRJ-802` is now DONE as the UX process-hardening slice:

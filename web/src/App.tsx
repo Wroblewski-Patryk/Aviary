@@ -2186,7 +2186,9 @@ export default function App() {
   ];
   const personalityRecentActivity = [
     { title: "Updated project plan", when: "2h ago" },
+    { title: "Deep work window refined", when: "3h ago" },
     { title: "Completed reflection cycle", when: "5h ago" },
+    { title: "New memory captured", when: "Yesterday" },
     { title: "Learned preference captured", when: "Yesterday" },
   ];
   const publicNavLabels = {
@@ -3035,12 +3037,6 @@ export default function App() {
                         src={CANONICAL_PERSONA_FIGURE_SRC}
                         alt="Embodied personality overview"
                       />
-                      <div className="aion-dashboard-figure-caption">
-                        <p className="aion-dashboard-figure-caption-label">Embodied cognition field</p>
-                        <p className="aion-dashboard-figure-caption-copy">
-                          Identity, memory, planning, and reflection staying visible in one calm orchestration space.
-                        </p>
-                      </div>
                       <div className="aion-dashboard-figure-badge">
                         <span className="aion-dashboard-figure-badge-core">✦</span>
                       </div>
@@ -3104,7 +3100,6 @@ export default function App() {
                         <article key={item.title} className="aion-dashboard-recent-row">
                           <div>
                             <p className="text-sm font-semibold text-base-900">{item.title}</p>
-                            <p className="mt-1 text-sm text-base-800">Captured in the living continuity layer.</p>
                           </div>
                           <span className="text-xs uppercase tracking-[0.18em] text-base-800">{item.when}</span>
                         </article>
@@ -3118,9 +3113,6 @@ export default function App() {
                       Create with clarity.
                       <br />
                       Serve with purpose.
-                    </p>
-                    <p className="mt-3 text-sm leading-7 text-base-800">
-                      Let the next action stay coherent with memory, active goals, and inner rhythm.
                     </p>
                   </section>
                 </aside>

@@ -203,6 +203,9 @@ paths, placeholders, fake data, and temporary fixes are forbidden.
   - corrected that decluttering pass by restoring the quiet support actions
     that do exist in the canonical dashboard, while keeping them visually soft
     and secondary
+  - continued the same single-surface lane by removing the non-canonical
+    figure caption, simplifying recent-activity rows, and trimming extra
+    narrative copy from the intention card
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`

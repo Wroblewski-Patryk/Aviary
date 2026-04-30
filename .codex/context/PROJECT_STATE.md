@@ -4,6 +4,25 @@ Last updated: 2026-04-30
 
 ## Product Snapshot
 
+- 2026-04-30: `PRJ-800F` continued with a figure-caption and rail simplification pass:
+  - `web/src/App.tsx` now:
+    - removes the non-canonical dashboard figure-caption card
+    - expands dashboard `recent activity` to five simpler rows
+    - trims the intention card down to the shorter canonical copy posture
+  - `web/src/index.css` now:
+    - removes the now-dead figure-caption styling from the dashboard hero stage
+  - result so far:
+    - the central hero should now read cleaner and closer to the canonical
+      dashboard
+    - the right rail should feel less verbose and more screenshot-faithful
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+  - highest-value next steps:
+    - inspect deployed `/dashboard` after this pass
+    - keep the next slice limited to crop and spacing only if the structure is
+      now close enough
+
 - 2026-04-30: `PRJ-802` froze a stricter flagship UX/UI workflow:
   - `AGENTS.md` now:
     - requires one-surface-at-a-time closure for flagship screenshot-driven UX
