@@ -4,6 +4,30 @@ Last updated: 2026-04-30
 
 ## Product Snapshot
 
+- 2026-04-30: `PRJ-800F` continued with a canonical-action hierarchy correction:
+  - `web/src/App.tsx` now:
+    - restores the quiet support actions in the guidance rail, current-phase
+      card, active-goals card, focus card, and scenic closure
+    - restores the fourth guidance, goal, and reflection rows that belong to
+      the canonical dashboard density
+  - `web/src/index.css` now:
+    - restores the three-column guidance-row contract with a softer action
+      treatment
+    - keeps those support actions visually light so the dashboard remains
+      premium instead of becoming loud app chrome
+  - result so far:
+    - the dashboard should now be closer to the canonical screenshot than the
+      previous over-pruned CTA continuation
+    - deploy-side screenshot proof is still required for this exact corrected
+      continuation
+  - focused validation passed:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+  - highest-value next steps:
+    - inspect deployed `/dashboard` after the canonical-action correction
+    - if only crop and spacing drift remain, finish `PRJ-800F` with one final
+      micro-pass
+
 - 2026-04-30: `PRJ-800F` continued with a dashboard CTA-decluttering pass:
   - `web/src/App.tsx` now:
     - removes secondary CTA buttons from the guidance rail, current-phase card,

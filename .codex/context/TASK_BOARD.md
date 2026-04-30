@@ -2,6 +2,27 @@
 
 Last updated: 2026-04-30
 
+## Fresh Dashboard Canonical Action Hierarchy Correction (2026-04-30)
+
+- `PRJ-800F` remains IN_PROGRESS as the current dashboard parity lane:
+  - `.codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md`
+- purpose:
+  - correct the previous CTA-decluttering continuation so the dashboard matches
+    the canonical screen more faithfully instead of merely becoming quieter
+- implemented in this continuation:
+  - restored the quiet support actions that are present in the canonical
+    dashboard rail, flow card, lower cards, and scenic closure
+  - restored the fourth guidance row and the fourth goal/reflection row where
+    the canonical screen benefits from that denser editorial cadence
+  - kept the actions visually soft so they read as support, not as loud app
+    chrome
+- focused validation passed:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-800F-dashboard-editorial-parity-slice.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+- remaining work before DONE:
+  - deploy-side screenshot proof for the corrected canonical-action hierarchy
+  - then decide whether only crop/spacing drift remains
+
 ## Fresh Dashboard CTA Decluttering Continuation (2026-04-30)
 
 - `PRJ-800F` remains IN_PROGRESS as the current dashboard parity lane:

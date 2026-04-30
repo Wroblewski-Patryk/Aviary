@@ -2628,12 +2628,12 @@ body {
 
 .aion-dashboard-guidance-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.58rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.62rem;
   align-items: start;
   border: 1px solid rgba(88, 67, 52, 0.08);
   border-radius: 1.3rem;
-  padding: 0.7rem 0.78rem;
+  padding: 0.72rem 0.8rem;
   background: rgba(255, 255, 255, 0.78);
   box-shadow:
     0 10px 22px rgba(78, 58, 43, 0.03),
@@ -2688,6 +2688,21 @@ body {
   color: var(--aion-muted);
   font-size: 0.76rem;
   line-height: 1.44;
+}
+
+.aion-dashboard-mini-action-quiet {
+  min-height: 2.1rem;
+  padding-inline: 0.74rem;
+  border: 1px solid rgba(88, 67, 52, 0.08);
+  background: rgba(255, 251, 245, 0.7);
+  color: var(--aion-muted);
+  font-size: 0.74rem;
+  box-shadow: none;
+}
+
+.aion-dashboard-guidance-cta {
+  width: 100%;
+  margin-top: 0.1rem;
 }
 
 .aion-rail-health {

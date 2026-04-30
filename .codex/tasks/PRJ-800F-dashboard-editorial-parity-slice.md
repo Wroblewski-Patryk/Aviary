@@ -200,6 +200,9 @@ paths, placeholders, fake data, and temporary fixes are forbidden.
   - continued the same lane by pruning dashboard CTA clutter so the route
     reads less like an operational control panel and more like one flagship
     tableau
+  - corrected that decluttering pass by restoring the quiet support actions
+    that do exist in the canonical dashboard, while keeping them visually soft
+    and secondary
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
