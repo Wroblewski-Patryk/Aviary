@@ -29,13 +29,23 @@ Last updated: 2026-04-30
   - added calmer transcript metadata and plan-like ordered-list treatment
     inside assistant messages so structured replies read closer to the
     canonical conversation cards
+- implemented in the latest refinement slice:
+  - tightened transcript density, bubble sizing, and message-meta hierarchy so
+    the thread reads closer to the canonical conversation cadence
+  - enlarged and retuned the embodied portrait stage with calmer note-card
+    density and a stronger scenic crop
+  - compressed the right rail and shortened its copy so it feels more
+    editorial and less widget-like
+  - replaced rough text glyphs in the composer with real icon components
+  - fixed the remaining chat-specific Polish copy and sample-plan text that
+    still suffered from encoding drift
 - focused validation:
   - `Push-Location .\web; npm run build; Pop-Location`
   - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-816-chat-canonical-parity-closure-lane.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
 - next smallest useful task:
   - compare the deployed chat against the canonical desktop reference
-  - then spend one bounded slice only on portrait crop, transcript density,
-    and any remaining topbar drift
+  - then, only if needed, spend one last bounded slice on portrait crop,
+    topbar density, and closure polish
 
 ## Fresh Internal Chat And Telegram Message Quality Implementation (2026-04-30)
 

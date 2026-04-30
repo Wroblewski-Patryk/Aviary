@@ -226,6 +226,13 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - opened a dedicated chat-only parity lane and closed the first major
     structural gap by reshaping the route into thread column, embodied stage,
     and cognitive rail
+  - completed one additional chat-only refinement pass that:
+    - tightened transcript density and bubble hierarchy
+    - made the embodied stage larger and calmer
+    - shortened right-rail copy so the route reads less like an app panel
+    - replaced rough text glyphs in the composer with real icon components
+    - repaired the chat-specific Polish copy that was still visibly mangled by
+      encoding drift
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
@@ -239,11 +246,12 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
     chat screenshots
 - What is incomplete:
   - live screenshot proof for this exact post-slice implementation
-  - final portrait crop and transcript spacing polish before a `97%` closure call
+  - final deploy-side decision on whether the remaining drift is small enough
+    to call the route above the `97%` gate
 - Next steps:
   - compare the deployed chat against the canonical reference
-  - spend the next bounded slice on portrait crop, transcript density, and
-    any remaining topbar drift only
+  - if needed, spend one last bounded slice only on portrait crop, topbar
+    density, and closure polish
 - Decisions made:
   - active flagship work is temporarily redirected from `dashboard` to `chat`
     by explicit user instruction

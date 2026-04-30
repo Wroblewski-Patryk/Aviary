@@ -25,6 +25,34 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-04-30 - Frontend copy can regress through encoding drift during shell-based rewrites
+- Context:
+  - flagship UI work on `chat` required targeted source rewrites after earlier
+    edits left several visible mojibake strings inside `web/src/App.tsx`.
+- Symptom:
+  - Polish copy, arrows, bullets, and preview-plan ranges can silently degrade
+    into malformed characters, which makes an otherwise close visual surface
+    look unfinished.
+- Root cause:
+  - shell-driven whole-file or broad raw-string rewrites can preserve or
+    amplify existing encoding drift instead of repairing only the intended
+    surface text.
+- Guardrail:
+  - prefer `apply_patch` for localized copy fixes, and after any fallback
+    shell-based rewrite, immediately re-audit the affected route strings for
+    visible encoding drift before calling the surface improved.
+- Preferred pattern:
+  - fix only the active route copy
+  - verify preview/sample strings as well as labels
+  - run a focused grep for mojibake markers after the rewrite
+- Avoid:
+  - assuming a successful raw text replace also repaired the rendered copy
+  - leaving mojibake in preview content or UI chrome while declaring a route
+    near screenshot parity
+- Evidence:
+  - `web/src/App.tsx`
+  - `.codex/tasks/PRJ-816-chat-canonical-parity-closure-lane.md`
+
 ### 2026-04-30 - Optimistic chat reconciliation must be message-role aware
 - Context:
   - internal chat uses backend-owned `/app/chat/history` as canonical durable

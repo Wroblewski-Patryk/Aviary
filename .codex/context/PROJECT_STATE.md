@@ -20,6 +20,15 @@ Last updated: 2026-04-30
       canonical multi-part stage
     - tightens topbar density, portrait crop, support-rail rhythm, and
       ordered-list treatment inside assistant messages
+    - now also compresses transcript density, message-card rhythm, portrait
+      note spacing, and right-rail pacing for a calmer flagship read
+  - `web/src/App.tsx` additionally now:
+    - replaces rough chat composer glyphs with explicit SVG icon components
+    - restores cleaner role-and-time metadata inside chat bubbles
+    - shortens the route-side rail copy and note-card copy to reduce
+      app-panel drift
+    - fixes the chat-specific Polish strings and preview-plan time ranges that
+      were still visibly affected by encoding drift
   - new implementation task:
     - `.codex/tasks/PRJ-816-chat-canonical-parity-closure-lane.md`
   - current evidence sources:
@@ -28,8 +37,8 @@ Last updated: 2026-04-30
     - `.codex/artifacts/prj811-815-chat-message-quality/chat-long-markdown-desktop.png`
   - highest-value next steps:
     - compare the deployed chat against the canonical reference
-    - then spend the next bounded slice only on portrait crop, transcript
-      density, and any remaining topbar drift
+    - if needed, spend one last bounded slice only on portrait crop, topbar
+      density, and closure polish
 
 - 2026-04-30: `PRJ-811..PRJ-815` implemented the internal chat and Telegram message-quality lane:
   - `web/src/App.tsx` now:

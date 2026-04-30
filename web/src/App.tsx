@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+﻿import { startTransition, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   ApiError,
   api,
@@ -40,7 +40,7 @@ const UI_LANGUAGE_OPTIONS: Array<{
     value: "system",
     iconToken: "AUTO",
     nativeLabel: "System",
-    label: { en: "System default", pl: "Domyślne systemu", de: "Systemstandard" },
+    label: { en: "System default", pl: "DomyĹ›lne systemu", de: "Systemstandard" },
     fallbackLabel: "browser",
   },
   {
@@ -244,27 +244,27 @@ const UI_COPY = {
     },
   },
   pl: {
-    routes: { "/login": "Logowanie", "/chat": "Czat", "/settings": "Ustawienia", "/tools": "Narzędzia", "/personality": "Osobowość" },
+    routes: { "/login": "Logowanie", "/chat": "Czat", "/settings": "Ustawienia", "/tools": "NarzÄ™dzia", "/personality": "OsobowoĹ›Ä‡" },
     routeDescriptions: {
-      "/login": "Zaloguj się do powłoki produktu.",
-      "/chat": "Jeden wspólny wątek rozmowy z ostatnimi wiadomościami i świeżymi odpowiedziami osobowości.",
-      "/settings": "Profil, język interfejsu i proaktywność w jednym prostym miejscu.",
-      "/tools": "Zobacz, co jest gotowe, co wymaga uwagi i z czego możesz skorzystać dalej.",
-      "/personality": "Produktowy przegląd tożsamości, wiedzy, planowania i możliwości.",
+      "/login": "Zaloguj siÄ™ do powĹ‚oki produktu.",
+      "/chat": "Jeden wspĂłlny wÄ…tek rozmowy z ostatnimi wiadomoĹ›ciami i Ĺ›wieĹĽymi odpowiedziami osobowoĹ›ci.",
+      "/settings": "Profil, jÄ™zyk interfejsu i proaktywnoĹ›Ä‡ w jednym prostym miejscu.",
+      "/tools": "Zobacz, co jest gotowe, co wymaga uwagi i z czego moĹĽesz skorzystaÄ‡ dalej.",
+      "/personality": "Produktowy przeglÄ…d toĹĽsamoĹ›ci, wiedzy, planowania i moĹĽliwoĹ›ci.",
     },
     common: {
-      workspace: "Przestrzeń",
-      currentSurface: "Bieżący ekran",
+      workspace: "PrzestrzeĹ„",
+      currentSurface: "BieĹĽÄ…cy ekran",
       account: "Konto",
       signedInAs: "Zalogowano jako",
       signOut: "Wyloguj",
       build: "build",
-      uiLanguage: "Język UI",
+      uiLanguage: "JÄ™zyk UI",
       utcOffset: "Offset UTC",
-      conversationLanguage: "Język rozmowy",
-      proactive: "Proaktywność",
-      on: "Wł.",
-      off: "Wył.",
+      conversationLanguage: "JÄ™zyk rozmowy",
+      proactive: "ProaktywnoĹ›Ä‡",
+      on: "WĹ‚.",
+      off: "WyĹ‚.",
       save: "Zapisz ustawienia",
       saving: "Zapisywanie...",
       loading: "Ładowanie...",
@@ -285,18 +285,18 @@ const UI_COPY = {
     },
     auth: {
       badge: "Aviary",
-      heroTitle: "Spokojne miejsce, żeby wrócić do rozmowy.",
+      heroTitle: "Spokojne miejsce, ĹĽeby wrĂłciÄ‡ do rozmowy.",
       heroBody:
-        "Zaloguj się, aby wrócić do czatu, ustawić preferencje i mieć Aviary blisko bez przedzierania się przez techniczny ekran startowy.",
-      sessionEntry: "Wejście do sesji",
-      trustTitle: "Czego możesz się spodziewać",
-      login: "Zaloguj się",
-      register: "Załóż konto",
+        "Zaloguj siÄ™, aby wrĂłciÄ‡ do czatu, ustawiÄ‡ preferencje i mieÄ‡ Aviary blisko bez przedzierania siÄ™ przez techniczny ekran startowy.",
+      sessionEntry: "WejĹ›cie do sesji",
+      trustTitle: "Czego moĹĽesz siÄ™ spodziewaÄ‡",
+      login: "Zaloguj siÄ™",
+      register: "ZaĹ‚ĂłĹĽ konto",
       email: "Email",
-      password: "Hasło",
-      displayName: "Nazwa wyświetlana",
-      enterWorkspace: "Wejdź do aplikacji",
-      createAccount: "Utwórz konto",
+      password: "HasĹ‚o",
+      displayName: "Nazwa wyĹ›wietlana",
+      enterWorkspace: "WejdĹş do aplikacji",
+      createAccount: "UtwĂłrz konto",
       tabsLogin: "Logowanie",
       tabsRegister: "Rejestracja",
     },
@@ -324,22 +324,22 @@ const UI_COPY = {
     },
     settings: {
       eyebrow: "Ustawienia",
-      title: "Dopasuj powłokę",
-      subtitle: "Krótki, mobile-first widok ustawień skupiony na profilu, języku interfejsu i proaktywnych follow-upach.",
+      title: "Dopasuj powĹ‚okÄ™",
+      subtitle: "KrĂłtki, mobile-first widok ustawieĹ„ skupiony na profilu, jÄ™zyku interfejsu i proaktywnych follow-upach.",
       profileTitle: "Profil",
-      profileBody: "Wybierz, jak aplikacja ma Cię opisywać.",
-      uiLanguageTitle: "Język interfejsu",
-      uiLanguageBody: "Zmienia etykiety, copy i nawigację tylko w powłoce aplikacji.",
-      uiLanguageHelp: "To nie steruje językiem używanym wewnątrz samej rozmowy.",
+      profileBody: "Wybierz, jak aplikacja ma CiÄ™ opisywaÄ‡.",
+      uiLanguageTitle: "JÄ™zyk interfejsu",
+      uiLanguageBody: "Zmienia etykiety, copy i nawigacjÄ™ tylko w powĹ‚oce aplikacji.",
+      uiLanguageHelp: "To nie steruje jÄ™zykiem uĹĽywanym wewnÄ…trz samej rozmowy.",
       utcOffsetTitle: "Lokalny offset czasu",
-      utcOffsetBody: "Ustawia jawny offset UTC, którego runtime używa przy wnioskowaniu o bieżącej dacie i godzinie dla Twojego profilu.",
-      utcOffsetHelp: "Wybierz offset zgodny z Twoim aktualnym miejscem. Na przykład Polska lub Szwajcaria zimą to zwykle UTC+01:00.",
-      conversationTitle: "Język rozmowy",
-      conversationBody: "Język rozmowy dopasowuje się live na podstawie kontekstu, historii i bieżącej wymiany.",
+      utcOffsetBody: "Ustawia jawny offset UTC, ktĂłrego runtime uĹĽywa przy wnioskowaniu o bieĹĽÄ…cej dacie i godzinie dla Twojego profilu.",
+      utcOffsetHelp: "Wybierz offset zgodny z Twoim aktualnym miejscem. Na przykĹ‚ad Polska lub Szwajcaria zimÄ… to zwykle UTC+01:00.",
+      conversationTitle: "JÄ™zyk rozmowy",
+      conversationBody: "JÄ™zyk rozmowy dopasowuje siÄ™ live na podstawie kontekstu, historii i bieĹĽÄ…cej wymiany.",
       proactiveTitle: "Proaktywne follow-upy",
-      proactiveBody: "Pozwól Aviary wysyłać okazjonalne follow-upy, gdy pozwalają na to ustawienia Twojego konta.",
-      saveHint: "Zapisz zmiany, gdy będziesz gotowy.",
-      conversationRuntimeOwned: "Adaptacyjne i oparte na kontekście",
+      proactiveBody: "PozwĂłl Aviary wysyĹ‚aÄ‡ okazjonalne follow-upy, gdy pozwalajÄ… na to ustawienia Twojego konta.",
+      saveHint: "Zapisz zmiany, gdy bÄ™dziesz gotowy.",
+      conversationRuntimeOwned: "Adaptacyjne i oparte na kontekĹ›cie",
       savedState: "Gotowe do zapisania",
       resetTitle: "Reset danych runtime",
       resetBody:
@@ -354,53 +354,53 @@ const UI_COPY = {
       resetSuccess: "Dane runtime zostaly zresetowane. Zaloguj sie ponownie i zacznij od nowa.",
     },
     tools: {
-      eyebrow: "Narzędzia",
-      title: "Gotowe narzędzia i kanały",
-      subtitle: "Zobacz, co działa już teraz, co wymaga działania, a co nadal jest zablokowane.",
-      groupCount: "Grupy narzędzi",
+      eyebrow: "NarzÄ™dzia",
+      title: "Gotowe narzÄ™dzia i kanaĹ‚y",
+      subtitle: "Zobacz, co dziaĹ‚a juĹĽ teraz, co wymaga dziaĹ‚ania, a co nadal jest zablokowane.",
+      groupCount: "Grupy narzÄ™dzi",
       integral: "Zawsze aktywne",
       ready: "Gotowe teraz",
-      linkRequired: "Wymaga podpięcia",
-      loading: "Ładowanie przeglądu narzędzi.",
-      empty: "Tutaj pojawi się przegląd Twoich narzędzi.",
+      linkRequired: "Wymaga podpiÄ™cia",
+      loading: "Ĺadowanie przeglÄ…du narzÄ™dzi.",
+      empty: "Tutaj pojawi siÄ™ przeglÄ…d Twoich narzÄ™dzi.",
       currentStatus: "Obecny stan",
-      nextStep: "Następny krok",
-      technicalDetails: "Szczegóły techniczne",
-      availability: "Dostępność",
+      nextStep: "NastÄ™pny krok",
+      technicalDetails: "SzczegĂłĹ‚y techniczne",
+      availability: "DostÄ™pnoĹ›Ä‡",
       provider: "Provider",
       control: "Sterowanie",
-      linkState: "Stan podpięcia",
-      readOnly: "Tylko podgląd",
-      enabledByUser: "Włączone przez Ciebie",
-      disabledByUser: "Wyłączone przez Ciebie",
+      linkState: "Stan podpiÄ™cia",
+      readOnly: "Tylko podglÄ…d",
+      enabledByUser: "WĹ‚Ä…czone przez Ciebie",
+      disabledByUser: "WyĹ‚Ä…czone przez Ciebie",
       saving: "Zapisywanie...",
       noAction: "Brak wymaganej akcji.",
       telegramLinking: "Podpinanie Telegrama",
       generateCode: "Wygeneruj kod",
-      rotateCode: "Obróć kod",
+      rotateCode: "ObrĂłÄ‡ kod",
       generating: "Generowanie...",
-      linkCode: "Kod podpięcia",
+      linkCode: "Kod podpiÄ™cia",
       instruction: "Instrukcja",
-      noLinkCode: "Brak aktywnego kodu. Wygeneruj go, gdy będziesz gotowy potwierdzić czat.",
-      capabilities: "Możliwości",
+      noLinkCode: "Brak aktywnego kodu. Wygeneruj go, gdy bÄ™dziesz gotowy potwierdziÄ‡ czat.",
+      capabilities: "MoĹĽliwoĹ›ci",
     },
     personality: {
-      eyebrow: "Osobowość",
-      title: "Przegląd osobowości",
-      subtitle: "Najpierw najważniejsze informacje, a dodatkowe szczegóły tylko wtedy, gdy ich potrzebujesz.",
+      eyebrow: "OsobowoĹ›Ä‡",
+      title: "PrzeglÄ…d osobowoĹ›ci",
+      subtitle: "Najpierw najwaĹĽniejsze informacje, a dodatkowe szczegĂłĹ‚y tylko wtedy, gdy ich potrzebujesz.",
       filter: "Filtruj sekcje",
-      loading: "Ładowanie przeglądu osobowości.",
-      empty: "Brak sekcji pasujących do filtra.",
+      loading: "Ĺadowanie przeglÄ…du osobowoĹ›ci.",
+      empty: "Brak sekcji pasujÄ…cych do filtra.",
     },
   },
   de: {
-    routes: { "/login": "Login", "/chat": "Chat", "/settings": "Einstellungen", "/tools": "Tools", "/personality": "Persönlichkeit" },
+    routes: { "/login": "Login", "/chat": "Chat", "/settings": "Einstellungen", "/tools": "Tools", "/personality": "PersĂ¶nlichkeit" },
     routeDescriptions: {
-      "/login": "Melde dich in der Produkthülle an.",
-      "/chat": "Ein gemeinsamer Gesprächsthread mit den letzten Nachrichten und neuen Antworten der Persönlichkeit.",
-      "/settings": "Profil, Oberflächensprache und proaktive Präferenzen an einem klaren Ort.",
-      "/tools": "Sieh, was bereit ist, was Aufmerksamkeit braucht und was du als Nächstes nutzen kannst.",
-      "/personality": "Produktorientierter Überblick über Identität, Wissen, Planung und Fähigkeiten.",
+      "/login": "Melde dich in der ProdukthĂĽlle an.",
+      "/chat": "Ein gemeinsamer GesprĂ¤chsthread mit den letzten Nachrichten und neuen Antworten der PersĂ¶nlichkeit.",
+      "/settings": "Profil, OberflĂ¤chensprache und proaktive PrĂ¤ferenzen an einem klaren Ort.",
+      "/tools": "Sieh, was bereit ist, was Aufmerksamkeit braucht und was du als NĂ¤chstes nutzen kannst.",
+      "/personality": "Produktorientierter Ăśberblick ĂĽber IdentitĂ¤t, Wissen, Planung und FĂ¤higkeiten.",
     },
     common: {
       workspace: "Workspace",
@@ -411,19 +411,19 @@ const UI_COPY = {
       build: "build",
       uiLanguage: "UI-Sprache",
       utcOffset: "UTC-Offset",
-      conversationLanguage: "Gesprächssprache",
+      conversationLanguage: "GesprĂ¤chssprache",
       proactive: "Proaktiv",
       on: "An",
       off: "Aus",
       save: "Einstellungen speichern",
       saving: "Speichern...",
-      loading: "Lädt...",
-      interfaceOnly: "Nur Oberfläche",
+      loading: "LĂ¤dt...",
+      interfaceOnly: "Nur OberflĂ¤che",
       details: "Details",
       inspectPayload: "Details anzeigen",
       noData: "Noch keine Daten.",
       user: "Du",
-      assistant: "Präsenz",
+      assistant: "PrĂ¤senz",
       sourceOfTruth: "Aktueller Wert",
       notSet: "nicht gesetzt",
       system: "System",
@@ -435,9 +435,9 @@ const UI_COPY = {
     },
     auth: {
       badge: "Aviary",
-      heroTitle: "Ein ruhiger Ort, um das Gespräch fortzusetzen.",
+      heroTitle: "Ein ruhiger Ort, um das GesprĂ¤ch fortzusetzen.",
       heroBody:
-        "Melde dich an, um zum Chat zurückzukehren, Einstellungen anzupassen und Aviary ohne technischen Ballast direkt griffbereit zu haben.",
+        "Melde dich an, um zum Chat zurĂĽckzukehren, Einstellungen anzupassen und Aviary ohne technischen Ballast direkt griffbereit zu haben.",
       sessionEntry: "Sitzung",
       trustTitle: "Was dich erwartet",
       login: "Einloggen",
@@ -451,9 +451,9 @@ const UI_COPY = {
       tabsRegister: "Registrieren",
     },
     chat: {
-      eyebrow: "Gespräch",
-      title: "Sprich mit der Persönlichkeit",
-      subtitle: "Du siehst zuerst den gemeinsamen Gesprächsverlauf, egal ob die letzten Nachrichten aus der App oder aus einem verknüpften Kanal kamen.",
+      eyebrow: "GesprĂ¤ch",
+      title: "Sprich mit der PersĂ¶nlichkeit",
+      subtitle: "Du siehst zuerst den gemeinsamen GesprĂ¤chsverlauf, egal ob die letzten Nachrichten aus der App oder aus einem verknĂĽpften Kanal kamen.",
       emptyThread:
         "Starte die Unterhaltung hier. Neue Nachrichten erscheinen direkt in diesem gemeinsamen Thread, sobald sie ausgetauscht wurden.",
       placeholder: "Sende eine Nachricht...",
@@ -465,8 +465,8 @@ const UI_COPY = {
       thread: "Thread",
       latestMessages: "Letzte Nachrichten",
       noHistory: "Noch keine gemeinsamen Nachrichten.",
-      transcriptCount: "Transkript-Einträge",
-      activeChannel: "Letzte Kanäle",
+      transcriptCount: "Transkript-EintrĂ¤ge",
+      activeChannel: "Letzte KanĂ¤le",
       latestLanguage: "Live-Sprache",
       messageDetails: "Nachrichtendetails",
       channel: "Kanal",
@@ -474,21 +474,21 @@ const UI_COPY = {
     },
     settings: {
       eyebrow: "Einstellungen",
-      title: "Hülle anpassen",
-      subtitle: "Kurzer mobile-first Bereich für Profil, Oberflächensprache und proaktive Follow-ups.",
+      title: "HĂĽlle anpassen",
+      subtitle: "Kurzer mobile-first Bereich fĂĽr Profil, OberflĂ¤chensprache und proaktive Follow-ups.",
       profileTitle: "Profil",
       profileBody: "Lege fest, wie dich die App anzeigen soll.",
-      uiLanguageTitle: "Oberflächensprache",
-      uiLanguageBody: "Ändert nur Labels, Copy und Navigation der App-Hülle.",
-      uiLanguageHelp: "Das steuert nicht die Sprache innerhalb des eigentlichen Gesprächs.",
+      uiLanguageTitle: "OberflĂ¤chensprache",
+      uiLanguageBody: "Ă„ndert nur Labels, Copy und Navigation der App-HĂĽlle.",
+      uiLanguageHelp: "Das steuert nicht die Sprache innerhalb des eigentlichen GesprĂ¤chs.",
       utcOffsetTitle: "Lokaler Zeit-Offset",
-      utcOffsetBody: "Legt den expliziten UTC-Offset fest, den die Runtime für Datum und Uhrzeit deines Profils verwendet.",
-      utcOffsetHelp: "Wähle den Offset passend zu deinem aktuellen Ort. Polen oder die Schweiz im Winter sind zum Beispiel meist UTC+01:00.",
-      conversationTitle: "Gesprächssprache",
-      conversationBody: "Die Gesprächssprache passt sich live aus Kontext, Verlauf und aktueller Unterhaltung an.",
+      utcOffsetBody: "Legt den expliziten UTC-Offset fest, den die Runtime fĂĽr Datum und Uhrzeit deines Profils verwendet.",
+      utcOffsetHelp: "WĂ¤hle den Offset passend zu deinem aktuellen Ort. Polen oder die Schweiz im Winter sind zum Beispiel meist UTC+01:00.",
+      conversationTitle: "GesprĂ¤chssprache",
+      conversationBody: "Die GesprĂ¤chssprache passt sich live aus Kontext, Verlauf und aktueller Unterhaltung an.",
       proactiveTitle: "Proaktive Follow-ups",
       proactiveBody: "Erlaube Aviary gelegentliche Follow-ups, wenn deine Kontoeinstellungen es zulassen.",
-      saveHint: "Speichere deine Änderungen, wenn du bereit bist.",
+      saveHint: "Speichere deine Ă„nderungen, wenn du bereit bist.",
       conversationRuntimeOwned: "Adaptiv und kontextbezogen",
       savedState: "Bereit zum Speichern",
       resetTitle: "Runtime-Daten zurucksetzen",
@@ -505,42 +505,42 @@ const UI_COPY = {
     },
     tools: {
       eyebrow: "Tools",
-      title: "Verfügbare Tools und Kanäle",
+      title: "VerfĂĽgbare Tools und KanĂ¤le",
       subtitle: "Sieh, was jetzt bereit ist, was Aktion braucht und was noch blockiert ist.",
       groupCount: "Tool-Gruppen",
       integral: "Immer aktiv",
       ready: "Jetzt bereit",
-      linkRequired: "Benötigt Verknüpfung",
-      loading: "Tool-Übersicht wird geladen.",
-      empty: "Noch keine Tool-Übersicht geladen.",
+      linkRequired: "BenĂ¶tigt VerknĂĽpfung",
+      loading: "Tool-Ăśbersicht wird geladen.",
+      empty: "Noch keine Tool-Ăśbersicht geladen.",
       currentStatus: "Aktueller Status",
-      nextStep: "Nächster Schritt",
+      nextStep: "NĂ¤chster Schritt",
       technicalDetails: "Technische Details",
-      availability: "Verfügbarkeit",
+      availability: "VerfĂĽgbarkeit",
       provider: "Provider",
       control: "Steuerung",
-      linkState: "Verknüpfungsstatus",
+      linkState: "VerknĂĽpfungsstatus",
       readOnly: "Nur lesen",
       enabledByUser: "Von dir aktiviert",
       disabledByUser: "Von dir deaktiviert",
       saving: "Speichern...",
-      noAction: "Keine Aktion nötig.",
-      telegramLinking: "Telegram verknüpfen",
+      noAction: "Keine Aktion nĂ¶tig.",
+      telegramLinking: "Telegram verknĂĽpfen",
       generateCode: "Code erzeugen",
       rotateCode: "Code erneuern",
       generating: "Erzeugen...",
-      linkCode: "Verknüpfungscode",
+      linkCode: "VerknĂĽpfungscode",
       instruction: "Anleitung",
-      noLinkCode: "Noch kein aktiver Code. Erzeuge ihn, wenn du den Chat bestätigen willst.",
-      capabilities: "Fähigkeiten",
+      noLinkCode: "Noch kein aktiver Code. Erzeuge ihn, wenn du den Chat bestĂ¤tigen willst.",
+      capabilities: "FĂ¤higkeiten",
     },
     personality: {
-      eyebrow: "Persönlichkeit",
-      title: "Persönlichkeitsübersicht",
+      eyebrow: "PersĂ¶nlichkeit",
+      title: "PersĂ¶nlichkeitsĂĽbersicht",
       subtitle: "Zuerst die wichtigsten Einblicke, weitere Details nur dann, wenn du sie sehen willst.",
       filter: "Sektionen filtern",
-      loading: "Persönlichkeitsübersicht wird geladen.",
-      empty: "Keine passenden Sektionen für diesen Filter.",
+      loading: "PersĂ¶nlichkeitsĂĽbersicht wird geladen.",
+      empty: "Keine passenden Sektionen fĂĽr diesen Filter.",
     },
   },
 } as const;
@@ -864,7 +864,7 @@ function localeLanguageLabel(option: (typeof UI_LANGUAGE_OPTIONS)[number], local
 }
 
 function localeOptionDisplay(option: (typeof UI_LANGUAGE_OPTIONS)[number], locale: ResolvedUiLanguageCode) {
-  return `${option.iconToken} ${option.nativeLabel}${localeLanguageLabel(option, locale) === option.nativeLabel ? "" : ` · ${localeLanguageLabel(option, locale)}`}`;
+  return `${option.iconToken} ${option.nativeLabel}${localeLanguageLabel(option, locale) === option.nativeLabel ? "" : ` Â· ${localeLanguageLabel(option, locale)}`}`;
 }
 
 function titleCaseFromStatus(value: string) {
@@ -1185,7 +1185,7 @@ function ModuleEntryCard({
       </div>
       <div className="mt-4 flex items-center justify-between text-sm text-base-800">
         <span>Open space</span>
-        <span className="font-semibold text-base-900 transition group-hover:translate-x-1">→</span>
+        <span className="font-semibold text-base-900 transition group-hover:translate-x-1">â†’</span>
       </div>
     </button>
   );
@@ -1205,7 +1205,7 @@ function FlowRail({
       {items.map((item) => (
         <article key={item.title} className="aion-flow-line pl-8">
           <span className="absolute left-0 top-1 flex h-5 w-5 items-center justify-center rounded-full border border-[#8eb8b2]/35 bg-[#f6faf8] text-[10px] font-semibold text-[#567671]">
-            •
+            â€˘
           </span>
           <p className="text-[11px] uppercase tracking-[0.22em] text-base-800">{item.eyebrow}</p>
           <h4 className="mt-1 font-display text-xl text-base-900">{item.title}</h4>
@@ -1431,6 +1431,36 @@ function CloseIcon() {
   );
 }
 
+function PlusIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+      <path d="M10 4.5v11" strokeLinecap="round" />
+      <path d="M4.5 10h11" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MicrophoneIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <rect x="7.1" y="3.8" width="5.8" height="8" rx="2.9" />
+      <path d="M5.8 9.9a4.2 4.2 0 0 0 8.4 0" strokeLinecap="round" />
+      <path d="M10 14.5v2.1" strokeLinecap="round" />
+      <path d="M7.7 16.6h4.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SendArrowIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <path d="M3.8 10 16 4.8l-3.5 5.2L16 15.2 3.8 10Z" fill="currentColor" opacity="0.16" stroke="none" />
+      <path d="M3.8 10 16 4.8l-3.5 5.2L16 15.2 3.8 10Z" strokeLinejoin="round" />
+      <path d="M12.5 10H4.9" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function PublicGlyph({ kind }: { kind: string }) {
   if (kind === "understanding") {
     return (
@@ -1605,21 +1635,21 @@ function ShellUtilityBar({
   return (
     <header className="aion-utility-bar hidden xl:grid">
       <div className="aion-utility-context">
-        <span className="aion-utility-context-emblem">✦</span>
+        <span className="aion-utility-context-emblem">âś¦</span>
         <div className="min-w-0">
           <p className="aion-utility-context-label">Aviary workspace</p>
           <p className="aion-utility-context-copy">{currentSurface}</p>
         </div>
       </div>
       <label className="aion-utility-search" aria-label="Workspace continuity frame">
-        <span className="aion-utility-search-icon">⌕</span>
+        <span className="aion-utility-search-icon">âŚ•</span>
         <input
           readOnly
           type="text"
           value=""
           placeholder="One calm shell for memory, planning, and the next meaningful action."
         />
-        <span className="aion-utility-search-shortcut">⌘K</span>
+        <span className="aion-utility-search-shortcut">âŚK</span>
       </label>
       <div className="aion-utility-actions">
         <button className="aion-utility-pill" type="button">
@@ -1627,7 +1657,7 @@ function ShellUtilityBar({
           Focus mode
         </button>
         <button className="aion-utility-pill" type="button">
-          ✧
+          âś§
           Quick capture
         </button>
         <button className="aion-utility-icon-pill" type="button" aria-label="Notifications">
@@ -1885,7 +1915,7 @@ export default function App() {
               event_id: "preview-assistant-2",
               role: "assistant",
               text:
-                "Perfect. I prepared a calm plan based on your goals, energy rhythm, and current priorities.\n\n1. Deep work block      10:00–12:00\n2. Project research     12:30–14:00\n3. Content creation     15:00–17:00\n\nShall we refine the details together?",
+                "Perfect. I prepared a calm plan based on your goals, energy rhythm, and current priorities.\n\n1. Deep work block      10:00-12:00\n2. Project research     12:30-14:00\n3. Content creation     15:00-17:00\n\nShall we refine the details together?",
               channel: "app",
               timestamp: "2026-04-26T09:43:00Z",
             },
@@ -2039,7 +2069,7 @@ export default function App() {
   const copy = UI_COPY[resolvedUiLanguage];
   const recentChannelsLabel = useMemo(() => {
     const recentChannels = Array.from(new Set(history.map((item) => item.channel))).filter(Boolean);
-    return recentChannels.length > 0 ? recentChannels.join(" • ") : copy.common.noData;
+    return recentChannels.length > 0 ? recentChannels.join(" - ") : copy.common.noData;
   }, [copy.common.noData, history]);
   const currentUserLabel = me?.user.display_name || me?.user.email || "Account";
   const accountSummaryItems = [
@@ -2205,9 +2235,9 @@ export default function App() {
   ];
   const personalityLayers = [
     {
-      zone: "Head · identity",
+      zone: "Head Â· identity",
       title: "Identity",
-      symbol: "◌",
+      symbol: "â—Ś",
       body: "Profile continuity, learned preferences, and language posture shape how the personality recognizes the current relationship.",
       highlights: [
         currentUserLabel,
@@ -2215,9 +2245,9 @@ export default function App() {
       ],
     },
     {
-      zone: "Near head · planning",
+      zone: "Near head Â· planning",
       title: "Planning",
-      symbol: "⌁",
+      symbol: "âŚ",
       body: "Goals, tasks, and milestones stay visible as the active foreground direction instead of remaining hidden in raw payloads.",
       highlights: [
         `${stringValue(planningSummary?.active_goal_count, "0")} goals`,
@@ -2225,9 +2255,9 @@ export default function App() {
       ],
     },
     {
-      zone: "Hand · learned knowledge",
+      zone: "Hand Â· learned knowledge",
       title: "Learned knowledge",
-      symbol: "✦",
+      symbol: "âś¦",
       body: "Patterns and affective takeaways become a reusable memory surface that supports future replies without overwhelming the route.",
       highlights: [
         `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} semantic conclusions`,
@@ -2235,9 +2265,9 @@ export default function App() {
       ],
     },
     {
-      zone: "Body · role + skills",
+      zone: "Body Â· role + skills",
       title: "Role and skills",
-      symbol: "↗",
+      symbol: "â†—",
       body: "Role posture and skill availability stay visible as product capabilities, while execution boundaries remain safely backend-owned.",
       highlights: [
         ...summaryLines("role_skill_state", overview?.role_skill_state ?? {}).slice(0, 2),
@@ -2312,19 +2342,19 @@ export default function App() {
       value: stringValue(me?.settings.preferred_language, copy.common.system).toUpperCase(),
     },
     {
-      label: "Channel",
+      label: "Linked channels",
       value: recentChannelsLabel === copy.common.noData ? "App" : recentChannelsLabel,
     },
   ];
   const chatModeTabs = ["Ask", "Plan", "Reflect", "Execute"];
-  const chatQuickActions = ["Plan my day", "Summarize", "What did I learn?", "Brainstorm"];
-  const chatComposerTools = ["Attach", "Voice", "Memory", "Tools"];
+  const chatQuickActions = ["Plan my day", "Summarize yesterday", "What did I learn?", "Check my goals"];
+  const chatComposerTools = ["Memory", "Voice", "Tools"];
   const chatCurrentFocus =
-    stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "Project planning" : "Conversation continuity";
+    stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "Daily planning" : "Conversation continuity";
   const chatLinkedChannelsStatus = recentChannelsLabel === copy.common.noData ? "App only" : recentChannelsLabel;
   const chatIntentCard = {
     title: "Plan my day",
-    body: "Create structured daily plan",
+    body: "Create a structured daily plan.",
     status: stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "Live" : "Ready",
     emphasis: stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "High" : "Steady",
   };
@@ -2338,34 +2368,34 @@ export default function App() {
     title: "Project: Next meaningful step",
     body:
       stringValue(planningSummary?.active_goal_count, "0") !== "0"
-        ? "Build and protect the current plan."
+        ? "Protect the current plan."
         : "Shape the next calm focus point.",
     progress: stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "72%" : "36%",
   };
   const chatRelatedMemory = [
     {
       title: `${stringValue(preferenceSummary?.learned_preference_count, "0")} learned cues`,
-      body: "Earlier preferences stay available while the dialogue remains calm.",
+      body: "Earlier preferences stay close to the thread.",
       when: "Recent",
     },
     {
       title: `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} reusable patterns`,
-      body: "Helpful summaries and patterns remain close to the thread.",
+      body: "Helpful summaries remain close to the thread.",
       when: "Today",
     },
     {
       title: recentChannelsLabel === copy.common.noData ? "App-first continuity" : `Linked with ${chatLinkedChannelsStatus}`,
       body:
         recentChannelsLabel === copy.common.noData
-          ? "The current thread is ready to become the first continuity anchor."
-          : "Conversation posture remains stable across connected touchpoints.",
+          ? "The thread is ready to become the first continuity anchor."
+          : "Posture stays steady across connected touchpoints.",
       when: recentChannelsLabel === copy.common.noData ? "Now" : "Connected",
     },
   ];
   const chatSuggestedActions = [
-    { title: "Convert this plan to tasks", body: "Create actionable items in your list." },
+    { title: "Convert this plan to tasks", body: "Create actionable items." },
     { title: "Schedule focus blocks", body: "Protect the next deep-work window." },
-    { title: "Set daily intention", body: "Define the main outcome for today." },
+    { title: "Set daily intention", body: "Define today's main outcome." },
   ];
   const chatProactiveCheckIn = {
     title: "Tomorrow 09:00",
@@ -2378,21 +2408,21 @@ export default function App() {
       className: "aion-chat-portrait-note aion-chat-portrait-note-memory",
       eyebrow: "Memory continuity",
       title: `${stringValue(preferenceSummary?.learned_preference_count, "0")} learned cues`,
-      body: "Earlier preferences and softer patterns stay available while the dialogue remains calm.",
+      body: "Earlier preferences stay available while the dialogue remains calm.",
     },
     {
       key: "expression",
       className: "aion-chat-portrait-note aion-chat-portrait-note-expression",
       eyebrow: "Expression",
       title: stringValue(me?.settings.preferred_language, "adaptive").toUpperCase(),
-      body: "The same persona adjusts tone and language without losing continuity or trust.",
+      body: "Tone adapts without losing continuity or trust.",
     },
     {
       key: "channels",
       className: "aion-chat-portrait-note aion-chat-portrait-note-channels",
       eyebrow: "Linked channels",
       title: chatLinkedChannelsStatus,
-      body: "Conversation posture stays coherent whether the last turn lived here or beyond the app shell.",
+      body: "The same conversation posture stays coherent across touchpoints.",
     },
   ];
   const chatActiveSummary = "Live";
@@ -3187,9 +3217,9 @@ export default function App() {
               </button>
 
               <section className="aion-panel-soft aion-rail-story aion-sidebar-support-card aion-sidebar-quote-card rounded-[1.8rem] p-4">
-                <p className="aion-sidebar-quote-mark">“</p>
+                <p className="aion-sidebar-quote-mark">â€ś</p>
                 <p className="aion-sidebar-quote-copy">Clarity is the lamp that makes the path.</p>
-                <p className="aion-sidebar-quote-signature">— AVIARY</p>
+                <p className="aion-sidebar-quote-signature">â€” AVIARY</p>
               </section>
             </div>
           </aside>
@@ -3332,7 +3362,7 @@ export default function App() {
               <section className="aion-panel aion-dashboard-stage">
                 <div className="aion-dashboard-stage-main">
                   <div className="aion-dashboard-stage-copy">
-                    <span className="aion-chat-headline-emblem">✦</span>
+                    <span className="aion-chat-headline-emblem" aria-hidden="true" />
                     <div>
                       <p className="text-xs uppercase tracking-[0.24em] text-[#8d785f]">Good morning</p>
                       <h2 className="mt-2 font-display text-[2.55rem] leading-[1.08] text-base-900">
@@ -3374,7 +3404,7 @@ export default function App() {
                         alt="Dashboard cognition field"
                       />
                       <div className="aion-dashboard-figure-badge">
-                        <span className="aion-dashboard-figure-badge-core">✦</span>
+                        <span className="aion-dashboard-figure-badge-core">âś¦</span>
                       </div>
                     </div>
 
@@ -3624,7 +3654,7 @@ export default function App() {
               <section className="aion-chat-workspace">
                 <div className="aion-chat-topbar">
                   <div className="aion-chat-headline">
-                    <span className="aion-chat-headline-emblem">✦</span>
+                    <span className="aion-chat-headline-emblem" aria-hidden="true" />
                     <div>
                     <p className="text-xs uppercase tracking-[0.24em] text-[#8d785f]">Active conversation</p>
                     <div className="mt-2 flex flex-wrap items-center gap-3">
@@ -3693,6 +3723,8 @@ export default function App() {
                             {!isUser ? <span className="aion-chat-avatar">A</span> : null}
                             <article className={`aion-chat-message ${isUser ? "aion-chat-message-user" : "aion-chat-message-assistant"}`}>
                               <div className={`aion-chat-message-meta ${transcriptIsPreview ? "aion-chat-message-meta-preview" : ""}`}>
+                                <span className="aion-chat-message-speaker">{isUser ? copy.common.user : "Aviary"}</span>
+                                <span className="aion-chat-meta-separator" aria-hidden="true" />
                                 <span>{formatTimestamp(message.timestamp, resolvedUiLanguage)}</span>
                                 {deliveryState && deliveryLabel ? (
                                   <span
@@ -3701,7 +3733,6 @@ export default function App() {
                                     title={deliveryLabel}
                                   />
                                 ) : null}
-                                {transcriptIsPreview ? <span>Starter conversation</span> : null}
                               </div>
                               <div className={`aion-chat-message-copy ${transcriptIsPreview ? "aion-chat-message-copy-preview" : ""}`}>
                                 {renderChatMarkdown(message.text)}
@@ -3739,7 +3770,7 @@ export default function App() {
                         </div>
                         <div className="aion-chat-composer-primary">
                           <button className="aion-chat-icon-button" type="button" aria-label="Add context">
-                            +
+                            <PlusIcon />
                           </button>
                           <div className="aion-chat-input-stack">
                             <textarea
@@ -3757,7 +3788,7 @@ export default function App() {
                             </div>
                           </div>
                           <button className="aion-chat-icon-button hidden sm:inline-flex" type="button" aria-label="Voice input">
-                            M
+                            <MicrophoneIcon />
                           </button>
                           <button
                             aria-label={copy.chat.send}
@@ -3765,7 +3796,7 @@ export default function App() {
                             disabled={sendingMessage}
                             type="submit"
                           >
-                            {sendingMessage ? "..." : "➜"}
+                            {sendingMessage ? "..." : <SendArrowIcon />}
                           </button>
                         </div>
                       </form>
@@ -3889,7 +3920,7 @@ export default function App() {
                               <p className="aion-chat-context-action-title">{item.title}</p>
                               <p className="aion-chat-context-action-body">{item.body}</p>
                             </div>
-                            <span className="aion-chat-context-action-arrow">→</span>
+                            <span className="aion-chat-context-action-arrow">?</span>
                           </button>
                         ))}
                       </div>
