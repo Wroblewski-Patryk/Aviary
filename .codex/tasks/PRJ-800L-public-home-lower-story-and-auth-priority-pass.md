@@ -228,6 +228,8 @@ paths, placeholders, fake data, and temporary fixes are forbidden.
   - changed the landing scenic art from an obvious nested image treatment to a
     background-stage treatment so the persona scene reads more like atmosphere
     than a card within a card
+  - replaced placeholder numbering and dots in the lower `home` closure with
+    route-appropriate semantic iconography for the feature strip and trust bar
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
@@ -244,16 +246,14 @@ paths, placeholders, fake data, and temporary fixes are forbidden.
   - production screenshot comparison against the canonical landing
   - local screenshot proof for `/` and `/login` via `vite preview` plus Playwright
 - What is incomplete:
-  - deploy-side confirmation for this exact modal-plus-scenic slice
+  - deploy-side confirmation for the final modal-plus-scenic-plus-iconography slice
   - final judgement whether the home surface is now above the `95%` gate or
     still needs one last micro-pass after live proof
-  - route-specific iconography for trust and proof items is still lighter than
-    the richer canonical feel the user wants
   - later dashboard parity remains the next major flagship loop
 - Next steps:
   - inspect deployed `/` and `/login` after this push
   - if live proof still shows drift, keep the next pass limited to home-only
-    crop, iconography, and trust-band rhythm
+    crop and trust-band rhythm
   - only return to `dashboard` after the landing first-screen read clears the
     `95%` gate
 - Decisions made:

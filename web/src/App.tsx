@@ -1269,6 +1269,93 @@ function CloseIcon() {
   );
 }
 
+function PublicGlyph({ kind }: { kind: string }) {
+  if (kind === "understanding") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <path d="M12 4.8c4 0 7.3 2.7 8.6 6.4-1.3 3.7-4.6 6.4-8.6 6.4s-7.3-2.7-8.6-6.4C4.7 7.5 8 4.8 12 4.8Z" />
+        <circle cx="12" cy="11.2" r="2.45" />
+      </svg>
+    );
+  }
+  if (kind === "memory") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <path d="M7.6 5.4h8.8a1.8 1.8 0 0 1 1.8 1.8v9.6a1 1 0 0 1-1.54.84L12 14.7l-4.66 2.94A1 1 0 0 1 5.8 16.8V7.2a1.8 1.8 0 0 1 1.8-1.8Z" />
+        <path d="M9.6 8.8h4.8" />
+        <path d="M9.6 11.6h3.2" />
+      </svg>
+    );
+  }
+  if (kind === "clarity") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <path d="M12 4.7 13.96 9l4.74.46-3.58 3.15 1 4.69L12 14.98 7.88 17.3l1-4.69-3.58-3.15L10.04 9 12 4.7Z" />
+      </svg>
+    );
+  }
+  if (kind === "planning") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <path d="M5.5 6.5h13v11h-13z" />
+        <path d="M8.2 10.1h4.1" />
+        <path d="m8.2 13.4 1.5 1.5 4-4" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+  if (kind === "companion") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <path d="M12 18.4c-3.7 0-6.8-3-6.8-6.8S8.3 4.8 12 4.8s6.8 3 6.8 6.8-3 6.8-6.8 6.8Z" />
+        <path d="M9.6 11.2c.44.7 1.16 1.12 2.4 1.12 1.24 0 1.96-.42 2.4-1.12" strokeLinecap="round" />
+        <circle cx="10" cy="9.3" r=".7" fill="currentColor" stroke="none" />
+        <circle cx="14" cy="9.3" r=".7" fill="currentColor" stroke="none" />
+      </svg>
+    );
+  }
+  if (kind === "privacy") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <path d="M12 4.8 18.2 7v4.8c0 3.42-2.52 6.48-6.2 7.44-3.68-.96-6.2-4.02-6.2-7.44V7L12 4.8Z" />
+        <path d="M9.8 12.1 11.2 13.5 14.4 10.3" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+  if (kind === "encryption") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <rect x="6.2" y="10.1" width="11.6" height="8.1" rx="2.1" />
+        <path d="M8.8 10.1V8.6a3.2 3.2 0 1 1 6.4 0v1.5" />
+      </svg>
+    );
+  }
+  if (kind === "storage") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <ellipse cx="12" cy="7" rx="5.7" ry="2.2" />
+        <path d="M6.3 7v4.1c0 1.22 2.55 2.2 5.7 2.2s5.7-.98 5.7-2.2V7" />
+        <path d="M6.3 11.1v4.1c0 1.22 2.55 2.2 5.7 2.2s5.7-.98 5.7-2.2v-4.1" />
+      </svg>
+    );
+  }
+  if (kind === "ownership") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <path d="M7.2 11.2V8.8a4.8 4.8 0 1 1 9.6 0v2.4" />
+        <path d="M6.2 11.2h11.6v7H6.2z" />
+        <path d="M12 14.2v2.3" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <path d="M12 5.2v13.6" />
+      <path d="M5.2 12h13.6" />
+      <circle cx="12" cy="12" r="6.8" />
+    </svg>
+  );
+}
+
 function ShellNavButton({
   label,
   active,
@@ -2233,32 +2320,50 @@ export default function App() {
   } satisfies Record<ResolvedUiLanguageCode, Array<{ title: string; body: string }>>;
   const publicFeaturePillars = {
     en: [
-      { title: "Deep understanding", body: "Understands your state and pace." },
-      { title: "Memory that grows", body: "Important insights stay available." },
-      { title: "Clarity and focus", body: "Helps you decide with intention." },
-      { title: "Plans and execution", body: "Turns ideas into next steps." },
-      { title: "Companion for life", body: "Present in work and growth." },
+      { icon: "understanding", title: "Deep understanding", body: "Understands your state and pace." },
+      { icon: "memory", title: "Memory that grows", body: "Important insights stay available." },
+      { icon: "clarity", title: "Clarity and focus", body: "Helps you decide with intention." },
+      { icon: "planning", title: "Plans and execution", body: "Turns ideas into next steps." },
+      { icon: "companion", title: "Companion for life", body: "Present in work and growth." },
     ],
     pl: [
-      { title: "Glebokie zrozumienie", body: "Rozumie Twoj stan i rytm." },
-      { title: "Pamiec, ktora rosnie", body: "Wazne wnioski zostaja i wracaja." },
-      { title: "Jasnosc i skupienie", body: "Pomaga wybierac z intencja." },
-      { title: "Plan i wykonanie", body: "Zamienia pomysly w kolejne kroki." },
-      { title: "Towarzysz na co dzien", body: "Obecny w pracy i rozwoju." },
+      { icon: "understanding", title: "Glebokie zrozumienie", body: "Rozumie Twoj stan i rytm." },
+      { icon: "memory", title: "Pamiec, ktora rosnie", body: "Wazne wnioski zostaja i wracaja." },
+      { icon: "clarity", title: "Jasnosc i skupienie", body: "Pomaga wybierac z intencja." },
+      { icon: "planning", title: "Plan i wykonanie", body: "Zamienia pomysly w kolejne kroki." },
+      { icon: "companion", title: "Towarzysz na co dzien", body: "Obecny w pracy i rozwoju." },
     ],
     de: [
-      { title: "Tiefes Verstehen", body: "Versteht Zustand und Tempo." },
-      { title: "Wachsende Erinnerung", body: "Wichtige Einsichten bleiben nah." },
-      { title: "Klarheit und Fokus", body: "Hilft bewusst zu entscheiden." },
-      { title: "Plan und Ausfuhrung", body: "Macht aus Ideen nachste Schritte." },
-      { title: "Begleiter im Alltag", body: "Prasent in Arbeit und Wachstum." },
+      { icon: "understanding", title: "Tiefes Verstehen", body: "Versteht Zustand und Tempo." },
+      { icon: "memory", title: "Wachsende Erinnerung", body: "Wichtige Einsichten bleiben nah." },
+      { icon: "clarity", title: "Klarheit und Fokus", body: "Hilft bewusst zu entscheiden." },
+      { icon: "planning", title: "Plan und Ausfuhrung", body: "Macht aus Ideen nachste Schritte." },
+      { icon: "companion", title: "Begleiter im Alltag", body: "Prasent in Arbeit und Wachstum." },
     ],
-  } satisfies Record<ResolvedUiLanguageCode, Array<{ title: string; body: string }>>;
+  } satisfies Record<ResolvedUiLanguageCode, Array<{ icon: string; title: string; body: string }>>;
   const publicTrustBandItems = {
-    en: ["Privacy first", "End-to-end encryption", "Local-first storage", "You own your data", "Transparent by default"],
-    pl: ["Prywatnosc przede wszystkim", "Szyfrowanie end-to-end", "Przechowywanie local-first", "To Ty kontrolujesz dane", "Przejrzystosc domyslnie"],
-    de: ["Privacy first", "Ende-zu-Ende-Verschlusselung", "Local-first Speicher", "Deine Daten gehoren dir", "Transparent von Beginn an"],
-  } satisfies Record<ResolvedUiLanguageCode, string[]>;
+    en: [
+      { icon: "privacy", label: "Privacy first" },
+      { icon: "encryption", label: "End-to-end encryption" },
+      { icon: "storage", label: "Local-first storage" },
+      { icon: "ownership", label: "You own your data" },
+      { icon: "clarity", label: "Transparent by default" },
+    ],
+    pl: [
+      { icon: "privacy", label: "Prywatnosc przede wszystkim" },
+      { icon: "encryption", label: "Szyfrowanie end-to-end" },
+      { icon: "storage", label: "Przechowywanie local-first" },
+      { icon: "ownership", label: "To Ty kontrolujesz dane" },
+      { icon: "clarity", label: "Przejrzystosc domyslnie" },
+    ],
+    de: [
+      { icon: "privacy", label: "Privacy first" },
+      { icon: "encryption", label: "Ende-zu-Ende-Verschlusselung" },
+      { icon: "storage", label: "Local-first Speicher" },
+      { icon: "ownership", label: "Deine Daten gehoren dir" },
+      { icon: "clarity", label: "Transparent von Beginn an" },
+    ],
+  } satisfies Record<ResolvedUiLanguageCode, Array<{ icon: string; label: string }>>;
   const publicProofLine = {
     en: "Trusted by thoughtful people worldwide",
     pl: "Zaufany przez uwaznych ludzi na calym swiecie",
@@ -2645,9 +2750,9 @@ export default function App() {
                     </div>
                     <div className="aion-public-micro-proof-row">
                       {publicHomeSurface.trustBand.slice(0, 3).map((item) => (
-                        <span key={item} className="aion-public-micro-proof-item">
+                        <span key={item.label} className="aion-public-micro-proof-item">
                           <span className="aion-public-micro-proof-dot" aria-hidden="true" />
-                          {item}
+                          {item.label}
                         </span>
                       ))}
                     </div>
@@ -2669,7 +2774,9 @@ export default function App() {
                   <div className="aion-public-feature-strip">
                     {publicHomeSurface.pillars.map((pillar, index) => (
                       <article key={pillar.title} className="aion-public-feature-card">
-                        <span className="aion-public-feature-index">{String(index + 1).padStart(2, "0")}</span>
+                        <span className="aion-public-feature-icon" aria-hidden="true">
+                          <PublicGlyph kind={pillar.icon} />
+                        </span>
                         <p className="aion-public-feature-title">{pillar.title}</p>
                         <p className="aion-public-feature-body">{pillar.body}</p>
                       </article>
@@ -2684,8 +2791,8 @@ export default function App() {
                     </div>
                     <div className="aion-public-proof-bridge-list">
                       {publicHomeSurface.trustBand.slice(0, 3).map((item) => (
-                        <span key={item} className="aion-public-proof-bridge-pill">
-                          {item}
+                        <span key={item.label} className="aion-public-proof-bridge-pill">
+                          {item.label}
                         </span>
                       ))}
                     </div>
@@ -2694,9 +2801,11 @@ export default function App() {
 
                 <section className="aion-public-trust-band">
                   {publicHomeSurface.trustBand.map((item) => (
-                    <article key={item} className="aion-public-trust-item">
-                      <span className="aion-public-trust-dot" aria-hidden="true" />
-                      <p>{item}</p>
+                    <article key={item.label} className="aion-public-trust-item">
+                      <span className="aion-public-trust-icon" aria-hidden="true">
+                        <PublicGlyph kind={item.icon} />
+                      </span>
+                      <p>{item.label}</p>
                     </article>
                   ))}
                 </section>

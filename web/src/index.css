@@ -319,19 +319,22 @@ body {
   display: none;
 }
 
-.aion-public-feature-index {
+.aion-public-feature-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.42rem;
-  height: 1.42rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 999px;
   border: 1px solid rgba(197, 145, 78, 0.18);
-  background: rgba(255, 251, 245, 0.78);
+  background: rgba(255, 251, 245, 0.92);
   color: rgba(111, 93, 77, 0.74);
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  box-shadow: 0 10px 18px rgba(84, 66, 52, 0.035);
+}
+
+.aion-public-feature-icon svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .aion-public-proof-bridge {
@@ -550,6 +553,24 @@ body {
   border-radius: 999px;
   background: linear-gradient(180deg, rgba(244, 222, 190, 0.94), rgba(221, 190, 150, 0.9));
   box-shadow: 0 0 0 0.32rem rgba(244, 222, 190, 0.14);
+}
+
+.aion-public-trust-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 222, 190, 0.24);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(244, 233, 214, 0.94);
+}
+
+.aion-public-trust-icon svg {
+  width: 0.95rem;
+  height: 0.95rem;
 }
 
 .aion-public-auth-modal-backdrop {
