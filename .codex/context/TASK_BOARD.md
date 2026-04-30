@@ -2,6 +2,26 @@
 
 Last updated: 2026-04-30
 
+## Fresh Public Home Scenic Crop And Note Polish (2026-04-30)
+
+- `PRJ-819` is now DONE as a bounded `home` polish slice:
+  - `.codex/tasks/PRJ-819-home-scenic-crop-and-note-polish-pass.md`
+- purpose:
+  - reduce the remaining card-heavy feel on `home` after the full-bleed shell
+    pass
+- implemented:
+  - strengthened the scenic hero crop and slightly enlarged the stage feel
+  - softened and repositioned the hero note cards
+  - tightened `feature bridge` overlap, material, and proof rhythm
+  - tightened `trust band` overlap and spacing so the lower closure reads more
+    like one continuation
+- focused validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/index.css .codex/tasks/PRJ-819-home-scenic-crop-and-note-polish-pass.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+- next smallest useful task:
+  - compare deployed `home`
+  - if needed, do one last note-position micro-pass only
+
 ## Fresh Public Home Full-Bleed Hero Shell Pass (2026-04-30)
 
 - `PRJ-818` is now DONE as a bounded `home` shell-framing slice:

@@ -2,6 +2,21 @@
 
 Last updated: 2026-04-30
 
+- 2026-04-30: `PRJ-819` polished the public `home` scenic read:
+  - `web/src/index.css` now:
+    - gives the landing hero copy slightly stronger proportions and spacing
+    - moves the scenic crop upward and increases the stage authority of the
+      background art
+    - softens and enlarges the landing note cards while reducing their visual
+      heaviness
+    - deepens the overlap and material polish of `feature bridge` and
+      `trust band`
+  - new implementation task:
+    - `.codex/tasks/PRJ-819-home-scenic-crop-and-note-polish-pass.md`
+  - highest-value next steps:
+    - compare the deployed `home`
+    - if needed, do one final micro-pass only on note positions and live crop
+
 - 2026-04-30: `PRJ-818` rebuilt the public `home` into a full-bleed shell:
   - `web/src/App.tsx` now:
     - uses full-width `header`, `hero`, and `footer` sections for the public
