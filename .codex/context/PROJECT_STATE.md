@@ -2,6 +2,35 @@
 
 Last updated: 2026-04-30
 
+- 2026-04-30: `PRJ-816` opened a new chat-only canonical parity closure lane:
+  - `web/src/App.tsx` now:
+    - introduces a clearer chat-specific cognitive rail hierarchy with current
+      intent, motivation, active goal, memory, suggested actions, and the next
+      proactive check-in
+    - upgrades the composer to include integrated mode tabs above the main
+      input tray
+    - removes the extra chat message summary line so transcript cards stay
+      calmer and closer to the canonical conversation-first reading
+    - restructures the desktop chat workspace toward three visible parts:
+      thread column, embodied portrait stage, and cognitive rail
+  - `web/src/index.css` now:
+    - adds the first canonical chat-parity styling for mode tabs, motivation
+      cards, memory rows, action rows, and check-in presentation
+    - changes the desktop grid from a stacked support column to a more
+      canonical multi-part stage
+    - tightens topbar density, portrait crop, support-rail rhythm, and
+      ordered-list treatment inside assistant messages
+  - new implementation task:
+    - `.codex/tasks/PRJ-816-chat-canonical-parity-closure-lane.md`
+  - current evidence sources:
+    - `docs/ux/assets/aion-chat-canonical-reference-v4.png`
+    - `.codex/artifacts/production-audit-2026-04-26/chat-desktop.png`
+    - `.codex/artifacts/prj811-815-chat-message-quality/chat-long-markdown-desktop.png`
+  - highest-value next steps:
+    - compare the deployed chat against the canonical reference
+    - then spend the next bounded slice only on portrait crop, transcript
+      density, and any remaining topbar drift
+
 - 2026-04-30: `PRJ-811..PRJ-815` implemented the internal chat and Telegram message-quality lane:
   - `web/src/App.tsx` now:
     - reconciles optimistic transcript items by exact message id or

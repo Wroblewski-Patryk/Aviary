@@ -2,6 +2,41 @@
 
 Last updated: 2026-04-30
 
+## Fresh Chat Canonical Parity Closure Lane (2026-04-30)
+
+- `PRJ-816` is now IN_PROGRESS as the active flagship surface:
+  - `.codex/tasks/PRJ-816-chat-canonical-parity-closure-lane.md`
+- purpose:
+  - bring the `chat` route above the current `97%` parity gate before opening
+    more flagship drift at once
+- current audit found:
+  - the chat route is functional and materially better than the older
+    production proof, but it still reads as `thread + stacked support column`
+    rather than the canonical `thread + embodied stage + cognitive rail`
+  - the composer is calmer than earlier builds, yet it still lacks the
+    integrated mode posture and feels more app-like than canonical
+  - the right-side support hierarchy is too abstract and does not yet match
+    the canonical order of intent, motivation, goal, memory, actions, and
+    proactive continuity
+- implemented in the first closure slice:
+  - introduced a dedicated `PRJ-816` chat-only parity lane
+  - restructured the chat workspace toward a three-part composition:
+    thread column, embodied portrait stage, and cognitive context rail
+  - upgraded the composer with integrated mode tabs and calmer support layout
+  - replaced the abstract support stack with clearer canonical sections for
+    current intent, motivation, active goal, related memory, suggested
+    actions, and next proactive check-in
+  - added calmer transcript metadata and plan-like ordered-list treatment
+    inside assistant messages so structured replies read closer to the
+    canonical conversation cards
+- focused validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-816-chat-canonical-parity-closure-lane.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+- next smallest useful task:
+  - compare the deployed chat against the canonical desktop reference
+  - then spend one bounded slice only on portrait crop, transcript density,
+    and any remaining topbar drift
+
 ## Fresh Internal Chat And Telegram Message Quality Implementation (2026-04-30)
 
 - `PRJ-811..PRJ-815` are now DONE:
