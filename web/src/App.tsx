@@ -2969,7 +2969,9 @@ export default function App() {
                           <div className="aion-public-micro-proof-row">
                             {publicHomeSurface.trustBand.slice(0, 3).map((item) => (
                               <span key={item.label} className="aion-public-micro-proof-item">
-                                <span className="aion-public-micro-proof-dot" aria-hidden="true" />
+                                <span className="aion-public-micro-proof-icon" aria-hidden="true">
+                                  <PublicGlyph kind={item.icon} />
+                                </span>
                                 {item.label}
                               </span>
                             ))}

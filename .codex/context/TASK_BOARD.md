@@ -2,6 +2,24 @@
 
 Last updated: 2026-04-30
 
+## Fresh Public Home Header And Proof Iconography Pass (2026-04-30)
+
+- `PRJ-822` is now IN_PROGRESS as a bounded `home` first-viewport slice:
+  - `.codex/tasks/PRJ-822-home-header-and-proof-iconography-pass.md`
+- purpose:
+  - replace placeholder-like proof dots with real iconography and calm the
+    header posture in the landing hero
+- implemented in the current slice:
+  - upgraded the micro-proof row to reuse semantic public glyphs
+  - softened public nav link and button rhythm
+  - tightened hero body and first-viewport spacing
+- focused validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-822-home-header-and-proof-iconography-pass.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+- next smallest useful task:
+  - compare the deployed `home`
+  - if still needed, spend one last bounded `home` slice on final hero-note and trust-band drift
+
 ## Fresh Canonical 100 Slice Closure Map (2026-04-30)
 
 - `PRJ-821` is now DONE as a planning freeze:
