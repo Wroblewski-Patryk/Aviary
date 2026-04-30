@@ -4,6 +4,31 @@ Last updated: 2026-04-30
 
 ## Product Snapshot
 
+- 2026-04-30: `PRJ-802` froze a stricter flagship UX/UI workflow:
+  - `AGENTS.md` now:
+    - requires one-surface-at-a-time closure for flagship screenshot-driven UX
+    - requires a `95%` parity gate before moving to the next dependent surface
+    - treats canonical screenshot plus explicit user notes as the active merged
+      spec
+    - requires escalation when those notes conflict
+  - `docs/ux/canonical-visual-implementation-workflow.md` now:
+    - defines a harder closure order and quick screenshot-check loop
+    - records the `95%` parity threshold explicitly
+  - `docs/ux/design-memory.md` now:
+    - records the approved surface-first closure pattern and the user-override
+      interpretation rule
+  - `.codex/context/LEARNING_JOURNAL.md` now:
+    - captures the recurring pitfall of parallel flagship polishing before a
+      screenshot-closed surface
+  - result:
+    - future flagship UI work should now progress through smaller, more
+      enforceable closure loops instead of broad overlapping polish passes
+  - focused validation passed:
+    - `git diff --check -- AGENTS.md docs/ux/canonical-visual-implementation-workflow.md docs/ux/design-memory.md .codex/context/LEARNING_JOURNAL.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .codex/tasks/PRJ-802-freeze-pixel-perfect-surface-closure-and-user-override-rules.md`
+  - highest-value next steps:
+    - apply this workflow immediately to the next single flagship surface
+    - keep later route work blocked until that surface reaches `95%+`
+
 - 2026-04-30: `PRJ-800F` continued with a canonical-action hierarchy correction:
   - `web/src/App.tsx` now:
     - restores the quiet support actions in the guidance rail, current-phase

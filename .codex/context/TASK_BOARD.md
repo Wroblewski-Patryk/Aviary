@@ -2,6 +2,26 @@
 
 Last updated: 2026-04-30
 
+## Fresh Pixel-Perfect Surface Closure Workflow Freeze (2026-04-30)
+
+- `PRJ-802` is now DONE as the UX process-hardening slice:
+  - `.codex/tasks/PRJ-802-freeze-pixel-perfect-surface-closure-and-user-override-rules.md`
+- purpose:
+  - prevent repeated flagship UX drift by freezing a stricter `one surface at a
+    time` workflow with a `95%` parity gate and explicit user-override rules
+- implemented in this slice:
+  - recorded the `95%` parity gate in repo instructions and canonical workflow
+  - recorded that canonical screenshot plus explicit user notes becomes the
+    active merged spec
+  - recorded that contradictory user notes must be escalated before
+    implementation
+  - captured the recurring pitfall in the learning journal
+- focused validation passed:
+  - `git diff --check -- AGENTS.md docs/ux/canonical-visual-implementation-workflow.md docs/ux/design-memory.md .codex/context/LEARNING_JOURNAL.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .codex/tasks/PRJ-802-freeze-pixel-perfect-surface-closure-and-user-override-rules.md`
+- next workflow expectation:
+  - finish one flagship surface to `95%+` before opening the next dependent
+    lane
+
 ## Fresh Dashboard Canonical Action Hierarchy Correction (2026-04-30)
 
 - `PRJ-800F` remains IN_PROGRESS as the current dashboard parity lane:

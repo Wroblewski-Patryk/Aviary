@@ -70,6 +70,18 @@
 - Product naming boundary:
   keep `Aviary` for app-brand surfaces, while the embodied personality remains
   unnamed until a later identity-forming product decision.
+- Surface-first flagship closure:
+  Close one flagship surface at a time and do not open the next dependent
+  route until the current one is visually at least `95%` aligned with the
+  active spec.
+- Canonical spec with user interpretation:
+  When a canonical screenshot exists, treat it as the base spec, but merge in
+  explicit user-requested deviations as approved interpretation notes instead
+  of ignoring them or silently reverting to the image.
+- Canonical conflict escalation:
+  If two user-requested visual notes conflict, or if a new note conflicts with
+  a previously accepted interpretation, stop and ask the user which direction
+  should win before implementing.
 
 ## Reuse Notes
 
@@ -88,6 +100,8 @@
 - Future web UX tasks should capture post-deploy screenshots and compare them
   directly against the canonical screen-set instead of relying only on memory
   or prompt descriptions.
+- Future flagship UX tasks should use a `95%` parity gate per surface instead
+  of polishing multiple screens in parallel.
 - When a canonical screenshot drives implementation, record background and
   decorative fidelity rules here so future parity passes reuse them instead of
   flattening them into generic gradients.

@@ -137,10 +137,21 @@ If any check fails, fix before closure.
   behind focused tests and docs or context updates.
 - For UX/UI work, require explicit design source, state coverage, responsive
   evidence, accessibility checks, and parity notes.
+- For flagship screenshot-driven UX/UI work, close one surface at a time:
+  - finish `layout` before `sidebar`
+  - finish shared shell pieces before route modules that depend on them
+  - do not polish `dashboard`, `chat`, or `personality` in parallel when the
+    current target surface is still below the acceptance threshold
 - Reuse shared UI patterns before introducing screen-local style inventions.
 - When a new pattern is approved, record it in `docs/ux/design-memory.md`.
 - When a canonical web screen reference exists, treat it as a specification
   and close the task with screenshot-comparison evidence.
+- For canonical screenshot work, require an explicit `95%` parity gate before
+  moving to the next dependent surface.
+- When the user adds explicit notes on top of a canonical screenshot, treat the
+  screenshot plus those notes as the active merged spec.
+- If user notes conflict with each other or with an already-approved screen
+  interpretation, stop and ask the user to choose before implementing.
 - Do not silently downgrade decorative fidelity by replacing image-based
   backgrounds with gradient approximations.
 - When a recurring environment or execution pitfall is discovered, record it in
@@ -225,6 +236,8 @@ This repository now has active browser-shell work. For UX/UI scope:
   driven parity tasks
 - use `docs/ux/background-and-decorative-asset-strategy.md` when route art
   direction depends on illustration or image-rich atmosphere
+- require a quick screenshot check after each surface slice before proceeding
+  to the next dependent surface
 
 ## Deployment Rule
 

@@ -25,6 +25,39 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-04-30 - Flagship UX work drifts when multiple surfaces are polished before the current one is screenshot-closed
+- Context:
+  - repeated `landing / dashboard / chat / personality` work created visible
+    progress, but the same structural instructions had to be repeated many
+    times before any one surface became truly close to the canonical target.
+- Symptom:
+  - the process keeps producing broad incremental polish without quickly
+    reaching one clearly finished, screenshot-verified surface.
+- Root cause:
+  - flagship UX work was spread across several surfaces before the current one
+    reached a hard parity gate, and canonical screenshots were not always used
+    as the only active spec with a strict closure threshold.
+- Guardrail:
+  - for screenshot-driven flagship UX, close one surface at a time and require
+    an explicit `95%` parity gate before moving to the next dependent surface.
+  - treat canonical screenshot plus explicit user notes as the active spec.
+  - if user notes conflict, stop for a decision instead of guessing.
+- Preferred pattern:
+  - `layout -> shared nav/sidebar -> route surface`
+  - screenshot after each slice
+  - top 5 to 10 remaining mismatches written down
+  - continue the same surface until it clears the threshold
+- Avoid:
+  - polishing `home`, `dashboard`, `chat`, and `personality` in overlapping
+    loops while earlier shell or layout surfaces still drift visibly
+  - treating the canonical image as inspiration instead of a specification
+  - silently ignoring user-requested deviations from the canonical image
+- Evidence:
+  - `docs/ux/canonical-visual-implementation-workflow.md`
+  - `docs/ux/design-memory.md`
+  - `AGENTS.md`
+  - `.codex/tasks/PRJ-802-freeze-pixel-perfect-surface-closure-and-user-override-rules.md`
+
 ### 2026-04-29 - Communication-boundary relations must reach proactive and expression owners
 - Context:
   - user reported repeated proactive Telegram-style check-ins every ~30 minutes
