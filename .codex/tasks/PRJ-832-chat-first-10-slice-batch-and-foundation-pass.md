@@ -260,6 +260,8 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - implemented one more bounded action-row batch by tightening transcript row
     cadence and reducing the padding, radius, shadow, and arrow emphasis of
     suggested-action rows
+  - implemented one more bounded memory-row batch by reducing related-memory
+    padding, radius, title scale, and timestamp emphasis
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
@@ -275,7 +277,7 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - deploy-side proof for the new chat batch
   - remaining batches beyond the foundation pass
 - Next steps:
-  - compare the deployed chat after the action-row and transcript-cadence batch
+  - compare the deployed chat after the memory-row quietness batch
   - if needed, open the next bounded chat continuation lane only for remaining
     proof-backed drift
 - Decisions made:
