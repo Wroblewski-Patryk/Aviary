@@ -251,6 +251,10 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
     weight, tightening lead-card spacing, and softening rail title/body scale
   - implemented one more bounded motivation-density batch by reducing
     motivation-card padding/scale and tightening the active-goal footer rhythm
+  - updated the chat 100-slice map so its active starting point now reflects
+    the later rail-density batches instead of still pointing back to Batch 1
+  - implemented one more bounded rail-quietness batch by softening the lead
+    card material, reducing support-accent weight, and thinning goal-progress
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
@@ -266,7 +270,7 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - deploy-side proof for the new chat batch
   - remaining batches beyond the foundation pass
 - Next steps:
-  - compare the deployed chat after the motivation-density and goal-footer batch
+  - compare the deployed chat after the rail-quietness and goal-progress batch
   - if needed, open the next bounded chat continuation lane only for remaining
     proof-backed drift
 - Decisions made:

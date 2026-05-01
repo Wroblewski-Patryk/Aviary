@@ -154,7 +154,14 @@ pixel-close steps.
 
 ## Current Recommended Starting Point
 
-The current active `chat` batch is Batch 1.
+The current active `chat` work has already moved through the foundations and
+is now operating inside the later density and proof-oriented slices.
 
-Implement slices `1..10` before deciding whether to open Batch 2 or jump
-directly to deploy-side proof for the route.
+Recommended focus order from the current state:
+
+1. keep tightening Batches 7..9 while the rail still reads heavier than the
+   canonical transcript-first composition
+2. avoid reopening early bubble/composer work unless a deploy-side proof shows
+   a regression there
+3. move into Batch 10 only after the desktop route looks sufficiently calm in
+   deploy-side proof

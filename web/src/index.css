@@ -2362,8 +2362,8 @@ body {
 
 .aion-chat-support-card-lead {
   background:
-    linear-gradient(180deg, rgba(236, 247, 244, 0.74), rgba(255, 251, 245, 0.84));
-  border-color: rgba(142, 184, 178, 0.2);
+    linear-gradient(180deg, rgba(239, 248, 245, 0.68), rgba(255, 251, 245, 0.82));
+  border-color: rgba(142, 184, 178, 0.16);
 }
 
 .aion-chat-support-card-quiet {
@@ -2375,13 +2375,13 @@ body {
 .aion-chat-support-accent {
   display: inline-flex;
   align-items: center;
-  padding: 0.2rem 0.5rem;
+  padding: 0.18rem 0.46rem;
   border-radius: 999px;
-  background: rgba(126, 167, 159, 0.12);
+  background: rgba(126, 167, 159, 0.1);
   color: #4f7e82;
-  font-size: 0.61rem;
+  font-size: 0.59rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
@@ -2418,8 +2418,8 @@ body {
 }
 
 .aion-chat-goal-progress {
-  margin-top: 0.82rem;
-  height: 0.38rem;
+  margin-top: 0.72rem;
+  height: 0.34rem;
   border-radius: 999px;
   background: rgba(111, 149, 146, 0.16);
   overflow: hidden;
