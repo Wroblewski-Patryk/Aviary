@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-01
 
+## Fresh Dashboard First 10 Slice Batch And Intro Pass (2026-05-01)
+
+- `PRJ-831` is now IN_PROGRESS as the active dashboard lane opener:
+  - `.codex/tasks/PRJ-831-dashboard-first-10-slice-batch-and-intro-pass.md`
+- purpose:
+  - freeze the first 10 dashboard micro-slices and execute the first bounded
+    intro, crop, and signal-softness passes
+- implemented in the current slice:
+  - recorded the first 10 dashboard slices in the canonical closure map
+  - compressed the dashboard intro/header rhythm
+  - shortened the hero body copy and cleaned the hero badge glyph drift
+  - tightened the central hero crop and persona-stage authority
+  - softened left and right signal-card scale, spacing, and connector weight
+- focused validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/App.tsx web/src/index.css docs/planning/canonical-100-slice-closure-map.md .codex/tasks/PRJ-831-dashboard-first-10-slice-batch-and-intro-pass.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+- next smallest useful task:
+  - continue dashboard slice 6 and slice 7
+  - then take the next deploy-side dashboard proof
+
 ## Fresh Authenticated Sidebar Quote CSS Consolidation Pass (2026-05-01)
 
 - `PRJ-830` is now IN_PROGRESS as a sidebar implementation cleanup slice:

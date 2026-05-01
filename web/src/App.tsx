@@ -3354,12 +3354,12 @@ export default function App() {
                   <div className="aion-dashboard-stage-copy">
                     <span className="aion-chat-headline-emblem" aria-hidden="true" />
                     <div>
-                      <p className="text-xs uppercase tracking-[0.24em] text-[#8d785f]">Good morning</p>
-                      <h2 className="mt-2 font-display text-[2.55rem] leading-[1.08] text-base-900">
+                      <p className="aion-dashboard-stage-eyebrow">Dashboard</p>
+                      <h2 className="aion-dashboard-stage-title mt-2 font-display text-[2.55rem] leading-[1.08] text-base-900">
                         Good morning, {currentUserLabel}
                       </h2>
-                      <p className="mt-2 max-w-xl text-sm leading-7 text-base-800">
-                        Here is what is quietly ready to move in your Aviary workspace today.
+                      <p className="aion-dashboard-stage-body">
+                        A calmer read of what is ready to move next.
                       </p>
                     </div>
                   </div>
@@ -3394,7 +3394,7 @@ export default function App() {
                         alt="Dashboard cognition field"
                       />
                       <div className="aion-dashboard-figure-badge">
-                        <span className="aion-dashboard-figure-badge-core">âś¦</span>
+                        <span className="aion-dashboard-figure-badge-core" aria-hidden="true" />
                       </div>
                     </div>
 

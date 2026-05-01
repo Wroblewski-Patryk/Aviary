@@ -170,15 +170,21 @@ Target slice budget: 15
 
 ## Current Recommended Starting Point
 
-The current active surface group is now the authenticated shell and desktop
-sidebar.
+The current active surface group is now `dashboard`.
 
-The next real implementation slice should continue from:
+The active first dashboard batch is:
 
-- slices `26..40` if the deployed shell frame already feels calm enough
-- otherwise the smallest remaining shell-frame subset from slices `16..25`
-  that still visibly drifts on live production
+1. intro compression and title authority
+2. hero stage copy-width and breathing-room refinement
+3. hero emblem and badge glyph cleanup
+4. left signal-column card softness
+5. right signal-column card softness
+6. central persona crop authority
+7. figure-note connector calmness
+8. guidance-rail width and pacing
+9. recent-activity density and rhythm
+10. intention-card hierarchy and scenic balance
 
-Do not reopen broad `home`, `dashboard`, `chat`, or `personality` polishing
-until the authenticated shell/sidebar pair is judged past the `95%` gate in
-the latest deploy-side compare.
+Do not reopen broad `home`, `sidebar`, `chat`, or `personality` polishing
+until the current dashboard batch is judged past the `95%` gate in the next
+deploy-side compare.

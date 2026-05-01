@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-01
 
+- 2026-05-01: `PRJ-831` opened the dashboard surface group:
+  - planning truth now:
+    - `docs/planning/canonical-100-slice-closure-map.md` declares `dashboard`
+      as the active surface group and freezes the first 10 dashboard
+      micro-slices
+  - `web/src/App.tsx` now:
+    - uses a calmer dashboard intro eyebrow and shorter hero body copy
+    - removes the visible hero badge glyph drift by switching to structural
+      rendering
+  - `web/src/index.css` now:
+    - compresses dashboard stage padding, stage-copy width, and hero-grid gap
+    - introduces dashboard-specific eyebrow/body rhythm tokens for the first
+      hero slice
+    - tightens the central hero crop and increases persona-stage authority
+    - softens left/right signal-card padding, scale, typography, and connector
+      weight
+  - new implementation task:
+    - `.codex/tasks/PRJ-831-dashboard-first-10-slice-batch-and-intro-pass.md`
+  - highest-value next steps:
+    - continue dashboard slice 6 and slice 7
+    - then compare the deployed dashboard
+
 - 2026-05-01: `PRJ-830` opened a sidebar implementation-cleanup slice:
   - `web/src/index.css` now:
     - removes the older duplicated quote-closure CSS block
