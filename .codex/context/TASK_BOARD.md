@@ -4,7 +4,7 @@ Last updated: 2026-05-01
 
 ## Fresh V1 Deploy Candidate Publish (2026-05-01)
 
-- `PRJ-845` is IN_PROGRESS as the current release publication slice:
+- `PRJ-845` is DONE as the current release publication slice:
   - `.codex/tasks/PRJ-845-publish-v1-deploy-candidate.md`
 - purpose:
   - commit and push the validated v1 deploy candidate to `origin/main`
@@ -12,12 +12,16 @@ Last updated: 2026-05-01
   - `PRJ-843` behavior-validation gate passed
   - `PRJ-844` full backend gate passed with `1009 passed`
   - local `main` matched `origin/main` before publication work started
+- result:
+  - committed `e03fb08` with message
+    `release: behavior feedback v1 candidate`
+  - pushed `e03fb08` to `origin/main`
 - scope note:
   - source, tests, docs, and task/context updates are in scope
   - local generated `artifacts/behavior_validation/prj843-report.json` is
     excluded from commit scope
 - next smallest useful task:
-  - after push, run production release smoke against
+  - start `PRJ-846` by running production release smoke against
     `https://aviary.luckysparrow.ch`
 
 ## Fresh Deploy Readiness Primary Backend Gate (2026-05-01)

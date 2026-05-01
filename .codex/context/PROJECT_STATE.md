@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-01
 
+- 2026-05-01: `PRJ-845` published the validated v1 deploy candidate:
+  - new task:
+    - `.codex/tasks/PRJ-845-publish-v1-deploy-candidate.md`
+  - candidate commit:
+    - `e03fb08` (`release: behavior feedback v1 candidate`)
+  - publication:
+    - pushed `e03fb08` to `origin/main`
+  - validation before publication:
+    - `PRJ-843` behavior-validation gate passed with `19 passed`,
+      `gate_status=pass`
+    - `PRJ-844` primary backend gate passed with `1009 passed`
+    - `git diff --cached --check` passed before commit
+  - scope note:
+    - generated local evidence at
+      `artifacts/behavior_validation/prj843-report.json` was intentionally not
+      committed because it contains machine-local paths
+  - highest-value next step:
+    - run production release smoke against `https://aviary.luckysparrow.ch`
+      and confirm deployment parity with the latest pushed revision
+
 - 2026-05-01: `PRJ-844` ran the primary backend deploy-readiness gate:
   - new task:
     - `.codex/tasks/PRJ-844-deploy-readiness-primary-backend-gate.md`

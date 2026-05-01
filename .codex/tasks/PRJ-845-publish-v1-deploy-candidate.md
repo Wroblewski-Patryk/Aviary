@@ -5,7 +5,7 @@
 - Title: Publish V1 Deploy Candidate
 - Task Type: release
 - Current Stage: release
-- Status: IN_PROGRESS
+- Status: DONE
 - Owner: Ops/Release
 - Depends on: PRJ-844
 - Priority: P0
@@ -85,16 +85,16 @@ posture for the next smoke task.
 
 ## Definition of Done
 
-- [ ] Candidate commit exists locally.
-- [ ] Candidate commit is pushed to `origin/main`.
-- [ ] Local-only artifacts remain uncommitted.
-- [ ] Task board and project state are synchronized.
+- [x] Candidate commit exists locally.
+- [x] Candidate commit is pushed to `origin/main`.
+- [x] Local-only artifacts remain uncommitted.
+- [x] Task board and project state are synchronized.
 
 ## Stage Exit Criteria
 
-- [ ] The output matches the declared `release` stage.
-- [ ] Work from later stages was not mixed in.
-- [ ] Risks and assumptions for this stage are stated clearly.
+- [x] The output matches the declared `release` stage.
+- [x] Work from later stages was not mixed in.
+- [x] Risks and assumptions for this stage are stated clearly.
 
 ## Forbidden
 
@@ -110,6 +110,8 @@ posture for the next smoke task.
   - `PRJ-844`: full backend gate passed with `1009 passed`
 - Manual checks:
   - local `HEAD` matched `origin/main` before release work started
+  - staged scope excluded `artifacts/`
+  - `git diff --cached --check` passed before commit
 - Screenshots/logs: not applicable
 - High-risk checks: post-push production smoke remains required
 - Coverage ledger updated: not applicable
@@ -141,15 +143,15 @@ posture for the next smoke task.
 - [x] Exactly one priority task was selected in this iteration.
 - [x] Operation mode was selected according to iteration rotation.
 - [x] Current stage is declared and respected.
-- [ ] Deliverable for the current stage is complete.
+- [x] Deliverable for the current stage is complete.
 - [x] Architecture alignment confirmed.
 - [x] Existing systems were reused where applicable.
 - [x] No workaround paths were introduced.
 - [x] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
-- [ ] Learning journal was updated if a recurring pitfall was confirmed.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
+- [x] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Product / Discovery Evidence
 - Problem validated: yes
@@ -194,11 +196,17 @@ posture for the next smoke task.
 
 ## Result Report
 
-- Task summary: pending
-- Files changed: pending final commit scope
+- Task summary:
+  - committed and pushed the validated behavior-feedback v1 candidate to
+    `origin/main`.
+- Files changed:
+  - source, tests, docs, and `.codex` task/context files for `PRJ-833..PRJ-845`
+  - local `artifacts/behavior_validation/prj843-report.json` was intentionally
+    left uncommitted
 - How tested: see PRJ-843 and PRJ-844 validation evidence
-- What is incomplete: push and production smoke are pending
-- Next steps: run production release smoke after push
+- What is incomplete: production smoke is pending
+- Next steps: run production release smoke against
+  `https://aviary.luckysparrow.ch`
 - Decisions made: generated `artifacts/` evidence stays local and uncommitted
 
 ## Autonomous Loop Evidence
@@ -236,9 +244,11 @@ posture for the next smoke task.
 
 ### 5. Verify and Test
 - Validation performed:
-  - pending
+  - `git diff --cached --check`
+  - `git commit -m "release: behavior feedback v1 candidate"`
+  - `git push origin main`
 - Result:
-  - pending
+  - pushed `e03fb08` to `origin/main`.
 
 ### 6. Self-Review
 - Simpler option considered:
@@ -252,7 +262,9 @@ posture for the next smoke task.
 
 ### 7. Update Documentation and Knowledge
 - Docs updated:
-  - pending
+  - no canonical docs changed in the closure patch beyond task/context state.
 - Context updated:
-  - pending
-- Learning journal updated: not applicable unless a recurring pitfall appears.
+  - `.codex/context/TASK_BOARD.md`
+  - `.codex/context/PROJECT_STATE.md`
+- Learning journal updated: not applicable; no recurring repository pitfall was
+  confirmed.
