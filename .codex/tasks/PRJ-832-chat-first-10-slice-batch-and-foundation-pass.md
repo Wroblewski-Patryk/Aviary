@@ -225,6 +225,8 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - redirected canonical planning truth from `dashboard` to `chat`
   - implemented the first bounded chat foundation batch across topbar calmness,
     transcript cadence, and assistant/user bubble parity
+  - implemented the next bounded portrait-and-rail batch across portrait-stage
+    authority, calmer portrait notes/connectors, and a narrower cognitive rail
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
@@ -240,9 +242,9 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - deploy-side proof for the new chat batch
   - remaining batches beyond the foundation pass
 - Next steps:
-  - continue slices `11..20` only if deploy proof still shows transcript and
-    bubble drift
-  - otherwise open the next bounded chat batch for portrait-stage authority
+  - compare the deployed chat after the portrait-and-rail batch
+  - if needed, continue the next bounded chat batch on motivation/goal and
+    memory/actions density
 - Decisions made:
   - active flagship work is redirected from `dashboard` to `chat` by explicit
     user instruction

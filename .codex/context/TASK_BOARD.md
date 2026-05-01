@@ -14,12 +14,15 @@ Last updated: 2026-05-01
   - redirected canonical planning truth from `dashboard` to `chat`
   - calmed the chat topbar, control pills, transcript cadence, and
     assistant/user bubble materials
+  - increased portrait-stage authority, calmed portrait notes/connectors, and
+    narrowed the cognitive rail
 - focused validation:
   - `Push-Location .\web; npm run build; Pop-Location`
   - `git diff --check -- web/src/App.tsx web/src/index.css docs/planning/canonical-100-slice-closure-map.md docs/planning/chat-canonical-100-slice-closure-map.md .codex/tasks/PRJ-832-chat-first-10-slice-batch-and-foundation-pass.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
 - next smallest useful task:
-  - continue the next bounded `chat` batch on portrait-stage authority
-  - then take the next deploy-side chat proof
+  - take the next deploy-side chat proof
+  - if drift remains, continue the next bounded `chat` batch on
+    motivation/goal and memory/actions density
 
 ## Fresh Dashboard First 10 Slice Batch And Intro Pass (2026-05-01)
 

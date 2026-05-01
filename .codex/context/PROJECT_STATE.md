@@ -14,11 +14,15 @@ Last updated: 2026-05-01
     - reduces topbar pill width, padding, and material heaviness
     - tightens transcript cadence and avatar spacing
     - narrows and calms assistant/user bubble width, padding, and meta rhythm
+    - increases portrait-stage authority and scenic crop
+    - reduces portrait note scale and connector lengths
+    - narrows the cognitive rail and reduces rail panel heaviness
   - new implementation task:
     - `.codex/tasks/PRJ-832-chat-first-10-slice-batch-and-foundation-pass.md`
   - highest-value next steps:
-    - continue the next bounded `chat` batch on portrait-stage authority
-    - then compare the deployed chat
+    - compare the deployed chat after the portrait-and-rail batch
+    - if needed, continue the next bounded `chat` batch on
+      motivation/goal and memory/actions density
 
 - 2026-05-01: `PRJ-831` opened the dashboard surface group:
   - planning truth now:

@@ -3789,8 +3789,8 @@ export default function App() {
                     />
                     <div className="aion-chat-portrait-overlay">
                       <p className="text-[11px] uppercase tracking-[0.22em] text-[#5f8f93]">Planning</p>
-                      <p className="mt-2 font-display text-2xl text-base-900">{chatCurrentFocus}</p>
-                      <div className="mt-4 space-y-2 text-sm text-base-800">
+                      <p className="mt-2 font-display text-[1.72rem] leading-[1.08] text-base-900">{chatCurrentFocus}</p>
+                      <div className="mt-3.5 space-y-2 text-[0.82rem] text-base-800">
                         <div className="flex items-center justify-between gap-3">
                           <span>Current focus</span>
                           <span className="font-semibold text-base-900">{chatIntentCard.emphasis}</span>
@@ -3805,8 +3805,8 @@ export default function App() {
                     </div>
                     <div className="aion-chat-portrait-copy">
                       <span className="aion-chat-portrait-chip">Embodied cognition</span>
-                      <p className="mt-4 max-w-[13rem] text-sm leading-7 text-base-800">
-                        Understanding leads to clarity. Clarity leads to action.
+                      <p className="mt-3.5 max-w-[12rem] text-[0.84rem] leading-6 text-base-800">
+                        Clarity forms before action takes shape.
                       </p>
                     </div>
                   </aside>
