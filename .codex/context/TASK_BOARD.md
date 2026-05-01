@@ -17,12 +17,13 @@ Last updated: 2026-05-01
   - softened left and right signal-card scale, spacing, and connector weight
   - calmed the figure-note positions and shortened their connector lengths
   - tightened the guidance rail so it reads more editorial and less panel-like
+  - reduced recent-activity density and made the intention card calmer
 - focused validation:
   - `Push-Location .\web; npm run build; Pop-Location`
   - `git diff --check -- web/src/App.tsx web/src/index.css docs/planning/canonical-100-slice-closure-map.md .codex/tasks/PRJ-831-dashboard-first-10-slice-batch-and-intro-pass.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
 - next smallest useful task:
-  - continue dashboard slice 9 and slice 10
-  - then take the next deploy-side dashboard proof
+  - take the next deploy-side dashboard proof
+  - if drift remains, open the next bounded dashboard continuation lane
 
 ## Fresh Authenticated Sidebar Quote CSS Consolidation Pass (2026-05-01)
 

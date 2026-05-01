@@ -3445,17 +3445,17 @@ export default function App() {
                     <div className="mb-4 flex items-center justify-between gap-3">
                       <div>
                         <p className="text-sm uppercase tracking-[0.22em] text-base-800">Recent activity</p>
-                        <h4 className="mt-2 font-display text-xl text-base-900">What just changed</h4>
+                        <h4 className="mt-2 font-display text-[1.06rem] text-base-900">What just changed</h4>
                       </div>
                       <button className="aion-dashboard-link" type="button">
                         View all
                       </button>
                     </div>
-                    <div className="grid gap-3">
-                      {personalityRecentActivity.map((item) => (
+                    <div className="grid gap-2.5">
+                      {personalityRecentActivity.slice(0, 4).map((item) => (
                         <article key={item.title} className="aion-dashboard-recent-row">
                           <div>
-                            <p className="text-sm font-semibold text-base-900">{item.title}</p>
+                            <p className="text-[0.82rem] font-semibold text-base-900">{item.title}</p>
                           </div>
                           <span className="text-xs uppercase tracking-[0.18em] text-base-800">{item.when}</span>
                         </article>
@@ -3465,10 +3465,9 @@ export default function App() {
 
                   <section className="aion-dashboard-side-story aion-dashboard-side-story-lead aion-dashboard-guidance-intention">
                     <p className="text-sm uppercase tracking-[0.22em] text-base-800">Today's intention</p>
-                    <p className="mt-4 font-display text-2xl leading-tight text-base-900">
+                    <p className="mt-3.5 font-display text-[1.78rem] leading-[1.08] text-base-900">
                       Create with clarity.
-                      <br />
-                      Serve with purpose.
+                      <span className="block mt-1.5">Move with purpose.</span>
                     </p>
                   </section>
                 </aside>

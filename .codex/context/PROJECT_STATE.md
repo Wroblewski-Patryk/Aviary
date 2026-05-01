@@ -22,11 +22,12 @@ Last updated: 2026-05-01
       center-stage read
     - tightens the guidance rail padding, token scale, row density, and action
       weight
+    - reduces recent-activity density and quiets the intention-card closure
   - new implementation task:
     - `.codex/tasks/PRJ-831-dashboard-first-10-slice-batch-and-intro-pass.md`
   - highest-value next steps:
-    - continue dashboard slice 9 and slice 10
-    - then compare the deployed dashboard
+    - compare the deployed dashboard after the first full 10-slice batch
+    - if needed, open the next bounded dashboard continuation lane
 
 - 2026-05-01: `PRJ-830` opened a sidebar implementation-cleanup slice:
   - `web/src/index.css` now:

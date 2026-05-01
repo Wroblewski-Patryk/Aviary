@@ -219,10 +219,11 @@ paths, placeholders, fake data, and temporary fixes are forbidden.
 ## Result Report
 
 - Task summary:
-  - froze the first 10 dashboard micro-slices and implemented slices 1 to 8:
+  - froze the first 10 dashboard micro-slices and implemented slices 1 to 10:
     intro compression, hero-header cleanup, central hero crop authority,
     softer left/right signal-card treatment, calmer figure-note placement, and
-    a tighter guidance-rail rhythm
+    a tighter guidance-rail rhythm, denser recent activity, and calmer
+    intention-card hierarchy
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
@@ -236,7 +237,7 @@ paths, placeholders, fake data, and temporary fixes are forbidden.
 - What is incomplete:
   - deploy-side dashboard proof still needs to confirm the lane direction
 - Next steps:
-  - continue slice 9 and slice 10 from the dashboard batch
-  - compare deployed dashboard once the next bounded slices land
+  - compare deployed dashboard for the first full 10-slice batch
+  - open the next bounded dashboard continuation lane only for remaining drift
 - Decisions made:
   - moved the active surface group from sidebar to dashboard
