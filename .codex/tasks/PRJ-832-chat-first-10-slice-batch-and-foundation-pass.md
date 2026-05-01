@@ -247,6 +247,8 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - implemented one more bounded rail-material batch by softening topbar
     closure, reducing compact-panel weight, lightening support accents, and
     narrowing the desktop rail proportion again
+  - implemented one more bounded lead-typography batch by reducing emblem
+    weight, tightening lead-card spacing, and softening rail title/body scale
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
@@ -262,7 +264,7 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - deploy-side proof for the new chat batch
   - remaining batches beyond the foundation pass
 - Next steps:
-  - compare the deployed chat after the rail-material and desktop-proportion batch
+  - compare the deployed chat after the lead-typography and rail-softness batch
   - if needed, open the next bounded chat continuation lane only for remaining
     proof-backed drift
 - Decisions made:
