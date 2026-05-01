@@ -18,13 +18,15 @@ Last updated: 2026-05-01
     narrowed the cognitive rail
   - reduced density in motivation, active goal, related memory, and suggested
     actions so the right rail reads less list-heavy
+  - tightened quick actions, composer tray density, and long-form transcript
+    polish
 - focused validation:
   - `Push-Location .\web; npm run build; Pop-Location`
   - `git diff --check -- web/src/App.tsx web/src/index.css docs/planning/canonical-100-slice-closure-map.md docs/planning/chat-canonical-100-slice-closure-map.md .codex/tasks/PRJ-832-chat-first-10-slice-batch-and-foundation-pass.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
 - next smallest useful task:
   - take the next deploy-side chat proof
-  - if drift remains, continue the next bounded `chat` batch on composer tray
-    and final transcript polish
+  - if drift remains, open the next bounded `chat` continuation lane only on
+    proof-backed residual drift
 
 ## Fresh Dashboard First 10 Slice Batch And Intro Pass (2026-05-01)
 

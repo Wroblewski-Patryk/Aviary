@@ -229,6 +229,8 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
     authority, calmer portrait notes/connectors, and a narrower cognitive rail
   - implemented the next bounded density batch across motivation, active goal,
     related memory, and suggested actions
+  - implemented the next bounded composer-and-transcript batch across quick
+    actions, composer tray density, and long-form transcript polish
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
@@ -244,9 +246,9 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - deploy-side proof for the new chat batch
   - remaining batches beyond the foundation pass
 - Next steps:
-  - compare the deployed chat after the density batch
-  - if needed, continue the next bounded chat batch on composer tray and final
-    transcript polish
+  - compare the deployed chat after the composer-and-transcript batch
+  - if needed, open the next bounded chat continuation lane only for remaining
+    proof-backed drift
 - Decisions made:
   - active flagship work is redirected from `dashboard` to `chat` by explicit
     user instruction
