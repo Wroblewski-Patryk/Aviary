@@ -262,6 +262,11 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
     suggested-action rows
   - implemented one more bounded memory-row batch by reducing related-memory
     padding, radius, title scale, and timestamp emphasis
+  - updated the global canonical 100-slice map so its current recommended
+    starting point matches the real later-stage `chat` lane instead of still
+    describing the original foundation opener
+  - implemented one more bounded composer-calmness batch by tightening
+    quick-action chips, composer shell, input, and control-button proportions
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
@@ -277,7 +282,7 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - deploy-side proof for the new chat batch
   - remaining batches beyond the foundation pass
 - Next steps:
-  - compare the deployed chat after the memory-row quietness batch
+  - compare the deployed chat after the composer-calmness batch
   - if needed, open the next bounded chat continuation lane only for remaining
     proof-backed drift
 - Decisions made:

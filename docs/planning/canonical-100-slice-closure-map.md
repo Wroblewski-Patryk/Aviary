@@ -172,18 +172,14 @@ Target slice budget: 15
 
 The current active surface group is now `chat`.
 
-The active first chat batch is:
+The active chat work is no longer at the opening foundation step.
 
-1. topbar eyebrow calmness
-2. topbar title authority
-3. topbar live-state rhythm
-4. control-pill width reduction
-5. control-pill padding reduction
-6. control-pill material quietness
-7. transcript column breathing-room refinement
-8. transcript vertical cadence refinement
-9. assistant bubble width parity
-10. assistant bubble padding and radius parity
+Current recommended focus:
+
+1. keep working inside the later `chat` density and closure slices
+2. treat right-rail quietness, action/memory closure, and composer calmness as
+   the highest remaining local-value areas
+3. use deploy-side proof before reopening already-softened early foundations
 
 Use `docs/planning/chat-canonical-100-slice-closure-map.md` as the route-level
 execution map for the active `chat` closure lane.
