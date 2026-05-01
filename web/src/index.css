@@ -1868,8 +1868,8 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.26rem 0.5rem;
-  margin-bottom: 0.5rem;
-  padding: 0.02rem 0.02rem 0.42rem;
+  margin-bottom: 0.42rem;
+  padding: 0.02rem 0.02rem 0.36rem;
   border-bottom: 1px solid rgba(88, 67, 52, 0.08);
 }
 
@@ -2331,17 +2331,17 @@ body {
 
 .aion-chat-context-panel {
   border: 1px solid rgba(88, 67, 52, 0.08);
-  border-radius: 1.46rem;
-  padding: 0.72rem;
+  border-radius: 1.34rem;
+  padding: 0.66rem;
   background:
-    linear-gradient(180deg, rgba(255, 251, 245, 0.86), rgba(246, 238, 227, 0.72));
-  box-shadow: 0 12px 24px rgba(78, 58, 43, 0.035);
+    linear-gradient(180deg, rgba(255, 251, 245, 0.84), rgba(246, 238, 227, 0.68));
+  box-shadow: 0 10px 20px rgba(78, 58, 43, 0.03);
 }
 
 .aion-chat-context-panel-curated {
-  padding: 0.82rem;
+  padding: 0.76rem;
   background:
-    linear-gradient(180deg, rgba(255, 252, 247, 0.88), rgba(246, 238, 227, 0.72));
+    linear-gradient(180deg, rgba(255, 252, 247, 0.86), rgba(246, 238, 227, 0.68));
 }
 
 .aion-chat-context-panel-lead {
@@ -2375,11 +2375,11 @@ body {
 .aion-chat-support-accent {
   display: inline-flex;
   align-items: center;
-  padding: 0.22rem 0.54rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 999px;
-  background: rgba(126, 167, 159, 0.14);
+  background: rgba(126, 167, 159, 0.12);
   color: #4f7e82;
-  font-size: 0.64rem;
+  font-size: 0.61rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -4244,7 +4244,7 @@ body {
   }
 
   .aion-chat-stage {
-    grid-template-columns: minmax(0, 1.08fr) minmax(21rem, 1fr) minmax(12rem, 0.31fr);
+    grid-template-columns: minmax(0, 1.1fr) minmax(20.8rem, 0.98fr) minmax(11.6rem, 0.29fr);
     align-items: start;
   }
 

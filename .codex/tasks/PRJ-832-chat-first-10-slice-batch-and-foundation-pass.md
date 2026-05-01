@@ -244,6 +244,9 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - implemented one more bounded portrait-note batch by shortening scenic-note
     copy, lightening note-card material, and shifting a little more desktop
     authority back to the transcript column
+  - implemented one more bounded rail-material batch by softening topbar
+    closure, reducing compact-panel weight, lightening support accents, and
+    narrowing the desktop rail proportion again
 - Files changed:
   - `web/src/App.tsx`
   - `web/src/index.css`
@@ -259,7 +262,7 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - deploy-side proof for the new chat batch
   - remaining batches beyond the foundation pass
 - Next steps:
-  - compare the deployed chat after the portrait-note and transcript-authority batch
+  - compare the deployed chat after the rail-material and desktop-proportion batch
   - if needed, open the next bounded chat continuation lane only for remaining
     proof-backed drift
 - Decisions made:
