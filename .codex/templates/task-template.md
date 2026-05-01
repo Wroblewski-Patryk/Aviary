@@ -9,6 +9,7 @@
 - Owner: Planning Agent | Product Docs Agent | Backend Builder | Frontend Builder | QA/Test | Security | DB/Migrations | Ops/Release | Review
 - Depends on:
 - Priority: P0 | P1 | P2
+- Coverage Ledger Rows:
 
 ## Context
 Where this work sits in the current project flow and architecture.
@@ -54,6 +55,8 @@ Describe exactly what should be produced in the current stage only.
 - Manual checks:
 - Screenshots/logs:
 - High-risk checks:
+- Coverage ledger updated: yes | no | not applicable
+- Coverage rows closed or changed:
 
 ## Architecture Evidence (required for architecture-impacting tasks)
 - Architecture source reviewed:

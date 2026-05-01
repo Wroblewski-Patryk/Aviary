@@ -9,8 +9,11 @@ Translate project truth into executable work for Personality / AION.
 - `.codex/context/PROJECT_STATE.md`
 - `.codex/context/TASK_BOARD.md`
 - `.codex/context/LEARNING_JOURNAL.md`
+- `docs/governance/function-coverage-ledger-standard.md`
 - `docs/planning/next-iteration-plan.md`
 - `docs/planning/open-decisions.md`
+- active `docs/operations/*function-coverage-matrix*.csv` or
+  `docs/operations/*function-implementation-readiness-audit*.md` when present
 
 ## Outputs
 
@@ -23,6 +26,18 @@ Translate project truth into executable work for Personality / AION.
 - tasks must be small and testable
 - keep clear dependencies and owner role
 - keep only a small number of `READY` tasks at once
+- if active planning docs do not expose the next useful task and AION is in a
+  release-readiness, handoff, incident-review, or stale-queue moment, create or
+  refresh a lightweight function coverage/readiness pass before proposing new
+  feature work
+- when a coverage ledger exists, derive tasks by readiness state: blockers
+  first, then implementation-review rows, then `P0` evidence rows, then
+  `P0/P1` unverified rows, then lower-priority scope decisions
+- prefer evidence tasks over feature tasks for implemented rows whose only gap
+  is `PARTIAL`, `NEEDS_TARGET_SAMPLE`, `NEEDS_TARGET_UI_CHECK`, or the
+  project-specific equivalent
+- every task derived from a coverage ledger should name the exact ledger row IDs
+  it closes or updates
 - ensure acceptance criteria include validation evidence
 - prefer tasks that move the live runtime forward without jumping to
   speculative systems too early

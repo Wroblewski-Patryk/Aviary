@@ -8,7 +8,11 @@ Workflow:
 1. Read `.codex/context/TASK_BOARD.md`,
    `docs/planning/next-iteration-plan.md`, and `docs/planning/open-decisions.md`.
 2. Pick the first `READY` or `IN_PROGRESS` task that matches the active queue.
-3. If no task is executable, refine the smallest viable task first.
+3. If no task is executable, refine the smallest viable task first. For
+   release-readiness, handoff, incident-review, stale-queue, or broad confidence
+   work, use `docs/governance/function-coverage-ledger-standard.md` and any
+   active `docs/operations/*function-coverage*` artifacts to derive the next
+   evidence, blocker, implementation-review, or scope-decision task.
 4. Implement exactly one tiny task.
 5. Run relevant checks.
 6. Review whether a better architectural follow-up, deployment note, or task
@@ -20,6 +24,12 @@ Hard rules:
 - Tiny commits only.
 - Fix, cleanup, or update before new features.
 - Never skip plan synchronization.
+- Do not invent feature work from an evidence gap. If a coverage ledger row is
+  `PARTIAL`, `NEEDS_TARGET_SAMPLE`, `NEEDS_TARGET_UI_CHECK`, or equivalent,
+  plan verification first and create a narrow fix only after proof or code
+  inspection finds a defect.
+- Every task derived from a coverage ledger must list the row IDs it closes or
+  updates.
 - Treat approved architecture docs as fixed unless the user explicitly approves
   a change.
 - If a better solution would require architecture change, surface it as a

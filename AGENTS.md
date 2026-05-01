@@ -36,6 +36,8 @@ Read these before starting non-trivial work:
 - `docs/operations/runtime-ops-runbook.md`
 - `docs/governance/working-agreements.md`
 - `docs/governance/repository-structure-policy.md`
+- `docs/governance/function-coverage-ledger-standard.md`
+- `docs/governance/function-coverage-ledger-template.csv`
 - `docs/ux/visual-direction-brief.md`
 - `docs/ux/experience-quality-bar.md`
 - `docs/ux/design-memory.md`
@@ -133,6 +135,16 @@ If any check fails, fix before closure.
 - Run relevant validation before creating a commit.
 - Do not mark work done without test or evidence notes that match the changed
   scope.
+- When active work is unclear, a release or handoff needs confidence, or the
+  queue goes stale, use the function coverage ledger standard to turn AION
+  runtime/module confidence gaps into explicit evidence, blocker, fix, or
+  scope-decision tasks before inventing new feature work.
+- If a coverage ledger exists, derive follow-up tasks in this order: release
+  blockers, implementation-review rows, `P0` evidence rows, `P0/P1` unverified
+  rows, then lower-priority scope decisions.
+- Do not turn every `PARTIAL` or evidence-missing ledger row into feature work.
+  Plan verification first, then create a narrow fix only when proof or code
+  inspection finds a real defect.
 - For runtime, memory, reflection, language, or preference changes, leave
   behind focused tests and docs or context updates.
 - For UX/UI work, require explicit design source, state coverage, responsive
@@ -215,6 +227,9 @@ If the user sends a short execution nudge such as `rob`, `dzialaj`, `start`,
 3. If no task is `READY`, derive the next smallest useful task from:
    - `docs/planning/next-iteration-plan.md`
    - `docs/planning/open-decisions.md`
+   - `docs/governance/function-coverage-ledger-standard.md` and any active
+     `docs/operations/*function-coverage*` artifacts when the queue is stale,
+     release confidence is unclear, or a handoff/incident needs a module map
 4. If planning docs and board drift, sync them before implementation.
 5. Implement exactly one small slice.
 6. Run relevant validation.
