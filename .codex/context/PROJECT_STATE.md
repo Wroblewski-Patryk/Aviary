@@ -2,6 +2,17 @@
 
 Last updated: 2026-05-01
 
+- 2026-05-01: `PRJ-830` opened a sidebar implementation-cleanup slice:
+  - `web/src/index.css` now:
+    - removes the older duplicated quote-closure CSS block
+    - keeps one canonical live quote block with stable punctuation and final
+      spacing values
+  - new implementation task:
+    - `.codex/tasks/PRJ-830-authenticated-sidebar-quote-css-consolidation-pass.md`
+  - highest-value next steps:
+    - compare the deployed authenticated sidebar
+    - if the parity gate clears, move to `dashboard`
+
 - 2026-05-01: `PRJ-829` opened a final bounded authenticated-sidebar rhythm
   slice before proof:
   - `web/src/App.tsx` now:

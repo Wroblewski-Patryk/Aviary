@@ -2,6 +2,24 @@
 
 Last updated: 2026-05-01
 
+## Fresh Authenticated Sidebar Quote CSS Consolidation Pass (2026-05-01)
+
+- `PRJ-830` is now IN_PROGRESS as a sidebar implementation cleanup slice:
+  - `.codex/tasks/PRJ-830-authenticated-sidebar-quote-css-consolidation-pass.md`
+- purpose:
+  - remove the remaining duplicated quote-closure CSS so the sidebar rail is
+    easier to maintain before proof
+- implemented in the current slice:
+  - removed the older overridden quote-closure CSS block
+  - kept one canonical live quote block with stable punctuation content and
+    final spacing values
+- focused validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - `git diff --check -- web/src/index.css .codex/tasks/PRJ-830-authenticated-sidebar-quote-css-consolidation-pass.md`
+- next smallest useful task:
+  - compare the deployed authenticated sidebar
+  - if the parity gate clears, move to `dashboard`
+
 ## Fresh Authenticated Sidebar Final Gap And Copy Rhythm Pass (2026-05-01)
 
 - `PRJ-829` is now IN_PROGRESS as the fourth exactness slice of the

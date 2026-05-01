@@ -1669,8 +1669,8 @@ body {
 .aion-sidebar-quote-card {
   position: relative;
   overflow: hidden;
-  min-height: 6.92rem;
-  padding: 0.84rem 0.84rem 0.82rem;
+  min-height: 6.54rem;
+  padding: 0.78rem 0.8rem 0.78rem;
 }
 
 .aion-sidebar-quote-mark {
@@ -1682,18 +1682,18 @@ body {
 }
 
 .aion-sidebar-quote-mark::before {
-  content: "“";
+  content: "\201C";
   font-size: 1.24rem;
   line-height: 1;
 }
 
 .aion-sidebar-quote-copy {
   margin: 0.14rem 0 0;
-  max-width: 8.9rem;
+  max-width: 8.4rem;
   color: var(--aion-ink);
-  font-size: 0.86rem;
+  font-size: 0.81rem;
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 1.42;
 }
 
 .aion-sidebar-quote-copy span {
@@ -1701,15 +1701,15 @@ body {
 }
 
 .aion-sidebar-quote-signature {
-  margin: 0.72rem 0 0;
   color: rgba(88, 67, 52, 0.72);
   font-size: 0;
   letter-spacing: 0.08em;
+  margin-top: 0.54rem;
   text-align: right;
 }
 
 .aion-sidebar-quote-signature::before {
-  content: "— AVIARY";
+  content: "\2014 AVIARY";
   font-size: 0.73rem;
 }
 
@@ -1717,42 +1717,12 @@ body {
   content: "";
   position: absolute;
   inset: auto 0 0 0;
-  height: 3rem;
+  height: 2.72rem;
   background:
     radial-gradient(circle at 20% 100%, rgba(255, 255, 255, 0.48), transparent 0 42%),
     radial-gradient(circle at 78% 100%, rgba(232, 194, 134, 0.12), transparent 0 30%);
   pointer-events: none;
 }
-
-/* Canonical sidebar closure refinements keep the final quote render stable
-   even if older encoded literals remain higher in the stylesheet. */
-.aion-sidebar-quote-card {
-  min-height: 6.54rem;
-  padding: 0.78rem 0.8rem 0.78rem;
-}
-
-.aion-sidebar-quote-mark::before {
-  content: "\201C";
-}
-
-.aion-sidebar-quote-copy {
-  max-width: 8.4rem;
-  font-size: 0.81rem;
-  line-height: 1.42;
-}
-
-.aion-sidebar-quote-signature {
-  margin-top: 0.54rem;
-}
-
-.aion-sidebar-quote-signature::before {
-  content: "\2014 AVIARY";
-}
-
-.aion-sidebar-quote-card::after {
-  height: 2.72rem;
-}
-
 .aion-sidebar-health-card,
 .aion-sidebar-identity-card,
 .aion-sidebar-quote-card {
