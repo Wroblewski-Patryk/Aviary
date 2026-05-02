@@ -2,6 +2,21 @@
 
 Last updated: 2026-05-02
 
+## Fresh V1 Candidate Publish (2026-05-02)
+
+- `PRJ-906` is DONE:
+  - `.codex/tasks/PRJ-906-publish-v1-candidate.md`
+  - `docs/planning/v1-publish-candidate.md`
+- publish result:
+  - validated candidate `582b146cdd89a488acc6bcebee4c00a7c418d108` was pushed
+    to `origin/main`
+  - push output: `5372d33..582b146 main -> main`
+- release posture:
+  - published to remote, but not production-green until PRJ-907 release smoke
+    passes with deploy parity
+- next smallest useful task:
+  - start `PRJ-907` Production Release Smoke With Deploy Parity
+
 ## Fresh V1 Candidate Validation Gate (2026-05-02)
 
 - `PRJ-905` is DONE:
@@ -23,7 +38,8 @@ Last updated: 2026-05-02
 - remaining local-only output:
   - `artifacts/behavior_validation/prj843-report.json`
 - next smallest useful task:
-  - start `PRJ-906` Publish V1 Candidate
+  - `PRJ-906` is complete; continue with `PRJ-907` Production Release Smoke
+    With Deploy Parity
 
 ## Fresh V1 Commit Scope Audit (2026-05-02)
 

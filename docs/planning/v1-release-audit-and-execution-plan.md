@@ -246,6 +246,10 @@ Tasks:
   - Close only if all gates pass.
 
 - `PRJ-906` Publish V1 Candidate
+  - Status: DONE
+  - Output: `docs/planning/v1-publish-candidate.md` records the successful
+    push of validated candidate `582b146cdd89a488acc6bcebee4c00a7c418d108` to
+    `origin/main`.
   - Commit the selected scope.
   - Push to `origin/main`.
   - Do not call the release complete until production smoke passes.

@@ -2,6 +2,21 @@
 
 Last updated: 2026-05-02
 
+- 2026-05-02: `PRJ-906` published the validated v1 candidate:
+  - new task:
+    - `.codex/tasks/PRJ-906-publish-v1-candidate.md`
+  - new planning source:
+    - `docs/planning/v1-publish-candidate.md`
+  - publish result:
+    - validated candidate `582b146cdd89a488acc6bcebee4c00a7c418d108` was
+      pushed to `origin/main`
+    - push output: `5372d33..582b146 main -> main`
+  - release posture:
+    - production-green status still requires PRJ-907 release smoke with deploy
+      parity
+  - next execution priority:
+    - `PRJ-907` Production Release Smoke With Deploy Parity
+
 - 2026-05-02: `PRJ-905` completed the local v1 candidate validation gate:
   - new task:
     - `.codex/tasks/PRJ-905-v1-candidate-validation-gate.md`
