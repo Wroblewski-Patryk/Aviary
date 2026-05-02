@@ -294,6 +294,10 @@ Goal: ensure every core gate has fresh release evidence.
 Tasks:
 
 - `PRJ-910` Core V1 Acceptance Bundle
+  - Status: DONE
+  - Output: `docs/planning/v1-core-acceptance-bundle.md` records core v1
+    behavior as GO, deploy parity as GO, and final v1 declaration as NO-GO
+    until PRJ-908 is resolved or explicitly waived.
   - Produce one concise acceptance bundle mapping every final gate to:
     - health field
     - behavior scenario

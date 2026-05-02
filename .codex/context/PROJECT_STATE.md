@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-02
 
+- 2026-05-02: `PRJ-910` completed the core v1 acceptance bundle:
+  - new task:
+    - `.codex/tasks/PRJ-910-core-v1-acceptance-bundle.md`
+  - new planning source:
+    - `docs/planning/v1-core-acceptance-bundle.md`
+  - result:
+    - core no-UI v1 behavior is GO
+    - production deploy parity is GO
+    - final v1 release declaration remains NO-GO until PRJ-908 is resolved or
+      explicitly waived by a documented release decision
+  - evidence:
+    - PRJ-905 backend tests passed with `1019 passed`
+    - PRJ-905 web build passed
+    - PRJ-905 behavior validation passed with `19 passed, 209 deselected`
+    - production release smoke passed with deploy parity for
+      `0e0929670fb669a94dd52498129147ef11281d66`
+    - production health snapshot was captured locally at
+      `.codex/artifacts/prj910-health-snapshot.json`
+  - next execution priority:
+    - resolve PRJ-908 through a production-safe incident-evidence export path,
+      or continue release hardening with the blocker explicit
+
 - 2026-05-02: `PRJ-908` is blocked after a production incident-evidence bundle
   attempt:
   - new task:
