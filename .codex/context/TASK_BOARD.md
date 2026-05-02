@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-02
 
+## Fresh V1 Commit Scope Audit (2026-05-02)
+
+- `PRJ-904` is DONE:
+  - `.codex/tasks/PRJ-904-v1-commit-scope-audit.md`
+  - `docs/planning/v1-commit-scope-audit.md`
+- candidate scope:
+  - base: `origin/main` at `5372d33a4fd132bc6280bb781642eb3ce55fbfdc`
+  - head: `350250fa7ee737863f72cdeb6c876d7fc39e17e1`
+  - local branch posture before PRJ-904 commit: `main` was ahead of
+    `origin/main` by 2 commits
+  - included: canonical UI/localization baseline, backend-backed recent
+    activity, v1 audit, release boundary, task/context records
+  - excluded: `artifacts/behavior_validation/prj843-report.json` and generated
+    local evidence artifacts
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - start `PRJ-905` V1 Candidate Validation Gate
+
 ## Fresh Current V1 Release Boundary (2026-05-02)
 
 - `PRJ-903` is DONE:
@@ -24,7 +44,7 @@ Last updated: 2026-05-02
   - `git diff --check`
   - result: passed
 - next smallest useful task:
-  - start `PRJ-904` V1 Commit Scope Audit against the frozen boundary
+  - `PRJ-904` is complete; continue with `PRJ-905` V1 Candidate Validation Gate
 
 ## Fresh V1 Release Audit And Execution Plan (2026-05-02)
 

@@ -223,6 +223,10 @@ Goal: make the repo releasable again.
 Tasks:
 
 - `PRJ-904` V1 Commit Scope Audit
+  - Status: DONE
+  - Output: `docs/planning/v1-commit-scope-audit.md` records the candidate
+    base, head, local commits, included scope, excluded local artifacts, and
+    PRJ-905 validation gate.
   - Identify intended release files across backend, web, `.codex`, docs, and
     generated artifacts.
   - Decide whether untracked historical task records are part of this release.
