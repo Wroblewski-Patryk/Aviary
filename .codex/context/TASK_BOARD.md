@@ -2,6 +2,27 @@
 
 Last updated: 2026-05-02
 
+## Fresh V1 Data Privacy And Debug Posture Check (2026-05-02)
+
+- `PRJ-912` is DONE:
+  - `.codex/tasks/PRJ-912-v1-data-privacy-and-debug-posture-check.md`
+  - `docs/planning/v1-data-privacy-and-debug-posture-check.md`
+- result:
+  - core no-UI v1 privacy/debug posture is GO
+  - production reports `event_debug_enabled=false`
+  - query debug compatibility is disabled
+  - auth/reset/transcript boundary regressions passed
+  - public-launch AI/security hardening remains HOLD until `PRJ-931..PRJ-933`
+- validation:
+  - focused backend tests passed with `23 passed, 96 deselected`
+  - production health snapshot captured locally at
+    `.codex/artifacts/prj912-health-snapshot.json`
+  - health snapshot scan found setting names and policy hints, not secret
+    values
+- next smallest useful task:
+  - run `PRJ-909` production Telegram mode smoke if Telegram is the primary
+    launch channel, otherwise continue to `PRJ-931` AI red-team pack
+
 ## Fresh V1 Rollback And Recovery Drill (2026-05-02)
 
 - `PRJ-911` is DONE:

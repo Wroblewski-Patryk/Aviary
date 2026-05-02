@@ -334,6 +334,10 @@ Tasks:
   - Confirm rollback does not require undocumented operator memory.
 
 - `PRJ-912` V1 Data Privacy And Debug Posture Check
+  - Status: DONE
+  - Output: `docs/planning/v1-data-privacy-and-debug-posture-check.md`
+    records debug-disabled production posture, auth/reset boundary regression
+    evidence, and payload exposure boundaries.
   - Verify shared debug ingress posture, debug token policy, auth boundaries,
     and app reset behavior.
   - Confirm no raw provider payloads or memory payloads leak through app
