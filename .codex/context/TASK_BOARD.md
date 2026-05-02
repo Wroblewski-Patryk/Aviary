@@ -2,6 +2,32 @@
 
 Last updated: 2026-05-03
 
+## Fresh Dashboard Continuity Sections Queue Sync (2026-05-03)
+
+- `PRJ-727` is DONE:
+  - `.codex/tasks/PRJ-727-dashboard-continuity-flow-and-module-entry-sections.md`
+- result:
+  - the stale `READY` task was closed against the existing dashboard continuity,
+    cognitive-flow, and module-entry sections instead of adding duplicates
+  - `web/src/App.tsx` already contains:
+    - `ModuleEntryCard`
+    - dashboard signal and guidance cards
+    - dashboard cognitive-flow steps
+    - dashboard goal, memory, reflection, and continuity sections
+  - `docs/planning/dashboard-foundation-and-personality-visual-system-plan.md`
+    already maps dashboard sections to shared component families
+- validation:
+  - verified continuity preview, cognitive-flow summary, and module-entry
+    expectations in the planning contract
+  - verified dashboard section ownership in `web/src/App.tsx`
+  - verified historical board evidence that `PRJ-724..PRJ-727` were complete
+    locally and that later dashboard proof exists
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - review `PRJ-728`, the next proof-oriented task after the completed
+    PRJ-724..PRJ-727 implementation lane
+
 ## Fresh Authenticated Dashboard Shell Queue Sync (2026-05-03)
 
 - `PRJ-726` is DONE:

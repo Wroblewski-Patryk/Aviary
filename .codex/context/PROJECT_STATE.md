@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-727` completed stale dashboard continuity sections queue sync:
+  - task:
+    - `.codex/tasks/PRJ-727-dashboard-continuity-flow-and-module-entry-sections.md`
+  - result:
+    - the dashboard continuity, flow, and module-entry sections task is no
+      longer a false `READY` item
+    - existing `web/src/App.tsx` dashboard signal cards, guidance cards,
+      cognitive-flow steps, goal rows, continuity copy, and module-entry
+      primitives remain the implementation path
+    - no duplicate dashboard section, data contract, or continuity surface was
+      introduced
+  - validation:
+    - planning contract, task-board history, dashboard code, and later
+      dashboard proof evidence were reviewed
+    - `git diff --check` passed
+  - next execution priority:
+    - review `PRJ-728` as the next proof-oriented task after the completed
+      PRJ-724..PRJ-727 implementation lane
+
 - 2026-05-03: `PRJ-726` completed stale authenticated dashboard shell queue sync:
   - task:
     - `.codex/tasks/PRJ-726-authenticated-dashboard-shell-and-responsive-layout-foundation.md`
