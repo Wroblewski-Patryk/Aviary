@@ -2,6 +2,29 @@
 
 Last updated: 2026-05-02
 
+## Fresh V1 Candidate Validation Gate (2026-05-02)
+
+- `PRJ-905` is DONE:
+  - `.codex/tasks/PRJ-905-v1-candidate-validation-gate.md`
+  - `docs/planning/v1-candidate-validation-gate.md`
+- candidate head:
+  - `463ad04bc147c1284d0f1e12b4d5ff0cabec6fa1`
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; Pop-Location`
+  - result: passed, `1019 passed`
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\run_behavior_validation.py --gate-mode operator --artifact-path ..\.codex\artifacts\prj905-v1-candidate-validation\behavior-validation-report.json; Pop-Location`
+  - result: passed, `19 passed, 209 deselected`
+  - `git diff --check`
+  - result: passed
+- artifact:
+  - `.codex/artifacts/prj905-v1-candidate-validation/behavior-validation-report.json`
+- remaining local-only output:
+  - `artifacts/behavior_validation/prj843-report.json`
+- next smallest useful task:
+  - start `PRJ-906` Publish V1 Candidate
+
 ## Fresh V1 Commit Scope Audit (2026-05-02)
 
 - `PRJ-904` is DONE:
@@ -20,7 +43,7 @@ Last updated: 2026-05-02
   - `git diff --check`
   - result: passed
 - next smallest useful task:
-  - start `PRJ-905` V1 Candidate Validation Gate
+  - `PRJ-905` is complete; continue with `PRJ-906` Publish V1 Candidate
 
 ## Fresh Current V1 Release Boundary (2026-05-02)
 

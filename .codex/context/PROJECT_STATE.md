@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-02
 
+- 2026-05-02: `PRJ-905` completed the local v1 candidate validation gate:
+  - new task:
+    - `.codex/tasks/PRJ-905-v1-candidate-validation-gate.md`
+  - new planning source:
+    - `docs/planning/v1-candidate-validation-gate.md`
+  - candidate head:
+    - `463ad04bc147c1284d0f1e12b4d5ff0cabec6fa1`
+  - verification:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; Pop-Location`
+    - result: passed, `1019 passed`
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\run_behavior_validation.py --gate-mode operator --artifact-path ..\.codex\artifacts\prj905-v1-candidate-validation\behavior-validation-report.json; Pop-Location`
+    - result: passed, `19 passed, 209 deselected`
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-906` Publish V1 Candidate
+
 - 2026-05-02: `PRJ-904` completed the v1 commit-scope audit:
   - new task:
     - `.codex/tasks/PRJ-904-v1-commit-scope-audit.md`

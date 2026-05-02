@@ -234,6 +234,10 @@ Tasks:
     evidence.
 
 - `PRJ-905` V1 Candidate Validation Gate
+  - Status: DONE
+  - Output: `docs/planning/v1-candidate-validation-gate.md` records the local
+    candidate validation gate for head
+    `463ad04bc147c1284d0f1e12b4d5ff0cabec6fa1`.
   - Run:
     - backend full test suite
     - web build
