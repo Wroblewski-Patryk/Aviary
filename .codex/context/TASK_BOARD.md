@@ -2,6 +2,24 @@
 
 Last updated: 2026-05-02
 
+## Fresh V1 Queue Renumbering Cleanup (2026-05-02)
+
+- `PRJ-929` is DONE:
+  - `.codex/tasks/PRJ-929-v1-queue-renumbering-cleanup.md`
+- result:
+  - completed `PRJ-922` remains the production-safe incident-evidence export
+    task
+  - the older future Deployment Trigger SLO Evidence slot was moved to
+    `PRJ-930`
+  - AI/security/final-release future tasks were shifted to `PRJ-931..PRJ-936`
+    so task IDs are unique before final v1 execution continues
+- validation:
+  - searched planning/context files for `PRJ-922`
+  - `git diff --check` passed
+- next smallest useful task:
+  - run final v1 acceptance refresh against the latest production SHA and
+    strict-mode incident bundle
+
 ## Fresh Production-Safe Incident Evidence Export (2026-05-02)
 
 - `PRJ-922` is DONE:

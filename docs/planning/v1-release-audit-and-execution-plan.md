@@ -387,7 +387,7 @@ Tasks:
   - Avoid committing generated machine-local artifacts unless intentionally
     selected.
 
-- `PRJ-922` Deployment Trigger SLO Evidence
+- `PRJ-930` Deployment Trigger SLO Evidence
   - Prove Coolify source automation triggers reliably enough or document manual
     redeploy as an exception-only fallback.
 
@@ -397,15 +397,15 @@ Goal: make AI behavior safe enough for a real user-facing launch.
 
 Tasks:
 
-- `PRJ-923` V1 AI Red-Team Scenario Pack
+- `PRJ-931` V1 AI Red-Team Scenario Pack
   - Cover prompt injection, tool boundary bypass attempts, data exfiltration,
     unauthorized memory access, and connector misuse.
 
-- `PRJ-924` Cross-User And Session Isolation Audit
+- `PRJ-932` Cross-User And Session Isolation Audit
   - Verify app auth, Telegram linked identity, reset behavior, chat history,
     overview data, and internal inspection authorization boundaries.
 
-- `PRJ-925` Provider Payload Leakage Audit
+- `PRJ-933` Provider Payload Leakage Audit
   - Confirm raw web page, task, calendar, drive, Telegram, and memory payloads
     do not leak through durable memory, health, app overview, or UI routes.
 
@@ -415,16 +415,16 @@ Goal: make the statement "v1 is real" defensible.
 
 Tasks:
 
-- `PRJ-926` V1 Final Go/No-Go Review
+- `PRJ-934` V1 Final Go/No-Go Review
   - Review all P0/P1 findings.
   - Confirm which P2 extension gaps remain intentionally deferred.
   - Verify production is serving the intended SHA.
 
-- `PRJ-927` V1 Release Notes And Operator Handoff
+- `PRJ-935` V1 Release Notes And Operator Handoff
   - Record capabilities, known limits, rollback, smoke commands, and support
     triage.
 
-- `PRJ-928` V1 Tag And Release Marker
+- `PRJ-936` V1 Tag And Release Marker
   - Create a release tag only after production smoke and acceptance bundle are
     green.
 
@@ -453,14 +453,14 @@ Tasks:
 7. `PRJ-918` Organizer Provider Activation Smoke
 8. `PRJ-920` Minimal External Health Monitor
 9. `PRJ-921` Release Evidence Archive Standard
-10. `PRJ-923` V1 AI Red-Team Scenario Pack
-11. `PRJ-924` Cross-User And Session Isolation Audit
-12. `PRJ-925` Provider Payload Leakage Audit
+10. `PRJ-931` V1 AI Red-Team Scenario Pack
+11. `PRJ-932` Cross-User And Session Isolation Audit
+12. `PRJ-933` Provider Payload Leakage Audit
 
 ### P2 Extensions
 
 1. `PRJ-919` Tool Authorization UX Tightening
-2. `PRJ-922` Deployment Trigger SLO Evidence
+2. `PRJ-930` Deployment Trigger SLO Evidence
 3. multimodal Telegram plan and implementation after v1
 4. mobile Expo restart from the approved stack baseline after web/backend v1
 
