@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-917` completed the organizer provider credential
+  activation runbook:
+  - new task:
+    - `.codex/tasks/PRJ-917-organizer-provider-credential-activation-runbook.md`
+  - new planning source:
+    - `docs/planning/v1-organizer-provider-credential-activation-runbook.md`
+  - new operations source:
+    - `docs/operations/organizer-provider-activation-runbook.md`
+  - result:
+    - production organizer health reports `provider_credentials_missing`,
+      `provider_ready_operation_count=0`, and
+      `daily_use_workflows_blocked_by_provider_activation`
+    - ClickUp, Google Calendar, and Google Drive required settings, expected
+      health transitions, smoke expectations, and rollback are documented
+    - no provider secrets were changed or stored
+  - next execution priority:
+    - `PRJ-918` Organizer Provider Activation Smoke, blocked until provider
+      credentials are configured
+
 - 2026-05-03: `PRJ-916` completed the web empty/error state audit:
   - new task:
     - `.codex/tasks/PRJ-916-web-empty-and-error-state-audit.md`

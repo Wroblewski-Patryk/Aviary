@@ -398,8 +398,12 @@ Goal: make post-core daily-use value visible and honest.
 Tasks:
 
 - `PRJ-917` Organizer Provider Credential Activation Runbook
-  - Turn provider missing settings into a step-by-step operator checklist.
-  - Include ClickUp, Google Calendar, and Google Drive.
+  - Status: DONE
+  - Output:
+    `docs/planning/v1-organizer-provider-credential-activation-runbook.md`
+    records the production organizer health snapshot and runbook link.
+  - Turned provider missing settings into a step-by-step operator checklist
+    for ClickUp, Google Calendar, and Google Drive.
 
 - `PRJ-918` Organizer Provider Activation Smoke
   - After credentials are configured, run production release smoke and provider
@@ -490,7 +494,7 @@ Tasks:
 3. `PRJ-914` Replace Remaining Static Personality Metrics - DONE locally
 4. `PRJ-915` Backend-Backed Dashboard Summary Surface - DONE locally
 5. `PRJ-916` Web Empty And Error State Audit - DONE locally
-6. `PRJ-917` Organizer Provider Credential Activation Runbook
+6. `PRJ-917` Organizer Provider Credential Activation Runbook - DONE locally
 7. `PRJ-918` Organizer Provider Activation Smoke
 8. `PRJ-920` Minimal External Health Monitor
 9. `PRJ-921` Release Evidence Archive Standard

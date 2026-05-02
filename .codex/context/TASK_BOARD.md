@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+## Fresh Organizer Provider Credential Activation Runbook (2026-05-03)
+
+- `PRJ-917` is DONE:
+  - `.codex/tasks/PRJ-917-organizer-provider-credential-activation-runbook.md`
+  - `docs/planning/v1-organizer-provider-credential-activation-runbook.md`
+  - `docs/operations/organizer-provider-activation-runbook.md`
+- result:
+  - production organizer health currently reports
+    `provider_credentials_missing`, `provider_ready_operation_count=0`, and
+    `daily_use_workflows_blocked_by_provider_activation`
+  - ClickUp, Google Calendar, and Google Drive required settings, expected
+    health transitions, smoke expectations, and rollback are documented
+  - no provider secrets were changed or stored
+- validation:
+  - production `/health` organizer snapshot reviewed
+  - `git diff --check`
+- next smallest useful task:
+  - `PRJ-918` Organizer Provider Activation Smoke, blocked until provider
+    credentials are configured
+
 ## Fresh Web Empty And Error State Audit (2026-05-03)
 
 - `PRJ-916` is DONE:

@@ -87,7 +87,8 @@ broader public or web-led release claim:
   desktop/mobile focused evidence
 - `PRJ-916` web empty/error state audit: DONE locally with authenticated route
   and backend-down dashboard evidence
-- `PRJ-917..PRJ-919` organizer/tooling extension readiness
+- `PRJ-917` organizer provider credential activation runbook: DONE locally
+- `PRJ-918..PRJ-919` organizer/tooling extension readiness
 - `PRJ-920..PRJ-921` operational monitor and release-evidence archive
 - `PRJ-930` deployment trigger SLO evidence
 - `PRJ-931..PRJ-933` AI/security/privacy hardening

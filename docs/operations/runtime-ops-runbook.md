@@ -392,6 +392,8 @@ posture:
   - `incident_evidence.policy_posture["connectors.organizer_tool_stack"]`
   - `health_snapshot.json.connectors.organizer_tool_stack` inside the exported
     incident-evidence bundle
+  - `docs/operations/organizer-provider-activation-runbook.md` when provider
+    credentials are being activated or triaged
 - when a release or incident touches tool-grounded learning from external
   reads, attach evidence for:
   - `T17.1` bounded search knowledge recall
