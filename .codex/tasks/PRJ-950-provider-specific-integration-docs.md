@@ -4,8 +4,8 @@
 - ID: PRJ-950
 - Title: Provider Specific Integration Docs
 - Task Type: research
-- Current Stage: planning
-- Status: BACKLOG
+- Current Stage: verification
+- Status: DONE
 - Owner: Product Docs Agent
 - Depends on: PRJ-946, PRJ-948
 - Priority: P2
@@ -33,6 +33,18 @@ readiness, operations, routes, modules, tests, failure modes, and gaps.
 - `docs/pipelines/tools.md`
 - possible `docs/integrations/`
 - traceability and drift docs
+- exact files:
+  - `docs/integrations/index.md`
+  - `docs/pipelines/tools.md`
+  - `docs/index.md`
+  - `docs/architecture/codebase-map.md`
+  - `docs/architecture/traceability-matrix.md`
+  - `docs/analysis/documentation-drift.md`
+  - `docs/analysis/documentation-inventory.md`
+  - `docs/planning/documentation-system-gap-repair-plan.md`
+  - `.codex/context/TASK_BOARD.md`
+  - `.codex/context/PROJECT_STATE.md`
+  - `.codex/tasks/PRJ-950-provider-specific-integration-docs.md`
 
 ## Implementation Plan
 
@@ -44,23 +56,72 @@ readiness, operations, routes, modules, tests, failure modes, and gaps.
 
 ## Acceptance Criteria
 
-- [ ] Provider integration docs exist.
-- [ ] Each provider lists config, readiness, operations, tests, and gaps.
-- [ ] Missing credentials or live smoke are marked without exposing secrets.
-- [ ] Traceability and drift docs are updated.
-- [ ] Validation evidence is recorded.
+- [x] Provider integration docs exist.
+- [x] Each provider lists config, readiness, operations, tests, and gaps.
+- [x] Missing credentials or live smoke are marked without exposing secrets.
+- [x] Traceability and drift docs are updated.
+- [x] Validation evidence is recorded.
 
 ## Definition of Done
 
-- [ ] `DEFINITION_OF_DONE.md` relevant checks are satisfied for docs scope.
-- [ ] No secrets are read or written.
-- [ ] No runtime behavior changes.
-- [ ] Validation passes.
+- [x] `DEFINITION_OF_DONE.md` relevant checks are satisfied for docs scope.
+- [x] No secrets are read or written.
+- [x] No runtime behavior changes.
+- [x] Validation passes.
+
+## Deliverable For This Stage
+
+A provider-specific integration reference linked from the tools pipeline,
+system map, codebase map, traceability matrix, drift report, and inventory.
+
+## Constraints
+
+- no secret values
+- no live provider calls
+- no runtime behavior changes
+- separate provider readiness from connector authorization policy
+
+## Forbidden
+
+- documenting credential values
+- inventing live provider readiness
+- treating policy-only operations as provider-backed paths
+- changing connector policy or integration code
+
+## Validation Evidence
+
+- Tests:
+  - connector policy operation coverage check passed
+  - provider section coverage check passed
+  - local markdown link check passed
+  - `git diff --check` passed
+- Manual checks:
+  - inspected `backend/app/integrations/`
+  - inspected `backend/app/core/connector_execution.py`
+  - inspected `backend/app/core/connector_policy.py`
+- Screenshots/logs: not applicable
+- High-risk checks: no secrets read or written; documentation-only
+- Coverage ledger updated: not applicable
+- Coverage rows closed or changed: none
 
 ## Result Report
 
-- Task summary:
+- Task summary: added provider-specific integration docs that map readiness,
+  policy, operations, modules, tests, failure modes, and remaining gaps.
 - Files changed:
-- How tested:
-- What is incomplete:
-- Next steps:
+  - `docs/integrations/index.md`
+  - `docs/pipelines/tools.md`
+  - `docs/index.md`
+  - `docs/architecture/codebase-map.md`
+  - `docs/architecture/traceability-matrix.md`
+  - `docs/analysis/documentation-drift.md`
+  - `docs/analysis/documentation-inventory.md`
+  - `docs/planning/documentation-system-gap-repair-plan.md`
+  - `.codex/context/TASK_BOARD.md`
+  - `.codex/context/PROJECT_STATE.md`
+  - `.codex/tasks/PRJ-950-provider-specific-integration-docs.md`
+- How tested: connector operation coverage, provider section coverage, local
+  markdown links, and `git diff --check`.
+- What is incomplete: provider request/response examples and live smoke
+  evidence remain follow-up gaps when credentials are available.
+- Next steps: no PRJ-945 gap repair tasks remain open.

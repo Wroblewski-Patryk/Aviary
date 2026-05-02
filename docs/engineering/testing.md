@@ -13,6 +13,14 @@ Canonical behavior-validation expectations now also live in:
 
 - `docs/architecture/29_runtime_behavior_testing.md`
 
+Stable test ownership IDs live in:
+
+- `docs/engineering/test-ownership-ledger.md`
+
+Use the ledger when updating `docs/architecture/traceability-matrix.md` so new
+or changed tests map back to feature and pipeline ownership instead of relying
+only on filenames.
+
 That architecture file defines when passing unit and integration tests are
 still insufficient because the runtime has not yet proven memory influence,
 continuity, or decision integrity across time.

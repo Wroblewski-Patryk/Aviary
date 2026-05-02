@@ -2,6 +2,127 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-950` completed provider-specific integration docs:
+  - task:
+    - `.codex/tasks/PRJ-950-provider-specific-integration-docs.md`
+  - created:
+    - `docs/integrations/index.md`
+  - updated:
+    - `docs/pipelines/tools.md`
+    - `docs/index.md`
+    - `docs/architecture/codebase-map.md`
+    - `docs/architecture/traceability-matrix.md`
+    - `docs/analysis/documentation-drift.md`
+    - `docs/analysis/documentation-inventory.md`
+    - `docs/planning/documentation-system-gap-repair-plan.md`
+  - result:
+    - provider docs now separate provider readiness, connector authorization
+      policy, live operations, policy-only operations, tests, failure modes,
+      and remaining gaps without exposing secrets
+    - the PRJ-945 documentation-system gap repair queue is complete at
+      foundation level
+  - validation:
+    - connector policy operation coverage check passed
+    - provider section coverage check passed
+    - local markdown link check passed
+    - `git diff --check` passed
+  - next execution priority:
+    - commit PRJ-946 through PRJ-950 documentation repair lane after review
+
+- 2026-05-03: `PRJ-949` completed the frontend route and component map:
+  - task:
+    - `.codex/tasks/PRJ-949-frontend-route-and-component-map.md`
+  - created:
+    - `docs/frontend/route-component-map.md`
+  - updated:
+    - `docs/architecture/codebase-map.md`
+    - `docs/architecture/traceability-matrix.md`
+    - `docs/index.md`
+    - `docs/analysis/documentation-drift.md`
+    - `docs/analysis/documentation-inventory.md`
+    - `docs/planning/documentation-system-gap-repair-plan.md`
+  - result:
+    - web shell routes now map to state owners, API client methods, backend
+      features/pipelines, helper clusters, tests, and remaining frontend gaps
+  - validation:
+    - route coverage check passed against `RoutePath` union and `ROUTES`
+    - API client method coverage check passed
+    - local markdown link check passed
+    - `git diff --check` passed
+  - next execution priority:
+    - `PRJ-950` Provider Specific Integration Docs
+
+- 2026-05-03: `PRJ-948` completed the test feature/pipeline ownership ledger:
+  - task:
+    - `.codex/tasks/PRJ-948-test-feature-pipeline-ownership-ledger.md`
+  - created:
+    - `docs/engineering/test-ownership-ledger.md`
+  - updated:
+    - `docs/engineering/testing.md`
+    - `docs/architecture/traceability-matrix.md`
+    - `docs/index.md`
+    - `docs/analysis/documentation-drift.md`
+    - `docs/analysis/documentation-inventory.md`
+    - `docs/planning/documentation-system-gap-repair-plan.md`
+  - result:
+    - backend tests now map to stable feature and pipeline ownership IDs at
+      file level
+  - validation:
+    - traceability referenced-test coverage check passed
+    - backend test file ledger coverage check passed
+    - local markdown link check passed
+    - `git diff --check` passed
+  - next execution priority:
+    - `PRJ-949` Frontend Route And Component Map
+
+- 2026-05-03: `PRJ-947` completed the ERD and column model reference:
+  - task:
+    - `.codex/tasks/PRJ-947-erd-and-column-model-reference.md`
+  - created:
+    - `backend/scripts/export_data_model_reference.py`
+    - `docs/data/columns.md`
+    - `docs/data/erd.mmd`
+  - updated:
+    - `docs/data/index.md`
+    - `docs/index.md`
+    - `docs/analysis/documentation-drift.md`
+    - `docs/analysis/documentation-inventory.md`
+    - `docs/planning/documentation-system-gap-repair-plan.md`
+  - result:
+    - data docs now include reproducible generated SQLAlchemy metadata
+      artifacts covering all `18` ORM tables
+  - validation:
+    - data model export command passed
+    - generated artifact coverage check passed for `18` tables
+    - local markdown link check passed
+    - `git diff --check` passed
+  - next execution priority:
+    - `PRJ-948` Test Feature Pipeline Ownership Ledger
+
+- 2026-05-03: `PRJ-946` completed the generated OpenAPI reference:
+  - task:
+    - `.codex/tasks/PRJ-946-generated-openapi-reference.md`
+  - created:
+    - `backend/scripts/export_openapi_schema.py`
+    - `docs/api/openapi.json`
+  - updated:
+    - `docs/api/index.md`
+    - `docs/index.md`
+    - `docs/analysis/documentation-drift.md`
+    - `docs/analysis/documentation-inventory.md`
+    - `docs/planning/documentation-system-gap-repair-plan.md`
+  - result:
+    - the API docs now link a reproducible FastAPI-generated OpenAPI artifact
+      exported from `backend/app/main.py`
+  - validation:
+    - OpenAPI export command passed
+    - schema shape check passed with `openapi=3.1.0`, `paths=18`,
+      `info.title=AION MVP`
+    - local markdown link check passed
+    - `git diff --check` passed
+  - next execution priority:
+    - `PRJ-947` ERD And Column Model Reference
+
 - 2026-05-03: `PRJ-945` planned and queued the documentation gap repair lane:
   - new task:
     - `.codex/tasks/PRJ-945-documentation-gap-repair-queue.md`

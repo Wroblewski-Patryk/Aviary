@@ -28,10 +28,16 @@ evidence.
   integrations, workers, scripts, deployment, and tests.
 - [Traceability Matrix](architecture/traceability-matrix.md) - core features
   mapped across frontend, API, services, models, pipelines, tests, and docs.
+- [Frontend Route And Component Map](frontend/route-component-map.md) - web
+  shell route, state, API, helper, and gap map.
 - [API Reference](api/index.md) - endpoint purpose, auth posture, schemas,
   side effects, frontend callers, tests, and related pipelines.
+- [Generated OpenAPI](api/openapi.json) - FastAPI-generated schema exported
+  from `backend/app/main.py`.
 - [Data Model Reference](data/index.md) - ORM tables, migrations, repository
   capability groups, feature usage, tests, and data-change checklist.
+- [Column Model Reference](data/columns.md) and [Mermaid ERD](data/erd.mmd) -
+  generated data-model artifacts from SQLAlchemy metadata.
 - [Pipeline Registry](pipelines/index.md) - runtime and product flow registry.
 - [Foreground Runtime Pipeline](pipelines/foreground-runtime.md) - dedicated
   stage-order, data, side-effect, failure-point, and test map for the central
@@ -46,6 +52,8 @@ evidence.
   test map.
 - [Tools Pipeline](pipelines/tools.md) - dedicated app tools, connector
   readiness, preference, Telegram link, permission-gate, and test map.
+- [Provider Integration Reference](integrations/index.md) - provider-specific
+  readiness, policy, operation, test, and gap map.
 - [Module Registry](modules/index.md) - module responsibilities, dependencies,
   used pipelines, related routes, models, tests, and known gaps.
 - [Documentation Drift Report](analysis/documentation-drift.md) - verified
@@ -61,6 +69,7 @@ evidence.
 
 - [Local Development](engineering/local-development.md)
 - [Testing](engineering/testing.md)
+- [Test Ownership Ledger](engineering/test-ownership-ledger.md)
 - [Runtime Ops Runbook](operations/runtime-ops-runbook.md)
 - [Service Reliability And Observability](operations/service-reliability-and-observability.md)
 - [Environment And Config](architecture/26_env_and_config.md)

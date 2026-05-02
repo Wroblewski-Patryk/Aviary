@@ -160,12 +160,15 @@ is inferred from file responsibility and inspected route/module names.
 - [Traceability Matrix](../architecture/traceability-matrix.md)
 - [API Reference](../api/index.md)
 - [Data Model Reference](../data/index.md)
+- [Provider Integration Reference](../integrations/index.md)
 - [Action System](../architecture/20_action_system.md)
 - [Runtime Ops Runbook](../operations/runtime-ops-runbook.md)
 
 ## Known Gaps
 
-- Provider-specific capability/configuration docs are still incomplete.
+- Provider-specific capability/configuration docs are now centralized in
+  [Provider Integration Reference](../integrations/index.md); provider-specific
+  request/response examples remain incomplete.
 - No generated connector capability matrix is checked in.
 - Frontend e2e coverage for the tools toggles and Telegram link start is not
   stable in this documentation pass.

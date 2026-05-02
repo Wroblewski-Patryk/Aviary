@@ -2,17 +2,133 @@
 
 Last updated: 2026-05-03
 
+## Fresh Provider Specific Integration Docs (2026-05-03)
+
+- `PRJ-950` is DONE:
+  - `.codex/tasks/PRJ-950-provider-specific-integration-docs.md`
+- created:
+  - `docs/integrations/index.md`
+- updated:
+  - `docs/pipelines/tools.md`
+  - `docs/index.md`
+  - `docs/architecture/codebase-map.md`
+  - `docs/architecture/traceability-matrix.md`
+  - `docs/analysis/documentation-drift.md`
+  - `docs/analysis/documentation-inventory.md`
+  - `docs/planning/documentation-system-gap-repair-plan.md`
+- validation:
+  - connector policy operation coverage check passed
+  - provider section coverage check passed
+  - local markdown link check passed
+  - `git diff --check`
+  - result: passed
+- result:
+  - PRJ-945 documentation-system gap repair queue is complete at foundation
+    level
+- next smallest useful task:
+  - commit PRJ-946 through PRJ-950 documentation repair lane after review
+
+## Fresh Frontend Route And Component Map (2026-05-03)
+
+- `PRJ-949` is DONE:
+  - `.codex/tasks/PRJ-949-frontend-route-and-component-map.md`
+- created:
+  - `docs/frontend/route-component-map.md`
+- updated:
+  - `docs/architecture/codebase-map.md`
+  - `docs/architecture/traceability-matrix.md`
+  - `docs/index.md`
+  - `docs/analysis/documentation-drift.md`
+  - `docs/analysis/documentation-inventory.md`
+  - `docs/planning/documentation-system-gap-repair-plan.md`
+- validation:
+  - route coverage check passed against `RoutePath` union and `ROUTES`
+  - API client method coverage check passed
+  - local markdown link check passed
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-950` Provider Specific Integration Docs
+
+## Fresh Test Feature Pipeline Ownership Ledger (2026-05-03)
+
+- `PRJ-948` is DONE:
+  - `.codex/tasks/PRJ-948-test-feature-pipeline-ownership-ledger.md`
+- created:
+  - `docs/engineering/test-ownership-ledger.md`
+- updated:
+  - `docs/engineering/testing.md`
+  - `docs/architecture/traceability-matrix.md`
+  - `docs/index.md`
+  - `docs/analysis/documentation-drift.md`
+  - `docs/analysis/documentation-inventory.md`
+  - `docs/planning/documentation-system-gap-repair-plan.md`
+- validation:
+  - traceability referenced-test coverage check passed
+  - backend test file ledger coverage check passed
+  - local markdown link check passed
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-949` Frontend Route And Component Map
+
+## Fresh ERD And Column Model Reference (2026-05-03)
+
+- `PRJ-947` is DONE:
+  - `.codex/tasks/PRJ-947-erd-and-column-model-reference.md`
+- created:
+  - `backend/scripts/export_data_model_reference.py`
+  - `docs/data/columns.md`
+  - `docs/data/erd.mmd`
+- updated:
+  - `docs/data/index.md`
+  - `docs/index.md`
+  - `docs/analysis/documentation-drift.md`
+  - `docs/analysis/documentation-inventory.md`
+  - `docs/planning/documentation-system-gap-repair-plan.md`
+- validation:
+  - data model export command passed
+  - generated artifact coverage check passed for `18` tables
+  - local markdown link check passed
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-948` Test Feature Pipeline Ownership Ledger
+
+## Fresh Generated OpenAPI Reference (2026-05-03)
+
+- `PRJ-946` is DONE:
+  - `.codex/tasks/PRJ-946-generated-openapi-reference.md`
+- created:
+  - `backend/scripts/export_openapi_schema.py`
+  - `docs/api/openapi.json`
+- updated:
+  - `docs/api/index.md`
+  - `docs/index.md`
+  - `docs/analysis/documentation-drift.md`
+  - `docs/analysis/documentation-inventory.md`
+  - `docs/planning/documentation-system-gap-repair-plan.md`
+- validation:
+  - OpenAPI export command passed
+  - OpenAPI schema shape check passed: `openapi=3.1.0`, `paths=18`,
+    `info.title=AION MVP`
+  - local markdown link check passed
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-947` ERD And Column Model Reference
+
 ## Fresh Documentation Gap Repair Queue (2026-05-03)
 
 - `PRJ-945` is DONE:
   - `.codex/tasks/PRJ-945-documentation-gap-repair-queue.md`
   - `docs/planning/documentation-system-gap-repair-plan.md`
 - queued:
-  - `PRJ-946` Generated OpenAPI Reference - READY
-  - `PRJ-947` ERD And Column Model Reference - BACKLOG
-  - `PRJ-948` Test Feature Pipeline Ownership Ledger - BACKLOG
-  - `PRJ-949` Frontend Route And Component Map - BACKLOG
-  - `PRJ-950` Provider Specific Integration Docs - BACKLOG
+  - `PRJ-946` Generated OpenAPI Reference - DONE
+  - `PRJ-947` ERD And Column Model Reference - DONE
+  - `PRJ-948` Test Feature Pipeline Ownership Ledger - DONE
+  - `PRJ-949` Frontend Route And Component Map - DONE
+  - `PRJ-950` Provider Specific Integration Docs - DONE
 - validation:
   - local markdown link check passed
   - `git diff --check`

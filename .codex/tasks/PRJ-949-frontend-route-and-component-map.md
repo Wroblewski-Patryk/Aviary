@@ -4,8 +4,8 @@
 - ID: PRJ-949
 - Title: Frontend Route And Component Map
 - Task Type: research
-- Current Stage: planning
-- Status: BACKLOG
+- Current Stage: verification
+- Status: DONE
 - Owner: Frontend Builder
 - Depends on: PRJ-946, PRJ-948
 - Priority: P2
@@ -31,6 +31,18 @@ without forcing a refactor.
 - `docs/architecture/codebase-map.md`
 - possible `docs/frontend/` or approved docs location
 - traceability and drift docs
+- exact files:
+  - `docs/frontend/route-component-map.md`
+  - `docs/architecture/codebase-map.md`
+  - `docs/architecture/traceability-matrix.md`
+  - `docs/index.md`
+  - `docs/analysis/documentation-drift.md`
+  - `docs/analysis/documentation-inventory.md`
+  - `docs/planning/documentation-system-gap-repair-plan.md`
+  - `.codex/context/TASK_BOARD.md`
+  - `.codex/context/PROJECT_STATE.md`
+  - `.codex/tasks/PRJ-949-frontend-route-and-component-map.md`
+  - `.codex/tasks/PRJ-950-provider-specific-integration-docs.md`
 
 ## Implementation Plan
 
@@ -43,21 +55,68 @@ without forcing a refactor.
 
 ## Acceptance Criteria
 
-- [ ] Frontend route/component map exists.
-- [ ] Routes map to API calls or explicit static/fallback status.
-- [ ] Traceability matrix uses the map for frontend entries.
-- [ ] Validation evidence is recorded.
+- [x] Frontend route/component map exists.
+- [x] Routes map to API calls or explicit static/fallback status.
+- [x] Traceability matrix uses the map for frontend entries.
+- [x] Validation evidence is recorded.
 
 ## Definition of Done
 
-- [ ] `DEFINITION_OF_DONE.md` relevant checks are satisfied for docs scope.
-- [ ] No UI behavior changes.
-- [ ] Validation passes.
+- [x] `DEFINITION_OF_DONE.md` relevant checks are satisfied for docs scope.
+- [x] No UI behavior changes.
+- [x] Validation passes.
+
+## Deliverable For This Stage
+
+A frontend route/component map linked from the codebase map, traceability
+matrix, docs index, inventory, drift report, and queue plan.
+
+## Constraints
+
+- do not refactor frontend code in this slice
+- mark static/fallback surfaces as gaps
+- document current ownership honestly even when `App.tsx` is still monolithic
+
+## Forbidden
+
+- UI behavior changes
+- invented API calls
+- claiming component extraction exists when it does not
+
+## Validation Evidence
+
+- Tests:
+  - route coverage check passed against `RoutePath` union and `ROUTES`
+  - API client method coverage check passed
+  - local markdown link check passed
+  - `git diff --check` passed
+- Manual checks:
+  - inspected `web/src/App.tsx`
+  - inspected `web/src/lib/api.ts`
+  - inspected current traceability/codebase docs
+- Screenshots/logs: not applicable
+- High-risk checks: documentation-only; no UI behavior changed
+- Coverage ledger updated: not applicable
+- Coverage rows closed or changed: none
 
 ## Result Report
 
-- Task summary:
+- Task summary: added a frontend route/component/state/API ownership map for
+  the current browser shell.
 - Files changed:
-- How tested:
-- What is incomplete:
-- Next steps:
+  - `docs/frontend/route-component-map.md`
+  - `docs/architecture/codebase-map.md`
+  - `docs/architecture/traceability-matrix.md`
+  - `docs/index.md`
+  - `docs/analysis/documentation-drift.md`
+  - `docs/analysis/documentation-inventory.md`
+  - `docs/planning/documentation-system-gap-repair-plan.md`
+  - `.codex/context/TASK_BOARD.md`
+  - `.codex/context/PROJECT_STATE.md`
+  - `.codex/tasks/PRJ-949-frontend-route-and-component-map.md`
+  - `.codex/tasks/PRJ-950-provider-specific-integration-docs.md`
+- How tested: route coverage, API client method coverage, markdown links, and
+  `git diff --check`.
+- What is incomplete: component extraction ownership remains a gap and no
+  frontend unit/e2e suite was added.
+- Next steps: `PRJ-950` Provider Specific Integration Docs.

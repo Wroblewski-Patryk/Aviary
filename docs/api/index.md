@@ -7,10 +7,30 @@ This reference is grounded in:
 - `backend/app/api/routes.py`
 - `backend/app/api/schemas.py`
 - `web/src/lib/api.ts`
+- generated schema: [openapi.json](openapi.json)
 
 It documents the current HTTP surface at an engineering level. It is not a
-generated OpenAPI export. When a route shape is intentionally flexible, this
-file says so rather than inventing fields.
+replacement for the generated OpenAPI export. When a route shape is
+intentionally flexible, this file says so rather than inventing fields.
+
+## Generated OpenAPI
+
+- Artifact: [openapi.json](openapi.json)
+- Source app: `backend/app/main.py`
+- Export script: `backend/scripts/export_openapi_schema.py`
+- Regeneration command:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python .\scripts\export_openapi_schema.py --output ..\docs\api\openapi.json
+Pop-Location
+```
+
+Validation expectation:
+
+- `openapi` is `3.1.0`
+- `info.title` is `AION MVP`
+- the exported `paths` object currently contains `18` paths
 
 ## Route Groups
 

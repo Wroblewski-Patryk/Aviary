@@ -1,0 +1,95 @@
+# Frontend Route And Component Map
+
+Last updated: 2026-05-03
+
+This map documents the current browser shell without requiring a component
+refactor. It is grounded in `web/src/App.tsx`, `web/src/lib/api.ts`, and
+`web/src/index.css`.
+
+## Current Ownership Model
+
+| Area | Owner File | Responsibility |
+| --- | --- | --- |
+| Route list and route normalization | `web/src/App.tsx` | `RoutePath`, `ROUTES`, `normalizeRoute`, `navigate`, `navigatePublicEntry` |
+| Public/auth shell | `web/src/App.tsx` | Public home, login/register modal, session bootstrap, logout/reset redirects |
+| Authenticated product shell | `web/src/App.tsx` | Sidebar, mobile tab bar, utility bar, route rendering, route copy |
+| API client | `web/src/lib/api.ts` | Typed fetch wrapper and app-facing endpoint methods |
+| Styling | `web/src/index.css` | Route layouts, product shell visuals, responsive behavior, state styling |
+
+`GAP`: route rendering and many route-local UI fragments are still mostly
+inside `web/src/App.tsx`; this document maps current ownership but does not
+claim component-level separation.
+
+## API Client Surface
+
+| API Client Method | Endpoint | Main Consumers |
+| --- | --- | --- |
+| `api.getMe()` | `GET /app/me` | bootstrap, settings refresh |
+| `api.register()` | `POST /app/auth/register` | auth modal |
+| `api.login()` | `POST /app/auth/login` | auth modal |
+| `api.logout()` | `POST /app/auth/logout` | utility bar/sign out |
+| `api.patchSettings()` | `PATCH /app/me/settings` | settings route |
+| `api.resetData()` | `POST /app/me/reset-data` | settings reset section |
+| `api.getChatHistory()` | `GET /app/chat/history` | chat route load and post-send refresh |
+| `api.sendChatMessage()` | `POST /app/chat/message` | chat composer |
+| `api.getPersonalityOverview()` | `GET /app/personality/overview` | dashboard, personality, memory, reflections, plans, goals, insights, automations |
+| `api.getToolsOverview()` | `GET /app/tools/overview` | tools and integrations route data |
+| `api.patchToolsPreferences()` | `PATCH /app/tools/preferences` | tools route toggles |
+| `api.startTelegramLink()` | `POST /app/tools/telegram/link/start` | tools route Telegram link start |
+| `api.getHealth()` | `GET /health` | dashboard/automation/integration health-derived panels |
+
+## Shared State Owners
+
+| State | Owner | Used By |
+| --- | --- | --- |
+| `route` | `App()` | route rendering, sidebar, mobile tab bar |
+| `authMode`, `authModalOpen`, `authBusy`, `me`, `settingsDraft` | `App()` | public/auth shell and settings route |
+| `history`, `localTranscriptItems`, `chatText`, `chatSending`, `historyLoading` | `App()` | chat route |
+| `overview`, `overviewLoading` | `App()` | dashboard, personality, memory, reflections, plans, goals, insights, automations |
+| `toolsOverview`, `toolsLoading`, `telegramLinkStart`, `toolPreferenceBusy` | `App()` | tools and integrations routes |
+| `healthSnapshot`, `healthLoading`, `healthError` | `App()` | dashboard, automations, integrations, health-status panels |
+| `error`, `toast` | `App()` | global feedback banners |
+
+## Route Map
+
+| Route | Public/Auth | Data Source | Route Behavior | Backend Feature/Pipeline | Test Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `/` | public | no API until auth action | Public home; `normalizeRoute("/")` maps product route state to `/login` while `navigatePublicEntry("/")` can show public entry | Public shell | `backend/tests/test_web_routes.py` |
+| `/login` | public/auth | `api.login`, `api.register`, `api.getMe` bootstrap | Login/register modal and auth session bootstrap | App auth session | `backend/tests/test_api_routes.py`, `backend/tests/test_web_routes.py` |
+| `/dashboard` | auth required | `api.getPersonalityOverview`, `api.getHealth`, `api.getToolsOverview` | Flagship overview assembled from learned state, health, and tool readiness summaries | Learned state overview, release/health, tools | `backend/tests/test_api_routes.py`, `backend/tests/test_web_routes.py` |
+| `/chat` | auth required | `api.getChatHistory`, `api.sendChatMessage` | Optimistic local transcript, backend chat send, durable history refresh, markdown rendering | App Chat Pipeline | `backend/tests/test_api_routes.py`, `backend/tests/test_runtime_pipeline.py`, `backend/tests/test_web_routes.py` |
+| `/personality` | auth required | `api.getPersonalityOverview` | Personality layers and recent learned-state presentation | Learned state overview | `backend/tests/test_api_routes.py`, `backend/tests/test_web_routes.py` |
+| `/memory` | auth required | `api.getPersonalityOverview` | Memory-style route using learned-state/recent activity projections | Learned state overview, retrieval context | `backend/tests/test_api_routes.py`, `backend/tests/test_web_routes.py` |
+| `/reflections` | auth required | `api.getPersonalityOverview` | Reflection-oriented route using learned-state summaries | Deferred reflection, learned state overview | `backend/tests/test_api_routes.py`, `backend/tests/test_web_routes.py` |
+| `/plans` | auth required | `api.getPersonalityOverview` | Planning route assembled from current planning/continuity summaries | Foreground runtime, goals/tasks | `backend/tests/test_api_routes.py`, `backend/tests/test_web_routes.py` |
+| `/goals` | auth required | `api.getPersonalityOverview` | Goal route assembled from learned-state and goal signal summaries | Goals/tasks/planned work | `backend/tests/test_api_routes.py`, `backend/tests/test_web_routes.py` |
+| `/insights` | auth required | `api.getPersonalityOverview` | Insight route assembled from learned knowledge/preference summaries | Learned state overview | `backend/tests/test_api_routes.py`, `backend/tests/test_web_routes.py` |
+| `/automations` | auth required | `api.getPersonalityOverview`, `api.getHealth` | Automation/proactive status route using overview and health-derived scheduler/proactive posture | Scheduler/proactive/planned work | `backend/tests/test_scheduler_worker.py`, `backend/tests/test_web_routes.py` |
+| `/integrations` | auth required | `api.getToolsOverview`, `api.getHealth` | Integration readiness route using backend-owned tool/provider truth | Tools Pipeline, provider readiness | `backend/tests/test_connector_policy.py`, `backend/tests/test_web_routes.py` |
+| `/tools` | auth required | `api.getToolsOverview`, `api.patchToolsPreferences`, `api.startTelegramLink` | Tool directory, preference toggles, Telegram link-code start | Tools Pipeline, Telegram linking | `backend/tests/test_api_routes.py`, `backend/tests/test_connector_policy.py`, `backend/tests/test_web_routes.py` |
+| `/settings` | auth required | `api.patchSettings`, `api.resetData`, `api.logout` | Account/interface settings and destructive reset flow | Profile/settings, user data reset, auth session | `backend/tests/test_api_routes.py`, `backend/tests/test_preferences.py`, `backend/tests/test_web_routes.py` |
+
+## Component And Helper Clusters
+
+| Cluster | Functions/Components | Main Routes |
+| --- | --- | --- |
+| Routing and labels | `normalizeRoute`, `navigate`, `routeLabel`, `routeDescription` | all routes |
+| Public shell | public home render branch, `AviaryWordmark`, `PublicGlyph` | `/`, `/login` |
+| Shell chrome | `SidebarGlyph`, `ShellNavButton`, `SidebarBrandBlock`, `ShellUtilityBar` | authenticated routes |
+| Shared panels | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel` | dashboard and module routes |
+| Chat helpers | `renderChatMarkdown`, `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems`, `ChatFlowStage` | `/chat` |
+| Tool helpers | `toolStatusClass`, `formatToolState`, `formatToolLinkState`, `summarizeToolAction` | `/tools`, `/integrations` |
+| Profile/settings helpers | `normalizeUiLanguage`, `resolveUiLanguage`, `normalizeUtcOffset`, `utcOffsetOption` | `/settings`, bootstrap |
+| Learned-state helpers | `recentActivityRows`, `summaryLines`, `conversationChannelStatus`, dashboard/personality derived summaries | dashboard, personality, memory, reflections, plans, goals, insights, automations |
+
+## Gaps
+
+- `web/src/App.tsx` remains the route/component/state owner for most of the
+  browser shell.
+- Static/fallback copy still exists for several module routes when backend
+  overview fields are absent.
+- No dedicated frontend unit/e2e suite was introduced in this slice; the stable
+  automated evidence remains backend route tests, web route tests, and build or
+  smoke evidence from task records.
+- Route-level data dependencies are documented here, but component extraction
+  ownership is not yet a code convention.

@@ -24,11 +24,18 @@ The current documentation system map is useful, but five gaps remain visible:
 
 | Order | Task | Status | Outcome |
 | --- | --- | --- | --- |
-| 1 | `PRJ-946` Generated OpenAPI Reference | READY | A reproducible OpenAPI export and docs link route schemas to the API reference. |
-| 2 | `PRJ-947` ERD And Column Model Reference | BACKLOG | Data docs include generated ERD evidence and model/table/column ownership. |
-| 3 | `PRJ-948` Test Feature Pipeline Ownership Ledger | BACKLOG | Tests map to stable feature and pipeline IDs that traceability can verify. |
-| 4 | `PRJ-949` Frontend Route And Component Map | BACKLOG | Web shell routes, state owners, API calls, and component boundaries are mapped below `App.tsx`. |
-| 5 | `PRJ-950` Provider Specific Integration Docs | BACKLOG | ClickUp, Google Calendar, Google Drive, Telegram, web knowledge, and browser integration docs list readiness, config, operations, tests, and gaps. |
+| 1 | `PRJ-946` Generated OpenAPI Reference | DONE | A reproducible OpenAPI export and docs link route schemas to the API reference. |
+| 2 | `PRJ-947` ERD And Column Model Reference | DONE | Data docs include generated ERD evidence and model/table/column ownership. |
+| 3 | `PRJ-948` Test Feature Pipeline Ownership Ledger | DONE | Tests map to stable feature and pipeline IDs that traceability can verify. |
+| 4 | `PRJ-949` Frontend Route And Component Map | DONE | Web shell routes, state owners, API calls, and component boundaries are mapped below `App.tsx`. |
+| 5 | `PRJ-950` Provider Specific Integration Docs | DONE | ClickUp, Google Calendar, Google Drive, Telegram, web knowledge, and browser integration docs list readiness, config, operations, tests, and gaps. |
+
+## Queue Status
+
+All PRJ-945 documentation-system gap repair tasks are complete at foundation
+level. Remaining gaps are narrower follow-ups recorded in the individual docs,
+such as provider request/response examples, test-function-level ownership, and
+future component extraction conventions.
 
 ## Execution Notes
 

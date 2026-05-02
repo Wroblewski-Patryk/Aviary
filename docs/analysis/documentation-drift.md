@@ -24,19 +24,24 @@ make missing links visible, not to claim full closure.
 | Deferred reflection only existed as registry entry | The background queue/signal writer path lacked a dedicated doc | Durable conclusions, relations, proposals, theta, progress, and milestones could drift without one queue/data/test map | Fixed by PRJ-942 foundation |
 | Scheduler/proactive only existed as registry entry | Cadence ownership, due planned work, observer admission, proactive ticks, and evidence writes lacked one dedicated doc | Background wakeup behavior could drift across scheduler, proactive, planned-work, health, and ops paths | Fixed by PRJ-943 foundation |
 | Tools/connectors only existed as registry entry | Tool readiness, preference writes, Telegram link-code start, connector execution baseline, and permission gates lacked one dedicated doc | Provider readiness, user preference, and backend-owned authorization boundaries could drift | Fixed by PRJ-944 foundation |
+| Missing generated OpenAPI artifact | No generated schema was checked in before PRJ-946 | API route/schema drift could not be compared against FastAPI output | Fixed by PRJ-946 foundation |
+| Missing ERD and column model reference | Data docs listed tables but had no generated ERD or column-by-column reference before PRJ-947 | Persistent state shape required manual inspection of ORM models | Fixed by PRJ-947 foundation |
+| Tests lacked stable feature/pipeline ownership IDs | Traceability mapped tests by filename and inspected responsibility only | Coverage could not be checked mechanically against feature/pipeline ownership | Fixed at file level by PRJ-948 foundation |
+| Frontend route/component ownership was too coarse | Codebase map only said most frontend ownership lived in `web/src/App.tsx` | Route data dependencies and fallback/static surfaces were hard to trace | Fixed at route/helper level by PRJ-949 foundation |
+| Provider-specific integration docs were incomplete | Tools docs named connector readiness but did not map providers, settings, live operations, policy-only operations, tests, and gaps in one place | Provider readiness could be confused with connector authorization capability | Fixed by PRJ-950 foundation |
 
 ## Code Without Dedicated Documentation
 
 | Code Area | Current Coverage | Gap |
 | --- | --- | --- |
-| `backend/app/api/routes.py` | Codebase map, traceability matrix, and API reference | Generated OpenAPI or per-route examples are still missing |
-| `backend/app/api/schemas.py` | API reference lists schemas and fields | Deep schema examples and generated client sync are still missing |
-| `backend/app/memory/models.py` | Codebase map and data reference list models/tables | Generated ERD and column-level reference are still missing |
+| `backend/app/api/routes.py` | Codebase map, traceability matrix, API reference, and generated OpenAPI artifact | Per-route examples are still missing |
+| `backend/app/api/schemas.py` | API reference lists schemas and fields; OpenAPI exports generated schema shapes | Deep schema examples and generated client sync are still missing |
+| `backend/app/memory/models.py` | Codebase map, data reference, generated column reference, and Mermaid ERD | Exhaustive repository-method reference is still missing |
 | `backend/app/core/*_policy.py` | Module registry groups policies | Dedicated policy registry is missing |
 | `backend/app/core/runtime_graph.py` | Pipeline registry covers foreground runtime | Per-node graph state input/output documentation is missing |
 | `backend/app/reflection/*.py` | Pipeline and module registry cover reflection | Per-signal extraction docs are missing |
-| `backend/app/integrations/**` | Traceability covers major integrations and the tools pipeline covers readiness/permission boundaries | Provider-specific capability/config docs are incomplete |
-| `web/src/App.tsx` | Codebase/module maps cover route shell | Component-level frontend map is missing because UI is mostly monolithic |
+| `backend/app/integrations/**` | Traceability, tools pipeline, and provider integration reference cover major integrations, readiness, permission boundaries, tests, and gaps | Provider-specific request/response examples and live smoke evidence remain incomplete |
+| `web/src/App.tsx` | Codebase map and frontend route/component map cover route shell, state owners, API calls, helper clusters, and gaps | Component extraction ownership remains mostly monolithic |
 | `web/src/lib/api.ts` | Codebase map covers app API client | OpenAPI/type-generation sync is missing |
 
 ## Documentation That May Describe Historical State
@@ -53,7 +58,6 @@ The first-pass endpoint reference now lives in `docs/api/index.md`.
 
 Remaining API gaps:
 
-- no generated OpenAPI artifact is checked in or linked
 - flexible response schemas with `extra="allow"` need deeper shape docs
 - generic event/debug payload contracts need a dedicated event contract
   reference
@@ -65,17 +69,15 @@ The first-pass data/model reference now lives in `docs/data/index.md`.
 
 Remaining data documentation gaps:
 
-- no generated ERD exists
-- no column-by-column model reference exists
 - migration-to-column mapping is filename-level, not exhaustive
 - repository methods are grouped by responsibility, not documented one by one
 
 ## Tests Without Explicit Feature Metadata
 
-The backend test suite is broad and named clearly, but tests do not currently
-declare a feature ID, module ID, or pipeline ID in metadata. The traceability
-matrix therefore maps tests by file responsibility and inspected names rather
-than a machine-readable test ownership field.
+The backend test suite is now mapped at file level in
+[Test Ownership Ledger](../engineering/test-ownership-ledger.md). Remaining
+gap: ownership is not yet test-function-level and no inline pytest marker
+convention has been adopted.
 
 ## Features With Documentation But No Dedicated Tests Found In This Pass
 
@@ -89,10 +91,5 @@ than a machine-readable test ownership field.
 The ordered repair lane is tracked in
 [Documentation System Gap Repair Plan](../planning/documentation-system-gap-repair-plan.md).
 
-1. Generate and link an OpenAPI artifact.
-2. Add ERD and column-level data/model reference.
-3. Add stable feature/pipeline IDs to tests or a test ownership ledger so the
-   traceability matrix can be verified mechanically.
-4. Create a frontend route/component map once the web shell is split or a
-   component ownership convention is approved.
-5. Add provider-specific integration docs for configured connector families.
+No documentation-system repair loops from PRJ-945 remain open. New loops should
+come from fresh drift findings or implementation changes.

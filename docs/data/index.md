@@ -9,11 +9,33 @@ This reference is grounded in:
 - `backend/app/memory/repository.py`
 - `backend/tests/test_memory_repository.py`
 - `backend/tests/test_schema_baseline.py`
+- generated column reference: [columns.md](columns.md)
+- generated Mermaid ERD: [erd.mmd](erd.mmd)
 
 It maps persistent state to features, repository ownership, migrations, and
-tests. It is not a generated ERD and does not document every column. If a
-relationship is not encoded in the inspected model file, this reference avoids
-presenting it as a database-level constraint.
+tests. If a relationship is not encoded in the inspected model file, this
+reference avoids presenting it as a database-level constraint.
+
+## Generated Data Model Artifacts
+
+- Column reference: [columns.md](columns.md)
+- Mermaid ERD: [erd.mmd](erd.mmd)
+- Source metadata: `Base.metadata` from `backend/app/memory/models.py`
+- Export script: `backend/scripts/export_data_model_reference.py`
+- Regeneration command:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python .\scripts\export_data_model_reference.py --columns-output ..\docs\data\columns.md --erd-output ..\docs\data\erd.mmd
+Pop-Location
+```
+
+Validation expectation:
+
+- the generated column reference covers all `18` ORM tables
+- the generated ERD contains all `18` ORM tables
+- logical links are documented as Mermaid comments unless the ORM declares
+  real database foreign keys
 
 ## Ownership Rules
 
@@ -153,8 +175,6 @@ For any data-affecting change:
 
 ## Known Data Documentation Gaps
 
-- No generated ERD exists.
-- No column-by-column model reference exists yet.
 - Repository methods are grouped by responsibility, not exhaustively documented
   one by one.
 - Some relationships are logical/application-level rather than encoded as

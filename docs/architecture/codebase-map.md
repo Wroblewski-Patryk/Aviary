@@ -35,7 +35,7 @@ navigation aid, not a replacement for the canonical architecture.
 | Proactive | `backend/app/proactive/engine.py` | Proactive candidate generation and delivery rules |
 | Communication | `backend/app/communication/*.py` | Communication boundary and behavior feedback interpretation |
 | Identity | `backend/app/identity/service.py` | Identity facts and foreground capability truth |
-| Integrations | `backend/app/integrations/**` | Telegram, ClickUp, Google Calendar, Google Drive, OpenAI, DuckDuckGo, generic HTTP/web browser, delivery router |
+| Integrations | `backend/app/integrations/**` | Telegram, ClickUp, Google Calendar, Google Drive, OpenAI, DuckDuckGo, generic HTTP/web browser, delivery router; see [Provider Integration Reference](../integrations/index.md) |
 | Workers | `backend/app/workers/scheduler.py` | Scheduler-owned maintenance/proactive execution entrypoints |
 | Utils | `backend/app/utils/*.py` | Shared language, preferences, UTC offset, goal/task ranking and progress helpers |
 
@@ -109,8 +109,10 @@ first-pass migration timeline.
 | `web/src/index.css` | Shared visual system, layout, route styling, responsive behavior |
 | `web/src/main.tsx` | React app bootstrap |
 
-Frontend component ownership is currently mostly inside `web/src/App.tsx`.
-Per-component docs below that level are a GAP.
+See [Frontend Route And Component Map](../frontend/route-component-map.md) for
+route, state, API, and helper ownership below the coarse `web/src/App.tsx`
+level. Component extraction is still a GAP; the map documents current
+ownership without forcing a refactor.
 
 ## Background Jobs And Queues
 

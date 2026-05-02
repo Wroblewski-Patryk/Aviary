@@ -1,0 +1,4437 @@
+{
+  "components": {
+    "schemas": {
+      "ActionResult": {
+        "properties": {
+          "actions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Actions",
+            "type": "array"
+          },
+          "notes": {
+            "title": "Notes",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "tool_learning_candidates": {
+            "items": {
+              "$ref": "#/components/schemas/ToolGroundedLearningCandidate"
+            },
+            "title": "Tool Learning Candidates",
+            "type": "array"
+          }
+        },
+        "required": [
+          "status",
+          "notes"
+        ],
+        "title": "ActionResult",
+        "type": "object"
+      },
+      "AffectiveAssessmentOutput": {
+        "properties": {
+          "affect_label": {
+            "default": "neutral",
+            "title": "Affect Label",
+            "type": "string"
+          },
+          "confidence": {
+            "default": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "intensity": {
+            "default": 0.0,
+            "title": "Intensity",
+            "type": "number"
+          },
+          "needs_support": {
+            "default": false,
+            "title": "Needs Support",
+            "type": "boolean"
+          },
+          "source": {
+            "default": "deterministic_placeholder",
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "title": "AffectiveAssessmentOutput",
+        "type": "object"
+      },
+      "AppAuthUserResponse": {
+        "properties": {
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email"
+        ],
+        "title": "AppAuthUserResponse",
+        "type": "object"
+      },
+      "AppChatHistoryEntry": {
+        "properties": {
+          "channel": {
+            "title": "Channel",
+            "type": "string"
+          },
+          "event_id": {
+            "title": "Event Id",
+            "type": "string"
+          },
+          "message_id": {
+            "title": "Message Id",
+            "type": "string"
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "timestamp": {
+            "title": "Timestamp"
+          }
+        },
+        "required": [
+          "message_id",
+          "event_id",
+          "role",
+          "text",
+          "channel",
+          "timestamp"
+        ],
+        "title": "AppChatHistoryEntry",
+        "type": "object"
+      },
+      "AppChatHistoryResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AppChatHistoryEntry"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "AppChatHistoryResponse",
+        "type": "object"
+      },
+      "AppChatMessageRequest": {
+        "properties": {
+          "text": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "AppChatMessageRequest",
+        "type": "object"
+      },
+      "AppChatMessageResponse": {
+        "properties": {
+          "event_id": {
+            "title": "Event Id",
+            "type": "string"
+          },
+          "reply": {
+            "$ref": "#/components/schemas/EventReplyResponse"
+          },
+          "runtime": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EventRuntimeResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "trace_id": {
+            "title": "Trace Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reply",
+          "event_id",
+          "trace_id"
+        ],
+        "title": "AppChatMessageResponse",
+        "type": "object"
+      },
+      "AppLoginRequest": {
+        "properties": {
+          "email": {
+            "maxLength": 320,
+            "minLength": 3,
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "minLength": 8,
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "AppLoginRequest",
+        "type": "object"
+      },
+      "AppMeResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "settings": {
+            "$ref": "#/components/schemas/AppSettingsResponse"
+          },
+          "user": {
+            "$ref": "#/components/schemas/AppAuthUserResponse"
+          }
+        },
+        "required": [
+          "user",
+          "settings"
+        ],
+        "title": "AppMeResponse",
+        "type": "object"
+      },
+      "AppPersonalityOverviewResponse": {
+        "additionalProperties": true,
+        "properties": {},
+        "title": "AppPersonalityOverviewResponse",
+        "type": "object"
+      },
+      "AppRegisterRequest": {
+        "properties": {
+          "display_name": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "email": {
+            "maxLength": 320,
+            "minLength": 3,
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "minLength": 8,
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "AppRegisterRequest",
+        "type": "object"
+      },
+      "AppResetDataRequest": {
+        "properties": {
+          "confirmation_text": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Confirmation Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "confirmation_text"
+        ],
+        "title": "AppResetDataRequest",
+        "type": "object"
+      },
+      "AppResetDataResponse": {
+        "properties": {
+          "cleared_categories": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Cleared Categories",
+            "type": "array"
+          },
+          "preserved_categories": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Preserved Categories",
+            "type": "array"
+          },
+          "preserved_conclusion_kinds": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Preserved Conclusion Kinds",
+            "type": "array"
+          },
+          "revoked_session_count": {
+            "title": "Revoked Session Count",
+            "type": "integer"
+          },
+          "scope": {
+            "title": "Scope",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "target_user_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target User Id"
+          },
+          "total_deleted_records": {
+            "title": "Total Deleted Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "status",
+          "scope",
+          "total_deleted_records",
+          "revoked_session_count",
+          "cleared_categories",
+          "preserved_categories",
+          "preserved_conclusion_kinds"
+        ],
+        "title": "AppResetDataResponse",
+        "type": "object"
+      },
+      "AppSettingsPatchRequest": {
+        "properties": {
+          "display_name": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "preferred_language": {
+            "anyOf": [
+              {
+                "maxLength": 8,
+                "minLength": 2,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Language"
+          },
+          "proactive_opt_in": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proactive Opt In"
+          },
+          "ui_language": {
+            "anyOf": [
+              {
+                "maxLength": 16,
+                "minLength": 2,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ui Language"
+          },
+          "utc_offset": {
+            "anyOf": [
+              {
+                "maxLength": 16,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utc Offset"
+          }
+        },
+        "title": "AppSettingsPatchRequest",
+        "type": "object"
+      },
+      "AppSettingsResponse": {
+        "properties": {
+          "preferred_language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Language"
+          },
+          "proactive_opt_in": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proactive Opt In"
+          },
+          "ui_language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ui Language"
+          },
+          "utc_offset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utc Offset"
+          }
+        },
+        "title": "AppSettingsResponse",
+        "type": "object"
+      },
+      "AppTelegramLinkStartResponse": {
+        "properties": {
+          "expires_in_seconds": {
+            "title": "Expires In Seconds",
+            "type": "integer"
+          },
+          "instruction_text": {
+            "title": "Instruction Text",
+            "type": "string"
+          },
+          "link_code": {
+            "title": "Link Code",
+            "type": "string"
+          },
+          "link_state": {
+            "title": "Link State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "link_code",
+          "instruction_text",
+          "link_state",
+          "expires_in_seconds"
+        ],
+        "title": "AppTelegramLinkStartResponse",
+        "type": "object"
+      },
+      "AppToolsOverviewResponse": {
+        "additionalProperties": true,
+        "properties": {},
+        "title": "AppToolsOverviewResponse",
+        "type": "object"
+      },
+      "AppToolsPreferencesPatchRequest": {
+        "properties": {
+          "clickup_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clickup Enabled"
+          },
+          "google_calendar_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Google Calendar Enabled"
+          },
+          "google_drive_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Google Drive Enabled"
+          },
+          "telegram_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telegram Enabled"
+          }
+        },
+        "title": "AppToolsPreferencesPatchRequest",
+        "type": "object"
+      },
+      "BehaviorFeedbackOutput": {
+        "properties": {
+          "confidence": {
+            "default": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "feedback_polarity": {
+            "default": "unclear",
+            "enum": [
+              "correction",
+              "approval",
+              "observation",
+              "unclear"
+            ],
+            "title": "Feedback Polarity",
+            "type": "string"
+          },
+          "feedback_target": {
+            "default": "unknown",
+            "enum": [
+              "interaction_ritual",
+              "contact_cadence",
+              "interruption_tolerance",
+              "response_style",
+              "collaboration",
+              "context_continuity",
+              "unknown"
+            ],
+            "title": "Feedback Target",
+            "type": "string"
+          },
+          "source": {
+            "default": "contract_default",
+            "title": "Source",
+            "type": "string"
+          },
+          "suggested_relation_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suggested Relation Type"
+          },
+          "suggested_relation_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suggested Relation Value"
+          }
+        },
+        "title": "BehaviorFeedbackOutput",
+        "type": "object"
+      },
+      "CalendarSchedulingIntentDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "calendar_scheduling_intent",
+            "default": "calendar_scheduling_intent",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "mode": {
+            "default": "suggestion_only",
+            "enum": [
+              "read_only",
+              "suggestion_only",
+              "mutate_with_confirmation"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "operation": {
+            "enum": [
+              "read_availability",
+              "suggest_slots",
+              "create_event",
+              "update_event",
+              "cancel_event"
+            ],
+            "title": "Operation",
+            "type": "string"
+          },
+          "provider_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider Hint"
+          },
+          "time_hint": {
+            "default": "",
+            "title": "Time Hint",
+            "type": "string"
+          },
+          "title_hint": {
+            "default": "",
+            "title": "Title Hint",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation"
+        ],
+        "title": "CalendarSchedulingIntentDomainIntent",
+        "type": "object"
+      },
+      "CancelPlannedWorkItemDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "cancel_planned_work_item",
+            "default": "cancel_planned_work_item",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "reason": {
+            "default": "",
+            "title": "Reason",
+            "type": "string"
+          },
+          "work_id": {
+            "title": "Work Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "work_id"
+        ],
+        "title": "CancelPlannedWorkItemDomainIntent",
+        "type": "object"
+      },
+      "CompletePlannedWorkItemDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "complete_planned_work_item",
+            "default": "complete_planned_work_item",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "reason": {
+            "default": "",
+            "title": "Reason",
+            "type": "string"
+          },
+          "work_id": {
+            "title": "Work Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "work_id"
+        ],
+        "title": "CompletePlannedWorkItemDomainIntent",
+        "type": "object"
+      },
+      "ConnectedDriveAccessDomainIntent": {
+        "properties": {
+          "file_hint": {
+            "default": "",
+            "title": "File Hint",
+            "type": "string"
+          },
+          "intent_type": {
+            "const": "connected_drive_access_intent",
+            "default": "connected_drive_access_intent",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "mode": {
+            "default": "suggestion_only",
+            "enum": [
+              "read_only",
+              "suggestion_only",
+              "mutate_with_confirmation"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "operation": {
+            "enum": [
+              "list_files",
+              "search_documents",
+              "read_document",
+              "suggest_file_plan",
+              "upload_file",
+              "update_document",
+              "delete_file"
+            ],
+            "title": "Operation",
+            "type": "string"
+          },
+          "provider_hint": {
+            "default": "generic",
+            "title": "Provider Hint",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation"
+        ],
+        "title": "ConnectedDriveAccessDomainIntent",
+        "type": "object"
+      },
+      "ConnectorCapabilityDiscoveryDomainIntent": {
+        "properties": {
+          "connector_kind": {
+            "enum": [
+              "calendar",
+              "task_system",
+              "cloud_drive",
+              "knowledge_search",
+              "web_browser"
+            ],
+            "title": "Connector Kind",
+            "type": "string"
+          },
+          "evidence": {
+            "default": "repeated_unmet_need",
+            "title": "Evidence",
+            "type": "string"
+          },
+          "intent_type": {
+            "const": "connector_capability_discovery_intent",
+            "default": "connector_capability_discovery_intent",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "mode": {
+            "const": "suggestion_only",
+            "default": "suggestion_only",
+            "title": "Mode",
+            "type": "string"
+          },
+          "provider_hint": {
+            "default": "generic",
+            "title": "Provider Hint",
+            "type": "string"
+          },
+          "requested_capability": {
+            "default": "connector_access",
+            "title": "Requested Capability",
+            "type": "string"
+          }
+        },
+        "required": [
+          "connector_kind"
+        ],
+        "title": "ConnectorCapabilityDiscoveryDomainIntent",
+        "type": "object"
+      },
+      "ConnectorPermissionGateOutput": {
+        "properties": {
+          "allowed": {
+            "default": false,
+            "title": "Allowed",
+            "type": "boolean"
+          },
+          "connector_kind": {
+            "enum": [
+              "calendar",
+              "task_system",
+              "cloud_drive",
+              "knowledge_search",
+              "web_browser"
+            ],
+            "title": "Connector Kind",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "read_only",
+              "suggestion_only",
+              "mutate_with_confirmation"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "operation": {
+            "title": "Operation",
+            "type": "string"
+          },
+          "provider_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider Hint"
+          },
+          "reason": {
+            "default": "explicit_user_authorization_required",
+            "title": "Reason",
+            "type": "string"
+          },
+          "requires_confirmation": {
+            "default": false,
+            "title": "Requires Confirmation",
+            "type": "boolean"
+          },
+          "requires_opt_in": {
+            "default": true,
+            "title": "Requires Opt In",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "connector_kind",
+          "operation",
+          "mode"
+        ],
+        "title": "ConnectorPermissionGateOutput",
+        "type": "object"
+      },
+      "ContextOutput": {
+        "properties": {
+          "available_tool_hints": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Available Tool Hints",
+            "type": "array"
+          },
+          "foreground_awareness_summary": {
+            "default": "",
+            "title": "Foreground Awareness Summary",
+            "type": "string"
+          },
+          "known_user_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Known User Name"
+          },
+          "memory_continuity_available": {
+            "default": false,
+            "title": "Memory Continuity Available",
+            "type": "boolean"
+          },
+          "related_goals": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Related Goals",
+            "type": "array"
+          },
+          "related_tags": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Related Tags",
+            "type": "array"
+          },
+          "risk_level": {
+            "title": "Risk Level",
+            "type": "number"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary",
+          "risk_level"
+        ],
+        "title": "ContextOutput",
+        "type": "object"
+      },
+      "Event": {
+        "properties": {
+          "event_id": {
+            "title": "Event Id",
+            "type": "string"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/EventMeta"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "title": "Payload",
+            "type": "object"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "subsource": {
+            "title": "Subsource",
+            "type": "string"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          }
+        },
+        "required": [
+          "event_id",
+          "source",
+          "subsource",
+          "timestamp",
+          "meta"
+        ],
+        "title": "Event",
+        "type": "object"
+      },
+      "EventMeta": {
+        "properties": {
+          "trace_id": {
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "user_id": {
+            "default": "anonymous",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "trace_id"
+        ],
+        "title": "EventMeta",
+        "type": "object"
+      },
+      "EventQueueResponse": {
+        "properties": {
+          "queued": {
+            "title": "Queued",
+            "type": "boolean"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "source_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Count"
+          },
+          "turn_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Turn Id"
+          }
+        },
+        "required": [
+          "queued",
+          "reason"
+        ],
+        "title": "EventQueueResponse",
+        "type": "object"
+      },
+      "EventReplyResponse": {
+        "properties": {
+          "channel": {
+            "title": "Channel",
+            "type": "string"
+          },
+          "language": {
+            "title": "Language",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "tone": {
+            "title": "Tone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "language",
+          "tone",
+          "channel"
+        ],
+        "title": "EventReplyResponse",
+        "type": "object"
+      },
+      "EventResponse": {
+        "properties": {
+          "debug": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RuntimeResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "event_id": {
+            "title": "Event Id",
+            "type": "string"
+          },
+          "incident_evidence": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Incident Evidence"
+          },
+          "queue": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EventQueueResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reply": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EventReplyResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "runtime": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EventRuntimeResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "system_debug": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RuntimeSystemDebugOutput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "trace_id": {
+            "title": "Trace Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "event_id",
+          "trace_id",
+          "source"
+        ],
+        "title": "EventResponse",
+        "type": "object"
+      },
+      "EventRuntimeResponse": {
+        "properties": {
+          "action_status": {
+            "title": "Action Status",
+            "type": "string"
+          },
+          "motivation_mode": {
+            "enum": [
+              "respond",
+              "ignore",
+              "analyze",
+              "execute",
+              "clarify"
+            ],
+            "title": "Motivation Mode",
+            "type": "string"
+          },
+          "reflection_triggered": {
+            "title": "Reflection Triggered",
+            "type": "boolean"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "motivation_mode",
+          "action_status",
+          "reflection_triggered"
+        ],
+        "title": "EventRuntimeResponse",
+        "type": "object"
+      },
+      "ExpressionOutput": {
+        "properties": {
+          "channel": {
+            "title": "Channel",
+            "type": "string"
+          },
+          "language": {
+            "title": "Language",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "self_review_notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Self Review Notes",
+            "type": "array"
+          },
+          "tone": {
+            "title": "Tone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "tone",
+          "channel",
+          "language"
+        ],
+        "title": "ExpressionOutput",
+        "type": "object"
+      },
+      "ExternalTaskSyncDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "external_task_sync_intent",
+            "default": "external_task_sync_intent",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "mode": {
+            "default": "suggestion_only",
+            "enum": [
+              "read_only",
+              "suggestion_only",
+              "mutate_with_confirmation"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "operation": {
+            "enum": [
+              "list_tasks",
+              "suggest_sync",
+              "create_task",
+              "update_task",
+              "link_internal_task"
+            ],
+            "title": "Operation",
+            "type": "string"
+          },
+          "provider_hint": {
+            "default": "generic",
+            "title": "Provider Hint",
+            "type": "string"
+          },
+          "status_hint": {
+            "default": "",
+            "title": "Status Hint",
+            "type": "string"
+          },
+          "task_hint": {
+            "default": "",
+            "title": "Task Hint",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation"
+        ],
+        "title": "ExternalTaskSyncDomainIntent",
+        "type": "object"
+      },
+      "GoalMilestoneHistoryRecordOutput": {
+        "properties": {
+          "completion_criteria": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completion Criteria"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "goal_id": {
+            "title": "Goal Id",
+            "type": "integer"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "milestone_name": {
+            "title": "Milestone Name",
+            "type": "string"
+          },
+          "phase": {
+            "title": "Phase",
+            "type": "string"
+          },
+          "risk_level": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Level"
+          },
+          "source_event_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Event Id"
+          }
+        },
+        "required": [
+          "goal_id",
+          "milestone_name",
+          "phase",
+          "created_at"
+        ],
+        "title": "GoalMilestoneHistoryRecordOutput",
+        "type": "object"
+      },
+      "GoalMilestoneRecordOutput": {
+        "properties": {
+          "arc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arc"
+          },
+          "completion_criteria": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completion Criteria"
+          },
+          "dependency_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dependency State"
+          },
+          "due_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Due State"
+          },
+          "due_window": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Due Window"
+          },
+          "goal_id": {
+            "title": "Goal Id",
+            "type": "integer"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "phase": {
+            "title": "Phase",
+            "type": "string"
+          },
+          "pressure_level": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pressure Level"
+          },
+          "risk_level": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Level"
+          },
+          "source_event_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Event Id"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "goal_id",
+          "name",
+          "phase",
+          "status"
+        ],
+        "title": "GoalMilestoneRecordOutput",
+        "type": "object"
+      },
+      "GoalProgressRecordOutput": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "execution_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution State"
+          },
+          "goal_id": {
+            "title": "Goal Id",
+            "type": "integer"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "progress_trend": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Progress Trend"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
+          "source_event_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Event Id"
+          }
+        },
+        "required": [
+          "goal_id",
+          "score",
+          "created_at"
+        ],
+        "title": "GoalProgressRecordOutput",
+        "type": "object"
+      },
+      "GoalRecordOutput": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "goal_type": {
+            "title": "Goal Type",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "priority": {
+            "title": "Priority",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "priority",
+          "status",
+          "goal_type"
+        ],
+        "title": "GoalRecordOutput",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "IdentityOutput": {
+        "properties": {
+          "behavioral_style": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Behavioral Style",
+            "type": "array"
+          },
+          "boundaries": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Boundaries",
+            "type": "array"
+          },
+          "collaboration_preference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collaboration Preference"
+          },
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "mission": {
+            "title": "Mission",
+            "type": "string"
+          },
+          "preferred_language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Language"
+          },
+          "response_style": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Style"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "theta_orientation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Theta Orientation"
+          },
+          "values": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Values",
+            "type": "array"
+          }
+        },
+        "required": [
+          "mission",
+          "summary"
+        ],
+        "title": "IdentityOutput",
+        "type": "object"
+      },
+      "KnowledgeSearchDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "knowledge_search_intent",
+            "default": "knowledge_search_intent",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "mode": {
+            "default": "suggestion_only",
+            "enum": [
+              "read_only",
+              "suggestion_only",
+              "mutate_with_confirmation"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "operation": {
+            "default": "search_web",
+            "enum": [
+              "search_web",
+              "suggest_search"
+            ],
+            "title": "Operation",
+            "type": "string"
+          },
+          "provider_hint": {
+            "default": "generic",
+            "title": "Provider Hint",
+            "type": "string"
+          },
+          "query_hint": {
+            "default": "",
+            "title": "Query Hint",
+            "type": "string"
+          }
+        },
+        "title": "KnowledgeSearchDomainIntent",
+        "type": "object"
+      },
+      "MaintainRelationDomainIntent": {
+        "properties": {
+          "confidence": {
+            "default": 0.7,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "decay_rate": {
+            "default": 0.02,
+            "title": "Decay Rate",
+            "type": "number"
+          },
+          "evidence_count": {
+            "default": 1,
+            "title": "Evidence Count",
+            "type": "integer"
+          },
+          "intent_type": {
+            "const": "maintain_relation",
+            "default": "maintain_relation",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "relation_type": {
+            "title": "Relation Type",
+            "type": "string"
+          },
+          "relation_value": {
+            "title": "Relation Value",
+            "type": "string"
+          },
+          "scope_key": {
+            "default": "global",
+            "title": "Scope Key",
+            "type": "string"
+          },
+          "scope_type": {
+            "default": "global",
+            "enum": [
+              "global",
+              "goal",
+              "task"
+            ],
+            "title": "Scope Type",
+            "type": "string"
+          },
+          "source": {
+            "default": "planning_intent",
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "relation_type",
+          "relation_value"
+        ],
+        "title": "MaintainRelationDomainIntent",
+        "type": "object"
+      },
+      "MaintainTaskStatusDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "maintain_task_status",
+            "default": "maintain_task_status",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "reason": {
+            "default": "inferred_repeated_blocker_evidence",
+            "title": "Reason",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "task_hint": {
+            "title": "Task Hint",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "task_hint"
+        ],
+        "title": "MaintainTaskStatusDomainIntent",
+        "type": "object"
+      },
+      "MemoryRecord": {
+        "properties": {
+          "event_id": {
+            "title": "Event Id",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "importance": {
+            "title": "Importance",
+            "type": "number"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "title": "Payload",
+            "type": "object"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          }
+        },
+        "required": [
+          "event_id",
+          "timestamp",
+          "summary",
+          "importance"
+        ],
+        "title": "MemoryRecord",
+        "type": "object"
+      },
+      "MotivationOutput": {
+        "properties": {
+          "arousal": {
+            "title": "Arousal",
+            "type": "number"
+          },
+          "importance": {
+            "title": "Importance",
+            "type": "number"
+          },
+          "mode": {
+            "enum": [
+              "respond",
+              "ignore",
+              "analyze",
+              "execute",
+              "clarify"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "urgency": {
+            "title": "Urgency",
+            "type": "number"
+          },
+          "valence": {
+            "title": "Valence",
+            "type": "number"
+          }
+        },
+        "required": [
+          "importance",
+          "urgency",
+          "valence",
+          "arousal",
+          "mode"
+        ],
+        "title": "MotivationOutput",
+        "type": "object"
+      },
+      "NoopDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "noop",
+            "default": "noop",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "reason": {
+            "default": "no_domain_change_detected",
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "title": "NoopDomainIntent",
+        "type": "object"
+      },
+      "PerceptionOutput": {
+        "properties": {
+          "affective": {
+            "$ref": "#/components/schemas/AffectiveAssessmentOutput"
+          },
+          "ambiguity": {
+            "title": "Ambiguity",
+            "type": "number"
+          },
+          "behavior_feedback": {
+            "items": {
+              "$ref": "#/components/schemas/BehaviorFeedbackOutput"
+            },
+            "title": "Behavior Feedback",
+            "type": "array"
+          },
+          "event_type": {
+            "title": "Event Type",
+            "type": "string"
+          },
+          "initial_salience": {
+            "title": "Initial Salience",
+            "type": "number"
+          },
+          "intent": {
+            "title": "Intent",
+            "type": "string"
+          },
+          "language": {
+            "title": "Language",
+            "type": "string"
+          },
+          "language_confidence": {
+            "title": "Language Confidence",
+            "type": "number"
+          },
+          "language_source": {
+            "title": "Language Source",
+            "type": "string"
+          },
+          "topic": {
+            "title": "Topic",
+            "type": "string"
+          },
+          "topic_tags": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Topic Tags",
+            "type": "array"
+          }
+        },
+        "required": [
+          "event_type",
+          "topic",
+          "intent",
+          "language",
+          "language_source",
+          "language_confidence",
+          "ambiguity",
+          "initial_salience"
+        ],
+        "title": "PerceptionOutput",
+        "type": "object"
+      },
+      "PlanOutput": {
+        "properties": {
+          "accepted_proposals": {
+            "items": {
+              "$ref": "#/components/schemas/SubconsciousProposalRecord"
+            },
+            "title": "Accepted Proposals",
+            "type": "array"
+          },
+          "connector_permission_gates": {
+            "items": {
+              "$ref": "#/components/schemas/ConnectorPermissionGateOutput"
+            },
+            "title": "Connector Permission Gates",
+            "type": "array"
+          },
+          "domain_intents": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "calendar_scheduling_intent": "#/components/schemas/CalendarSchedulingIntentDomainIntent",
+                  "cancel_planned_work_item": "#/components/schemas/CancelPlannedWorkItemDomainIntent",
+                  "complete_planned_work_item": "#/components/schemas/CompletePlannedWorkItemDomainIntent",
+                  "connected_drive_access_intent": "#/components/schemas/ConnectedDriveAccessDomainIntent",
+                  "connector_capability_discovery_intent": "#/components/schemas/ConnectorCapabilityDiscoveryDomainIntent",
+                  "external_task_sync_intent": "#/components/schemas/ExternalTaskSyncDomainIntent",
+                  "knowledge_search_intent": "#/components/schemas/KnowledgeSearchDomainIntent",
+                  "maintain_relation": "#/components/schemas/MaintainRelationDomainIntent",
+                  "maintain_task_status": "#/components/schemas/MaintainTaskStatusDomainIntent",
+                  "noop": "#/components/schemas/NoopDomainIntent",
+                  "promote_inferred_goal": "#/components/schemas/PromoteInferredGoalDomainIntent",
+                  "promote_inferred_task": "#/components/schemas/PromoteInferredTaskDomainIntent",
+                  "reschedule_planned_work_item": "#/components/schemas/ReschedulePlannedWorkItemDomainIntent",
+                  "update_collaboration_preference": "#/components/schemas/UpdateCollaborationPreferenceDomainIntent",
+                  "update_proactive_preference": "#/components/schemas/UpdateProactivePreferenceDomainIntent",
+                  "update_proactive_state": "#/components/schemas/UpdateProactiveStateDomainIntent",
+                  "update_response_style": "#/components/schemas/UpdateResponseStyleDomainIntent",
+                  "update_task_status": "#/components/schemas/UpdateTaskStatusDomainIntent",
+                  "upsert_goal": "#/components/schemas/UpsertGoalDomainIntent",
+                  "upsert_planned_work_item": "#/components/schemas/UpsertPlannedWorkItemDomainIntent",
+                  "upsert_task": "#/components/schemas/UpsertTaskDomainIntent",
+                  "web_browser_access_intent": "#/components/schemas/WebBrowserAccessDomainIntent"
+                },
+                "propertyName": "intent_type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/NoopDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/UpsertGoalDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/UpsertTaskDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/UpdateTaskStatusDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/UpsertPlannedWorkItemDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/ReschedulePlannedWorkItemDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/CancelPlannedWorkItemDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/CompletePlannedWorkItemDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/PromoteInferredGoalDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/PromoteInferredTaskDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/MaintainTaskStatusDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/UpdateResponseStyleDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/UpdateCollaborationPreferenceDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/UpdateProactivePreferenceDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/CalendarSchedulingIntentDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/ExternalTaskSyncDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/ConnectedDriveAccessDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/ConnectorCapabilityDiscoveryDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/KnowledgeSearchDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/WebBrowserAccessDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/MaintainRelationDomainIntent"
+                },
+                {
+                  "$ref": "#/components/schemas/UpdateProactiveStateDomainIntent"
+                }
+              ]
+            },
+            "title": "Domain Intents",
+            "type": "array"
+          },
+          "goal": {
+            "title": "Goal",
+            "type": "string"
+          },
+          "inferred_promotion_diagnostics": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Inferred Promotion Diagnostics",
+            "type": "array"
+          },
+          "needs_action": {
+            "title": "Needs Action",
+            "type": "boolean"
+          },
+          "needs_response": {
+            "title": "Needs Response",
+            "type": "boolean"
+          },
+          "proactive_decision": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProactiveDecisionOutput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "proactive_delivery_guard": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProactiveDeliveryGuardOutput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "proposal_handoffs": {
+            "items": {
+              "$ref": "#/components/schemas/ProposalHandoffDecisionOutput"
+            },
+            "title": "Proposal Handoffs",
+            "type": "array"
+          },
+          "selected_skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillCapabilityOutput"
+            },
+            "title": "Selected Skills",
+            "type": "array"
+          },
+          "steps": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Steps",
+            "type": "array"
+          }
+        },
+        "required": [
+          "goal",
+          "needs_action",
+          "needs_response"
+        ],
+        "title": "PlanOutput",
+        "type": "object"
+      },
+      "PlannedWorkRecordOutput": {
+        "properties": {
+          "created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "delivery_channel": {
+            "default": "none",
+            "enum": [
+              "telegram",
+              "api",
+              "none"
+            ],
+            "title": "Delivery Channel",
+            "type": "string"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "goal_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Goal Id"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "kind": {
+            "enum": [
+              "follow_up",
+              "check_in",
+              "reminder",
+              "routine",
+              "research_window"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "last_evaluated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Evaluated At"
+          },
+          "not_before": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Not Before"
+          },
+          "preferred_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred At"
+          },
+          "provenance": {
+            "default": "explicit_user_request",
+            "enum": [
+              "explicit_user_request",
+              "planning_inference",
+              "reflection_inference"
+            ],
+            "title": "Provenance",
+            "type": "string"
+          },
+          "quiet_hours_policy": {
+            "default": "respect_user_context",
+            "title": "Quiet Hours Policy",
+            "type": "string"
+          },
+          "recurrence_mode": {
+            "default": "none",
+            "enum": [
+              "none",
+              "daily",
+              "weekly",
+              "custom"
+            ],
+            "title": "Recurrence Mode",
+            "type": "string"
+          },
+          "recurrence_rule": {
+            "default": "",
+            "title": "Recurrence Rule",
+            "type": "string"
+          },
+          "requires_foreground_execution": {
+            "default": true,
+            "title": "Requires Foreground Execution",
+            "type": "boolean"
+          },
+          "source_event_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Event Id"
+          },
+          "status": {
+            "default": "pending",
+            "enum": [
+              "pending",
+              "due",
+              "snoozed",
+              "completed",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "task_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Task Id"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "user_id": {
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id",
+          "kind",
+          "summary"
+        ],
+        "title": "PlannedWorkRecordOutput",
+        "type": "object"
+      },
+      "ProactiveDecisionOutput": {
+        "properties": {
+          "decision_score": {
+            "title": "Decision Score",
+            "type": "number"
+          },
+          "importance": {
+            "title": "Importance",
+            "type": "number"
+          },
+          "interruption_cost": {
+            "title": "Interruption Cost",
+            "type": "number"
+          },
+          "mode": {
+            "enum": [
+              "soft",
+              "medium",
+              "strong"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "output_type": {
+            "enum": [
+              "suggestion",
+              "reminder",
+              "question",
+              "warning",
+              "encouragement",
+              "insight"
+            ],
+            "title": "Output Type",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "relevance": {
+            "title": "Relevance",
+            "type": "number"
+          },
+          "should_interrupt": {
+            "title": "Should Interrupt",
+            "type": "boolean"
+          },
+          "trigger": {
+            "title": "Trigger",
+            "type": "string"
+          },
+          "urgency": {
+            "title": "Urgency",
+            "type": "number"
+          }
+        },
+        "required": [
+          "trigger",
+          "output_type",
+          "mode",
+          "importance",
+          "urgency",
+          "relevance",
+          "interruption_cost",
+          "decision_score",
+          "should_interrupt",
+          "reason"
+        ],
+        "title": "ProactiveDecisionOutput",
+        "type": "object"
+      },
+      "ProactiveDeliveryGuardOutput": {
+        "properties": {
+          "allowed": {
+            "title": "Allowed",
+            "type": "boolean"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "recent_outbound_count": {
+            "default": 0,
+            "title": "Recent Outbound Count",
+            "type": "integer"
+          },
+          "recent_outbound_limit": {
+            "default": 0,
+            "title": "Recent Outbound Limit",
+            "type": "integer"
+          },
+          "unanswered_proactive_count": {
+            "default": 0,
+            "title": "Unanswered Proactive Count",
+            "type": "integer"
+          },
+          "unanswered_proactive_limit": {
+            "default": 0,
+            "title": "Unanswered Proactive Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "allowed",
+          "reason"
+        ],
+        "title": "ProactiveDeliveryGuardOutput",
+        "type": "object"
+      },
+      "PromoteInferredGoalDomainIntent": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "evidence": {
+            "const": "repeated_execution_blocker",
+            "default": "repeated_execution_blocker",
+            "title": "Evidence",
+            "type": "string"
+          },
+          "goal_type": {
+            "default": "tactical",
+            "title": "Goal Type",
+            "type": "string"
+          },
+          "intent_type": {
+            "const": "promote_inferred_goal",
+            "default": "promote_inferred_goal",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "priority": {
+            "default": "medium",
+            "title": "Priority",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "PromoteInferredGoalDomainIntent",
+        "type": "object"
+      },
+      "PromoteInferredTaskDomainIntent": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "evidence": {
+            "const": "repeated_execution_blocker",
+            "default": "repeated_execution_blocker",
+            "title": "Evidence",
+            "type": "string"
+          },
+          "intent_type": {
+            "const": "promote_inferred_task",
+            "default": "promote_inferred_task",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "priority": {
+            "default": "medium",
+            "title": "Priority",
+            "type": "string"
+          },
+          "status": {
+            "default": "todo",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "PromoteInferredTaskDomainIntent",
+        "type": "object"
+      },
+      "ProposalHandoffDecisionOutput": {
+        "properties": {
+          "decided_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided At"
+          },
+          "decided_by": {
+            "const": "conscious",
+            "default": "conscious",
+            "title": "Decided By",
+            "type": "string"
+          },
+          "decision": {
+            "enum": [
+              "accept",
+              "merge",
+              "defer",
+              "discard"
+            ],
+            "title": "Decision",
+            "type": "string"
+          },
+          "proposal_id": {
+            "title": "Proposal Id",
+            "type": "integer"
+          },
+          "reason": {
+            "default": "",
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "proposal_id",
+          "decision"
+        ],
+        "title": "ProposalHandoffDecisionOutput",
+        "type": "object"
+      },
+      "ReschedulePlannedWorkItemDomainIntent": {
+        "properties": {
+          "expires_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "intent_type": {
+            "const": "reschedule_planned_work_item",
+            "default": "reschedule_planned_work_item",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "not_before": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Not Before"
+          },
+          "preferred_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred At"
+          },
+          "reason": {
+            "default": "",
+            "title": "Reason",
+            "type": "string"
+          },
+          "work_id": {
+            "title": "Work Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "work_id"
+        ],
+        "title": "ReschedulePlannedWorkItemDomainIntent",
+        "type": "object"
+      },
+      "RoleOutput": {
+        "properties": {
+          "confidence": {
+            "title": "Confidence",
+            "type": "number"
+          },
+          "selected": {
+            "title": "Selected",
+            "type": "string"
+          },
+          "selected_skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillCapabilityOutput"
+            },
+            "title": "Selected Skills",
+            "type": "array"
+          },
+          "selection_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/RoleSelectionEvidenceOutput"
+            },
+            "title": "Selection Evidence",
+            "type": "array"
+          },
+          "selection_policy_owner": {
+            "const": "role_selection_policy",
+            "default": "role_selection_policy",
+            "title": "Selection Policy Owner",
+            "type": "string"
+          },
+          "selection_reason": {
+            "default": "",
+            "title": "Selection Reason",
+            "type": "string"
+          },
+          "skill_policy_owner": {
+            "const": "role_skill_boundary_policy",
+            "default": "role_skill_boundary_policy",
+            "title": "Skill Policy Owner",
+            "type": "string"
+          }
+        },
+        "required": [
+          "selected",
+          "confidence"
+        ],
+        "title": "RoleOutput",
+        "type": "object"
+      },
+      "RoleSelectionEvidenceOutput": {
+        "properties": {
+          "applied": {
+            "default": false,
+            "title": "Applied",
+            "type": "boolean"
+          },
+          "note": {
+            "default": "",
+            "title": "Note",
+            "type": "string"
+          },
+          "signal": {
+            "title": "Signal",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "signal",
+          "source",
+          "value"
+        ],
+        "title": "RoleSelectionEvidenceOutput",
+        "type": "object"
+      },
+      "RuntimeResult": {
+        "properties": {
+          "action_result": {
+            "$ref": "#/components/schemas/ActionResult"
+          },
+          "active_goal_milestones": {
+            "items": {
+              "$ref": "#/components/schemas/GoalMilestoneRecordOutput"
+            },
+            "title": "Active Goal Milestones",
+            "type": "array"
+          },
+          "active_goals": {
+            "items": {
+              "$ref": "#/components/schemas/GoalRecordOutput"
+            },
+            "title": "Active Goals",
+            "type": "array"
+          },
+          "active_planned_work": {
+            "items": {
+              "$ref": "#/components/schemas/PlannedWorkRecordOutput"
+            },
+            "title": "Active Planned Work",
+            "type": "array"
+          },
+          "active_tasks": {
+            "items": {
+              "$ref": "#/components/schemas/TaskRecordOutput"
+            },
+            "title": "Active Tasks",
+            "type": "array"
+          },
+          "affective": {
+            "$ref": "#/components/schemas/AffectiveAssessmentOutput"
+          },
+          "context": {
+            "$ref": "#/components/schemas/ContextOutput"
+          },
+          "duration_ms": {
+            "title": "Duration Ms",
+            "type": "integer"
+          },
+          "event": {
+            "$ref": "#/components/schemas/Event"
+          },
+          "expression": {
+            "$ref": "#/components/schemas/ExpressionOutput"
+          },
+          "goal_milestone_history": {
+            "items": {
+              "$ref": "#/components/schemas/GoalMilestoneHistoryRecordOutput"
+            },
+            "title": "Goal Milestone History",
+            "type": "array"
+          },
+          "goal_progress_history": {
+            "items": {
+              "$ref": "#/components/schemas/GoalProgressRecordOutput"
+            },
+            "title": "Goal Progress History",
+            "type": "array"
+          },
+          "identity": {
+            "$ref": "#/components/schemas/IdentityOutput"
+          },
+          "memory_record": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MemoryRecord"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "motivation": {
+            "$ref": "#/components/schemas/MotivationOutput"
+          },
+          "perception": {
+            "$ref": "#/components/schemas/PerceptionOutput"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/PlanOutput"
+          },
+          "reflection_triggered": {
+            "default": false,
+            "title": "Reflection Triggered",
+            "type": "boolean"
+          },
+          "role": {
+            "$ref": "#/components/schemas/RoleOutput"
+          },
+          "stage_timings_ms": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Stage Timings Ms",
+            "type": "object"
+          },
+          "system_debug": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RuntimeSystemDebugOutput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "event",
+          "identity",
+          "perception",
+          "context",
+          "motivation",
+          "role",
+          "plan",
+          "action_result",
+          "expression",
+          "duration_ms"
+        ],
+        "title": "RuntimeResult",
+        "type": "object"
+      },
+      "RuntimeSystemDebugEventView": {
+        "properties": {
+          "event_id": {
+            "title": "Event Id",
+            "type": "string"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "title": "Payload",
+            "type": "object"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "subsource": {
+            "title": "Subsource",
+            "type": "string"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "trace_id": {
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "user_id": {
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "event_id",
+          "trace_id",
+          "source",
+          "subsource",
+          "timestamp",
+          "user_id"
+        ],
+        "title": "RuntimeSystemDebugEventView",
+        "type": "object"
+      },
+      "RuntimeSystemDebugMemoryBundle": {
+        "properties": {
+          "affective": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Affective",
+            "type": "array"
+          },
+          "diagnostics": {
+            "additionalProperties": true,
+            "title": "Diagnostics",
+            "type": "object"
+          },
+          "episodic": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Episodic",
+            "type": "array"
+          },
+          "relations": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Relations",
+            "type": "array"
+          },
+          "semantic": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Semantic",
+            "type": "array"
+          }
+        },
+        "title": "RuntimeSystemDebugMemoryBundle",
+        "type": "object"
+      },
+      "RuntimeSystemDebugOutput": {
+        "properties": {
+          "action_result": {
+            "$ref": "#/components/schemas/ActionResult"
+          },
+          "adaptive_state": {
+            "additionalProperties": true,
+            "title": "Adaptive State",
+            "type": "object"
+          },
+          "behavior_feedback": {
+            "items": {
+              "$ref": "#/components/schemas/BehaviorFeedbackOutput"
+            },
+            "title": "Behavior Feedback",
+            "type": "array"
+          },
+          "context": {
+            "$ref": "#/components/schemas/ContextOutput"
+          },
+          "event": {
+            "$ref": "#/components/schemas/RuntimeSystemDebugEventView"
+          },
+          "expression": {
+            "$ref": "#/components/schemas/ExpressionOutput"
+          },
+          "memory_bundle": {
+            "$ref": "#/components/schemas/RuntimeSystemDebugMemoryBundle"
+          },
+          "mode": {
+            "const": "system_debug",
+            "default": "system_debug",
+            "title": "Mode",
+            "type": "string"
+          },
+          "motivation": {
+            "$ref": "#/components/schemas/MotivationOutput"
+          },
+          "perception": {
+            "$ref": "#/components/schemas/PerceptionOutput"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/RuntimeSystemDebugPlanView"
+          },
+          "role": {
+            "$ref": "#/components/schemas/RoleOutput"
+          }
+        },
+        "required": [
+          "event",
+          "perception",
+          "memory_bundle",
+          "context",
+          "motivation",
+          "role",
+          "plan",
+          "expression",
+          "action_result"
+        ],
+        "title": "RuntimeSystemDebugOutput",
+        "type": "object"
+      },
+      "RuntimeSystemDebugPlanView": {
+        "properties": {
+          "domain_intents": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Domain Intents",
+            "type": "array"
+          },
+          "goal": {
+            "title": "Goal",
+            "type": "string"
+          },
+          "inferred_promotion_diagnostics": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Inferred Promotion Diagnostics",
+            "type": "array"
+          },
+          "needs_action": {
+            "title": "Needs Action",
+            "type": "boolean"
+          },
+          "needs_response": {
+            "title": "Needs Response",
+            "type": "boolean"
+          },
+          "steps": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Steps",
+            "type": "array"
+          }
+        },
+        "required": [
+          "goal",
+          "needs_action",
+          "needs_response"
+        ],
+        "title": "RuntimeSystemDebugPlanView",
+        "type": "object"
+      },
+      "SetWebhookRequest": {
+        "properties": {
+          "secret_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secret Token"
+          },
+          "webhook_url": {
+            "title": "Webhook Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "webhook_url"
+        ],
+        "title": "SetWebhookRequest",
+        "type": "object"
+      },
+      "SkillCapabilityOutput": {
+        "properties": {
+          "capability_family": {
+            "enum": [
+              "support",
+              "analysis",
+              "execution",
+              "memory",
+              "connector_boundary"
+            ],
+            "title": "Capability Family",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "policy_owner": {
+            "const": "role_skill_boundary_policy",
+            "default": "role_skill_boundary_policy",
+            "title": "Policy Owner",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "side_effect_posture": {
+            "const": "metadata_only",
+            "default": "metadata_only",
+            "title": "Side Effect Posture",
+            "type": "string"
+          },
+          "skill_id": {
+            "title": "Skill Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "skill_id",
+          "label",
+          "capability_family",
+          "reason"
+        ],
+        "title": "SkillCapabilityOutput",
+        "type": "object"
+      },
+      "SubconsciousProposalRecord": {
+        "properties": {
+          "allowed_tools": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Allowed Tools",
+            "type": "array"
+          },
+          "confidence": {
+            "default": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "title": "Payload",
+            "type": "object"
+          },
+          "proposal_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proposal Id"
+          },
+          "proposal_type": {
+            "enum": [
+              "ask_user",
+              "research_topic",
+              "suggest_goal",
+              "nudge_user",
+              "suggest_connector_expansion"
+            ],
+            "title": "Proposal Type",
+            "type": "string"
+          },
+          "research_policy": {
+            "const": "read_only",
+            "default": "read_only",
+            "title": "Research Policy",
+            "type": "string"
+          },
+          "source_event_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Event Id"
+          },
+          "status": {
+            "default": "pending",
+            "enum": [
+              "pending",
+              "accepted",
+              "merged",
+              "deferred",
+              "discarded"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "required": [
+          "proposal_type",
+          "summary"
+        ],
+        "title": "SubconsciousProposalRecord",
+        "type": "object"
+      },
+      "TaskRecordOutput": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "goal_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Goal Id"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "priority": {
+            "title": "Priority",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "priority",
+          "status"
+        ],
+        "title": "TaskRecordOutput",
+        "type": "object"
+      },
+      "ToolGroundedLearningCandidate": {
+        "properties": {
+          "conclusion_kind": {
+            "title": "Conclusion Kind",
+            "type": "string"
+          },
+          "confidence": {
+            "default": 0.74,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "policy_owner": {
+            "const": "tool_grounded_learning_policy",
+            "default": "tool_grounded_learning_policy",
+            "title": "Policy Owner",
+            "type": "string"
+          },
+          "source_family": {
+            "enum": [
+              "knowledge_search",
+              "web_browser",
+              "task_system",
+              "calendar",
+              "cloud_drive"
+            ],
+            "title": "Source Family",
+            "type": "string"
+          },
+          "source_operation": {
+            "title": "Source Operation",
+            "type": "string"
+          },
+          "source_reference": {
+            "default": "",
+            "title": "Source Reference",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_family",
+          "source_operation",
+          "conclusion_kind",
+          "content"
+        ],
+        "title": "ToolGroundedLearningCandidate",
+        "type": "object"
+      },
+      "UpdateCollaborationPreferenceDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "update_collaboration_preference",
+            "default": "update_collaboration_preference",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "preference": {
+            "enum": [
+              "guided",
+              "hands_on"
+            ],
+            "title": "Preference",
+            "type": "string"
+          },
+          "source": {
+            "default": "explicit_request",
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "preference"
+        ],
+        "title": "UpdateCollaborationPreferenceDomainIntent",
+        "type": "object"
+      },
+      "UpdateProactivePreferenceDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "update_proactive_preference",
+            "default": "update_proactive_preference",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "opt_in": {
+            "title": "Opt In",
+            "type": "boolean"
+          },
+          "source": {
+            "default": "explicit_request",
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "opt_in"
+        ],
+        "title": "UpdateProactivePreferenceDomainIntent",
+        "type": "object"
+      },
+      "UpdateProactiveStateDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "update_proactive_state",
+            "default": "update_proactive_state",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "soft",
+              "medium",
+              "strong"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "output_type": {
+            "enum": [
+              "suggestion",
+              "reminder",
+              "question",
+              "warning",
+              "encouragement",
+              "insight"
+            ],
+            "title": "Output Type",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "source": {
+            "default": "proactive_planning",
+            "title": "Source",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "attention_gate_blocked",
+              "interruption_deferred",
+              "delivery_guard_blocked",
+              "delivery_ready"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "trigger": {
+            "title": "Trigger",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "trigger",
+          "reason",
+          "output_type",
+          "mode"
+        ],
+        "title": "UpdateProactiveStateDomainIntent",
+        "type": "object"
+      },
+      "UpdateResponseStyleDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "update_response_style",
+            "default": "update_response_style",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "source": {
+            "default": "explicit_request",
+            "title": "Source",
+            "type": "string"
+          },
+          "style": {
+            "enum": [
+              "concise",
+              "structured"
+            ],
+            "title": "Style",
+            "type": "string"
+          }
+        },
+        "required": [
+          "style"
+        ],
+        "title": "UpdateResponseStyleDomainIntent",
+        "type": "object"
+      },
+      "UpdateTaskStatusDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "update_task_status",
+            "default": "update_task_status",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "task_hint": {
+            "title": "Task Hint",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "task_hint"
+        ],
+        "title": "UpdateTaskStatusDomainIntent",
+        "type": "object"
+      },
+      "UpsertGoalDomainIntent": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "goal_type": {
+            "default": "tactical",
+            "title": "Goal Type",
+            "type": "string"
+          },
+          "intent_type": {
+            "const": "upsert_goal",
+            "default": "upsert_goal",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "priority": {
+            "default": "medium",
+            "title": "Priority",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "UpsertGoalDomainIntent",
+        "type": "object"
+      },
+      "UpsertPlannedWorkItemDomainIntent": {
+        "properties": {
+          "channel_hint": {
+            "default": "none",
+            "enum": [
+              "telegram",
+              "api",
+              "none"
+            ],
+            "title": "Channel Hint",
+            "type": "string"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "goal_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Goal Id"
+          },
+          "intent_type": {
+            "const": "upsert_planned_work_item",
+            "default": "upsert_planned_work_item",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "not_before": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Not Before"
+          },
+          "preferred_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred At"
+          },
+          "provenance": {
+            "default": "explicit_user_request",
+            "enum": [
+              "explicit_user_request",
+              "planning_inference",
+              "reflection_inference"
+            ],
+            "title": "Provenance",
+            "type": "string"
+          },
+          "quiet_hours_policy": {
+            "default": "respect_user_context",
+            "title": "Quiet Hours Policy",
+            "type": "string"
+          },
+          "recurrence_mode": {
+            "default": "none",
+            "enum": [
+              "none",
+              "daily",
+              "weekly",
+              "custom"
+            ],
+            "title": "Recurrence Mode",
+            "type": "string"
+          },
+          "recurrence_rule": {
+            "default": "",
+            "title": "Recurrence Rule",
+            "type": "string"
+          },
+          "requires_foreground_execution": {
+            "default": true,
+            "title": "Requires Foreground Execution",
+            "type": "boolean"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "task_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Task Id"
+          },
+          "work_kind": {
+            "enum": [
+              "follow_up",
+              "check_in",
+              "reminder",
+              "routine",
+              "research_window"
+            ],
+            "title": "Work Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "work_kind",
+          "summary"
+        ],
+        "title": "UpsertPlannedWorkItemDomainIntent",
+        "type": "object"
+      },
+      "UpsertTaskDomainIntent": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "intent_type": {
+            "const": "upsert_task",
+            "default": "upsert_task",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "priority": {
+            "default": "medium",
+            "title": "Priority",
+            "type": "string"
+          },
+          "status": {
+            "default": "todo",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "UpsertTaskDomainIntent",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "WebBrowserAccessDomainIntent": {
+        "properties": {
+          "intent_type": {
+            "const": "web_browser_access_intent",
+            "default": "web_browser_access_intent",
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "mode": {
+            "default": "suggestion_only",
+            "enum": [
+              "read_only",
+              "suggestion_only",
+              "mutate_with_confirmation"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "operation": {
+            "default": "read_page",
+            "enum": [
+              "read_page",
+              "suggest_page_review"
+            ],
+            "title": "Operation",
+            "type": "string"
+          },
+          "page_hint": {
+            "default": "",
+            "title": "Page Hint",
+            "type": "string"
+          },
+          "provider_hint": {
+            "default": "generic",
+            "title": "Provider Hint",
+            "type": "string"
+          }
+        },
+        "title": "WebBrowserAccessDomainIntent",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "AION MVP",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/app/auth/login": {
+      "post": {
+        "operationId": "app_login_app_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppMeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "App Login"
+      }
+    },
+    "/app/auth/logout": {
+      "post": {
+        "operationId": "app_logout_app_auth_logout_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response App Logout App Auth Logout Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "App Logout"
+      }
+    },
+    "/app/auth/register": {
+      "post": {
+        "operationId": "app_register_app_auth_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppRegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppMeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "App Register"
+      }
+    },
+    "/app/chat/history": {
+      "get": {
+        "operationId": "app_chat_history_app_chat_history_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppChatHistoryResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "App Chat History"
+      }
+    },
+    "/app/chat/message": {
+      "post": {
+        "operationId": "app_chat_message_app_chat_message_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppChatMessageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppChatMessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "App Chat Message"
+      }
+    },
+    "/app/me": {
+      "get": {
+        "operationId": "app_me_app_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppMeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "App Me"
+      }
+    },
+    "/app/me/reset-data": {
+      "post": {
+        "operationId": "app_reset_me_data_app_me_reset_data_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppResetDataRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppResetDataResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "App Reset Me Data"
+      }
+    },
+    "/app/me/settings": {
+      "patch": {
+        "operationId": "app_patch_me_settings_app_me_settings_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppSettingsPatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppSettingsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "App Patch Me Settings"
+      }
+    },
+    "/app/personality/overview": {
+      "get": {
+        "operationId": "app_personality_overview_app_personality_overview_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppPersonalityOverviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "App Personality Overview"
+      }
+    },
+    "/app/tools/overview": {
+      "get": {
+        "operationId": "app_tools_overview_app_tools_overview_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppToolsOverviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "App Tools Overview"
+      }
+    },
+    "/app/tools/preferences": {
+      "patch": {
+        "operationId": "app_patch_tools_preferences_app_tools_preferences_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppToolsPreferencesPatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppToolsOverviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "App Patch Tools Preferences"
+      }
+    },
+    "/app/tools/telegram/link/start": {
+      "post": {
+        "operationId": "app_start_telegram_link_app_tools_telegram_link_start_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppTelegramLinkStartResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "App Start Telegram Link"
+      }
+    },
+    "/event": {
+      "post": {
+        "operationId": "event_endpoint_event_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "debug",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Debug",
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Payload",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Event Endpoint"
+      }
+    },
+    "/event/debug": {
+      "post": {
+        "operationId": "event_debug_endpoint_event_debug_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Payload",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Event Debug Endpoint"
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Health Health Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health"
+      }
+    },
+    "/internal/event/debug": {
+      "post": {
+        "operationId": "internal_event_debug_endpoint_internal_event_debug_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Payload",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Internal Event Debug Endpoint"
+      }
+    },
+    "/internal/state/inspect": {
+      "get": {
+        "operationId": "internal_state_inspection_endpoint_internal_state_inspect_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "title": "User Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Internal State Inspection Endpoint Internal State Inspect Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Internal State Inspection Endpoint"
+      }
+    },
+    "/telegram/set-webhook": {
+      "post": {
+        "operationId": "set_webhook_telegram_set_webhook_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetWebhookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Set Webhook Telegram Set Webhook Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set Webhook"
+      }
+    }
+  }
+}
