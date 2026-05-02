@@ -2,6 +2,31 @@
 
 Last updated: 2026-05-03
 
+## Fresh Shared Token Infrastructure Queue Sync (2026-05-03)
+
+- `PRJ-725` is DONE:
+  - `.codex/tasks/PRJ-725-shared-tokens-surfaces-and-motif-infrastructure.md`
+- result:
+  - the stale `READY` task was closed against existing shared token and motif
+    infrastructure instead of creating a duplicate CSS primitive layer
+  - `web/src/index.css` already contains the `--aion-*` token family and
+    shared `.aion-panel*` surface primitives
+  - `web/src/App.tsx` already reuses shared surface classes and route-level
+    primitives such as `RouteHeroPanel`, `InsightPanel`, and `MotifFigurePanel`
+  - `docs/planning/dashboard-foundation-and-personality-visual-system-plan.md`
+    already excludes route-specific composition until after shared tokens and
+    primitives
+- validation:
+  - verified token and primitive intent in the planning contract
+  - verified shared motif-aware surfaces in CSS and web route components
+  - verified historical board evidence that `PRJ-724..PRJ-727` were complete
+    locally
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - review `PRJ-726` for the same stale READY/task-board drift before
+    selecting new implementation work
+
 ## Fresh Dashboard Visual Contract Queue Sync (2026-05-03)
 
 - `PRJ-724` is DONE:

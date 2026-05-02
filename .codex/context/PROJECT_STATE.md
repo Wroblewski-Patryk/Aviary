@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-725` completed stale shared token infrastructure queue sync:
+  - task:
+    - `.codex/tasks/PRJ-725-shared-tokens-surfaces-and-motif-infrastructure.md`
+  - result:
+    - the shared tokens, surfaces, and motif infrastructure task is no longer
+      a false `READY` item
+    - existing `--aion-*` CSS tokens and `.aion-panel*` primitives remain the
+      shared implementation layer in `web/src/index.css`
+    - existing web shell primitives in `web/src/App.tsx` remain the reuse path
+      for route hero, insight, and motif-stage surfaces
+    - no duplicate token system, route-specific workaround, or new runtime
+      behavior was introduced
+  - validation:
+    - planning contract, task-board history, CSS tokens/primitives, and shared
+      web components were reviewed
+    - `git diff --check` passed
+  - next execution priority:
+    - review `PRJ-726` for stale READY/task-board drift before selecting new
+      implementation work
+
 - 2026-05-03: `PRJ-724` completed stale dashboard visual contract queue sync:
   - task:
     - `.codex/tasks/PRJ-724-freeze-dashboard-first-visual-system-and-component-contract.md`
