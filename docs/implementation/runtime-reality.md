@@ -743,8 +743,9 @@ Scheduler-facing runtime contracts are now explicit:
   `app/workers/scheduler.py` for reflection, maintenance, and proactive
   routines
 - proactive cadence is now live in the in-process scheduler through
-  repository-backed candidate selection, bounded scheduler event emission, and
-  normal runtime execution
+  planned-action observer admission: empty proactive scans no-op without
+  foreground runtime execution, while due planned work can still enter the
+  conscious path through the existing `planned_work_due` handoff
 - scheduler runtime posture and latest tick summaries are visible through
   `GET /health`
 - maintenance/proactive cadence dispatch now uses shared owner-aware boundary
@@ -1073,16 +1074,18 @@ What is already live:
 - proactive scheduler events now pass through an explicit attention gate
   (quiet-hours, cooldown, unanswered-backlog with adaptive-only tightening
   limits) before delivery planning
-- canonical architecture now narrows the intended target beyond the current
-  proactive tick implementation: passive relationship/proactive cadence should
-  create or update planned work/proposals, and a cheap planned-action observer
-  should avoid full conscious runtime execution when no due/actionable item
-  exists
+- proactive tick implementation now follows the passive/active target:
+  passive relationship/proactive cadence creates or updates planned
+  work/proposals, and the planned-action observer avoids full conscious runtime
+  execution when no due/actionable item exists
 - planned-action observer posture now has a shared policy owner in
   `app/core/planned_action_observer.py`, exposed through `/health.proactive`
   and debug incident evidence as counts-only posture:
   `empty_noop`, `due_planned_work`, `actionable_proposal`,
   `blocked_by_policy`, or `observer_unavailable`
+- `app/workers/scheduler.py` no longer emits generic proactive scheduler
+  candidate events from opt-in/user-activity alone; proactive cadence records
+  an observer no-op when no due planned work or actionable proposal is present
 - proactive planning now records the resulting delivery posture through typed
   `update_proactive_state` intents
 - proactive outreach outcomes and connector permission-gate outcomes now share

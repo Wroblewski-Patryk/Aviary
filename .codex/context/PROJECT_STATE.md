@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-02
 
+- 2026-05-02: `PRJ-856` routed proactive cadence through observer admission:
+  - new task:
+    - `.codex/tasks/PRJ-856-route-proactive-cadence-through-observer-admission.md`
+  - `backend/app/workers/scheduler.py` now records empty proactive scans as
+    `observer_state=empty_noop` with zero foreground events instead of
+    emitting generic proactive runtime events from opt-in/user-activity alone
+  - due planned work remains eligible for conscious planning through the
+    existing `planned_work_due` handoff and proposal boundary
+  - proactive summaries now expose observer state/reason, due counts, proposal
+    handoff counts, and nested planned-action observer posture
+  - validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py -k "proactive"; Pop-Location`
+    - result: `4 passed, 15 deselected`
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py; Pop-Location`
+    - result: `19 passed`
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py; Pop-Location`
+    - result: `109 passed`
+    - `git diff --check`
+    - result: passed
+  - highest-value next step:
+    - execute `PRJ-857` by persisting skipped/failed passive-active evidence
+      for reflection learning
 - 2026-05-02: `PRJ-855` added planned-action observer policy and diagnostics:
   - new task:
     - `.codex/tasks/PRJ-855-planned-action-observer-policy-and-diagnostics.md`

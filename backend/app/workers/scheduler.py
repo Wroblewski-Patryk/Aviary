@@ -6,6 +6,7 @@ from typing import Any
 
 from app.core.logging import get_logger
 from app.core.events import build_scheduler_event
+from app.core.planned_action_observer import planned_action_observer_snapshot
 from app.core.proactive_policy import proactive_runtime_policy_snapshot
 from app.core.scheduler_contracts import (
     SCHEDULER_MAINTENANCE_TICK,
@@ -578,132 +579,12 @@ class SchedulerWorker:
             )
             return summary
 
-        if self.runtime is None or not hasattr(self.runtime, "run"):
-            summary = {
-                "executed": False,
-                "reason": "runtime_unavailable",
-                "trigger": reason,
-                "candidates_considered": 0,
-                "events_emitted": 0,
-                "messages_delivered": 0,
-                "delivery_blocked": 0,
-                "failures": 0,
-            }
-            self._last_proactive_tick_at = now
-            self._last_proactive_summary = summary
-            await self._record_cadence_evidence(
-                cadence_kind="proactive",
-                execution_owner="in_process_scheduler",
-                summary=summary,
-                now=now,
-            )
-            self.logger.warning(
-                "scheduler_proactive_tick executed=%s reason=%s trigger=%s execution_mode=%s proactive_owner=%s candidates_considered=%s events_emitted=%s delivered=%s blocked=%s failures=%s",
-                summary["executed"],
-                summary["reason"],
-                summary["trigger"],
-                self.execution_mode,
-                "external_scheduler" if self.execution_mode == "externalized" else "in_process_scheduler",
-                summary["candidates_considered"],
-                summary["events_emitted"],
-                summary["messages_delivered"],
-                summary["delivery_blocked"],
-                summary["failures"],
-            )
-            return summary
-
-        candidates = []
-        if hasattr(self.memory_repository, "get_proactive_scheduler_candidates"):
-            candidates = await self.memory_repository.get_proactive_scheduler_candidates(
-                proactive_interval_seconds=self.proactive_interval_seconds,
-                limit=5,
-            )
-
-        messages_delivered = 0
-        delivery_blocked = 0
-        failures = 0
-        events_emitted = 0
-        decision_evidence: list[dict[str, Any]] = []
-        decision_reason_counts: dict[str, int] = {}
-        delivery_guard_reason_counts: dict[str, int] = {}
-        for candidate in candidates:
-            proactive_event = build_scheduler_event(
-                subsource=SCHEDULER_PROACTIVE_TICK,
-                user_id=str(candidate["user_id"]),
-                payload={
-                    "text": str(candidate["text"]),
-                    "chat_id": candidate["chat_id"],
-                    "proactive_trigger": str(candidate["trigger"]),
-                    "user_context": {
-                        "quiet_hours": False,
-                        "focus_mode": False,
-                        "recent_user_activity": str(candidate["recent_user_activity"]),
-                        "recent_outbound_count": int(candidate["recent_outbound_count"]),
-                        "unanswered_proactive_count": int(candidate["unanswered_proactive_count"]),
-                    },
-                },
-            )
-            try:
-                result = await self.runtime.run(proactive_event)
-            except Exception:
-                failures += 1
-                evidence = self._proactive_decision_evidence(
-                    candidate=candidate,
-                    action_status="fail",
-                    failure_reason="runtime_exception",
-                )
-                decision_evidence.append(evidence)
-                self._increment_reason_count(decision_reason_counts, evidence.get("decision_reason"))
-                self._increment_reason_count(delivery_guard_reason_counts, evidence.get("delivery_guard_reason"))
-                continue
-            events_emitted += 1
-            if result.action_result.status == "success" and "send_telegram_message" in result.action_result.actions:
-                messages_delivered += 1
-            elif result.action_result.status in {"noop", "partial"}:
-                delivery_blocked += 1
-            elif result.action_result.status == "fail":
-                failures += 1
-            evidence = self._proactive_decision_evidence(candidate=candidate, result=result)
-            decision_evidence.append(evidence)
-            self._increment_reason_count(decision_reason_counts, evidence.get("decision_reason"))
-            self._increment_reason_count(delivery_guard_reason_counts, evidence.get("delivery_guard_reason"))
-
-        summary = {
-            "executed": True,
-            "reason": dispatch_reason,
-            "trigger": reason,
-            "candidates_considered": len(candidates),
-            "events_emitted": events_emitted,
-            "messages_delivered": messages_delivered,
-            "delivery_blocked": delivery_blocked,
-            "failures": failures,
-            "decision_reason_counts": decision_reason_counts,
-            "delivery_guard_reason_counts": delivery_guard_reason_counts,
-            "decision_evidence": decision_evidence[:5],
-        }
-        self._last_proactive_tick_at = now
-        self._last_proactive_summary = summary
-        await self._record_cadence_evidence(
-            cadence_kind="proactive",
+        return await self._run_observer_admitted_proactive_tick(
+            reason=reason,
+            dispatch_reason=dispatch_reason,
             execution_owner="in_process_scheduler",
-            summary=summary,
             now=now,
         )
-        log_method = self.logger.warning if failures > 0 else self.logger.info
-        log_method(
-            "scheduler_proactive_tick executed=%s reason=%s trigger=%s execution_mode=%s proactive_owner=%s candidates_considered=%s events_emitted=%s delivered=%s blocked=%s failures=%s",
-            summary["executed"],
-            summary["reason"],
-            summary["trigger"],
-            self.execution_mode,
-            "external_scheduler" if self.execution_mode == "externalized" else "in_process_scheduler",
-            summary["candidates_considered"],
-            summary["events_emitted"],
-            summary["messages_delivered"],
-            summary["delivery_blocked"],
-            summary["failures"],
-        )
-        return summary
 
     async def run_external_proactive_tick_once(
         self,
@@ -753,105 +634,86 @@ class SchedulerWorker:
             )
             return summary
 
-        if self.runtime is None or not hasattr(self.runtime, "run"):
-            summary = {
-                "executed": False,
-                "reason": "runtime_unavailable",
-                "trigger": reason,
-                "candidates_considered": 0,
-                "events_emitted": 0,
-                "messages_delivered": 0,
-                "delivery_blocked": 0,
-                "failures": 0,
-            }
-            self._last_proactive_tick_at = now
-            self._last_proactive_summary = summary
-            await self._record_cadence_evidence(
-                cadence_kind="proactive",
-                execution_owner="external_scheduler",
-                summary=summary,
-                now=now,
-            )
-            return summary
+        return await self._run_observer_admitted_proactive_tick(
+            reason=reason,
+            dispatch_reason="external_scheduler_owner",
+            execution_owner="external_scheduler",
+            now=now,
+            external_entrypoint=True,
+        )
 
-        candidates = []
-        if hasattr(self.memory_repository, "get_proactive_scheduler_candidates"):
-            candidates = await self.memory_repository.get_proactive_scheduler_candidates(
-                proactive_interval_seconds=self.proactive_interval_seconds,
-                limit=5,
-            )
-
-        messages_delivered = 0
-        delivery_blocked = 0
-        failures = 0
-        events_emitted = 0
-        decision_evidence: list[dict[str, Any]] = []
-        decision_reason_counts: dict[str, int] = {}
-        delivery_guard_reason_counts: dict[str, int] = {}
-        for candidate in candidates:
-            proactive_event = build_scheduler_event(
-                subsource=SCHEDULER_PROACTIVE_TICK,
-                user_id=str(candidate["user_id"]),
-                payload={
-                    "text": str(candidate["text"]),
-                    "chat_id": candidate["chat_id"],
-                    "proactive_trigger": str(candidate["trigger"]),
-                    "user_context": {
-                        "quiet_hours": False,
-                        "focus_mode": False,
-                        "recent_user_activity": str(candidate["recent_user_activity"]),
-                        "recent_outbound_count": int(candidate["recent_outbound_count"]),
-                        "unanswered_proactive_count": int(candidate["unanswered_proactive_count"]),
-                    },
-                },
-            )
-            try:
-                result = await self.runtime.run(proactive_event)
-            except Exception:
-                failures += 1
-                evidence = self._proactive_decision_evidence(
-                    candidate=candidate,
-                    action_status="fail",
-                    failure_reason="runtime_exception",
-                )
-                decision_evidence.append(evidence)
-                self._increment_reason_count(decision_reason_counts, evidence.get("decision_reason"))
-                self._increment_reason_count(delivery_guard_reason_counts, evidence.get("delivery_guard_reason"))
-                continue
-            events_emitted += 1
-            if result.action_result.status == "success" and "send_telegram_message" in result.action_result.actions:
-                messages_delivered += 1
-            elif result.action_result.status in {"noop", "partial"}:
-                delivery_blocked += 1
-            elif result.action_result.status == "fail":
-                failures += 1
-            evidence = self._proactive_decision_evidence(candidate=candidate, result=result)
-            decision_evidence.append(evidence)
-            self._increment_reason_count(decision_reason_counts, evidence.get("decision_reason"))
-            self._increment_reason_count(delivery_guard_reason_counts, evidence.get("delivery_guard_reason"))
-
-        summary = {
+    async def _run_observer_admitted_proactive_tick(
+        self,
+        *,
+        reason: str,
+        dispatch_reason: str,
+        execution_owner: str,
+        now: datetime,
+        external_entrypoint: bool = False,
+    ) -> dict[str, Any]:
+        due_summary = await self._handoff_due_planned_work(now=now)
+        due_items = list(due_summary["items"])
+        foreground_summary = await self._dispatch_due_planned_work_foreground(
+            items=due_items,
+            reason=reason,
+            now=now,
+        )
+        observer = planned_action_observer_snapshot(
+            proactive_enabled=self.proactive_enabled,
+            scheduler_execution_mode=self.execution_mode,
+            maintenance_summary={
+                "due_planned_work": int(due_summary["due_planned_work"]),
+                "proposal_handoffs_created": int(due_summary["proposal_handoffs_created"]),
+                "foreground_events_emitted": int(foreground_summary["events_emitted"]),
+            },
+            proactive_summary={"events_emitted": 0},
+        )
+        failures = int(foreground_summary["failures"])
+        summary: dict[str, Any] = {
             "executed": True,
-            "reason": "external_scheduler_owner",
+            "reason": dispatch_reason,
             "trigger": reason,
-            "entrypoint_owner": "external_scheduler",
-            "idempotency_baseline": "single_tick_candidate_evaluation_per_invocation",
-            "candidates_considered": len(candidates),
-            "events_emitted": events_emitted,
-            "messages_delivered": messages_delivered,
-            "delivery_blocked": delivery_blocked,
+            "observer_state": observer["last_observer_state"],
+            "observer_reason": observer["last_observer_reason"],
+            "due_planned_work": int(due_summary["due_planned_work"]),
+            "proposal_handoffs_created": int(due_summary["proposal_handoffs_created"]),
+            "candidates_considered": 0,
+            "events_emitted": int(foreground_summary["events_emitted"]),
+            "messages_delivered": int(foreground_summary["delivery_successes"]),
+            "delivery_blocked": int(foreground_summary["delivery_blocked"]),
             "failures": failures,
-            "decision_reason_counts": decision_reason_counts,
-            "delivery_guard_reason_counts": delivery_guard_reason_counts,
-            "decision_evidence": decision_evidence[:5],
+            "delivery_delayed": int(due_summary["delivery_delayed"]),
+            "delivery_skipped": int(due_summary["delivery_skipped"]),
+            "recurrence_advanced": int(due_summary["recurrence_advanced"])
+            + int(foreground_summary["recurrence_advanced"]),
+            "planned_action_observer": observer,
         }
+        if external_entrypoint:
+            summary["entrypoint_owner"] = "external_scheduler"
+            summary["idempotency_baseline"] = "single_tick_observer_admission_per_invocation"
         self._last_proactive_tick_at = now
         self._last_proactive_summary = summary
         await self._record_cadence_evidence(
             cadence_kind="proactive",
-            execution_owner="external_scheduler",
+            execution_owner=execution_owner,
             summary=summary,
             now=now,
+        )
+        log_method = self.logger.warning if failures > 0 else self.logger.info
+        log_method(
+            "scheduler_proactive_tick executed=%s reason=%s trigger=%s execution_mode=%s proactive_owner=%s observer_state=%s due_planned_work=%s proposal_handoffs_created=%s events_emitted=%s delivered=%s blocked=%s failures=%s",
+            summary["executed"],
+            summary["reason"],
+            summary["trigger"],
+            self.execution_mode,
+            execution_owner,
+            summary["observer_state"],
+            summary["due_planned_work"],
+            summary["proposal_handoffs_created"],
+            summary["events_emitted"],
+            summary["messages_delivered"],
+            summary["delivery_blocked"],
+            summary["failures"],
         )
         return summary
 
@@ -869,6 +731,12 @@ class SchedulerWorker:
             scheduler_execution_mode=self.execution_mode,
             scheduler_ready=bool(cadence_execution["ready"]),
             scheduler_running=running,
+            planned_action_observer=planned_action_observer_snapshot(
+                proactive_enabled=self.proactive_enabled,
+                scheduler_execution_mode=self.execution_mode,
+                maintenance_summary=self._last_maintenance_summary,
+                proactive_summary=self._last_proactive_summary,
+            ),
         )
         return {
             "execution_mode": self.execution_mode,

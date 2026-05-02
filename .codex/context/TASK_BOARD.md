@@ -2,6 +2,42 @@
 
 Last updated: 2026-05-02
 
+## Fresh Proactive Cadence Observer Admission (2026-05-02)
+
+- `PRJ-856` is DONE as the behavior-changing passive/active trigger slice:
+  - `.codex/tasks/PRJ-856-route-proactive-cadence-through-observer-admission.md`
+- purpose:
+  - stop generic proactive candidate selection from starting full foreground
+    runtime just because cadence fired
+  - keep due planned work eligible for conscious planning through the existing
+    `planned_work_due` handoff
+  - make empty proactive cadence a cheap observer no-op with zero foreground
+    events
+- implemented:
+  - `backend/app/workers/scheduler.py` now routes in-process and external
+    proactive ticks through observer-admitted due planned work
+  - proactive summaries include `observer_state`, `observer_reason`, due
+    counts, proposal handoff counts, and nested planned-action observer
+    posture
+  - generic `get_proactive_scheduler_candidates(...)` output no longer emits
+    foreground runtime events on its own
+  - scheduler snapshot proactive policy now receives the latest observer
+    summary evidence
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py -k "proactive"; Pop-Location`
+  - result: `4 passed, 15 deselected`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py; Pop-Location`
+  - result: `19 passed`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py; Pop-Location`
+  - result: `109 passed`
+  - `git diff --check`
+  - result: passed
+- deployment impact:
+  - medium; proactive cadence behavior changes, but no env, DB, schema, API,
+    or user-authored turn behavior changes
+- next smallest useful task:
+  - `PRJ-857` persist skipped and failed passive/active evidence for
+    reflection learning
 ## Fresh Planned-Action Observer Policy And Diagnostics (2026-05-02)
 
 - `PRJ-855` is DONE as the first implementation slice for the passive/active

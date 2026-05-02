@@ -80,8 +80,14 @@ Queue update:
 - `/health.proactive.planned_action_observer` and exported proactive incident
   posture now expose the observer target without leaking raw planned-work
   payloads.
-- runtime behavior is intentionally unchanged; `PRJ-856` remains the slice
-  that routes proactive cadence through observer admission.
+- `PRJ-856` is now complete.
+- proactive cadence now routes through observer admission:
+  - empty proactive scans record `empty_noop` and emit zero foreground events
+  - generic proactive candidates no longer start foreground runtime by
+    themselves
+  - due planned work can still enter conscious planning through the existing
+    `planned_work_due` handoff
+- `PRJ-857` remains the next slice for skipped/failed evidence persistence.
 
 Why this order:
 

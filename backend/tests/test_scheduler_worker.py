@@ -663,7 +663,7 @@ async def test_scheduler_worker_external_maintenance_tick_runs_when_execution_mo
     assert repository.cadence_evidence_writes[-1]["summary"]["reason"] == "external_scheduler_owner"
 
 
-async def test_scheduler_worker_external_proactive_tick_runs_when_execution_mode_is_externalized() -> None:
+async def test_scheduler_worker_external_proactive_tick_noops_without_observer_admitted_work() -> None:
     reflection_worker = FakeReflectionWorker(running=False)
     repository = FakeMemoryRepository()
     repository.proactive_candidates = [
@@ -704,45 +704,19 @@ async def test_scheduler_worker_external_proactive_tick_runs_when_execution_mode
 
     summary = await scheduler.run_external_proactive_tick_once(reason="external_proactive")
 
-    assert summary == {
-        "executed": True,
-        "reason": "external_scheduler_owner",
-        "trigger": "external_proactive",
-        "entrypoint_owner": "external_scheduler",
-        "idempotency_baseline": "single_tick_candidate_evaluation_per_invocation",
-        "candidates_considered": 1,
-        "events_emitted": 1,
-        "messages_delivered": 1,
-        "delivery_blocked": 0,
-        "failures": 0,
-        "decision_reason_counts": {"task_blocked_selected_high_trust": 1},
-        "delivery_guard_reason_counts": {"delivery_allowed": 1},
-        "decision_evidence": [
-            {
-                "user_id": "123456",
-                "trigger": "task_blocked",
-                "action_status": "success",
-                "actions": ["send_telegram_message"],
-                "decision_reason": "task_blocked_selected_high_trust",
-                "should_interrupt": True,
-                "decision_score": 0.61,
-                "output_type": "warning",
-                "delivery_guard_allowed": True,
-                "delivery_guard_reason": "delivery_allowed",
-                "recent_outbound_count": 0,
-                "unanswered_proactive_count": 0,
-            }
-        ],
-    }
-    assert runtime.calls == [
-        {
-            "user_id": "123456",
-            "subsource": "proactive_tick",
-            "chat_id": 123456,
-            "trigger": "task_blocked",
-            "planned_work_due": None,
-        }
-    ]
+    assert summary["executed"] is True
+    assert summary["reason"] == "external_scheduler_owner"
+    assert summary["entrypoint_owner"] == "external_scheduler"
+    assert summary["idempotency_baseline"] == "single_tick_observer_admission_per_invocation"
+    assert summary["observer_state"] == "empty_noop"
+    assert summary["observer_reason"] == "no_due_or_actionable_work"
+    assert summary["candidates_considered"] == 0
+    assert summary["due_planned_work"] == 0
+    assert summary["proposal_handoffs_created"] == 0
+    assert summary["events_emitted"] == 0
+    assert summary["messages_delivered"] == 0
+    assert summary["planned_action_observer"]["empty_result_behavior"] == "no_foreground_event"
+    assert runtime.calls == []
     assert repository.cadence_evidence_writes[-1]["cadence_kind"] == "proactive"
     assert repository.cadence_evidence_writes[-1]["execution_owner"] == "external_scheduler"
     assert repository.cadence_evidence_writes[-1]["execution_mode"] == "externalized"
@@ -777,7 +751,7 @@ async def test_scheduler_worker_snapshot_exposes_owner_aware_execution_posture()
     assert snapshot["cadence_execution"]["proactive_tick_reason"] == "proactive_disabled"
 
 
-async def test_scheduler_worker_proactive_tick_emits_bounded_scheduler_events() -> None:
+async def test_scheduler_worker_proactive_tick_noops_for_generic_candidates_without_due_work() -> None:
     reflection_worker = FakeReflectionWorker(running=False)
     repository = FakeMemoryRepository()
     repository.proactive_candidates = [
@@ -817,71 +791,46 @@ async def test_scheduler_worker_proactive_tick_emits_bounded_scheduler_events() 
 
     summary = await scheduler.run_proactive_tick_once(reason="test_proactive")
 
-    assert summary == {
-        "executed": True,
-        "reason": "in_process_owner_mode",
-        "trigger": "test_proactive",
-        "candidates_considered": 1,
-        "events_emitted": 1,
-        "messages_delivered": 1,
-        "delivery_blocked": 0,
-        "failures": 0,
-        "decision_reason_counts": {"task_blocked_selected_high_trust": 1},
-        "delivery_guard_reason_counts": {"delivery_allowed": 1},
-        "decision_evidence": [
-            {
-                "user_id": "123456",
-                "trigger": "task_blocked",
-                "action_status": "success",
-                "actions": ["send_telegram_message"],
-                "decision_reason": "task_blocked_selected_high_trust",
-                "should_interrupt": True,
-                "decision_score": 0.61,
-                "output_type": "warning",
-                "delivery_guard_allowed": True,
-                "delivery_guard_reason": "delivery_allowed",
-                "recent_outbound_count": 0,
-                "unanswered_proactive_count": 0,
-            }
-        ],
-    }
-    assert runtime.calls == [
-        {
-            "user_id": "123456",
-            "subsource": "proactive_tick",
-            "chat_id": 123456,
-            "trigger": "task_blocked",
-            "planned_work_due": None,
-        }
-    ]
+    assert summary["executed"] is True
+    assert summary["reason"] == "in_process_owner_mode"
+    assert summary["observer_state"] == "empty_noop"
+    assert summary["observer_reason"] == "no_due_or_actionable_work"
+    assert summary["candidates_considered"] == 0
+    assert summary["due_planned_work"] == 0
+    assert summary["proposal_handoffs_created"] == 0
+    assert summary["events_emitted"] == 0
+    assert summary["messages_delivered"] == 0
+    assert summary["planned_action_observer"]["foreground_trigger_policy"] == "only_due_planned_work_or_actionable_proposal"
+    assert runtime.calls == []
 
 
-async def test_scheduler_worker_proactive_summary_exposes_guard_block_evidence() -> None:
+async def test_scheduler_worker_proactive_tick_admits_due_planned_work_to_foreground() -> None:
     reflection_worker = FakeReflectionWorker(running=False)
     repository = FakeMemoryRepository()
-    repository.proactive_candidates = [
+    fixed_now = datetime(2026, 5, 2, 12, 0, tzinfo=timezone.utc)
+    repository.due_planned_work = [
         {
+            "id": 31,
             "user_id": "123456",
-            "chat_id": 123456,
-            "trigger": "time_checkin",
-            "text": "time check-in follow up",
-            "recent_outbound_count": 0,
-            "unanswered_proactive_count": 0,
-            "recent_user_activity": "idle",
+            "kind": "check_in",
+            "summary": "relation-aware check-in",
+            "status": "pending",
+            "delivery_channel": "telegram",
+            "requires_foreground_execution": True,
+            "preferred_at": fixed_now - timedelta(minutes=3),
+            "source_event_id": "evt-check-in-31",
         }
     ]
     runtime = FakeRuntime(
-        status="noop",
-        actions=[],
         proactive_decision={
-            "reason": "time_checkin_selected",
+            "reason": "planned_work_due_selected",
             "should_interrupt": True,
-            "decision_score": 0.44,
-            "output_type": "reminder",
+            "decision_score": 0.72,
+            "output_type": "check_in",
         },
         proactive_delivery_guard={
-            "allowed": False,
-            "reason": "contact_cadence_on_demand",
+            "allowed": True,
+            "reason": "delivery_allowed",
         },
     )
     scheduler = SchedulerWorker(
@@ -894,28 +843,30 @@ async def test_scheduler_worker_proactive_summary_exposes_guard_block_evidence()
         proactive_enabled=True,
         proactive_interval_seconds=1800,
     )
+    scheduler._utcnow = lambda: fixed_now
     scheduler.set_runtime(runtime)
 
-    summary = await scheduler.run_proactive_tick_once(reason="test_proactive_blocked")
+    summary = await scheduler.run_proactive_tick_once(reason="test_proactive_due_work")
 
-    assert summary["messages_delivered"] == 0
-    assert summary["delivery_blocked"] == 1
-    assert summary["decision_reason_counts"] == {"time_checkin_selected": 1}
-    assert summary["delivery_guard_reason_counts"] == {"contact_cadence_on_demand": 1}
-    assert summary["decision_evidence"] == [
+    assert summary["observer_state"] == "due_planned_work"
+    assert summary["observer_reason"] == "due_planned_work_available"
+    assert summary["due_planned_work"] == 1
+    assert summary["proposal_handoffs_created"] == 1
+    assert summary["events_emitted"] == 1
+    assert summary["messages_delivered"] == 1
+    assert runtime.calls == [
         {
             "user_id": "123456",
-            "trigger": "time_checkin",
-            "action_status": "noop",
-            "actions": [],
-            "decision_reason": "time_checkin_selected",
-            "should_interrupt": True,
-            "decision_score": 0.44,
-            "output_type": "reminder",
-            "delivery_guard_allowed": False,
-            "delivery_guard_reason": "contact_cadence_on_demand",
-            "recent_outbound_count": 0,
-            "unanswered_proactive_count": 0,
+            "subsource": "maintenance_tick",
+            "chat_id": 123456,
+            "trigger": None,
+            "planned_work_due": {
+                "work_id": 31,
+                "summary": "relation-aware check-in",
+                "work_kind": "check_in",
+                "delivery_channel": "telegram",
+                "source_event_id": "evt-check-in-31",
+            },
         }
     ]
 

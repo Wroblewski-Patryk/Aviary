@@ -110,10 +110,11 @@ remaining rollout target.
 cadence posture:
 
 - shared policy owner and selected cadence owner
-- delivery-target and candidate-selection baselines
+- delivery-target and planned-action observer admission baselines
 - anti-spam contract defaults (cooldown, recent outbound threshold,
   unanswered threshold)
-- latest proactive tick summary and last tick timestamp
+- latest proactive tick summary, planned-action observer state, and last tick
+  timestamp
 - live enabled state plus production baseline readiness and state
   (`enabled=true`,
   `production_baseline_state=external_scheduler_target_owner` in Coolify
@@ -121,6 +122,8 @@ cadence posture:
 
 Use `/health.proactive` together with `/health.scheduler.last_proactive_summary`
 when triaging why proactive outreach is quiet, blocked, or actively delivering.
+An `empty_noop` observer state means cadence found no due/actionable work and
+should not have started a conscious foreground run.
 `/health.proactive.communication_boundary_contract` exposes the relation-owned
 communication-boundary policy used by planning, reflection, proactive
 candidate selection, proactive delivery guardrails, and expression ritual
@@ -322,8 +325,8 @@ posture:
 - use `/health.conversation_channels.telegram` first to confirm round-trip
   viability before treating reminder silence as planning drift
 - use `/health.proactive` and the latest proactive tick summary to distinguish
-  `opt_in_required`, attention-gate deferral, anti-spam throttling, and normal
-  proactive delivery
+  observer `empty_noop`, due planned-work admission, attention-gate deferral,
+  anti-spam throttling, and normal proactive delivery
 - when a release or incident touches reminder capture, daily planning, or
   follow-up behavior, attach behavior-validation evidence that covers the
   bounded `v1` workflow (`T13.1`) alongside incident evidence instead of
