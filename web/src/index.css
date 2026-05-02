@@ -25,10 +25,15 @@
     linear-gradient(180deg, #f7f1ea 0%, #f1e6d8 100%);
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
   font-family: var(--font-body, "Inter", sans-serif);
   color: var(--aion-ink);
   background:
@@ -937,12 +942,16 @@ body {
 }
 
 .aion-mobile-tabbar {
+  contain: layout paint;
+  max-width: 100vw;
+  overflow: hidden;
   padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
   box-shadow: 0 -14px 28px rgba(78, 58, 43, 0.08);
 }
 
 .aion-mobile-tabbar-scroll {
   gap: 0.35rem;
+  max-width: 100%;
   scrollbar-width: none;
   scroll-padding-inline: 0.75rem;
 }
@@ -6662,6 +6671,9 @@ body {
 
 .aion-tools-canvas {
   align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  width: 100%;
 }
 
 .aion-tools-overview-bar {
@@ -6672,6 +6684,8 @@ body {
   padding: 0.72rem 0.82rem;
   border: 1px solid rgba(88, 67, 52, 0.08);
   border-radius: 1.55rem;
+  min-width: 0;
+  width: 100%;
   background:
     radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.56), transparent 0 24%),
     linear-gradient(135deg, rgba(255, 251, 245, 0.88), rgba(247, 239, 228, 0.74));
@@ -6715,6 +6729,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .aion-tools-summary-value {
@@ -6735,12 +6750,20 @@ body {
 .aion-tools-directory {
   padding: 0.92rem;
   border-radius: 1.7rem;
+  min-width: 0;
+}
+
+.aion-tools-directory .grid {
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
 }
 
 .aion-tools-group {
   border: 1px solid rgba(88, 67, 52, 0.08);
   border-radius: 1.35rem;
   padding: 0.78rem;
+  min-width: 0;
+  width: 100%;
   background:
     linear-gradient(180deg, rgba(255, 252, 247, 0.82), rgba(248, 241, 232, 0.66));
   box-shadow: 0 10px 20px rgba(78, 58, 43, 0.026);
@@ -6756,6 +6779,7 @@ body {
   border: 1px solid rgba(88, 67, 52, 0.09);
   border-radius: 1.12rem;
   padding: 0.74rem;
+  min-width: 0;
   background: rgba(255, 252, 247, 0.7);
 }
 
@@ -6818,6 +6842,13 @@ body {
 
 .aion-tools-details summary {
   padding: 0.58rem 0.72rem !important;
+}
+
+.aion-tools-details span {
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .aion-settings-canvas {

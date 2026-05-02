@@ -79,7 +79,9 @@ broader public or web-led release claim:
   `provider_backed_ready`
 - `PRJ-911` rollback and recovery drill
 - `PRJ-912` data privacy and debug posture check
-- `PRJ-913..PRJ-916` web-v1 route and product-honesty checks
+- `PRJ-913` web-v1 route smoke: DONE locally with desktop/mobile route
+  evidence and `/tools` mobile overflow fix
+- `PRJ-914..PRJ-916` remaining web-v1 product-honesty checks
 - `PRJ-917..PRJ-919` organizer/tooling extension readiness
 - `PRJ-920..PRJ-921` operational monitor and release-evidence archive
 - `PRJ-930` deployment trigger SLO evidence

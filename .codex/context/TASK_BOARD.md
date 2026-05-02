@@ -2,6 +2,31 @@
 
 Last updated: 2026-05-03
 
+## Fresh Web V1 Route Smoke After Release Candidate (2026-05-03)
+
+- `PRJ-913` is DONE:
+  - `.codex/tasks/PRJ-913-web-v1-route-smoke-after-release-candidate.md`
+  - `docs/planning/v1-web-route-smoke-after-release-candidate.md`
+- result:
+  - web build passed
+  - local backend `/health` was green during the smoke
+  - route smoke passed for `/login` plus 12 authenticated routes on desktop
+    and mobile:
+    - `routeChecks=24`
+    - `failures=0`
+    - `unexpectedConsoleIssueCount=0`
+    - `benignConsoleIssueCount=2`
+    - `screenshots=8`
+  - `/tools` mobile overflow was fixed in `web/src/index.css`
+  - in-app browser plugin was blocked by local Node version; bundled Node +
+    Playwright fallback was used
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - bundled Node + Playwright route smoke
+  - `git diff --check`
+- next smallest useful task:
+  - `PRJ-914` Replace Remaining Static Personality Metrics
+
 ## Fresh Production Telegram Mode Smoke (2026-05-03)
 
 - `PRJ-909` is BLOCKED:

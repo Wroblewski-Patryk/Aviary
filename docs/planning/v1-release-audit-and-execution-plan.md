@@ -357,6 +357,11 @@ from primary surfaces.
 Tasks:
 
 - `PRJ-913` Web V1 Route Smoke After Release Candidate
+  - Status: DONE
+  - Output: `docs/planning/v1-web-route-smoke-after-release-candidate.md`
+    records a passing local route smoke across `/login` plus 12 authenticated
+    routes on desktop/mobile, and `web/src/index.css` fixes the concrete
+    `/tools` mobile overflow found during the smoke.
   - Cover login, dashboard, chat, personality, settings, tools, memory,
     reflections, plans, goals, insights, automations, and integrations.
   - Check desktop/mobile, empty/loading/success/error where practical.
@@ -469,7 +474,7 @@ Tasks:
 
 1. `PRJ-909` Production Telegram Mode Smoke - BLOCKED by operator
    preconditions
-2. `PRJ-913` Web V1 Route Smoke After Release Candidate
+2. `PRJ-913` Web V1 Route Smoke After Release Candidate - DONE locally
 3. `PRJ-914` Replace Remaining Static Personality Metrics
 4. `PRJ-915` Backend-Backed Dashboard Summary Surface
 5. `PRJ-916` Web Empty And Error State Audit

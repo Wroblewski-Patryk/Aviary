@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-913` completed the web v1 route smoke after release
+  candidate:
+  - new task:
+    - `.codex/tasks/PRJ-913-web-v1-route-smoke-after-release-candidate.md`
+  - new planning source:
+    - `docs/planning/v1-web-route-smoke-after-release-candidate.md`
+  - implementation:
+    - `web/src/index.css` now constrains the Tools route grid and detail pills
+      so `/tools` no longer creates mobile horizontal overflow
+    - root horizontal overflow is clipped to keep the scrollable mobile tabbar
+      from becoming page-level horizontal scroll
+  - validation:
+    - web build passed
+    - local backend route smoke passed with `24` checks, `0` failures, and `0`
+      unexpected console issues
+    - screenshots and JSON evidence were captured in
+      `.codex/artifacts/prj913-web-v1-route-smoke/`
+  - next execution priority:
+    - `PRJ-914` Replace Remaining Static Personality Metrics
+
 - 2026-05-03: `PRJ-909` attempted the production Telegram mode smoke and is
   blocked by missing local operator preconditions:
   - new task:
