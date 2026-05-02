@@ -92,7 +92,12 @@ Queue update:
   leaves bounded `passive_active_evidence` in scheduler cadence evidence so
   reflection/scenario work can learn from silence without user-visible failure
   chatter.
-- `PRJ-858` remains the next slice for behavior scenarios.
+- `PRJ-858` is now complete.
+- runtime behavior-testing docs now define `T22.1..T22.4` for silent no-op,
+  due planned-work admission, relation-care handoff, and internal
+  failure-learning evidence.
+- `PRJ-859` remains the next slice for ops, release smoke, and learning-journal
+  sync.
 
 Why this order:
 

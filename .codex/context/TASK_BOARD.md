@@ -2,6 +2,31 @@
 
 Last updated: 2026-05-02
 
+## Fresh Observer-Gated Proactivity Behavior Scenarios (2026-05-02)
+
+- `PRJ-858` is DONE as the observer-gated behavior scenario slice:
+  - `.codex/tasks/PRJ-858-observer-gated-proactivity-behavior-scenarios.md`
+- purpose:
+  - make the passive/active proactive behavior provable as canonical scenario
+    truth, not only as module-level output
+  - document silent no-op, due outreach, relation-care handoff, and failure
+    evidence learning anchors
+- implemented:
+  - `docs/architecture/29_runtime_behavior_testing.md` now defines
+    `T22.1..T22.4`
+  - `docs/engineering/testing.md` now requires proactive-runtime slices to pin
+    the observer-gated scenario family
+  - no runtime behavior changed in this slice
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py tests/test_memory_repository.py -k "proactive or passive_active or scheduler_cadence_evidence"; Pop-Location`
+  - result: `9 passed, 76 deselected`
+  - `git diff --check`
+  - result: passed
+- deployment impact:
+  - docs/testing/context only; no runtime, API, DB, env, or deployment behavior
+    change
+- next smallest useful task:
+  - `PRJ-859` sync ops, release smoke, and learning journal
 ## Fresh Passive/Active Skipped And Failed Evidence (2026-05-02)
 
 - `PRJ-857` is DONE as the passive/active evidence persistence slice:

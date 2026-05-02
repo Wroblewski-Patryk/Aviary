@@ -2,6 +2,24 @@
 
 Last updated: 2026-05-02
 
+- 2026-05-02: `PRJ-858` added observer-gated proactivity behavior scenarios:
+  - new task:
+    - `.codex/tasks/PRJ-858-observer-gated-proactivity-behavior-scenarios.md`
+  - `docs/architecture/29_runtime_behavior_testing.md` now defines:
+    - `T22.1` silent observer no-op
+    - `T22.2` due planned-work admission
+    - `T22.3` relation-care/check-in planned-work or proposal handoff
+    - `T22.4` internal failure-learning evidence with
+      `expression_visible=false`
+  - `docs/engineering/testing.md` now points proactive-runtime slices at the
+    `T22.1..T22.4` observer-gated scenario family
+  - validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_scheduler_worker.py tests/test_memory_repository.py -k "proactive or passive_active or scheduler_cadence_evidence"; Pop-Location`
+    - result: `9 passed, 76 deselected`
+    - `git diff --check`
+    - result: passed
+  - highest-value next step:
+    - execute `PRJ-859` by syncing ops, release smoke, and learning journal
 - 2026-05-02: `PRJ-857` persisted skipped and failed passive-active evidence:
   - new task:
     - `.codex/tasks/PRJ-857-persist-skipped-and-failed-passive-active-evidence.md`

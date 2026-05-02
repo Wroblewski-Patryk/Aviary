@@ -460,6 +460,9 @@ For meaningful repo changes, leave behind:
     - anti-spam guardrail outcomes through proactive runtime and scheduler paths
     - latest proactive tick summary together with scheduler-owned cadence
       evidence
+    - observer-gated behavior anchors `T22.1..T22.4` for silent no-op, due
+      planned-work admission, relation-care handoff, and internal failure
+      learning evidence
 - for proactive production-evidence slices, regression and evidence checks from:
   - `.\.venv\Scripts\python -m pytest -q tests/test_observability_policy.py tests/test_api_routes.py tests/test_deployment_trigger_scripts.py tests/test_behavior_validation_script.py`
   - `.\backend\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`

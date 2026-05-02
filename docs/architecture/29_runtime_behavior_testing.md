@@ -341,6 +341,11 @@ Post-convergence minimum scenario families now also include:
   - generic HTTP page read
   - ClickUp task update
 - proactive delivery-ready versus anti-spam-blocked posture
+- observer-gated proactivity:
+  - silent no-op when no due/actionable work exists
+  - due planned-work admission through the conscious foreground path
+  - relation-care/check-in handoff as planned work or proposal before outreach
+  - skipped/blocked/failure evidence that remains internal for later learning
 - deferred reflection enqueue and non-blocking background expectations
 - exported `incident_evidence` consumption through smoke or validation tooling
   whenever observability-sensitive runtime or release slices change
@@ -382,6 +387,14 @@ Current scenario anchors:
   and later expression removes generated repeated greetings
 - `T21.3`: repeated weaker behavior-feedback candidates consolidate through
   reflection while unclear feedback stays descriptive-only
+- `T22.1`: observer-gated proactive cadence with no due/actionable work records
+  `empty_noop`, emits zero foreground events, and creates no user-visible turn
+- `T22.2`: due planned work is admitted by the observer and enters the normal
+  conscious foreground path through `planned_work_due`
+- `T22.3`: relation-aware care/check-in candidates are represented as planned
+  work or subconscious proposal handoffs before any outreach can occur
+- `T22.4`: blocked or failed observer-admitted work persists bounded
+  `passive_active_evidence` with `expression_visible=false`
 
 Boundary note:
 
