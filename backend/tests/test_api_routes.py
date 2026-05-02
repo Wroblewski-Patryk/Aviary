@@ -5539,6 +5539,7 @@ def test_app_chat_message_localizes_runtime_timestamp_from_profile_utc_offset() 
 
 def test_app_personality_overview_uses_authenticated_user() -> None:
     client, _, _ = _client()
+    repository = client.app.state.memory_repository
     register_response = client.post(
         "/app/auth/register",
         json={
@@ -5547,6 +5548,28 @@ def test_app_personality_overview_uses_authenticated_user() -> None:
         },
     )
     user_id = register_response.json()["user"]["id"]
+    repository.recent_memory = [
+        {
+            "event_id": "evt-real-activity",
+            "trace_id": "trace-real-activity",
+            "source": "api",
+            "user_id": user_id,
+            "event_timestamp": datetime(2026, 5, 2, 10, 15, tzinfo=timezone.utc),
+            "summary": "Real persisted activity surfaced.",
+            "payload": {"event": "raw user text stays out of overview"},
+            "importance": 0.72,
+        },
+        {
+            "event_id": "evt-other-user",
+            "trace_id": "trace-other-user",
+            "source": "api",
+            "user_id": "other-user",
+            "event_timestamp": datetime(2026, 5, 2, 10, 30, tzinfo=timezone.utc),
+            "summary": "Other user activity must not leak.",
+            "payload": {"event": "other user raw text"},
+            "importance": 0.91,
+        },
+    ]
 
     response = client.get("/app/personality/overview")
 
@@ -5554,6 +5577,16 @@ def test_app_personality_overview_uses_authenticated_user() -> None:
     body = response.json()
     assert body["user_id"] == user_id
     assert body["identity_state"]["profile"]["preferred_language"] == "pl"
+    assert body["recent_activity"] == [
+        {
+            "event_id": "evt-real-activity",
+            "title": "Real persisted activity surfaced.",
+            "timestamp": "2026-05-02T10:15:00Z",
+            "source": "api",
+            "importance": 0.72,
+        }
+    ]
+    assert "payload" not in body["recent_activity"][0]
 
 
 def test_app_tools_overview_requires_authenticated_session() -> None:

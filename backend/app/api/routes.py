@@ -142,6 +142,30 @@ def _settings_from_request(request: Request):
     return request.app.state.settings
 
 
+def _recent_activity_snapshot(memory_items: list[dict], *, limit: int = 5) -> list[dict[str, Any]]:
+    activity: list[dict[str, Any]] = []
+    for item in memory_items:
+        if not isinstance(item, dict):
+            continue
+        summary = " ".join(str(item.get("summary", "") or "").split())
+        if not summary:
+            continue
+        timestamp = item.get("event_timestamp") or item.get("timestamp")
+        activity_item: dict[str, Any] = {
+            "event_id": str(item.get("event_id", "") or "").strip(),
+            "title": summary[:180],
+            "timestamp": timestamp,
+            "source": str(item.get("source", "") or "").strip().lower()[:32],
+        }
+        importance = item.get("importance")
+        if isinstance(importance, (int, float)) and not isinstance(importance, bool):
+            activity_item["importance"] = max(0.0, min(1.0, float(importance)))
+        activity.append(activity_item)
+        if len(activity) >= limit:
+            break
+    return activity
+
+
 def _normalize_auth_email(value: str) -> str:
     normalized = str(value or "").strip().lower()
     if "@" not in normalized or "." not in normalized.split("@", 1)[-1]:
@@ -606,6 +630,10 @@ async def _build_learned_state_snapshot(*, request: Request, user_id: str) -> di
         goal_ids=goal_ids,
         limit=8,
     )
+    recent_activity = _recent_activity_snapshot(
+        await memory_repository.get_recent_for_user(user_id=user_id, limit=5),
+        limit=5,
+    )
     pending_proposals = await memory_repository.get_pending_subconscious_proposals(
         user_id=user_id,
         limit=8,
@@ -751,6 +779,7 @@ async def _build_learned_state_snapshot(*, request: Request, user_id: str) -> di
         **learned_state_policy_snapshot(),
         "api_readiness": api_readiness,
         "user_id": user_id,
+        "recent_activity": recent_activity,
         "capability_catalog": capability_catalog,
         "identity_state": {
             "identity_policy": identity_policy_snapshot(),

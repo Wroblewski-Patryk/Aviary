@@ -2,6 +2,877 @@
 
 Last updated: 2026-05-02
 
+- 2026-05-02: `PRJ-902` completed the v1 release audit and execution plan:
+  - new task:
+    - `.codex/tasks/PRJ-902-v1-release-audit-and-execution-plan.md`
+  - new planning source:
+    - `docs/planning/v1-release-audit-and-execution-plan.md`
+  - audit summary:
+    - core no-UI v1 behavior is locally strong
+    - the current local tree is dirty and cannot be treated as a release fact
+      until the intended scope is selected, validated, committed, pushed, and
+      smoke-tested
+    - production parity evidence is stale for the current local product state
+    - organizer provider activation, external observability, AI red-team
+      evidence, and remaining web static/decorative values are now planned as
+      explicit follow-up lanes instead of hidden blockers
+  - verification:
+    - `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\run_behavior_validation.py --gate-mode operator --artifact-path ..\.codex\artifacts\prj902-v1-audit\behavior-validation-report.json; Pop-Location`
+    - result: passed, `19 passed, 209 deselected`
+    - evidence:
+      - `.codex/artifacts/prj902-v1-audit/behavior-validation-report.json`
+  - next execution priority:
+    - `PRJ-903` Freeze Current V1 Release Boundary
+
+- 2026-05-02: `PRJ-901` completed the real recent-activity surface:
+  - new task:
+    - `.codex/tasks/PRJ-901-real-recent-activity-surface.md`
+  - backend implementation:
+    - `/app/personality/overview` now includes additive `recent_activity`
+      rows for the authenticated user
+    - the projection reuses existing episodic memory, exposes only
+      `event_id`, `title`, `timestamp`, `source`, and bounded `importance`,
+      and keeps raw memory payloads out of the response
+  - web implementation:
+    - Dashboard, Memory, Reflections, and Personality recent-activity panels
+      now prefer real overview activity
+    - localized static rows remain the fallback for empty or malformed backend
+      activity
+  - verification:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k personality_overview; Pop-Location`
+    - result: passed, `1 passed, 118 deselected`
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; Pop-Location`
+    - result: passed, `1019 passed`
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+  - deployment posture:
+    - low; additive authenticated overview data and defensive frontend
+      consumption only
+
+- 2026-05-02: `PRJ-899` completed the final localized module-copy reaudit:
+  - new task:
+    - `.codex/tasks/PRJ-899-localized-module-copy-final-reaudit.md`
+  - verification:
+    - Chrome CDP Polish module-copy reaudit covered `/memory`,
+      `/reflections`, `/plans`, `/goals`, `/insights`, `/automations`,
+      `/integrations`, and `/tools`
+    - result: passed after PRJ-900 fixed the remaining Memory zero-count form
+    - no checked route had horizontal overflow at 390px mobile width
+    - evidence:
+      - `.codex/artifacts/prj899-localized-module-copy-final-reaudit/localized-module-copy-final-reaudit.json`
+      - `.codex/artifacts/prj899-localized-module-copy-final-reaudit/pl-final-reaudit-last-route.png`
+  - findings:
+    - targeted route-owned localization gaps are closed for checked module
+      routes
+    - provider/API-owned English values may remain by design
+  - deployment posture:
+    - none; audit and documentation only
+
+- 2026-05-02: `PRJ-900` completed Memory zero-count Polish form cleanup:
+  - new task:
+    - `.codex/tasks/PRJ-900-memory-zero-count-polish-forms.md`
+  - web implementation:
+    - Memory pattern, insight, and cue count labels now have zero-count suffixes
+      in `UI_COPY.memory`
+    - Polish Memory count labels now render `0 wzorców`, `0 wniosków`, and
+      `0 sygnałów`
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - PRJ-899 final localized module-copy reaudit
+    - result: passed
+  - deployment posture:
+    - low; frontend-only copy/grammar fix
+
+- 2026-05-02: `PRJ-898` completed Tools route-owned copy localization:
+  - new task:
+    - `.codex/tasks/PRJ-898-tools-route-owned-copy-localization.md`
+  - web implementation:
+    - Tools summary notes, directory title, item count labels, status labels,
+      provider readiness labels, link-state labels, Telegram linking helper
+      copy, expiry copy, and Tools toast/error fallbacks now use
+      `UI_COPY.tools`
+    - provider/API-owned values remain unchanged, including group titles, item
+      labels, descriptions, status reasons, capabilities, and source-of-truth
+      strings
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP Polish `/tools` route-owned copy smoke with a mocked app API
+      snapshot
+    - result: passed; no horizontal overflow at 390px mobile width
+    - evidence:
+      - `.codex/artifacts/prj898-tools-route-owned-copy-localization/pl-tools-route-owned-copy-smoke.json`
+      - `.codex/artifacts/prj898-tools-route-owned-copy-localization/pl-tools-route-owned-copy-mobile.png`
+  - deployment posture:
+    - low; frontend-only route-owned copy refactor, no backend, DB, auth,
+      scheduler, provider, or action-layer changes
+
+- 2026-05-02: `PRJ-897` completed shared recent-activity localization:
+  - new task:
+    - `.codex/tasks/PRJ-897-shared-recent-activity-localization.md`
+  - web implementation:
+    - shared recent-activity rows now live in
+      `UI_COPY.common.recentActivity` for English, Polish, and German
+    - Dashboard, Memory, Reflections, and Personality now consume localized
+      shared activity rows
+    - the shared Personality activity action label now uses
+      `UI_COPY.common.view`
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP Polish shared activity smoke covered `/dashboard`, `/memory`,
+      `/reflections`, and `/personality`
+    - result: passed; no horizontal overflow at 390px mobile width
+    - evidence:
+      - `.codex/artifacts/prj897-shared-recent-activity-localization/pl-shared-recent-activity-smoke.json`
+      - `.codex/artifacts/prj897-shared-recent-activity-localization/pl-memory-shared-activity-scrolled.png`
+  - deployment posture:
+    - low; frontend-only shared-copy refactor, no backend, DB, auth,
+      scheduler, provider, or action-layer changes
+
+- 2026-05-02: `PRJ-896` completed the Reflections body copy localization fix:
+  - new task:
+    - `.codex/tasks/PRJ-896-reflections-body-copy-localization.md`
+  - web implementation:
+    - static Reflections stat details, status labels, flow rows, prompt cards,
+      and recent-movement header now use `UI_COPY.reflections`
+    - visible Reflections insight counts now handle the Polish zero form
+      (`0 wniosków`) correctly
+    - shared recent-activity feed entries remain out of scope and still need a
+      separate shared localization ownership pass
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP Polish Reflections copy smoke with a mocked app API snapshot
+    - result: passed; no horizontal overflow at 390px mobile width
+    - evidence:
+      - `.codex/artifacts/prj896-reflections-body-copy-localization/pl-reflections-copy-smoke.json`
+      - `.codex/artifacts/prj896-reflections-body-copy-localization/pl-reflections-mobile.png`
+  - deployment posture:
+    - low; frontend-only localization refactor, no backend, DB, auth,
+      scheduler, provider, or action-layer changes
+
+- 2026-05-02: `PRJ-895` completed a localized module copy reaudit:
+  - new task:
+    - `.codex/tasks/PRJ-895-localized-module-copy-reaudit.md`
+  - verification:
+    - Chrome CDP Polish module copy reaudit covered `/memory`, `/reflections`,
+      `/plans`, `/goals`, `/insights`, `/automations`, `/integrations`, and
+      `/tools`
+    - result: passed; no checked route had horizontal overflow
+    - evidence:
+      - `.codex/artifacts/prj895-localized-module-copy-reaudit/localized-module-copy-reaudit.json`
+  - findings:
+    - `/reflections` is the next highest-impact route-owned body-copy
+      localization task
+    - `/plans`, `/goals`, `/insights`, `/automations`, and `/integrations` are
+      clean for targeted route-owned English signals
+    - `/memory` has remaining shared recent-activity English entries
+    - `/tools` needs a separate ownership pass because some English values are
+      provider or data-owned
+  - deployment posture:
+    - none; audit and documentation only
+
+- 2026-05-02: `PRJ-894` completed the Goals body copy localization fix:
+  - new task:
+    - `.codex/tasks/PRJ-894-goals-body-copy-localization.md`
+  - web implementation:
+    - static Goals stat details, horizon labels, goal rows, signal cards, and
+      guidance rows now use `UI_COPY.goals`
+    - visible Goals count units and direction text handle `1 cel` correctly
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP Polish Goals copy smoke
+    - result: passed
+    - evidence:
+      - `.codex/artifacts/prj894-goals-body-copy-localization/pl-goals-copy-smoke.json`
+      - `.codex/artifacts/prj894-goals-body-copy-localization/pl-goals-mobile.png`
+  - deployment posture:
+    - low; frontend-only localization refactor, no backend, DB, auth,
+      scheduler, provider, or action-layer changes
+
+- 2026-05-02: `PRJ-893` completed the Plans body copy localization fix:
+  - new task:
+    - `.codex/tasks/PRJ-893-plans-body-copy-localization.md`
+  - web implementation:
+    - static Plans stat details, planning path labels, flow rows, next-step
+      cards, and context cards now use `UI_COPY.plans`
+    - visible Plans count units use localized singular/plural labels
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP Polish Plans copy smoke
+    - result: passed
+    - evidence:
+      - `.codex/artifacts/prj893-plans-body-copy-localization/pl-plans-copy-smoke.json`
+      - `.codex/artifacts/prj893-plans-body-copy-localization/pl-plans-mobile.png`
+  - deployment posture:
+    - low; frontend-only localization refactor, no backend, DB, auth,
+      scheduler, provider, or action-layer changes
+
+- 2026-05-02: `PRJ-892` completed the Memory body copy localization fix:
+  - new task:
+    - `.codex/tasks/PRJ-892-memory-body-copy-localization.md`
+  - web implementation:
+    - static Memory stat details, map labels, continuity rows, and signal cards
+      now use `UI_COPY.memory`
+    - visible Memory count units use localized singular/plural labels
+    - shared recent-activity entries remain English and are tracked as a
+      separate shared localization gap
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP Polish Memory copy smoke
+    - result: passed
+    - evidence:
+      - `.codex/artifacts/prj892-memory-body-copy-localization/pl-memory-copy-smoke-v2.json`
+      - `.codex/artifacts/prj892-memory-body-copy-localization/pl-memory-mobile-v2.png`
+  - deployment posture:
+    - low; frontend-only localization refactor, no backend, DB, auth,
+      scheduler, provider, or action-layer changes
+
+- 2026-05-02: `PRJ-891` completed the Insights body copy localization fix:
+  - new task:
+    - `.codex/tasks/PRJ-891-insights-body-copy-localization.md`
+  - web implementation:
+    - static Insights stat details, map labels, signal rows, clarity notes, and
+      guidance candidates now use `UI_COPY.insights`
+    - visible Insights count units now avoid the `1 cele` Polish grammar issue
+    - shared Dashboard guidance copy used by other routes remains out of scope
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP Polish Insights copy smoke
+    - result: passed
+    - evidence:
+      - `.codex/artifacts/prj891-insights-body-copy-localization/pl-insights-copy-smoke-v2.json`
+      - `.codex/artifacts/prj891-insights-body-copy-localization/pl-insights-mobile-v2.png`
+  - deployment posture:
+    - low; frontend-only localization refactor, no backend, DB, auth,
+      scheduler, provider, or action-layer changes
+
+- 2026-05-02: `PRJ-890` completed a localized module copy audit:
+  - new task:
+    - `.codex/tasks/PRJ-890-localized-module-copy-audit.md`
+  - verification:
+    - Chrome CDP Polish module copy audit covered `/memory`, `/reflections`,
+      `/plans`, `/goals`, `/insights`, and `/tools`
+    - result: passed; no checked route had horizontal overflow
+    - evidence:
+      - `.codex/artifacts/prj890-localized-module-copy-audit/localized-module-copy-audit.json`
+  - findings:
+    - `/insights` is the next highest-impact route-owned body-copy
+      localization task
+    - `/memory`, `/plans`, and `/goals` also contain route-owned English copy
+    - `/tools` needs a separate ownership pass because some English values are
+      provider or data-owned
+  - deployment posture:
+    - none; audit and documentation only
+
+- 2026-05-02: `PRJ-889` completed the Automations body copy localization fix:
+  - new task:
+    - `.codex/tasks/PRJ-889-automations-body-copy-localization.md`
+  - web implementation:
+    - static Automations stat details, flow headers, flow rows, boundary cards,
+      and health detail labels now use `UI_COPY.automations`
+    - English, Polish, and German copy entries were added to the existing UI
+      copy structure
+    - backend-supplied health status and error values remain data-owned and may
+      still be English when returned by the backend
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP Polish Automations copy smoke
+    - result: passed
+    - evidence:
+      - `.codex/artifacts/prj889-automations-body-copy-localization/pl-automations-copy-smoke.json`
+      - `.codex/artifacts/prj889-automations-body-copy-localization/pl-automations-mobile.png`
+  - deployment posture:
+    - low; frontend-only localization refactor, no backend, DB, auth,
+      scheduler, provider, or action-layer changes
+
+- 2026-05-02: `PRJ-888` completed the Integrations body copy localization fix:
+  - new task:
+    - `.codex/tasks/PRJ-888-integrations-body-copy-localization.md`
+  - web implementation:
+    - static Integrations stat details, provider-map labels, boundary cards,
+      and readiness detail labels now use `UI_COPY.integrations`
+    - English, Polish, and German copy entries were added to the existing UI
+      copy structure
+    - provider-supplied `status_reason` values remain data-owned and may still
+      be English when returned by the backend
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP Polish Integrations copy smoke
+    - result: passed
+    - evidence:
+      - `.codex/artifacts/prj888-integrations-body-copy-localization/pl-integrations-copy-smoke-v3.json`
+      - `.codex/artifacts/prj888-integrations-body-copy-localization/pl-integrations-mobile-v3.png`
+  - deployment posture:
+    - low; frontend-only localization refactor, no backend, DB, auth, provider,
+      scheduler, or action-layer changes
+
+- 2026-05-02: `PRJ-887` completed the localized shell route smoke:
+  - new task:
+    - `.codex/tasks/PRJ-887-localized-shell-route-smoke.md`
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP localized shell smoke covered `/dashboard`, `/chat`, and
+      `/integrations` across desktop and mobile
+    - result: passed, 6 checks
+    - evidence:
+      - `.codex/artifacts/prj887-localized-shell-route-smoke/localized-shell-smoke-results-v2.json`
+      - `.codex/artifacts/prj887-localized-shell-route-smoke/dashboard-desktop-v2.png`
+      - `.codex/artifacts/prj887-localized-shell-route-smoke/chat-mobile-v2.png`
+      - `.codex/artifacts/prj887-localized-shell-route-smoke/integrations-mobile-v2.png`
+  - findings:
+    - no checked route rendered blank, overflowed horizontally, or threw a
+      JavaScript exception
+    - mobile `/chat` intentionally omits mobile tabbar rendering
+    - some newly added module body copy remains English in localized views and
+      should be handled separately
+  - deployment posture:
+    - none; verification and documentation only
+
+- 2026-05-02: `PRJ-886` completed the sidebar localized module labels fix:
+  - new task:
+    - `.codex/tasks/PRJ-886-sidebar-localized-module-labels.md`
+  - web implementation:
+    - Memory, Reflections, Plans, Goals, Insights, Automations, and
+      Integrations labels in `shellNavItems` now use
+      `routeLabel(route, resolvedUiLanguage)`
+    - desktop sidebar and mobile tabbar now reuse existing `UI_COPY.routes`
+      translations for newly enabled modules
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP Polish sidebar smoke
+    - result: passed
+    - `git diff --check -- web/src/App.tsx .codex/tasks/PRJ-886-sidebar-localized-module-labels.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+    - result: passed with line-ending warnings only
+    - evidence:
+      - `.codex/artifacts/prj886-sidebar-localized-module-labels/pl-sidebar-smoke-v2.json`
+      - `.codex/artifacts/prj886-sidebar-localized-module-labels/pl-dashboard-sidebar-desktop-v2.png`
+  - deployment posture:
+    - low; frontend-only localization consistency fix, no backend, DB, auth,
+      provider, scheduler, or action-layer changes
+
+- 2026-05-02: `PRJ-885` completed the refreshed canonical UI commit scope audit:
+  - new task:
+    - `.codex/tasks/PRJ-885-canonical-ui-commit-scope-audit.md`
+  - release-scope finding:
+    - tracked canonical UI files are `.codex/context/PROJECT_STATE.md`,
+      `.codex/context/TASK_BOARD.md`, `web/src/App.tsx`, and
+      `web/src/index.css`
+    - current-package task records are PRJ-864 through PRJ-885
+    - PRJ-851 and PRJ-852 still require a separate inclusion decision because
+      they predate the current canonical UI package
+    - `artifacts/behavior_validation/prj843-report.json` remains unrelated to
+      the canonical UI commit candidate and should stay excluded unless
+      explicitly requested
+  - verification:
+    - `git diff --name-only`
+    - `git ls-files --others --exclude-standard`
+    - `git diff --stat -- web/src/App.tsx web/src/index.css .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+  - deployment posture:
+    - none; release-scope audit only
+
+- 2026-05-02: `PRJ-884` completed the canonical route final sweep:
+  - new task:
+    - `.codex/tasks/PRJ-884-canonical-route-final-sweep.md`
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - Chrome CDP final route smoke covered `/dashboard`, `/chat`,
+      `/personality`, `/memory`, `/reflections`, `/plans`, `/goals`,
+      `/insights`, `/automations`, `/integrations`, `/tools`, and `/settings`
+      across desktop and mobile
+    - result: passed, 24 route/viewport checks
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-884-canonical-route-final-sweep.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+    - result: passed with line-ending warnings only
+    - evidence:
+      - `.codex/artifacts/prj884-canonical-route-final-sweep/route-smoke-results.json`
+      - `.codex/artifacts/prj884-canonical-route-final-sweep/dashboard-desktop.png`
+      - `.codex/artifacts/prj884-canonical-route-final-sweep/chat-mobile.png`
+      - `.codex/artifacts/prj884-canonical-route-final-sweep/integrations-mobile.png`
+  - findings:
+    - no scoped route rendered blank
+    - no scoped route had horizontal overflow in the CDP check
+    - no JavaScript exception was reported during the sweep
+  - deployment posture:
+    - none; verification and documentation only
+
+- 2026-05-02: `PRJ-883` completed the Integrations canonical route slice:
+  - new task:
+    - `.codex/tasks/PRJ-883-integrations-canonical-route.md`
+  - web implementation:
+    - `/integrations` is now a first-class authenticated route
+    - Integrations is enabled in the desktop sidebar and mobile tabbar
+    - Integrations reads provider readiness, enabled tools, blocked providers,
+      and link requirements from `/app/tools/overview`
+    - the route uses a canonical overview bar, stat cards, provider map,
+      provider rows, connection rules, and readiness details with route-scoped
+      CSS
+    - the action boundary is preserved; no provider calls, link-flow changes,
+      preference changes, or action side effects were introduced
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-883-integrations-canonical-route.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj883-integrations-canonical-route/integrations-desktop-1568x1003-v2.png`
+      - `.codex/artifacts/prj883-integrations-canonical-route/integrations-mobile-390x844-v2.png`
+  - deployment posture:
+    - low; frontend-only route enablement and layout, no backend, DB, auth,
+      env, provider, link-flow, or action-layer changes
+
+- 2026-05-02: `PRJ-882` completed the Automations canonical route slice:
+  - new task:
+    - `.codex/tasks/PRJ-882-automations-canonical-route.md`
+  - web implementation:
+    - `/automations` is now a first-class authenticated route
+    - Automations is enabled in the desktop sidebar and mobile tabbar
+    - Automations reads proactive setting state from `/app/me` and attention /
+      scheduler posture from `/health`
+    - the route uses a canonical overview bar, stat cards, switchboard, flow
+      rows, guardrail notes, and health details with route-scoped CSS
+    - the action boundary is preserved; no scheduler API, automation editor,
+      execution behavior, or action side effects were introduced
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-882-automations-canonical-route.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj882-automations-canonical-route/automations-desktop-1568x1003-v1.png`
+      - `.codex/artifacts/prj882-automations-canonical-route/automations-mobile-390x844-v1.png`
+  - deployment posture:
+    - low; frontend-only route enablement and layout, no backend, DB, auth,
+      env, scheduler, or action-layer changes
+
+- 2026-05-02: `PRJ-881` completed the Insights canonical route slice:
+  - new task:
+    - `.codex/tasks/PRJ-881-insights-canonical-route.md`
+  - web implementation:
+    - `/insights` is now a first-class authenticated route
+    - Insights is enabled in the desktop sidebar and mobile tabbar
+    - Insights participates in the existing `/app/personality/overview` fetch
+      path and displays semantic pattern, affective signal, planning, and
+      guidance context
+    - the route uses a canonical overview bar, stat cards, insight map, signal
+      rows, clarity notes, and guidance candidates with route-scoped CSS
+    - the action boundary is preserved; no analytics backend, insight editor,
+      execution behavior, or action side effects were introduced
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-881-insights-canonical-route.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj881-insights-canonical-route/insights-desktop-1568x1003-v2.png`
+      - `.codex/artifacts/prj881-insights-canonical-route/insights-mobile-390x844-v2.png`
+  - deployment posture:
+    - low; frontend-only route enablement and layout, no backend, DB, auth,
+      env, action-layer, analytics, or runtime insight contract changes
+
+- 2026-05-02: `PRJ-880` completed the Goals canonical route slice:
+  - new task:
+    - `.codex/tasks/PRJ-880-goals-canonical-route.md`
+  - web implementation:
+    - `/goals` is now a first-class authenticated route
+    - Goals is enabled in the desktop sidebar and mobile tabbar
+    - Goals participates in the existing `/app/personality/overview` fetch
+      path and displays active goal count, dashboard goal rows, and planning
+      summary context
+    - the route uses a canonical overview bar, stat cards, goal horizon rings,
+      progress list, signal cards, and guidance list with route-scoped CSS
+    - the action boundary is preserved; no goal editor, execution behavior, or
+      action side effects were introduced
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-880-goals-canonical-route.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj880-goals-canonical-route/goals-desktop-1568x1003-v1.png`
+      - `.codex/artifacts/prj880-goals-canonical-route/goals-mobile-390x844-v1.png`
+  - deployment posture:
+    - low; frontend-only route enablement and layout, no backend, DB, auth,
+      env, action-layer, or runtime goal contract changes
+
+- 2026-05-02: `PRJ-879` completed the Plans canonical route slice:
+  - new task:
+    - `.codex/tasks/PRJ-879-plans-canonical-route.md`
+  - web implementation:
+    - `/plans` is now a first-class authenticated route
+    - Plans is enabled in the desktop sidebar and mobile tabbar
+    - Plans participates in the existing `/app/personality/overview` fetch path
+      and displays active goal/task planning summary data
+    - the route uses a canonical overview bar, summary stat cards, planning
+      board, flow rows, next-step suggestions, and context list with
+      route-scoped CSS
+    - the action boundary is preserved; no task editor, execution, or action
+      side effects were introduced
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-879-plans-canonical-route.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj879-plans-canonical-route/plans-desktop-1568x1003-v1.png`
+      - `.codex/artifacts/prj879-plans-canonical-route/plans-mobile-390x844-v1.png`
+  - deployment posture:
+    - low; frontend-only route enablement and layout, no backend, DB, auth, env,
+      action-layer, or runtime planning contract changes
+
+- 2026-05-02: `PRJ-878` completed the Reflections canonical route slice:
+  - new task:
+    - `.codex/tasks/PRJ-878-reflections-canonical-route.md`
+  - web implementation:
+    - `/reflections` is now a first-class authenticated route
+    - Reflections is enabled in the desktop sidebar and mobile tabbar
+    - Reflections participates in the existing `/app/personality/overview`
+      fetch path and displays affective insight and integration summary data
+    - the route uses a canonical overview bar, summary stat cards, process
+      flow, prompt cards, and recent movement list with route-scoped CSS
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-878-reflections-canonical-route.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj878-reflections-canonical-route/reflections-desktop-1568x1003-v1.png`
+      - `.codex/artifacts/prj878-reflections-canonical-route/reflections-mobile-390x844-v1.png`
+  - deployment posture:
+    - low; frontend-only route enablement and layout, no backend, DB, auth, env,
+      reflection worker, or runtime contract changes
+
+- 2026-05-02: `PRJ-877` completed the Memory canonical route slice:
+  - new task:
+    - `.codex/tasks/PRJ-877-memory-canonical-route.md`
+  - web implementation:
+    - `/memory` is now a first-class authenticated route
+    - Memory is enabled in the desktop sidebar and mobile tabbar
+    - Memory participates in the existing `/app/personality/overview` fetch
+      path and displays semantic conclusion, affective conclusion, and learned
+      preference summary counts
+    - the route uses a canonical overview bar, summary stat cards, continuity
+      map, signal cards, and recent movement list with route-scoped CSS
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-877-memory-canonical-route.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj877-memory-canonical-route/memory-desktop-1568x1003-v2.png`
+      - `.codex/artifacts/prj877-memory-canonical-route/memory-mobile-390x844-v2.png`
+  - deployment posture:
+    - low; frontend-only route enablement and layout, no backend, DB, auth, env,
+      or runtime memory contract changes
+
+- 2026-05-02: `PRJ-876` completed the canonical UI commit scope audit:
+  - new task:
+    - `.codex/tasks/PRJ-876-canonical-ui-commit-scope-audit.md`
+  - release-scope finding:
+    - tracked canonical UI package files are `.codex/context/PROJECT_STATE.md`,
+      `.codex/context/TASK_BOARD.md`, `web/src/App.tsx`, and
+      `web/src/index.css`
+    - untracked canonical UI task files are PRJ-864 through PRJ-876
+    - `.codex/artifacts/` screenshot evidence remains intentionally ignored
+    - `artifacts/behavior_validation/prj843-report.json` is untracked and
+      should stay out of the canonical UI commit unless explicitly requested
+    - PRJ-851 and PRJ-852 task files predate the current canonical UI package
+      and need a separate inclusion decision if they are to be staged
+  - verification:
+    - `git diff --name-only`
+    - `git ls-files --others --exclude-standard`
+    - `git diff --stat -- web/src/App.tsx web/src/index.css .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+  - deployment posture:
+    - none; documentation-only commit-scope audit
+
+- 2026-05-02: `PRJ-875` completed the canonical UI final route sweep:
+  - new task:
+    - `.codex/tasks/PRJ-875-canonical-ui-final-route-sweep.md`
+  - web implementation:
+    - Chrome CDP screenshot evidence was captured for `/`, `/dashboard`,
+      `/chat`, `/personality`, `/settings`, and `/tools`
+    - the mobile chat composer now gives the text input a full-width row and
+      moves compact controls beneath it, fixing the cramped placeholder layout
+      found during the TESTER sweep
+    - no backend, DB, env, auth, API, or runtime contracts changed
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-875-canonical-ui-final-route-sweep.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj875-canonical-ui-final-route-sweep/public-home-unauth-desktop-1568x1003-v2.png`
+      - `.codex/artifacts/prj875-canonical-ui-final-route-sweep/public-home-unauth-mobile-390x844-v2.png`
+      - `.codex/artifacts/prj875-canonical-ui-final-route-sweep/dashboard-desktop-1568x1003.png`
+      - `.codex/artifacts/prj875-canonical-ui-final-route-sweep/chat-desktop-1568x1003.png`
+      - `.codex/artifacts/prj875-canonical-ui-final-route-sweep/chat-mobile-full-390x844-v3.png`
+      - `.codex/artifacts/prj875-canonical-ui-final-route-sweep/personality-desktop-1568x1003.png`
+      - `.codex/artifacts/prj875-canonical-ui-final-route-sweep/settings-desktop-1568x1003.png`
+      - `.codex/artifacts/prj875-canonical-ui-final-route-sweep/tools-desktop-1568x1003.png`
+  - deployment posture:
+    - low; frontend-only verification and route-scoped mobile chat composer CSS
+      refinement, no runtime impact
+
+- 2026-05-02: `PRJ-874` completed the tools canonical directory polish pass:
+  - new task:
+    - `.codex/tasks/PRJ-874-tools-canonical-directory-polish.md`
+  - web implementation:
+    - `/tools` now uses route-scoped canonical group, item, fact, detail, and
+      details classes instead of heavier generic card blocks
+    - tool item facts compress into a four-column desktop row and one-column
+      mobile stack while preserving availability, provider, control, and link
+      state
+    - current status, next step, and technical details are visually quieter but
+      remain available
+    - the mobile tools route header is compressed to match settings and
+      personality
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-874-tools-canonical-directory-polish.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj874-tools-canonical-directory-polish/tools-desktop-after-1568x1003-v1.png`
+      - `.codex/artifacts/prj874-tools-canonical-directory-polish/tools-mobile-after-390x844-v1.png`
+  - deployment posture:
+    - low; frontend-only tools layout refinement, no backend, DB, env, auth,
+      tool execution, or runtime impact
+
+- 2026-05-02: `PRJ-873` completed the settings canonical shell polish pass:
+  - new task:
+    - `.codex/tasks/PRJ-873-settings-canonical-shell-polish.md`
+  - web implementation:
+    - `/settings` now uses a compact canonical overview bar instead of the
+      generic route hero
+    - profile, interface language, UTC offset, and conversation language now
+      render inside one cohesive preferences panel
+    - proactive follow-ups, ready-to-save, and reset runtime data now render in
+      a supporting side stack
+    - the reset panel remains explicit and guarded by the existing exact
+      confirmation phrase, but is visually quieter and less dominant
+    - the mobile settings route header is compressed to match the refreshed
+      personality route behavior
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-873-settings-canonical-shell-polish.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj873-settings-canonical-shell-polish/settings-desktop-after-1568x1003-v2.png`
+      - `.codex/artifacts/prj873-settings-canonical-shell-polish/settings-mobile-after-390x844-v2.png`
+  - deployment posture:
+    - low; frontend-only settings layout refinement, no backend, DB, env, auth,
+      reset contract, or runtime impact
+
+- 2026-05-02: `PRJ-872` completed the chat `99%` canonical evidence pass:
+  - new task:
+    - `.codex/tasks/PRJ-872-chat-99-canonical-evidence-pass.md`
+  - web implementation:
+    - `/chat` now adds desktop portrait support notes for memory continuity,
+      expression, and channel context, matching the annotated persona rhythm in
+      `docs/ux/assets/aion-chat-canonical-reference-v5.png`
+    - the notes are code-native route UI and reuse the existing portrait-note
+      styling instead of introducing a parallel component system
+    - mobile keeps the simpler chat/persona stack because the portrait notes
+      remain hidden below desktop widths
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-872-chat-99-canonical-evidence-pass.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj872-chat-99-canonical-evidence-pass/chat-desktop-after-1568x1003-v1.png`
+      - `.codex/artifacts/prj872-chat-99-canonical-evidence-pass/chat-mobile-after-390x844-v1.png`
+  - deployment posture:
+    - low; frontend-only chat visual refinement, no backend, DB, env, auth, or
+      runtime contract impact
+
+- 2026-05-02: `PRJ-871` completed the personality `99%` canonical pass:
+  - new task:
+    - `.codex/tasks/PRJ-871-personality-99-canonical-pass.md`
+  - web implementation:
+    - `/personality` now keeps a lighter, less dominant overview bar above the
+      embodied personality surface
+    - hero-stage height, callout positions, role-card sizing, timeline density,
+      side-panel padding, and signal/activity rows were tightened toward
+      `docs/ux/assets/aion-personality-canonical-reference-v1.png`
+    - mobile personality now uses a route-specific compressed header and a
+      shorter embodied stage so the scene ends at the shared fixed tabbar
+      boundary
+    - the skills callout now reads nested
+      `role_skill_state.skill_summary.skill_count` before falling back, so the
+      UI can display real overview data when the API provides it
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-871-personality-99-canonical-pass.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj871-personality-99-canonical-pass/personality-desktop-after-1568x1003-v2.png`
+      - `.codex/artifacts/prj871-personality-99-canonical-pass/personality-mobile-after-390x844-v3.png`
+  - deployment posture:
+    - low; frontend-only personality visual/data-read refinement, no backend,
+      DB, env, auth, or runtime contract impact
+
+- 2026-05-02: `PRJ-870` completed the dashboard `99%` canonical evidence pass:
+  - new task:
+    - `.codex/tasks/PRJ-870-dashboard-99-canonical-evidence-pass.md`
+  - web implementation:
+    - dashboard hero/stage density was tightened so the cognitive-flow panel
+      and lower modules enter the first viewport earlier
+    - cognitive-flow panel, phase card, step typography, and step controls were
+      compacted toward `docs/ux/assets/aion-dashboard-canonical-reference-v2.png`
+    - summary balance rows now use a stable label/value grid without visible
+      overlap or vertical word splitting
+    - the no-toolbar private shell baseline from `PRJ-868` was preserved
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-870-dashboard-99-canonical-evidence-pass.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj870-dashboard-99-canonical-evidence-pass/dashboard-desktop-viewport-after-1568x1003-v3.png`
+      - `.codex/artifacts/prj870-dashboard-99-canonical-evidence-pass/dashboard-desktop-after-1568x1003-v3.png`
+      - `.codex/artifacts/prj870-dashboard-99-canonical-evidence-pass/dashboard-mobile-after-390x844-v2.png`
+  - deployment posture:
+    - low; frontend-only dashboard CSS change, no backend/API/DB/env impact
+
+- 2026-05-02: `PRJ-869` completed the public home/landing `99%` canonical pass:
+  - new task:
+    - `.codex/tasks/PRJ-869-public-home-landing-99-pass.md`
+  - web implementation:
+    - desktop public home now renders inside a canonical browser-window frame
+      with chrome, address bar, rounded border, shadow, and top `Landing Page`
+      tag
+    - hero, feature bridge, proof bridge, and trust band are contained more
+      like `docs/ux/assets/aion-landing-canonical-reference-v1.png`
+    - mobile keeps the native full-width landing flow for readability instead
+      of shrinking into a browser mockup
+    - public auth modal no longer displays a technical `/app/me` bootstrap
+      error before the user submits credentials
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-869-public-home-landing-99-pass.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj869-public-home-landing-99-pass/landing-desktop-after-1568x1003-v3.png`
+      - `.codex/artifacts/prj869-public-home-landing-99-pass/landing-mobile-after-390x844-v2.png`
+      - `.codex/artifacts/prj869-public-home-landing-99-pass/landing-auth-modal-mobile-390x844-v2.png`
+  - deployment posture:
+    - low; frontend-only public landing/auth-modal presentation change, no
+      backend/API/DB/env impact
+
+- 2026-05-02: `PRJ-868` established the shared public/private layout
+  foundation for the renewed `99%` canonical program:
+  - new task:
+    - `.codex/tasks/PRJ-868-canonical-99-layout-foundation.md`
+  - web implementation:
+    - the authenticated desktop route toolbar is now hidden globally, removing
+      route-level shell drift before the next canonical route passes
+    - private mobile layout has increased bottom clearance for the fixed tabbar
+    - the duplicated phone header route row is hidden below `md`; tablet keeps
+      the header route row where there is enough space
+    - the phone bottom tabbar density now fits all five private route labels
+      without clipping at 390px width
+    - active mobile tab centering support remains in place for narrower or
+      localized overflow cases
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-868-canonical-99-layout-foundation.md`
+    - result: passed with line-ending warnings only
+    - Chrome CDP screenshot evidence:
+      - `.codex/artifacts/prj868-canonical-99-layout-foundation/settings-mobile-390x844-viewport-v7.png`
+      - `.codex/artifacts/prj868-canonical-99-layout-foundation/settings-mobile-390x844-v7.png`
+      - `.codex/artifacts/prj868-canonical-99-layout-foundation/settings-desktop-1568x1003-v4.png`
+      - `.codex/artifacts/prj868-canonical-99-layout-foundation/dashboard-desktop-1568x1003-v4.png`
+      - `.codex/artifacts/prj868-canonical-99-layout-foundation/landing-mobile-390x844.png`
+  - deployment posture:
+    - low; frontend-only shared layout change, no backend/API/DB/env impact
+
+- 2026-05-02: `PRJ-867` aligned Tools with the canonical shell language:
+  - new task:
+    - `.codex/tasks/PRJ-867-tools-canonical-shell-consistency-pass.md`
+  - web implementation:
+    - `/tools` now hides the extra desktop route toolbar like other
+      canonicalized shell routes
+    - duplicate route hero and summary panels were replaced with one compact
+      operational overview bar
+    - the detailed section now reads as a tool directory
+    - existing tool groups, item controls, technical details, and Telegram
+      linking behavior were preserved
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-867-tools-canonical-shell-consistency-pass.md`
+    - result: passed with line-ending warnings only
+    - Playwright Chromium screenshot evidence:
+      - `.codex/artifacts/prj867-tools-canonical-shell-pass/desktop-1568x1003-v2.png`
+      - `.codex/artifacts/prj867-tools-canonical-shell-pass/mobile-390x844-v2.png`
+      - `.codex/artifacts/prj867-tools-canonical-shell-pass/settings-smoke-1568x1003.png`
+  - deployment posture:
+    - low; frontend-only visual layout change, no backend/API/DB/env impact
+
+- 2026-05-02: `PRJ-866` improved public Landing canonical first-viewport framing:
+  - new task:
+    - `.codex/tasks/PRJ-866-landing-canonical-first-viewport-pass.md`
+  - web implementation:
+    - hero copy now sits inward from the left viewport edge and higher in the
+      first viewport
+    - hero title/body and CTA rhythm were tuned toward
+      `docs/ux/assets/aion-landing-canonical-reference-v1.png`
+    - the feature/proof bridge begins earlier on desktop
+    - mobile proof bridge overlap was reduced so it no longer covers the final
+      hero note
+    - public auth modal flow, localized copy, and the existing landing hero art
+      asset were preserved
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/index.css .codex/tasks/PRJ-866-landing-canonical-first-viewport-pass.md`
+    - result: passed with line-ending warnings only
+    - Playwright Chromium screenshot evidence:
+      - `.codex/artifacts/prj866-landing-canonical-pass/desktop-1568x1003-v3.png`
+      - `.codex/artifacts/prj866-landing-canonical-pass/mobile-390x844-v3.png`
+      - `.codex/artifacts/prj866-landing-canonical-pass/auth-modal-390x844-v3.png`
+  - deployment posture:
+    - low; frontend CSS-only visual framing change, no backend/API/DB/env impact
+
+- 2026-05-02: `PRJ-865` improved Personality canonical first-viewport parity:
+  - new task:
+    - `.codex/tasks/PRJ-865-personality-canonical-first-viewport-pass.md`
+  - web implementation:
+    - `/personality` now hides the extra desktop route toolbar like Chat and
+      Dashboard
+    - the previous separate large intro card was replaced with a compact
+      overview bar above the embodied personality map
+    - the hero/map, callout, timeline, side-panel, signal-row, and activity-row
+      spacing were tightened toward
+      `docs/ux/assets/aion-personality-canonical-reference-v1.png`
+    - the existing canonical persona figure asset and route data were preserved
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-865-personality-canonical-first-viewport-pass.md`
+    - result: passed with line-ending warnings only
+    - Playwright Chromium screenshot evidence:
+      - `.codex/artifacts/prj865-personality-canonical-pass/desktop-1568x1003-v2.png`
+      - `.codex/artifacts/prj865-personality-canonical-pass/mobile-390x844-v2.png`
+      - `.codex/artifacts/prj865-personality-canonical-pass/dashboard-smoke-1568x1003.png`
+  - deployment posture:
+    - low; frontend-only visual layout change, no backend/API/DB/env impact
+
 - 2026-05-02: `PRJ-860` ran the final passive/active backend gate:
   - new task:
     - `.codex/tasks/PRJ-860-final-passive-active-backend-gate.md`
@@ -14,6 +885,7 @@ Last updated: 2026-05-02
   - highest-value next step:
     - select the next independent product/runtime slice from the task board
       instead of extending the completed passive/active lane by default
+
 - 2026-05-02: `PRJ-859` synced ops and release-smoke observer evidence:
   - new task:
     - `.codex/tasks/PRJ-859-sync-ops-release-smoke-and-learning-journal.md`
@@ -35,6 +907,7 @@ Last updated: 2026-05-02
   - highest-value next step:
     - execute `PRJ-860` by running the final backend gate and closing
       docs/context
+
 - 2026-05-02: `PRJ-858` added observer-gated proactivity behavior scenarios:
   - new task:
     - `.codex/tasks/PRJ-858-observer-gated-proactivity-behavior-scenarios.md`
@@ -53,6 +926,31 @@ Last updated: 2026-05-02
     - result: passed
   - highest-value next step:
     - execute `PRJ-859` by syncing ops, release smoke, and learning journal
+
+- 2026-05-02: `PRJ-864` improved Dashboard canonical density and composition:
+  - new task:
+    - `.codex/tasks/PRJ-864-dashboard-canonical-density-pass.md`
+  - web implementation:
+    - Dashboard now separates the primary dashboard column from the guidance
+      rail so the rail no longer stretches the hero-stage height
+    - the first desktop viewport now shows the hero-stage, cognitive flow, and
+      the start of lower dashboard cards, closer to
+      `docs/ux/assets/aion-dashboard-canonical-reference-v2.png`
+    - the dashboard route hides the extra desktop route toolbar, matching the
+      canonical no-browser-frame shell direction already applied to Chat
+    - hero, signal, guidance, flow, and lower-card spacing were tightened
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check -- web/src/App.tsx web/src/index.css .codex/tasks/PRJ-864-dashboard-canonical-density-pass.md`
+    - result: passed with line-ending warnings only
+    - Playwright Chromium screenshot evidence:
+      - `.codex/artifacts/prj864-dashboard-canonical-pass/dashboard-desktop-1568x1003-v2.png`
+      - `.codex/artifacts/prj864-dashboard-canonical-pass/dashboard-mobile-390x844-v2.png`
+      - `.codex/artifacts/prj864-dashboard-canonical-pass/chat-desktop-smoke-1568x1003-v2.png`
+  - deployment posture:
+    - low; frontend-only visual layout change, no backend/API/DB/env impact
+
 - 2026-05-02: `PRJ-857` persisted skipped and failed passive-active evidence:
   - new task:
     - `.codex/tasks/PRJ-857-persist-skipped-and-failed-passive-active-evidence.md`
@@ -68,11 +966,10 @@ Last updated: 2026-05-02
     - result: `9 passed, 76 deselected`
     - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_action_executor.py tests/test_reflection_worker.py tests/test_memory_repository.py tests/test_scheduler_worker.py; Pop-Location`
     - result: `182 passed`
-    - `git diff --check`
-    - result: passed
   - highest-value next step:
     - execute `PRJ-858` by adding behavior scenarios for observer-gated
       proactivity
+
 - 2026-05-02: `PRJ-856` routed proactive cadence through observer admission:
   - new task:
     - `.codex/tasks/PRJ-856-route-proactive-cadence-through-observer-admission.md`
@@ -90,11 +987,71 @@ Last updated: 2026-05-02
     - result: `19 passed`
     - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py; Pop-Location`
     - result: `109 passed`
-    - `git diff --check`
-    - result: passed
   - highest-value next step:
     - execute `PRJ-857` by persisting skipped/failed passive-active evidence
       for reflection learning
+
+- 2026-05-02: `PRJ-863` aligned the Chat shell/sidebar framing with the
+  canonical authenticated layout:
+  - new task:
+    - `.codex/tasks/PRJ-863-chat-shell-sidebar-canonical-layout.md`
+  - web implementation:
+    - the authenticated shell wrapper remains in the DOM for layout/popover
+      behavior but no longer renders as a visible browser/mockup container
+    - desktop now reads as two primary surfaces: canonical sidebar and main
+      Chat content
+    - sidebar brand lockup now uses an AION wordmark with a code-native
+      sunburst mark, matching the canonical sidebar direction more closely
+    - sidebar rail, active pill, navigation rhythm, system-health card,
+      identity card, and quote card were retuned toward the approved sidebar
+      reference
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check`
+    - result: passed with line-ending warnings only
+    - Playwright Chromium screenshot evidence:
+      - `.codex/artifacts/prj863-shell-sidebar-layout/desktop-1568x1003-v2.png`
+      - `.codex/artifacts/prj863-shell-sidebar-layout/mobile-390x844-v2.png`
+    - browser metrics verified no horizontal overflow and confirmed the
+      shell wrapper has transparent background and `0px` border
+  - deployment posture:
+    - low; frontend visual shell/sidebar change only, no backend, API, DB, env,
+      or runtime behavior changed
+
+- 2026-05-02: `PRJ-862` implemented the Chat v5 canonical two-column view:
+  - new task:
+    - `.codex/tasks/PRJ-862-implement-chat-canonical-v5-two-column-view.md`
+  - web implementation:
+    - `/chat` now renders a top cognitive belt for current intent, motivation,
+      active goal, memory, suggested action, and next check-in
+    - the old rendered third context rail was removed from the Chat surface
+    - the main Chat body now uses two equal-height columns on desktop:
+      - left conversation column for transcript and composer
+      - right persona-stage column using the v5-derived left-facing persona art
+    - the authenticated sidebar was brought closer to the canonical AION rail
+      with AION branding and the full module list shown in the approved visual
+  - new route art asset:
+    - `docs/ux/assets/aion-chat-persona-stage-v5.png`
+    - `web/public/aion-chat-persona-stage-v5.png`
+  - verification:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `git diff --check`
+    - result: passed with line-ending warnings only
+    - Playwright Chromium screenshot evidence:
+      - `.codex/artifacts/prj862-chat-v5-parity/desktop-1568x1003-verified-v2.png`
+      - `.codex/artifacts/prj862-chat-v5-parity/tablet-1024x900-verified.png`
+      - `.codex/artifacts/prj862-chat-v5-parity/mobile-390x844-verified-v3.png`
+    - `view_image` comparison was performed against
+      `docs/ux/assets/aion-chat-canonical-reference-v5.png`
+  - deployment posture:
+    - low; frontend visual shell change only, no backend, API, DB, env, or
+      runtime behavior changed
+  - residual visual note:
+    - the live UI keeps chat messages and controls code-native rather than
+      shipping the generated reference as a static screenshot
+
 - 2026-05-02: `PRJ-855` added planned-action observer policy and diagnostics:
   - new task:
     - `.codex/tasks/PRJ-855-planned-action-observer-policy-and-diagnostics.md`
@@ -120,6 +1077,32 @@ Last updated: 2026-05-02
   - highest-value next step:
     - execute `PRJ-856` by routing proactive cadence through observer-backed
       due work and actionable proposals
+
+- 2026-05-02: `PRJ-861` froze the generated Chat v5 canonical reference:
+  - new task:
+    - `.codex/tasks/PRJ-861-freeze-chat-canonical-reference-v5.md`
+  - new active canonical asset:
+    - `docs/ux/assets/aion-chat-canonical-reference-v5.png`
+  - `docs/ux/canonical-web-screen-reference-set.md` now points Chat at v5 and
+    records the approved top-belt plus two-column body target:
+    - `60%` conversation transcript/composer column
+    - `40%` chat-context persona stage
+    - equal-height body columns
+    - no separate third context column below the belt
+    - chat persona faces left toward the conversation
+  - `docs/ux/design-memory.md` now records the Chat v5 canonical composition
+    rule for future implementation parity passes
+  - validation:
+    - saved asset opened with `view_image`
+    - `git diff --check`
+    - result: passed
+  - deployment posture:
+    - docs/asset freeze only; no runtime, API, backend, DB, env, or deploy
+      behavior changed
+  - highest-value next step:
+    - implement a focused `/chat` parity pass against v5 when the next UI slice
+      starts
+
 - 2026-05-02: `PRJ-854` detailed the passive/active trigger implementation
   plan:
   - new task:
@@ -160,6 +1143,60 @@ Last updated: 2026-05-02
   - highest-value next step:
     - execute `PRJ-854` by adding planned-action observer policy and
       health/debug posture before rerouting proactive cadence
+
+- 2026-05-01: `PRJ-852` closed the local chat canonical parity slice:
+  - new task:
+    - `.codex/tasks/PRJ-852-chat-canonical-97-parity-closure.md`
+  - `web/src/App.tsx` now gives `/chat` its own compact canonical
+    conversation topbar, fuller cognitive-context controls, expanded
+    motivation/action/check-in hierarchy, and a composer tray that spans the
+    transcript plus embodied stage on desktop
+  - `web/src/index.css` now aligns the chat workspace closer to
+    `docs/ux/assets/aion-chat-canonical-reference-v4.png`, keeps the
+    three-column canonical layout for wide desktop, and stacks tablet/mobile
+    safely without horizontal clipping
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+  - screenshot evidence:
+    - `.codex/artifacts/prj852-chat-canonical-parity/closure-desktop.png`
+    - `.codex/artifacts/prj852-chat-canonical-parity/closure-tablet-v2.png`
+    - `.codex/artifacts/prj852-chat-canonical-parity/closure-mobile.png`
+    - `.codex/artifacts/prj852-chat-canonical-parity/final-mobile-v2.png`
+  - parity posture:
+    - desktop `/chat` is judged at 97% structural/visual parity against the
+      canonical chat reference for shell, topbar, transcript, portrait stage,
+      right cognitive context, and composer anatomy
+    - tablet/mobile are responsive-safe stacked translations rather than
+      clipped desktop layouts
+  - deployment posture:
+    - local web-only UI change; production deploy comparison remains a later
+      release/smoke concern
+
+- 2026-05-01: `PRJ-851` published and smoke-verified the release-smoke missing
+  settings summary:
+  - new task:
+    - `.codex/tasks/PRJ-851-publish-and-smoke-release-smoke-summary.md`
+  - published commit:
+    - `2e9031a` (`chore: surface organizer missing settings in smoke`)
+  - production host:
+    - `https://aviary.luckysparrow.ch`
+  - production evidence:
+    - `health_status=ok`
+    - `release_ready=true`
+    - `release_violations=[]`
+    - `runtime_action=success`
+    - `deployment_runtime_build_revision=2e9031a1efe80a0ef2267f8de793564eaaa0ed72`
+    - `web_shell_build_revision=2e9031a1efe80a0ef2267f8de793564eaaa0ed72`
+    - `organizer_tool_activation_missing_settings_by_provider` includes
+      missing setting-name lists for `clickup`, `google_calendar`, and
+      `google_drive`
+  - deployment posture:
+    - production is smoke-verified after the release-smoke summary improvement
+    - `PRJ-851` evidence remains local to avoid a docs-only redeploy cycle
+  - highest-value next step:
+    - provider credentials remain the next operational blocker for organizer
+      daily-use readiness
 
 - 2026-05-01: `PRJ-850` improved release-smoke provider activation evidence:
   - new task:

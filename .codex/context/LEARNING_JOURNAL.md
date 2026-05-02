@@ -25,6 +25,65 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-02 - Chrome CDP profile cleanup must wait for child processes
+- Context:
+  - localized route smokes launch headless Chrome with per-task profiles under
+    `.codex/tmp`.
+- Symptom:
+  - immediate `Remove-Item -Recurse` can fail with locked Chrome profile files
+    even after the primary process is stopped.
+- Root cause:
+  - Chrome can leave child processes alive for a short period after the CDP
+    session closes, and those children still hold profile files.
+- Guardrail:
+  - find and stop all `Win32_Process` entries whose command line contains the
+    exact `--user-data-dir` profile path before deleting the profile.
+  - wait briefly after stopping those processes, then delete only after
+    verifying the resolved path remains inside `.codex/tmp`.
+- Preferred pattern:
+  - `Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like "*<profile>*" }`
+  - stop matching process ids
+  - `Start-Sleep -Seconds 1`
+  - resolve and remove the profile path under `.codex/tmp`
+- Avoid:
+  - deleting a Chrome profile immediately after stopping only the originally
+    returned `Start-Process` id
+  - using broad cleanup outside `.codex/tmp`
+- Evidence:
+  - `.codex/tasks/PRJ-899-localized-module-copy-final-reaudit.md`
+
+### 2026-05-02 - Canonical module copy must enter UI_COPY before route closure
+- Context:
+  - canonical module routes were added quickly across authenticated shell
+    surfaces, then localized shell smokes found route-owned English body copy
+    still present in Polish views.
+- Symptom:
+  - sidebar and route titles localize correctly, but lower module cards,
+    section headings, flow rows, and detail labels remain in English.
+- Root cause:
+  - new canonical route body strings were sometimes added directly in route
+    arrays or JSX instead of extending the existing `UI_COPY` structure.
+- Guardrail:
+  - before closing a localized canonical route, smoke the selected UI language
+    against both labels and route-owned body copy.
+  - treat provider, backend, or health payload text separately from route-owned
+    copy so the UI does not hide data-contract ownership.
+- Preferred pattern:
+  - add English, Polish, and German fields to the existing route-specific
+    `UI_COPY` branch first
+  - build route arrays from `copy.<route>`
+  - run a focused CDP smoke for expected localized strings and absence of
+    known hardcoded English phrases
+- Avoid:
+  - declaring a route localized when only navigation and hero text are localized
+  - translating backend-supplied status or error payloads inside route copy
+    without an explicit data-contract decision
+- Evidence:
+  - `.codex/tasks/PRJ-887-localized-shell-route-smoke.md`
+  - `.codex/tasks/PRJ-888-integrations-body-copy-localization.md`
+  - `.codex/tasks/PRJ-889-automations-body-copy-localization.md`
+  - `web/src/App.tsx`
+
 ### 2026-05-01 - Operator script paths must match backend-owned script layout
 - Context:
   - release and deployment documentation used root-level `scripts/` examples

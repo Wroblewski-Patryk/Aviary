@@ -13,11 +13,29 @@ import {
   type AppToolsOverviewResponse,
 } from "./lib/api";
 
-type RoutePath = "/login" | "/dashboard" | "/chat" | "/settings" | "/personality" | "/tools";
+type RoutePath =
+  | "/login"
+  | "/dashboard"
+  | "/chat"
+  | "/memory"
+  | "/reflections"
+  | "/plans"
+  | "/goals"
+  | "/insights"
+  | "/automations"
+  | "/integrations"
+  | "/settings"
+  | "/personality"
+  | "/tools";
 type AuthMode = "login" | "register";
 type UiLanguageCode = "system" | "en" | "pl" | "de";
 type ResolvedUiLanguageCode = Exclude<UiLanguageCode, "system">;
 type ChatDeliveryState = "sending" | "delivered" | "failed";
+type RecentActivityDisplayItem = {
+  key: string;
+  title: string;
+  when: string;
+};
 type UtcOffsetOption = {
   value: string;
   label: string;
@@ -28,7 +46,20 @@ const CANONICAL_PERSONA_FIGURE_SRC = "/aviary-persona-figure-canonical-reference
 const DASHBOARD_HERO_ART_SRC = "/aviary-dashboard-hero-canonical-reference-v4.png";
 const LANDING_HERO_ART_SRC = "/aviary-landing-hero-canonical-reference-v1.png";
 const RESET_DATA_CONFIRMATION_TEXT = "RESET MY DATA";
-const ROUTES: RoutePath[] = ["/dashboard", "/chat", "/personality", "/tools", "/settings"];
+const ROUTES: RoutePath[] = [
+  "/dashboard",
+  "/chat",
+  "/personality",
+  "/memory",
+  "/reflections",
+  "/plans",
+  "/goals",
+  "/insights",
+  "/automations",
+  "/integrations",
+  "/tools",
+  "/settings",
+];
 const UI_LANGUAGE_OPTIONS: Array<{
   value: UiLanguageCode;
   iconToken: string;
@@ -85,6 +116,13 @@ const UI_COPY = {
       "/login": "Login",
       "/dashboard": "Dashboard",
       "/chat": "Chat",
+      "/memory": "Memory",
+      "/reflections": "Reflections",
+      "/plans": "Plans",
+      "/goals": "Goals",
+      "/insights": "Insights",
+      "/automations": "Automations",
+      "/integrations": "Integrations",
       "/settings": "Settings",
       "/tools": "Tools",
       "/personality": "Personality",
@@ -93,6 +131,13 @@ const UI_COPY = {
       "/login": "Authenticate into the product shell.",
       "/dashboard": "Flagship overview of your current goals, signals, flow, and next best actions.",
       "/chat": "One shared conversation thread with your latest exchanged messages and fresh replies from the personality.",
+      "/memory": "A calm map of reusable patterns, learned preferences, and continuity signals.",
+      "/reflections": "Slower learning, integration notes, and the insights that shape future responses.",
+      "/plans": "Planning posture, active work, and the next calm step without turning the route into execution.",
+      "/goals": "A calm view of active direction, meaningful progress, and what deserves focus.",
+      "/insights": "A clear sensemaking layer for patterns, signals, and guidance already present in AION.",
+      "/automations": "A visible control room for proactive preference, attention queue, and scheduler posture.",
+      "/integrations": "A quiet map of connected providers, link state, and integration readiness.",
       "/settings": "Profile, interface language, and proactive preferences in one clear place.",
       "/tools": "See what is ready, what needs attention, and what you can use next.",
       "/personality": "Product-facing overview of identity, knowledge, planning, and capabilities.",
@@ -127,6 +172,15 @@ const UI_COPY = {
       stateSuccessTitle: "Done",
       stateErrorTitle: "Something needs attention",
       stateDetailLabel: "Details",
+      view: "View",
+      unknownTime: "Unknown time",
+      recentActivity: [
+        { title: "Updated project plan", when: "2h ago" },
+        { title: "Deep work window refined", when: "3h ago" },
+        { title: "Completed reflection cycle", when: "5h ago" },
+        { title: "New memory captured", when: "Yesterday" },
+        { title: "Learned preference captured", when: "Yesterday" },
+      ],
     },
     auth: {
       badge: "Aviary",
@@ -233,6 +287,343 @@ const UI_COPY = {
       instruction: "Instruction",
       noLinkCode: "No active link code yet. Generate one when you are ready to confirm the chat.",
       capabilities: "Capabilities",
+      summaryGroupNote: "Clear groups for the tools you can browse here",
+      summaryIntegralNote: "Capabilities that stay available as part of the product",
+      summaryReadyNote: "Tools that are ready to use today",
+      summaryLinkRequiredNote: "Channels waiting for a quick linking step",
+      directoryTitle: "Tool directory",
+      itemSingularSuffix: "item",
+      itemsSuffix: "items",
+      workspaceSnapshot: "workspace snapshot",
+      statusAlwaysOn: "Always on",
+      statusReadyToUse: "Ready to use",
+      statusLinkRequired: "Link required",
+      statusPlanned: "Planned",
+      statusNeedsReview: "Needs review",
+      providerReadyValue: "ready",
+      providerConfiguredValue: "configured",
+      providerNotConfiguredValue: "not configured",
+      telegramInstructionBody:
+        "Generate a short code, then send it to the configured Aviary Telegram bot from the chat you want to attach to this identity.",
+      expiresInAbout: "Expires in about",
+      seconds: "seconds",
+      saveSuccess: "Your tool choices have been saved.",
+      saveError: "Failed to save tool preference.",
+      telegramLinkReady: "Your Telegram link code is ready.",
+      telegramStartError: "Failed to start Telegram linking.",
+      readyChipSuffix: "ready",
+      needsLinkingChipSuffix: "needs linking",
+      alwaysOnChipSuffix: "always on",
+      linkStateLinkedValue: "Linked",
+      linkStateNotLinkedValue: "Not linked",
+      linkStateRequiredValue: "Link required",
+      linkStateUnknownValue: "Unknown",
+    },
+    memory: {
+      eyebrow: "Memory",
+      title: "Continuity library",
+      subtitle: "Reusable patterns, learned cues, and recent context without turning memory into a raw database.",
+      semantic: "Reusable patterns",
+      affective: "Affective insights",
+      preferences: "Learned cues",
+      recent: "Recent memory signals",
+      continuity: "Continuity",
+      patternSingularSuffix: "pattern",
+      patternsSuffix: "patterns",
+      patternsZeroSuffix: "patterns",
+      insightSingularSuffix: "insight",
+      insightsSuffix: "insights",
+      insightsZeroSuffix: "insights",
+      cueSingularSuffix: "cue",
+      cuesSuffix: "cues",
+      cuesZeroSuffix: "cues",
+      semanticDetail: "Patterns ready for reuse in future replies.",
+      affectiveDetail: "Emotional takeaways that can shape tone and timing.",
+      preferencesDetail: "Stable cues attached to your preferred way of working.",
+      memoryMap: "Memory map",
+      memoryMapTitle: "What can be reused",
+      noRawRecords: "No raw records exposed",
+      semanticMemoryTitle: "Semantic memory",
+      semanticMemoryDetail: "Reusable concepts and summaries stay available before the next response.",
+      affectiveMemoryTitle: "Affective memory",
+      affectiveMemoryDetail: "Tone, friction, and emotional context can inform future expression.",
+      preferencesMemoryTitle: "Preferences",
+      preferencesMemoryDetail: "Learned cues keep the shell personal without exposing raw records.",
+      continuityNearConversation: "Continuity near the conversation",
+      conversationContinuityTitle: "Conversation continuity",
+      memorySourceEmptyBody: "The web app is ready to become the active memory source.",
+      recentChannelsPrefix: "Recent channels:",
+      currentContext: "Current context",
+      reflectionBridgeTitle: "Reflection bridge",
+      reflectionBridgeEmptyBody: "A short reflection can start deeper memory formation.",
+      reflectionBridgeReadyBody: "Recent reflections are already available to shape the next answer.",
+      slowLearning: "Slow learning",
+      preferencePostureTitle: "Preference posture",
+      preferencePostureEmptyBody: "No learned cues yet; the view stays ready without pretending.",
+      preferencePostureReadyBody: "Learned cues are present and visible without exposing internals.",
+      personalization: "Personalization",
+      recentMovement: "Recent movement",
+    },
+    reflections: {
+      eyebrow: "Reflections",
+      title: "Reflection chamber",
+      subtitle: "A quieter layer for insights, integration, and the slower learning that shapes continuity.",
+      integrated: "Integrated insights",
+      pending: "Ready to integrate",
+      cadence: "Learning cadence",
+      recent: "Recent reflections",
+      slowLearning: "Slow learning",
+      insightSingularSuffix: "insight",
+      insightsSuffix: "insights",
+      insightsZeroSuffix: "insights",
+      threadSingularSuffix: "thread",
+      threadsSuffix: "threads",
+      readyValue: "Ready",
+      activeValue: "Active",
+      integratedDetail: "Insights already available to influence future expression.",
+      pendingDetail: "Open threads that can become clearer through a short review.",
+      cadenceDetail: "The slower learning layer stays available without crowding chat.",
+      reflectionFlow: "Reflection flow",
+      flowTitle: "Notice, integrate, return",
+      noRawJournal: "No raw journal exposed",
+      noticeTitle: "Notice",
+      noticeDetail: "Recent context and emotional cues become visible.",
+      integrateTitle: "Integrate",
+      integrateDetail: "Affective conclusions are folded into future posture.",
+      returnTitle: "Return",
+      returnDetail: "The next response can reuse the lesson without exposing raw notes.",
+      webValue: "web",
+      readyShort: "ready",
+      promptsTitle: "Prompts for the next review",
+      whatChangedTitle: "What changed?",
+      whatChangedBody: "Name the smallest shift worth carrying forward.",
+      whatQuietTitle: "What should stay quiet?",
+      whatQuietBody: "Keep private context useful without turning it into noise.",
+      whatActionTitle: "What action follows?",
+      whatActionBody: "Let the insight become a calmer next step.",
+      recentMovement: "Recent movement",
+    },
+    plans: {
+      eyebrow: "Plans",
+      title: "Planning room",
+      subtitle: "Active goals and tasks shaped into a calm path before anything becomes execution.",
+      activeGoals: "Active goals",
+      activeTasks: "Active tasks",
+      nextStep: "Next best step",
+      posture: "Planning posture",
+      goalSingularSuffix: "goal",
+      goalsSuffix: "goals",
+      taskSingularSuffix: "task",
+      tasksSuffix: "tasks",
+      activeGoalsDetail: "Goals that currently shape the foreground direction.",
+      activeTasksDetail: "Tasks visible to planning before execution is considered.",
+      readyValue: "Ready",
+      alignedValue: "Aligned",
+      postureDetail: "Planning stays bounded to guidance, not side effects.",
+      planningPath: "Planning path",
+      shapeBeforeAction: "Shape before action",
+      actionBoundaryPreserved: "Action boundary preserved",
+      gatherTitle: "Gather",
+      gatherDetail: "Goals, tasks, memory, and current context are read together.",
+      sequenceTitle: "Sequence",
+      sequenceDetail: "The next move is shaped before it becomes an action.",
+      boundTitle: "Bound",
+      boundDetail: "Execution remains outside the route until a real action layer owns it.",
+      safeValue: "safe",
+      planningSuggestions: "Planning suggestions",
+      clarifyOutcomeTitle: "Clarify the next outcome",
+      clarifyOutcomeEmptyBody: "Create one meaningful goal before expanding the plan.",
+      clarifyOutcomeReadyBody: "Choose the goal that deserves the next focused block.",
+      convertSequenceTitle: "Convert intent into sequence",
+      convertSequenceEmptyBody: "Break the plan into the first visible task.",
+      convertSequenceReadyBody: "Group active tasks into the smallest useful order.",
+      returnChatTitle: "Return through chat",
+      returnChatBody: "Use the conversation to refine the plan before acting.",
+      planningContext: "Planning context",
+      directionTitle: "Direction",
+      directionBody: "Current goals show where attention should land next.",
+      cadenceTitle: "Cadence",
+      cadenceBody: "Tasks stay visible before anything becomes execution.",
+      boundaryTitle: "Boundary",
+      boundaryBody: "Plans remain guidance until the action layer owns a real side effect.",
+    },
+    goals: {
+      eyebrow: "Goals",
+      title: "Goal horizon",
+      subtitle: "See what is in motion, what has momentum, and where attention should land next.",
+      active: "Active goals",
+      progress: "Progress posture",
+      focus: "Focus candidate",
+      momentum: "Momentum",
+      goalSingularSuffix: "goal",
+      goalsSuffix: "goals",
+      activeDetail: "Current directions held in the foreground.",
+      openValue: "Open",
+      movingValue: "Moving",
+      progressDetail: "Progress is visible without forcing execution.",
+      focusFallback: "Choose a meaningful first goal.",
+      goalHorizon: "Goal horizon",
+      whatIsInMotion: "What is in motion",
+      directionOnly: "Direction only",
+      dailyRhythmTitle: "Build a stronger daily rhythm",
+      channelContinuityTitle: "Improve continuity across channels",
+      reusableInsightsTitle: "Capture reusable insights",
+      embodiedPersonalityTitle: "Shape a more embodied personality",
+      strongestCandidateDetail: "Strongest candidate for the next focused block.",
+      continuitySurfacesDetail: "Supports continuity across surfaces.",
+      reusableLearningDetail: "Turns reflection into reusable learning.",
+      embodiedDirectionDetail: "Keeps the embodied product direction alive.",
+      goalSignals: "Goal signals",
+      directionTitle: "Direction",
+      directionEmptyBody: "No active goals yet; the horizon stays ready for a first anchor.",
+      directionReadySingularBody: "is shaping the current direction.",
+      directionReadyPluralBody: "are shaping the current direction.",
+      momentumTitle: "Momentum",
+      momentumBody: "The strongest visible goal has enough progress to deserve the next review.",
+      focusBoundaryTitle: "Focus boundary",
+      focusBoundaryBody: "Goals stay as direction here; planning and action remain separate surfaces.",
+      relatedGuidance: "Related guidance",
+      nextFocusTitle: "Next focus",
+      nextFocusBody: "Use the strongest goal as the next focused block.",
+      planningBridgeTitle: "Planning bridge",
+      planningBridgeBody: "Move into planning when the goal needs sequence instead of more interpretation.",
+      reflectionBridgeTitle: "Reflection bridge",
+      reflectionBridgeBody: "Return to reflection when the direction needs a clearer reason.",
+    },
+    insights: {
+      eyebrow: "Insights",
+      title: "Signal studio",
+      subtitle: "Patterns, affective signals, and guidance gathered into one calm sensemaking surface.",
+      patterns: "Reusable patterns",
+      signals: "Affective signals",
+      guidance: "Guidance threads",
+      clarity: "Clarity index",
+      patternsDetail: "Reusable meaning extracted from past context.",
+      signalsDetail: "Tone, emotion, and friction available for expression.",
+      guidanceDetail: "Curated prompts ready to shape the next move.",
+      patternSingularSuffix: "pattern",
+      patternsSuffix: "patterns",
+      signalSingularSuffix: "signal",
+      signalsSuffix: "signals",
+      goalSingularSuffix: "goal",
+      goalsSuffix: "goals",
+      readyValue: "Ready",
+      insightMap: "Insight map",
+      insightMapTitle: "What the system can already read",
+      readOnly: "Read only",
+      semanticPatternTitle: "Semantic pattern",
+      semanticPatternDetail: "Reusable knowledge gives the conversation a stronger spine.",
+      affectiveTextureTitle: "Affective texture",
+      affectiveTextureDetail: "Emotional context stays visible before tone is chosen.",
+      planningRelevanceTitle: "Planning relevance",
+      planningRelevanceDetail: "Goal and task context helps separate noise from useful guidance.",
+      reflectionReturnTitle: "Reflection return",
+      reflectionReturnDetail: "Insights are useful when they can return to chat, memory, or action.",
+      sensemakingNotes: "Sensemaking notes",
+      signalDensityTitle: "Signal density",
+      signalDensityReadyBody: "AION already has reusable context to make the next answer less generic.",
+      signalDensityEmptyBody: "No semantic patterns are visible yet; the surface stays ready for first evidence.",
+      interpretationBoundaryTitle: "Interpretation boundary",
+      interpretationBoundaryBody: "Insights are displayed as read-only sensemaking; action remains in planning and tools.",
+      nextUsefulMoveTitle: "Next useful move",
+      nextUsefulMoveFallback: "Use chat to create the first meaningful signal.",
+      guidanceCandidates: "Guidance candidates",
+      deepWorkTitle: "Deep work window",
+      deepWorkNoGoalBody: "Shape one meaningful goal to give the day a stronger center.",
+      deepWorkActiveBody: "Your active goals are ready for a focused work block.",
+      momentumTitle: "Build momentum",
+      momentumNoThreadBody: "The next message can become the anchor for a clearer plan.",
+      momentumThreadPrefix: "Stay close to your latest thread:",
+      reflectTitle: "Reflect and integrate",
+      reflectNoSignalBody: "A short reflection can start your first layer of deeper learning.",
+      reflectReadyBody: "Recent reflections are ready to inform the next response.",
+      connectionTitle: "Connection opportunity",
+      connectionNoChannelBody: "Link another surface when you want continuity outside the web shell.",
+      connectionLivePrefix: "Continuity is already alive across:",
+    },
+    automations: {
+      eyebrow: "Automations",
+      title: "Automation control",
+      subtitle: "Proactive preference, scheduler posture, and attention queue without hidden side effects.",
+      proactive: "Proactive mode",
+      queue: "Attention queue",
+      scheduler: "Scheduler",
+      boundary: "Action boundary",
+      proactiveOnDetail: "Account preference allows occasional follow-ups.",
+      proactiveOffDetail: "Follow-ups stay quiet until you enable the preference.",
+      pendingValue: "pending",
+      queueDetail: "Pending attention items from the current health snapshot.",
+      checkingValue: "Checking",
+      unknownValue: "Unknown",
+      readyValue: "Ready",
+      schedulerDetail: "Scheduler posture is read from backend health.",
+      automationFlow: "Automation flow",
+      allowedToMove: "What is allowed to move",
+      observed: "Observed",
+      preferenceGateTitle: "Preference gate",
+      preferenceOnDetail: "Proactive follow-ups are allowed by the account settings.",
+      preferenceOffDetail: "The account has proactive follow-ups disabled.",
+      attentionQueueTitle: "Attention queue",
+      attentionQueueDetail: "Queued attention is visible before any future delivery behavior.",
+      schedulerTickTitle: "Scheduler tick",
+      schedulerTickPresentDetail: "Scheduler details are present in the health snapshot.",
+      schedulerTickQuietDetail: "No scheduler detail is exposed by the current health payload.",
+      presentValue: "Present",
+      quietValue: "Quiet",
+      actionBoundaryTitle: "Action boundary",
+      actionBoundaryDetail: "This route observes posture only; side effects remain outside the view layer.",
+      readOnlyValue: "Read only",
+      guardrails: "Guardrails",
+      noHiddenExecutionTitle: "No hidden execution",
+      noHiddenExecutionBody: "Opening this route does not create reminders, send messages, or mutate proactive settings.",
+      settingsSwitchTitle: "Settings remains the switch",
+      settingsSwitchBody: "The actual proactive opt-in control stays in Settings, preserving one source of truth.",
+      healthBackedTitle: "Health-backed posture",
+      healthUnavailableBody: "Health is unavailable, so scheduler details are shown conservatively.",
+      healthBackedBody: "Scheduler and queue posture comes from the existing health endpoint.",
+      healthDetails: "Health details",
+      pending: "Pending",
+      claimed: "Claimed",
+      answered: "Answered",
+      attentionItems: "attention items",
+      claimedItems: "claimed items",
+      answeredItems: "answered items",
+    },
+    integrations: {
+      eyebrow: "Integrations",
+      title: "Connection map",
+      subtitle: "Provider readiness, link needs, and external channels gathered into one calm surface.",
+      ready: "Ready providers",
+      linked: "Linked tools",
+      attention: "Needs attention",
+      boundary: "Integration boundary",
+      readyShort: "ready",
+      readyDetail: "Providers reporting ready through the existing tools overview.",
+      linkedDetail: "Enabled tools currently available to the shell.",
+      attentionDetail: "Providers blocked or waiting for a link step.",
+      providerMap: "Provider map",
+      providerMapTitle: "External surfaces at the edge",
+      overview: "Overview",
+      noProvidersTitle: "No providers visible",
+      noProvidersDetail: "Tools overview has not exposed provider rows yet.",
+      connectionRules: "Connection rules",
+      toolsOwnTogglesTitle: "Tools own toggles",
+      toolsOwnTogglesBody: "This route shows integration posture; detailed enablement remains in the Tools surface.",
+      linksStayExplicitTitle: "Links stay explicit",
+      linksStayExplicitBody: "Any provider that requires linking still needs the approved link flow before use.",
+      noSilentProviderAccessTitle: "No silent provider access",
+      noSilentProviderAccessBody: "Opening the route reads overview data only and does not call external providers.",
+      readinessDetails: "Readiness details",
+      configured: "Configured",
+      toolsKnown: "tools known",
+      linkRequired: "Link required",
+      waitingForLinkFlow: "waiting for link flow",
+      blocked: "Blocked",
+      providerChecksBlocked: "provider checks blocked",
+      readyValue: "Ready",
+      linkValue: "Link",
+      blockedValue: "Blocked",
+      quietValue: "Quiet",
     },
     personality: {
       eyebrow: "Personality",
@@ -244,10 +635,18 @@ const UI_COPY = {
     },
   },
   pl: {
-    routes: { "/login": "Logowanie", "/chat": "Czat", "/settings": "Ustawienia", "/tools": "Narzędzia", "/personality": "Osobowość" },
+    routes: { "/login": "Logowanie", "/dashboard": "Dashboard", "/chat": "Czat", "/memory": "Pamięć", "/reflections": "Refleksje", "/plans": "Plany", "/goals": "Cele", "/insights": "Wnioski", "/automations": "Automatyzacje", "/integrations": "Integracje", "/settings": "Ustawienia", "/tools": "Narzędzia", "/personality": "Osobowość" },
     routeDescriptions: {
       "/login": "Zaloguj się do powłoki produktu.",
+      "/dashboard": "Flagowy przegląd celów, sygnałów, przepływu i kolejnych działań.",
       "/chat": "Jeden wspólny wątek rozmowy z ostatnimi wiadomościami i świeżymi odpowiedziami osobowości.",
+      "/memory": "Spokojna mapa wzorców, preferencji i sygnałów ciągłości.",
+      "/reflections": "Wolniejsze uczenie, integracja i wnioski, które kształtują kolejne odpowiedzi.",
+      "/plans": "Postawa planowania, aktywna praca i kolejny spokojny krok bez uruchamiania wykonania.",
+      "/goals": "Spokojny widok aktywnego kierunku, postępu i tego, co zasługuje na uwagę.",
+      "/insights": "Warstwa sensu dla wzorców, sygnałów i wskazówek już obecnych w AION.",
+      "/automations": "Widoczna sterownia proaktywności, kolejki uwagi i postawy schedulera.",
+      "/integrations": "Spokojna mapa dostawców, połączeń i gotowości integracji.",
       "/settings": "Profil, język interfejsu i proaktywność w jednym prostym miejscu.",
       "/tools": "Zobacz, co jest gotowe, co wymaga uwagi i z czego możesz skorzystać dalej.",
       "/personality": "Produktowy przegląd tożsamości, wiedzy, planowania i możliwości.",
@@ -282,6 +681,15 @@ const UI_COPY = {
       stateSuccessTitle: "Gotowe",
       stateErrorTitle: "Coś wymaga uwagi",
       stateDetailLabel: "Szczegóły",
+      view: "Zobacz",
+      unknownTime: "Nieznany czas",
+      recentActivity: [
+        { title: "Zaktualizowano plan projektu", when: "2 godz. temu" },
+        { title: "Doprecyzowano blok głębokiej pracy", when: "3 godz. temu" },
+        { title: "Ukończono cykl refleksji", when: "5 godz. temu" },
+        { title: "Zapisano nową pamięć", when: "Wczoraj" },
+        { title: "Zapisano wyuczoną preferencję", when: "Wczoraj" },
+      ],
     },
     auth: {
       badge: "Aviary",
@@ -383,6 +791,37 @@ const UI_COPY = {
       instruction: "Instrukcja",
       noLinkCode: "Brak aktywnego kodu. Wygeneruj go, gdy będziesz gotowy potwierdzić czat.",
       capabilities: "Możliwości",
+      summaryGroupNote: "Czytelne grupy narzędzi, które możesz tutaj przeglądać",
+      summaryIntegralNote: "Możliwości dostępne jako stała część produktu",
+      summaryReadyNote: "Narzędzia gotowe do użycia dzisiaj",
+      summaryLinkRequiredNote: "Kanały czekające na szybki krok podpięcia",
+      directoryTitle: "Katalog narzędzi",
+      itemSingularSuffix: "element",
+      itemsSuffix: "elementów",
+      workspaceSnapshot: "migawka przestrzeni",
+      statusAlwaysOn: "Zawsze aktywne",
+      statusReadyToUse: "Gotowe do użycia",
+      statusLinkRequired: "Wymaga podpięcia",
+      statusPlanned: "Zaplanowane",
+      statusNeedsReview: "Wymaga przeglądu",
+      providerReadyValue: "gotowy",
+      providerConfiguredValue: "skonfigurowany",
+      providerNotConfiguredValue: "nieskonfigurowany",
+      telegramInstructionBody:
+        "Wygeneruj krótki kod, a potem wyślij go do skonfigurowanego bota Telegram Aviary z czatu, który chcesz podpiąć do tej tożsamości.",
+      expiresInAbout: "Wygasa za około",
+      seconds: "sekund",
+      saveSuccess: "Wybór narzędzi został zapisany.",
+      saveError: "Nie udało się zapisać preferencji narzędzia.",
+      telegramLinkReady: "Kod podpięcia Telegrama jest gotowy.",
+      telegramStartError: "Nie udało się rozpocząć podpinania Telegrama.",
+      readyChipSuffix: "gotowe",
+      needsLinkingChipSuffix: "wymaga podpięcia",
+      alwaysOnChipSuffix: "zawsze aktywne",
+      linkStateLinkedValue: "Podpięte",
+      linkStateNotLinkedValue: "Niepodpięte",
+      linkStateRequiredValue: "Wymaga podpięcia",
+      linkStateUnknownValue: "Nieznane",
     },
     personality: {
       eyebrow: "Osobowość",
@@ -392,12 +831,326 @@ const UI_COPY = {
       loading: "Ładowanie przeglądu osobowości.",
       empty: "Brak sekcji pasujących do filtra.",
     },
+    memory: {
+      eyebrow: "Pamięć",
+      title: "Biblioteka ciągłości",
+      subtitle: "Wzorce, preferencje i aktualny kontekst bez zamiany pamięci w surową bazę danych.",
+      semantic: "Wzorce wielokrotnego użytku",
+      affective: "Wnioski afektywne",
+      preferences: "Nauczone sygnały",
+      recent: "Ostatnie sygnały pamięci",
+      continuity: "Ciągłość",
+      patternSingularSuffix: "wzorzec",
+      patternsSuffix: "wzorce",
+      patternsZeroSuffix: "wzorców",
+      insightSingularSuffix: "wniosek",
+      insightsSuffix: "wnioski",
+      insightsZeroSuffix: "wniosków",
+      cueSingularSuffix: "sygnał",
+      cuesSuffix: "sygnały",
+      cuesZeroSuffix: "sygnałów",
+      semanticDetail: "Wzorce gotowe do ponownego użycia w przyszłych odpowiedziach.",
+      affectiveDetail: "Wnioski emocjonalne, które mogą kształtować ton i moment odpowiedzi.",
+      preferencesDetail: "Stabilne sygnały podpięte do preferowanego sposobu pracy.",
+      memoryMap: "Mapa pamięci",
+      memoryMapTitle: "Co można użyć ponownie",
+      noRawRecords: "Bez ujawniania surowych rekordów",
+      semanticMemoryTitle: "Pamięć semantyczna",
+      semanticMemoryDetail: "Pojęcia i podsumowania wielorazowe zostają dostępne przed następną odpowiedzią.",
+      affectiveMemoryTitle: "Pamięć afektywna",
+      affectiveMemoryDetail: "Ton, tarcie i kontekst emocjonalny mogą informować przyszłą ekspresję.",
+      preferencesMemoryTitle: "Preferencje",
+      preferencesMemoryDetail: "Nauczone sygnały utrzymują osobisty charakter powłoki bez ujawniania surowych rekordów.",
+      continuityNearConversation: "Ciągłość blisko rozmowy",
+      conversationContinuityTitle: "Ciągłość rozmowy",
+      memorySourceEmptyBody: "Aplikacja webowa jest gotowa stać się aktywnym źródłem pamięci.",
+      recentChannelsPrefix: "Ostatnie kanały:",
+      currentContext: "Bieżący kontekst",
+      reflectionBridgeTitle: "Most refleksji",
+      reflectionBridgeEmptyBody: "Krótka refleksja może rozpocząć głębsze formowanie pamięci.",
+      reflectionBridgeReadyBody: "Ostatnie refleksje są już dostępne, aby kształtować następną odpowiedź.",
+      slowLearning: "Wolniejsze uczenie",
+      preferencePostureTitle: "Postawa preferencji",
+      preferencePostureEmptyBody: "Nie ma jeszcze nauczonych sygnałów; widok pozostaje gotowy bez udawania.",
+      preferencePostureReadyBody: "Nauczone sygnały są obecne i widoczne bez ujawniania szczegółów wewnętrznych.",
+      personalization: "Personalizacja",
+      recentMovement: "Ostatni ruch",
+    },
+    reflections: {
+      eyebrow: "Refleksje",
+      title: "Komora refleksji",
+      subtitle: "Cichsza warstwa wniosków, integracji i wolniejszego uczenia, które wzmacnia ciągłość.",
+      integrated: "Zintegrowane wnioski",
+      pending: "Gotowe do integracji",
+      cadence: "Rytm uczenia",
+      recent: "Ostatnie refleksje",
+      slowLearning: "Wolniejsze uczenie",
+      insightSingularSuffix: "wniosek",
+      insightsSuffix: "wnioski",
+      insightsZeroSuffix: "wniosków",
+      threadSingularSuffix: "wątek",
+      threadsSuffix: "wątki",
+      readyValue: "Gotowe",
+      activeValue: "Aktywne",
+      integratedDetail: "Wnioski gotowe już wpływać na przyszłą ekspresję.",
+      pendingDetail: "Otwarte wątki, które mogą stać się jaśniejsze po krótkim przeglądzie.",
+      cadenceDetail: "Wolniejsza warstwa uczenia pozostaje dostępna bez zagęszczania czatu.",
+      reflectionFlow: "Przepływ refleksji",
+      flowTitle: "Zauważ, zintegruj, wróć",
+      noRawJournal: "Bez ujawniania surowego dziennika",
+      noticeTitle: "Zauważ",
+      noticeDetail: "Bieżący kontekst i sygnały emocjonalne stają się widoczne.",
+      integrateTitle: "Zintegruj",
+      integrateDetail: "Wnioski afektywne są składane w przyszłą postawę.",
+      returnTitle: "Wróć",
+      returnDetail: "Następna odpowiedź może użyć lekcji bez ujawniania surowych notatek.",
+      webValue: "web",
+      readyShort: "gotowe",
+      promptsTitle: "Podpowiedzi do następnego przeglądu",
+      whatChangedTitle: "Co się zmieniło?",
+      whatChangedBody: "Nazwij najmniejszą zmianę wartą przeniesienia dalej.",
+      whatQuietTitle: "Co powinno zostać ciche?",
+      whatQuietBody: "Zachowaj prywatny kontekst jako użyteczny, bez zamieniania go w szum.",
+      whatActionTitle: "Jakie działanie wynika?",
+      whatActionBody: "Niech wniosek stanie się spokojniejszym następnym krokiem.",
+      recentMovement: "Ostatni ruch",
+    },
+    plans: {
+      eyebrow: "Plany",
+      title: "Pokój planowania",
+      subtitle: "Aktywne cele i zadania ułożone w spokojną ścieżkę zanim cokolwiek stanie się wykonaniem.",
+      activeGoals: "Aktywne cele",
+      activeTasks: "Aktywne zadania",
+      nextStep: "Najlepszy kolejny krok",
+      posture: "Postawa planowania",
+      goalSingularSuffix: "cel",
+      goalsSuffix: "cele",
+      taskSingularSuffix: "zadanie",
+      tasksSuffix: "zadania",
+      activeGoalsDetail: "Cele, które obecnie kształtują kierunek na pierwszym planie.",
+      activeTasksDetail: "Zadania widoczne dla planowania, zanim rozważone zostanie wykonanie.",
+      readyValue: "Gotowe",
+      alignedValue: "Wyrównane",
+      postureDetail: "Planowanie pozostaje ograniczone do wskazówek, bez skutków ubocznych.",
+      planningPath: "Ścieżka planowania",
+      shapeBeforeAction: "Najpierw kształt, potem działanie",
+      actionBoundaryPreserved: "Granica działania zachowana",
+      gatherTitle: "Zbierz",
+      gatherDetail: "Cele, zadania, pamięć i bieżący kontekst są czytane razem.",
+      sequenceTitle: "Ułóż sekwencję",
+      sequenceDetail: "Następny ruch jest kształtowany, zanim stanie się działaniem.",
+      boundTitle: "Ogranicz",
+      boundDetail: "Wykonanie pozostaje poza widokiem, dopóki nie przejmie go prawdziwa warstwa działania.",
+      safeValue: "bezpiecznie",
+      planningSuggestions: "Sugestie planowania",
+      clarifyOutcomeTitle: "Doprecyzuj następny rezultat",
+      clarifyOutcomeEmptyBody: "Utwórz jeden znaczący cel, zanim rozbudujesz plan.",
+      clarifyOutcomeReadyBody: "Wybierz cel, który zasługuje na następny blok skupienia.",
+      convertSequenceTitle: "Zamień intencję w sekwencję",
+      convertSequenceEmptyBody: "Rozbij plan na pierwsze widoczne zadanie.",
+      convertSequenceReadyBody: "Pogrupuj aktywne zadania w najmniejszy użyteczny porządek.",
+      returnChatTitle: "Wróć przez czat",
+      returnChatBody: "Użyj rozmowy, aby dopracować plan przed działaniem.",
+      planningContext: "Kontekst planowania",
+      directionTitle: "Kierunek",
+      directionBody: "Bieżące cele pokazują, gdzie powinna trafić uwaga.",
+      cadenceTitle: "Rytm",
+      cadenceBody: "Zadania pozostają widoczne, zanim cokolwiek stanie się wykonaniem.",
+      boundaryTitle: "Granica",
+      boundaryBody: "Plany pozostają wskazówkami, dopóki warstwa działania nie przejmie realnego skutku ubocznego.",
+    },
+    goals: {
+      eyebrow: "Cele",
+      title: "Horyzont celów",
+      subtitle: "Zobacz, co jest w ruchu, co ma impet i gdzie powinna trafić uwaga.",
+      active: "Aktywne cele",
+      progress: "Postawa postępu",
+      focus: "Kandydat do skupienia",
+      momentum: "Impet",
+      goalSingularSuffix: "cel",
+      goalsSuffix: "cele",
+      activeDetail: "Bieżące kierunki trzymane na pierwszym planie.",
+      openValue: "Otwarte",
+      movingValue: "W ruchu",
+      progressDetail: "Postęp jest widoczny bez wymuszania wykonania.",
+      focusFallback: "Wybierz pierwszy znaczący cel.",
+      goalHorizon: "Horyzont celów",
+      whatIsInMotion: "Co jest w ruchu",
+      directionOnly: "Tylko kierunek",
+      dailyRhythmTitle: "Zbuduj mocniejszy rytm dnia",
+      channelContinuityTitle: "Wzmocnij ciągłość między kanałami",
+      reusableInsightsTitle: "Zapisz wnioski wielorazowe",
+      embodiedPersonalityTitle: "Ukształtuj bardziej ucieleśnioną osobowość",
+      strongestCandidateDetail: "Najmocniejszy kandydat na następny blok skupienia.",
+      continuitySurfacesDetail: "Wspiera ciągłość między powierzchniami.",
+      reusableLearningDetail: "Zamienia refleksję w uczenie wielorazowe.",
+      embodiedDirectionDetail: "Utrzymuje żywy kierunek ucieleśnionego produktu.",
+      goalSignals: "Sygnały celów",
+      directionTitle: "Kierunek",
+      directionEmptyBody: "Nie ma jeszcze aktywnych celów; horyzont czeka na pierwszą kotwicę.",
+      directionReadySingularBody: "kształtuje bieżący kierunek.",
+      directionReadyPluralBody: "kształtują bieżący kierunek.",
+      momentumTitle: "Impet",
+      momentumBody: "Najmocniejszy widoczny cel ma dość postępu, by zasłużyć na kolejny przegląd.",
+      focusBoundaryTitle: "Granica skupienia",
+      focusBoundaryBody: "Cele pozostają tu kierunkiem; planowanie i działanie zostają osobnymi powierzchniami.",
+      relatedGuidance: "Powiązane wskazówki",
+      nextFocusTitle: "Następne skupienie",
+      nextFocusBody: "Użyj najmocniejszego celu jako następnego bloku skupienia.",
+      planningBridgeTitle: "Most planowania",
+      planningBridgeBody: "Przejdź do planowania, gdy cel potrzebuje sekwencji zamiast dalszej interpretacji.",
+      reflectionBridgeTitle: "Most refleksji",
+      reflectionBridgeBody: "Wróć do refleksji, gdy kierunek potrzebuje wyraźniejszego powodu.",
+    },
+    insights: {
+      eyebrow: "Wnioski",
+      title: "Studio sygnałów",
+      subtitle: "Wzorce, sygnały afektywne i wskazówki zebrane w spokojną powierzchnię sensu.",
+      patterns: "Wzorce wielorazowe",
+      signals: "Sygnały afektywne",
+      guidance: "Wątki wskazówek",
+      clarity: "Indeks klarowności",
+      patternsDetail: "Znaczenie wielorazowe wydobyte z wcześniejszego kontekstu.",
+      signalsDetail: "Ton, emocje i tarcie dostępne dla sposobu wypowiedzi.",
+      guidanceDetail: "Wybrane podpowiedzi gotowe kształtować następny ruch.",
+      patternSingularSuffix: "wzorzec",
+      patternsSuffix: "wzorce",
+      signalSingularSuffix: "sygnał",
+      signalsSuffix: "sygnały",
+      goalSingularSuffix: "cel",
+      goalsSuffix: "cele",
+      readyValue: "Gotowe",
+      insightMap: "Mapa wniosków",
+      insightMapTitle: "Co system potrafi już odczytać",
+      readOnly: "Tylko odczyt",
+      semanticPatternTitle: "Wzorzec semantyczny",
+      semanticPatternDetail: "Wiedza wielorazowa daje rozmowie mocniejszy kręgosłup.",
+      affectiveTextureTitle: "Tekstura afektywna",
+      affectiveTextureDetail: "Kontekst emocjonalny pozostaje widoczny zanim zostanie dobrany ton.",
+      planningRelevanceTitle: "Trafność planowania",
+      planningRelevanceDetail: "Kontekst celów i zadań pomaga oddzielić szum od użytecznych wskazówek.",
+      reflectionReturnTitle: "Powrót refleksji",
+      reflectionReturnDetail: "Wnioski są użyteczne, gdy mogą wrócić do czatu, pamięci albo działania.",
+      sensemakingNotes: "Notatki sensotwórcze",
+      signalDensityTitle: "Gęstość sygnałów",
+      signalDensityReadyBody: "AION ma już kontekst wielorazowy, który może uczynić następną odpowiedź mniej generyczną.",
+      signalDensityEmptyBody: "Nie widać jeszcze wzorców semantycznych; powierzchnia czeka na pierwsze dowody.",
+      interpretationBoundaryTitle: "Granica interpretacji",
+      interpretationBoundaryBody: "Wnioski są pokazane jako odczyt sensu; działanie pozostaje w planowaniu i narzędziach.",
+      nextUsefulMoveTitle: "Następny użyteczny ruch",
+      nextUsefulMoveFallback: "Użyj czatu, aby stworzyć pierwszy znaczący sygnał.",
+      guidanceCandidates: "Kandydaci wskazówek",
+      deepWorkTitle: "Okno głębokiej pracy",
+      deepWorkNoGoalBody: "Ukształtuj jeden znaczący cel, aby dzień miał mocniejsze centrum.",
+      deepWorkActiveBody: "Aktywne cele są gotowe na skupiony blok pracy.",
+      momentumTitle: "Buduj impet",
+      momentumNoThreadBody: "Następna wiadomość może stać się kotwicą klarowniejszego planu.",
+      momentumThreadPrefix: "Zostań blisko ostatniego wątku:",
+      reflectTitle: "Reflektuj i integruj",
+      reflectNoSignalBody: "Krótka refleksja może rozpocząć pierwszą warstwę głębszego uczenia.",
+      reflectReadyBody: "Ostatnie refleksje są gotowe wesprzeć następną odpowiedź.",
+      connectionTitle: "Szansa połączenia",
+      connectionNoChannelBody: "Podepnij kolejną powierzchnię, gdy chcesz ciągłości poza webową powłoką.",
+      connectionLivePrefix: "Ciągłość już działa przez:",
+    },
+    automations: {
+      eyebrow: "Automatyzacje",
+      title: "Kontrola automatyzacji",
+      subtitle: "Proaktywność, scheduler i kolejka uwagi bez ukrytych skutków ubocznych.",
+      proactive: "Tryb proaktywny",
+      queue: "Kolejka uwagi",
+      scheduler: "Scheduler",
+      boundary: "Granica działania",
+      proactiveOnDetail: "Preferencja konta pozwala na okazjonalne follow-upy.",
+      proactiveOffDetail: "Follow-upy pozostają wyciszone, dopóki nie włączysz preferencji.",
+      pendingValue: "oczekuje",
+      queueDetail: "Oczekujące elementy uwagi z bieżącego stanu zdrowia.",
+      checkingValue: "Sprawdzam",
+      unknownValue: "Nieznane",
+      readyValue: "Gotowe",
+      schedulerDetail: "Postawa schedulera jest czytana z backendowego health.",
+      automationFlow: "Przepływ automatyzacji",
+      allowedToMove: "Co może się poruszyć",
+      observed: "Obserwowane",
+      preferenceGateTitle: "Brama preferencji",
+      preferenceOnDetail: "Proaktywne follow-upy są dozwolone przez ustawienia konta.",
+      preferenceOffDetail: "Konto ma wyłączone proaktywne follow-upy.",
+      attentionQueueTitle: "Kolejka uwagi",
+      attentionQueueDetail: "Kolejka uwagi jest widoczna przed przyszłym zachowaniem dostarczania.",
+      schedulerTickTitle: "Tik schedulera",
+      schedulerTickPresentDetail: "Szczegóły schedulera są obecne w stanie zdrowia.",
+      schedulerTickQuietDetail: "Bieżący health payload nie udostępnia szczegółów schedulera.",
+      presentValue: "Obecne",
+      quietValue: "Cicho",
+      actionBoundaryTitle: "Granica działania",
+      actionBoundaryDetail: "Ten widok tylko obserwuje postawę; skutki uboczne pozostają poza warstwą widoku.",
+      readOnlyValue: "Tylko odczyt",
+      guardrails: "Ograniczenia",
+      noHiddenExecutionTitle: "Bez ukrytego wykonania",
+      noHiddenExecutionBody: "Otwarcie tego widoku nie tworzy przypomnień, nie wysyła wiadomości i nie zmienia ustawień proaktywności.",
+      settingsSwitchTitle: "Ustawienia pozostają przełącznikiem",
+      settingsSwitchBody: "Rzeczywisty opt-in proaktywności zostaje w Ustawieniach, zachowując jedno źródło prawdy.",
+      healthBackedTitle: "Postawa oparta na health",
+      healthUnavailableBody: "Health jest niedostępny, więc szczegóły schedulera są pokazane zachowawczo.",
+      healthBackedBody: "Postawa schedulera i kolejki pochodzi z istniejącego endpointu health.",
+      healthDetails: "Szczegóły health",
+      pending: "Oczekujące",
+      claimed: "Przejęte",
+      answered: "Obsłużone",
+      attentionItems: "elementów uwagi",
+      claimedItems: "przejętych elementów",
+      answeredItems: "obsłużonych elementów",
+    },
+    integrations: {
+      eyebrow: "Integracje",
+      title: "Mapa połączeń",
+      subtitle: "Gotowość dostawców, potrzeby linkowania i kanały zewnętrzne w jednym spokojnym widoku.",
+      ready: "Gotowi dostawcy",
+      linked: "Połączone narzędzia",
+      attention: "Wymaga uwagi",
+      boundary: "Granica integracji",
+      readyShort: "gotowe",
+      readyDetail: "Dostawcy zgłaszający gotowość w istniejącym przeglądzie narzędzi.",
+      linkedDetail: "Włączone narzędzia dostępne obecnie w powłoce.",
+      attentionDetail: "Dostawcy zablokowani albo czekający na linkowanie.",
+      providerMap: "Mapa dostawców",
+      providerMapTitle: "Zewnętrzne powierzchnie na krawędzi",
+      overview: "Przegląd",
+      noProvidersTitle: "Brak widocznych dostawców",
+      noProvidersDetail: "Przegląd narzędzi nie udostępnił jeszcze wierszy dostawców.",
+      connectionRules: "Zasady połączeń",
+      toolsOwnTogglesTitle: "Przełączniki należą do Narzędzi",
+      toolsOwnTogglesBody: "Ten widok pokazuje postawę integracji; szczegółowe włączanie pozostaje w widoku Narzędzia.",
+      linksStayExplicitTitle: "Linkowanie pozostaje jawne",
+      linksStayExplicitBody: "Każdy dostawca wymagający linkowania nadal potrzebuje zatwierdzonego przepływu połączenia.",
+      noSilentProviderAccessTitle: "Bez cichego dostępu do dostawców",
+      noSilentProviderAccessBody: "Otwarcie widoku tylko czyta dane przeglądu i nie wywołuje zewnętrznych dostawców.",
+      readinessDetails: "Szczegóły gotowości",
+      configured: "Skonfigurowane",
+      toolsKnown: "znane narzędzia",
+      linkRequired: "Wymaga linkowania",
+      waitingForLinkFlow: "czeka na linkowanie",
+      blocked: "Zablokowane",
+      providerChecksBlocked: "zablokowane sprawdzenia dostawcy",
+      readyValue: "Gotowe",
+      linkValue: "Link",
+      blockedValue: "Blokada",
+      quietValue: "Cicho",
+    },
   },
   de: {
-    routes: { "/login": "Login", "/chat": "Chat", "/settings": "Einstellungen", "/tools": "Tools", "/personality": "PersĂ¶nlichkeit" },
+    routes: { "/login": "Login", "/dashboard": "Dashboard", "/chat": "Chat", "/memory": "Memory", "/reflections": "Reflections", "/plans": "Plans", "/goals": "Goals", "/insights": "Insights", "/automations": "Automationen", "/integrations": "Integrationen", "/settings": "Einstellungen", "/tools": "Tools", "/personality": "PersĂ¶nlichkeit" },
     routeDescriptions: {
       "/login": "Melde dich in der ProdukthĂĽlle an.",
+      "/dashboard": "Flagship-Ăśberblick ĂĽber Ziele, Signale, Flow und nĂ¤chste Aktionen.",
       "/chat": "Ein gemeinsamer GesprĂ¤chsthread mit den letzten Nachrichten und neuen Antworten der PersĂ¶nlichkeit.",
+      "/memory": "Eine ruhige Karte wiederverwendbarer Muster, gelernter Hinweise und KontinuitĂ¤t.",
+      "/reflections": "Langsameres Lernen, Integration und Einsichten fĂĽr kĂĽnftige Antworten.",
+      "/plans": "Planungshaltung, aktive Arbeit und der nĂ¤chste ruhige Schritt ohne AusfĂĽhrung.",
+      "/goals": "Ein ruhiger Blick auf Richtung, Fortschritt und den nĂ¤chsten Fokus.",
+      "/insights": "Eine klare Sinnschicht fĂĽr Muster, Signale und vorhandene AION-Hinweise.",
+      "/automations": "Ein sichtbarer Kontrollraum fĂĽr ProaktivitĂ¤t, Attention Queue und Scheduler.",
+      "/integrations": "Eine ruhige Karte verbundener Anbieter, Linkstatus und Integrationsbereitschaft.",
       "/settings": "Profil, OberflĂ¤chensprache und proaktive PrĂ¤ferenzen an einem klaren Ort.",
       "/tools": "Sieh, was bereit ist, was Aufmerksamkeit braucht und was du als NĂ¤chstes nutzen kannst.",
       "/personality": "Produktorientierter Ăśberblick ĂĽber IdentitĂ¤t, Wissen, Planung und FĂ¤higkeiten.",
@@ -432,6 +1185,15 @@ const UI_COPY = {
       stateSuccessTitle: "Erledigt",
       stateErrorTitle: "Etwas braucht Aufmerksamkeit",
       stateDetailLabel: "Details",
+      view: "Ansehen",
+      unknownTime: "Unbekannte Zeit",
+      recentActivity: [
+        { title: "Projektplan aktualisiert", when: "vor 2 Std." },
+        { title: "Deep-Work-Fenster verfeinert", when: "vor 3 Std." },
+        { title: "Reflexionszyklus abgeschlossen", when: "vor 5 Std." },
+        { title: "Neue Erinnerung erfasst", when: "Gestern" },
+        { title: "Gelernte Präferenz erfasst", when: "Gestern" },
+      ],
     },
     auth: {
       badge: "Aviary",
@@ -533,6 +1295,37 @@ const UI_COPY = {
       instruction: "Anleitung",
       noLinkCode: "Noch kein aktiver Code. Erzeuge ihn, wenn du den Chat bestĂ¤tigen willst.",
       capabilities: "FĂ¤higkeiten",
+      summaryGroupNote: "Klare Gruppen für die Tools, die du hier durchsuchen kannst",
+      summaryIntegralNote: "Fähigkeiten, die als Teil des Produkts verfügbar bleiben",
+      summaryReadyNote: "Tools, die heute einsatzbereit sind",
+      summaryLinkRequiredNote: "Kanäle, die auf einen kurzen Verknüpfungsschritt warten",
+      directoryTitle: "Tool-Verzeichnis",
+      itemSingularSuffix: "Eintrag",
+      itemsSuffix: "Einträge",
+      workspaceSnapshot: "Workspace-Snapshot",
+      statusAlwaysOn: "Immer aktiv",
+      statusReadyToUse: "Einsatzbereit",
+      statusLinkRequired: "Verknüpfung erforderlich",
+      statusPlanned: "Geplant",
+      statusNeedsReview: "Prüfung nötig",
+      providerReadyValue: "bereit",
+      providerConfiguredValue: "konfiguriert",
+      providerNotConfiguredValue: "nicht konfiguriert",
+      telegramInstructionBody:
+        "Erzeuge einen kurzen Code und sende ihn dann aus dem Chat, den du mit dieser Identität verbinden willst, an den konfigurierten Aviary-Telegram-Bot.",
+      expiresInAbout: "Läuft ab in etwa",
+      seconds: "Sekunden",
+      saveSuccess: "Deine Tool-Auswahl wurde gespeichert.",
+      saveError: "Tool-Präferenz konnte nicht gespeichert werden.",
+      telegramLinkReady: "Dein Telegram-Verknüpfungscode ist bereit.",
+      telegramStartError: "Telegram-Verknüpfung konnte nicht gestartet werden.",
+      readyChipSuffix: "bereit",
+      needsLinkingChipSuffix: "braucht Verknüpfung",
+      alwaysOnChipSuffix: "immer aktiv",
+      linkStateLinkedValue: "Verknüpft",
+      linkStateNotLinkedValue: "Nicht verknüpft",
+      linkStateRequiredValue: "Verknüpfung erforderlich",
+      linkStateUnknownValue: "Unbekannt",
     },
     personality: {
       eyebrow: "PersĂ¶nlichkeit",
@@ -541,6 +1334,312 @@ const UI_COPY = {
       filter: "Sektionen filtern",
       loading: "PersĂ¶nlichkeitsĂĽbersicht wird geladen.",
       empty: "Keine passenden Sektionen fĂĽr diesen Filter.",
+    },
+    memory: {
+      eyebrow: "Memory",
+      title: "KontinuitĂ¤tsbibliothek",
+      subtitle: "Wiederverwendbare Muster, gelernte Hinweise und aktueller Kontext ohne rohe Datenbankansicht.",
+      semantic: "Wiederverwendbare Muster",
+      affective: "Affektive Einsichten",
+      preferences: "Gelernte Hinweise",
+      recent: "Aktuelle Memory-Signale",
+      continuity: "Kontinuität",
+      patternSingularSuffix: "Muster",
+      patternsSuffix: "Muster",
+      patternsZeroSuffix: "Muster",
+      insightSingularSuffix: "Einsicht",
+      insightsSuffix: "Einsichten",
+      insightsZeroSuffix: "Einsichten",
+      cueSingularSuffix: "Hinweis",
+      cuesSuffix: "Hinweise",
+      cuesZeroSuffix: "Hinweise",
+      semanticDetail: "Muster stehen für künftige Antworten wiederverwendbar bereit.",
+      affectiveDetail: "Emotionale Einsichten können Ton und Timing formen.",
+      preferencesDetail: "Stabile Hinweise sind mit deiner bevorzugten Arbeitsweise verbunden.",
+      memoryMap: "Memory-Karte",
+      memoryMapTitle: "Was wiederverwendet werden kann",
+      noRawRecords: "Keine rohen Datensätze sichtbar",
+      semanticMemoryTitle: "Semantische Erinnerung",
+      semanticMemoryDetail: "Wiederverwendbare Konzepte und Zusammenfassungen bleiben vor der nächsten Antwort verfügbar.",
+      affectiveMemoryTitle: "Affektive Erinnerung",
+      affectiveMemoryDetail: "Ton, Reibung und emotionaler Kontext können künftigen Ausdruck informieren.",
+      preferencesMemoryTitle: "Präferenzen",
+      preferencesMemoryDetail: "Gelernte Hinweise halten die Shell persönlich, ohne rohe Datensätze offenzulegen.",
+      continuityNearConversation: "Kontinuität nahe am Gespräch",
+      conversationContinuityTitle: "Gesprächskontinuität",
+      memorySourceEmptyBody: "Die Web-App ist bereit, zur aktiven Memory-Quelle zu werden.",
+      recentChannelsPrefix: "Aktuelle Kanäle:",
+      currentContext: "Aktueller Kontext",
+      reflectionBridgeTitle: "Reflexionsbrücke",
+      reflectionBridgeEmptyBody: "Eine kurze Reflexion kann tiefere Memory-Bildung starten.",
+      reflectionBridgeReadyBody: "Aktuelle Reflexionen sind verfügbar, um die nächste Antwort zu formen.",
+      slowLearning: "Langsameres Lernen",
+      preferencePostureTitle: "Präferenzhaltung",
+      preferencePostureEmptyBody: "Noch keine gelernten Hinweise; die Ansicht bleibt bereit ohne zu simulieren.",
+      preferencePostureReadyBody: "Gelernte Hinweise sind sichtbar, ohne Interna offenzulegen.",
+      personalization: "Personalisierung",
+      recentMovement: "Aktuelle Bewegung",
+    },
+    reflections: {
+      eyebrow: "Reflections",
+      title: "Reflexionskammer",
+      subtitle: "Eine ruhigere Schicht fĂĽr Einsichten, Integration und langsameres Lernen.",
+      integrated: "Integrierte Einsichten",
+      pending: "Bereit zur Integration",
+      cadence: "Lernrhythmus",
+      recent: "Aktuelle Reflexionen",
+      slowLearning: "Langsameres Lernen",
+      insightSingularSuffix: "Einsicht",
+      insightsSuffix: "Einsichten",
+      insightsZeroSuffix: "Einsichten",
+      threadSingularSuffix: "Faden",
+      threadsSuffix: "Fäden",
+      readyValue: "Bereit",
+      activeValue: "Aktiv",
+      integratedDetail: "Einsichten sind bereit, künftige Ausdrucksweisen zu beeinflussen.",
+      pendingDetail: "Offene Fäden können durch einen kurzen Rückblick klarer werden.",
+      cadenceDetail: "Die langsamere Lernschicht bleibt verfügbar, ohne den Chat zu überladen.",
+      reflectionFlow: "Reflexionsfluss",
+      flowTitle: "Wahrnehmen, integrieren, zurückkehren",
+      noRawJournal: "Kein Rohjournal sichtbar",
+      noticeTitle: "Wahrnehmen",
+      noticeDetail: "Aktueller Kontext und emotionale Hinweise werden sichtbar.",
+      integrateTitle: "Integrieren",
+      integrateDetail: "Affektive Einsichten werden in die künftige Haltung eingefaltet.",
+      returnTitle: "Zurückkehren",
+      returnDetail: "Die nächste Antwort kann die Lektion nutzen, ohne Rohnotizen offenzulegen.",
+      webValue: "web",
+      readyShort: "bereit",
+      promptsTitle: "Impulse für den nächsten Rückblick",
+      whatChangedTitle: "Was hat sich verändert?",
+      whatChangedBody: "Benenne die kleinste Veränderung, die weitergetragen werden sollte.",
+      whatQuietTitle: "Was sollte still bleiben?",
+      whatQuietBody: "Halte privaten Kontext nützlich, ohne ihn in Rauschen zu verwandeln.",
+      whatActionTitle: "Welche Handlung folgt?",
+      whatActionBody: "Lass die Einsicht zu einem ruhigeren nächsten Schritt werden.",
+      recentMovement: "Letzte Bewegung",
+    },
+    plans: {
+      eyebrow: "Plans",
+      title: "Planungsraum",
+      subtitle: "Aktive Ziele und Aufgaben als ruhiger Pfad, bevor etwas zur AusfĂĽhrung wird.",
+      activeGoals: "Aktive Ziele",
+      activeTasks: "Aktive Aufgaben",
+      nextStep: "NĂ¤chster bester Schritt",
+      posture: "Planungshaltung",
+      goalSingularSuffix: "Ziel",
+      goalsSuffix: "Ziele",
+      taskSingularSuffix: "Aufgabe",
+      tasksSuffix: "Aufgaben",
+      activeGoalsDetail: "Ziele, die aktuell die Vordergrundrichtung formen.",
+      activeTasksDetail: "Aufgaben, die vor Ausführung für Planung sichtbar sind.",
+      readyValue: "Bereit",
+      alignedValue: "Ausgerichtet",
+      postureDetail: "Planung bleibt auf Hinweise begrenzt, ohne Nebeneffekte.",
+      planningPath: "Planungspfad",
+      shapeBeforeAction: "Form vor Aktion",
+      actionBoundaryPreserved: "Aktionsgrenze bleibt erhalten",
+      gatherTitle: "Sammeln",
+      gatherDetail: "Ziele, Aufgaben, Erinnerung und aktueller Kontext werden gemeinsam gelesen.",
+      sequenceTitle: "Sequenzieren",
+      sequenceDetail: "Der nächste Schritt wird geformt, bevor er Aktion wird.",
+      boundTitle: "Begrenzen",
+      boundDetail: "Ausführung bleibt außerhalb der Route, bis eine echte Aktionsschicht sie besitzt.",
+      safeValue: "sicher",
+      planningSuggestions: "Planungsvorschläge",
+      clarifyOutcomeTitle: "Nächstes Ergebnis klären",
+      clarifyOutcomeEmptyBody: "Erstelle ein bedeutsames Ziel, bevor du den Plan erweiterst.",
+      clarifyOutcomeReadyBody: "Wähle das Ziel, das den nächsten Fokusblock verdient.",
+      convertSequenceTitle: "Intent in Sequenz wandeln",
+      convertSequenceEmptyBody: "Brich den Plan in die erste sichtbare Aufgabe herunter.",
+      convertSequenceReadyBody: "Gruppiere aktive Aufgaben in die kleinste nützliche Reihenfolge.",
+      returnChatTitle: "Über Chat zurückkehren",
+      returnChatBody: "Nutze das Gespräch, um den Plan vor Aktion zu verfeinern.",
+      planningContext: "Planungskontext",
+      directionTitle: "Richtung",
+      directionBody: "Aktuelle Ziele zeigen, wo Aufmerksamkeit als Nächstes landen sollte.",
+      cadenceTitle: "Kadenz",
+      cadenceBody: "Aufgaben bleiben sichtbar, bevor etwas zur Ausführung wird.",
+      boundaryTitle: "Grenze",
+      boundaryBody: "Pläne bleiben Hinweise, bis die Aktionsschicht einen echten Nebeneffekt besitzt.",
+    },
+    goals: {
+      eyebrow: "Goals",
+      title: "Zielhorizont",
+      subtitle: "Sieh, was in Bewegung ist, was Momentum hat und wo Aufmerksamkeit landen sollte.",
+      active: "Aktive Ziele",
+      progress: "Fortschrittshaltung",
+      focus: "Fokus-Kandidat",
+      momentum: "Momentum",
+      goalSingularSuffix: "Ziel",
+      goalsSuffix: "Ziele",
+      activeDetail: "Aktuelle Richtungen im Vordergrund.",
+      openValue: "Offen",
+      movingValue: "In Bewegung",
+      progressDetail: "Fortschritt bleibt sichtbar, ohne Ausführung zu erzwingen.",
+      focusFallback: "Wähle ein bedeutsames erstes Ziel.",
+      goalHorizon: "Zielhorizont",
+      whatIsInMotion: "Was in Bewegung ist",
+      directionOnly: "Nur Richtung",
+      dailyRhythmTitle: "Einen stärkeren Tagesrhythmus bauen",
+      channelContinuityTitle: "Kontinuität über Kanäle verbessern",
+      reusableInsightsTitle: "Wiederverwendbare Einsichten erfassen",
+      embodiedPersonalityTitle: "Eine verkörpertere Persönlichkeit formen",
+      strongestCandidateDetail: "Stärkster Kandidat für den nächsten Fokusblock.",
+      continuitySurfacesDetail: "Unterstützt Kontinuität über Oberflächen.",
+      reusableLearningDetail: "Macht Reflexion zu wiederverwendbarem Lernen.",
+      embodiedDirectionDetail: "Hält die verkörperte Produktrichtung lebendig.",
+      goalSignals: "Zielsignale",
+      directionTitle: "Richtung",
+      directionEmptyBody: "Noch keine aktiven Ziele; der Horizont wartet auf den ersten Anker.",
+      directionReadySingularBody: "formt die aktuelle Richtung.",
+      directionReadyPluralBody: "formen die aktuelle Richtung.",
+      momentumTitle: "Momentum",
+      momentumBody: "Das stärkste sichtbare Ziel hat genug Fortschritt für die nächste Prüfung.",
+      focusBoundaryTitle: "Fokusgrenze",
+      focusBoundaryBody: "Ziele bleiben hier Richtung; Planung und Aktion bleiben getrennte Flächen.",
+      relatedGuidance: "Verwandte Hinweise",
+      nextFocusTitle: "Nächster Fokus",
+      nextFocusBody: "Nutze das stärkste Ziel als nächsten Fokusblock.",
+      planningBridgeTitle: "Planungsbrücke",
+      planningBridgeBody: "Wechsle in Planung, wenn das Ziel Sequenz statt weiterer Interpretation braucht.",
+      reflectionBridgeTitle: "Reflexionsbrücke",
+      reflectionBridgeBody: "Kehre zur Reflexion zurück, wenn die Richtung einen klareren Grund braucht.",
+    },
+    insights: {
+      eyebrow: "Insights",
+      title: "Signalstudio",
+      subtitle: "Muster, affektive Signale und Hinweise in einer ruhigen SinnflĂ¤che.",
+      patterns: "Wiederverwendbare Muster",
+      signals: "Affektive Signale",
+      guidance: "HinweisfĂ¤den",
+      clarity: "Klarheitsindex",
+      patternsDetail: "Wiederverwendbare Bedeutung aus früherem Kontext.",
+      signalsDetail: "Ton, Emotion und Reibung stehen für Ausdruck bereit.",
+      guidanceDetail: "Kuratierte Hinweise formen den nächsten Schritt.",
+      patternSingularSuffix: "Muster",
+      patternsSuffix: "Muster",
+      signalSingularSuffix: "Signal",
+      signalsSuffix: "Signale",
+      goalSingularSuffix: "Ziel",
+      goalsSuffix: "Ziele",
+      readyValue: "Bereit",
+      insightMap: "Insight-Karte",
+      insightMapTitle: "Was das System bereits lesen kann",
+      readOnly: "Nur lesen",
+      semanticPatternTitle: "Semantisches Muster",
+      semanticPatternDetail: "Wiederverwendbares Wissen gibt dem Gespräch mehr Rückgrat.",
+      affectiveTextureTitle: "Affektive Textur",
+      affectiveTextureDetail: "Emotionaler Kontext bleibt sichtbar, bevor der Ton gewählt wird.",
+      planningRelevanceTitle: "Planungsrelevanz",
+      planningRelevanceDetail: "Ziel- und Aufgaben-Kontext trennt Rauschen von nützlicher Führung.",
+      reflectionReturnTitle: "Reflexionsrückkehr",
+      reflectionReturnDetail: "Insights helfen, wenn sie zu Chat, Erinnerung oder Aktion zurückkehren.",
+      sensemakingNotes: "Sinnnotizen",
+      signalDensityTitle: "Signaldichte",
+      signalDensityReadyBody: "AION hat bereits wiederverwendbaren Kontext für weniger generische Antworten.",
+      signalDensityEmptyBody: "Noch keine semantischen Muster sichtbar; die Fläche wartet auf erste Evidenz.",
+      interpretationBoundaryTitle: "Interpretationsgrenze",
+      interpretationBoundaryBody: "Insights bleiben lesende Sinnbildung; Aktion bleibt in Planung und Tools.",
+      nextUsefulMoveTitle: "Nächster nützlicher Schritt",
+      nextUsefulMoveFallback: "Nutze Chat, um das erste bedeutsame Signal zu erzeugen.",
+      guidanceCandidates: "Hinweiskandidaten",
+      deepWorkTitle: "Deep-Work-Fenster",
+      deepWorkNoGoalBody: "Forme ein bedeutsames Ziel, damit der Tag ein stärkeres Zentrum bekommt.",
+      deepWorkActiveBody: "Deine aktiven Ziele sind bereit für einen fokussierten Arbeitsblock.",
+      momentumTitle: "Momentum aufbauen",
+      momentumNoThreadBody: "Die nächste Nachricht kann der Anker für einen klareren Plan werden.",
+      momentumThreadPrefix: "Bleib nah am letzten Thread:",
+      reflectTitle: "Reflektieren und integrieren",
+      reflectNoSignalBody: "Eine kurze Reflexion kann die erste tiefere Lernschicht starten.",
+      reflectReadyBody: "Aktuelle Reflexionen können die nächste Antwort informieren.",
+      connectionTitle: "Verbindungschance",
+      connectionNoChannelBody: "Verbinde eine weitere Fläche, wenn du Kontinuität außerhalb der Web-Shell willst.",
+      connectionLivePrefix: "Kontinuität lebt bereits über:",
+    },
+    automations: {
+      eyebrow: "Automationen",
+      title: "Automationskontrolle",
+      subtitle: "ProaktivitĂ¤t, Scheduler und Attention Queue ohne versteckte Nebenwirkungen.",
+      proactive: "Proaktiver Modus",
+      queue: "Attention Queue",
+      scheduler: "Scheduler",
+      boundary: "Aktionsgrenze",
+      proactiveOnDetail: "Die Kontopräferenz erlaubt gelegentliche Follow-ups.",
+      proactiveOffDetail: "Follow-ups bleiben ruhig, bis du die Präferenz aktivierst.",
+      pendingValue: "ausstehend",
+      queueDetail: "Ausstehende Attention-Elemente aus dem aktuellen Health-Snapshot.",
+      checkingValue: "Prüfung",
+      unknownValue: "Unbekannt",
+      readyValue: "Bereit",
+      schedulerDetail: "Scheduler-Haltung wird aus Backend-Health gelesen.",
+      automationFlow: "Automationsfluss",
+      allowedToMove: "Was sich bewegen darf",
+      observed: "Beobachtet",
+      preferenceGateTitle: "Präferenz-Gate",
+      preferenceOnDetail: "Proaktive Follow-ups sind durch die Kontoeinstellungen erlaubt.",
+      preferenceOffDetail: "Das Konto hat proaktive Follow-ups deaktiviert.",
+      attentionQueueTitle: "Attention Queue",
+      attentionQueueDetail: "Wartende Attention bleibt vor künftiger Zustellung sichtbar.",
+      schedulerTickTitle: "Scheduler-Tick",
+      schedulerTickPresentDetail: "Scheduler-Details sind im Health-Snapshot vorhanden.",
+      schedulerTickQuietDetail: "Der aktuelle Health-Payload liefert keine Scheduler-Details.",
+      presentValue: "Vorhanden",
+      quietValue: "Ruhig",
+      actionBoundaryTitle: "Aktionsgrenze",
+      actionBoundaryDetail: "Diese Route beobachtet nur die Haltung; Nebeneffekte bleiben außerhalb der View-Schicht.",
+      readOnlyValue: "Nur lesen",
+      guardrails: "Leitplanken",
+      noHiddenExecutionTitle: "Keine versteckte Ausführung",
+      noHiddenExecutionBody: "Das Öffnen dieser Route erstellt keine Erinnerungen, sendet keine Nachrichten und ändert keine Proaktivitäts-Einstellungen.",
+      settingsSwitchTitle: "Einstellungen bleiben der Schalter",
+      settingsSwitchBody: "Die eigentliche proaktive Opt-in-Steuerung bleibt in Einstellungen als einzige Wahrheitsquelle.",
+      healthBackedTitle: "Health-gestützte Haltung",
+      healthUnavailableBody: "Health ist nicht verfügbar, daher werden Scheduler-Details konservativ angezeigt.",
+      healthBackedBody: "Scheduler- und Queue-Haltung kommen aus dem bestehenden Health-Endpunkt.",
+      healthDetails: "Health-Details",
+      pending: "Ausstehend",
+      claimed: "Beansprucht",
+      answered: "Beantwortet",
+      attentionItems: "Attention-Elemente",
+      claimedItems: "beanspruchte Elemente",
+      answeredItems: "beantwortete Elemente",
+    },
+    integrations: {
+      eyebrow: "Integrationen",
+      title: "Verbindungskarte",
+      subtitle: "Provider-Bereitschaft, Linkbedarf und externe KanĂ¤le in einer ruhigen FlĂ¤che.",
+      ready: "Bereite Provider",
+      linked: "Verbundene Tools",
+      attention: "Braucht Aufmerksamkeit",
+      boundary: "Integrationsgrenze",
+      readyShort: "bereit",
+      readyDetail: "Provider, die in der bestehenden Tools-Übersicht bereit melden.",
+      linkedDetail: "Aktivierte Tools, die der Shell aktuell zur Verfügung stehen.",
+      attentionDetail: "Provider, die blockiert sind oder auf Verknüpfung warten.",
+      providerMap: "Provider-Karte",
+      providerMapTitle: "Externe Flächen am Rand",
+      overview: "Übersicht",
+      noProvidersTitle: "Keine Provider sichtbar",
+      noProvidersDetail: "Die Tools-Übersicht liefert noch keine Provider-Zeilen.",
+      connectionRules: "Verbindungsregeln",
+      toolsOwnTogglesTitle: "Tools besitzen die Schalter",
+      toolsOwnTogglesBody: "Diese Route zeigt Integrationshaltung; detaillierte Aktivierung bleibt in Tools.",
+      linksStayExplicitTitle: "Links bleiben explizit",
+      linksStayExplicitBody: "Jeder Provider mit Linkbedarf braucht weiter den genehmigten Verknüpfungsfluss.",
+      noSilentProviderAccessTitle: "Kein stiller Provider-Zugriff",
+      noSilentProviderAccessBody: "Das Öffnen der Route liest nur Übersichtsdaten und ruft keine externen Provider auf.",
+      readinessDetails: "Bereitschaftsdetails",
+      configured: "Konfiguriert",
+      toolsKnown: "bekannte Tools",
+      linkRequired: "Link erforderlich",
+      waitingForLinkFlow: "warten auf Verknüpfung",
+      blocked: "Blockiert",
+      providerChecksBlocked: "blockierte Provider-Checks",
+      readyValue: "Bereit",
+      linkValue: "Link",
+      blockedValue: "Blockiert",
+      quietValue: "Ruhig",
     },
   },
 } as const;
@@ -554,6 +1653,27 @@ function normalizeRoute(pathname: string): RoutePath {
   }
   if (pathname === "/settings") {
     return "/settings";
+  }
+  if (pathname === "/memory") {
+    return "/memory";
+  }
+  if (pathname === "/reflections") {
+    return "/reflections";
+  }
+  if (pathname === "/plans") {
+    return "/plans";
+  }
+  if (pathname === "/goals") {
+    return "/goals";
+  }
+  if (pathname === "/insights") {
+    return "/insights";
+  }
+  if (pathname === "/automations") {
+    return "/automations";
+  }
+  if (pathname === "/integrations") {
+    return "/integrations";
   }
   if (pathname === "/tools") {
     return "/tools";
@@ -648,6 +1768,45 @@ function truncateText(value: string, maxLength: number) {
   }
 
   return `${trimmed.slice(0, Math.max(0, maxLength - 1)).trimEnd()}...`;
+}
+
+function recentActivityRows(
+  overview: AppPersonalityOverviewResponse | null,
+  locale: string,
+  fallbackRows: Array<{ title: string; when: string }>,
+  unknownTime: string,
+): RecentActivityDisplayItem[] {
+  const fallback = fallbackRows.map((item, index) => ({
+    key: `fallback-${index}-${item.title}`,
+    title: item.title,
+    when: item.when,
+  }));
+  const rawActivity = overview?.recent_activity;
+  if (!Array.isArray(rawActivity)) {
+    return fallback;
+  }
+
+  const rows = rawActivity.flatMap((item, index) => {
+    if (!item || typeof item !== "object") {
+      return [];
+    }
+    const record = item as Record<string, unknown>;
+    const title = stringValue(record.title ?? record.summary, "").trim();
+    if (!title) {
+      return [];
+    }
+    const timestamp = stringValue(record.timestamp ?? record.event_timestamp, "").trim();
+    const eventId = stringValue(record.event_id, "").trim();
+    return [
+      {
+        key: eventId || `activity-${index}-${title}`,
+        title,
+        when: timestamp ? formatTimestamp(timestamp, locale) : unknownTime,
+      },
+    ];
+  });
+
+  return rows.length > 0 ? rows : fallback;
 }
 
 function renderInlineMarkdown(text: string, keyPrefix: string): ReactNode[] {
@@ -867,14 +2026,6 @@ function localeOptionDisplay(option: (typeof UI_LANGUAGE_OPTIONS)[number], local
   return `${option.iconToken} ${option.nativeLabel}${localeLanguageLabel(option, locale) === option.nativeLabel ? "" : ` · ${localeLanguageLabel(option, locale)}`}`;
 }
 
-function titleCaseFromStatus(value: string) {
-  return value
-    .split("_")
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-}
-
 function toolStatusClass(status: string) {
   if (status === "integral_active" || status === "provider_ready") {
     return "badge-success";
@@ -888,20 +2039,33 @@ function toolStatusClass(status: string) {
   return "badge-outline";
 }
 
-function formatToolState(status: string) {
+function formatToolState(status: string, toolsCopy: typeof UI_COPY.en.tools) {
   if (status === "integral_active") {
-    return "Always on";
+    return toolsCopy.statusAlwaysOn;
   }
   if (status === "provider_ready") {
-    return "Ready to use";
+    return toolsCopy.statusReadyToUse;
   }
   if (status === "provider_ready_link_required") {
-    return "Link required";
+    return toolsCopy.statusLinkRequired;
   }
   if (status === "planned_placeholder") {
-    return "Planned";
+    return toolsCopy.statusPlanned;
   }
-  return titleCaseFromStatus(status);
+  return toolsCopy.statusNeedsReview;
+}
+
+function formatToolLinkState(status: string, toolsCopy: typeof UI_COPY.en.tools) {
+  if (status === "linked") {
+    return toolsCopy.linkStateLinkedValue;
+  }
+  if (status === "not_linked") {
+    return toolsCopy.linkStateNotLinkedValue;
+  }
+  if (status === "link_required") {
+    return toolsCopy.linkStateRequiredValue;
+  }
+  return toolsCopy.linkStateUnknownValue;
 }
 
 function summarizeToolAction(nextActions: string[], fallback: string) {
@@ -1807,6 +2971,8 @@ function PersonalityTimelineRow({
 
 export default function App() {
   const [route, setRoute] = useState<RoutePath>(() => normalizeRoute(window.location.pathname));
+  const mobileNavScrollRef = useRef<HTMLDivElement | null>(null);
+  const mobileNavRefs = useRef<Partial<Record<RoutePath, HTMLButtonElement | null>>>({});
   const [authMode, setAuthMode] = useState<AuthMode>("login");
   const [authModalOpen, setAuthModalOpen] = useState(() => window.location.pathname === "/login");
   const [authBusy, setAuthBusy] = useState(false);
@@ -1858,6 +3024,23 @@ export default function App() {
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
+
+  useEffect(() => {
+    if (initializing || route === "/login") {
+      return;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      const scrollContainer = mobileNavScrollRef.current;
+      const activeItem = mobileNavRefs.current[route];
+      if (!scrollContainer || !activeItem) {
+        return;
+      }
+
+      scrollContainer.scrollLeft = activeItem.offsetLeft + activeItem.offsetWidth / 2 - scrollContainer.clientWidth / 2;
+    });
+    return () => window.cancelAnimationFrame(frameId);
+  }, [initializing, route]);
 
   useEffect(() => {
     setError(null);
@@ -1913,7 +3096,7 @@ export default function App() {
         if (cancelled) {
           return;
         }
-        if (!(caught instanceof ApiError && caught.status === 401)) {
+        if (route !== "/login" && !(caught instanceof ApiError && caught.status === 401)) {
           setError(caught instanceof Error ? caught.message : "Failed to initialize session.");
         }
         if (route === "/login") {
@@ -2053,7 +3236,18 @@ export default function App() {
   }, [route, transcriptItems]);
 
   useEffect(() => {
-    if (!me || (route !== "/personality" && route !== "/chat" && route !== "/dashboard") || overview) {
+    if (
+      !me ||
+      (route !== "/personality" &&
+        route !== "/chat" &&
+        route !== "/dashboard" &&
+        route !== "/memory" &&
+        route !== "/reflections" &&
+        route !== "/plans" &&
+        route !== "/goals" &&
+        route !== "/insights") ||
+      overview
+    ) {
       return;
     }
 
@@ -2084,7 +3278,7 @@ export default function App() {
   }, [me, route, overview]);
 
   useEffect(() => {
-    if (!me || (route !== "/tools" && route !== "/chat" && route !== "/dashboard") || toolsOverview) {
+    if (!me || (route !== "/tools" && route !== "/chat" && route !== "/dashboard" && route !== "/integrations") || toolsOverview) {
       return;
     }
 
@@ -2115,7 +3309,7 @@ export default function App() {
   }, [me, route, toolsOverview]);
 
   useEffect(() => {
-    if (!me || route !== "/dashboard") {
+    if (!me || (route !== "/dashboard" && route !== "/automations")) {
       return;
     }
 
@@ -2390,9 +3584,9 @@ export default function App() {
     },
   ];
   const toolsHeroChips = [
-    `${stringValue(toolsOverview?.summary.provider_ready_count, "0")} ready`,
-    `${stringValue(toolsOverview?.summary.link_required_count, "0")} needs linking`,
-    `${stringValue(toolsOverview?.summary.integral_enabled_count, "0")} always on`,
+    `${stringValue(toolsOverview?.summary.provider_ready_count, "0")} ${copy.tools.readyChipSuffix}`,
+    `${stringValue(toolsOverview?.summary.link_required_count, "0")} ${copy.tools.needsLinkingChipSuffix}`,
+    `${stringValue(toolsOverview?.summary.integral_enabled_count, "0")} ${copy.tools.alwaysOnChipSuffix}`,
   ];
   const settingsHeroChips = [
     localeOptionDisplay(selectedUiLanguageMetadata, resolvedUiLanguage),
@@ -2421,29 +3615,29 @@ export default function App() {
       icon: "personality" as const,
     },
     {
-      label: "Memory",
+      route: "/memory" as const,
+      label: routeLabel("/memory", resolvedUiLanguage),
       icon: "memory",
-      disabled: true,
     },
     {
-      label: "Reflections",
+      route: "/reflections" as const,
+      label: routeLabel("/reflections", resolvedUiLanguage),
       icon: "reflections",
-      disabled: true,
     },
     {
-      label: "Plans",
+      route: "/plans" as const,
+      label: routeLabel("/plans", resolvedUiLanguage),
       icon: "plans",
-      disabled: true,
     },
     {
-      label: "Goals",
+      route: "/goals" as const,
+      label: routeLabel("/goals", resolvedUiLanguage),
       icon: "goals",
-      disabled: true,
     },
     {
-      label: "Insights",
+      route: "/insights" as const,
+      label: routeLabel("/insights", resolvedUiLanguage),
       icon: "insights",
-      disabled: true,
     },
     {
       route: "/tools" as const,
@@ -2451,14 +3645,14 @@ export default function App() {
       icon: "tools" as const,
     },
     {
-      label: "Automations",
+      route: "/automations" as const,
+      label: routeLabel("/automations", resolvedUiLanguage),
       icon: "automations",
-      disabled: true,
     },
     {
-      label: "Integrations",
+      route: "/integrations" as const,
+      label: routeLabel("/integrations", resolvedUiLanguage),
       icon: "integrations",
-      disabled: true,
     },
     {
       route: "/settings" as const,
@@ -2500,6 +3694,502 @@ export default function App() {
       title: `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} reusable patterns`,
       body: "Summaries stay near.",
       when: "Today",
+    },
+  ];
+  const memoryStatCards = [
+    {
+      label: copy.memory.semantic,
+      value: stringValue(knowledgeSummary?.semantic_conclusion_count, "0"),
+      detail: copy.memory.semanticDetail,
+    },
+    {
+      label: copy.memory.affective,
+      value: stringValue(knowledgeSummary?.affective_conclusion_count, "0"),
+      detail: copy.memory.affectiveDetail,
+    },
+    {
+      label: copy.memory.preferences,
+      value: stringValue(preferenceSummary?.learned_preference_count, "0"),
+      detail: copy.memory.preferencesDetail,
+    },
+  ];
+  const memoryPatternCount = stringValue(knowledgeSummary?.semantic_conclusion_count, "0");
+  const memoryInsightCount = stringValue(knowledgeSummary?.affective_conclusion_count, "0");
+  const memoryCueCount = stringValue(preferenceSummary?.learned_preference_count, "0");
+  const memoryPatternNumber = Number(memoryPatternCount);
+  const memoryInsightNumber = Number(memoryInsightCount);
+  const memoryCueNumber = Number(memoryCueCount);
+  const memoryPatternUnit =
+    memoryPatternNumber === 1
+      ? copy.memory.patternSingularSuffix
+      : memoryPatternNumber === 0
+        ? copy.memory.patternsZeroSuffix
+        : copy.memory.patternsSuffix;
+  const memoryInsightUnit =
+    memoryInsightNumber === 1
+      ? copy.memory.insightSingularSuffix
+      : memoryInsightNumber === 0
+        ? copy.memory.insightsZeroSuffix
+        : copy.memory.insightsSuffix;
+  const memoryCueUnit = memoryCueNumber === 1
+    ? copy.memory.cueSingularSuffix
+    : memoryCueNumber === 0
+      ? copy.memory.cuesZeroSuffix
+      : copy.memory.cuesSuffix;
+  const memoryContinuityRows = [
+    {
+      token: "S",
+      title: copy.memory.semanticMemoryTitle,
+      detail: copy.memory.semanticMemoryDetail,
+      value: `${memoryPatternCount} ${memoryPatternUnit}`,
+    },
+    {
+      token: "A",
+      title: copy.memory.affectiveMemoryTitle,
+      detail: copy.memory.affectiveMemoryDetail,
+      value: `${memoryInsightCount} ${memoryInsightUnit}`,
+    },
+    {
+      token: "P",
+      title: copy.memory.preferencesMemoryTitle,
+      detail: copy.memory.preferencesMemoryDetail,
+      value: `${memoryCueCount} ${memoryCueUnit}`,
+    },
+  ];
+  const memorySignalCards = [
+    {
+      title: copy.memory.conversationContinuityTitle,
+      body:
+        recentChannelsLabel === copy.common.noData
+          ? copy.memory.memorySourceEmptyBody
+          : `${copy.memory.recentChannelsPrefix} ${recentChannelsLabel}.`,
+      meta: copy.memory.currentContext,
+    },
+    {
+      title: copy.memory.reflectionBridgeTitle,
+      body:
+        stringValue(knowledgeSummary?.affective_conclusion_count, "0") === "0"
+          ? copy.memory.reflectionBridgeEmptyBody
+          : copy.memory.reflectionBridgeReadyBody,
+      meta: copy.memory.slowLearning,
+    },
+    {
+      title: copy.memory.preferencePostureTitle,
+      body:
+        stringValue(preferenceSummary?.learned_preference_count, "0") === "0"
+          ? copy.memory.preferencePostureEmptyBody
+          : copy.memory.preferencePostureReadyBody,
+      meta: copy.memory.personalization,
+    },
+  ];
+  const reflectionInsightCount = stringValue(knowledgeSummary?.affective_conclusion_count, "0");
+  const reflectionInsightNumber = Number(reflectionInsightCount);
+  const reflectionInsightUnit = reflectionInsightNumber === 1
+    ? copy.reflections.insightSingularSuffix
+    : reflectionInsightNumber === 0
+      ? copy.reflections.insightsZeroSuffix
+      : copy.reflections.insightsSuffix;
+  const reflectionPendingCount = stringValue(planningSummary?.active_goal_count, "0") === "0"
+    ? "1"
+    : stringValue(planningSummary?.active_goal_count, "0");
+  const reflectionThreadUnit = Number(reflectionPendingCount) === 1
+    ? copy.reflections.threadSingularSuffix
+    : copy.reflections.threadsSuffix;
+  const reflectionStatCards = [
+    {
+      label: copy.reflections.integrated,
+      value: reflectionInsightCount,
+      detail: copy.reflections.integratedDetail,
+    },
+    {
+      label: copy.reflections.pending,
+      value: `${reflectionPendingCount} ${reflectionThreadUnit}`,
+      detail: copy.reflections.pendingDetail,
+    },
+    {
+      label: copy.reflections.cadence,
+      value: reflectionInsightCount === "0" ? copy.reflections.readyValue : copy.reflections.activeValue,
+      detail: copy.reflections.cadenceDetail,
+    },
+  ];
+  const reflectionFlowRows = [
+    {
+      token: "N",
+      title: copy.reflections.noticeTitle,
+      detail: copy.reflections.noticeDetail,
+      value: recentChannelsLabel === copy.common.noData ? copy.reflections.webValue : recentChannelsLabel,
+    },
+    {
+      token: "I",
+      title: copy.reflections.integrateTitle,
+      detail: copy.reflections.integrateDetail,
+      value: `${reflectionInsightCount} ${reflectionInsightUnit}`,
+    },
+    {
+      token: "R",
+      title: copy.reflections.returnTitle,
+      detail: copy.reflections.returnDetail,
+      value: copy.reflections.readyShort,
+    },
+  ];
+  const reflectionPromptCards = [
+    {
+      title: copy.reflections.whatChangedTitle,
+      body: copy.reflections.whatChangedBody,
+    },
+    {
+      title: copy.reflections.whatQuietTitle,
+      body: copy.reflections.whatQuietBody,
+    },
+    {
+      title: copy.reflections.whatActionTitle,
+      body: copy.reflections.whatActionBody,
+    },
+  ];
+  const plansStatCards = [
+    {
+      label: copy.plans.activeGoals,
+      value: stringValue(planningSummary?.active_goal_count, "0"),
+      detail: copy.plans.activeGoalsDetail,
+    },
+    {
+      label: copy.plans.activeTasks,
+      value: stringValue(planningSummary?.active_task_count, "0"),
+      detail: copy.plans.activeTasksDetail,
+    },
+    {
+      label: copy.plans.posture,
+      value: stringValue(planningSummary?.active_goal_count, "0") === "0" ? copy.plans.readyValue : copy.plans.alignedValue,
+      detail: copy.plans.postureDetail,
+    },
+  ];
+  const plansGoalCount = stringValue(planningSummary?.active_goal_count, "0");
+  const plansTaskCount = stringValue(planningSummary?.active_task_count, "0");
+  const plansGoalUnit = Number(plansGoalCount) === 1 ? copy.plans.goalSingularSuffix : copy.plans.goalsSuffix;
+  const plansTaskUnit = Number(plansTaskCount) === 1 ? copy.plans.taskSingularSuffix : copy.plans.tasksSuffix;
+  const plansFlowRows = [
+    {
+      token: "G",
+      title: copy.plans.gatherTitle,
+      detail: copy.plans.gatherDetail,
+      value: `${plansGoalCount} ${plansGoalUnit}`,
+    },
+    {
+      token: "S",
+      title: copy.plans.sequenceTitle,
+      detail: copy.plans.sequenceDetail,
+      value: `${plansTaskCount} ${plansTaskUnit}`,
+    },
+    {
+      token: "B",
+      title: copy.plans.boundTitle,
+      detail: copy.plans.boundDetail,
+      value: copy.plans.safeValue,
+    },
+  ];
+  const plansNextSteps = [
+    {
+      title: copy.plans.clarifyOutcomeTitle,
+      body: stringValue(planningSummary?.active_goal_count, "0") === "0"
+        ? copy.plans.clarifyOutcomeEmptyBody
+        : copy.plans.clarifyOutcomeReadyBody,
+    },
+    {
+      title: copy.plans.convertSequenceTitle,
+      body: stringValue(planningSummary?.active_task_count, "0") === "0"
+        ? copy.plans.convertSequenceEmptyBody
+        : copy.plans.convertSequenceReadyBody,
+    },
+    {
+      title: copy.plans.returnChatTitle,
+      body: copy.plans.returnChatBody,
+    },
+  ];
+  const plansContextCards = [
+    { title: copy.plans.directionTitle, body: copy.plans.directionBody },
+    { title: copy.plans.cadenceTitle, body: copy.plans.cadenceBody },
+    { title: copy.plans.boundaryTitle, body: copy.plans.boundaryBody },
+  ];
+  const goalsStatCards = [
+    {
+      label: copy.goals.active,
+      value: stringValue(planningSummary?.active_goal_count, "0"),
+      detail: copy.goals.activeDetail,
+    },
+    {
+      label: copy.goals.progress,
+      value: stringValue(planningSummary?.active_goal_count, "0") === "0" ? copy.goals.openValue : copy.goals.movingValue,
+      detail: copy.goals.progressDetail,
+    },
+    {
+      label: copy.goals.focus,
+      value: dashboardGoalRows[0]?.value ?? "0%",
+      detail: copy.goals.dailyRhythmTitle ?? copy.goals.focusFallback,
+    },
+  ];
+  const goalsCount = stringValue(planningSummary?.active_goal_count, "0");
+  const goalsUnit = Number(goalsCount) === 1 ? copy.goals.goalSingularSuffix : copy.goals.goalsSuffix;
+  const goalHorizonBaseRows = [
+    { title: copy.goals.dailyRhythmTitle, value: "72%" },
+    { title: copy.goals.channelContinuityTitle, value: "58%" },
+    { title: copy.goals.reusableInsightsTitle, value: "41%" },
+    { title: copy.goals.embodiedPersonalityTitle, value: "33%" },
+  ];
+  const goalHorizonRows = goalHorizonBaseRows.map((goal, index) => ({
+    ...goal,
+    token: String(index + 1),
+    detail:
+      index === 0
+        ? copy.goals.strongestCandidateDetail
+        : index === 1
+          ? copy.goals.continuitySurfacesDetail
+          : index === 2
+            ? copy.goals.reusableLearningDetail
+            : copy.goals.embodiedDirectionDetail,
+  }));
+  const goalSignalCards = [
+    {
+      title: copy.goals.directionTitle,
+      body:
+        stringValue(planningSummary?.active_goal_count, "0") === "0"
+          ? copy.goals.directionEmptyBody
+          : `${goalsCount} ${goalsUnit} ${
+              Number(goalsCount) === 1 ? copy.goals.directionReadySingularBody : copy.goals.directionReadyPluralBody
+            }`,
+    },
+    {
+      title: copy.goals.momentumTitle,
+      body: copy.goals.momentumBody,
+    },
+    {
+      title: copy.goals.focusBoundaryTitle,
+      body: copy.goals.focusBoundaryBody,
+    },
+  ];
+  const goalGuidanceCards = [
+    { title: copy.goals.nextFocusTitle, body: copy.goals.nextFocusBody },
+    { title: copy.goals.planningBridgeTitle, body: copy.goals.planningBridgeBody },
+    { title: copy.goals.reflectionBridgeTitle, body: copy.goals.reflectionBridgeBody },
+  ];
+  const insightPatternCount = stringValue(knowledgeSummary?.semantic_conclusion_count, "0");
+  const insightSignalCount = stringValue(knowledgeSummary?.affective_conclusion_count, "0");
+  const insightGoalCount = stringValue(planningSummary?.active_goal_count, "0");
+  const insightPatternUnit =
+    Number(insightPatternCount) === 1 ? copy.insights.patternSingularSuffix : copy.insights.patternsSuffix;
+  const insightSignalUnit =
+    Number(insightSignalCount) === 1 ? copy.insights.signalSingularSuffix : copy.insights.signalsSuffix;
+  const insightGoalUnit =
+    Number(insightGoalCount) === 1 ? copy.insights.goalSingularSuffix : copy.insights.goalsSuffix;
+  const insightStatCards = [
+    {
+      label: copy.insights.patterns,
+      value: insightPatternCount,
+      detail: copy.insights.patternsDetail,
+    },
+    {
+      label: copy.insights.signals,
+      value: insightSignalCount,
+      detail: copy.insights.signalsDetail,
+    },
+    {
+      label: copy.insights.guidance,
+      value: "4",
+      detail: copy.insights.guidanceDetail,
+    },
+  ];
+  const insightSignalRows = [
+    {
+      token: "S",
+      title: copy.insights.semanticPatternTitle,
+      detail: copy.insights.semanticPatternDetail,
+      value: `${insightPatternCount} ${insightPatternUnit}`,
+    },
+    {
+      token: "A",
+      title: copy.insights.affectiveTextureTitle,
+      detail: copy.insights.affectiveTextureDetail,
+      value: `${insightSignalCount} ${insightSignalUnit}`,
+    },
+    {
+      token: "P",
+      title: copy.insights.planningRelevanceTitle,
+      detail: copy.insights.planningRelevanceDetail,
+      value: `${insightGoalCount} ${insightGoalUnit}`,
+    },
+    {
+      token: "R",
+      title: copy.insights.reflectionReturnTitle,
+      detail: copy.insights.reflectionReturnDetail,
+      value: copy.insights.readyValue,
+    },
+  ];
+  const insightClarityCards = [
+    {
+      title: copy.insights.signalDensityTitle,
+      body:
+        Number(stringValue(knowledgeSummary?.semantic_conclusion_count, "0")) > 0
+          ? copy.insights.signalDensityReadyBody
+          : copy.insights.signalDensityEmptyBody,
+    },
+    {
+      title: copy.insights.interpretationBoundaryTitle,
+      body: copy.insights.interpretationBoundaryBody,
+    },
+    {
+      title: copy.insights.nextUsefulMoveTitle,
+      body:
+        stringValue(planningSummary?.active_goal_count, "0") === "0"
+          ? copy.insights.deepWorkNoGoalBody
+          : copy.insights.deepWorkActiveBody,
+    },
+  ];
+  const insightGuidanceCards = [
+    {
+      title: copy.insights.deepWorkTitle,
+      body:
+        stringValue(planningSummary?.active_goal_count, "0") === "0"
+          ? copy.insights.deepWorkNoGoalBody
+          : copy.insights.deepWorkActiveBody,
+    },
+    {
+      title: copy.insights.momentumTitle,
+      body: latestUserMessage
+        ? `${copy.insights.momentumThreadPrefix} ${truncateText(latestUserMessage, 72)}`
+        : copy.insights.momentumNoThreadBody,
+    },
+    {
+      title: copy.insights.reflectTitle,
+      body:
+        stringValue(knowledgeSummary?.affective_conclusion_count, "0") === "0"
+          ? copy.insights.reflectNoSignalBody
+          : copy.insights.reflectReadyBody,
+    },
+    {
+      title: copy.insights.connectionTitle,
+      body:
+        recentChannelsLabel === copy.common.noData
+          ? copy.insights.connectionNoChannelBody
+          : `${copy.insights.connectionLivePrefix} ${recentChannelsLabel}.`,
+    },
+  ];
+  const proactiveEnabled = Boolean(me?.settings.proactive_opt_in);
+  const schedulerSummary = healthSnapshot?.proactive?.scheduler_tick_summary ?? {};
+  const automationStatCards = [
+    {
+      label: copy.automations.proactive,
+      value: proactiveEnabled ? copy.common.on : copy.common.off,
+      detail: proactiveEnabled ? copy.automations.proactiveOnDetail : copy.automations.proactiveOffDetail,
+    },
+    {
+      label: copy.automations.queue,
+      value: `${numberValue(healthSnapshot?.attention?.pending)} ${copy.automations.pendingValue}`,
+      detail: copy.automations.queueDetail,
+    },
+    {
+      label: copy.automations.scheduler,
+      value: healthLoading
+        ? copy.automations.checkingValue
+        : healthError
+          ? copy.automations.unknownValue
+          : healthSnapshot?.status ?? copy.automations.readyValue,
+      detail: healthError ?? copy.automations.schedulerDetail,
+    },
+  ];
+  const automationFlowRows = [
+    {
+      token: "P",
+      title: copy.automations.preferenceGateTitle,
+      detail: proactiveEnabled ? copy.automations.preferenceOnDetail : copy.automations.preferenceOffDetail,
+      value: proactiveEnabled ? copy.common.on : copy.common.off,
+    },
+    {
+      token: "Q",
+      title: copy.automations.attentionQueueTitle,
+      detail: copy.automations.attentionQueueDetail,
+      value: `${numberValue(healthSnapshot?.attention?.pending)} ${copy.automations.pendingValue}`,
+    },
+    {
+      token: "S",
+      title: copy.automations.schedulerTickTitle,
+      detail: Object.keys(schedulerSummary).length
+        ? copy.automations.schedulerTickPresentDetail
+        : copy.automations.schedulerTickQuietDetail,
+      value: Object.keys(schedulerSummary).length ? copy.automations.presentValue : copy.automations.quietValue,
+    },
+    {
+      token: "B",
+      title: copy.automations.actionBoundaryTitle,
+      detail: copy.automations.actionBoundaryDetail,
+      value: copy.automations.readOnlyValue,
+    },
+  ];
+  const automationBoundaryCards = [
+    {
+      title: copy.automations.noHiddenExecutionTitle,
+      body: copy.automations.noHiddenExecutionBody,
+    },
+    {
+      title: copy.automations.settingsSwitchTitle,
+      body: copy.automations.settingsSwitchBody,
+    },
+    {
+      title: copy.automations.healthBackedTitle,
+      body: healthError ? copy.automations.healthUnavailableBody : copy.automations.healthBackedBody,
+    },
+  ];
+  const automationHealthRows = [
+    {
+      title: copy.automations.pending,
+      body: `${numberValue(healthSnapshot?.attention?.pending)} ${copy.automations.attentionItems}`,
+    },
+    {
+      title: copy.automations.claimed,
+      body: `${numberValue(healthSnapshot?.attention?.claimed)} ${copy.automations.claimedItems}`,
+    },
+    {
+      title: copy.automations.answered,
+      body: `${numberValue(healthSnapshot?.attention?.answered)} ${copy.automations.answeredItems}`,
+    },
+  ];
+  const integrationItems = toolsOverview?.groups.flatMap((group) => group.items) ?? [];
+  const integrationReadyCount = toolsOverview?.summary.provider_ready_count ?? 0;
+  const integrationBlockedCount = toolsOverview?.summary.provider_blocked_count ?? 0;
+  const integrationLinkRequiredCount = toolsOverview?.summary.link_required_count ?? 0;
+  const integrationStatCards = [
+    {
+      label: copy.integrations.ready,
+      value: String(integrationReadyCount),
+      detail: copy.integrations.readyDetail,
+    },
+    {
+      label: copy.integrations.linked,
+      value: String(integrationItems.filter((item) => item.enabled).length),
+      detail: copy.integrations.linkedDetail,
+    },
+    {
+      label: copy.integrations.attention,
+      value: String(integrationBlockedCount + integrationLinkRequiredCount),
+      detail: copy.integrations.attentionDetail,
+    },
+  ];
+  const integrationProviderRows = integrationItems.slice(0, 5).map((item) => ({
+    token: item.label.slice(0, 1).toUpperCase(),
+    title: item.label,
+    detail: item.status_reason || item.description,
+    value: item.link_required ? copy.integrations.linkValue : item.provider.ready ? copy.integrations.readyValue : copy.integrations.blockedValue,
+  }));
+  const integrationBoundaryCards = [
+    {
+      title: copy.integrations.toolsOwnTogglesTitle,
+      body: copy.integrations.toolsOwnTogglesBody,
+    },
+    {
+      title: copy.integrations.linksStayExplicitTitle,
+      body: copy.integrations.linksStayExplicitBody,
+    },
+    {
+      title: copy.integrations.noSilentProviderAccessTitle,
+      body: copy.integrations.noSilentProviderAccessBody,
     },
   ];
   const chatSuggestedActions = [
@@ -2590,7 +4280,13 @@ export default function App() {
       key: "skills",
       className: "aion-personality-callout aion-personality-callout-skills",
       eyebrow: "Skills",
-      title: stringValue((overview?.role_skill_state as Record<string, unknown> | undefined)?.skill_count, "18"),
+      title: stringValue(
+        ((overview?.role_skill_state as Record<string, unknown> | undefined)?.skill_summary as
+          | Record<string, unknown>
+          | undefined)?.skill_count ??
+          (overview?.role_skill_state as Record<string, unknown> | undefined)?.skill_count,
+        "18",
+      ),
       body: "Visible capabilities and tools.",
     },
     {
@@ -2651,13 +4347,12 @@ export default function App() {
     { label: "Preferences", value: `${stringValue(preferenceSummary?.learned_preference_count, "0")}` },
     { label: "Intuition", value: "Strong" },
   ];
-  const personalityRecentActivity = [
-    { title: "Updated project plan", when: "2h ago" },
-    { title: "Deep work window refined", when: "3h ago" },
-    { title: "Completed reflection cycle", when: "5h ago" },
-    { title: "New memory captured", when: "Yesterday" },
-    { title: "Learned preference captured", when: "Yesterday" },
-  ];
+  const personalityRecentActivity = recentActivityRows(
+    overview,
+    resolvedUiLanguage,
+    copy.common.recentActivity,
+    copy.common.unknownTime,
+  );
   const publicNavLabels = {
     en: ["Features", "How it works", "Privacy", "Resources"],
     pl: ["Funkcje", "Jak to działa", "Prywatność", "Zasoby"],
@@ -3019,9 +4714,9 @@ export default function App() {
       if (toolId === "telegram" && !nextValue) {
         setTelegramLinkStart(null);
       }
-      setToast("Your tool choices have been saved.");
+      setToast(copy.tools.saveSuccess);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Failed to save tool preference.");
+      setError(caught instanceof Error ? caught.message : copy.tools.saveError);
     } finally {
       setSavingToolId(null);
     }
@@ -3036,9 +4731,9 @@ export default function App() {
       const nextOverview = await api.getToolsOverview();
       setTelegramLinkStart(linkStart);
       setToolsOverview(nextOverview);
-      setToast("Your Telegram link code is ready.");
+      setToast(copy.tools.telegramLinkReady);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Failed to start Telegram linking.");
+      setError(caught instanceof Error ? caught.message : copy.tools.telegramStartError);
     } finally {
       setTelegramLinkBusy(false);
     }
@@ -3064,6 +4759,25 @@ export default function App() {
       <div className="aion-public-shell min-h-screen text-base-content">
         <div className="aion-public-shell-frame">
           <section className="aion-public-window">
+            <div className="aion-public-canonical-tag" aria-hidden="true">
+              <span>1</span>
+              <strong>Landing Page</strong>
+            </div>
+            <div className="aion-public-browser-chrome" aria-hidden="true">
+              <div className="aion-public-browser-dots">
+                <span />
+                <span />
+                <span />
+              </div>
+              <div className="aion-public-browser-address">
+                <span>aion.ai</span>
+              </div>
+              <div className="aion-public-browser-actions">
+                <span />
+                <span />
+                <span />
+              </div>
+            </div>
             <div className="aion-public-window-body">
               <header className="aion-public-nav">
                 <AviaryWordmark compact />
@@ -3310,7 +5024,7 @@ export default function App() {
 
   return (
     <div className="aion-shell min-h-screen text-base-content">
-      <div className="mx-auto max-w-[112rem] px-3 pb-12 pt-3 sm:px-4 md:px-5 md:pb-6 md:pt-4 xl:px-5">
+      <div className="mx-auto max-w-[112rem] px-3 pb-28 pt-3 sm:px-4 md:px-5 md:pb-6 md:pt-4 xl:px-5">
         <section className="aion-shell-window">
           <div className="aion-shell-window-body">
         <div className="aion-shell-frame aion-shell-frame-canonical grid gap-3 xl:grid-cols-[14.7rem_minmax(0,1fr)]">
@@ -3373,7 +5087,7 @@ export default function App() {
           </aside>
 
           <div className="aion-shell-stage grid gap-3">
-            <div className={`aion-shell-toolbar hidden xl:block ${route === "/chat" ? "aion-shell-toolbar-chat-canonical" : ""}`}>
+            <div className="aion-shell-toolbar aion-shell-toolbar-chat-canonical hidden xl:block">
               <ShellUtilityBar
                 currentSurface={routeLabel(route, resolvedUiLanguage)}
                 currentUserLabel={currentUserLabel}
@@ -3418,7 +5132,7 @@ export default function App() {
               ) : null}
             </div>
 
-            <header className="aion-panel rounded-[2rem] xl:hidden">
+            <header className={`aion-panel aion-mobile-route-header aion-mobile-route-header-${route.slice(1)} rounded-[2rem] xl:hidden`}>
               <div className="flex flex-wrap items-center gap-3 px-4 py-4 sm:px-5">
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-3">
@@ -3444,7 +5158,7 @@ export default function App() {
                 </button>
               </div>
 
-              <div className="border-t border-base-300/70 px-4 py-3 sm:px-5">
+              <div className="hidden border-t border-base-300/70 px-4 py-3 sm:px-5 md:block">
                 <div className="flex gap-2 overflow-x-auto pb-1">
                   {ROUTES.map((entry) => (
                     <button
@@ -3506,8 +5220,10 @@ export default function App() {
 
             <main className="flex-1">
           {route === "/dashboard" ? (
-            <section className="grid gap-4">
-              <section className="aion-panel aion-dashboard-stage">
+            <section className="aion-dashboard-canvas grid gap-4">
+              <div className="aion-dashboard-top-composition">
+                <div className="aion-dashboard-primary-column">
+              <section className="aion-panel aion-dashboard-stage aion-dashboard-stage-canonical-main">
                 <div className="aion-dashboard-stage-main">
                   <div className="aion-dashboard-stage-copy">
                     <span className="aion-chat-headline-emblem" aria-hidden="true" />
@@ -3572,63 +5288,6 @@ export default function App() {
                   </div>
 
                 </div>
-
-                <aside className="aion-dashboard-guidance-column">
-                  <section className="aion-dashboard-guidance-panel">
-                    <p className="text-sm uppercase tracking-[0.22em] text-base-800">Insights and guidance</p>
-                    <h3 className="mt-2 font-display text-2xl text-base-900">Curated for you</h3>
-                    <div className="aion-dashboard-guidance-list">
-                      {dashboardGuidanceCards.slice(0, 4).map((card, index) => (
-                        <article
-                          key={card.title}
-                          className={`aion-dashboard-guidance-row ${index === 0 ? "aion-dashboard-guidance-row-lead" : ""}`}
-                        >
-                          <span className="aion-dashboard-guidance-token" aria-hidden="true" />
-                          <div className="aion-dashboard-guidance-row-copy">
-                            <p className="aion-dashboard-guidance-row-title">{card.title}</p>
-                            <p className="aion-dashboard-guidance-row-body">{card.body}</p>
-                          </div>
-                          <button className="aion-dashboard-mini-action aion-dashboard-mini-action-quiet" type="button">
-                            {card.action}
-                          </button>
-                        </article>
-                      ))}
-                    </div>
-                    <button className="aion-dashboard-action-button aion-dashboard-guidance-cta" type="button">
-                      View all insights
-                    </button>
-                  </section>
-
-                  <section className="aion-dashboard-recent-panel aion-dashboard-recent-panel-compact">
-                    <div className="mb-4 flex items-center justify-between gap-3">
-                      <div>
-                        <p className="text-sm uppercase tracking-[0.22em] text-base-800">Recent activity</p>
-                        <h4 className="mt-2 font-display text-[1.06rem] text-base-900">What just changed</h4>
-                      </div>
-                      <button className="aion-dashboard-link" type="button">
-                        View all
-                      </button>
-                    </div>
-                    <div className="grid gap-2.5">
-                      {personalityRecentActivity.slice(0, 4).map((item) => (
-                        <article key={item.title} className="aion-dashboard-recent-row">
-                          <div>
-                            <p className="text-[0.82rem] font-semibold text-base-900">{item.title}</p>
-                          </div>
-                          <span className="text-xs uppercase tracking-[0.18em] text-base-800">{item.when}</span>
-                        </article>
-                      ))}
-                    </div>
-                  </section>
-
-                  <section className="aion-dashboard-side-story aion-dashboard-side-story-lead aion-dashboard-guidance-intention">
-                    <p className="text-sm uppercase tracking-[0.22em] text-base-800">Today's intention</p>
-                    <p className="mt-3.5 font-display text-[1.78rem] leading-[1.08] text-base-900">
-                      Create with clarity.
-                      <span className="block mt-1.5">Move with purpose.</span>
-                    </p>
-                  </section>
-                </aside>
               </section>
 
               <section className="aion-panel aion-dashboard-flow-panel aion-dashboard-flow-panel-bridge">
@@ -3742,6 +5401,65 @@ export default function App() {
                   </div>
                 </article>
               </section>
+                </div>
+
+                <aside className="aion-dashboard-guidance-column">
+                  <section className="aion-dashboard-guidance-panel">
+                    <p className="text-sm uppercase tracking-[0.22em] text-base-800">Insights and guidance</p>
+                    <h3 className="mt-2 font-display text-2xl text-base-900">Curated for you</h3>
+                    <div className="aion-dashboard-guidance-list">
+                      {dashboardGuidanceCards.slice(0, 4).map((card, index) => (
+                        <article
+                          key={card.title}
+                          className={`aion-dashboard-guidance-row ${index === 0 ? "aion-dashboard-guidance-row-lead" : ""}`}
+                        >
+                          <span className="aion-dashboard-guidance-token" aria-hidden="true" />
+                          <div className="aion-dashboard-guidance-row-copy">
+                            <p className="aion-dashboard-guidance-row-title">{card.title}</p>
+                            <p className="aion-dashboard-guidance-row-body">{card.body}</p>
+                          </div>
+                          <button className="aion-dashboard-mini-action aion-dashboard-mini-action-quiet" type="button">
+                            {card.action}
+                          </button>
+                        </article>
+                      ))}
+                    </div>
+                    <button className="aion-dashboard-action-button aion-dashboard-guidance-cta" type="button">
+                      View all insights
+                    </button>
+                  </section>
+
+                  <section className="aion-dashboard-recent-panel aion-dashboard-recent-panel-compact">
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm uppercase tracking-[0.22em] text-base-800">Recent activity</p>
+                        <h4 className="mt-2 font-display text-[1.06rem] text-base-900">What just changed</h4>
+                      </div>
+                      <button className="aion-dashboard-link" type="button">
+                        View all
+                      </button>
+                    </div>
+                    <div className="grid gap-2.5">
+                      {personalityRecentActivity.slice(0, 4).map((item) => (
+                        <article key={item.key} className="aion-dashboard-recent-row">
+                          <div>
+                            <p className="text-[0.82rem] font-semibold text-base-900">{item.title}</p>
+                          </div>
+                          <span className="text-xs uppercase tracking-[0.18em] text-base-800">{item.when}</span>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="aion-dashboard-side-story aion-dashboard-side-story-lead aion-dashboard-guidance-intention">
+                    <p className="text-sm uppercase tracking-[0.22em] text-base-800">Today's intention</p>
+                    <p className="mt-3.5 font-display text-[1.78rem] leading-[1.08] text-base-900">
+                      Create with clarity.
+                      <span className="block mt-1.5">Move with purpose.</span>
+                    </p>
+                  </section>
+                </aside>
+              </div>
 
               <section className="grid gap-4">
                 <article className="aion-panel aion-dashboard-summary-band aion-dashboard-summary-band-closure">
@@ -3953,6 +5671,27 @@ export default function App() {
                   </div>
 
                   <aside className="aion-chat-portrait-panel aion-chat-portrait-panel-elevated">
+                    <article className="aion-chat-portrait-note aion-chat-portrait-note-memory">
+                      <p className="aion-chat-portrait-note-eyebrow">Memory continuity</p>
+                      <p className="aion-chat-portrait-note-title">Strong coherence</p>
+                      <p className="aion-chat-portrait-note-body">
+                        Preferences stable across touchpoints.
+                      </p>
+                    </article>
+                    <article className="aion-chat-portrait-note aion-chat-portrait-note-expression">
+                      <p className="aion-chat-portrait-note-eyebrow">Expression</p>
+                      <p className="aion-chat-portrait-note-title">Attentive</p>
+                      <p className="aion-chat-portrait-note-body">
+                        Listening and synthesizing context.
+                      </p>
+                    </article>
+                    <article className="aion-chat-portrait-note aion-chat-portrait-note-channels">
+                      <p className="aion-chat-portrait-note-eyebrow">Channel</p>
+                      <p className="aion-chat-portrait-note-title">App</p>
+                      <p className="aion-chat-portrait-note-body">
+                        Private focused environment.
+                      </p>
+                    </article>
                     <div className="aion-chat-portrait-overlay">
                       <p className="text-[11px] uppercase tracking-[0.22em] text-[#5f8f93]">Planning</p>
                       <p className="mt-2 font-display text-[1.62rem] leading-[1.08] text-base-900">{chatCurrentFocus}</p>
@@ -3981,154 +5720,819 @@ export default function App() {
             </section>
           ) : null}
 
+          {route === "/memory" ? (
+            <div className="aion-memory-canvas grid gap-4">
+              <section className="aion-memory-overview-bar">
+                <span className="aion-chat-headline-emblem" aria-hidden="true" />
+                <div className="aion-memory-overview-copy">
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.memory.eyebrow}</p>
+                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.memory.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.memory.subtitle}</p>
+                </div>
+                <div className="aion-memory-overview-status" aria-label="Memory status">
+                  <span>{copy.memory.continuity}</span>
+                  <strong>{memoryPatternCount} {memoryPatternUnit}</strong>
+                </div>
+              </section>
+
+              <section className="aion-memory-stat-row" aria-label="Memory summary">
+                {memoryStatCards.map((item) => (
+                  <article key={item.label} className="aion-memory-stat-card">
+                    <p className="aion-memory-stat-label">{item.label}</p>
+                    <p className="aion-memory-stat-value">{item.value}</p>
+                    <p className="aion-memory-stat-detail">{item.detail}</p>
+                  </article>
+                ))}
+              </section>
+
+              <div className="aion-memory-layout">
+                <section className="aion-memory-library-panel">
+                  <div className="aion-memory-library-head">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.memory.memoryMap}</p>
+                      <h3 className="mt-2 font-display text-3xl text-base-900">{copy.memory.memoryMapTitle}</h3>
+                    </div>
+                    <span className="aion-memory-library-chip">{copy.memory.noRawRecords}</span>
+                  </div>
+
+                  <div className="aion-memory-orbit" aria-hidden="true">
+                    <span className="aion-memory-orbit-core" />
+                    <span className="aion-memory-orbit-ring aion-memory-orbit-ring-one" />
+                    <span className="aion-memory-orbit-ring aion-memory-orbit-ring-two" />
+                    <span className="aion-memory-orbit-node aion-memory-orbit-node-a" />
+                    <span className="aion-memory-orbit-node aion-memory-orbit-node-b" />
+                    <span className="aion-memory-orbit-node aion-memory-orbit-node-c" />
+                  </div>
+
+                  <div className="aion-memory-continuity-list">
+                    {memoryContinuityRows.map((row) => (
+                      <PersonalityTimelineRow
+                        key={row.title}
+                        token={row.token}
+                        title={row.title}
+                        detail={row.detail}
+                        value={row.value}
+                      />
+                    ))}
+                  </div>
+                </section>
+
+                <aside className="aion-memory-side-stack">
+                  <section className="aion-memory-side-panel aion-memory-side-panel-live">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.memory.recent}</p>
+                    <h3 className="mt-2 font-display text-2xl text-base-900">{copy.memory.continuityNearConversation}</h3>
+                    <div className="mt-5 grid gap-3">
+                      {memorySignalCards.map((item) => (
+                        <article key={item.title} className="aion-memory-signal-card">
+                          <div>
+                            <p className="aion-memory-signal-meta">{item.meta}</p>
+                            <h4 className="aion-memory-signal-title">{item.title}</h4>
+                          </div>
+                          <p className="aion-memory-signal-body">{item.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="aion-memory-side-panel aion-memory-side-panel-recent">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.memory.recentMovement}</p>
+                    <div className="mt-4 grid gap-3">
+                      {personalityRecentActivity.slice(0, 4).map((item) => (
+                        <article key={item.key} className="aion-memory-activity-row">
+                          <span className="aion-memory-activity-dot" aria-hidden="true" />
+                          <div>
+                            <p className="text-sm font-semibold text-base-900">{item.title}</p>
+                            <p className="mt-1 text-xs uppercase tracking-[0.16em] text-base-800">{item.when}</p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                </aside>
+              </div>
+            </div>
+          ) : null}
+
+          {route === "/reflections" ? (
+            <div className="aion-reflections-canvas grid gap-4">
+              <section className="aion-reflections-overview-bar">
+                <span className="aion-chat-headline-emblem" aria-hidden="true" />
+                <div className="aion-reflections-overview-copy">
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.reflections.eyebrow}</p>
+                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.reflections.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.reflections.subtitle}</p>
+                </div>
+                <div className="aion-reflections-overview-status" aria-label="Reflection status">
+                  <span>{copy.reflections.slowLearning}</span>
+                  <strong>{reflectionInsightCount} {reflectionInsightUnit}</strong>
+                </div>
+              </section>
+
+              <section className="aion-reflections-stat-row" aria-label="Reflection summary">
+                {reflectionStatCards.map((item) => (
+                  <article key={item.label} className="aion-reflections-stat-card">
+                    <p className="aion-reflections-stat-label">{item.label}</p>
+                    <p className="aion-reflections-stat-value">{item.value}</p>
+                    <p className="aion-reflections-stat-detail">{item.detail}</p>
+                  </article>
+                ))}
+              </section>
+
+              <div className="aion-reflections-layout">
+                <section className="aion-reflections-process-panel">
+                  <div className="aion-reflections-process-head">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.reflections.reflectionFlow}</p>
+                      <h3 className="mt-2 font-display text-3xl text-base-900">{copy.reflections.flowTitle}</h3>
+                    </div>
+                    <span className="aion-reflections-process-chip">{copy.reflections.noRawJournal}</span>
+                  </div>
+
+                  <div className="aion-reflections-wave" aria-hidden="true">
+                    <span className="aion-reflections-wave-line" />
+                    <span className="aion-reflections-wave-node aion-reflections-wave-node-one" />
+                    <span className="aion-reflections-wave-node aion-reflections-wave-node-two" />
+                    <span className="aion-reflections-wave-node aion-reflections-wave-node-three" />
+                  </div>
+
+                  <div className="aion-reflections-flow-list">
+                    {reflectionFlowRows.map((row) => (
+                      <PersonalityTimelineRow
+                        key={row.title}
+                        token={row.token}
+                        title={row.title}
+                        detail={row.detail}
+                        value={row.value}
+                      />
+                    ))}
+                  </div>
+                </section>
+
+                <aside className="aion-reflections-side-stack">
+                  <section className="aion-reflections-side-panel aion-reflections-side-panel-prompts">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.reflections.recent}</p>
+                    <h3 className="mt-2 font-display text-2xl text-base-900">{copy.reflections.promptsTitle}</h3>
+                    <div className="mt-5 grid gap-3">
+                      {reflectionPromptCards.map((item) => (
+                        <article key={item.title} className="aion-reflections-prompt-card">
+                          <h4 className="aion-reflections-prompt-title">{item.title}</h4>
+                          <p className="aion-reflections-prompt-body">{item.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="aion-reflections-side-panel">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.reflections.recentMovement}</p>
+                    <div className="mt-4 grid gap-3">
+                      {personalityRecentActivity.slice(0, 4).map((item) => (
+                        <article key={item.key} className="aion-reflections-activity-row">
+                          <span className="aion-reflections-activity-dot" aria-hidden="true" />
+                          <div>
+                            <p className="text-sm font-semibold text-base-900">{item.title}</p>
+                            <p className="mt-1 text-xs uppercase tracking-[0.16em] text-base-800">{item.when}</p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                </aside>
+              </div>
+            </div>
+          ) : null}
+
+          {route === "/plans" ? (
+            <div className="aion-plans-canvas grid gap-4">
+              <section className="aion-plans-overview-bar">
+                <span className="aion-chat-headline-emblem" aria-hidden="true" />
+                <div className="aion-plans-overview-copy">
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.plans.eyebrow}</p>
+                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.plans.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.plans.subtitle}</p>
+                </div>
+                <div className="aion-plans-overview-status" aria-label="Planning status">
+                  <span>{copy.plans.activeGoals}</span>
+                  <strong>{plansGoalCount} {plansGoalUnit}</strong>
+                </div>
+              </section>
+
+              <section className="aion-plans-stat-row" aria-label="Planning summary">
+                {plansStatCards.map((item) => (
+                  <article key={item.label} className="aion-plans-stat-card">
+                    <p className="aion-plans-stat-label">{item.label}</p>
+                    <p className="aion-plans-stat-value">{item.value}</p>
+                    <p className="aion-plans-stat-detail">{item.detail}</p>
+                  </article>
+                ))}
+              </section>
+
+              <div className="aion-plans-layout">
+                <section className="aion-plans-board-panel">
+                  <div className="aion-plans-board-head">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.plans.planningPath}</p>
+                      <h3 className="mt-2 font-display text-3xl text-base-900">{copy.plans.shapeBeforeAction}</h3>
+                    </div>
+                    <span className="aion-plans-board-chip">{copy.plans.actionBoundaryPreserved}</span>
+                  </div>
+
+                  <div className="aion-plans-lane" aria-hidden="true">
+                    <span className="aion-plans-lane-card aion-plans-lane-card-one" />
+                    <span className="aion-plans-lane-card aion-plans-lane-card-two" />
+                    <span className="aion-plans-lane-card aion-plans-lane-card-three" />
+                    <span className="aion-plans-lane-line" />
+                  </div>
+
+                  <div className="aion-plans-flow-list">
+                    {plansFlowRows.map((row) => (
+                      <PersonalityTimelineRow
+                        key={row.title}
+                        token={row.token}
+                        title={row.title}
+                        detail={row.detail}
+                        value={row.value}
+                      />
+                    ))}
+                  </div>
+                </section>
+
+                <aside className="aion-plans-side-stack">
+                  <section className="aion-plans-side-panel aion-plans-side-panel-next">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.plans.nextStep}</p>
+                    <h3 className="mt-2 font-display text-2xl text-base-900">{copy.plans.planningSuggestions}</h3>
+                    <div className="mt-5 grid gap-3">
+                      {plansNextSteps.map((item) => (
+                        <article key={item.title} className="aion-plans-step-card">
+                          <h4 className="aion-plans-step-title">{item.title}</h4>
+                          <p className="aion-plans-step-body">{item.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="aion-plans-side-panel">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.plans.planningContext}</p>
+                    <div className="mt-4 grid gap-3">
+                      {plansContextCards.map((card) => (
+                        <article key={card.title} className="aion-plans-context-row">
+                          <span className="aion-plans-context-dot" aria-hidden="true" />
+                          <div>
+                            <p className="text-sm font-semibold text-base-900">{card.title}</p>
+                            <p className="mt-1 text-sm leading-6 text-base-800">{card.body}</p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                </aside>
+              </div>
+            </div>
+          ) : null}
+
+          {route === "/goals" ? (
+            <div className="aion-goals-canvas grid gap-4">
+              <section className="aion-goals-overview-bar">
+                <span className="aion-chat-headline-emblem" aria-hidden="true" />
+                <div className="aion-goals-overview-copy">
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.goals.eyebrow}</p>
+                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.goals.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.goals.subtitle}</p>
+                </div>
+                <div className="aion-goals-overview-status" aria-label="Goal status">
+                  <span>{copy.goals.active}</span>
+                  <strong>{goalsCount} {goalsUnit}</strong>
+                </div>
+              </section>
+
+              <section className="aion-goals-stat-row" aria-label="Goal summary">
+                {goalsStatCards.map((item) => (
+                  <article key={item.label} className="aion-goals-stat-card">
+                    <p className="aion-goals-stat-label">{item.label}</p>
+                    <p className="aion-goals-stat-value">{item.value}</p>
+                    <p className="aion-goals-stat-detail">{item.detail}</p>
+                  </article>
+                ))}
+              </section>
+
+              <div className="aion-goals-layout">
+                <section className="aion-goals-horizon-panel">
+                  <div className="aion-goals-horizon-head">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.goals.goalHorizon}</p>
+                      <h3 className="mt-2 font-display text-3xl text-base-900">{copy.goals.whatIsInMotion}</h3>
+                    </div>
+                    <span className="aion-goals-horizon-chip">{copy.goals.directionOnly}</span>
+                  </div>
+
+                  <div className="aion-goals-rings" aria-hidden="true">
+                    <span className="aion-goals-ring aion-goals-ring-one" />
+                    <span className="aion-goals-ring aion-goals-ring-two" />
+                    <span className="aion-goals-ring aion-goals-ring-three" />
+                    <span className="aion-goals-ring-core" />
+                  </div>
+
+                  <div className="aion-goals-list">
+                    {goalHorizonRows.map((goal) => (
+                      <article key={goal.title} className="aion-goals-row">
+                        <div className="aion-goals-row-copy">
+                          <span className="aion-goals-row-token">{goal.token}</span>
+                          <div>
+                            <p className="aion-goals-row-title">{goal.title}</p>
+                            <p className="aion-goals-row-detail">{goal.detail}</p>
+                          </div>
+                        </div>
+                        <div className="aion-goals-progress" aria-label={`${goal.title} ${goal.value}`}>
+                          <span style={{ width: goal.value }} />
+                        </div>
+                        <strong>{goal.value}</strong>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <aside className="aion-goals-side-stack">
+                  <section className="aion-goals-side-panel aion-goals-side-panel-signals">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.goals.momentum}</p>
+                    <h3 className="mt-2 font-display text-2xl text-base-900">{copy.goals.goalSignals}</h3>
+                    <div className="mt-5 grid gap-3">
+                      {goalSignalCards.map((item) => (
+                        <article key={item.title} className="aion-goals-signal-card">
+                          <h4 className="aion-goals-signal-title">{item.title}</h4>
+                          <p className="aion-goals-signal-body">{item.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="aion-goals-side-panel">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.goals.relatedGuidance}</p>
+                    <div className="mt-4 grid gap-3">
+                      {goalGuidanceCards.map((card) => (
+                        <article key={card.title} className="aion-goals-guidance-row">
+                          <span className="aion-goals-guidance-dot" aria-hidden="true" />
+                          <div>
+                            <p className="text-sm font-semibold text-base-900">{card.title}</p>
+                            <p className="mt-1 text-sm leading-6 text-base-800">{card.body}</p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                </aside>
+              </div>
+            </div>
+          ) : null}
+
+          {route === "/insights" ? (
+            <div className="aion-insights-canvas grid gap-4">
+              <section className="aion-insights-overview-bar">
+                <span className="aion-chat-headline-emblem" aria-hidden="true" />
+                <div className="aion-insights-overview-copy">
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.insights.eyebrow}</p>
+                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.insights.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.insights.subtitle}</p>
+                </div>
+                <div className="aion-insights-overview-status" aria-label="Insight status">
+                  <span>{copy.insights.clarity}</span>
+                  <strong>{insightPatternCount} {insightPatternUnit}</strong>
+                </div>
+              </section>
+
+              <section className="aion-insights-stat-row" aria-label="Insight summary">
+                {insightStatCards.map((item) => (
+                  <article key={item.label} className="aion-insights-stat-card">
+                    <p className="aion-insights-stat-label">{item.label}</p>
+                    <p className="aion-insights-stat-value">{item.value}</p>
+                    <p className="aion-insights-stat-detail">{item.detail}</p>
+                  </article>
+                ))}
+              </section>
+
+              <div className="aion-insights-layout">
+                <section className="aion-insights-map-panel">
+                  <div className="aion-insights-map-head">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.insights.insightMap}</p>
+                      <h3 className="mt-2 font-display text-3xl text-base-900">{copy.insights.insightMapTitle}</h3>
+                    </div>
+                    <span className="aion-insights-map-chip">{copy.insights.readOnly}</span>
+                  </div>
+
+                  <div className="aion-insights-orbit" aria-hidden="true">
+                    <span className="aion-insights-orbit-line aion-insights-orbit-line-one" />
+                    <span className="aion-insights-orbit-line aion-insights-orbit-line-two" />
+                    <span className="aion-insights-orbit-core" />
+                    <span className="aion-insights-orbit-node aion-insights-orbit-node-one" />
+                    <span className="aion-insights-orbit-node aion-insights-orbit-node-two" />
+                    <span className="aion-insights-orbit-node aion-insights-orbit-node-three" />
+                  </div>
+
+                  <div className="aion-insights-signal-list">
+                    {insightSignalRows.map((row) => (
+                      <article key={row.title} className="aion-insights-signal-row">
+                        <div className="aion-insights-signal-copy">
+                          <span className="aion-insights-signal-token">{row.token}</span>
+                          <div>
+                            <p className="aion-insights-signal-title">{row.title}</p>
+                            <p className="aion-insights-signal-detail">{row.detail}</p>
+                          </div>
+                        </div>
+                        <strong>{row.value}</strong>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <aside className="aion-insights-side-stack">
+                  <section className="aion-insights-side-panel aion-insights-side-panel-clarity">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.insights.clarity}</p>
+                    <h3 className="mt-2 font-display text-2xl text-base-900">{copy.insights.sensemakingNotes}</h3>
+                    <div className="mt-5 grid gap-3">
+                      {insightClarityCards.map((item) => (
+                        <article key={item.title} className="aion-insights-note-card">
+                          <h4 className="aion-insights-note-title">{item.title}</h4>
+                          <p className="aion-insights-note-body">{item.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="aion-insights-side-panel">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.insights.guidanceCandidates}</p>
+                    <div className="mt-4 grid gap-3">
+                      {insightGuidanceCards.map((card) => (
+                        <article key={card.title} className="aion-insights-guidance-row">
+                          <span className="aion-insights-guidance-dot" aria-hidden="true" />
+                          <div>
+                            <p className="text-sm font-semibold text-base-900">{card.title}</p>
+                            <p className="mt-1 text-sm leading-6 text-base-800">{card.body}</p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                </aside>
+              </div>
+            </div>
+          ) : null}
+
+          {route === "/automations" ? (
+            <div className="aion-automations-canvas grid gap-4">
+              <section className="aion-automations-overview-bar">
+                <span className="aion-chat-headline-emblem" aria-hidden="true" />
+                <div className="aion-automations-overview-copy">
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.automations.eyebrow}</p>
+                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.automations.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.automations.subtitle}</p>
+                </div>
+                <div className="aion-automations-overview-status" aria-label="Automation status">
+                  <span>{copy.automations.proactive}</span>
+                  <strong>{proactiveEnabled ? copy.common.on : copy.common.off}</strong>
+                </div>
+              </section>
+
+              <section className="aion-automations-stat-row" aria-label="Automation summary">
+                {automationStatCards.map((item) => (
+                  <article key={item.label} className="aion-automations-stat-card">
+                    <p className="aion-automations-stat-label">{item.label}</p>
+                    <p className="aion-automations-stat-value">{item.value}</p>
+                    <p className="aion-automations-stat-detail">{item.detail}</p>
+                  </article>
+                ))}
+              </section>
+
+              <div className="aion-automations-layout">
+                <section className="aion-automations-flow-panel">
+                  <div className="aion-automations-flow-head">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.automations.automationFlow}</p>
+                      <h3 className="mt-2 font-display text-3xl text-base-900">{copy.automations.allowedToMove}</h3>
+                    </div>
+                    <span className="aion-automations-flow-chip">{copy.automations.observed}</span>
+                  </div>
+
+                  <div className="aion-automations-switchboard" aria-hidden="true">
+                    <span className="aion-automations-switch-line" />
+                    <span className="aion-automations-switch-node aion-automations-switch-node-one" />
+                    <span className="aion-automations-switch-node aion-automations-switch-node-two" />
+                    <span className="aion-automations-switch-node aion-automations-switch-node-three" />
+                    <span className="aion-automations-switch-core">{proactiveEnabled ? copy.common.on : copy.common.off}</span>
+                  </div>
+
+                  <div className="aion-automations-flow-list">
+                    {automationFlowRows.map((row) => (
+                      <article key={row.title} className="aion-automations-flow-row">
+                        <div className="aion-automations-flow-copy">
+                          <span className="aion-automations-flow-token">{row.token}</span>
+                          <div>
+                            <p className="aion-automations-flow-title">{row.title}</p>
+                            <p className="aion-automations-flow-detail">{row.detail}</p>
+                          </div>
+                        </div>
+                        <strong>{row.value}</strong>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <aside className="aion-automations-side-stack">
+                  <section className="aion-automations-side-panel aion-automations-side-panel-boundary">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.automations.boundary}</p>
+                    <h3 className="mt-2 font-display text-2xl text-base-900">{copy.automations.guardrails}</h3>
+                    <div className="mt-5 grid gap-3">
+                      {automationBoundaryCards.map((item) => (
+                        <article key={item.title} className="aion-automations-note-card">
+                          <h4 className="aion-automations-note-title">{item.title}</h4>
+                          <p className="aion-automations-note-body">{item.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="aion-automations-side-panel">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.automations.healthDetails}</p>
+                    <div className="mt-4 grid gap-3">
+                      {automationHealthRows.map((item) => (
+                        <article key={item.title} className="aion-automations-health-row">
+                          <span className="aion-automations-health-dot" aria-hidden="true" />
+                          <div>
+                            <p className="text-sm font-semibold text-base-900">{item.title}</p>
+                            <p className="mt-1 text-sm leading-6 text-base-800">{item.body}</p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                </aside>
+              </div>
+            </div>
+          ) : null}
+
+          {route === "/integrations" ? (
+            <div className="aion-integrations-canvas grid gap-4">
+              <section className="aion-integrations-overview-bar">
+                <span className="aion-chat-headline-emblem" aria-hidden="true" />
+                <div className="aion-integrations-overview-copy">
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.integrations.eyebrow}</p>
+                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.integrations.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.integrations.subtitle}</p>
+                </div>
+                <div className="aion-integrations-overview-status" aria-label="Integration status">
+                  <span>{copy.integrations.ready}</span>
+                  <strong>{integrationReadyCount} {copy.integrations.readyShort}</strong>
+                </div>
+              </section>
+
+              <section className="aion-integrations-stat-row" aria-label="Integration summary">
+                {integrationStatCards.map((item) => (
+                  <article key={item.label} className="aion-integrations-stat-card">
+                    <p className="aion-integrations-stat-label">{item.label}</p>
+                    <p className="aion-integrations-stat-value">{item.value}</p>
+                    <p className="aion-integrations-stat-detail">{item.detail}</p>
+                  </article>
+                ))}
+              </section>
+
+              <div className="aion-integrations-layout">
+                <section className="aion-integrations-map-panel">
+                  <div className="aion-integrations-map-head">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.integrations.providerMap}</p>
+                      <h3 className="mt-2 font-display text-3xl text-base-900">{copy.integrations.providerMapTitle}</h3>
+                    </div>
+                    <span className="aion-integrations-map-chip">{copy.integrations.overview}</span>
+                  </div>
+
+                  <div className="aion-integrations-web" aria-hidden="true">
+                    <span className="aion-integrations-web-line aion-integrations-web-line-one" />
+                    <span className="aion-integrations-web-line aion-integrations-web-line-two" />
+                    <span className="aion-integrations-web-core" />
+                    <span className="aion-integrations-web-node aion-integrations-web-node-one" />
+                    <span className="aion-integrations-web-node aion-integrations-web-node-two" />
+                    <span className="aion-integrations-web-node aion-integrations-web-node-three" />
+                  </div>
+
+                  <div className="aion-integrations-provider-list">
+                    {(integrationProviderRows.length ? integrationProviderRows : [
+                      { token: "I", title: copy.integrations.noProvidersTitle, detail: copy.integrations.noProvidersDetail, value: copy.integrations.quietValue },
+                    ]).map((row) => (
+                      <article key={row.title} className="aion-integrations-provider-row">
+                        <div className="aion-integrations-provider-copy">
+                          <span className="aion-integrations-provider-token">{row.token}</span>
+                          <div>
+                            <p className="aion-integrations-provider-title">{row.title}</p>
+                            <p className="aion-integrations-provider-detail">{row.detail}</p>
+                          </div>
+                        </div>
+                        <strong>{row.value}</strong>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <aside className="aion-integrations-side-stack">
+                  <section className="aion-integrations-side-panel aion-integrations-side-panel-boundary">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.integrations.boundary}</p>
+                    <h3 className="mt-2 font-display text-2xl text-base-900">{copy.integrations.connectionRules}</h3>
+                    <div className="mt-5 grid gap-3">
+                      {integrationBoundaryCards.map((item) => (
+                        <article key={item.title} className="aion-integrations-note-card">
+                          <h4 className="aion-integrations-note-title">{item.title}</h4>
+                          <p className="aion-integrations-note-body">{item.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="aion-integrations-side-panel">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.integrations.readinessDetails}</p>
+                    <div className="mt-4 grid gap-3">
+                      {[
+                        { title: copy.integrations.configured, body: `${toolsOverview?.summary.total_items ?? 0} ${copy.integrations.toolsKnown}` },
+                        { title: copy.integrations.linkRequired, body: `${integrationLinkRequiredCount} ${copy.integrations.waitingForLinkFlow}` },
+                        { title: copy.integrations.blocked, body: `${integrationBlockedCount} ${copy.integrations.providerChecksBlocked}` },
+                      ].map((item) => (
+                        <article key={item.title} className="aion-integrations-health-row">
+                          <span className="aion-integrations-health-dot" aria-hidden="true" />
+                          <div>
+                            <p className="text-sm font-semibold text-base-900">{item.title}</p>
+                            <p className="mt-1 text-sm leading-6 text-base-800">{item.body}</p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                </aside>
+              </div>
+            </div>
+          ) : null}
+
           {route === "/settings" ? (
-            <div className="grid gap-6">
-              <RouteHeroPanel
-                eyebrow={copy.settings.eyebrow}
-                title={copy.settings.title}
-                body={copy.settings.subtitle}
-                chips={settingsHeroChips}
-              />
+            <div className="aion-settings-canvas grid gap-4">
+              <section className="aion-settings-overview-bar">
+                <span className="aion-chat-headline-emblem" aria-hidden="true" />
+                <div className="aion-settings-overview-copy">
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.settings.eyebrow}</p>
+                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.settings.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.settings.subtitle}</p>
+                </div>
+                <div className="aion-settings-status-grid">
+                  {settingsHeroChips.map((chip) => (
+                    <span key={chip} className="aion-settings-status-pill">
+                      {chip}
+                    </span>
+                  ))}
+                </div>
+              </section>
 
-              <section className="aion-panel rounded-[2rem] p-5">
-                <form className="grid gap-4 md:grid-cols-2" onSubmit={(event) => void handleSaveSettings(event)}>
-                <section className="aion-panel-soft rounded-[1.6rem] p-4">
-                  <p className="text-sm uppercase tracking-[0.2em] text-base-800">{copy.settings.profileTitle}</p>
-                  <h3 className="mt-2 font-display text-2xl text-base-900">{copy.auth.displayName}</h3>
-                  <p className="mt-2 text-sm leading-7 text-base-800">{copy.settings.profileBody}</p>
-                  <label className="form-control mt-4">
-                    <input
-                      className="input input-bordered"
-                      value={settingsDraft.displayName}
-                      onChange={(event) =>
-                        setSettingsDraft((draft) => ({ ...draft, displayName: event.target.value }))
-                      }
-                      placeholder={copy.auth.displayName}
-                    />
-                  </label>
-                </section>
-
-                <section className="aion-panel-soft rounded-[1.6rem] p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <p className="text-sm uppercase tracking-[0.2em] text-base-800">{copy.settings.uiLanguageTitle}</p>
-                      <h3 className="mt-2 font-display text-2xl text-base-900">{copy.common.uiLanguage}</h3>
-                    </div>
-                    <div className="aion-chip rounded-[1rem] px-3 py-2">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-base-800">{copy.common.details}</p>
-                      <p className="mt-1 text-sm font-semibold text-base-900">{copy.common.interfaceOnly}</p>
-                    </div>
+              <form className="aion-settings-layout" onSubmit={(event) => void handleSaveSettings(event)}>
+                <section className="aion-panel aion-settings-preferences">
+                  <div className="aion-settings-section-head">
+                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">Preferences</p>
+                    <h3 className="font-display text-3xl text-base-900">Account and interface</h3>
                   </div>
-                  <p className="mt-2 text-sm leading-7 text-base-800">{copy.settings.uiLanguageBody}</p>
-                  <label className="form-control mt-4">
-                    <select
-                      className="select select-bordered"
-                      value={settingsDraft.uiLanguage}
-                      onChange={(event) =>
-                        setSettingsDraft((draft) => ({
-                          ...draft,
-                          uiLanguage: normalizeUiLanguage(event.target.value),
-                        }))
-                      }
-                    >
-                      {UI_LANGUAGE_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {localeOptionDisplay(option, resolvedUiLanguage)}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <p className="mt-3 text-sm text-base-800">{copy.settings.uiLanguageHelp}</p>
-                </section>
 
-                <section className="aion-panel-soft rounded-[1.6rem] p-4">
-                  <p className="text-sm uppercase tracking-[0.2em] text-base-800">{copy.settings.utcOffsetTitle}</p>
-                  <h3 className="mt-2 font-display text-2xl text-base-900">{copy.common.utcOffset}</h3>
-                  <p className="mt-2 text-sm leading-7 text-base-800">{copy.settings.utcOffsetBody}</p>
-                  <label className="form-control mt-4">
-                    <select
-                      className="select select-bordered"
-                      value={settingsDraft.utcOffset}
-                      onChange={(event) =>
-                        setSettingsDraft((draft) => ({
-                          ...draft,
-                          utcOffset: normalizeUtcOffset(event.target.value),
-                        }))
-                      }
-                    >
-                      {UTC_OFFSET_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.value}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <p className="mt-3 text-sm text-base-800">{copy.settings.utcOffsetHelp}</p>
-                </section>
+                  <div className="aion-settings-card-grid">
+                    <section className="aion-settings-card aion-settings-card-lead">
+                      <p className="aion-settings-card-label">{copy.settings.profileTitle}</p>
+                      <h4 className="aion-settings-card-title">{copy.auth.displayName}</h4>
+                      <p className="aion-settings-card-body">{copy.settings.profileBody}</p>
+                      <label className="form-control mt-4">
+                        <input
+                          className="input input-bordered aion-settings-control"
+                          value={settingsDraft.displayName}
+                          onChange={(event) =>
+                            setSettingsDraft((draft) => ({ ...draft, displayName: event.target.value }))
+                          }
+                          placeholder={copy.auth.displayName}
+                        />
+                      </label>
+                    </section>
 
-                <section className="aion-panel-soft rounded-[1.6rem] p-4">
-                  <p className="text-sm uppercase tracking-[0.2em] text-base-800">{copy.settings.conversationTitle}</p>
-                  <h3 className="mt-2 font-display text-2xl text-base-900">{copy.common.conversationLanguage}</h3>
-                  <p className="mt-2 text-sm leading-7 text-base-800">{copy.settings.conversationBody}</p>
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <div className="aion-chip rounded-[1.2rem] p-4">
-                      <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.common.sourceOfTruth}</p>
-                      <p className="mt-2 text-base font-semibold text-base-900">
-                        {stringValue(me.settings.preferred_language, copy.common.notSet)}
-                      </p>
-                    </div>
-                    <div className="aion-chip rounded-[1.2rem] p-4">
-                      <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.common.details}</p>
-                      <p className="mt-2 text-base font-semibold text-base-900">{selectedUtcOffsetMetadata.value}</p>
-                    </div>
-                  </div>
-                </section>
-
-                <section className="aion-panel-soft rounded-[1.6rem] p-4">
-                  <p className="text-sm uppercase tracking-[0.2em] text-base-800">{copy.settings.proactiveTitle}</p>
-                  <h3 className="mt-2 font-display text-2xl text-base-900">{copy.common.proactive}</h3>
-                  <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-[1.2rem] bg-base-100 px-4 py-4">
-                    <input
-                      className="toggle toggle-primary mt-1"
-                      type="checkbox"
-                      checked={settingsDraft.proactiveOptIn}
-                      onChange={(event) =>
-                        setSettingsDraft((draft) => ({ ...draft, proactiveOptIn: event.target.checked }))
-                      }
-                    />
-                    <div>
-                      <span className="text-base font-semibold text-base-900">{copy.settings.proactiveTitle}</span>
-                      <p className="mt-1 text-sm leading-7 text-base-800">{copy.settings.proactiveBody}</p>
-                    </div>
-                  </label>
-                </section>
-
-                <section className="rounded-[1.6rem] border border-error/40 bg-error/5 p-4 md:col-span-2 shadow-sm">
-                  <p className="text-sm uppercase tracking-[0.2em] text-error">{copy.settings.resetTitle}</p>
-                  <h3 className="mt-2 font-display text-2xl text-base-900">{copy.settings.resetAction}</h3>
-                  <p className="mt-3 max-w-4xl text-sm leading-7 text-base-900">{copy.settings.resetBody}</p>
-                  <p className="mt-3 max-w-4xl text-sm leading-7 text-base-800">{copy.settings.resetImpact}</p>
-
-                  <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-                    <label className="form-control">
-                      <div className="label">
-                        <span className="label-text text-base-900">{copy.settings.resetConfirmationLabel}</span>
+                    <section className="aion-settings-card">
+                      <div className="aion-settings-card-header">
+                        <div>
+                          <p className="aion-settings-card-label">{copy.settings.uiLanguageTitle}</p>
+                          <h4 className="aion-settings-card-title">{copy.common.uiLanguage}</h4>
+                        </div>
+                        <span className="aion-settings-mini-pill">{copy.common.interfaceOnly}</span>
                       </div>
+                      <p className="aion-settings-card-body">{copy.settings.uiLanguageBody}</p>
+                      <label className="form-control mt-4">
+                        <select
+                          className="select select-bordered aion-settings-control"
+                          value={settingsDraft.uiLanguage}
+                          onChange={(event) =>
+                            setSettingsDraft((draft) => ({
+                              ...draft,
+                              uiLanguage: normalizeUiLanguage(event.target.value),
+                            }))
+                          }
+                        >
+                          {UI_LANGUAGE_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {localeOptionDisplay(option, resolvedUiLanguage)}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <p className="aion-settings-help">{copy.settings.uiLanguageHelp}</p>
+                    </section>
+
+                    <section className="aion-settings-card">
+                      <p className="aion-settings-card-label">{copy.settings.utcOffsetTitle}</p>
+                      <h4 className="aion-settings-card-title">{copy.common.utcOffset}</h4>
+                      <p className="aion-settings-card-body">{copy.settings.utcOffsetBody}</p>
+                      <label className="form-control mt-4">
+                        <select
+                          className="select select-bordered aion-settings-control"
+                          value={settingsDraft.utcOffset}
+                          onChange={(event) =>
+                            setSettingsDraft((draft) => ({
+                              ...draft,
+                              utcOffset: normalizeUtcOffset(event.target.value),
+                            }))
+                          }
+                        >
+                          {UTC_OFFSET_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.value}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <p className="aion-settings-help">{copy.settings.utcOffsetHelp}</p>
+                    </section>
+
+                    <section className="aion-settings-card">
+                      <p className="aion-settings-card-label">{copy.settings.conversationTitle}</p>
+                      <h4 className="aion-settings-card-title">{copy.common.conversationLanguage}</h4>
+                      <p className="aion-settings-card-body">{copy.settings.conversationBody}</p>
+                      <div className="aion-settings-fact-grid">
+                        <div className="aion-settings-fact">
+                          <p>{copy.common.sourceOfTruth}</p>
+                          <strong>{stringValue(me.settings.preferred_language, copy.common.notSet)}</strong>
+                        </div>
+                        <div className="aion-settings-fact">
+                          <p>{copy.common.details}</p>
+                          <strong>{selectedUtcOffsetMetadata.value}</strong>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </section>
+
+                <aside className="aion-settings-side-stack">
+                  <section className="aion-panel aion-settings-proactive-panel">
+                    <p className="aion-settings-card-label">{copy.settings.proactiveTitle}</p>
+                    <h3 className="aion-settings-card-title">{copy.common.proactive}</h3>
+                    <label className="aion-settings-toggle-row">
                       <input
-                        className="input input-bordered border-error/40 bg-base-100"
+                        className="toggle toggle-primary"
+                        type="checkbox"
+                        checked={settingsDraft.proactiveOptIn}
+                        onChange={(event) =>
+                          setSettingsDraft((draft) => ({ ...draft, proactiveOptIn: event.target.checked }))
+                        }
+                      />
+                      <span>
+                        <strong>{copy.settings.proactiveTitle}</strong>
+                        <small>{copy.settings.proactiveBody}</small>
+                      </span>
+                    </label>
+                  </section>
+
+                  <section className="aion-settings-save-panel">
+                    <div>
+                      <p className="aion-settings-save-title">{copy.settings.savedState}</p>
+                      <p className="aion-settings-save-body">{copy.settings.saveHint}</p>
+                    </div>
+                    <button className="btn btn-primary" disabled={savingSettings} type="submit">
+                      {savingSettings ? copy.common.saving : copy.common.save}
+                    </button>
+                  </section>
+
+                  <section className="aion-settings-danger-panel">
+                    <p className="aion-settings-danger-label">{copy.settings.resetTitle}</p>
+                    <h3 className="aion-settings-card-title">{copy.settings.resetAction}</h3>
+                    <p className="aion-settings-card-body">{copy.settings.resetBody}</p>
+                    <p className="aion-settings-help">{copy.settings.resetImpact}</p>
+
+                    <label className="form-control mt-4">
+                      <span className="label-text text-base-900">{copy.settings.resetConfirmationLabel}</span>
+                      <input
+                        className="input input-bordered aion-settings-control aion-settings-danger-input mt-2"
                         value={resetConfirmationText}
                         onChange={(event) => setResetConfirmationText(event.target.value)}
                         placeholder={copy.settings.resetConfirmationPlaceholder}
                       />
-                      <div className="label">
-                        <span className="label-text text-base-800">
-                          {copy.settings.resetConfirmationHint} <code>{RESET_DATA_CONFIRMATION_TEXT}</code>
-                        </span>
-                      </div>
+                      <span className="label-text mt-2 text-base-800">
+                        {copy.settings.resetConfirmationHint} <code>{RESET_DATA_CONFIRMATION_TEXT}</code>
+                      </span>
                     </label>
 
                     <button
-                      className="btn btn-error w-full lg:w-fit"
+                      className="btn btn-error mt-4 w-full"
                       disabled={resettingData || resetConfirmationText.trim() !== RESET_DATA_CONFIRMATION_TEXT}
                       type="button"
                       onClick={() => {
@@ -4136,86 +6540,66 @@ export default function App() {
                       }}
                     >
                       {resettingData ? copy.settings.resetting : copy.settings.resetAction}
-                    </button>
-                  </div>
-                </section>
-
-                <div className="md:col-span-2">
-                  <div className="aion-panel sticky bottom-[4.5rem] rounded-[1.6rem] p-4 md:bottom-0">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-base-900">{copy.settings.savedState}</p>
-                        <p className="text-sm text-base-800">{copy.settings.saveHint}</p>
-                      </div>
-                      <button className="btn btn-primary w-full sm:w-fit" disabled={savingSettings} type="submit">
-                        {savingSettings ? copy.common.saving : copy.common.save}
                       </button>
-                    </div>
-                  </div>
-                </div>
+                  </section>
+                </aside>
               </form>
-            </section>
             </div>
           ) : null}
 
           {route === "/tools" ? (
-            <div className="grid gap-6">
-              <RouteHeroPanel
-                eyebrow={copy.tools.eyebrow}
-                title={copy.tools.title}
-                body={copy.tools.subtitle}
-                chips={toolsHeroChips}
-              />
-
-              <section className="aion-panel rounded-[2rem] p-5">
-                <div className="mb-5 max-w-3xl">
+            <div className="aion-tools-canvas grid gap-4">
+              <section className="aion-tools-overview-bar">
+                <span className="aion-chat-headline-emblem" aria-hidden="true" />
+                <div className="aion-tools-overview-copy">
                   <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.tools.eyebrow}</p>
-                  <h2 className="font-display text-3xl text-base-900">{copy.tools.title}</h2>
-                  <p className="mt-3 text-sm leading-7 text-base-800">{copy.tools.subtitle}</p>
+                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.tools.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.tools.subtitle}</p>
                 </div>
-
-                      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <div className="aion-tools-summary-grid">
                 {[
                   {
                     title: copy.tools.groupCount,
                     value: stringValue(toolsOverview?.summary.total_groups, "0"),
-                    note: "Clear groups for the tools you can browse here",
+                    note: copy.tools.summaryGroupNote,
                   },
                   {
                     title: copy.tools.integral,
                     value: stringValue(toolsOverview?.summary.integral_enabled_count, "0"),
-                    note: "Capabilities that stay available as part of the product",
+                    note: copy.tools.summaryIntegralNote,
                   },
                   {
                     title: copy.tools.ready,
                     value: stringValue(toolsOverview?.summary.provider_ready_count, "0"),
-                    note: "Tools that are ready to use today",
+                    note: copy.tools.summaryReadyNote,
                   },
                   {
                     title: copy.tools.linkRequired,
                     value: stringValue(toolsOverview?.summary.link_required_count, "0"),
-                    note: "Channels waiting for a quick linking step",
+                    note: copy.tools.summaryLinkRequiredNote,
                   },
                 ].map((card) => (
-                  <article key={card.title} className="aion-panel-soft rounded-[1.75rem] p-5">
-                    <p className="text-sm uppercase tracking-[0.22em] text-base-800">{card.title}</p>
-                    <p className="mt-3 font-display text-4xl text-base-900">{card.value}</p>
-                    <p className="mt-2 text-sm text-base-800">{card.note}</p>
+                  <article key={card.title} className="aion-tools-summary-card">
+                    <p className="aion-tools-summary-label">{card.title}</p>
+                    <p className="aion-tools-summary-value">{card.value}</p>
+                    <p className="aion-tools-summary-note">{card.note}</p>
                   </article>
                 ))}
                 </div>
               </section>
 
-              <section className="aion-panel rounded-[2rem] p-5">
+              <section className="aion-panel aion-tools-directory">
                 <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
                   <div>
                     <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.tools.eyebrow}</p>
-                    <h2 className="font-display text-3xl text-base-900">{copy.tools.title}</h2>
+                    <h2 className="font-display text-3xl text-base-900">{copy.tools.directoryTitle}</h2>
                   </div>
                   <div className="aion-chip rounded-[1rem] px-3 py-2">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-base-800">{copy.tools.groupCount}</p>
                     <p className="mt-1 text-sm font-semibold text-base-900">
-                      {toolsOverview ? `${toolsOverview.summary.total_items} items` : "workspace snapshot"}
+                      {toolsOverview
+                        ? `${toolsOverview.summary.total_items} ${toolsOverview.summary.total_items === 1 ? copy.tools.itemSingularSuffix : copy.tools.itemsSuffix}`
+                        : copy.tools.workspaceSnapshot}
                     </p>
                   </div>
                 </div>
@@ -4230,7 +6614,7 @@ export default function App() {
 
                 <div className="grid gap-5">
                   {toolsOverview?.groups.map((group) => (
-                    <article key={group.id} className="aion-panel-soft rounded-[1.6rem] p-4">
+                    <article key={group.id} className="aion-tools-group">
                       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
                         <div>
                           <h3 className="font-display text-2xl text-base-900">{group.title}</h3>
@@ -4238,13 +6622,15 @@ export default function App() {
                         </div>
                         <div className="rounded-[1rem] bg-base-100 px-3 py-2">
                           <p className="text-[10px] uppercase tracking-[0.18em] text-base-800">{copy.tools.groupCount}</p>
-                          <p className="mt-1 text-sm font-semibold text-base-900">{group.item_count} items</p>
+                          <p className="mt-1 text-sm font-semibold text-base-900">
+                            {group.item_count} {group.item_count === 1 ? copy.tools.itemSingularSuffix : copy.tools.itemsSuffix}
+                          </p>
                         </div>
                       </div>
 
-                      <div className="grid gap-4 lg:grid-cols-2">
+                      <div className="aion-tools-item-grid">
                         {group.items.map((item) => (
-                          <section key={item.id} className="rounded-[1.4rem] border border-base-300 bg-base-100 p-4">
+                          <section key={item.id} className="aion-tools-item-card">
                             <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
                               <div>
                                 <div className="flex flex-wrap items-center gap-2">
@@ -4257,30 +6643,30 @@ export default function App() {
                                 </div>
                                 <p className="mt-2 text-sm leading-7 text-base-800">{item.description}</p>
                               </div>
-                              <div className={`badge ${toolStatusClass(item.status)}`}>{formatToolState(item.status)}</div>
+                              <div className={`badge ${toolStatusClass(item.status)}`}>{formatToolState(item.status, copy.tools)}</div>
                             </div>
 
-                            <div className="mb-4 grid gap-3 lg:grid-cols-2">
-                              <div className="rounded-2xl bg-base-200 p-3">
+                            <div className="aion-tools-fact-grid">
+                              <div className="aion-tools-fact-card">
                                 <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.availability}</p>
                                 <p className="mt-2 text-base font-semibold text-base-900">
                                   {item.enabled ? copy.common.on : copy.common.off}
                                 </p>
                               </div>
-                              <div className="rounded-2xl bg-base-200 p-3">
+                              <div className="aion-tools-fact-card">
                                 <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.provider}</p>
                                 <p className="mt-2 text-base font-semibold text-base-900">
                                   {item.provider.name.replaceAll("_", " ")}
                                 </p>
                                 <p className="mt-1 text-xs text-base-800">
                                   {item.provider.ready
-                                    ? "ready"
+                                    ? copy.tools.providerReadyValue
                                     : item.provider.configured
-                                      ? "configured"
-                                      : "not configured"}
+                                      ? copy.tools.providerConfiguredValue
+                                      : copy.tools.providerNotConfiguredValue}
                                 </p>
                               </div>
-                              <div className="rounded-2xl bg-base-200 p-3">
+                              <div className="aion-tools-fact-card">
                                 <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.control}</p>
                                 {item.user_control.toggle_allowed ? (
                                   <label className="mt-2 flex items-center gap-3">
@@ -4305,21 +6691,21 @@ export default function App() {
                                   <p className="mt-2 text-base font-semibold text-base-900">{copy.tools.readOnly}</p>
                                 )}
                               </div>
-                              <div className="rounded-2xl bg-base-200 p-3">
+                              <div className="aion-tools-fact-card">
                                 <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.linkState}</p>
                                 <p className="mt-2 text-base font-semibold text-base-900">
-                                  {titleCaseFromStatus(item.link_state)}
+                                  {formatToolLinkState(item.link_state, copy.tools)}
                                 </p>
                               </div>
                             </div>
 
                             <div className="space-y-3">
-                              <div className="rounded-2xl border border-base-300 px-4 py-3">
+                              <div className="aion-tools-detail-card">
                                 <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.currentStatus}</p>
                                 <p className="mt-2 text-sm leading-7 text-base-900">{item.status_reason}</p>
                               </div>
 
-                              <div className="rounded-2xl border border-base-300 px-4 py-3">
+                              <div className="aion-tools-detail-card">
                                 <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.nextStep}</p>
                                 <p className="mt-2 text-sm leading-7 text-base-900">
                                   {summarizeToolAction(item.next_actions, copy.tools.noAction)}
@@ -4337,8 +6723,7 @@ export default function App() {
                                         {copy.tools.telegramLinking}
                                       </p>
                                       <p className="mt-2 max-w-2xl text-sm leading-7 text-base-900">
-                      Generate a short code, then send it to the configured Aviary Telegram bot from
-                                        the chat you want to attach to this identity.
+                                        {copy.tools.telegramInstructionBody}
                                       </p>
                                     </div>
                                     <button
@@ -4365,7 +6750,7 @@ export default function App() {
                                           {telegramLinkStart.link_code}
                                         </p>
                                         <p className="mt-2 text-xs text-base-800">
-                                          Expires in about {telegramLinkStart.expires_in_seconds} seconds.
+                                          {copy.tools.expiresInAbout} {telegramLinkStart.expires_in_seconds} {copy.tools.seconds}.
                                         </p>
                                       </div>
                                       <div className="rounded-2xl bg-base-200 p-3">
@@ -4385,7 +6770,7 @@ export default function App() {
                                 </div>
                               ) : null}
 
-                              <details className="rounded-2xl border border-base-300 bg-base-100">
+                              <details className="aion-tools-details">
                                 <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-base-900">
                                   {copy.tools.technicalDetails}
                                 </summary>
@@ -4438,19 +6823,22 @@ export default function App() {
           ) : null}
 
           {route === "/personality" ? (
-            <div className="grid gap-6">
-              <section className="aion-panel-soft rounded-[1.8rem] p-5">
-                <div className="flex flex-wrap items-end justify-between gap-4">
-                  <div className="max-w-3xl">
-                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.personality.eyebrow}</p>
-                    <h2 className="mt-2 font-display text-4xl text-base-900">{copy.personality.title}</h2>
-                    <p className="mt-3 text-sm leading-7 text-base-800">{copy.personality.subtitle}</p>
-                  </div>
+            <div className="aion-personality-canvas grid gap-4">
+              <section className="aion-personality-overview-bar">
+                <span className="aion-chat-headline-emblem" aria-hidden="true" />
+                <div className="aion-personality-overview-copy">
+                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.personality.eyebrow}</p>
+                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.personality.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.personality.subtitle}</p>
+                </div>
+                <div className="aion-personality-overview-status" aria-label="Personality status">
+                  <span>Stable</span>
+                  <strong>{stringValue(preferenceSummary?.learned_preference_count, "0")} cues</strong>
                 </div>
               </section>
 
-              <div className="grid gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.74fr)]">
-                <div className="grid gap-6">
+              <div className="aion-personality-main-grid grid gap-4 xl:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.74fr)]">
+                <div className="aion-personality-primary-stack grid gap-6">
                   <section className="aion-panel aion-personality-hero">
                     <div className="aion-personality-hero-stage">
                       <div className="aion-personality-hero-figure">
@@ -4526,12 +6914,12 @@ export default function App() {
                   >
                     <div className="grid gap-3">
                       {personalityRecentActivity.map((item) => (
-                        <div key={item.title} className="aion-personality-activity-row">
+                        <div key={item.key} className="aion-personality-activity-row">
                           <div>
                             <p className="text-sm font-semibold text-base-900">{item.title}</p>
                             <p className="mt-1 text-sm text-base-800">{item.when}</p>
                           </div>
-                          <span className="aion-chip-ghost rounded-full px-3 py-1 text-xs font-medium">View</span>
+                          <span className="aion-chip-ghost rounded-full px-3 py-1 text-xs font-medium">{copy.common.view}</span>
                         </div>
                       ))}
                     </div>
@@ -4549,12 +6937,15 @@ export default function App() {
         </section>
 
         {route !== "/chat" ? (
-          <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-base-300 bg-base-100/95 px-3 py-3 backdrop-blur md:hidden">
-            <div className="mx-auto grid max-w-2xl grid-cols-5 gap-2">
+          <nav className="aion-mobile-tabbar fixed inset-x-0 bottom-0 z-30 border-t border-base-300 bg-base-100/95 px-3 py-3 backdrop-blur md:hidden">
+            <div ref={mobileNavScrollRef} className="aion-mobile-tabbar-scroll mx-auto flex max-w-2xl gap-2 overflow-x-auto">
               {ROUTES.map((entry) => (
                 <button
                   key={entry}
-                  className={`rounded-[1.2rem] px-3 py-3 text-sm font-medium transition ${
+                  ref={(node) => {
+                    mobileNavRefs.current[entry] = node;
+                  }}
+                  className={`aion-mobile-tabbar-button rounded-[1.2rem] px-3 py-3 text-sm font-medium transition ${
                     route === entry
                       ? "bg-base-900 text-base-100 shadow-sm"
                       : "border border-base-300 bg-base-200 text-base-900"
