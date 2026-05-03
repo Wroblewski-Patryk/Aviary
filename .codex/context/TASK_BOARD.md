@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+## Fresh Personality Timeline Row Extraction (2026-05-03)
+
+- `PRJ-978` is DONE:
+  - `.codex/tasks/PRJ-978-personality-timeline-row-extraction.md`
+- result:
+  - added `web/src/components/personality.tsx`
+  - moved `PersonalityTimelineRow` out of `web/src/App.tsx`
+  - preserved row markup, classes, and all learned-state derived row values
+  - left learned-state derivation in `App()`
+  - updated the frontend route/component map and v1 roadmap with personality
+    component ownership
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=6`
+- next smallest useful task:
+  - `PRJ-979` extract the next pure repeated route card cluster from
+    `web/src/App.tsx`
+
 ## Fresh Chat Flow Stage Extraction (2026-05-03)
 
 - `PRJ-977` is DONE:
@@ -580,7 +600,11 @@ Last updated: 2026-05-03
     - completed in this iteration by moving `ChatFlowStage` to
       `web/src/components/chat.tsx`
   - `PRJ-978` Extract personality timeline row component from `web/src/App.tsx`:
-    READY_AFTER_PRJ-977
+    DONE
+    - completed in this iteration by moving `PersonalityTimelineRow` to
+      `web/src/components/personality.tsx`
+  - `PRJ-979` Extract route summary/card component cluster from `web/src/App.tsx`:
+    READY_AFTER_PRJ-978
 
 ## Fresh V1 Deploy Parity Blocker (2026-05-03)
 

@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-978` completed personality timeline row extraction:
+  - task:
+    - `.codex/tasks/PRJ-978-personality-timeline-row-extraction.md`
+  - result:
+    - added `web/src/components/personality.tsx`
+    - moved `PersonalityTimelineRow` out of `web/src/App.tsx`
+    - preserved row markup, classes, and all learned-state derived row values
+    - left learned-state derivation in `App()`
+    - updated the frontend route/component map and v1 roadmap with personality
+      component ownership
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=6`
+  - next execution priority:
+    - `PRJ-979` extract the next pure repeated route card cluster from
+      `web/src/App.tsx`
+
 - 2026-05-03: `PRJ-977` completed chat flow stage extraction:
   - task:
     - `.codex/tasks/PRJ-977-chat-flow-stage-extraction.md`
