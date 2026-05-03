@@ -2,6 +2,39 @@
 
 Last updated: 2026-05-03
 
+## Fresh PRJ-823 Public Home Bridge And Trust Closure (2026-05-03)
+
+- `PRJ-823` is DONE:
+  - `.codex/tasks/PRJ-823-home-bridge-and-trust-closure-pass.md`
+- result:
+  - the public-home bridge and trust closure pass is no longer a stale
+    `IN_PROGRESS` item
+  - historical implementation is preserved:
+    - semantic proof-bridge markers via `PublicGlyph`
+    - lighter proof-pill material and spacing
+    - calmer trust-band icon scale, label rhythm, and lower closure spacing
+  - current public landing source keeps `aion-public-feature-bridge`,
+    `aion-public-proof-bridge`, `aion-public-proof-bridge-pill`, and
+    `aion-public-trust-band`
+  - current public landing truth remains chrome-free per `PRJ-782`:
+    - browser mockup frames in generated canonical previews are presentation
+      context only
+    - product UI must not implement simulated browser controls or title bars
+  - later proof owners remain:
+    - `PRJ-869` public home landing `99%` canonical pass
+    - `PRJ-875` canonical UI final route sweep
+- validation:
+  - reviewed PRJ-823 task history, current public landing source, design
+    memory, user clarification, and later board/project proof
+  - `Select-String -Path web\src\App.tsx,web\src\index.css -Pattern
+    "aion-public-browser|WindowChrome|aion-window-chrome"`
+  - result: no matches
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - review `PRJ-824` authenticated shell utility bar calm pass for stale
+    status
+
 ## Fresh PRJ-822 Public Home Header And Proof Closure (2026-05-03)
 
 - `PRJ-822` is DONE:

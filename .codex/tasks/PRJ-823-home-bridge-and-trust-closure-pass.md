@@ -4,8 +4,8 @@
 - ID: PRJ-823
 - Title: Home Bridge And Trust Closure Pass
 - Task Type: design
-- Current Stage: implementation
-- Status: IN_PROGRESS
+- Current Stage: release
+- Status: DONE
 - Owner: Frontend Builder
 - Depends on: PRJ-822
 - Priority: P1
@@ -61,15 +61,15 @@ markup and styling.
 - focused validation passes
 
 ## Definition of Done
-- [ ] proof bridge is refined
-- [ ] trust band is refined
-- [ ] task board and project state are synced
-- [ ] focused validation evidence is attached
+- [x] proof bridge is refined
+- [x] trust band is refined
+- [x] task board and project state are synced
+- [x] focused validation evidence is attached
 
 ## Stage Exit Criteria
-- [ ] The output matches the declared `Current Stage`.
-- [ ] Work from later stages was not mixed in without explicit approval.
-- [ ] Risks and assumptions for this stage are stated clearly.
+- [x] The output matches the declared `Current Stage`.
+- [x] Work from later stages was not mixed in without explicit approval.
+- [x] Risks and assumptions for this stage are stated clearly.
 
 ## Forbidden
 - new systems without approval
@@ -132,19 +132,47 @@ markup and styling.
 - Staged rollout or feature flag: no
 
 ## Review Checklist (mandatory)
-- [ ] Current stage is declared and respected.
-- [ ] Deliverable for the current stage is complete.
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
-- [ ] Learning journal was updated if a recurring pitfall was confirmed.
+- [x] Current stage is declared and respected.
+- [x] Deliverable for the current stage is complete.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
+- [x] Learning journal update was not required; no new recurring pitfall was
+  confirmed in this closure sync.
 
 ## Notes
 This slice stays on `home` lower closure only.
+
+## Closure Sync - 2026-05-03
+
+- Current release status:
+  - DONE as a historical public-home proof-bridge and trust-band closure
+    slice.
+- Current source truth:
+  - `web/src/App.tsx` keeps `aion-public-feature-bridge`,
+    `aion-public-proof-bridge`, `aion-public-proof-bridge-pill`, and
+    `aion-public-trust-band`.
+  - `web/src/index.css` keeps the route-local proof-bridge spacing, trust-band
+    item rhythm, icon scale, and responsive closure rules from this slice.
+- Superseding proof owners:
+  - `PRJ-869` public home landing `99%` canonical pass.
+  - `PRJ-875` canonical UI final route sweep.
+  - `PRJ-782` shell-frame decision resolution.
+- Browser/mockup note:
+  - canonical screenshot browser frames are presentation context only.
+  - product UI must not simulate browser controls, title bars, or fake window
+    chrome.
+- Closure evidence:
+  - reviewed this task history, current public landing source, design memory,
+    user clarification, and later project/board proof.
+  - `Select-String -Path web\src\App.tsx,web\src\index.css -Pattern
+    "aion-public-browser|WindowChrome|aion-window-chrome"` returned no
+    matches in the current source.
+  - no runtime files were changed by this closure sync.
 
 ## Production-Grade Required Contract
 
