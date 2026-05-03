@@ -151,6 +151,26 @@ export function InsightPanel({
   );
 }
 
+export function RouteStatCard({
+  routeKey,
+  label,
+  value,
+  detail,
+}: {
+  routeKey: string;
+  label: ReactNode;
+  value: ReactNode;
+  detail: ReactNode;
+}) {
+  return (
+    <article className={`aion-${routeKey}-stat-card`}>
+      <p className={`aion-${routeKey}-stat-label`}>{label}</p>
+      <p className={`aion-${routeKey}-stat-value`}>{value}</p>
+      <p className={`aion-${routeKey}-stat-detail`}>{detail}</p>
+    </article>
+  );
+}
+
 export function FeedbackBanner({
   tone,
   title,

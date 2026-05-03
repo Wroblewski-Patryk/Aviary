@@ -43,7 +43,7 @@ parity suite.
 | Chat components | `web/src/components/chat.tsx` | `ChatFlowStage` |
 | Dashboard components | `web/src/components/dashboard.tsx` | `DashboardSignalCard` |
 | Personality components | `web/src/components/personality.tsx` | `PersonalityTimelineRow` |
-| Shared presentational panels | `web/src/components/shared.tsx` | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel` |
+| Shared presentational panels | `web/src/components/shared.tsx` | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel`, `RouteStatCard` |
 | API client | `web/src/lib/api.ts` | Typed fetch wrapper and app-facing endpoint methods |
 | Styling | `web/src/index.css` | Route layouts, product shell visuals, responsive behavior, state styling |
 
@@ -109,7 +109,7 @@ claim component-level separation beyond the extracted route contract.
 | Public shell | public home render branch in `web/src/App.tsx`, `AviaryWordmark` in `web/src/components/shell.tsx`, `PublicGlyph` in `web/src/components/public-shell.tsx` | `/`, `/login` |
 | Shell chrome | `SidebarGlyph`, `ShellNavButton`, `SidebarBrandBlock`, `AviaryWordmark`, `ShellUtilityBar` in `web/src/components/shell.tsx` | authenticated routes |
 | App control icons | `ChevronDownIcon`, `CloseIcon`, `PlusIcon`, `MicrophoneIcon`, `SendArrowIcon` in `web/src/components/app-icons.tsx` | public auth modal, sidebar, chat composer |
-| Shared panels | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel` in `web/src/components/shared.tsx` | dashboard and module routes |
+| Shared panels | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel`, `RouteStatCard` in `web/src/components/shared.tsx` | dashboard and module routes |
 | Chat helpers | `renderChatMarkdown`, `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems` in `web/src/App.tsx`; `ChatFlowStage` in `web/src/components/chat.tsx` | `/chat` |
 | Personality route components | `PersonalityTimelineRow` in `web/src/components/personality.tsx` | memory, reflections, plans, personality |
 | Tool helpers | `toolStatusClass`, `formatToolState`, `formatToolLinkState`, `summarizeToolAction` | `/tools`, `/integrations` |

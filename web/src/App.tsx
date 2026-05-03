@@ -23,6 +23,7 @@ import {
   InsightPanel,
   ModuleEntryCard,
   RouteHeroPanel,
+  RouteStatCard,
   StatePanel,
 } from "./components/shared";
 import {
@@ -5092,11 +5093,13 @@ export default function App() {
 
               <section className="aion-memory-stat-row" aria-label="Memory summary">
                 {memoryStatCards.map((item) => (
-                  <article key={item.label} className="aion-memory-stat-card">
-                    <p className="aion-memory-stat-label">{item.label}</p>
-                    <p className="aion-memory-stat-value">{item.value}</p>
-                    <p className="aion-memory-stat-detail">{item.detail}</p>
-                  </article>
+                  <RouteStatCard
+                    key={item.label}
+                    routeKey="memory"
+                    label={item.label}
+                    value={item.value}
+                    detail={item.detail}
+                  />
                 ))}
               </section>
 
@@ -5185,11 +5188,13 @@ export default function App() {
 
               <section className="aion-reflections-stat-row" aria-label="Reflection summary">
                 {reflectionStatCards.map((item) => (
-                  <article key={item.label} className="aion-reflections-stat-card">
-                    <p className="aion-reflections-stat-label">{item.label}</p>
-                    <p className="aion-reflections-stat-value">{item.value}</p>
-                    <p className="aion-reflections-stat-detail">{item.detail}</p>
-                  </article>
+                  <RouteStatCard
+                    key={item.label}
+                    routeKey="reflections"
+                    label={item.label}
+                    value={item.value}
+                    detail={item.detail}
+                  />
                 ))}
               </section>
 
@@ -5273,11 +5278,13 @@ export default function App() {
 
               <section className="aion-plans-stat-row" aria-label="Planning summary">
                 {plansStatCards.map((item) => (
-                  <article key={item.label} className="aion-plans-stat-card">
-                    <p className="aion-plans-stat-label">{item.label}</p>
-                    <p className="aion-plans-stat-value">{item.value}</p>
-                    <p className="aion-plans-stat-detail">{item.detail}</p>
-                  </article>
+                  <RouteStatCard
+                    key={item.label}
+                    routeKey="plans"
+                    label={item.label}
+                    value={item.value}
+                    detail={item.detail}
+                  />
                 ))}
               </section>
 
@@ -5361,11 +5368,13 @@ export default function App() {
 
               <section className="aion-goals-stat-row" aria-label="Goal summary">
                 {goalsStatCards.map((item) => (
-                  <article key={item.label} className="aion-goals-stat-card">
-                    <p className="aion-goals-stat-label">{item.label}</p>
-                    <p className="aion-goals-stat-value">{item.value}</p>
-                    <p className="aion-goals-stat-detail">{item.detail}</p>
-                  </article>
+                  <RouteStatCard
+                    key={item.label}
+                    routeKey="goals"
+                    label={item.label}
+                    value={item.value}
+                    detail={item.detail}
+                  />
                 ))}
               </section>
 
@@ -5455,11 +5464,13 @@ export default function App() {
 
               <section className="aion-insights-stat-row" aria-label="Insight summary">
                 {insightStatCards.map((item) => (
-                  <article key={item.label} className="aion-insights-stat-card">
-                    <p className="aion-insights-stat-label">{item.label}</p>
-                    <p className="aion-insights-stat-value">{item.value}</p>
-                    <p className="aion-insights-stat-detail">{item.detail}</p>
-                  </article>
+                  <RouteStatCard
+                    key={item.label}
+                    routeKey="insights"
+                    label={item.label}
+                    value={item.value}
+                    detail={item.detail}
+                  />
                 ))}
               </section>
 
@@ -5548,11 +5559,13 @@ export default function App() {
 
               <section className="aion-automations-stat-row" aria-label="Automation summary">
                 {automationStatCards.map((item) => (
-                  <article key={item.label} className="aion-automations-stat-card">
-                    <p className="aion-automations-stat-label">{item.label}</p>
-                    <p className="aion-automations-stat-value">{item.value}</p>
-                    <p className="aion-automations-stat-detail">{item.detail}</p>
-                  </article>
+                  <RouteStatCard
+                    key={item.label}
+                    routeKey="automations"
+                    label={item.label}
+                    value={item.value}
+                    detail={item.detail}
+                  />
                 ))}
               </section>
 
@@ -5640,11 +5653,13 @@ export default function App() {
 
               <section className="aion-integrations-stat-row" aria-label="Integration summary">
                 {integrationStatCards.map((item) => (
-                  <article key={item.label} className="aion-integrations-stat-card">
-                    <p className="aion-integrations-stat-label">{item.label}</p>
-                    <p className="aion-integrations-stat-value">{item.value}</p>
-                    <p className="aion-integrations-stat-detail">{item.detail}</p>
-                  </article>
+                  <RouteStatCard
+                    key={item.label}
+                    routeKey="integrations"
+                    label={item.label}
+                    value={item.value}
+                    detail={item.detail}
+                  />
                 ))}
               </section>
 

@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-981` completed shared route stat card extraction:
+  - task:
+    - `.codex/tasks/PRJ-981-shared-route-stat-card-extraction.md`
+  - result:
+    - added `RouteStatCard` to `web/src/components/shared.tsx`
+    - replaced repeated stat-card markup for memory, reflections, plans,
+      goals, insights, automations, and integrations
+    - preserved route-specific CSS selectors through explicit `routeKey`
+    - kept route data derivation in `App()`
+    - updated the frontend route/component map and v1 roadmap
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=14`
+  - next execution priority:
+    - `PRJ-982` extract a route note/side-card component cluster from
+      `web/src/App.tsx`
+
 - 2026-05-03: `PRJ-980` completed full route smoke expansion:
   - task:
     - `.codex/tasks/PRJ-980-full-route-smoke-expansion.md`
