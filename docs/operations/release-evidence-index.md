@@ -67,6 +67,7 @@ they are pushed, deployed, and proven by fresh release smoke.
 | --- | --- |
 | Release smoke and deploy parity | `backend/scripts/run_release_smoke.ps1` |
 | Release reality audit | `backend/scripts/audit_release_reality.py` |
+| Release go/no-go wrapper | `backend/scripts/run_release_go_no_go.py` |
 | Coolify fallback readiness | `backend/scripts/check_coolify_fallback_readiness.py` |
 | Release archive standard | `docs/planning/v1-release-evidence-archive-standard.md` |
 | V1 reality roadmap | `docs/planning/v1-reality-audit-and-roadmap.md` |
@@ -86,6 +87,7 @@ $health.release_readiness.ready
 $health.v1_readiness.final_acceptance_state
 curl.exe -s -L --max-time 30 https://aviary.luckysparrow.ch/settings
 Push-Location .\backend; ..\.venv\Scripts\python .\scripts\check_coolify_fallback_readiness.py --print-json; Pop-Location
+Push-Location .\backend; ..\.venv\Scripts\python .\scripts\run_release_go_no_go.py --base-url https://aviary.luckysparrow.ch --selected-tag v1.0.0 --monitor-mode; Pop-Location
 ```
 
 ## Latest Refresh Evidence
@@ -101,3 +103,6 @@ Push-Location .\backend; ..\.venv\Scripts\python .\scripts\check_coolify_fallbac
   `core_v1_bundle_ready`
 - `GET /settings` web meta revision:
   `5e64f494e2aac8d29cea532d95f7039ed6029213`
+- `run_release_go_no_go.py --selected-tag v1.0.0 --monitor-mode`:
+  `verdict=GO`; release smoke was skipped because the selected tag differs
+  from local `HEAD` and `run_release_smoke.ps1` is local-HEAD-bound

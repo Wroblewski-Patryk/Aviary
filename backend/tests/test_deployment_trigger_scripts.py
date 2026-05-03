@@ -20,6 +20,7 @@ BACKEND_ROOT = ROOT / "backend"
 TRIGGER_SCRIPT_PATH = BACKEND_ROOT / "scripts" / "trigger_coolify_deploy_webhook.py"
 COOLIFY_READINESS_SCRIPT_PATH = BACKEND_ROOT / "scripts" / "check_coolify_fallback_readiness.py"
 RELEASE_AUDIT_SCRIPT_PATH = BACKEND_ROOT / "scripts" / "audit_release_reality.py"
+RELEASE_GO_NO_GO_SCRIPT_PATH = BACKEND_ROOT / "scripts" / "run_release_go_no_go.py"
 RELEASE_SMOKE_PS1_PATH = BACKEND_ROOT / "scripts" / "run_release_smoke.ps1"
 PYTHON_EXE = ROOT / ".venv" / "Scripts" / "python.exe"
 BACKEND_SCRIPT_ENTRYPOINTS = [
@@ -28,6 +29,7 @@ BACKEND_SCRIPT_ENTRYPOINTS = [
     "export_incident_evidence_bundle.py",
     "run_behavior_validation.py",
     "run_communication_boundary_backfill_once.py",
+    "run_release_go_no_go.py",
     "run_maintenance_tick_once.py",
     "run_proactive_tick_once.py",
     "run_reflection_queue_once.py",
@@ -62,6 +64,15 @@ assert RELEASE_AUDIT_SPEC is not None and RELEASE_AUDIT_SPEC.loader is not None
 RELEASE_AUDIT_MODULE = importlib.util.module_from_spec(RELEASE_AUDIT_SPEC)
 sys.modules[RELEASE_AUDIT_SPEC.name] = RELEASE_AUDIT_MODULE
 RELEASE_AUDIT_SPEC.loader.exec_module(RELEASE_AUDIT_MODULE)
+
+RELEASE_GO_NO_GO_SPEC = importlib.util.spec_from_file_location(
+    "run_release_go_no_go_script",
+    RELEASE_GO_NO_GO_SCRIPT_PATH,
+)
+assert RELEASE_GO_NO_GO_SPEC is not None and RELEASE_GO_NO_GO_SPEC.loader is not None
+RELEASE_GO_NO_GO_MODULE = importlib.util.module_from_spec(RELEASE_GO_NO_GO_SPEC)
+sys.modules[RELEASE_GO_NO_GO_SPEC.name] = RELEASE_GO_NO_GO_MODULE
+RELEASE_GO_NO_GO_SPEC.loader.exec_module(RELEASE_GO_NO_GO_MODULE)
 
 LEARNED_STATE_INSPECTION_SECTIONS = [
     "identity_state",
@@ -2019,6 +2030,159 @@ def test_coolify_fallback_readiness_main_writes_blocked_report(monkeypatch, tmp_
     assert report["repository"] == "owner/repo"
     assert report["before_sha"] == "a" * 40
     assert report["after_sha"] == "b" * 40
+
+
+def test_release_go_no_go_main_goes_when_audit_and_smoke_pass(monkeypatch, tmp_path: Path, capsys) -> None:
+    output_path = tmp_path / "go-no-go.json"
+
+    monkeypatch.setattr(
+        RELEASE_GO_NO_GO_MODULE,
+        "_parse_args",
+        lambda: SimpleNamespace(
+            base_url="https://aviary.example",
+            selected_sha="",
+            selected_tag="v1.0.0",
+            monitor_mode=True,
+            skip_smoke=False,
+            enforce_local_head_parity=False,
+            timeout_seconds=20,
+            deploy_parity_max_wait_seconds=300,
+            deploy_parity_poll_seconds=15,
+            health_retry_max_attempts=5,
+            health_retry_delay_seconds=5,
+            output=str(output_path),
+        ),
+    )
+
+    def fake_run(command: list[str]) -> tuple[int, str, str]:
+        if "audit_release_reality.py" in command[1]:
+            audit_path = Path(command[command.index("--output") + 1])
+            audit_path.write_text(
+                json.dumps({"kind": "release_reality_audit", "verdict": "GO_FOR_SELECTED_SHA"}),
+                encoding="utf-8",
+            )
+            return 0, '{"verdict":"GO_FOR_SELECTED_SHA"}', ""
+        assert any("run_release_smoke.ps1" in part for part in command)
+        assert "-WaitForDeployParity" not in command
+        return 0, json.dumps({"health_status": "ok"}), ""
+
+    monkeypatch.setattr(RELEASE_GO_NO_GO_MODULE, "_run_command", fake_run)
+
+    exit_code = RELEASE_GO_NO_GO_MODULE.main()
+    report = json.loads(output_path.read_text(encoding="utf-8"))
+    printed = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert report["verdict"] == "GO"
+    assert printed["verdict"] == "GO"
+    assert report["audit"]["report"]["verdict"] == "GO_FOR_SELECTED_SHA"
+    assert report["smoke"]["report"]["health_status"] == "ok"
+    assert report["next_action"] == "release_claim_allowed_for_selected_sha"
+
+
+def test_release_go_no_go_main_holds_when_audit_fails(monkeypatch, tmp_path: Path) -> None:
+    output_path = tmp_path / "go-no-go.json"
+
+    monkeypatch.setattr(
+        RELEASE_GO_NO_GO_MODULE,
+        "_parse_args",
+        lambda: SimpleNamespace(
+            base_url="https://aviary.example",
+            selected_sha="",
+            selected_tag="",
+            monitor_mode=False,
+            skip_smoke=False,
+            enforce_local_head_parity=True,
+            timeout_seconds=20,
+            deploy_parity_max_wait_seconds=300,
+            deploy_parity_poll_seconds=15,
+            health_retry_max_attempts=5,
+            health_retry_delay_seconds=5,
+            output=str(output_path),
+        ),
+    )
+
+    calls: list[list[str]] = []
+
+    def fake_run(command: list[str]) -> tuple[int, str, str]:
+        calls.append(command)
+        if "audit_release_reality.py" in command[1]:
+            audit_path = Path(command[command.index("--output") + 1])
+            audit_path.write_text(
+                json.dumps({"kind": "release_reality_audit", "verdict": "HOLD_REVISION_DRIFT"}),
+                encoding="utf-8",
+            )
+            return 1, '{"verdict":"HOLD_REVISION_DRIFT"}', "revision drift"
+        raise AssertionError("smoke should not run when audit fails")
+
+    monkeypatch.setattr(RELEASE_GO_NO_GO_MODULE, "_run_command", fake_run)
+
+    exit_code = RELEASE_GO_NO_GO_MODULE.main()
+    report = json.loads(output_path.read_text(encoding="utf-8"))
+
+    assert exit_code == 1
+    assert len(calls) == 1
+    assert report["verdict"] == "HOLD"
+    assert report["smoke"]["exit_code"] is None
+    assert report["next_action"] == "resolve_audit_or_smoke_hold"
+
+
+def test_release_go_no_go_skips_local_head_bound_smoke_for_historical_selected_sha(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    output_path = tmp_path / "go-no-go.json"
+
+    monkeypatch.setattr(
+        RELEASE_GO_NO_GO_MODULE,
+        "_parse_args",
+        lambda: SimpleNamespace(
+            base_url="https://aviary.example",
+            selected_sha="",
+            selected_tag="v1.0.0",
+            monitor_mode=True,
+            skip_smoke=False,
+            enforce_local_head_parity=False,
+            timeout_seconds=20,
+            deploy_parity_max_wait_seconds=300,
+            deploy_parity_poll_seconds=15,
+            health_retry_max_attempts=5,
+            health_retry_delay_seconds=5,
+            output=str(output_path),
+        ),
+    )
+
+    calls: list[list[str]] = []
+
+    def fake_run(command: list[str]) -> tuple[int, str, str]:
+        calls.append(command)
+        if "audit_release_reality.py" in command[1]:
+            audit_path = Path(command[command.index("--output") + 1])
+            audit_path.write_text(
+                json.dumps(
+                    {
+                        "kind": "release_reality_audit",
+                        "selected_sha": "5" * 40,
+                        "local_head": "f" * 40,
+                        "verdict": "GO_FOR_SELECTED_SHA",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            return 0, '{"verdict":"GO_FOR_SELECTED_SHA"}', ""
+        raise AssertionError("local-head-bound smoke should be skipped for historical selected SHA")
+
+    monkeypatch.setattr(RELEASE_GO_NO_GO_MODULE, "_run_command", fake_run)
+
+    exit_code = RELEASE_GO_NO_GO_MODULE.main()
+    report = json.loads(output_path.read_text(encoding="utf-8"))
+
+    assert exit_code == 0
+    assert len(calls) == 1
+    assert report["verdict"] == "GO"
+    assert report["smoke"]["skipped"] is True
+    assert report["smoke"]["skip_reason"] == "selected_sha_differs_from_local_head_release_smoke_is_local_head_bound"
+    assert report["smoke"]["selected_sha_is_local_head"] is False
 
 
 def test_release_smoke_allows_optional_deployment_evidence_to_be_omitted(

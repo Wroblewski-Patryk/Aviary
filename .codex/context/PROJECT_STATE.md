@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-970` completed the release go/no-go wrapper:
+  - task:
+    - `.codex/tasks/PRJ-970-release-go-no-go-wrapper.md`
+  - result:
+    - added `backend/scripts/run_release_go_no_go.py`
+    - added `backend/scripts/run_release_go_no_go.ps1`
+    - wrapper runs release reality audit first and release smoke when
+      applicable
+    - wrapper prints `release_go_no_go_report` with `verdict=GO|HOLD`
+    - selected historical tag monitoring avoids a false HOLD when local `HEAD`
+      has moved ahead and records the local-HEAD-bound smoke skip reason
+    - runtime ops runbook and release evidence index now document the wrapper
+  - validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py -k "release_go_no_go or backend_operator_scripts_expose_help"; Pop-Location`
+    - result: `14 passed, 50 deselected`
+    - `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\run_release_go_no_go.py --base-url https://aviary.luckysparrow.ch --selected-tag v1.0.0 --monitor-mode --output ..\.codex\tmp\release-go-no-go-prj970-full.json; Pop-Location`
+    - result: `verdict=GO`; smoke skipped because selected tag differs from
+      local `HEAD` and current release smoke is local-HEAD-bound
+  - next execution priority:
+    - external blockers remain `PRJ-962` Telegram live-mode smoke and
+      `PRJ-963` organizer provider activation smoke
+
 - 2026-05-03: `PRJ-969` completed Coolify fallback readiness checking:
   - task:
     - `.codex/tasks/PRJ-969-coolify-fallback-readiness-check.md`

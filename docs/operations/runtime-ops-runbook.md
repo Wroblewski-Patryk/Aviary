@@ -1539,6 +1539,35 @@ Then rerun production release smoke with deploy parity. The generated
 `artifacts/deploy/coolify-webhook.json` file remains local unless an operator
 explicitly selects a sanitized artifact for archival.
 
+### Release Go/No-Go Wrapper
+
+Use the wrapper when an operator needs one command that composes the release
+reality audit with the release-smoke posture:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python .\scripts\run_release_go_no_go.py `
+  --base-url https://aviary.luckysparrow.ch `
+  --enforce-local-head-parity
+Pop-Location
+```
+
+For monitoring the already deployed `v1.0.0` marker while local `main` has
+moved ahead, use:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python .\scripts\run_release_go_no_go.py `
+  --base-url https://aviary.luckysparrow.ch `
+  --selected-tag v1.0.0 `
+  --monitor-mode
+Pop-Location
+```
+
+The second form uses the release reality audit for the selected tag. It does
+not run local-HEAD-bound release smoke when the selected tag differs from local
+`HEAD`, unless `--enforce-local-head-parity` is explicitly passed.
+
 Important health surfaces for current release checks:
 
 - `runtime_policy.startup_schema_removal_window`

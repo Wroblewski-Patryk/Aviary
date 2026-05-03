@@ -2,6 +2,29 @@
 
 Last updated: 2026-05-03
 
+## Fresh Release Go/No-Go Wrapper (2026-05-03)
+
+- `PRJ-970` is DONE:
+  - `.codex/tasks/PRJ-970-release-go-no-go-wrapper.md`
+- result:
+  - added release wrapper:
+    - `backend/scripts/run_release_go_no_go.py`
+    - `backend/scripts/run_release_go_no_go.ps1`
+  - wrapper runs release reality audit first and release smoke when applicable
+  - wrapper prints `release_go_no_go_report` with `verdict=GO|HOLD`
+  - selected historical tag monitoring avoids a false HOLD when local `HEAD`
+    has moved ahead and records the local-HEAD-bound smoke skip reason
+  - runtime ops runbook and release evidence index now document the wrapper
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py -k "release_go_no_go or backend_operator_scripts_expose_help"; Pop-Location`
+  - result: `14 passed, 50 deselected`
+  - `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\run_release_go_no_go.py --base-url https://aviary.luckysparrow.ch --selected-tag v1.0.0 --monitor-mode --output ..\.codex\tmp\release-go-no-go-prj970-full.json; Pop-Location`
+  - result: `verdict=GO`; smoke skipped because selected tag differs from
+    local `HEAD` and current release smoke is local-HEAD-bound
+- next smallest useful task:
+  - external blockers remain `PRJ-962` Telegram live-mode smoke and `PRJ-963`
+    organizer provider activation smoke
+
 ## Fresh Coolify Fallback Readiness Check (2026-05-03)
 
 - `PRJ-969` is DONE:
@@ -382,7 +405,8 @@ Last updated: 2026-05-03
     - completed in this iteration with `docs/operations/release-evidence-index.md`
   - `PRJ-969` Add Coolify fallback secret/runbook readiness check: DONE
     - completed in this iteration with a read-only readiness checker
-  - `PRJ-970` Add release go/no-go command wrapper: READY_AFTER_PRJ-956
+  - `PRJ-970` Add release go/no-go command wrapper: DONE
+    - completed in this iteration with a structured GO/HOLD wrapper
   - `PRJ-971` Extract first route-rendering component from `web/src/App.tsx`:
     READY_AFTER_PRJ-967
 
