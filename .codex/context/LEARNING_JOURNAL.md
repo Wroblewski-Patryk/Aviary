@@ -25,6 +25,30 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-03 - Frontend route smoke must run after build completes
+- Context:
+  - frontend validation often runs `npm run build` and `npm run smoke:routes`
+    for presentation-only route cleanup slices.
+- Symptom:
+  - running build and route smoke in parallel can make route smoke fail with
+    `ENOENT` for `web/dist/index.html`.
+- Root cause:
+  - route smoke serves the built `dist` directory and can start before Vite has
+    written `dist/index.html`.
+- Guardrail:
+  - run `Push-Location .\web; npm run build; Pop-Location` to completion before
+    `Push-Location .\web; npm run smoke:routes; Pop-Location`.
+- Preferred pattern:
+  - build first
+  - then route smoke
+  - then `git diff --check`
+- Avoid:
+  - parallelizing frontend build and route smoke in the same validation batch.
+- Evidence:
+  - `PRJ-1097` initially hit `ENOENT: no such file or directory, open
+    'web\\dist\\index.html'`; rerunning route smoke after build passed with
+    `status=ok` and `route_count=14`.
+
 ### 2026-05-03 - Stale READY tasks need board and source-of-truth verification
 - Context:
   - older task files can remain marked `READY` even after later context-board
@@ -1690,6 +1714,10 @@ fixes for this repository.
 - Evidence:
   - `.codex/artifacts/prj705-responsive-proof/`
   - `.codex/tasks/PRJ-705-responsive-tier-rules-for-mobile-tablet-and-desktop.md`
+  - `.codex/tasks/PRJ-1105-tools-directory-behavior-characterization.md`
+  - `web/scripts/tools-directory-characterization.mjs`
+  - `.codex/tasks/PRJ-1110-chat-transcript-render-characterization.md`
+  - `web/scripts/chat-transcript-characterization.mjs`
 
 ### 2026-04-30 - Template world-class delivery standards synced
 

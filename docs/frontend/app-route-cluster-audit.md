@@ -377,3 +377,434 @@ should remain in `App()`, while the row/list presentation moves behind a
 `web/src/components/dashboard.tsx`. Dashboard progress row presentation now
 lives beside `DashboardSignalCard`, while `dashboardGoalRows` and
 `scaledMetricSize(...)` remain in `App()`.
+
+`PRJ-1042` selected `/insights` shared-shell/list alignment as the next
+implementation slice. The route still owns insight stat, signal, clarity, and
+guidance data in `App()`, but its overview bar, stat row, and signal value rows
+match existing route-keyed shared component shapes. The next task should reuse
+`ModuleOverviewBar`, `ModuleStatRow`, and `ModuleValueRowList` while preserving
+`aion-insights-*` selectors and deferring the decorative orbit/map panel,
+dashboard route data-helper movement, provider/health-coupled rows, and broad
+visual polish.
+
+`PRJ-1043` implemented that slice. `/insights` now uses `ModuleOverviewBar`,
+`ModuleStatRow`, and `ModuleValueRowList` for the simple route shell and signal
+rows while preserving `aion-insights-*` selectors and keeping
+`insightStatCards`, `insightSignalRows`, clarity/guidance data, and the
+decorative orbit/map panel in `App()`.
+
+`PRJ-1044` selected `/integrations` side-panel shared alignment as the next
+implementation slice. The route still owns provider rows, readiness rows, and
+the decorative web/map panel in `App()`, but its boundary and readiness side
+panels match the existing `ModuleRouteSidePanel` contract exactly, including
+the `boundary` variant class. Automations flow rows, route data-helper
+movement, and decorative panels remain deferred.
+
+`PRJ-1045` implemented that slice. `/integrations` now uses
+`ModuleRouteSidePanel` for the boundary and readiness side panels while keeping
+`integrationBoundaryCards`, `integrationReadinessRows`, provider rows, and the
+decorative web/map panel in `App()`. The existing
+`aion-integrations-side-panel` and `aion-integrations-side-panel-boundary`
+classes are preserved through the shared route-keyed component.
+
+`PRJ-1046` selected `/automations` flow-row shared alignment as the next
+implementation slice. `automationFlowRows` already has the
+`token/title/detail/value` shape used by `ModuleValueRowList`, and
+`routeKey="automations"` with `rowKey="flow"` preserves the existing
+`aion-automations-flow-*` selectors. Health/proactive data construction,
+route data-helper movement, and decorative switchboard panels remain deferred.
+
+`PRJ-1047` implemented that slice. `/automations` flow rows now use
+`ModuleValueRowList` while `automationFlowRows`, scheduler summary, health
+snapshot consumption, proactive state, and the decorative switchboard remain in
+`App()`.
+
+`PRJ-1048` selected `/automations` health-row shared alignment as the next
+implementation slice. `automationHealthRows` has the `title/body` shape already
+used by `ModuleDotRowList`, and `routeKey="automations"` with `rowKey="health"`
+preserves the existing `aion-automations-health-*` selectors. Health data
+construction, route data-helper movement, and decorative panels remain
+deferred.
+
+`PRJ-1049` implemented that slice. `/automations` health rows now use
+`ModuleDotRowList` while `automationHealthRows` and health snapshot data
+construction remain in `App()`.
+
+`PRJ-1050` selected `/insights` guidance-row shared alignment as the next
+implementation slice. `insightGuidanceCards` has the `title/body` shape already
+used by `ModuleDotRowList`, and `routeKey="insights"` with
+`rowKey="guidance"` preserves the existing `aion-insights-guidance-*`
+selectors. Route data-helper movement and decorative panels remain deferred.
+
+`PRJ-1051` implemented that slice. `/insights` guidance rows now use
+`ModuleDotRowList` while `insightGuidanceCards` and the side-panel composition
+remain in `App()`. The stale `ModuleRouteSideRow` import was removed from
+`App.tsx`.
+
+`PRJ-1052` selected unused `ModuleRouteSideRow` removal as the next
+implementation slice. The last live call site was removed in `PRJ-1051`; the
+only remaining code reference is the exported component in
+`web/src/components/shared.tsx`. The next task should remove that export and
+refresh the active frontend component map while leaving historical task
+evidence untouched.
+
+`PRJ-1053` implemented that slice. `ModuleRouteSideRow` was removed from
+`web/src/components/shared.tsx`, and the active frontend component map no
+longer lists it. Historical task evidence still mentions the component where it
+was part of earlier extraction work.
+
+`PRJ-1054` selected shared route note-card list extraction as the next
+implementation slice. `/insights`, `/automations`, and `/integrations` repeat
+the same `mt-5 grid gap-3` wrapper around `RouteNoteCard` maps, and the
+extraction can preserve all `aion-*-note-card` selectors by reusing the
+existing card component.
+
+`PRJ-1055` implemented that slice. `RouteNoteCardList` now lives in
+`web/src/components/shared.tsx` and is used by the insights clarity,
+automations boundary, and integrations boundary side panels while their route
+data arrays remain in `App()`.
+
+`PRJ-1056` selected shared route stat-card list extraction as the next
+implementation slice. Memory, reflections, plans, goals, insights,
+automations, and integrations repeat the same `RouteStatCard` map inside
+`ModuleStatRow`. A `RouteStatCardList` wrapper can preserve every
+`aion-*-stat-card` selector by reusing the existing card component while route
+stat data arrays remain in `App()`.
+
+`PRJ-1057` implemented that slice. `RouteStatCardList` now lives in
+`web/src/components/shared.tsx` and is used inside the existing `ModuleStatRow`
+wrappers for memory, reflections, plans, goals, insights, automations, and
+integrations while stat data arrays remain in `App()`.
+
+`PRJ-1058` selected shared personality timeline-row list extraction as the next
+implementation slice. Memory continuity rows, reflection flow rows, planning
+flow rows, and the personality route timeline all repeat the same
+`PersonalityTimelineRow` map while using different wrapper classes. A
+`PersonalityTimelineRowList` can preserve those wrappers through a `className`
+prop while route data arrays remain in `App()`.
+
+`PRJ-1059` implemented that slice. `PersonalityTimelineRowList` now lives in
+`web/src/components/personality.tsx` and is used by memory continuity,
+reflections flow, plans flow, and the personality timeline while preserving
+their wrapper classes through `className`.
+
+`PRJ-1060` selected stale `RouteStatCard` import removal as the next
+implementation slice. After `PRJ-1057`, `App.tsx` uses `RouteStatCardList` for
+all route stat-card maps and no longer calls `RouteStatCard` directly. The next
+task should remove only that stale route-shell import while keeping
+`RouteStatCard` exported for `RouteStatCardList`.
+
+`PRJ-1061` implemented that slice. `App.tsx` no longer imports
+`RouteStatCard` directly; `RouteStatCardList` remains the route-shell stat-card
+boundary and the shared card export remains available inside
+`web/src/components/shared.tsx`.
+
+`PRJ-1062` selected shared personality signal-row list extraction as the next
+implementation slice. The conscious and subconscious personality side panels
+repeat the same `aion-personality-signal-row` map around `label/value` items. A
+`PersonalitySignalRowList` can preserve the existing `grid gap-3` wrapper and
+selectors while keeping signal data arrays in `App()`.
+
+`PRJ-1063` implemented that slice. `PersonalitySignalRowList` now lives in
+`web/src/components/personality.tsx` and is used by both conscious and
+subconscious personality side panels while preserving the existing
+`aion-personality-signal-*` selectors and route-owned signal data arrays.
+
+`PRJ-1064` selected dashboard signal-column extraction as the next
+implementation slice. The dashboard hero left and right columns both filter
+`dashboardSignalCards` by `placement` and render the existing
+`DashboardSignalCard`. A `DashboardSignalColumn` can preserve the
+`aion-dashboard-signal-column` wrapper and card props while avoiding broader
+flagship layout, figure, flow, or route data changes.
+
+`PRJ-1065` implemented that slice. `DashboardSignalColumn` now lives in
+`web/src/components/dashboard.tsx` and is used for the dashboard hero left and
+right signal columns while preserving the existing wrapper class, card props,
+and route-owned `dashboardSignalCards` data.
+
+`PRJ-1066` selected public trust-pill list extraction as the next
+implementation slice. The public micro-proof row and proof-bridge list both
+render `publicHomeSurface.trustBand.slice(0, 3)` with `PublicGlyph`, using
+different wrapper, item, and icon classes. A class-configurable
+`PublicTrustPillList` can preserve both visual call sites while keeping the
+footer trust band and public copy data in `App()`.
+
+`PRJ-1067` implemented that slice. `PublicTrustPillList` now lives in
+`web/src/components/public-shell.tsx` and is used by the public micro-proof row
+and proof-bridge trust list while preserving each call site's wrapper, item,
+and icon classes.
+
+`PRJ-1068` selected public feature-card list extraction as the next
+implementation slice. The public feature strip maps `publicHomeSurface.pillars`
+through the same `PublicGlyph` owner module and can move into
+`PublicFeatureCardList` while preserving `aion-public-feature-*` classes and
+keeping public route copy/data in `App()`.
+
+`PRJ-1069` implemented that slice. `PublicFeatureCardList` now lives in
+`web/src/components/public-shell.tsx` and renders the public feature strip with
+the existing `PublicGlyph` and `aion-public-feature-*` classes while public
+route copy/data stays in `App()`.
+
+`PRJ-1070` selected public footer trust-band extraction as the next
+implementation slice. The public footer maps `publicHomeSurface.trustBand`
+into `aion-public-trust-item` articles with `PublicGlyph`; a dedicated
+`PublicTrustBand` can preserve that article structure without overloading the
+proof pill list semantics.
+
+`PRJ-1071` implemented that slice. `PublicTrustBand` now lives in
+`web/src/components/public-shell.tsx` and renders the public footer trust band
+with the existing footer semantics, `PublicGlyph`, and
+`aion-public-trust-*` classes while public route data stays in `App()`.
+
+`PRJ-1072` selected dashboard reflection-list extraction as the next
+implementation slice. The reflection highlight card maps `dashboardReflectionRows`
+into `aion-dashboard-reflection-row` elements with a static `title/tag` shape.
+`DashboardReflectionList` can preserve those classes while leaving dynamic
+memory bars, guidance CTA rows, and dashboard figure/flow pieces deferred.
+
+`PRJ-1073` implemented that slice. `DashboardReflectionList` now lives in
+`web/src/components/dashboard.tsx` and renders dashboard reflection highlights
+with the existing `aion-dashboard-reflection-*` classes while
+`dashboardReflectionRows` stays in `App()`.
+
+`PRJ-1074` selected dashboard memory bar-chart extraction as the next
+implementation slice. The memory card maps `dashboardMemoryBars` into
+`aion-dashboard-bar-*` elements with dynamic `height` values already computed
+in `App()`. `DashboardMemoryBarChart` can preserve the inline height style and
+classes while keeping scaled metric calculations in the route shell.
+
+`PRJ-1075` implemented that slice. `DashboardMemoryBarChart` now lives in
+`web/src/components/dashboard.tsx` and renders the dashboard memory bar chart
+with the existing `aion-dashboard-bar-*` classes and inline `height` style
+while `dashboardMemoryBars` remains in `App()`.
+
+`PRJ-1076` selected dashboard guidance-list extraction as the next
+implementation slice. The guidance panel maps `dashboardGuidanceCards.slice(0, 4)`
+into rows with `title/body/action` content and passive buttons. A
+`DashboardGuidanceList` can preserve the lead-row class, button classes, and
+button type while leaving data and CTA behavior unchanged.
+
+`PRJ-1077` implemented that slice. `DashboardGuidanceList` now lives in
+`web/src/components/dashboard.tsx` and renders the dashboard guidance rows with
+the existing lead-row class and passive button markup while
+`dashboardGuidanceCards` remains in `App()`.
+
+`PRJ-1078` selected dashboard recent-activity list extraction as the next
+implementation slice. The dashboard recent panel maps
+`personalityRecentActivity.slice(0, 4)` into `aion-dashboard-recent-row`
+elements with a `title/when` shape. A dashboard-specific
+`DashboardRecentActivityList` can preserve that markup while leaving the
+different personality activity rows deferred.
+
+`PRJ-1079` implemented that slice. `DashboardRecentActivityList` now lives in
+`web/src/components/dashboard.tsx` and renders the dashboard recent activity
+rows with the existing `aion-dashboard-recent-row` and text classes while the
+`slice(0, 4)` data selection stays in `App()`.
+
+`PRJ-1080` selected dashboard balance-grid extraction as the next
+implementation slice. The dashboard summary balance section maps
+`dashboardBalanceRows` into `aion-dashboard-summary-balance-row` elements with
+index-based token classes. `DashboardBalanceGrid` can preserve that small grid
+without moving the full summary band or harmony copy.
+
+`PRJ-1081` implemented that slice. `DashboardBalanceGrid` now lives in
+`web/src/components/dashboard.tsx` and renders dashboard summary balance rows
+with the existing `aion-dashboard-summary-balance-*` classes and index-based
+token class numbering while `dashboardBalanceRows` stays in `App()`.
+
+`PRJ-1082` selected dashboard cognitive flow-track extraction as the next
+implementation slice. The flow intro maps `dashboardCognitiveSteps` into
+`aion-dashboard-flow-step` cards with an active-step modifier. A
+`DashboardCognitiveFlowTrack` can preserve the track and step classes while
+leaving the full flow shell and current phase panel in `App()`.
+
+`PRJ-1083` implemented that slice. `DashboardCognitiveFlowTrack` now lives in
+`web/src/components/dashboard.tsx` and renders dashboard cognitive flow steps
+with the existing track, step, icon, text, and active-step classes while the
+current phase aside remains in `App()`.
+
+`PRJ-1084` selected dashboard figure-note extraction as the next implementation
+slice. The hero figure stage maps `dashboardFigureNotes` into
+`aion-dashboard-figure-note-*` articles. `DashboardFigureNoteList` can preserve
+the caller-owned note classes while leaving the hero image, halo, badge, and
+overall figure layout in `App()`.
+
+`PRJ-1085` implemented that slice. `DashboardFigureNoteList` now lives in
+`web/src/components/dashboard.tsx` and renders dashboard hero figure notes with
+the existing caller-owned note classes while the figure image, halo, badge, and
+stage layout stay in `App()`.
+
+`PRJ-1086` selected personality activity-row list extraction as the next
+implementation slice. The personality side panel maps `personalityRecentActivity`
+into `aion-personality-activity-row` entries with a visible action chip. A
+`PersonalityActivityRowList` can preserve that personality-specific shape while
+avoiding false sharing with dashboard recent activity rows.
+
+`PRJ-1087` implemented that slice. `PersonalityActivityRowList` now lives in
+`web/src/components/personality.tsx` and renders personality recent activity
+rows with the existing `aion-personality-activity-row` and chip classes while
+`personalityRecentActivity` stays in `App()`.
+
+`PRJ-1088` selected settings hero status-pill list extraction as the next
+implementation slice. The `/settings` hero still maps `settingsHeroChips` into
+`aion-settings-status-pill` elements inline, while `web/src/components/settings.tsx`
+already owns settings presentation shells. A `SettingsStatusPillList` can
+preserve the current grid and pill selectors while leaving settings data and
+draft state in `App()`. Tools group/item cards and broader route data helpers
+remain deferred because they touch actions, toggles, or wider route ownership.
+
+`PRJ-1089` implemented that slice. `SettingsStatusPillList` now lives in
+`web/src/components/settings.tsx` and renders the existing status grid and pill
+classes while `settingsHeroChips` remains in `App()`.
+
+`PRJ-1090` selected tools summary card-list extraction as the next
+implementation slice. The `/tools` hero summary still maps four display-only
+cards into `ToolsSummaryCard`, while the tools directory maps include user
+preference toggles, provider readiness, and Telegram linking actions. A
+`ToolsSummaryCardList` can preserve the current summary grid and card component
+while leaving `toolsOverview` data, tool toggles, and link handlers in `App()`.
+
+`PRJ-1091` implemented that slice. `ToolsSummaryCardList` now lives in
+`web/src/components/tools.tsx`, reuses `ToolsSummaryCard`, and preserves the
+existing summary grid while `toolsSummaryCards` data remains in `App()`.
+
+`PRJ-1092` selected personality hero preview-callout extraction as the next
+implementation slice. The `/personality` hero still maps
+`personalityPreviewCallouts` into caller-classed articles inside
+`aion-personality-hero-figure`. A `PersonalityPreviewCalloutList` can preserve
+the current article typography and callout classes while leaving callout data in
+`App()`. Tools directory cards, shell navigation, form option maps, and route
+data projections remain deferred because they are behaviorful, control-specific,
+or not presentation extraction targets.
+
+`PRJ-1093` implemented that slice. `PersonalityPreviewCalloutList` now lives in
+`web/src/components/personality.tsx` and renders the personality hero callout
+articles while `personalityPreviewCallouts` and the hero figure/stage layout
+remain in `App()`.
+
+`PRJ-1094` selected public home nav-link list extraction as the next
+implementation slice. The public shell still maps `publicHomeSurface.nav` into
+`aion-public-nav-link` anchors inline. A `PublicNavLinkList` can preserve the
+current wrapper, anchor classes, and `#aviary-home` target while leaving public
+copy/data in `App()`. Tools directory cards, shell account facts, form option
+maps, shell route navigation, and route data projections remain deferred.
+
+`PRJ-1095` implemented that slice. `PublicNavLinkList` now lives in
+`web/src/components/public-shell.tsx` and renders the existing public nav
+wrapper and anchors while `publicHomeSurface.nav` stays in `App()`.
+
+`PRJ-1096` selected shell account fact-list extraction as the next
+implementation slice. `accountSummaryItems` is still mapped inline in the
+desktop account popover and mobile account panel with different wrappers but
+the same `label/value` data shape. A shell-owned `ShellAccountFactList` can
+preserve both desktop and mobile classes through a variant prop while leaving
+account data, account-panel state, route navigation, and sign-out actions in
+`App()`.
+
+`PRJ-1097` implemented that slice. `ShellAccountFactList` now lives in
+`web/src/components/shell.tsx` and renders the desktop popover and mobile
+account fact variants while `accountSummaryItems`, account-panel state, route
+navigation, and actions remain in `App()`.
+
+`PRJ-1098` selected desktop sidebar nav button-list extraction as the next
+implementation slice. `App.tsx` still maps `shellNavItems` into the
+`aion-sidebar-nav` wrapper and existing `ShellNavButton` components. A
+`ShellNavButtonList` can preserve the wrapper, active/disabled props, and
+existing button component while `changeRoute`, active route state, and nav item
+data stay in `App()`. Mobile tabbar remains deferred because it owns scroll
+refs; settings option maps, tools directory behavior, and route data projections
+remain deferred.
+
+`PRJ-1099` implemented that slice. `ShellNavButtonList` now lives in
+`web/src/components/shell.tsx`, renders the existing `aion-sidebar-nav` wrapper
+and `ShellNavButton` instances, and receives active route plus route-change
+callback from `App()`.
+
+`PRJ-1100` selected shell route-switcher extraction as the next implementation
+slice. The route header still maps `ROUTES` into the tablet/desktop switcher
+inside `aion-mobile-route-header`, but unlike the bottom mobile tabbar it does
+not own refs. A `ShellRouteSwitcher` can preserve the existing border wrapper,
+scroll row, button classes, active state, and route-change callback while route
+labels and route state stay in `App()`.
+
+`PRJ-1101` implemented that slice. `ShellRouteSwitcher` now lives in
+`web/src/components/shell.tsx`, renders the existing route-header switcher
+wrapper/buttons, and receives routes, active route, label function, and
+route-change callback from `App()`.
+
+`PRJ-1102` selected settings select option-list extraction as the next
+implementation slice. The UI language and UTC offset selects still map option
+items inline in `App.tsx`, but the select state, normalization, and `onChange`
+handlers should stay in `App()`. A small `SettingsSelectOptionList` can render
+the option elements through a caller-provided label function while leaving form
+ownership unchanged.
+
+`PRJ-1103` implemented that slice. `SettingsSelectOptionList` now lives in
+`web/src/components/settings.tsx` and renders both UI language and UTC offset
+options while select values, normalization, language-aware labels, and handlers
+remain in `App()`.
+
+`PRJ-1104` re-audited the remaining `App.tsx` maps after settings select option
+cleanup. The remaining candidates are not another obvious display-only JSX
+list:
+
+- pure route data projections remain in `App()` for now
+- tools directory groups/items are behaviorful because they include user
+  preference toggles, provider readiness display, and Telegram link actions
+- chat transcript rows are ref/message-behavior sensitive
+- bottom mobile tabbar owns route refs and scroll behavior
+
+The next safe frontend architecture step is `PRJ-1105`, a TESTER-mode
+tools-directory behavior characterization before any tools directory extraction.
+
+`PRJ-1105` added that tools behavior characterization. `PRJ-1106` then moved
+the `/tools` group/item presentation behind `ToolsDirectoryGroupList` in
+`web/src/components/tools.tsx` while keeping route-owned data, busy state,
+Telegram link state, and handlers in `App()`. After this extraction, the
+remaining `App.tsx` maps are data projections, local transcript state updates,
+the chat transcript render map, public hero highlight projection, and the
+mobile tabbar ref map. The next safe step is `PRJ-1107`, an ARCHITECT-mode
+boundary audit rather than an immediate extraction.
+
+`PRJ-1107` completed that boundary audit. Chat transcript rendering and bottom
+mobile tabbar rendering remain deferred because they own refs and
+route-specific behavior. The next small implementation target is `PRJ-1108`,
+which aligns the public hero card data shape with `MotifFigurePanel`'s
+`label/value` highlights to remove the one-off JSX projection.
+
+`PRJ-1108` completed that alignment. The public hero data now uses
+`label/value` directly and `MotifFigurePanel` receives
+`publicHomeSurface.heroCards` without a local projection. The remaining
+implementation candidates should start with a fresh audit of the chat
+transcript render map because it owns refs, delivery labels, timestamps, and
+markdown rendering.
+
+`PRJ-1109` completed that chat transcript readiness audit. Existing coverage
+characterizes markdown rendering and transcript helper behavior, but not the
+full row composition, refs, delivery labels, timestamps, preview fallback, or
+optimistic delivery states together. The next safe task is `PRJ-1110`, a
+focused chat transcript render characterization before any message-list
+extraction.
+
+`PRJ-1110` added that characterization, and `PRJ-1111` moved transcript row
+mapping behind `ChatTranscriptMessageList` while `App()` still passes delivery
+state, delivery-label copy, timestamp formatting, markdown rendering, and ref
+registration callbacks explicitly. The remaining live JSX map in `App.tsx` is
+the bottom mobile tabbar, which owns scroll refs and route button registration
+and needs a separate readiness audit.
+
+`PRJ-1112` completed that readiness audit. The safe next boundary is a
+shell-owned `ShellMobileTabbar` that receives `routes`, `activeRoute`,
+`labelForRoute`, `onRouteChange`, `scrollRef`, and `registerRouteRef` while
+the active-route scroll-centering effect remains in `App()`.
+
+`PRJ-1113` completed that extraction. `App.tsx` no longer has live JSX render
+maps for route/component lists; the remaining `.map(...)` calls are data
+projections or local transcript state updates. The next frontend task should be
+a closure audit for those remaining data projections rather than another
+presentational extraction.
+
+`PRJ-1114` completed that closure audit. The remaining `App.tsx` maps are data
+projections or local transcript state updates, not live JSX render maps. The
+current frontend presentation extraction lane is closed; further frontend work
+should be helper/data-model work only when a concrete v1 payoff is identified.

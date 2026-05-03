@@ -8,7 +8,9 @@
     "build": "npm exec tsc -b && npm exec vite build",
     "preview": "vite preview",
     "smoke:routes": "node scripts/route-smoke.mjs",
-    "test:chat-markdown": "node scripts/chat-markdown-characterization.mjs"
+    "test:chat-transcript": "node scripts/chat-transcript-characterization.mjs",
+    "test:chat-markdown": "node scripts/chat-markdown-characterization.mjs",
+    "test:tools-directory": "node scripts/tools-directory-characterization.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

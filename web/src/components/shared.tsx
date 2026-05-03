@@ -394,6 +394,32 @@ export function RouteStatCard({
   );
 }
 
+export function RouteStatCardList({
+  routeKey,
+  items,
+}: {
+  routeKey: string;
+  items: Array<{
+    label: ReactNode;
+    value: ReactNode;
+    detail: ReactNode;
+  }>;
+}) {
+  return (
+    <>
+      {items.map((item) => (
+        <RouteStatCard
+          key={String(item.label)}
+          routeKey={routeKey}
+          label={item.label}
+          value={item.value}
+          detail={item.detail}
+        />
+      ))}
+    </>
+  );
+}
+
 export function RouteNoteCard({
   routeKey,
   title,
@@ -408,6 +434,25 @@ export function RouteNoteCard({
       <h4 className={`aion-${routeKey}-note-title`}>{title}</h4>
       <p className={`aion-${routeKey}-note-body`}>{body}</p>
     </article>
+  );
+}
+
+export function RouteNoteCardList({
+  routeKey,
+  items,
+}: {
+  routeKey: string;
+  items: Array<{
+    title: ReactNode;
+    body: ReactNode;
+  }>;
+}) {
+  return (
+    <div className="mt-5 grid gap-3">
+      {items.map((item) => (
+        <RouteNoteCard key={String(item.title)} routeKey={routeKey} title={item.title} body={item.body} />
+      ))}
+    </div>
   );
 }
 
@@ -432,28 +477,6 @@ export function ModuleRouteSidePanel({
       {title ? <h3 className="mt-2 font-display text-2xl text-base-900">{title}</h3> : null}
       {children}
     </section>
-  );
-}
-
-export function ModuleRouteSideRow({
-  routeKey,
-  rowKey,
-  title,
-  body,
-}: {
-  routeKey: string;
-  rowKey: string;
-  title: ReactNode;
-  body: ReactNode;
-}) {
-  return (
-    <article className={`aion-${routeKey}-${rowKey}-row`}>
-      <span className={`aion-${routeKey}-${rowKey}-dot`} aria-hidden="true" />
-      <div>
-        <p className="text-sm font-semibold text-base-900">{title}</p>
-        <p className="mt-1 text-sm leading-6 text-base-800">{body}</p>
-      </div>
-    </article>
   );
 }
 

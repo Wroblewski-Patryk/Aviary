@@ -14,8 +14,8 @@ v1 factual, executable, and resistant to drift.
 
 | Area | Code or Evidence Checked | Current State | V1 Meaning |
 | --- | --- | --- | --- |
-| Git source | `git status --short --branch`, `git log`, `git remote -v` | `main` matches `origin/main`; origin is `Wroblewski-Patryk/Aviary`; only local `.codex/tmp/` and `artifacts/` are untracked | Repository truth is ready for deploy work |
-| Production revision | `GET https://aviary.luckysparrow.ch/health`, `/settings` meta | Production still reports `ed1c4d981314787d76252985b53c14ea1d7886ed` | Current `origin/main` is not deployed |
+| Git source | `git status --short --branch`, `git log`, `git remote -v` | PRJ-1115 refresh: local `main` is ahead of `origin/main` by 86 commits; local `HEAD` is `5ff12953289bbca680fd5d9f8b3d8780a8f4be55`; origin/release marker target remains `5e64f494e2aac8d29cea532d95f7039ed6029213` | Local hardening work is not release-eligible until pushed, deployed, and smoke-tested |
+| Production revision | `GET https://aviary.luckysparrow.ch/health`, `/settings` meta | PRJ-1115 refresh: production backend and web meta both report `5e64f494e2aac8d29cea532d95f7039ed6029213` | Deployed `v1.0.0` remains coherent; current local `HEAD` is not deployed |
 | Release smoke | `run_release_smoke.ps1 -WaitForDeployParity` in PRJ-938 | Failed after 900 seconds because production stayed on the older SHA | Release marker remains blocked |
 | V1 health gates | `/health.v1_readiness` | Existing deployed SHA reports `core_v1_bundle_ready` and green final gates | Core v1 behavior appears green only for the currently deployed older SHA |
 | Deploy policy | `backend/app/core/deployment_policy.py`, `/health.deployment` | Runtime declares source automation and build revision | The proof surface exists; the automation did not converge for the latest push |
@@ -37,6 +37,11 @@ current blocker is release reality:
   deployed SHA
 - the release marker remains correctly blocked until a selected SHA has fresh
   production smoke
+
+PRJ-1115 refreshed release evidence after frontend closure. The deployed
+`v1.0.0` selected SHA still receives `GO` in monitor mode, but the current local
+`HEAD` receives `HOLD_REVISION_DRIFT`; Coolify fallback readiness remains
+`blocked` until an operator provides webhook URL and secret.
 
 ## Current Acceptance Boundary
 
@@ -61,6 +66,7 @@ current blocker is release reality:
 | PRJ-955 | Create release marker only after green production evidence | READY_AFTER_PRJ-954 | tag/marker created for selected SHA; task board/project state record evidence |
 | PRJ-956 | Add a release reality audit script | DONE | local script checks git SHA, production backend SHA, web meta SHA, release readiness, and v1 gates in one command |
 | PRJ-957 | Make production health monitor revision-aware | DONE | monitor can alert on revision drift, not only HTTP health |
+| PRJ-1115 | Refresh local release-readiness evidence after frontend closure | DONE | existing release scripts confirm deployed `v1.0.0` is green, local `HEAD` is `HOLD_REVISION_DRIFT`, and fallback readiness is blocked by missing operator webhook inputs |
 
 ### P1: Close Hardening Evidence Gaps
 
@@ -152,7 +158,79 @@ current blocker is release reality:
 | PRJ-1039 | Extract shared module progress value row list for goal horizon | DONE | `/goals` horizon row presentation uses `ModuleProgressValueRowList` while `goalHorizonRows` stays in `App()` |
 | PRJ-1040 | Audit next frontend cleanup after goal horizon extraction | DONE | selected dashboard-specific progress list extraction while broad dashboard layout work stays deferred |
 | PRJ-1041 | Extract dashboard progress list component | DONE | dashboard progress row presentation lives in `web/src/components/dashboard.tsx` while `dashboardGoalRows` stays in `App()` |
-| PRJ-1042 | Audit next frontend cleanup after dashboard progress extraction | READY_AFTER_PRJ-1041 | choose between route data-helper extraction, remaining route-local visual panels, or dashboard-specific component slices |
+| PRJ-1042 | Audit next frontend cleanup after dashboard progress extraction | DONE | selected `/insights` shared-shell/list alignment while route data, decorative orbit/map panels, and provider/health-coupled cleanup stay deferred |
+| PRJ-1043 | Align insights route with shared module shell components | DONE | `/insights` uses `ModuleOverviewBar`, `ModuleStatRow`, and `ModuleValueRowList` while preserving route data ownership and `aion-insights-*` selectors |
+| PRJ-1044 | Audit next frontend cleanup after insights shell alignment | DONE | selected `/integrations` side-panel shared alignment while provider/readiness data, automations flow rows, route data helpers, and decorative panels stay deferred |
+| PRJ-1045 | Align integrations side panels with shared module side-panel components | DONE | `/integrations` side panels use `ModuleRouteSidePanel` while provider/readiness data and decorative map panel stay in `App()` |
+| PRJ-1046 | Audit next frontend cleanup after integrations side-panel alignment | DONE | selected `/automations` flow-row shared alignment while health/proactive data and decorative switchboard panels stay in `App()` |
+| PRJ-1047 | Align automations flow rows with shared module value-row list | DONE | `/automations` flow rows use `ModuleValueRowList` while scheduler/proactive data and switchboard presentation stay in `App()` |
+| PRJ-1048 | Audit next frontend cleanup after automations flow-row alignment | DONE | selected `/automations` health-row shared alignment while health data construction and decorative panels stay in `App()` |
+| PRJ-1049 | Align automations health rows with shared module dot-row list | DONE | `/automations` health rows use `ModuleDotRowList` while health data construction stays in `App()` |
+| PRJ-1050 | Audit next frontend cleanup after automations health-row alignment | DONE | selected `/insights` guidance-row shared alignment while route data helpers and decorative panels stay deferred |
+| PRJ-1051 | Align insights guidance rows with shared module dot-row list | DONE | `/insights` guidance rows use `ModuleDotRowList` while route data stays in `App()` |
+| PRJ-1052 | Audit next frontend cleanup after insights guidance-row alignment | DONE | selected unused `ModuleRouteSideRow` removal after the last live call site moved to `ModuleDotRowList` |
+| PRJ-1053 | Remove unused ModuleRouteSideRow shared component | DONE | removed the unused shared component export and refreshed the active frontend component map |
+| PRJ-1054 | Audit next frontend cleanup after ModuleRouteSideRow removal | DONE | selected shared `RouteNoteCardList` extraction for repeated insights/automations/integrations note-card maps |
+| PRJ-1055 | Extract shared route note-card list | DONE | `RouteNoteCardList` wraps repeated route-keyed note-card maps while route data stays in `App()` |
+| PRJ-1056 | Audit next frontend cleanup after route note-card list extraction | DONE | selected shared `RouteStatCardList` extraction for repeated module stat-card maps |
+| PRJ-1057 | Extract shared route stat-card list | DONE | `RouteStatCardList` wraps repeated route-keyed stat-card maps while route data stays in `App()` |
+| PRJ-1058 | Audit next frontend cleanup after route stat-card list extraction | DONE | selected shared `PersonalityTimelineRowList` extraction for repeated timeline-row maps |
+| PRJ-1059 | Extract shared personality timeline-row list | DONE | `PersonalityTimelineRowList` wraps repeated timeline-row maps while wrapper classes and route data stay in `App()` |
+| PRJ-1060 | Audit next frontend cleanup after personality timeline-row list extraction | DONE | selected stale `RouteStatCard` import removal from `App.tsx` after stat-card maps moved behind `RouteStatCardList` |
+| PRJ-1061 | Remove stale RouteStatCard route-shell import | DONE | removed the unused `RouteStatCard` named import from `App.tsx` while keeping `RouteStatCardList` and the shared export intact |
+| PRJ-1062 | Audit next frontend cleanup after stale RouteStatCard import removal | DONE | selected shared `PersonalitySignalRowList` extraction for repeated personality side-panel signal maps |
+| PRJ-1063 | Extract shared personality signal-row list | DONE | `PersonalitySignalRowList` wraps conscious and subconscious personality signal rows while route data stays in `App()` |
+| PRJ-1064 | Audit next frontend cleanup after personality signal-row list extraction | DONE | selected dashboard `DashboardSignalColumn` extraction for repeated left/right signal-card maps |
+| PRJ-1065 | Extract dashboard signal-card column | DONE | `DashboardSignalColumn` wraps dashboard left/right signal-card maps while hero layout and route data stay unchanged |
+| PRJ-1066 | Audit next frontend cleanup after dashboard signal-column extraction | DONE | selected public `PublicTrustPillList` extraction for repeated public proof pill maps |
+| PRJ-1067 | Extract public trust-pill list | DONE | `PublicTrustPillList` wraps public micro-proof and proof-bridge trust pill lists while public data stays in `App()` |
+| PRJ-1068 | Audit next frontend cleanup after public trust-pill list extraction | DONE | selected public `PublicFeatureCardList` extraction for the public feature strip |
+| PRJ-1069 | Extract public feature-card list | DONE | `PublicFeatureCardList` wraps public feature strip cards while public data stays in `App()` |
+| PRJ-1070 | Audit next frontend cleanup after public feature-card list extraction | DONE | selected public `PublicTrustBand` extraction for the footer trust-band articles |
+| PRJ-1071 | Extract public footer trust band | DONE | `PublicTrustBand` wraps the public footer trust-band while public data stays in `App()` |
+| PRJ-1072 | Audit next frontend cleanup after public footer trust-band extraction | DONE | selected dashboard `DashboardReflectionList` extraction for static reflection highlight rows |
+| PRJ-1073 | Extract dashboard reflection list | DONE | `DashboardReflectionList` wraps dashboard reflection highlight rows while route data stays in `App()` |
+| PRJ-1074 | Audit next frontend cleanup after dashboard reflection-list extraction | DONE | selected dashboard `DashboardMemoryBarChart` extraction for the memory bar chart |
+| PRJ-1075 | Extract dashboard memory bar chart | DONE | `DashboardMemoryBarChart` wraps the dashboard memory bar chart while dynamic height data stays in `App()` |
+| PRJ-1076 | Audit next frontend cleanup after dashboard memory bar-chart extraction | DONE | selected dashboard `DashboardGuidanceList` extraction for guidance rows with passive buttons |
+| PRJ-1077 | Extract dashboard guidance list | DONE | `DashboardGuidanceList` wraps dashboard guidance rows while preserving passive button behavior |
+| PRJ-1078 | Audit next frontend cleanup after dashboard guidance-list extraction | DONE | selected dashboard `DashboardRecentActivityList` extraction for dashboard recent activity rows |
+| PRJ-1079 | Extract dashboard recent activity list | DONE | `DashboardRecentActivityList` wraps dashboard recent activity rows while data selection stays in `App()` |
+| PRJ-1080 | Audit next frontend cleanup after dashboard recent activity-list extraction | DONE | selected dashboard `DashboardBalanceGrid` extraction for summary balance rows |
+| PRJ-1081 | Extract dashboard balance grid | DONE | `DashboardBalanceGrid` wraps dashboard balance rows while route data stays in `App()` |
+| PRJ-1082 | Audit next frontend cleanup after dashboard balance-grid extraction | DONE | selected dashboard `DashboardCognitiveFlowTrack` extraction for flow step cards |
+| PRJ-1083 | Extract dashboard cognitive flow track | DONE | `DashboardCognitiveFlowTrack` wraps dashboard cognitive flow steps while current phase stays in `App()` |
+| PRJ-1084 | Audit next frontend cleanup after dashboard cognitive flow-track extraction | DONE | selected dashboard `DashboardFigureNoteList` extraction for hero figure notes |
+| PRJ-1085 | Extract dashboard figure note list | DONE | `DashboardFigureNoteList` wraps dashboard hero figure notes while figure stage layout stays in `App()` |
+| PRJ-1086 | Audit next frontend cleanup after dashboard figure note-list extraction | DONE | selected personality `PersonalityActivityRowList` extraction for personality activity rows |
+| PRJ-1087 | Extract personality activity row list | DONE | `PersonalityActivityRowList` wraps personality recent activity rows while route data stays in `App()` |
+| PRJ-1088 | Audit next frontend cleanup after personality activity-row list extraction | DONE | selected settings hero `SettingsStatusPillList` extraction for display-only status pills |
+| PRJ-1089 | Extract settings hero status-pill list | DONE | `SettingsStatusPillList` wraps settings hero status pills while settings data stays in `App()` |
+| PRJ-1090 | Audit next frontend cleanup after settings status-pill extraction | DONE | selected tools summary `ToolsSummaryCardList` extraction while deferring behaviorful tools directory cards |
+| PRJ-1091 | Extract tools summary card list | DONE | `ToolsSummaryCardList` wraps tools summary cards while tools summary data stays in `App()` |
+| PRJ-1092 | Audit next frontend cleanup after tools summary card extraction | DONE | selected personality hero `PersonalityPreviewCalloutList` extraction while deferring behaviorful/control maps |
+| PRJ-1093 | Extract personality preview callout list | DONE | `PersonalityPreviewCalloutList` wraps personality hero callouts while callout data stays in `App()` |
+| PRJ-1094 | Audit next frontend cleanup after personality preview callout extraction | DONE | selected public home `PublicNavLinkList` extraction while deferring behaviorful/control/shell-wide maps |
+| PRJ-1095 | Extract public nav link list | DONE | `PublicNavLinkList` wraps public home nav anchors while public copy/data stays in `App()` |
+| PRJ-1096 | Audit next frontend cleanup after public nav link extraction | DONE | selected shell `ShellAccountFactList` extraction while deferring behaviorful/control/data-projection maps |
+| PRJ-1097 | Extract shell account fact list | DONE | `ShellAccountFactList` wraps desktop/mobile account facts while account data and panel state stay in `App()` |
+| PRJ-1098 | Audit next frontend cleanup after shell account fact extraction | DONE | selected shell `ShellNavButtonList` extraction while deferring mobile refs/control/data maps |
+| PRJ-1099 | Extract shell nav button list | DONE | `ShellNavButtonList` wraps desktop sidebar nav while route state and navigation callback stay in `App()` |
+| PRJ-1100 | Audit next frontend cleanup after shell nav button extraction | DONE | selected shell `ShellRouteSwitcher` extraction for the non-ref route-header switcher |
+| PRJ-1101 | Extract shell route switcher | DONE | `ShellRouteSwitcher` wraps route-header switcher while route labels/state/callback stay in `App()` |
+| PRJ-1102 | Audit next frontend cleanup after shell route switcher extraction | DONE | selected settings `SettingsSelectOptionList` extraction while keeping form state and normalization in `App()` |
+| PRJ-1103 | Extract settings select option list | DONE | `SettingsSelectOptionList` wraps settings select options while state/handlers stay in `App()` |
+| PRJ-1104 | Audit next frontend cleanup after settings select option extraction | DONE | classified remaining maps and selected tools-directory behavior characterization before behaviorful extraction |
+| PRJ-1105 | Add focused tools-directory behavior characterization | DONE | `npm run test:tools-directory` proves loading, empty, provider readiness, toggle, Telegram link, and route smoke behavior before any tools directory extraction |
+| PRJ-1106 | Extract tools directory group/item presentation | DONE | `ToolsDirectoryGroupList` owns `/tools` group/item presentation while route-owned API calls, toggle state, Telegram link state, and handlers stay in `App()`; build, tools characterization, and route smoke pass |
+| PRJ-1107 | Audit remaining frontend map boundaries after tools directory extraction | DONE | classified remaining data-projection, chat transcript, public hero highlight, and mobile-tabbar ref maps; selected public hero data-shape alignment next |
+| PRJ-1108 | Align public hero card data shape with motif highlights | DONE | public hero card data uses `label/value` directly so `MotifFigurePanel` no longer needs a JSX-local `{ title, body }` to `{ label, value }` projection |
+| PRJ-1109 | Audit chat transcript render-map extraction readiness | DONE | classified transcript refs, delivery labels, timestamp formatting, markdown rendering, and loading fallback ownership; selected characterization before extraction |
+| PRJ-1110 | Add focused chat transcript render characterization | DONE | `npm run test:chat-transcript` proves preview fallback, durable rows, optimistic delivery labels, timestamp/markdown rendering, and row selectors before extracting the transcript message list |
+| PRJ-1111 | Extract chat transcript message-list presentation | DONE | `ChatTranscriptMessageList` owns transcript row mapping while refs, delivery labels, timestamp formatting, markdown rendering, and composer state remain explicitly owned by `App()`; build, chat transcript characterization, and route smoke pass |
+| PRJ-1112 | Audit mobile tabbar ref extraction readiness | DONE | selected a shell-owned `ShellMobileTabbar` boundary while keeping scroll-centering effect ownership in `App()` |
+| PRJ-1113 | Extract shell mobile tabbar | DONE | bottom mobile tabbar JSX moved to `web/src/components/shell.tsx` with explicit route/ref props; build and route smoke pass |
+| PRJ-1114 | Audit remaining data projections and frontend cleanup closure | DONE | confirmed remaining `App.tsx` maps are data projections or local state updates; current frontend presentation extraction lane is closed |
 | PRJ-968 | Add release evidence index | DONE | `docs/operations/release-evidence-index.md` shows current candidate lineage, production SHA, release tag target, blockers, and next action |
 | PRJ-969 | Add Coolify fallback secret/runbook readiness check | DONE | `check_coolify_fallback_readiness.py` reports whether approved webhook fallback inputs are present without triggering deploy |
 | PRJ-970 | Add release go/no-go command wrapper | DONE | `run_release_go_no_go.py` composes release reality audit with release-smoke posture and prints GO/HOLD |

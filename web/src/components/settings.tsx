@@ -52,6 +52,36 @@ export function SettingsFact({
   );
 }
 
+export function SettingsStatusPillList({ items }: { items: string[] }) {
+  return (
+    <div className="aion-settings-status-grid">
+      {items.map((item, index) => (
+        <span key={`${item}-${index}`} className="aion-settings-status-pill">
+          {item}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+export function SettingsSelectOptionList<TOption extends { value: string }>({
+  options,
+  labelForOption,
+}: {
+  options: TOption[];
+  labelForOption: (option: TOption) => string;
+}) {
+  return (
+    <>
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {labelForOption(option)}
+        </option>
+      ))}
+    </>
+  );
+}
+
 export function SettingsProactivePanel({
   label,
   title,

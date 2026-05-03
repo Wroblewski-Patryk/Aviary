@@ -12,12 +12,6 @@ import {
   type AppToolsOverviewResponse,
 } from "./lib/api";
 import {
-  formatToolLinkState,
-  formatToolState,
-  summarizeToolAction,
-  toolStatusClass,
-} from "./lib/tool-formatting";
-import {
   formatTimestamp,
   recentActivityRows,
   stringValue,
@@ -50,13 +44,35 @@ import {
   ChatFlowStage,
   ChatPortraitPanel,
   ChatTopbar,
-  ChatTranscriptMessageRow,
+  ChatTranscriptMessageList,
   ChatTranscriptShell,
   type ChatCognitiveBeltItem,
 } from "./components/chat";
-import { DashboardProgressList, DashboardSignalCard } from "./components/dashboard";
-import { PersonalityTimelineRow } from "./components/personality";
-import { MotifFigurePanel, PublicGlyph } from "./components/public-shell";
+import {
+  DashboardBalanceGrid,
+  DashboardCognitiveFlowTrack,
+  DashboardFigureNoteList,
+  DashboardGuidanceList,
+  DashboardMemoryBarChart,
+  DashboardProgressList,
+  DashboardReflectionList,
+  DashboardRecentActivityList,
+  DashboardSignalColumn,
+} from "./components/dashboard";
+import {
+  PersonalityActivityRowList,
+  PersonalityPreviewCalloutList,
+  PersonalitySignalRowList,
+  PersonalityTimelineRowList,
+} from "./components/personality";
+import {
+  MotifFigurePanel,
+  PublicFeatureCardList,
+  PublicGlyph,
+  PublicNavLinkList,
+  PublicTrustBand,
+  PublicTrustPillList,
+} from "./components/public-shell";
 import {
   FeedbackBanner,
   FlowRail,
@@ -68,13 +84,12 @@ import {
   ModuleOverviewBar,
   ModuleProgressValueRowList,
   ModuleRouteSidePanel,
-  ModuleRouteSideRow,
   ModuleStatRow,
   ModuleTextCardList,
   ModuleValueRowList,
-  RouteNoteCard,
+  RouteNoteCardList,
   RouteHeroPanel,
-  RouteStatCard,
+  RouteStatCardList,
   StatePanel,
 } from "./components/shared";
 import {
@@ -83,20 +98,23 @@ import {
   SettingsFact,
   SettingsProactivePanel,
   SettingsSavePanel,
+  SettingsSelectOptionList,
+  SettingsStatusPillList,
 } from "./components/settings";
 import {
   AviaryWordmark,
-  ShellNavButton,
+  ShellAccountFactList,
+  ShellMobileTabbar,
+  ShellNavButtonList,
+  ShellRouteSwitcher,
   ShellUtilityBar,
   SidebarBrandBlock,
-  type SidebarIconKind,
+  type ShellNavButtonItem,
 } from "./components/shell";
 import {
-  ToolsDetailCard,
-  ToolsFactCard,
-  ToolsSummaryCard,
-  ToolsTelegramLinkPanel,
-  ToolsTechnicalDetailPanel,
+  ToolsDirectoryGroupList,
+  ToolsSummaryCardList,
+  type ToolsSummaryCardItem,
 } from "./components/tools";
 import { ROUTES, navigate, navigatePublicEntry, normalizeRoute, type RoutePath } from "./routes";
 
@@ -1702,7 +1720,7 @@ export default function App() {
   const [resettingData, setResettingData] = useState(false);
   const [accountPanelOpen, setAccountPanelOpen] = useState(false);
   const transcriptContainerRef = useRef<HTMLDivElement | null>(null);
-  const transcriptMessageRefs = useRef<Record<string, HTMLArticleElement | null>>({});
+  const transcriptMessageRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const initialTranscriptScrollDoneRef = useRef(false);
   const pendingAssistantScrollIdRef = useRef<string | null>(null);
 
@@ -2344,17 +2362,34 @@ export default function App() {
     `${stringValue(toolsOverview?.summary.link_required_count, "0")} ${copy.tools.needsLinkingChipSuffix}`,
     `${stringValue(toolsOverview?.summary.integral_enabled_count, "0")} ${copy.tools.alwaysOnChipSuffix}`,
   ];
+  const toolsSummaryCards: ToolsSummaryCardItem[] = [
+    {
+      title: copy.tools.groupCount,
+      value: stringValue(toolsOverview?.summary.total_groups, "0"),
+      note: copy.tools.summaryGroupNote,
+    },
+    {
+      title: copy.tools.integral,
+      value: stringValue(toolsOverview?.summary.integral_enabled_count, "0"),
+      note: copy.tools.summaryIntegralNote,
+    },
+    {
+      title: copy.tools.ready,
+      value: stringValue(toolsOverview?.summary.provider_ready_count, "0"),
+      note: copy.tools.summaryReadyNote,
+    },
+    {
+      title: copy.tools.linkRequired,
+      value: stringValue(toolsOverview?.summary.link_required_count, "0"),
+      note: copy.tools.summaryLinkRequiredNote,
+    },
+  ];
   const settingsHeroChips = [
     localeOptionDisplay(selectedUiLanguageMetadata, resolvedUiLanguage),
     selectedUtcOffsetMetadata.value,
     Boolean(me?.settings.proactive_opt_in) ? copy.common.on : copy.common.off,
   ];
-  const shellNavItems: Array<{
-    route?: RoutePath;
-    label: string;
-    icon: SidebarIconKind;
-    disabled?: boolean;
-  }> = [
+  const shellNavItems: Array<ShellNavButtonItem<RoutePath>> = [
     {
       route: "/dashboard" as const,
       label: routeLabel("/dashboard", resolvedUiLanguage),
@@ -3106,24 +3141,24 @@ export default function App() {
   } satisfies Record<ResolvedUiLanguageCode, string[]>;
   const publicHeroCards = {
     en: [
-      { title: "Memory", body: "Everything meaningful stays visible." },
-      { title: "Cognition", body: "Understand context before acting." },
-      { title: "Planning", body: "Turn goals into calm next steps." },
-      { title: "Reflection", body: "Learn and evolve over time." },
+      { label: "Memory", value: "Everything meaningful stays visible." },
+      { label: "Cognition", value: "Understand context before acting." },
+      { label: "Planning", value: "Turn goals into calm next steps." },
+      { label: "Reflection", value: "Learn and evolve over time." },
     ],
     pl: [
-      { title: "Pamięć", body: "To, co ważne, pozostaje widoczne." },
-      { title: "Poznanie", body: "Najpierw zrozum kontekst, potem działaj." },
-      { title: "Planowanie", body: "Zamieniaj cele w spokojne kolejne kroki." },
-      { title: "Refleksja", body: "Ucz się i rozwijaj w czasie." },
+      { label: "Pamięć", value: "To, co ważne, pozostaje widoczne." },
+      { label: "Poznanie", value: "Najpierw zrozum kontekst, potem działaj." },
+      { label: "Planowanie", value: "Zamieniaj cele w spokojne kolejne kroki." },
+      { label: "Refleksja", value: "Ucz się i rozwijaj w czasie." },
     ],
     de: [
-      { title: "Gedachtnis", body: "Wichtiges bleibt sichtbar." },
-      { title: "Kognition", body: "Kontext verstehen, bevor gehandelt wird." },
-      { title: "Planung", body: "Ziele in ruhige nachste Schritte uberfuhren." },
-      { title: "Reflexion", body: "Lernen und sich mit der Zeit weiterentwickeln." },
+      { label: "Gedachtnis", value: "Wichtiges bleibt sichtbar." },
+      { label: "Kognition", value: "Kontext verstehen, bevor gehandelt wird." },
+      { label: "Planung", value: "Ziele in ruhige nachste Schritte uberfuhren." },
+      { label: "Reflexion", value: "Lernen und sich mit der Zeit weiterentwickeln." },
     ],
-  } satisfies Record<ResolvedUiLanguageCode, Array<{ title: string; body: string }>>;
+  } satisfies Record<ResolvedUiLanguageCode, Array<{ label: string; value: string }>>;
   const publicFeaturePillars = {
     en: [
       { icon: "understanding", title: "Deep understanding", body: "Understands your state and pace." },
@@ -3512,13 +3547,7 @@ export default function App() {
             <div className="aion-public-window-body">
               <header className="aion-public-nav">
                 <AviaryWordmark compact />
-                <nav className="aion-public-nav-links" aria-label="Public navigation">
-                  {publicHomeSurface.nav.map((item) => (
-                    <a key={item} className="aion-public-nav-link" href="#aviary-home">
-                      {item}
-                    </a>
-                  ))}
-                </nav>
+                <PublicNavLinkList items={publicHomeSurface.nav} />
                 <div className="aion-public-nav-actions">
                   <button
                     className="aion-public-nav-button aion-public-nav-button-ghost"
@@ -3542,10 +3571,7 @@ export default function App() {
                   <div className="aion-public-hero-stage">
                     <MotifFigurePanel
                       artSrc={LANDING_HERO_ART_SRC}
-                      highlights={publicHomeSurface.heroCards.map((card) => ({
-                        label: card.title,
-                        value: card.body,
-                      }))}
+                      highlights={publicHomeSurface.heroCards}
                       overlay={
                         <div className="aion-public-hero-copy">
                           <h1 className="aion-public-hero-title">{publicHomeSurface.heroTitle}</h1>
@@ -3566,16 +3592,12 @@ export default function App() {
                               {copy.auth.enterWorkspace}
                             </button>
                           </div>
-                          <div className="aion-public-micro-proof-row">
-                            {publicHomeSurface.trustBand.slice(0, 3).map((item) => (
-                              <span key={item.label} className="aion-public-micro-proof-item">
-                                <span className="aion-public-micro-proof-icon" aria-hidden="true">
-                                  <PublicGlyph kind={item.icon} />
-                                </span>
-                                {item.label}
-                              </span>
-                            ))}
-                          </div>
+                          <PublicTrustPillList
+                            items={publicHomeSurface.trustBand.slice(0, 3)}
+                            className="aion-public-micro-proof-row"
+                            itemClassName="aion-public-micro-proof-item"
+                            iconClassName="aion-public-micro-proof-icon"
+                          />
                         </div>
                       }
                       scenic
@@ -3584,17 +3606,7 @@ export default function App() {
                 </section>
 
                 <section className="aion-public-feature-bridge aion-panel-soft">
-                  <div className="aion-public-feature-strip">
-                    {publicHomeSurface.pillars.map((pillar) => (
-                      <article key={pillar.title} className="aion-public-feature-card">
-                        <span className="aion-public-feature-icon" aria-hidden="true">
-                          <PublicGlyph kind={pillar.icon} />
-                        </span>
-                        <p className="aion-public-feature-title">{pillar.title}</p>
-                        <p className="aion-public-feature-body">{pillar.body}</p>
-                      </article>
-                    ))}
-                  </div>
+                  <PublicFeatureCardList items={publicHomeSurface.pillars} />
                   <div className="aion-public-proof-bridge">
                     <div className="aion-public-proof-bridge-copy">
                       <p className="aion-public-section-label">{publicHomeSurface.proofLine}</p>
@@ -3602,29 +3614,16 @@ export default function App() {
                         {publicHomeSurface.proofBridgeLead}
                       </p>
                     </div>
-                    <div className="aion-public-proof-bridge-list">
-                      {publicHomeSurface.trustBand.slice(0, 3).map((item) => (
-                        <span key={item.label} className="aion-public-proof-bridge-pill">
-                          <span className="aion-public-proof-bridge-pill-icon" aria-hidden="true">
-                            <PublicGlyph kind={item.icon} />
-                          </span>
-                          {item.label}
-                        </span>
-                      ))}
-                    </div>
+                    <PublicTrustPillList
+                      items={publicHomeSurface.trustBand.slice(0, 3)}
+                      className="aion-public-proof-bridge-list"
+                      itemClassName="aion-public-proof-bridge-pill"
+                      iconClassName="aion-public-proof-bridge-pill-icon"
+                    />
                   </div>
                 </section>
 
-                <footer className="aion-public-trust-band">
-                  {publicHomeSurface.trustBand.map((item) => (
-                    <article key={item.label} className="aion-public-trust-item">
-                      <span className="aion-public-trust-icon" aria-hidden="true">
-                        <PublicGlyph kind={item.icon} />
-                      </span>
-                      <p>{item.label}</p>
-                    </article>
-                  ))}
-                </footer>
+                <PublicTrustBand items={publicHomeSurface.trustBand} />
               </main>
 
               {authModalOpen ? (
@@ -3762,22 +3761,11 @@ export default function App() {
           <aside className="aion-app-rail hidden xl:flex xl:min-h-[calc(100vh-3rem)] xl:flex-col">
             <SidebarBrandBlock />
 
-            <nav className="aion-sidebar-nav" aria-label="Authenticated navigation">
-              {shellNavItems.map((item) => (
-                <ShellNavButton
-                  key={item.route ?? item.label}
-                  label={item.label}
-                  active={Boolean(item.route && route === item.route)}
-                  icon={item.icon}
-                  disabled={item.disabled}
-                  onClick={() => {
-                    if (item.route) {
-                      changeRoute(item.route);
-                    }
-                  }}
-                />
-              ))}
-            </nav>
+            <ShellNavButtonList
+              items={shellNavItems}
+              activeRoute={route}
+              onRouteChange={changeRoute}
+            />
 
             <div className="aion-sidebar-support-stack mt-auto">
               <section className="aion-panel-soft aion-rail-health aion-sidebar-support-card aion-sidebar-health-card">
@@ -3842,14 +3830,7 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="aion-shell-account-facts">
-                      {accountSummaryItems.map((item) => (
-                        <div key={item.label} className="aion-shell-account-fact">
-                          <p className="aion-shell-account-fact-label">{item.label}</p>
-                          <p className="aion-shell-account-fact-value">{item.value}</p>
-                        </div>
-                      ))}
-                    </div>
+                    <ShellAccountFactList items={accountSummaryItems} />
 
                     <div className="aion-shell-account-actions">
                       <button className="btn btn-outline" onClick={() => changeRoute("/settings")} type="button">
@@ -3890,20 +3871,12 @@ export default function App() {
                 </button>
               </div>
 
-              <div className="hidden border-t border-base-300/70 px-4 py-3 sm:px-5 md:block">
-                <div className="flex gap-2 overflow-x-auto pb-1">
-                  {ROUTES.map((entry) => (
-                    <button
-                      key={entry}
-                      className={`btn btn-sm whitespace-nowrap ${route === entry ? "btn-primary" : "btn-ghost border border-base-300"}`}
-                      onClick={() => changeRoute(entry)}
-                      type="button"
-                    >
-                      {routeLabel(entry, resolvedUiLanguage)}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <ShellRouteSwitcher
+                routes={ROUTES}
+                activeRoute={route}
+                labelForRoute={(entry) => routeLabel(entry, resolvedUiLanguage)}
+                onRouteChange={changeRoute}
+              />
             </header>
 
             {accountPanelOpen ? (
@@ -3915,14 +3888,7 @@ export default function App() {
                     <p className="mt-1 text-sm text-base-800">{me.user.email}</p>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      {accountSummaryItems.map((item) => (
-                        <div key={item.label} className="aion-panel-soft rounded-[1.4rem] p-4">
-                          <p className="text-xs uppercase tracking-[0.18em] text-base-800">{item.label}</p>
-                          <p className="mt-2 text-base font-semibold text-base-900">{item.value}</p>
-                        </div>
-                      ))}
-                    </div>
+                    <ShellAccountFactList items={accountSummaryItems} variant="mobile" />
                     <button className="btn btn-outline sm:self-end" onClick={() => void handleLogout()} type="button">
                       {copy.common.signOut}
                     </button>
@@ -3971,29 +3937,11 @@ export default function App() {
                   </div>
 
                   <div className="aion-dashboard-hero-grid">
-                    <div className="aion-dashboard-signal-column">
-                      {dashboardSignalCards
-                        .filter((card) => card.placement === "left")
-                        .map((card) => (
-                          <DashboardSignalCard
-                            key={card.eyebrow}
-                            eyebrow={card.eyebrow}
-                            value={card.value}
-                            detail={card.detail}
-                            note={card.note}
-                          />
-                        ))}
-                    </div>
+                    <DashboardSignalColumn cards={dashboardSignalCards} placement="left" />
 
                     <div className="aion-dashboard-figure-stage">
                       <div className="aion-dashboard-figure-halo" aria-hidden="true" />
-                      {dashboardFigureNotes.map((note) => (
-                        <article key={note.key} className={note.className}>
-                          <p className="aion-dashboard-figure-note-eyebrow">{note.eyebrow}</p>
-                          <p className="aion-dashboard-figure-note-title">{note.title}</p>
-                          <p className="aion-dashboard-figure-note-body">{note.body}</p>
-                        </article>
-                      ))}
+                      <DashboardFigureNoteList notes={dashboardFigureNotes} />
                       <img
                         className="aion-dashboard-figure-image"
                         src={DASHBOARD_HERO_ART_SRC}
@@ -4004,19 +3952,7 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="aion-dashboard-signal-column">
-                      {dashboardSignalCards
-                        .filter((card) => card.placement === "right")
-                        .map((card) => (
-                          <DashboardSignalCard
-                            key={card.eyebrow}
-                            eyebrow={card.eyebrow}
-                            value={card.value}
-                            detail={card.detail}
-                            note={card.note}
-                          />
-                        ))}
-                    </div>
+                    <DashboardSignalColumn cards={dashboardSignalCards} placement="right" />
                   </div>
 
                 </div>
@@ -4034,18 +3970,7 @@ export default function App() {
                         Live
                       </div>
                     </div>
-                    <div className="aion-dashboard-flow-track aion-dashboard-flow-track-bridge">
-                      {dashboardCognitiveSteps.map((step) => (
-                        <article
-                          key={step.title}
-                          className={`aion-dashboard-flow-step ${step.active ? "aion-dashboard-flow-step-active" : ""}`}
-                        >
-                          <span className="aion-dashboard-flow-icon">{step.token}</span>
-                          <p className="mt-3 text-base font-semibold text-base-900">{step.title}</p>
-                          <p className="mt-1 text-sm text-base-800">{step.detail}</p>
-                        </article>
-                      ))}
-                    </div>
+                    <DashboardCognitiveFlowTrack steps={dashboardCognitiveSteps} />
                   </div>
 
                   <aside className="aion-dashboard-flow-phase">
@@ -4098,27 +4023,13 @@ export default function App() {
                     </span>
                   </div>
                   <p className="mt-2 text-sm text-[#5f8f93]">Useful memories stored and made easier to reuse.</p>
-                  <div className="aion-dashboard-bar-chart mt-6">
-                    {dashboardMemoryBars.map((bar) => (
-                      <div key={bar.label} className="aion-dashboard-bar-item">
-                        <span className="aion-dashboard-bar-fill" style={{ height: bar.height }} />
-                        <span className="aion-dashboard-bar-label">{bar.label}</span>
-                      </div>
-                    ))}
-                  </div>
+                  <DashboardMemoryBarChart items={dashboardMemoryBars} />
                 </article>
 
                 <article className="aion-panel-soft aion-dashboard-card aion-dashboard-card-reflection">
                   <p className="text-sm uppercase tracking-[0.2em] text-base-800">Reflection highlights</p>
                   <h3 className="mt-2 font-display text-2xl text-base-900">What is becoming clearer</h3>
-                  <div className="aion-dashboard-reflection-list mt-5">
-                    {dashboardReflectionRows.map((row) => (
-                      <div key={row.title} className="aion-dashboard-reflection-row">
-                        <span className="aion-dashboard-reflection-tag">{row.tag}</span>
-                        <p>{row.title}</p>
-                      </div>
-                    ))}
-                  </div>
+                  <DashboardReflectionList items={dashboardReflectionRows} />
                 </article>
               </section>
                 </div>
@@ -4127,23 +4038,7 @@ export default function App() {
                   <section className="aion-dashboard-guidance-panel">
                     <p className="text-sm uppercase tracking-[0.22em] text-base-800">Insights and guidance</p>
                     <h3 className="mt-2 font-display text-2xl text-base-900">Curated for you</h3>
-                    <div className="aion-dashboard-guidance-list">
-                      {dashboardGuidanceCards.slice(0, 4).map((card, index) => (
-                        <article
-                          key={card.title}
-                          className={`aion-dashboard-guidance-row ${index === 0 ? "aion-dashboard-guidance-row-lead" : ""}`}
-                        >
-                          <span className="aion-dashboard-guidance-token" aria-hidden="true" />
-                          <div className="aion-dashboard-guidance-row-copy">
-                            <p className="aion-dashboard-guidance-row-title">{card.title}</p>
-                            <p className="aion-dashboard-guidance-row-body">{card.body}</p>
-                          </div>
-                          <button className="aion-dashboard-mini-action aion-dashboard-mini-action-quiet" type="button">
-                            {card.action}
-                          </button>
-                        </article>
-                      ))}
-                    </div>
+                    <DashboardGuidanceList items={dashboardGuidanceCards} />
                     <button className="aion-dashboard-action-button aion-dashboard-guidance-cta" type="button">
                       View all insights
                     </button>
@@ -4159,16 +4054,7 @@ export default function App() {
                         View all
                       </button>
                     </div>
-                    <div className="grid gap-2.5">
-                      {personalityRecentActivity.slice(0, 4).map((item) => (
-                        <article key={item.key} className="aion-dashboard-recent-row">
-                          <div>
-                            <p className="text-[0.82rem] font-semibold text-base-900">{item.title}</p>
-                          </div>
-                          <span className="text-xs uppercase tracking-[0.18em] text-base-800">{item.when}</span>
-                        </article>
-                      ))}
-                    </div>
+                    <DashboardRecentActivityList items={personalityRecentActivity.slice(0, 4)} />
                   </section>
 
                   <section className="aion-dashboard-side-story aion-dashboard-side-story-lead aion-dashboard-guidance-intention">
@@ -4199,17 +4085,7 @@ export default function App() {
 
                     <div className="aion-dashboard-summary-balance">
                       <p className="text-sm uppercase tracking-[0.2em] text-base-800">Balance across layers</p>
-                      <div className="aion-dashboard-summary-balance-grid">
-                        {dashboardBalanceRows.map((row, index) => (
-                          <div key={row.label} className="aion-dashboard-summary-balance-row">
-                            <div className="aion-dashboard-summary-balance-label">
-                              <span className={`aion-dashboard-summary-balance-token aion-dashboard-summary-balance-token-${index + 1}`} />
-                              <span>{row.label}</span>
-                            </div>
-                            <strong>{row.value}</strong>
-                          </div>
-                        ))}
-                      </div>
+                      <DashboardBalanceGrid items={dashboardBalanceRows} />
                     </div>
                     <div className="aion-dashboard-summary-scenic aion-dashboard-summary-scenic-closure">
                       <div className="aion-dashboard-summary-scenic-copy">
@@ -4262,35 +4138,30 @@ export default function App() {
                         />
                       ) : null
                     }
-                    transcript={visibleTranscriptItems.map((message) => {
-                        const isUser = message.role === "user";
-                        const deliveryState = isUser ? chatDeliveryState(message) : null;
-                        const deliveryLabel =
+                    transcript={
+                      <ChatTranscriptMessageList
+                        messages={visibleTranscriptItems}
+                        preview={transcriptIsPreview}
+                        userSpeakerLabel={copy.common.user}
+                        assistantSpeakerLabel="AION"
+                        getDeliveryState={(message) =>
+                          message.role === "user" ? chatDeliveryState(message) : null
+                        }
+                        getDeliveryLabel={(deliveryState) =>
                           deliveryState === "sending"
                             ? copy.chat.pending
                             : deliveryState === "delivered"
                               ? copy.chat.delivered
                               : deliveryState === "failed"
                                 ? copy.chat.failed
-                                : null;
-
-                        return (
-                          <ChatTranscriptMessageRow
-                            key={message.message_id}
-                            ref={(node) => {
-                              transcriptMessageRefs.current[message.message_id] = node;
-                            }}
-                            isUser={isUser}
-                            preview={transcriptIsPreview}
-                            speakerLabel={isUser ? copy.common.user : "AION"}
-                            timestampLabel={formatTimestamp(message.timestamp, resolvedUiLanguage)}
-                            deliveryState={deliveryState}
-                            deliveryLabel={deliveryLabel}
-                          >
-                            {renderChatMarkdown(message.text)}
-                          </ChatTranscriptMessageRow>
-                        );
-                      })
+                                : null
+                        }
+                        getTimestampLabel={(message) => formatTimestamp(message.timestamp, resolvedUiLanguage)}
+                        renderMessage={(message) => renderChatMarkdown(message.text)}
+                        registerMessageRef={(messageId, node) => {
+                          transcriptMessageRefs.current[messageId] = node;
+                        }}
+                      />
                     }
                     composer={
                       <ChatComposerShell
@@ -4335,15 +4206,7 @@ export default function App() {
               />
 
               <ModuleStatRow routeKey="memory" ariaLabel="Memory summary">
-                {memoryStatCards.map((item) => (
-                  <RouteStatCard
-                    key={item.label}
-                    routeKey="memory"
-                    label={item.label}
-                    value={item.value}
-                    detail={item.detail}
-                  />
-                ))}
+                <RouteStatCardList routeKey="memory" items={memoryStatCards} />
               </ModuleStatRow>
 
               <div className="aion-memory-layout">
@@ -4365,17 +4228,7 @@ export default function App() {
                     <span className="aion-memory-orbit-node aion-memory-orbit-node-c" />
                   </div>
 
-                  <div className="aion-memory-continuity-list">
-                    {memoryContinuityRows.map((row) => (
-                      <PersonalityTimelineRow
-                        key={row.title}
-                        token={row.token}
-                        title={row.title}
-                        detail={row.detail}
-                        value={row.value}
-                      />
-                    ))}
-                  </div>
+                  <PersonalityTimelineRowList items={memoryContinuityRows} className="aion-memory-continuity-list" />
                 </section>
 
                 <aside className="aion-memory-side-stack">
@@ -4410,15 +4263,7 @@ export default function App() {
               />
 
               <ModuleStatRow routeKey="reflections" ariaLabel="Reflection summary">
-                {reflectionStatCards.map((item) => (
-                  <RouteStatCard
-                    key={item.label}
-                    routeKey="reflections"
-                    label={item.label}
-                    value={item.value}
-                    detail={item.detail}
-                  />
-                ))}
+                <RouteStatCardList routeKey="reflections" items={reflectionStatCards} />
               </ModuleStatRow>
 
               <div className="aion-reflections-layout">
@@ -4438,17 +4283,7 @@ export default function App() {
                     <span className="aion-reflections-wave-node aion-reflections-wave-node-three" />
                   </div>
 
-                  <div className="aion-reflections-flow-list">
-                    {reflectionFlowRows.map((row) => (
-                      <PersonalityTimelineRow
-                        key={row.title}
-                        token={row.token}
-                        title={row.title}
-                        detail={row.detail}
-                        value={row.value}
-                      />
-                    ))}
-                  </div>
+                  <PersonalityTimelineRowList items={reflectionFlowRows} className="aion-reflections-flow-list" />
                 </section>
 
                 <aside className="aion-reflections-side-stack">
@@ -4483,15 +4318,7 @@ export default function App() {
               />
 
               <ModuleStatRow routeKey="plans" ariaLabel="Planning summary">
-                {plansStatCards.map((item) => (
-                  <RouteStatCard
-                    key={item.label}
-                    routeKey="plans"
-                    label={item.label}
-                    value={item.value}
-                    detail={item.detail}
-                  />
-                ))}
+                <RouteStatCardList routeKey="plans" items={plansStatCards} />
               </ModuleStatRow>
 
               <div className="aion-plans-layout">
@@ -4511,17 +4338,7 @@ export default function App() {
                     <span className="aion-plans-lane-line" />
                   </div>
 
-                  <div className="aion-plans-flow-list">
-                    {plansFlowRows.map((row) => (
-                      <PersonalityTimelineRow
-                        key={row.title}
-                        token={row.token}
-                        title={row.title}
-                        detail={row.detail}
-                        value={row.value}
-                      />
-                    ))}
-                  </div>
+                  <PersonalityTimelineRowList items={plansFlowRows} className="aion-plans-flow-list" />
                 </section>
 
                 <aside className="aion-plans-side-stack">
@@ -4553,15 +4370,7 @@ export default function App() {
               />
 
               <ModuleStatRow routeKey="goals" ariaLabel="Goal summary">
-                {goalsStatCards.map((item) => (
-                  <RouteStatCard
-                    key={item.label}
-                    routeKey="goals"
-                    label={item.label}
-                    value={item.value}
-                    detail={item.detail}
-                  />
-                ))}
+                <RouteStatCardList routeKey="goals" items={goalsStatCards} />
               </ModuleStatRow>
 
               <div className="aion-goals-layout">
@@ -4607,30 +4416,19 @@ export default function App() {
 
           {route === "/insights" ? (
             <div className="aion-insights-canvas grid gap-4">
-              <section className="aion-insights-overview-bar">
-                <span className="aion-chat-headline-emblem" aria-hidden="true" />
-                <div className="aion-insights-overview-copy">
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.insights.eyebrow}</p>
-                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.insights.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.insights.subtitle}</p>
-                </div>
-                <div className="aion-insights-overview-status" aria-label="Insight status">
-                  <span>{copy.insights.clarity}</span>
-                  <strong>{insightPatternCount} {insightPatternUnit}</strong>
-                </div>
-              </section>
+              <ModuleOverviewBar
+                routeKey="insights"
+                eyebrow={copy.insights.eyebrow}
+                title={copy.insights.title}
+                subtitle={copy.insights.subtitle}
+                statusLabel={copy.insights.clarity}
+                statusValue={`${insightPatternCount} ${insightPatternUnit}`}
+                statusAriaLabel="Insight status"
+              />
 
-              <section className="aion-insights-stat-row" aria-label="Insight summary">
-                {insightStatCards.map((item) => (
-                  <RouteStatCard
-                    key={item.label}
-                    routeKey="insights"
-                    label={item.label}
-                    value={item.value}
-                    detail={item.detail}
-                  />
-                ))}
-              </section>
+              <ModuleStatRow routeKey="insights" ariaLabel="Insight summary">
+                <RouteStatCardList routeKey="insights" items={insightStatCards} />
+              </ModuleStatRow>
 
               <div className="aion-insights-layout">
                 <section className="aion-insights-map-panel">
@@ -4651,20 +4449,7 @@ export default function App() {
                     <span className="aion-insights-orbit-node aion-insights-orbit-node-three" />
                   </div>
 
-                  <div className="aion-insights-signal-list">
-                    {insightSignalRows.map((row) => (
-                      <article key={row.title} className="aion-insights-signal-row">
-                        <div className="aion-insights-signal-copy">
-                          <span className="aion-insights-signal-token">{row.token}</span>
-                          <div>
-                            <p className="aion-insights-signal-title">{row.title}</p>
-                            <p className="aion-insights-signal-detail">{row.detail}</p>
-                          </div>
-                        </div>
-                        <strong>{row.value}</strong>
-                      </article>
-                    ))}
-                  </div>
+                  <ModuleValueRowList routeKey="insights" rowKey="signal" items={insightSignalRows} />
                 </section>
 
                 <aside className="aion-insights-side-stack">
@@ -4674,30 +4459,11 @@ export default function App() {
                     title={copy.insights.sensemakingNotes}
                     variant="clarity"
                   >
-                    <div className="mt-5 grid gap-3">
-                      {insightClarityCards.map((item) => (
-                        <RouteNoteCard
-                          key={item.title}
-                          routeKey="insights"
-                          title={item.title}
-                          body={item.body}
-                        />
-                      ))}
-                    </div>
+                    <RouteNoteCardList routeKey="insights" items={insightClarityCards} />
                   </ModuleRouteSidePanel>
 
                   <ModuleRouteSidePanel routeKey="insights" eyebrow={copy.insights.guidanceCandidates}>
-                    <div className="mt-4 grid gap-3">
-                      {insightGuidanceCards.map((card) => (
-                        <ModuleRouteSideRow
-                          key={card.title}
-                          routeKey="insights"
-                          rowKey="guidance"
-                          title={card.title}
-                          body={card.body}
-                        />
-                      ))}
-                    </div>
+                    <ModuleDotRowList routeKey="insights" rowKey="guidance" items={insightGuidanceCards} />
                   </ModuleRouteSidePanel>
                 </aside>
               </div>
@@ -4717,15 +4483,7 @@ export default function App() {
               />
 
               <ModuleStatRow routeKey="automations" ariaLabel="Automation summary">
-                {automationStatCards.map((item) => (
-                  <RouteStatCard
-                    key={item.label}
-                    routeKey="automations"
-                    label={item.label}
-                    value={item.value}
-                    detail={item.detail}
-                  />
-                ))}
+                <RouteStatCardList routeKey="automations" items={automationStatCards} />
               </ModuleStatRow>
 
               <div className="aion-automations-layout">
@@ -4746,20 +4504,7 @@ export default function App() {
                     <span className="aion-automations-switch-core">{proactiveEnabled ? copy.common.on : copy.common.off}</span>
                   </div>
 
-                  <div className="aion-automations-flow-list">
-                    {automationFlowRows.map((row) => (
-                      <article key={row.title} className="aion-automations-flow-row">
-                        <div className="aion-automations-flow-copy">
-                          <span className="aion-automations-flow-token">{row.token}</span>
-                          <div>
-                            <p className="aion-automations-flow-title">{row.title}</p>
-                            <p className="aion-automations-flow-detail">{row.detail}</p>
-                          </div>
-                        </div>
-                        <strong>{row.value}</strong>
-                      </article>
-                    ))}
-                  </div>
+                  <ModuleValueRowList routeKey="automations" rowKey="flow" items={automationFlowRows} />
                 </section>
 
                 <aside className="aion-automations-side-stack">
@@ -4769,30 +4514,11 @@ export default function App() {
                     title={copy.automations.guardrails}
                     variant="boundary"
                   >
-                    <div className="mt-5 grid gap-3">
-                      {automationBoundaryCards.map((item) => (
-                        <RouteNoteCard
-                          key={item.title}
-                          routeKey="automations"
-                          title={item.title}
-                          body={item.body}
-                        />
-                      ))}
-                    </div>
+                    <RouteNoteCardList routeKey="automations" items={automationBoundaryCards} />
                   </ModuleRouteSidePanel>
 
                   <ModuleRouteSidePanel routeKey="automations" eyebrow={copy.automations.healthDetails}>
-                    <div className="mt-4 grid gap-3">
-                      {automationHealthRows.map((item) => (
-                        <ModuleRouteSideRow
-                          key={item.title}
-                          routeKey="automations"
-                          rowKey="health"
-                          title={item.title}
-                          body={item.body}
-                        />
-                      ))}
-                    </div>
+                    <ModuleDotRowList routeKey="automations" rowKey="health" items={automationHealthRows} />
                   </ModuleRouteSidePanel>
                 </aside>
               </div>
@@ -4812,15 +4538,7 @@ export default function App() {
               />
 
               <ModuleStatRow routeKey="integrations" ariaLabel="Integration summary">
-                {integrationStatCards.map((item) => (
-                  <RouteStatCard
-                    key={item.label}
-                    routeKey="integrations"
-                    label={item.label}
-                    value={item.value}
-                    detail={item.detail}
-                  />
-                ))}
+                <RouteStatCardList routeKey="integrations" items={integrationStatCards} />
               </ModuleStatRow>
 
               <div className="aion-integrations-layout">
@@ -4850,29 +4568,22 @@ export default function App() {
                 </section>
 
                 <aside className="aion-integrations-side-stack">
-                  <section className="aion-integrations-side-panel aion-integrations-side-panel-boundary">
-                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.integrations.boundary}</p>
-                    <h3 className="mt-2 font-display text-2xl text-base-900">{copy.integrations.connectionRules}</h3>
-                    <div className="mt-5 grid gap-3">
-                      {integrationBoundaryCards.map((item) => (
-                        <RouteNoteCard
-                          key={item.title}
-                          routeKey="integrations"
-                          title={item.title}
-                          body={item.body}
-                        />
-                      ))}
-                    </div>
-                  </section>
+                  <ModuleRouteSidePanel
+                    routeKey="integrations"
+                    eyebrow={copy.integrations.boundary}
+                    title={copy.integrations.connectionRules}
+                    variant="boundary"
+                  >
+                    <RouteNoteCardList routeKey="integrations" items={integrationBoundaryCards} />
+                  </ModuleRouteSidePanel>
 
-                  <section className="aion-integrations-side-panel">
-                    <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.integrations.readinessDetails}</p>
+                  <ModuleRouteSidePanel routeKey="integrations" eyebrow={copy.integrations.readinessDetails}>
                     <ModuleDotRowList
                       routeKey="integrations"
                       rowKey="health"
                       items={integrationReadinessRows}
                     />
-                  </section>
+                  </ModuleRouteSidePanel>
                 </aside>
               </div>
             </div>
@@ -4887,13 +4598,7 @@ export default function App() {
                   <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.settings.title}</h2>
                   <p className="mt-2 text-sm leading-6 text-base-800">{copy.settings.subtitle}</p>
                 </div>
-                <div className="aion-settings-status-grid">
-                  {settingsHeroChips.map((chip) => (
-                    <span key={chip} className="aion-settings-status-pill">
-                      {chip}
-                    </span>
-                  ))}
-                </div>
+                <SettingsStatusPillList items={settingsHeroChips} />
               </section>
 
               <form className="aion-settings-layout" onSubmit={(event) => void handleSaveSettings(event)}>
@@ -4941,11 +4646,10 @@ export default function App() {
                             }))
                           }
                         >
-                          {UI_LANGUAGE_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {localeOptionDisplay(option, resolvedUiLanguage)}
-                            </option>
-                          ))}
+                          <SettingsSelectOptionList
+                            options={UI_LANGUAGE_OPTIONS}
+                            labelForOption={(option) => localeOptionDisplay(option, resolvedUiLanguage)}
+                          />
                         </select>
                       </label>
                       <p className="aion-settings-help">{copy.settings.uiLanguageHelp}</p>
@@ -4967,11 +4671,10 @@ export default function App() {
                             }))
                           }
                         >
-                          {UTC_OFFSET_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.value}
-                            </option>
-                          ))}
+                          <SettingsSelectOptionList
+                            options={UTC_OFFSET_OPTIONS}
+                            labelForOption={(option) => option.value}
+                          />
                         </select>
                       </label>
                       <p className="aion-settings-help">{copy.settings.utcOffsetHelp}</p>
@@ -5064,37 +4767,7 @@ export default function App() {
                   <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.tools.title}</h2>
                   <p className="mt-2 text-sm leading-6 text-base-800">{copy.tools.subtitle}</p>
                 </div>
-                <div className="aion-tools-summary-grid">
-                {[
-                  {
-                    title: copy.tools.groupCount,
-                    value: stringValue(toolsOverview?.summary.total_groups, "0"),
-                    note: copy.tools.summaryGroupNote,
-                  },
-                  {
-                    title: copy.tools.integral,
-                    value: stringValue(toolsOverview?.summary.integral_enabled_count, "0"),
-                    note: copy.tools.summaryIntegralNote,
-                  },
-                  {
-                    title: copy.tools.ready,
-                    value: stringValue(toolsOverview?.summary.provider_ready_count, "0"),
-                    note: copy.tools.summaryReadyNote,
-                  },
-                  {
-                    title: copy.tools.linkRequired,
-                    value: stringValue(toolsOverview?.summary.link_required_count, "0"),
-                    note: copy.tools.summaryLinkRequiredNote,
-                  },
-                ].map((card) => (
-                  <ToolsSummaryCard
-                    key={card.title}
-                    title={card.title}
-                    value={card.value}
-                    note={card.note}
-                  />
-                ))}
-                </div>
+                <ToolsSummaryCardList items={toolsSummaryCards} />
               </section>
 
               <section className="aion-panel aion-tools-directory">
@@ -5121,152 +4794,25 @@ export default function App() {
                   <StatePanel tone="neutral" title={copy.common.stateEmptyTitle} body={copy.tools.empty} />
                 ) : null}
 
-                <div className="grid gap-5">
-                  {toolsOverview?.groups.map((group) => (
-                    <article key={group.id} className="aion-tools-group">
-                      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-                        <div>
-                          <h3 className="font-display text-2xl text-base-900">{group.title}</h3>
-                          <p className="mt-1 max-w-3xl text-sm leading-7 text-base-800">{group.description}</p>
-                        </div>
-                        <div className="rounded-[1rem] bg-base-100 px-3 py-2">
-                          <p className="text-[10px] uppercase tracking-[0.18em] text-base-800">{copy.tools.groupCount}</p>
-                          <p className="mt-1 text-sm font-semibold text-base-900">
-                            {group.item_count} {group.item_count === 1 ? copy.tools.itemSingularSuffix : copy.tools.itemsSuffix}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="aion-tools-item-grid">
-                        {group.items.map((item) => (
-                          <section key={item.id} className="aion-tools-item-card">
-                            <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
-                              <div>
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <h4 className="font-display text-xl text-base-900">{item.label}</h4>
-                                  {item.integral ? (
-                                    <span className="rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-                                      {copy.tools.integral}
-                                    </span>
-                                  ) : null}
-                                </div>
-                                <p className="mt-2 text-sm leading-7 text-base-800">{item.description}</p>
-                              </div>
-                              <div className={`badge ${toolStatusClass(item.status)}`}>{formatToolState(item.status, copy.tools)}</div>
-                            </div>
-
-                            <div className="aion-tools-fact-grid">
-                              <ToolsFactCard label={copy.tools.availability}>
-                                <p className="mt-2 text-base font-semibold text-base-900">
-                                  {item.enabled ? copy.common.on : copy.common.off}
-                                </p>
-                              </ToolsFactCard>
-                              <ToolsFactCard label={copy.tools.provider}>
-                                <p className="mt-2 text-base font-semibold text-base-900">
-                                  {item.provider.name.replaceAll("_", " ")}
-                                </p>
-                                <p className="mt-1 text-xs text-base-800">
-                                  {item.provider.ready
-                                    ? copy.tools.providerReadyValue
-                                    : item.provider.configured
-                                      ? copy.tools.providerConfiguredValue
-                                      : copy.tools.providerNotConfiguredValue}
-                                </p>
-                              </ToolsFactCard>
-                              <ToolsFactCard label={copy.tools.control}>
-                                {item.user_control.toggle_allowed ? (
-                                  <label className="mt-2 flex items-center gap-3">
-                                    <input
-                                      className="toggle toggle-primary"
-                                      type="checkbox"
-                                      checked={Boolean(item.user_control.requested_enabled)}
-                                      disabled={savingToolId === item.id}
-                                      onChange={(event) => {
-                                        void handleToolToggle(item.id, event.target.checked);
-                                      }}
-                                    />
-                                    <span className="text-base font-semibold text-base-900">
-                                      {savingToolId === item.id
-                                        ? copy.tools.saving
-                                        : item.user_control.requested_enabled
-                                          ? copy.tools.enabledByUser
-                                          : copy.tools.disabledByUser}
-                                    </span>
-                                  </label>
-                                ) : (
-                                  <p className="mt-2 text-base font-semibold text-base-900">{copy.tools.readOnly}</p>
-                                )}
-                              </ToolsFactCard>
-                              <ToolsFactCard label={copy.tools.linkState}>
-                                <p className="mt-2 text-base font-semibold text-base-900">
-                                  {formatToolLinkState(item.link_state, copy.tools)}
-                                </p>
-                              </ToolsFactCard>
-                            </div>
-
-                            <div className="space-y-3">
-                              <ToolsDetailCard label={copy.tools.currentStatus}>
-                                <p className="mt-2 text-sm leading-7 text-base-900">{item.status_reason}</p>
-                              </ToolsDetailCard>
-
-                              <ToolsDetailCard label={copy.tools.nextStep}>
-                                <p className="mt-2 text-sm leading-7 text-base-900">
-                                  {summarizeToolAction(item.next_actions, copy.tools.noAction)}
-                                </p>
-                              </ToolsDetailCard>
-
-                              {item.id === "telegram" &&
-                              item.user_control.requested_enabled &&
-                              item.provider.ready &&
-                              item.link_state !== "linked" ? (
-                                <ToolsTelegramLinkPanel
-                                  title={copy.tools.telegramLinking}
-                                  body={copy.tools.telegramInstructionBody}
-                                  buttonLabel={
-                                    telegramLinkBusy
-                                      ? copy.tools.generating
-                                      : telegramLinkStart
-                                        ? copy.tools.rotateCode
-                                        : copy.tools.generateCode
-                                  }
-                                  linkStart={telegramLinkStart}
-                                  linkCodeLabel={copy.tools.linkCode}
-                                  expiresInAboutLabel={copy.tools.expiresInAbout}
-                                  secondsLabel={copy.tools.seconds}
-                                  instructionLabel={copy.tools.instruction}
-                                  noLinkCodeLabel={copy.tools.noLinkCode}
-                                  busy={telegramLinkBusy}
-                                  onStart={() => {
-                                    void handleStartTelegramLink();
-                                  }}
-                                />
-                              ) : null}
-
-                              <details className="aion-tools-details">
-                                <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-base-900">
-                                  {copy.tools.technicalDetails}
-                                </summary>
-                                <div className="grid gap-3 px-4 pb-4 sm:grid-cols-2">
-                                  <ToolsTechnicalDetailPanel
-                                    label={copy.tools.capabilities}
-                                    values={item.capabilities}
-                                    emptyLabel={copy.common.noData}
-                                  />
-                                  <ToolsTechnicalDetailPanel
-                                    label={copy.common.sourceOfTruth}
-                                    values={item.source_of_truth}
-                                    emptyLabel={copy.common.noData}
-                                    chipTone="muted"
-                                  />
-                                </div>
-                              </details>
-                            </div>
-                          </section>
-                        ))}
-                      </div>
-                    </article>
-                  ))}
-                </div>
+                <ToolsDirectoryGroupList
+                  groups={toolsOverview?.groups ?? []}
+                  labels={copy.tools}
+                  commonLabels={{
+                    on: copy.common.on,
+                    off: copy.common.off,
+                    noData: copy.common.noData,
+                    sourceOfTruth: copy.common.sourceOfTruth,
+                  }}
+                  savingToolId={savingToolId}
+                  telegramLinkBusy={telegramLinkBusy}
+                  telegramLinkStart={telegramLinkStart}
+                  onToolToggle={(toolId, nextValue) => {
+                    void handleToolToggle(toolId, nextValue);
+                  }}
+                  onStartTelegramLink={() => {
+                    void handleStartTelegramLink();
+                  }}
+                />
               </section>
             </div>
           ) : null}
@@ -5291,13 +4837,7 @@ export default function App() {
                   <section className="aion-panel aion-personality-hero">
                     <div className="aion-personality-hero-stage">
                       <div className="aion-personality-hero-figure">
-                        {personalityPreviewCallouts.map((callout) => (
-                          <article key={callout.key} className={callout.className}>
-                            <p className="text-[10px] uppercase tracking-[0.18em] text-base-800">{callout.eyebrow}</p>
-                            <p className="mt-2 font-display text-xl text-base-900">{callout.title}</p>
-                            <p className="mt-2 text-sm leading-6 text-base-800">{callout.body}</p>
-                          </article>
-                        ))}
+                        <PersonalityPreviewCalloutList items={personalityPreviewCallouts} />
                       </div>
                     </div>
 
@@ -5306,17 +4846,7 @@ export default function App() {
                         <p className="text-sm uppercase tracking-[0.24em] text-base-800">Mind layers timeline</p>
                         <h3 className="mt-2 font-display text-2xl text-base-900">Embodied personality layers in motion</h3>
                       </div>
-                      <div className="grid gap-3">
-                        {personalityTimelineRows.map((row) => (
-                          <PersonalityTimelineRow
-                            key={row.title}
-                            token={row.token}
-                            title={row.title}
-                            detail={row.detail}
-                            value={row.value}
-                          />
-                        ))}
-                      </div>
+                      <PersonalityTimelineRowList items={personalityTimelineRows} />
                     </div>
                   </section>
 
@@ -5329,14 +4859,7 @@ export default function App() {
                     body="The foreground loop stays visible through focus, clarity, active load, and the present task horizon."
                     className="aion-personality-side-panel aion-personality-side-panel-conscious"
                   >
-                    <div className="grid gap-3">
-                      {personalityConsciousSignals.map((item) => (
-                        <div key={item.label} className="aion-personality-signal-row">
-                          <span className="aion-personality-signal-label">{item.label}</span>
-                          <span className="aion-personality-signal-value">{item.value}</span>
-                        </div>
-                      ))}
-                    </div>
+                    <PersonalitySignalRowList items={personalityConsciousSignals} />
                   </InsightPanel>
 
                   <InsightPanel
@@ -5345,14 +4868,7 @@ export default function App() {
                     body="Longer memory, associations, and learned preferences stay active without crowding the live route."
                     className="aion-personality-side-panel aion-personality-side-panel-subconscious"
                   >
-                    <div className="grid gap-3">
-                      {personalitySubconsciousSignals.map((item) => (
-                        <div key={item.label} className="aion-personality-signal-row">
-                          <span className="aion-personality-signal-label">{item.label}</span>
-                          <span className="aion-personality-signal-value">{item.value}</span>
-                        </div>
-                      ))}
-                    </div>
+                    <PersonalitySignalRowList items={personalitySubconsciousSignals} />
                   </InsightPanel>
 
                   <InsightPanel
@@ -5361,17 +4877,10 @@ export default function App() {
                     body="Recent changes stay readable before the user opens the deeper sections."
                     className="aion-personality-side-panel aion-personality-side-panel-recent aion-personality-side-panel-recent-quiet"
                   >
-                    <div className="grid gap-3">
-                      {personalityRecentActivity.map((item) => (
-                        <div key={item.key} className="aion-personality-activity-row">
-                          <div>
-                            <p className="text-sm font-semibold text-base-900">{item.title}</p>
-                            <p className="mt-1 text-sm text-base-800">{item.when}</p>
-                          </div>
-                          <span className="aion-chip-ghost rounded-full px-3 py-1 text-xs font-medium">{copy.common.view}</span>
-                        </div>
-                      ))}
-                    </div>
+                    <PersonalityActivityRowList
+                      items={personalityRecentActivity}
+                      viewLabel={copy.common.view}
+                    />
                   </InsightPanel>
                 </div>
               </div>
@@ -5386,27 +4895,16 @@ export default function App() {
         </section>
 
         {route !== "/chat" ? (
-          <nav className="aion-mobile-tabbar fixed inset-x-0 bottom-0 z-30 border-t border-base-300 bg-base-100/95 px-3 py-3 backdrop-blur md:hidden">
-            <div ref={mobileNavScrollRef} className="aion-mobile-tabbar-scroll mx-auto flex max-w-2xl gap-2 overflow-x-auto">
-              {ROUTES.map((entry) => (
-                <button
-                  key={entry}
-                  ref={(node) => {
-                    mobileNavRefs.current[entry] = node;
-                  }}
-                  className={`aion-mobile-tabbar-button rounded-[1.2rem] px-3 py-3 text-sm font-medium transition ${
-                    route === entry
-                      ? "bg-base-900 text-base-100 shadow-sm"
-                      : "border border-base-300 bg-base-200 text-base-900"
-                  }`}
-                  onClick={() => changeRoute(entry)}
-                  type="button"
-                >
-                  {routeLabel(entry, resolvedUiLanguage)}
-                </button>
-              ))}
-            </div>
-          </nav>
+          <ShellMobileTabbar
+            routes={ROUTES}
+            activeRoute={route}
+            labelForRoute={(entry) => routeLabel(entry, resolvedUiLanguage)}
+            onRouteChange={changeRoute}
+            scrollRef={mobileNavScrollRef}
+            registerRouteRef={(entry, node) => {
+              mobileNavRefs.current[entry] = node;
+            }}
+          />
         ) : null}
       </div>
     </div>

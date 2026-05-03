@@ -1,3 +1,5 @@
+import type { RefObject } from "react";
+
 export type SidebarIconKind =
   | "dashboard"
   | "chat"
@@ -11,6 +13,13 @@ export type SidebarIconKind =
   | "automations"
   | "integrations"
   | "settings";
+
+export type ShellNavButtonItem<TRoute extends string = string> = {
+  route?: TRoute;
+  label: string;
+  icon: SidebarIconKind;
+  disabled?: boolean;
+};
 
 function SidebarGlyph({ kind }: { kind: SidebarIconKind }) {
   const commonProps = {
@@ -181,6 +190,104 @@ export function ShellNavButton({
   );
 }
 
+export function ShellNavButtonList<TRoute extends string>({
+  items,
+  activeRoute,
+  onRouteChange,
+}: {
+  items: Array<ShellNavButtonItem<TRoute>>;
+  activeRoute: TRoute;
+  onRouteChange: (route: TRoute) => void;
+}) {
+  return (
+    <nav className="aion-sidebar-nav" aria-label="Authenticated navigation">
+      {items.map((item) => (
+        <ShellNavButton
+          key={item.route ?? item.label}
+          label={item.label}
+          active={Boolean(item.route && activeRoute === item.route)}
+          icon={item.icon}
+          disabled={item.disabled}
+          onClick={() => {
+            if (item.route) {
+              onRouteChange(item.route);
+            }
+          }}
+        />
+      ))}
+    </nav>
+  );
+}
+
+export function ShellRouteSwitcher<TRoute extends string>({
+  routes,
+  activeRoute,
+  labelForRoute,
+  onRouteChange,
+}: {
+  routes: TRoute[];
+  activeRoute: TRoute;
+  labelForRoute: (route: TRoute) => string;
+  onRouteChange: (route: TRoute) => void;
+}) {
+  return (
+    <div className="hidden border-t border-base-300/70 px-4 py-3 sm:px-5 md:block">
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {routes.map((entry) => (
+          <button
+            key={entry}
+            className={`btn btn-sm whitespace-nowrap ${activeRoute === entry ? "btn-primary" : "btn-ghost border border-base-300"}`}
+            onClick={() => onRouteChange(entry)}
+            type="button"
+          >
+            {labelForRoute(entry)}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function ShellMobileTabbar<TRoute extends string>({
+  routes,
+  activeRoute,
+  labelForRoute,
+  onRouteChange,
+  scrollRef,
+  registerRouteRef,
+}: {
+  routes: TRoute[];
+  activeRoute: TRoute;
+  labelForRoute: (route: TRoute) => string;
+  onRouteChange: (route: TRoute) => void;
+  scrollRef: RefObject<HTMLDivElement>;
+  registerRouteRef: (route: TRoute, node: HTMLButtonElement | null) => void;
+}) {
+  return (
+    <nav className="aion-mobile-tabbar fixed inset-x-0 bottom-0 z-30 border-t border-base-300 bg-base-100/95 px-3 py-3 backdrop-blur md:hidden">
+      <div ref={scrollRef} className="aion-mobile-tabbar-scroll mx-auto flex max-w-2xl gap-2 overflow-x-auto">
+        {routes.map((entry) => (
+          <button
+            key={entry}
+            ref={(node) => {
+              registerRouteRef(entry, node);
+            }}
+            className={`aion-mobile-tabbar-button rounded-[1.2rem] px-3 py-3 text-sm font-medium transition ${
+              activeRoute === entry
+                ? "bg-base-900 text-base-100 shadow-sm"
+                : "border border-base-300 bg-base-200 text-base-900"
+            }`}
+            onClick={() => onRouteChange(entry)}
+            type="button"
+          >
+            {labelForRoute(entry)}
+          </button>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
 export function AviaryWordmark({ className = "", compact = false }: { className?: string; compact?: boolean }) {
   return (
     <div
@@ -204,6 +311,41 @@ export function SidebarBrandBlock() {
         <span>Your conscious</span>
         <span>companion</span>
       </p>
+    </div>
+  );
+}
+
+export function ShellAccountFactList({
+  items,
+  variant = "popover",
+}: {
+  items: Array<{
+    label: string;
+    value: string;
+  }>;
+  variant?: "popover" | "mobile";
+}) {
+  if (variant === "mobile") {
+    return (
+      <div className="grid gap-3 sm:grid-cols-2">
+        {items.map((item) => (
+          <div key={item.label} className="aion-panel-soft rounded-[1.4rem] p-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-base-800">{item.label}</p>
+            <p className="mt-2 text-base font-semibold text-base-900">{item.value}</p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="aion-shell-account-facts">
+      {items.map((item) => (
+        <div key={item.label} className="aion-shell-account-fact">
+          <p className="aion-shell-account-fact-label">{item.label}</p>
+          <p className="aion-shell-account-fact-value">{item.value}</p>
+        </div>
+      ))}
     </div>
   );
 }

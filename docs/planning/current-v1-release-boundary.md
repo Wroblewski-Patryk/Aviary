@@ -1,13 +1,13 @@
 # Current V1 Release Boundary
 
-Last updated: 2026-05-02
+Last updated: 2026-05-03
 
 ## Purpose
 
-This document freezes what the next `v1` release candidate means for this
-repository. It exists so release work can package, validate, publish, and smoke
-one explicit scope instead of silently expanding `v1` with every useful
-follow-up feature.
+This document freezes what `v1` means for this repository and how post-v1 local
+work can become a future release candidate. It exists so release work can
+package, validate, publish, and smoke one explicit scope instead of silently
+expanding `v1` with every useful follow-up feature.
 
 ## Frozen Core V1
 
@@ -21,9 +21,29 @@ by the architecture and release-readiness docs:
 5. time-aware planned work
 6. deployment parity in live production
 
-These six gates are the P0 release blockers. A candidate is not `v1` until the
-current commit is validated locally, published, and proven in production with
-release-smoke evidence tied to the deployed revision.
+These six gates were the P0 release blockers for the core marker and remain the
+baseline for any future candidate. A candidate is not release-eligible until
+the selected commit is validated locally, published, and proven in production
+with release-smoke evidence tied to the deployed revision.
+
+## Current Marker State
+
+`v1.0.0` is the released core marker for selected SHA
+`5e64f494e2aac8d29cea532d95f7039ed6029213`.
+
+PRJ-1115 refreshed release evidence after frontend closure:
+
+- production backend revision:
+  `5e64f494e2aac8d29cea532d95f7039ed6029213`
+- production web meta revision:
+  `5e64f494e2aac8d29cea532d95f7039ed6029213`
+- deployed marker verdict: `GO` in monitor mode
+- current local `HEAD`: `5ff12953289bbca680fd5d9f8b3d8780a8f4be55`
+- local `HEAD` verdict: `HOLD_REVISION_DRIFT`
+
+Local post-v1 hardening and frontend work must not inherit the `v1.0.0`
+release claim until a new selected SHA is pushed, deployed, and proven by fresh
+release smoke.
 
 ## Included Candidate Surface
 
@@ -31,7 +51,8 @@ The current web shell and canonical route work are included in the release
 candidate as a product-facing companion surface, but they do not redefine the
 core no-UI `v1` architecture gate.
 
-For this candidate, the web shell must satisfy:
+For a future candidate that includes the current web shell, the web shell must
+satisfy:
 
 - committed and pushed source scope
 - successful `npm run build`
@@ -76,15 +97,18 @@ must stay separate from core feature invention:
 - no temporary bypass for failing production parity
 - no release claim based only on local tests
 
-## Next Execution Order
+## Current Post-V1 Execution Order
 
-1. `PRJ-904` V1 Commit Scope Audit
-2. `PRJ-905` V1 Candidate Validation Gate
-3. `PRJ-906` Publish V1 Candidate
-4. `PRJ-907` Production Release Smoke With Deploy Parity
-5. `PRJ-908` Production Incident Evidence Bundle
-6. `PRJ-910` Core V1 Acceptance Bundle
+1. Select the intended post-v1 candidate SHA.
+2. Push that SHA to the deployment source.
+3. Resolve `PRJ-952` by confirming Coolify source automation or by using the
+   approved operator fallback with webhook URL and secret.
+4. Rerun production release smoke with deploy parity for the selected SHA.
+5. Refresh release evidence index, v1 roadmap, acceptance bundle, and operator
+   handoff for the exact selected SHA.
+6. Create or move a release marker only after backend revision, web revision,
+   release readiness, and smoke evidence all match the selected SHA.
 
-`PRJ-909`, `PRJ-911`, `PRJ-912`, and the P1/P2 hardening tasks remain queued
-behind the candidate package unless the release smoke exposes a higher-risk
-gap.
+`PRJ-962` Telegram live-mode smoke and `PRJ-963` organizer provider activation
+smoke remain extension gates unless the release claim is expanded beyond the
+current core/web-supported posture.

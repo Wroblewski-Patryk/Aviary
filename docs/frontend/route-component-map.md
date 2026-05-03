@@ -35,22 +35,58 @@ for `/`, `/login`, and every current authenticated app route in
 `/tools`, and `/personality`. It is a route-mount guard, not a screenshot
 parity suite.
 
+## Tools Directory Characterization
+
+`web/scripts/tools-directory-characterization.mjs` provides the focused
+behavior guard for `/tools`. Run it after a production build:
+
+```powershell
+Push-Location .\web
+npm run build
+npm run test:tools-directory
+Pop-Location
+```
+
+The characterization serves `web/dist`, supplies synthetic app-facing API
+responses, drives Chrome or Edge through CDP, and checks the full tools
+directory, delayed loading, empty overview, API error state, ClickUp preference
+toggle request payload, and Telegram link-start/code rendering.
+
+## Chat Transcript Characterization
+
+`web/scripts/chat-transcript-characterization.mjs` provides the focused
+behavior guard for `/chat` transcript rendering. Run it after a production
+build:
+
+```powershell
+Push-Location .\web
+npm run build
+npm run test:chat-transcript
+Pop-Location
+```
+
+The characterization serves `web/dist`, supplies synthetic app-facing API
+responses, drives Chrome or Edge through CDP, and checks preview fallback rows,
+durable user/assistant rows, delivered indicators, markdown rendering, an
+optimistic sending row, and the delivered assistant response after a mocked
+send.
+
 ## Current Ownership Model
 
 | Area | Owner File | Responsibility |
 | --- | --- | --- |
 | Route list and route normalization | `web/src/routes.ts` | `RoutePath`, `ROUTES`, `normalizeRoute`, `navigate`, `navigatePublicEntry` |
 | Public/auth shell | `web/src/App.tsx` | Public home, login/register modal, session bootstrap, logout/reset redirects |
-| Public shell helpers | `web/src/components/public-shell.tsx` | `MotifFigurePanel`, `PublicGlyph` |
+| Public shell helpers | `web/src/components/public-shell.tsx` | `PublicNavLinkList`, `MotifFigurePanel`, `PublicFeatureCardList`, `PublicTrustPillList`, `PublicTrustBand`, `PublicGlyph` |
 | Authenticated product shell | `web/src/App.tsx` | Sidebar layout, mobile tab bar, route rendering, route copy |
-| Shell chrome helpers | `web/src/components/shell.tsx` | `SidebarIconKind`, `ShellNavButton`, `AviaryWordmark`, `SidebarBrandBlock`, `ShellUtilityBar` |
+| Shell chrome helpers | `web/src/components/shell.tsx` | `SidebarIconKind`, `ShellNavButton`, `ShellNavButtonList`, `ShellRouteSwitcher`, `ShellMobileTabbar`, `AviaryWordmark`, `SidebarBrandBlock`, `ShellUtilityBar` |
 | App icon primitives | `web/src/components/app-icons.tsx` | `ChevronDownIcon`, `CloseIcon`, `PlusIcon`, `MicrophoneIcon`, `SendArrowIcon` |
-| Chat components | `web/src/components/chat.tsx` | `ChatFlowStage`, `ChatTopbar`, `ChatCognitiveBelt`, `ChatTranscriptShell`, `ChatTranscriptMessageRow`, `ChatComposerShell`, `ChatPortraitPanel` |
-| Dashboard components | `web/src/components/dashboard.tsx` | `DashboardSignalCard`, `DashboardProgressList` |
-| Personality components | `web/src/components/personality.tsx` | `PersonalityTimelineRow` |
-| Settings components | `web/src/components/settings.tsx` | `SettingsCard`, `SettingsFact`, `SettingsProactivePanel`, `SettingsSavePanel`, `SettingsDangerPanel` |
-| Tools components | `web/src/components/tools.tsx` | `ToolsSummaryCard`, `ToolsFactCard`, `ToolsDetailCard`, `ToolsTechnicalDetailPanel`, `ToolsTelegramLinkPanel` |
-| Shared presentational panels | `web/src/components/shared.tsx` | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `ModuleOverviewBar`, `ModuleStatRow`, `ModuleActivityList`, `ModuleTextCardList`, `ModuleMetaCardList`, `ModuleDotRowList`, `ModuleValueRowList`, `ModuleProgressValueRowList`, `RouteHeroPanel`, `InsightPanel`, `RouteStatCard`, `RouteNoteCard`, `ModuleRouteSidePanel`, `ModuleRouteSideRow` |
+| Chat components | `web/src/components/chat.tsx` | `ChatFlowStage`, `ChatTopbar`, `ChatCognitiveBelt`, `ChatTranscriptShell`, `ChatTranscriptMessageList`, `ChatTranscriptMessageRow`, `ChatComposerShell`, `ChatPortraitPanel` |
+| Dashboard components | `web/src/components/dashboard.tsx` | `DashboardSignalCard`, `DashboardSignalColumn`, `DashboardProgressList`, `DashboardReflectionList`, `DashboardMemoryBarChart`, `DashboardGuidanceList`, `DashboardRecentActivityList`, `DashboardBalanceGrid`, `DashboardCognitiveFlowTrack`, `DashboardFigureNoteList` |
+| Personality components | `web/src/components/personality.tsx` | `PersonalityTimelineRow`, `PersonalityTimelineRowList`, `PersonalitySignalRowList`, `PersonalityPreviewCalloutList`, `PersonalityActivityRowList` |
+| Settings components | `web/src/components/settings.tsx` | `SettingsCard`, `SettingsFact`, `SettingsStatusPillList`, `SettingsSelectOptionList`, `SettingsProactivePanel`, `SettingsSavePanel`, `SettingsDangerPanel` |
+| Tools components | `web/src/components/tools.tsx` | `ToolsSummaryCard`, `ToolsSummaryCardList`, `ToolsFactCard`, `ToolsDetailCard`, `ToolsTechnicalDetailPanel`, `ToolsTelegramLinkPanel` |
+| Shared presentational panels | `web/src/components/shared.tsx` | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `ModuleOverviewBar`, `ModuleStatRow`, `ModuleActivityList`, `ModuleTextCardList`, `ModuleMetaCardList`, `ModuleDotRowList`, `ModuleValueRowList`, `ModuleProgressValueRowList`, `RouteHeroPanel`, `InsightPanel`, `RouteStatCard`, `RouteStatCardList`, `RouteNoteCard`, `RouteNoteCardList`, `ModuleRouteSidePanel` |
 | API client | `web/src/lib/api.ts` | Typed fetch wrapper and app-facing endpoint methods |
 | Chat markdown renderer | `web/src/lib/chat-markdown.tsx` | `renderChatMarkdown` |
 | Chat route display model | `web/src/lib/chat-route-model.ts` | `buildChatRouteModel` |
@@ -122,18 +158,69 @@ extraction queue after the tools route component cleanup.
 | Cluster | Functions/Components | Main Routes |
 | --- | --- | --- |
 | Routing and labels | `normalizeRoute`, `navigate`, `routeLabel`, `routeDescription` | all routes |
-| Dashboard components | `DashboardSignalCard`, `DashboardProgressList` in `web/src/components/dashboard.tsx` | dashboard |
-| Public shell | public home render branch in `web/src/App.tsx`, `AviaryWordmark` in `web/src/components/shell.tsx`, `MotifFigurePanel` and `PublicGlyph` in `web/src/components/public-shell.tsx` | `/`, `/login` |
-| Shell chrome | `SidebarGlyph`, `ShellNavButton`, `SidebarBrandBlock`, `AviaryWordmark`, `ShellUtilityBar` in `web/src/components/shell.tsx` | authenticated routes |
+| Dashboard components | `DashboardSignalCard`, `DashboardSignalColumn`, `DashboardProgressList`, `DashboardReflectionList`, `DashboardMemoryBarChart`, `DashboardGuidanceList`, `DashboardRecentActivityList`, `DashboardBalanceGrid`, `DashboardCognitiveFlowTrack`, `DashboardFigureNoteList` in `web/src/components/dashboard.tsx` | dashboard |
+| Public shell | public home render branch in `web/src/App.tsx`, `AviaryWordmark` in `web/src/components/shell.tsx`, `PublicNavLinkList`, `MotifFigurePanel`, `PublicFeatureCardList`, `PublicTrustPillList`, `PublicTrustBand`, and `PublicGlyph` in `web/src/components/public-shell.tsx` | `/`, `/login` |
+| Shell chrome | `SidebarGlyph`, `ShellNavButton`, `ShellNavButtonList`, `ShellRouteSwitcher`, `SidebarBrandBlock`, `AviaryWordmark`, `ShellAccountFactList`, `ShellUtilityBar` in `web/src/components/shell.tsx` | authenticated routes |
 | App control icons | `ChevronDownIcon`, `CloseIcon`, `PlusIcon`, `MicrophoneIcon`, `SendArrowIcon` in `web/src/components/app-icons.tsx` | public auth modal, sidebar, chat composer |
-| Shared panels | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `ModuleOverviewBar`, `ModuleStatRow`, `ModuleActivityList`, `ModuleTextCardList`, `ModuleMetaCardList`, `ModuleDotRowList`, `ModuleValueRowList`, `ModuleProgressValueRowList`, `RouteHeroPanel`, `InsightPanel`, `RouteStatCard`, `RouteNoteCard`, `ModuleRouteSidePanel`, `ModuleRouteSideRow` in `web/src/components/shared.tsx` | dashboard and module routes |
-| Chat helpers | `renderChatMarkdown` in `web/src/lib/chat-markdown.tsx`; `buildChatRouteModel` in `web/src/lib/chat-route-model.ts`; `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems` in `web/src/lib/chat-transcript.ts`; `ChatFlowStage`, `ChatTopbar`, `ChatCognitiveBelt`, `ChatTranscriptShell`, `ChatTranscriptMessageRow`, `ChatComposerShell`, and `ChatPortraitPanel` in `web/src/components/chat.tsx` | `/chat` |
-| Personality route components | `PersonalityTimelineRow` in `web/src/components/personality.tsx` | memory, reflections, plans, personality |
+| Shared panels | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `ModuleOverviewBar`, `ModuleStatRow`, `ModuleActivityList`, `ModuleTextCardList`, `ModuleMetaCardList`, `ModuleDotRowList`, `ModuleValueRowList`, `ModuleProgressValueRowList`, `RouteHeroPanel`, `InsightPanel`, `RouteStatCard`, `RouteStatCardList`, `RouteNoteCard`, `RouteNoteCardList`, `ModuleRouteSidePanel` in `web/src/components/shared.tsx` | dashboard, insights, automations, integrations, and module routes |
+| Chat helpers | `renderChatMarkdown` in `web/src/lib/chat-markdown.tsx`; `buildChatRouteModel` in `web/src/lib/chat-route-model.ts`; `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems` in `web/src/lib/chat-transcript.ts`; `ChatFlowStage`, `ChatTopbar`, `ChatCognitiveBelt`, `ChatTranscriptShell`, `ChatTranscriptMessageList`, `ChatTranscriptMessageRow`, `ChatComposerShell`, and `ChatPortraitPanel` in `web/src/components/chat.tsx` | `/chat` |
+| Personality route components | `PersonalityTimelineRow`, `PersonalityTimelineRowList`, `PersonalitySignalRowList`, `PersonalityPreviewCalloutList`, `PersonalityActivityRowList` in `web/src/components/personality.tsx` | memory, reflections, plans, personality |
 | Tool helpers | `toolStatusClass`, `formatToolState`, `formatToolLinkState`, `summarizeToolAction` in `web/src/lib/tool-formatting.ts` | `/tools`, `/integrations` |
-| Tools components | `ToolsSummaryCard`, `ToolsFactCard`, `ToolsDetailCard`, `ToolsTechnicalDetailPanel`, `ToolsTelegramLinkPanel` in `web/src/components/tools.tsx` | `/tools` |
-| Settings components | `SettingsCard`, `SettingsFact`, `SettingsProactivePanel`, `SettingsSavePanel`, `SettingsDangerPanel` in `web/src/components/settings.tsx` | `/settings` |
+| Tools components | `ToolsSummaryCard`, `ToolsSummaryCardList`, `ToolsDirectoryGroupList`, `ToolsFactCard`, `ToolsDetailCard`, `ToolsTechnicalDetailPanel`, `ToolsTelegramLinkPanel` in `web/src/components/tools.tsx` | `/tools` |
+| Settings components | `SettingsCard`, `SettingsFact`, `SettingsStatusPillList`, `SettingsSelectOptionList`, `SettingsProactivePanel`, `SettingsSavePanel`, `SettingsDangerPanel` in `web/src/components/settings.tsx` | `/settings` |
 | Profile/settings helpers | `normalizeUiLanguage`, `resolveUiLanguage`, `normalizeUtcOffset`, `utcOffsetOption`, `localeOptionDisplay` in `web/src/lib/settings-formatting.ts` | `/settings`, bootstrap |
 | Learned-state helpers | `recentActivityRows`, `summaryLines`, `stringValue`, `formatTimestamp` in `web/src/lib/learned-state-formatting.ts`; route-derived summaries remain in `App.tsx` | dashboard, personality, memory, reflections, plans, goals, insights, automations |
+
+## Current Frontend Cleanup Queue
+
+`PRJ-1104` found that the remaining `App.tsx` map call sites are mostly data
+projections, behaviorful tools-directory rendering, chat transcript refs, or
+mobile tabbar refs. The next frontend task is `PRJ-1105`, which should
+characterize `/tools` directory behavior before moving any of that route's
+group/item rendering behind a component boundary.
+
+`PRJ-1105` added that characterization. The next safe frontend task is
+`PRJ-1106`, extracting the tools directory group/item presentation while
+preserving route-owned API calls, toggle state, Telegram link state, and
+handlers in `App()`.
+
+`PRJ-1106` completed that extraction with `ToolsDirectoryGroupList`. The next
+frontend task is `PRJ-1107`, an ARCHITECT-mode audit of the remaining
+data-projection, chat transcript, public hero highlight, and mobile-tabbar ref
+maps before selecting another implementation target.
+
+`PRJ-1107` selected public hero card data-shape alignment as the next safe
+small cleanup. Chat transcript and bottom mobile tabbar maps stay in `App()`
+until separate ref/behavior audits.
+
+`PRJ-1108` completed public hero data-shape alignment, so
+`MotifFigurePanel` now receives `publicHomeSurface.heroCards` directly. The
+next frontend cleanup should audit chat transcript render-map extraction
+readiness before moving any message refs or delivery rendering.
+
+`PRJ-1109` completed that audit and selected `PRJ-1110`, a focused chat
+transcript render characterization, before any message-list component
+extraction.
+
+`PRJ-1110` added that characterization. The next safe frontend task is
+`PRJ-1111`, extracting the chat transcript message-list presentation while
+keeping transcript refs, delivery-label selection, timestamp formatting, and
+markdown rendering explicitly passed from `App()` unless the task narrows that
+ownership further.
+
+`PRJ-1111` completed that extraction with `ChatTranscriptMessageList`. The
+remaining live JSX map in `App.tsx` is the bottom mobile tabbar, which should
+be audited separately because it owns scroll refs and route button registration.
+
+`PRJ-1112` selected a shell-owned `ShellMobileTabbar` boundary. The component
+should receive route/ref props explicitly while `App()` keeps the active-route
+scroll-centering effect.
+
+`PRJ-1113` completed that extraction. The remaining `App.tsx` maps are data
+projections or local transcript state updates, not live JSX render maps.
+
+`PRJ-1114` closed the current frontend presentation extraction lane. Remaining
+`App.tsx` maps are data projections or local transcript state updates.
 
 ## Gaps
 

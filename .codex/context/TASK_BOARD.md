@@ -1,6 +1,1690 @@
 # TASK_BOARD
 
-Last updated: 2026-05-03
+Last updated: 2026-05-04
+
+## Fresh Current Workspace Candidate Packaging (2026-05-04)
+
+- `PRJ-1124` is DONE:
+  - `.codex/tasks/PRJ-1124-package-current-workspace-candidate.md`
+- result:
+  - created and pushed the candidate packaging commit
+  - included audited PRJ-1123 scope
+  - excluded `.codex/tmp/` and `artifacts/`
+  - no Coolify deploy or fallback trigger was executed
+- validation:
+  - PRJ-1122 local validation remains current:
+    - backend `1045 passed`
+    - web build passed
+    - tools/chat characterization passed
+    - route smoke `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - resolve `PRJ-952` for the pushed packaging `HEAD`, then run `PRJ-953`
+    production release smoke
+
+## Fresh Current Workspace Candidate Scope Audit (2026-05-04)
+
+- `PRJ-1123` is DONE:
+  - `.codex/tasks/PRJ-1123-current-workspace-candidate-scope-audit.md`
+- result:
+  - added `docs/planning/current-workspace-candidate-scope-audit.md`
+  - classified current candidate include/exclude scope before any commit or
+    PRJ-952 deploy handoff
+  - included tracked frontend/docs/context changes, new PRJ task records, and
+    the two new web characterization scripts
+  - excluded `.codex/tmp/` and `artifacts/` unless separately approved
+  - indexed the new planning doc in `docs/README.md`
+- validation:
+  - `git status --short --branch`
+  - `git diff --name-status`
+  - `git diff --stat`
+  - `git ls-files --others --exclude-standard`
+  - `.codex/tmp` and `artifacts` listings inspected
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - create an explicit candidate commit/push from the audited include scope,
+    then resolve external `PRJ-952`
+
+## Fresh Current Workspace Candidate Validation Refresh (2026-05-03)
+
+- `PRJ-1122` is DONE:
+  - `.codex/tasks/PRJ-1122-current-workspace-candidate-validation-refresh.md`
+- result:
+  - current workspace local validation is green
+  - this does not replace deploy parity; local `HEAD` and working-tree changes
+    still need candidate freeze, commit/push, deploy, and production smoke
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; Pop-Location`
+  - result: `1045 passed`
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run test:tools-directory; Pop-Location`
+  - result: `status=ok`
+  - `Push-Location .\web; npm run test:chat-transcript; Pop-Location`
+  - result: `status=ok`
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - freeze the intended candidate scope for commit/push, then resolve external
+    `PRJ-952`
+
+## Fresh Coolify Deploy Parity Operator Preflight (2026-05-03)
+
+- `PRJ-1121` is DONE:
+  - `.codex/tasks/PRJ-1121-coolify-deploy-parity-operator-preflight.md`
+- result:
+  - added a PRJ-952 operator preflight to
+    `docs/planning/v1-deployment-trigger-slo-evidence.md`
+  - documented that deploy fallback must target an explicit selected pushed
+    SHA, not an inferred `HEAD` when intended work is still uncommitted
+  - updated `docs/operations/release-evidence-index.md` with the
+    candidate-freeze blocker
+  - preserved source automation as primary and webhook/UI fallback as
+    exception-only
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - external: resolve PRJ-952 by selecting, pushing, and deploying a candidate
+    SHA, then run PRJ-953 release smoke
+
+## Fresh Final Go/No-Go Historical Blocker Wording (2026-05-03)
+
+- `PRJ-1120` is DONE:
+  - `.codex/tasks/PRJ-1120-final-go-no-go-historical-blocker-wording.md`
+- result:
+  - clarified the remaining active-sounding historical PRJ-936 blocker bullet
+    in `docs/planning/v1-final-go-no-go-review.md`
+  - preserved historical SHA evidence and current `v1.0.0` final decision
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - resolve external `PRJ-952`; local release-doc cleanup has no active marker
+    blocker wording left in the checked release docs
+
+## Fresh V1 Release Execution Plan Current Status Refresh (2026-05-03)
+
+- `PRJ-1119` is DONE:
+  - `.codex/tasks/PRJ-1119-v1-release-execution-plan-current-status-refresh.md`
+- result:
+  - refreshed `docs/planning/v1-release-audit-and-execution-plan.md` current
+    status after `v1.0.0`
+  - replaced stale local/production SHA evidence with PRJ-1115 release truth
+  - preserved older phase history as audit history
+  - updated PRJ-936 from blocked to resolved by PRJ-955 for `v1.0.0`
+  - replaced stale P0 queue with current `PRJ-952` through `PRJ-955`
+    future-candidate gates
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - resolve external `PRJ-952` or inspect release docs for remaining stale
+    active-blocker language
+
+## Fresh Release Notes Current Handoff Refresh (2026-05-03)
+
+- `PRJ-1118` is DONE:
+  - `.codex/tasks/PRJ-1118-release-notes-current-handoff-refresh.md`
+- result:
+  - refreshed `docs/planning/v1-release-notes-and-operator-handoff.md` so it
+    no longer says the current state is not tag-ready after `v1.0.0`
+  - replaced stale "create PRJ-936" language with future-release-marker
+    guidance
+  - documented that current local `HEAD`
+    `5ff12953289bbca680fd5d9f8b3d8780a8f4be55` remains
+    `HOLD_REVISION_DRIFT`
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - inspect the broader release audit/execution plan for stale current-state
+    language
+
+## Fresh Current V1 Release Boundary Refresh (2026-05-03)
+
+- `PRJ-1117` is DONE:
+  - `.codex/tasks/PRJ-1117-current-v1-release-boundary-refresh.md`
+- result:
+  - refreshed `docs/planning/current-v1-release-boundary.md` after
+    `v1.0.0` and PRJ-1115 evidence
+  - documented `v1.0.0` selected SHA
+    `5e64f494e2aac8d29cea532d95f7039ed6029213` as the released core marker
+  - documented current local `HEAD`
+    `5ff12953289bbca680fd5d9f8b3d8780a8f4be55` as
+    `HOLD_REVISION_DRIFT`
+  - replaced the stale `PRJ-904` through `PRJ-910` next-execution order with
+    the current post-v1 candidate path
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - resolve external `PRJ-952` or continue only narrow release-truth cleanup
+
+## Fresh Release Review Stale Snapshot Clarification (2026-05-03)
+
+- `PRJ-1116` is DONE:
+  - `.codex/tasks/PRJ-1116-release-review-stale-snapshot-clarification.md`
+- result:
+  - clarified `docs/planning/v1-final-go-no-go-review.md` so PRJ-934 SHA rows
+    read as historical evidence, not current release instructions
+  - added current-truth pointers to PRJ-955, PRJ-1115, and
+    `docs/operations/release-evidence-index.md`
+  - preserved historical evidence while keeping local `HEAD`
+    `5ff12953289bbca680fd5d9f8b3d8780a8f4be55` blocked until production serves
+    that SHA
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - external: resolve `PRJ-952`
+  - local while blocked: inspect release-boundary docs for any remaining stale
+    current-vs-historical wording
+
+## Fresh Local Release-Readiness Evidence Refresh (2026-05-03)
+
+- `PRJ-1115` is DONE:
+  - `.codex/tasks/PRJ-1115-local-release-readiness-evidence-refresh.md`
+- result:
+  - refreshed release evidence after frontend presentation cleanup closure
+  - confirmed deployed `v1.0.0` selected SHA
+    `5e64f494e2aac8d29cea532d95f7039ed6029213` still receives monitor-mode
+    `GO`
+  - confirmed local `HEAD` `5ff12953289bbca680fd5d9f8b3d8780a8f4be55`
+    receives `HOLD_REVISION_DRIFT`
+  - confirmed Coolify fallback readiness is `blocked` by missing webhook URL
+    and webhook secret
+  - kept `PRJ-952` external because no deploy automation or operator fallback
+    evidence was produced
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\run_release_go_no_go.py --base-url https://aviary.luckysparrow.ch --selected-tag v1.0.0 --monitor-mode --output ..\.codex\tmp\release-go-no-go-prj1115-v1.json; Pop-Location`
+  - result: `verdict=GO`, smoke skipped because selected SHA differs from local
+    `HEAD` and smoke is local-HEAD-bound
+  - `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\audit_release_reality.py --base-url https://aviary.luckysparrow.ch --output ..\.codex\tmp\release-reality-audit-prj1115-local-head.json; Pop-Location`
+  - result: `verdict=HOLD_REVISION_DRIFT`
+  - `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\check_coolify_fallback_readiness.py --output ..\.codex\tmp\coolify-fallback-readiness-prj1115.json --print-json; Pop-Location`
+  - result: `ready=false`; missing webhook URL and secret
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py; Pop-Location`
+  - result: `64 passed`
+- next smallest useful task:
+  - external: resolve `PRJ-952` by recovering Coolify source automation or
+    providing fallback webhook inputs
+  - local while blocked: run one narrow release-doc consistency cleanup if any
+    stale release SHA language remains outside the updated release index
+
+## Fresh Frontend Presentation Cleanup Closure Audit (2026-05-03)
+
+- `PRJ-1114` is DONE:
+  - `.codex/tasks/PRJ-1114-frontend-data-projection-closure-audit.md`
+- result:
+  - confirmed no live JSX render maps remain in `web/src/App.tsx`
+  - classified remaining maps as data projections or local transcript state
+    updates
+  - closed the current frontend presentation extraction lane
+  - reconnected next priority to v1 release reality and the externally blocked
+    deploy parity lane
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "\\.map\\(" -Context 1,4`
+  - result: remaining maps inspected
+  - `Select-String -Path docs/planning/v1-reality-audit-and-roadmap.md -Pattern "PRJ-952|PRJ-953|PRJ-1114|BLOCKED_EXTERNAL|READY_AFTER" -Context 0,2`
+  - result: v1 roadmap blockers inspected
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - resolve external deploy parity blocker `PRJ-952`, or if external inputs are
+    still unavailable, run a local release-readiness evidence refresh
+
+## Fresh Shell Mobile Tabbar Extraction (2026-05-03)
+
+- `PRJ-1113` is DONE:
+  - `.codex/tasks/PRJ-1113-shell-mobile-tabbar-extraction.md`
+- result:
+  - added `ShellMobileTabbar` to `web/src/components/shell.tsx`
+  - replaced the inline bottom mobile tabbar JSX in `App.tsx`
+  - kept route scroll-centering effect ownership in `App()`
+  - passed route labels, route changes, scroll ref, and route button ref
+    registration explicitly
+  - confirmed remaining `App.tsx` maps are data projections or local transcript
+    state updates, not live JSX render maps
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed with `status=ok`, `route_count=14`
+  - `Select-String -Path web/src/App.tsx -Pattern "\\.map\\(" -Context 1,4`
+  - result: remaining maps inspected
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1114` audit remaining data projections and frontend cleanup closure
+
+## Fresh Mobile Tabbar Ref Boundary Audit (2026-05-03)
+
+- `PRJ-1112` is DONE:
+  - `.codex/tasks/PRJ-1112-mobile-tabbar-ref-extraction-readiness-audit.md`
+- result:
+  - audited the bottom mobile tabbar render map
+  - selected a shell-owned `ShellMobileTabbar` boundary
+  - kept scroll-centering effect ownership in `App()` through explicit
+    `scrollRef` and `registerRouteRef` props
+- validation:
+  - `Get-Content web/src/App.tsx | Select-Object -Skip 4888 -First 45`
+  - result: mobile tabbar markup inspected
+  - `Get-Content web/src/components/shell.tsx`
+  - result: shell owner inspected
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1113` extract shell mobile tabbar
+
+## Fresh Chat Transcript Message List Extraction (2026-05-03)
+
+- `PRJ-1111` is DONE:
+  - `.codex/tasks/PRJ-1111-chat-transcript-message-list-extraction.md`
+- result:
+  - added `ChatTranscriptMessageList` to `web/src/components/chat.tsx`
+  - moved chat transcript row mapping out of `App.tsx`
+  - kept delivery-state selection, delivery-label copy, timestamp formatting,
+    markdown rendering, and message ref registration explicit through `App()`
+    callbacks
+  - corrected transcript message ref storage to `HTMLDivElement`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run test:chat-transcript; Pop-Location`
+  - result: passed with `status=ok`
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed with `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1112` audit mobile tabbar ref extraction readiness
+
+## Fresh Chat Transcript Render Characterization (2026-05-03)
+
+- `PRJ-1110` is DONE:
+  - `.codex/tasks/PRJ-1110-chat-transcript-render-characterization.md`
+- result:
+  - added `web/scripts/chat-transcript-characterization.mjs`
+  - added `npm run test:chat-transcript`
+  - characterized preview fallback rows
+  - characterized durable transcript rows, delivered indicators, bold markdown,
+    and list markdown
+  - characterized optimistic send pending state and delivered assistant response
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run test:chat-transcript; Pop-Location`
+  - result: passed with `status=ok`
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed with `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- learning:
+  - `.codex/context/LEARNING_JOURNAL.md` now includes the chat transcript CDP
+    harness as additional evidence for Chrome profile cleanup guardrails
+- next smallest useful task:
+  - `PRJ-1111` extract chat transcript message list presentation
+
+## Fresh Chat Transcript Render-Map Readiness Audit (2026-05-03)
+
+- `PRJ-1109` is DONE:
+  - `.codex/tasks/PRJ-1109-chat-transcript-render-map-readiness-audit.md`
+- result:
+  - audited chat transcript render-map ownership after public/tools cleanup
+  - confirmed `App()` still owns transcript refs, pending scroll target,
+    delivery-label selection, timestamp formatting, and markdown rendering
+  - confirmed existing markdown/helper coverage does not characterize full row
+    composition or ref behavior
+  - selected a focused chat transcript render characterization before
+    extraction
+- validation:
+  - `Get-Content web/src/App.tsx | Select-Object -Skip 4100 -First 110`
+  - result: transcript render map inspected
+  - `Get-Content web/src/components/chat.tsx`
+  - result: existing chat component ownership inspected
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1110` add focused chat transcript render characterization
+
+## Fresh Public Hero Data Shape Alignment (2026-05-03)
+
+- `PRJ-1108` is DONE:
+  - `.codex/tasks/PRJ-1108-public-hero-card-data-shape-alignment.md`
+- result:
+  - changed `publicHeroCards` to use the `MotifFigurePanel` highlight shape
+    directly
+  - replaced the JSX-local `publicHomeSurface.heroCards.map(...)` projection
+    with `highlights={publicHomeSurface.heroCards}`
+  - preserved public hero copy and component ownership
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed with `status=ok`, `route_count=14`
+  - `Select-String -Path web/src/App.tsx -Pattern "\\.map\\(" -Context 1,4`
+  - result: remaining maps inspected; public hero projection is gone
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1109` audit chat transcript render-map extraction readiness
+
+## Fresh Remaining Frontend Map Boundary Audit (2026-05-03)
+
+- `PRJ-1107` is DONE:
+  - `.codex/tasks/PRJ-1107-remaining-frontend-map-boundary-audit.md`
+- result:
+  - classified remaining `web/src/App.tsx` `.map(...)` call sites after tools
+    directory extraction
+  - deferred chat transcript rendering because it owns refs, delivery labels,
+    timestamps, and markdown rendering
+  - deferred bottom mobile tabbar because it owns scroll refs and route button
+    registration
+  - selected public hero data-shape alignment as the next smallest safe cleanup
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "\\.map\\(" -Context 1,4`
+  - result: remaining maps inspected
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1108` align public hero card data shape with motif highlights
+
+## Fresh Tools Directory Presentation Extraction (2026-05-03)
+
+- `PRJ-1106` is DONE:
+  - `.codex/tasks/PRJ-1106-tools-directory-group-item-presentation-extraction.md`
+- result:
+  - added `ToolsDirectoryGroupList` to `web/src/components/tools.tsx`
+  - moved `/tools` group and item card presentation out of `App.tsx`
+  - preserved `aion-tools-group`, `aion-tools-item-grid`, and
+    `aion-tools-item-card` selectors
+  - kept `toolsOverview`, `savingToolId`, `telegramLinkStart`,
+    `telegramLinkBusy`, `handleToolToggle`, and `handleStartTelegramLink` in
+    `App()`
+  - removed stale tool-formatting and low-level tools component imports from
+    `App.tsx`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run test:tools-directory; Pop-Location`
+  - result: passed with `status=ok`
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed with `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1107` audit remaining frontend map boundaries after tools directory
+    extraction
+
+## Fresh Tools Directory Behavior Characterization (2026-05-03)
+
+- `PRJ-1105` is DONE:
+  - `.codex/tasks/PRJ-1105-tools-directory-behavior-characterization.md`
+- result:
+  - added `web/scripts/tools-directory-characterization.mjs`
+  - added `npm run test:tools-directory`
+  - characterized `/tools` full, loading, empty, and error states
+  - characterized ClickUp preference toggle request payload
+  - characterized Telegram link-start request and returned link-code rendering
+  - added Windows Chrome profile cleanup hardening for the CDP harness
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run test:tools-directory; Pop-Location`
+  - result: passed with `status=ok`
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed with `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- learning:
+  - `.codex/context/LEARNING_JOURNAL.md` now includes the tools directory CDP
+    harness as additional evidence for Chrome profile cleanup guardrails
+- next smallest useful task:
+  - `PRJ-1106` extract tools directory group/item presentation
+
+## Fresh Post-Settings Select Cleanup Audit (2026-05-03)
+
+- `PRJ-1104` is DONE:
+  - `.codex/tasks/PRJ-1104-next-cleanup-after-settings-select-option-list-audit.md`
+- result:
+  - classified the remaining `web/src/App.tsx` `.map(...)` call sites after
+    settings select option extraction
+  - confirmed the remaining obvious render maps are behaviorful or ref-sensitive:
+    tools directory groups/items, chat transcript rows, and bottom mobile tabbar
+  - kept pure route data projections in `App()` for now because they are not
+    presentation component repetitions
+  - selected a test-focused tools-directory behavior characterization as the
+    next smallest useful task before any behaviorful extraction
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "\\.map\\(" -Context 2,6`
+  - result: remaining maps inspected
+  - `Get-Content web/src/components/public-shell.tsx`
+  - result: public hero component owner inspected
+  - `Get-Content web/src/components/tools.tsx`
+  - result: existing tools component owner inspected
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1105` add focused tools-directory behavior characterization
+
+## Fresh Settings Select Option List Extraction (2026-05-03)
+
+- `PRJ-1103` is DONE:
+  - `.codex/tasks/PRJ-1103-settings-select-option-list-extraction.md`
+- result:
+  - added `SettingsSelectOptionList` to `web/src/components/settings.tsx`
+  - reused it for UI language and UTC offset options
+  - preserved option values and labels
+  - kept select state, normalization, and handlers in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed after rerun with longer timeout; `status=ok`,
+    `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1104` audit next frontend cleanup after settings select option
+    extraction
+
+## Fresh Settings Select Option Audit (2026-05-03)
+
+- `PRJ-1102` is DONE:
+  - `.codex/tasks/PRJ-1102-next-cleanup-after-shell-route-switcher-audit.md`
+- result:
+  - selected `SettingsSelectOptionList` extraction as the next smallest
+    frontend cleanup
+  - confirmed UI language and UTC offset selects map option items inline
+  - deferred mobile tabbar refs, tools directory behavior, chat transcript
+    mapping, and route data projections
+- validation:
+  - `Get-Content web/src/App.tsx | Select-Object -Skip 4640 -First 75`
+  - result: settings option maps inspected
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1103` extract settings select option list
+
+## Fresh Shell Route Switcher Extraction (2026-05-03)
+
+- `PRJ-1101` is DONE:
+  - `.codex/tasks/PRJ-1101-shell-route-switcher-extraction.md`
+- result:
+  - added `ShellRouteSwitcher` to `web/src/components/shell.tsx`
+  - reused it for the route-header switcher
+  - preserved wrapper, scroll row, button classes, active state, and route
+    callback behavior
+  - kept routes, route labels, active route state, and navigation callback in
+    `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed; `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1102` audit next frontend cleanup after shell route switcher
+    extraction
+
+## Fresh Shell Route Switcher Audit (2026-05-03)
+
+- `PRJ-1100` is DONE:
+  - `.codex/tasks/PRJ-1100-next-cleanup-after-shell-nav-button-list-audit.md`
+- result:
+  - selected `ShellRouteSwitcher` extraction as the next smallest frontend
+    cleanup
+  - confirmed route header maps `ROUTES` inline without owning refs
+  - deferred bottom mobile tabbar because it owns refs, plus settings option
+    maps, tools directory behavior, chat transcript mapping, and data
+    projections
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "\\.map\\(" -Context 1,5`
+  - result: remaining maps inspected
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1101` extract shell route switcher
+
+## Fresh Shell Nav Button List Extraction (2026-05-03)
+
+- `PRJ-1099` is DONE:
+  - `.codex/tasks/PRJ-1099-shell-nav-button-list-extraction.md`
+- result:
+  - added `ShellNavButtonItem` and `ShellNavButtonList` to
+    `web/src/components/shell.tsx`
+  - reused it for the desktop sidebar navigation
+  - preserved `aion-sidebar-nav`, `ShellNavButton`, active state, disabled
+    state, and no-route click guard
+  - kept route state, route data, and navigation callback in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed; `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1100` audit next frontend cleanup after shell nav button extraction
+
+## Fresh Shell Nav Button Audit (2026-05-03)
+
+- `PRJ-1098` is DONE:
+  - `.codex/tasks/PRJ-1098-next-cleanup-after-shell-account-fact-list-audit.md`
+- result:
+  - selected `ShellNavButtonList` extraction as the next smallest frontend
+    cleanup
+  - confirmed desktop sidebar maps `shellNavItems` into `ShellNavButton`
+    inline
+  - deferred mobile tabbar because it owns refs, plus settings option maps,
+    tools directory behavior, and route data projections
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "shellNavItems|aion-sidebar-nav|ShellNavButton|ROUTES.map|UI_LANGUAGE_OPTIONS.map|UTC_OFFSET_OPTIONS.map|toolsOverview\\?\\.groups" -Context 2,6`
+  - result: remaining shell/control maps inspected
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1099` extract shell nav button list
+
+## Fresh Shell Account Fact List Extraction (2026-05-03)
+
+- `PRJ-1097` is DONE:
+  - `.codex/tasks/PRJ-1097-shell-account-fact-list-extraction.md`
+- result:
+  - added `ShellAccountFactList` to `web/src/components/shell.tsx`
+  - reused it for desktop account popover facts and mobile account panel facts
+  - preserved existing desktop and mobile fact classes
+  - kept `accountSummaryItems`, account-panel state, route navigation, and
+    actions in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed after sequential rerun; `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- learning:
+  - `.codex/context/LEARNING_JOURNAL.md` records that frontend route smoke must
+    run after build completes because parallel build/smoke can race on
+    `web/dist/index.html`
+- next smallest useful task:
+  - `PRJ-1098` audit next frontend cleanup after shell account fact extraction
+
+## Fresh Shell Account Fact Audit (2026-05-03)
+
+- `PRJ-1096` is DONE:
+  - `.codex/tasks/PRJ-1096-next-cleanup-after-public-nav-link-list-audit.md`
+- result:
+  - selected `ShellAccountFactList` extraction as the next smallest frontend
+    cleanup
+  - confirmed desktop and mobile account panels both map `accountSummaryItems`
+    inline
+  - deferred route navigation controls, settings option maps, tools directory
+    behavior, and route data projections
+- validation:
+  - `Get-Content web/src/App.tsx | Select-Object -Skip 3835 -First 115`
+  - result: repeated account fact maps inspected
+  - `Get-Content web/src/components/shell.tsx`
+  - result: existing shell component owner confirmed
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1097` extract shell account fact list
+
+## Fresh Public Nav Link List Extraction (2026-05-03)
+
+- `PRJ-1095` is DONE:
+  - `.codex/tasks/PRJ-1095-public-nav-link-list-extraction.md`
+- result:
+  - added `PublicNavLinkList` to `web/src/components/public-shell.tsx`
+  - reused it for public home nav anchors
+  - preserved `aion-public-nav-links`, `aion-public-nav-link`, and
+    `#aviary-home`
+  - kept `publicHomeSurface.nav` in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed; `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1096` audit next frontend cleanup after public nav link extraction
+
+## Fresh Public Nav Link Audit (2026-05-03)
+
+- `PRJ-1094` is DONE:
+  - `.codex/tasks/PRJ-1094-next-cleanup-after-personality-preview-callout-list-audit.md`
+- result:
+  - selected `PublicNavLinkList` extraction as the next smallest frontend
+    cleanup
+  - confirmed public home nav maps `publicHomeSurface.nav` into
+    `aion-public-nav-link` anchors inline
+  - deferred tools directory cards, shell account facts, form option maps,
+    shell route navigation, and route data projections
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "\\.map\\(" -Context 1,4`
+  - result: remaining maps inspected
+  - `Get-Content web/src/components/public-shell.tsx`
+  - result: existing public-shell component owner confirmed
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1095` extract public nav link list
+
+## Fresh Personality Preview Callout List Extraction (2026-05-03)
+
+- `PRJ-1093` is DONE:
+  - `.codex/tasks/PRJ-1093-personality-preview-callout-list-extraction.md`
+- result:
+  - added `PersonalityPreviewCalloutList` to
+    `web/src/components/personality.tsx`
+  - reused it for personality hero callout articles
+  - preserved caller-owned callout classes and article typography classes
+  - kept `personalityPreviewCallouts` and hero stage layout in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed; `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1094` audit next frontend cleanup after personality preview callout
+    extraction
+
+## Fresh Personality Preview Callout Audit (2026-05-03)
+
+- `PRJ-1092` is DONE:
+  - `.codex/tasks/PRJ-1092-next-cleanup-after-tools-summary-card-list-audit.md`
+- result:
+  - selected `PersonalityPreviewCalloutList` extraction as the next smallest
+    frontend cleanup
+  - confirmed `/personality` hero maps `personalityPreviewCallouts` into
+    caller-classed articles inline
+  - deferred tools directory cards, shell navigation, form option maps, and
+    route data projections
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "\\.map\\(" -Context 1,4`
+  - result: remaining maps inspected
+  - `Get-Content web/src/components/personality.tsx`
+  - result: existing personality component owner confirmed
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1093` extract personality preview callout list
+
+## Fresh Tools Summary Card List Extraction (2026-05-03)
+
+- `PRJ-1091` is DONE:
+  - `.codex/tasks/PRJ-1091-tools-summary-card-list-extraction.md`
+- result:
+  - added `ToolsSummaryCardList` and `ToolsSummaryCardItem` to
+    `web/src/components/tools.tsx`
+  - reused `ToolsSummaryCard` for tools hero summary cards
+  - preserved `aion-tools-summary-grid` and `aion-tools-summary-card`
+  - kept `toolsSummaryCards` data construction in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed; `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1092` audit next frontend cleanup after tools summary card extraction
+
+## Fresh Tools Summary Card Audit (2026-05-03)
+
+- `PRJ-1090` is DONE:
+  - `.codex/tasks/PRJ-1090-next-cleanup-after-settings-status-pill-list-audit.md`
+- result:
+  - selected `ToolsSummaryCardList` extraction as the next smallest
+    test-focused frontend cleanup
+  - confirmed `/tools` summary maps four display-only cards into
+    `ToolsSummaryCard`
+  - deferred tools group/item directory extraction because it includes toggles,
+    provider readiness, and Telegram link actions
+- validation:
+  - `Get-Content web/src/components/tools.tsx`
+  - result: existing tools component owner confirmed
+  - `Select-String -Path web/src/App.tsx -Pattern "\\]\\.map\\(\\(card\\)|ToolsSummaryCard|toolsOverview\\?\\.groups|aion-tools-group|group\\.items\\.map" -Context 2,4`
+  - result: summary and directory maps inspected
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1091` extract tools summary card list
+
+## Fresh Settings Status-Pill List Extraction (2026-05-03)
+
+- `PRJ-1089` is DONE:
+  - `.codex/tasks/PRJ-1089-settings-status-pill-list-extraction.md`
+- result:
+  - added `SettingsStatusPillList` to `web/src/components/settings.tsx`
+  - reused it for settings hero status pills
+  - preserved `aion-settings-status-grid` and
+    `aion-settings-status-pill`
+  - kept `settingsHeroChips` data construction in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed; `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1090` audit next frontend cleanup after settings status-pill
+    extraction
+
+## Fresh Settings Status-Pill Audit (2026-05-03)
+
+- `PRJ-1088` is DONE:
+  - `.codex/tasks/PRJ-1088-next-cleanup-after-personality-activity-row-list-audit.md`
+- result:
+  - selected `SettingsStatusPillList` extraction as the next smallest frontend
+    cleanup
+  - confirmed `/settings` hero maps `settingsHeroChips` into
+    `aion-settings-status-pill` elements inline
+  - deferred tools group/item cards, broader route data helpers, and full route
+    extraction
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "settingsHeroChips|aion-settings-status|toolsGroups|\\.map\\(" -Context 2,5`
+  - result: settings status pill map found
+  - `Get-Content web/src/components/settings.tsx`
+  - result: existing settings component owner confirmed
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1089` extract settings hero status-pill list
+
+## Fresh Personality Activity-Row List Extraction (2026-05-03)
+
+- `PRJ-1087` is DONE:
+  - `.codex/tasks/PRJ-1087-personality-activity-row-list-extraction.md`
+- result:
+  - added `PersonalityActivityRowList` to
+    `web/src/components/personality.tsx`
+  - reused it for personality recent activity rows
+  - preserved `aion-personality-activity-row`, text classes, and chip class
+  - kept `personalityRecentActivity` in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: passed; `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1088` audit next frontend cleanup after personality activity-row list
+    extraction
+
+## Fresh Personality Activity-Row Audit (2026-05-03)
+
+- `PRJ-1086` is DONE:
+  - `.codex/tasks/PRJ-1086-next-cleanup-after-dashboard-figure-note-list-audit.md`
+- result:
+  - selected `PersonalityActivityRowList` extraction as the next smallest
+    frontend cleanup
+  - confirmed personality activity rows use `key/title/when` plus a visible
+    action chip label
+  - deferred settings controls, tools groups, route data helpers, and full route
+    extraction
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "aion-personality-activity-row|personalityRecentActivity.map|copy.common.view" -Context 1,6`
+  - result: personality activity row map found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1087` extract personality activity row list
+
+## Fresh Dashboard Figure-Note List Extraction (2026-05-03)
+
+- `PRJ-1085` is DONE:
+  - `.codex/tasks/PRJ-1085-dashboard-figure-note-list-extraction.md`
+- result:
+  - added `DashboardFigureNoteList` to `web/src/components/dashboard.tsx`
+  - reused it for dashboard hero figure notes
+  - preserved caller-owned note classes and note text classes
+  - kept hero image, halo, badge, and stage layout in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1086` audit next frontend cleanup after dashboard figure note-list
+    extraction
+
+## Fresh Dashboard Figure-Note Audit (2026-05-03)
+
+- `PRJ-1084` is DONE:
+  - `.codex/tasks/PRJ-1084-next-cleanup-after-dashboard-cognitive-flow-track-audit.md`
+- result:
+  - selected `DashboardFigureNoteList` extraction as the next smallest
+    frontend cleanup
+  - confirmed dashboard figure notes map `className/eyebrow/title/body` data
+    into `aion-dashboard-figure-note-*` articles
+  - deferred full hero figure stage, current phase panel, settings controls,
+    tools groups, and route data-helper movement
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "dashboardFigureNotes|aion-dashboard-figure-note" -Context 1,5`
+  - result: dashboard figure note map found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1085` extract dashboard figure note list
+
+## Fresh Dashboard Cognitive Flow-Track Extraction (2026-05-03)
+
+- `PRJ-1083` is DONE:
+  - `.codex/tasks/PRJ-1083-dashboard-cognitive-flow-track-extraction.md`
+- result:
+  - added `DashboardCognitiveFlowTrack` to
+    `web/src/components/dashboard.tsx`
+  - reused it for dashboard cognitive flow steps
+  - preserved `aion-dashboard-flow-*` classes and active-step behavior
+  - kept current phase computation and aside in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1084` audit next frontend cleanup after dashboard cognitive flow-track
+    extraction
+
+## Fresh Dashboard Cognitive Flow-Track Audit (2026-05-03)
+
+- `PRJ-1082` is DONE:
+  - `.codex/tasks/PRJ-1082-next-cleanup-after-dashboard-balance-grid-audit.md`
+- result:
+  - selected `DashboardCognitiveFlowTrack` extraction as the next smallest
+    frontend cleanup
+  - confirmed dashboard cognitive flow steps use `token/title/detail/active`
+    with `aion-dashboard-flow-*` classes
+  - deferred full flow panel, figure notes, settings controls, tools groups,
+    and route data-helper movement
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "dashboardCognitiveSteps|aion-dashboard-flow" -Context 1,5`
+  - result: dashboard cognitive flow track map found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1083` extract dashboard cognitive flow track
+
+## Fresh Dashboard Balance-Grid Extraction (2026-05-03)
+
+- `PRJ-1081` is DONE:
+  - `.codex/tasks/PRJ-1081-dashboard-balance-grid-extraction.md`
+- result:
+  - added `DashboardBalanceGrid` to `web/src/components/dashboard.tsx`
+  - reused it for dashboard summary balance rows
+  - preserved `aion-dashboard-summary-balance-*` classes and index-based token
+    class numbering
+  - kept `dashboardBalanceRows` in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1082` audit next frontend cleanup after dashboard balance-grid
+    extraction
+
+## Fresh Dashboard Balance-Grid Audit (2026-05-03)
+
+- `PRJ-1080` is DONE:
+  - `.codex/tasks/PRJ-1080-next-cleanup-after-dashboard-recent-activity-list-audit.md`
+- result:
+  - selected `DashboardBalanceGrid` extraction as the next smallest frontend
+    cleanup
+  - confirmed dashboard balance rows use `label/value` plus index-based token
+    classes
+  - deferred dashboard figure/flow pieces, settings controls, tools groups, and
+    route data-helper movement
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "dashboardBalanceRows|aion-dashboard-summary-balance" -Context 1,5`
+  - result: dashboard summary balance-grid map found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1081` extract dashboard balance grid
+
+## Fresh Dashboard Recent-Activity List Extraction (2026-05-03)
+
+- `PRJ-1079` is DONE:
+  - `.codex/tasks/PRJ-1079-dashboard-recent-activity-list-extraction.md`
+- result:
+  - added `DashboardRecentActivityList` to
+    `web/src/components/dashboard.tsx`
+  - reused it for dashboard recent activity rows
+  - preserved `aion-dashboard-recent-row`, text classes, and wrapper spacing
+  - kept `personalityRecentActivity.slice(0, 4)` in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1080` audit next frontend cleanup after dashboard recent activity-list
+    extraction
+
+## Fresh Dashboard Recent-Activity Audit (2026-05-03)
+
+- `PRJ-1078` is DONE:
+  - `.codex/tasks/PRJ-1078-next-cleanup-after-dashboard-guidance-list-audit.md`
+- result:
+  - selected `DashboardRecentActivityList` extraction as the next smallest
+    frontend cleanup
+  - confirmed dashboard recent activity rows use `key/title/when` with
+    `aion-dashboard-recent-row`
+  - deferred personality activity rows, dashboard figure/flow pieces, settings
+    controls, tools groups, and route data-helper movement
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "aion-dashboard-recent|personalityRecentActivity.slice(0, 4)" -Context 1,5`
+  - result: dashboard recent activity row list found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1079` extract dashboard recent activity list
+
+## Fresh Dashboard Guidance-List Extraction (2026-05-03)
+
+- `PRJ-1077` is DONE:
+  - `.codex/tasks/PRJ-1077-dashboard-guidance-list-extraction.md`
+- result:
+  - added `DashboardGuidanceList` to `web/src/components/dashboard.tsx`
+  - reused it for dashboard guidance rows
+  - preserved lead-row class and passive button markup
+  - kept `dashboardGuidanceCards` in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1078` audit next frontend cleanup after dashboard guidance-list
+    extraction
+
+## Fresh Dashboard Guidance-List Audit (2026-05-03)
+
+- `PRJ-1076` is DONE:
+  - `.codex/tasks/PRJ-1076-next-cleanup-after-dashboard-memory-bar-chart-audit.md`
+- result:
+  - selected `DashboardGuidanceList` extraction as the next smallest frontend
+    cleanup
+  - confirmed dashboard guidance rows render `title/body/action` content with
+    passive buttons and a lead row class
+  - deferred dashboard figure/flow pieces, settings controls, tools groups, and
+    route data-helper movement
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "dashboardGuidanceCards|aion-dashboard-guidance" -Context 1,5`
+  - result: dashboard guidance card list found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1077` extract dashboard guidance list
+
+## Fresh Dashboard Memory Bar-Chart Extraction (2026-05-03)
+
+- `PRJ-1075` is DONE:
+  - `.codex/tasks/PRJ-1075-dashboard-memory-bar-chart-extraction.md`
+- result:
+  - added `DashboardMemoryBarChart` to `web/src/components/dashboard.tsx`
+  - reused it for the dashboard memory bar chart
+  - preserved `aion-dashboard-bar-*` classes and inline `height` style
+  - kept `dashboardMemoryBars` and scaled metric calculations in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1076` audit next frontend cleanup after dashboard memory bar-chart
+    extraction
+
+## Fresh Dashboard Memory Bar-Chart Audit (2026-05-03)
+
+- `PRJ-1074` is DONE:
+  - `.codex/tasks/PRJ-1074-next-cleanup-after-dashboard-reflection-list-audit.md`
+- result:
+  - selected `DashboardMemoryBarChart` extraction as the next smallest
+    frontend cleanup
+  - confirmed dashboard memory bars render `label/height` items through
+    `aion-dashboard-bar-*` classes
+  - deferred guidance CTA rows, dashboard figure/flow pieces, settings
+    controls, tools groups, and route data-helper movement
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "dashboardMemoryBars|aion-dashboard-bar" -Context 1,5`
+  - result: dashboard memory bar chart map found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1075` extract dashboard memory bar chart
+
+## Fresh Dashboard Reflection-List Extraction (2026-05-03)
+
+- `PRJ-1073` is DONE:
+  - `.codex/tasks/PRJ-1073-dashboard-reflection-list-extraction.md`
+- result:
+  - added `DashboardReflectionList` to `web/src/components/dashboard.tsx`
+  - reused it for dashboard reflection highlight rows
+  - preserved `aion-dashboard-reflection-*` classes and wrapper spacing
+  - kept `dashboardReflectionRows` in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1074` audit next frontend cleanup after dashboard reflection-list
+    extraction
+
+## Fresh Dashboard Reflection-List Audit (2026-05-03)
+
+- `PRJ-1072` is DONE:
+  - `.codex/tasks/PRJ-1072-next-cleanup-after-public-trust-band-audit.md`
+- result:
+  - selected `DashboardReflectionList` extraction as the next smallest
+    frontend cleanup
+  - confirmed dashboard reflection highlights render a static `title/tag` list
+    with `aion-dashboard-reflection-*` classes
+  - deferred dynamic memory bars, guidance CTA rows, dashboard figure/flow
+    pieces, and route data-helper movement
+- validation:
+  - `Get-Content web/src/App.tsx | Select-Object -Skip 4058 -First 45`
+  - result: dashboard reflection-row map found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1073` extract dashboard reflection list
+
+## Fresh Public Trust-Band Extraction (2026-05-03)
+
+- `PRJ-1071` is DONE:
+  - `.codex/tasks/PRJ-1071-public-trust-band-extraction.md`
+- result:
+  - added `PublicTrustBand` to `web/src/components/public-shell.tsx`
+  - reused it for the public footer trust-band
+  - preserved footer semantics, `PublicGlyph` rendering, and
+    `aion-public-trust-*` classes
+  - kept public home copy/data in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1072` audit next frontend cleanup after public footer trust-band
+    extraction
+
+## Fresh Public Trust-Band Audit (2026-05-03)
+
+- `PRJ-1070` is DONE:
+  - `.codex/tasks/PRJ-1070-next-cleanup-after-public-feature-card-list-audit.md`
+- result:
+  - selected `PublicTrustBand` extraction as the next smallest frontend cleanup
+  - confirmed public footer maps `publicHomeSurface.trustBand` into
+    `aion-public-trust-item` articles with `PublicGlyph`
+  - deferred dashboard figure/flow pieces, settings controls, tools groups,
+    and route data-helper movement
+- validation:
+  - `Get-Content web/src/App.tsx | Select-Object -Skip 3604 -First 25`
+  - result: public footer trust-band map found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1071` extract public footer trust band
+
+## Fresh Public Feature-Card List Extraction (2026-05-03)
+
+- `PRJ-1069` is DONE:
+  - `.codex/tasks/PRJ-1069-public-feature-card-list-extraction.md`
+- result:
+  - added `PublicFeatureCardList` to `web/src/components/public-shell.tsx`
+  - reused it for public feature strip cards
+  - preserved `PublicGlyph` rendering and `aion-public-feature-*` classes
+  - kept public home copy/data in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1070` audit next frontend cleanup after public feature-card list
+    extraction
+
+## Fresh Public Feature-Card Audit (2026-05-03)
+
+- `PRJ-1068` is DONE:
+  - `.codex/tasks/PRJ-1068-next-cleanup-after-public-trust-pill-list-audit.md`
+- result:
+  - selected `PublicFeatureCardList` extraction as the next smallest frontend
+    cleanup
+  - confirmed the public feature strip maps `publicHomeSurface.pillars` through
+    `PublicGlyph` with `aion-public-feature-*` classes
+  - deferred footer trust cards, dashboard figure/flow pieces, settings
+    controls, tools groups, and route data-helper movement
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "publicHomeSurface.pillars|publicHomeSurface.trustBand" -Context 1,5`
+  - result: public feature-strip map found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1069` extract public feature-card list
+
+## Fresh Public Trust-Pill List Extraction (2026-05-03)
+
+- `PRJ-1067` is DONE:
+  - `.codex/tasks/PRJ-1067-public-trust-pill-list-extraction.md`
+- result:
+  - added `PublicTrustPillList` to `web/src/components/public-shell.tsx`
+  - reused it for public micro-proof and proof-bridge trust pill lists
+  - preserved each call site's wrapper, item, and icon classes
+  - kept public home data and footer trust-band cards in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1068` audit next frontend cleanup after public trust-pill list
+    extraction
+
+## Fresh Public Trust-Pill Audit (2026-05-03)
+
+- `PRJ-1066` is DONE:
+  - `.codex/tasks/PRJ-1066-next-cleanup-after-dashboard-signal-column-audit.md`
+- result:
+  - selected `PublicTrustPillList` extraction as the next smallest frontend
+    cleanup
+  - confirmed public micro-proof and proof-bridge lists repeat
+    `publicHomeSurface.trustBand.slice(0, 3)` with `PublicGlyph`
+  - deferred public pillars, footer trust cards, dashboard figure/flow pieces,
+    settings controls, tools groups, and route data-helper movement
+- validation:
+  - `Get-Content web/src/App.tsx | Select-Object -Skip 3558 -First 60`
+  - result: repeated public trust proof pill maps found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1067` extract public trust-pill list
+
+## Fresh Dashboard Signal-Column Extraction (2026-05-03)
+
+- `PRJ-1065` is DONE:
+  - `.codex/tasks/PRJ-1065-dashboard-signal-column-extraction.md`
+- result:
+  - added `DashboardSignalColumn` to `web/src/components/dashboard.tsx`
+  - reused it for dashboard hero left and right signal-card columns
+  - preserved `aion-dashboard-signal-column`, signal card props, and
+    route-owned `dashboardSignalCards`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1066` audit next frontend cleanup after dashboard signal-column
+    extraction
+
+## Fresh Dashboard Signal-Column Audit (2026-05-03)
+
+- `PRJ-1064` is DONE:
+  - `.codex/tasks/PRJ-1064-next-cleanup-after-personality-signal-row-list-audit.md`
+- result:
+  - selected `DashboardSignalColumn` extraction as the next smallest frontend
+    cleanup
+  - confirmed dashboard left/right signal columns repeat the same
+    placement-filtered `DashboardSignalCard` map
+  - deferred dashboard figure notes, cognitive flow, public shell, settings
+    controls, tools groups, and route data-helper movement
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "dashboardSignalCards" -Context 2,8`
+  - result: repeated left/right signal-card maps found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1065` extract dashboard signal-card column
+
+## Fresh Personality Signal-Row List Extraction (2026-05-03)
+
+- `PRJ-1063` is DONE:
+  - `.codex/tasks/PRJ-1063-personality-signal-row-list-extraction.md`
+- result:
+  - added `PersonalitySignalRowList` to
+    `web/src/components/personality.tsx`
+  - reused it for conscious and subconscious personality signal rows
+  - preserved `aion-personality-signal-*` selectors and default `grid gap-3`
+    spacing
+  - kept signal data arrays in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1064` audit next frontend cleanup after personality signal-row list
+    extraction
+
+## Fresh Personality Signal-Row Audit (2026-05-03)
+
+- `PRJ-1062` is DONE:
+  - `.codex/tasks/PRJ-1062-next-cleanup-after-route-stat-card-import-audit.md`
+- result:
+  - selected shared `PersonalitySignalRowList` extraction as the next smallest
+    frontend cleanup
+  - confirmed conscious and subconscious personality side panels repeat the
+    same `aion-personality-signal-row` map around `label/value` items
+  - deferred dashboard flagship panels, public shell pieces, settings controls,
+    tools groups, and route data-helper movement
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern ".map((" -Context 1,4`
+  - result: repeated personality signal-row maps found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1063` extract shared personality signal-row list
+
+## Fresh RouteStatCard Import Cleanup (2026-05-03)
+
+- `PRJ-1061` is DONE:
+  - `.codex/tasks/PRJ-1061-remove-stale-route-stat-card-import.md`
+- result:
+  - removed the unused `RouteStatCard` named import from `App.tsx`
+  - kept `RouteStatCardList` as the route-shell stat-card boundary
+  - kept the shared `RouteStatCard` export available for `RouteStatCardList`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1062` audit next frontend cleanup after stale `RouteStatCard` import
+    removal
+
+## Fresh Post-Timeline Frontend Cleanup Audit (2026-05-03)
+
+- `PRJ-1060` is DONE:
+  - `.codex/tasks/PRJ-1060-next-cleanup-after-personality-timeline-row-list-audit.md`
+- result:
+  - selected stale `RouteStatCard` route-shell import removal as the next
+    smallest frontend cleanup
+  - confirmed `App.tsx` now uses `RouteStatCardList` for route stat-card maps
+    and no longer calls `RouteStatCard` directly
+  - deferred route data-helper movement, settings overview, dashboard flagship
+    panels, and decorative panels
+- validation:
+  - `Select-String -Path web/src/App.tsx -Pattern "RouteStatCard" -Context 0,2`
+  - result: only stale direct import plus live `RouteStatCardList` usage found
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1061` remove stale `RouteStatCard` import from `App.tsx`
+
+## Fresh Personality Timeline-Row List Extraction (2026-05-03)
+
+- `PRJ-1059` is DONE:
+  - `.codex/tasks/PRJ-1059-personality-timeline-row-list-extraction.md`
+- result:
+  - added `PersonalityTimelineRowList` to
+    `web/src/components/personality.tsx`
+  - reused it for memory continuity, reflections flow, plans flow, and the
+    personality timeline
+  - preserved wrapper classes through `className`
+  - kept route timeline data arrays in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1060` audit next frontend cleanup after personality timeline-row list
+    extraction
+
+## Fresh Personality Timeline-Row List Audit (2026-05-03)
+
+- `PRJ-1058` is DONE:
+  - `.codex/tasks/PRJ-1058-next-cleanup-after-route-stat-card-list-audit.md`
+- result:
+  - selected shared `PersonalityTimelineRowList` extraction for repeated
+    timeline-row maps
+  - planned a `className` prop to preserve memory, reflections, plans, and
+    personality route wrapper classes
+  - kept route data arrays in `App()`
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1059` extract shared personality timeline-row list
+
+## Fresh Route Stat-Card List Extraction (2026-05-03)
+
+- `PRJ-1057` is DONE:
+  - `.codex/tasks/PRJ-1057-route-stat-card-list-extraction.md`
+- result:
+  - added `RouteStatCardList` to `web/src/components/shared.tsx`
+  - reused it inside existing `ModuleStatRow` wrappers for memory,
+    reflections, plans, goals, insights, automations, and integrations
+  - preserved route-keyed `aion-*-stat-card` selectors through the existing
+    `RouteStatCard`
+  - kept route stat data arrays in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1058` audit next frontend cleanup after route stat-card list
+    extraction
+
+## Fresh Route Stat-Card List Audit (2026-05-03)
+
+- `PRJ-1056` is DONE:
+  - `.codex/tasks/PRJ-1056-next-cleanup-after-route-note-card-list-audit.md`
+- result:
+  - selected shared `RouteStatCardList` extraction for repeated module
+    stat-card maps
+  - kept `ModuleStatRow` wrappers and route stat data arrays in `App()`
+  - deferred route data-helper movement, settings overview, flagship dashboard
+    panels, and decorative panels
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1057` extract shared route stat-card list
+
+## Fresh Route Note-Card List Extraction (2026-05-03)
+
+- `PRJ-1055` is DONE:
+  - `.codex/tasks/PRJ-1055-route-note-card-list-extraction.md`
+- result:
+  - added `RouteNoteCardList` to `web/src/components/shared.tsx`
+  - reused it for insights clarity, automations boundary, and integrations
+    boundary note-card maps
+  - preserved route-keyed `aion-*-note-card` selectors through the existing
+    `RouteNoteCard`
+  - kept route data arrays in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1056` audit next frontend cleanup after route note-card list
+    extraction
+
+## Fresh Route Note-Card List Audit (2026-05-03)
+
+- `PRJ-1054` is DONE:
+  - `.codex/tasks/PRJ-1054-next-cleanup-after-route-side-row-removal-audit.md`
+- result:
+  - selected shared `RouteNoteCardList` extraction for repeated
+    insights/automations/integrations note-card maps
+  - kept route data arrays and decorative panels in `App()`
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1055` extract shared route note-card list
+
+## Fresh ModuleRouteSideRow Removal (2026-05-03)
+
+- `PRJ-1053` is DONE:
+  - `.codex/tasks/PRJ-1053-remove-unused-module-route-side-row.md`
+- result:
+  - removed unused `ModuleRouteSideRow` from
+    `web/src/components/shared.tsx`
+  - refreshed the active frontend component map so it no longer lists the
+    removed component
+  - left historical task evidence untouched
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1054` audit next frontend cleanup after `ModuleRouteSideRow` removal
+
+## Fresh ModuleRouteSideRow Removal Audit (2026-05-03)
+
+- `PRJ-1052` is DONE:
+  - `.codex/tasks/PRJ-1052-next-cleanup-after-insights-guidance-row-audit.md`
+- result:
+  - selected unused `ModuleRouteSideRow` removal as the next frontend cleanup
+  - confirmed the last live call site moved to `ModuleDotRowList` in
+    `PRJ-1051`
+  - deferred route data-helper movement and decorative panels
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1053` remove unused `ModuleRouteSideRow` shared component
+
+## Fresh Insights Guidance-Row Alignment (2026-05-03)
+
+- `PRJ-1051` is DONE:
+  - `.codex/tasks/PRJ-1051-insights-guidance-row-alignment.md`
+- result:
+  - reused `ModuleDotRowList` for `/insights` guidance rows
+  - preserved `aion-insights-guidance-*` selectors through shared route keys
+  - kept `insightGuidanceCards` and side-panel composition in `App()`
+  - removed stale `ModuleRouteSideRow` import from `App.tsx`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1052` audit next frontend cleanup after insights guidance-row
+    alignment
+
+## Fresh Insights Guidance-Row Audit (2026-05-03)
+
+- `PRJ-1050` is DONE:
+  - `.codex/tasks/PRJ-1050-next-cleanup-after-automations-health-row-audit.md`
+- result:
+  - selected `/insights` guidance-row shared alignment as the next frontend
+    cleanup
+  - target component: `ModuleDotRowList`
+  - kept route data arrays and decorative panels in `App()`
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1051` align insights guidance rows with shared module dot-row list
+
+## Fresh Automations Health-Row Alignment (2026-05-03)
+
+- `PRJ-1049` is DONE:
+  - `.codex/tasks/PRJ-1049-automations-health-row-alignment.md`
+- result:
+  - reused `ModuleDotRowList` for `/automations` health rows
+  - preserved `aion-automations-health-*` selectors through shared route keys
+  - kept `automationHealthRows` and health snapshot data construction in
+    `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1050` audit next frontend cleanup after automations health-row
+    alignment
+
+## Fresh Automations Health-Row Audit (2026-05-03)
+
+- `PRJ-1048` is DONE:
+  - `.codex/tasks/PRJ-1048-next-cleanup-after-automations-flow-row-audit.md`
+- result:
+  - selected `/automations` health-row shared alignment as the next frontend
+    cleanup
+  - target component: `ModuleDotRowList`
+  - kept health data construction and decorative panels in `App()`
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1049` align automations health rows with shared module dot-row list
+
+## Fresh Automations Flow-Row Alignment (2026-05-03)
+
+- `PRJ-1047` is DONE:
+  - `.codex/tasks/PRJ-1047-automations-flow-row-alignment.md`
+- result:
+  - reused `ModuleValueRowList` for `/automations` flow rows
+  - preserved `aion-automations-flow-*` selectors through shared route keys
+  - kept `automationFlowRows`, scheduler summary, health snapshot consumption,
+    proactive state, and the decorative switchboard in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1048` audit next frontend cleanup after automations flow-row alignment
+
+## Fresh Automations Flow-Row Audit (2026-05-03)
+
+- `PRJ-1046` is DONE:
+  - `.codex/tasks/PRJ-1046-next-cleanup-after-integrations-side-panel-audit.md`
+- result:
+  - selected `/automations` flow-row shared alignment as the next frontend
+    cleanup
+  - target component: `ModuleValueRowList`
+  - kept health/proactive data construction and the decorative switchboard in
+    `App()`
+  - deferred route data-helper movement and decorative panels
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1047` align automations flow rows with shared module value-row list
+
+## Fresh Integrations Side-Panel Alignment (2026-05-03)
+
+- `PRJ-1045` is DONE:
+  - `.codex/tasks/PRJ-1045-integrations-side-panel-alignment.md`
+- result:
+  - reused `ModuleRouteSidePanel` for integrations boundary and readiness side
+    panels
+  - preserved `aion-integrations-side-panel` and
+    `aion-integrations-side-panel-boundary` through shared route-keyed props
+  - kept provider rows, readiness rows, and the decorative web/map panel in
+    `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1046` audit next frontend cleanup after integrations side-panel
+    alignment
+
+## Fresh Integrations Side-Panel Audit (2026-05-03)
+
+- `PRJ-1044` is DONE:
+  - `.codex/tasks/PRJ-1044-next-cleanup-after-insights-shell-audit.md`
+- result:
+  - selected `/integrations` side-panel shared alignment as the next frontend
+    cleanup
+  - target component: `ModuleRouteSidePanel`
+  - kept provider rows, readiness rows, and decorative web/map panel ownership
+    in `App()`
+  - deferred automations flow rows, route data-helper movement, and decorative
+    panels
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1045` align integrations side panels with shared module side-panel
+    components
+
+## Fresh Insights Shared-Shell Alignment (2026-05-03)
+
+- `PRJ-1043` is DONE:
+  - `.codex/tasks/PRJ-1043-insights-shared-shell-alignment.md`
+- result:
+  - reused `ModuleOverviewBar`, `ModuleStatRow`, and `ModuleValueRowList` in
+    `/insights`
+  - preserved `aion-insights-*` selectors through shared route keys
+  - kept `insightStatCards`, `insightSignalRows`, clarity/guidance data, and
+    the decorative orbit/map panel in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1044` audit next frontend cleanup after insights shell alignment
+
+## Fresh Insights Shared-Shell Audit (2026-05-03)
+
+- `PRJ-1042` is DONE:
+  - `.codex/tasks/PRJ-1042-next-cleanup-after-dashboard-progress-audit.md`
+- result:
+  - selected `/insights` shared-shell/list alignment as the next frontend v1
+    cleanup
+  - target components: `ModuleOverviewBar`, `ModuleStatRow`, and
+    `ModuleValueRowList`
+  - kept insight stat, signal, clarity, and guidance data ownership in `App()`
+  - deferred dashboard route data-helper extraction, decorative orbit/map
+    panels, provider/health-coupled rows, and broad visual polish
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1043` align insights route with shared module shell components
 
 ## Fresh Dashboard Progress List Extraction (2026-05-03)
 

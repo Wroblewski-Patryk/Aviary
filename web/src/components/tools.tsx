@@ -1,20 +1,319 @@
 import type { ReactNode } from "react";
+import type { AppTelegramLinkStartResponse, AppToolGroup, AppToolItem } from "../lib/api";
+import {
+  formatToolLinkState,
+  formatToolState,
+  summarizeToolAction,
+  toolStatusClass,
+} from "../lib/tool-formatting";
+
+export type ToolsSummaryCardItem = {
+  title: string;
+  value: string;
+  note: string;
+};
+
+export type ToolsDirectoryLabels = {
+  groupCount: string;
+  itemSingularSuffix: string;
+  itemsSuffix: string;
+  integral: string;
+  availability: string;
+  provider: string;
+  providerReadyValue: string;
+  providerConfiguredValue: string;
+  providerNotConfiguredValue: string;
+  control: string;
+  saving: string;
+  enabledByUser: string;
+  disabledByUser: string;
+  readOnly: string;
+  linkState: string;
+  currentStatus: string;
+  nextStep: string;
+  noAction: string;
+  telegramLinking: string;
+  telegramInstructionBody: string;
+  generating: string;
+  rotateCode: string;
+  generateCode: string;
+  linkCode: string;
+  expiresInAbout: string;
+  seconds: string;
+  instruction: string;
+  noLinkCode: string;
+  technicalDetails: string;
+  capabilities: string;
+};
+
+export type ToolsDirectoryCommonLabels = {
+  on: string;
+  off: string;
+  noData: string;
+  sourceOfTruth: string;
+};
 
 export function ToolsSummaryCard({
   title,
   value,
   note,
-}: {
-  title: string;
-  value: string;
-  note: string;
-}) {
+}: ToolsSummaryCardItem) {
   return (
     <article className="aion-tools-summary-card">
       <p className="aion-tools-summary-label">{title}</p>
       <p className="aion-tools-summary-value">{value}</p>
       <p className="aion-tools-summary-note">{note}</p>
     </article>
+  );
+}
+
+export function ToolsSummaryCardList({ items }: { items: ToolsSummaryCardItem[] }) {
+  return (
+    <div className="aion-tools-summary-grid">
+      {items.map((item, index) => (
+        <ToolsSummaryCard
+          key={`${item.title}-${index}`}
+          title={item.title}
+          value={item.value}
+          note={item.note}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function ToolsDirectoryGroupList({
+  groups,
+  labels,
+  commonLabels,
+  savingToolId,
+  telegramLinkBusy,
+  telegramLinkStart,
+  onToolToggle,
+  onStartTelegramLink,
+}: {
+  groups: AppToolGroup[];
+  labels: ToolsDirectoryLabels;
+  commonLabels: ToolsDirectoryCommonLabels;
+  savingToolId: string | null;
+  telegramLinkBusy: boolean;
+  telegramLinkStart: AppTelegramLinkStartResponse | null;
+  onToolToggle: (toolId: string, nextValue: boolean) => void;
+  onStartTelegramLink: () => void;
+}) {
+  return (
+    <div className="grid gap-5">
+      {groups.map((group) => (
+        <ToolsDirectoryGroup
+          key={group.id}
+          group={group}
+          labels={labels}
+          commonLabels={commonLabels}
+          savingToolId={savingToolId}
+          telegramLinkBusy={telegramLinkBusy}
+          telegramLinkStart={telegramLinkStart}
+          onToolToggle={onToolToggle}
+          onStartTelegramLink={onStartTelegramLink}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ToolsDirectoryGroup({
+  group,
+  labels,
+  commonLabels,
+  savingToolId,
+  telegramLinkBusy,
+  telegramLinkStart,
+  onToolToggle,
+  onStartTelegramLink,
+}: {
+  group: AppToolGroup;
+  labels: ToolsDirectoryLabels;
+  commonLabels: ToolsDirectoryCommonLabels;
+  savingToolId: string | null;
+  telegramLinkBusy: boolean;
+  telegramLinkStart: AppTelegramLinkStartResponse | null;
+  onToolToggle: (toolId: string, nextValue: boolean) => void;
+  onStartTelegramLink: () => void;
+}) {
+  return (
+    <article className="aion-tools-group">
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h3 className="font-display text-2xl text-base-900">{group.title}</h3>
+          <p className="mt-1 max-w-3xl text-sm leading-7 text-base-800">{group.description}</p>
+        </div>
+        <div className="rounded-[1rem] bg-base-100 px-3 py-2">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-base-800">{labels.groupCount}</p>
+          <p className="mt-1 text-sm font-semibold text-base-900">
+            {group.item_count} {group.item_count === 1 ? labels.itemSingularSuffix : labels.itemsSuffix}
+          </p>
+        </div>
+      </div>
+
+      <div className="aion-tools-item-grid">
+        {group.items.map((item) => (
+          <ToolsDirectoryItem
+            key={item.id}
+            item={item}
+            labels={labels}
+            commonLabels={commonLabels}
+            saving={savingToolId === item.id}
+            telegramLinkBusy={telegramLinkBusy}
+            telegramLinkStart={telegramLinkStart}
+            onToolToggle={onToolToggle}
+            onStartTelegramLink={onStartTelegramLink}
+          />
+        ))}
+      </div>
+    </article>
+  );
+}
+
+function ToolsDirectoryItem({
+  item,
+  labels,
+  commonLabels,
+  saving,
+  telegramLinkBusy,
+  telegramLinkStart,
+  onToolToggle,
+  onStartTelegramLink,
+}: {
+  item: AppToolItem;
+  labels: ToolsDirectoryLabels;
+  commonLabels: ToolsDirectoryCommonLabels;
+  saving: boolean;
+  telegramLinkBusy: boolean;
+  telegramLinkStart: AppTelegramLinkStartResponse | null;
+  onToolToggle: (toolId: string, nextValue: boolean) => void;
+  onStartTelegramLink: () => void;
+}) {
+  return (
+    <section className="aion-tools-item-card">
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <h4 className="font-display text-xl text-base-900">{item.label}</h4>
+            {item.integral ? (
+              <span className="rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                {labels.integral}
+              </span>
+            ) : null}
+          </div>
+          <p className="mt-2 text-sm leading-7 text-base-800">{item.description}</p>
+        </div>
+        <div className={`badge ${toolStatusClass(item.status)}`}>{formatToolState(item.status, labels)}</div>
+      </div>
+
+      <div className="aion-tools-fact-grid">
+        <ToolsFactCard label={labels.availability}>
+          <p className="mt-2 text-base font-semibold text-base-900">
+            {item.enabled ? commonLabels.on : commonLabels.off}
+          </p>
+        </ToolsFactCard>
+        <ToolsFactCard label={labels.provider}>
+          <p className="mt-2 text-base font-semibold text-base-900">
+            {item.provider.name.replaceAll("_", " ")}
+          </p>
+          <p className="mt-1 text-xs text-base-800">
+            {item.provider.ready
+              ? labels.providerReadyValue
+              : item.provider.configured
+                ? labels.providerConfiguredValue
+                : labels.providerNotConfiguredValue}
+          </p>
+        </ToolsFactCard>
+        <ToolsFactCard label={labels.control}>
+          {item.user_control.toggle_allowed ? (
+            <label className="mt-2 flex items-center gap-3">
+              <input
+                className="toggle toggle-primary"
+                type="checkbox"
+                checked={Boolean(item.user_control.requested_enabled)}
+                disabled={saving}
+                onChange={(event) => {
+                  onToolToggle(item.id, event.target.checked);
+                }}
+              />
+              <span className="text-base font-semibold text-base-900">
+                {saving
+                  ? labels.saving
+                  : item.user_control.requested_enabled
+                    ? labels.enabledByUser
+                    : labels.disabledByUser}
+              </span>
+            </label>
+          ) : (
+            <p className="mt-2 text-base font-semibold text-base-900">{labels.readOnly}</p>
+          )}
+        </ToolsFactCard>
+        <ToolsFactCard label={labels.linkState}>
+          <p className="mt-2 text-base font-semibold text-base-900">
+            {formatToolLinkState(item.link_state, labels)}
+          </p>
+        </ToolsFactCard>
+      </div>
+
+      <div className="space-y-3">
+        <ToolsDetailCard label={labels.currentStatus}>
+          <p className="mt-2 text-sm leading-7 text-base-900">{item.status_reason}</p>
+        </ToolsDetailCard>
+
+        <ToolsDetailCard label={labels.nextStep}>
+          <p className="mt-2 text-sm leading-7 text-base-900">
+            {summarizeToolAction(item.next_actions, labels.noAction)}
+          </p>
+        </ToolsDetailCard>
+
+        {item.id === "telegram" &&
+        item.user_control.requested_enabled &&
+        item.provider.ready &&
+        item.link_state !== "linked" ? (
+          <ToolsTelegramLinkPanel
+            title={labels.telegramLinking}
+            body={labels.telegramInstructionBody}
+            buttonLabel={
+              telegramLinkBusy
+                ? labels.generating
+                : telegramLinkStart
+                  ? labels.rotateCode
+                  : labels.generateCode
+            }
+            linkStart={telegramLinkStart}
+            linkCodeLabel={labels.linkCode}
+            expiresInAboutLabel={labels.expiresInAbout}
+            secondsLabel={labels.seconds}
+            instructionLabel={labels.instruction}
+            noLinkCodeLabel={labels.noLinkCode}
+            busy={telegramLinkBusy}
+            onStart={onStartTelegramLink}
+          />
+        ) : null}
+
+        <details className="aion-tools-details">
+          <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-base-900">
+            {labels.technicalDetails}
+          </summary>
+          <div className="grid gap-3 px-4 pb-4 sm:grid-cols-2">
+            <ToolsTechnicalDetailPanel
+              label={labels.capabilities}
+              values={item.capabilities}
+              emptyLabel={commonLabels.noData}
+            />
+            <ToolsTechnicalDetailPanel
+              label={commonLabels.sourceOfTruth}
+              values={item.source_of_truth}
+              emptyLabel={commonLabels.noData}
+              chipTone="muted"
+            />
+          </div>
+        </details>
+      </div>
+    </section>
   );
 }
 

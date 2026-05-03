@@ -11,8 +11,12 @@ the `v1.0.0` release marker has been created. Several broader launch-channel or
 evidence gaps remain explicit follow-ups.
 
 This review is superseded by PRJ-955 for the release marker decision.
+For current release truth after frontend closure, use PRJ-1115 and
+`docs/operations/release-evidence-index.md`: deployed `v1.0.0` remains green,
+while current local `HEAD` remains held by revision drift until production
+serves that SHA.
 
-## Revision Check
+## Historical PRJ-934 Revision Check
 
 | Check | Value | Result |
 | --- | --- | --- |
@@ -22,6 +26,9 @@ This review is superseded by PRJ-955 for the release marker decision.
 | Production trigger posture | `source_automation` / `primary_automation` | Policy surface is healthy |
 | Production final acceptance gate states | all inspected core states green | Core production posture is still green for deployed SHA |
 | Selected `v1.0.0` SHA after PRJ-955 | `5e64f494e2aac8d29cea532d95f7039ed6029213` | Release reality audit and release smoke passed |
+
+The first three rows are retained as the PRJ-934 historical snapshot. They are
+not the current production revision after PRJ-955 and PRJ-1115.
 
 Commands used:
 
@@ -35,10 +42,14 @@ Invoke-RestMethod -Uri "https://aviary.luckysparrow.ch/settings" -TimeoutSec 20
 
 | Scope | Decision | Reason |
 | --- | --- | --- |
-| Core no-UI v1 already deployed at `ed1c4d9...` | GO | Existing acceptance bundle and production health remain green for that deployed revision. |
-| Current local repository candidate `92f7bf3...` | NO-GO / HOLD | Production is not serving this SHA; release smoke with deploy parity would fail until deployment catches up or a release SHA is intentionally frozen. |
-| Public/web-led v1 launch marker | NO-GO / HOLD | PRJ-935 handoff and PRJ-936 marker are not complete; launch-channel and evidence gaps remain explicit. |
+| Historical core no-UI v1 deployed at `ed1c4d9...` during PRJ-934 | GO at that time | Existing acceptance bundle and production health were green for that deployed revision. |
+| Historical local repository candidate `92f7bf3...` during PRJ-934 | NO-GO / HOLD at that time | Production was not serving that SHA. |
+| Public/web-led v1 launch marker before PRJ-955 | NO-GO / HOLD at that time | PRJ-935 handoff and PRJ-936 marker were not complete yet. |
 | Release tag/marker | GO | `v1.0.0` was created after green production smoke and acceptance evidence. |
+
+Current PRJ-1115 evidence keeps the same release boundary discipline: local
+`HEAD` `5ff12953289bbca680fd5d9f8b3d8780a8f4be55` is not a release marker
+candidate until production backend and web revisions match it.
 
 ## P0 Review
 
@@ -74,7 +85,11 @@ Invoke-RestMethod -Uri "https://aviary.luckysparrow.ch/settings" -TimeoutSec 20
 These should stay deferred unless the release claim is expanded beyond the
 current core/web-supported v1 posture.
 
-## Required Actions Before PRJ-936
+## Historical Required Actions Before PRJ-936
+
+This list records the pre-PRJ-955 action plan. PRJ-955 resolved the `v1.0.0`
+marker for selected SHA `5e64f494e2aac8d29cea532d95f7039ed6029213`; future
+release candidates should use the release evidence index and v1 roadmap.
 
 1. Decide whether the release target is the deployed SHA
    `ed1c4d981314787d76252985b53c14ea1d7886ed` or the current local candidate
@@ -83,8 +98,8 @@ current core/web-supported v1 posture.
    `/health.deployment.runtime_build_revision` and web meta revision to match.
 3. Run production release smoke with deploy parity.
 4. Complete PRJ-935 release notes and operator handoff.
-5. Keep PRJ-936 blocked until the chosen release SHA has green production
-   evidence.
+5. At that time, keep PRJ-936 blocked until the chosen release SHA had green
+   production evidence.
 
 ## Final Decision
 

@@ -1,6 +1,6 @@
 # V1 Release Audit And Execution Plan
 
-Last updated: 2026-05-02
+Last updated: 2026-05-03
 
 Current release boundary:
 `docs/planning/current-v1-release-boundary.md`.
@@ -9,6 +9,12 @@ Current release boundary:
 
 This document turns the current repository state into a concrete path for
 making `v1` a release fact, not only a locally proven architecture baseline.
+
+Current status after PRJ-955 and PRJ-1115: `v1.0.0` is the released
+core no-UI/web-supported marker for selected SHA
+`5e64f494e2aac8d29cea532d95f7039ed6029213`. Current local `HEAD`
+`5ff12953289bbca680fd5d9f8b3d8780a8f4be55` is post-v1 local work and remains
+`HOLD_REVISION_DRIFT` until production backend and web revisions match it.
 
 The current approved core `v1` is the no-UI life-assistant bundle:
 
@@ -25,8 +31,15 @@ tracked, but they must not silently redefine the core `v1` blocker set.
 
 ## Current Evidence
 
-- Local `HEAD`: `5372d33a4fd132bc6280bb781642eb3ce55fbfdc`
-- `origin/main`: `5372d33a4fd132bc6280bb781642eb3ce55fbfdc`
+- Released marker: `v1.0.0`
+- Released selected SHA: `5e64f494e2aac8d29cea532d95f7039ed6029213`
+- Current local `HEAD`: `5ff12953289bbca680fd5d9f8b3d8780a8f4be55`
+- Production backend revision:
+  `5e64f494e2aac8d29cea532d95f7039ed6029213`
+- Production web meta revision:
+  `5e64f494e2aac8d29cea532d95f7039ed6029213`
+- PRJ-1115 local `HEAD` release audit: `HOLD_REVISION_DRIFT`
+- PRJ-1115 deployed marker go/no-go monitor: `GO`
 - Fresh behavior validation:
   - command:
     `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\run_behavior_validation.py --gate-mode operator --artifact-path ..\.codex\artifacts\prj902-v1-audit\behavior-validation-report.json; Pop-Location`
@@ -37,25 +50,27 @@ tracked, but they must not silently redefine the core `v1` blocker set.
   - `PRJ-901` recorded `1019 passed`
 - Recent web build:
   - `PRJ-901` recorded `npm run build` passed
-- Previous production smoke evidence exists, but it is not current for the
-  dirty working tree and later local UI/backend changes.
+- The behavior-validation evidence below is historical PRJ-902 evidence. For a
+  new selected candidate, rerun the relevant validation bundle and production
+  release smoke after deploy parity.
 
 ## Audit Findings
 
 ### A. Release-State Findings
 
-1. **Current local tree is not release-clean.**
+1. **Current local `HEAD` is not production release evidence.**
    - `git status --short` shows modified tracked files and many untracked task
      records.
-   - Impact: `v1` cannot be declared as a current production fact from this
-     tree until the intended release scope is selected, validated, committed,
-     pushed, and smoke-tested.
+   - Impact: post-v1 local work cannot inherit the `v1.0.0` production claim
+     until the intended release scope is selected, validated, pushed, deployed,
+     and smoke-tested.
    - Severity: P0 release blocker.
 
-2. **Production parity evidence is stale for the current local product state.**
-   - Earlier production smoke proved earlier commits, but the canonical web and
-     product-usability work after that is local/unpublished.
-   - Impact: live production may be behind the current intended product shell.
+2. **Production parity evidence is current for `v1.0.0`, not local `HEAD`.**
+   - PRJ-1115 confirmed production backend and web revisions both match
+     `5e64f494e2aac8d29cea532d95f7039ed6029213`.
+   - Impact: live production is coherent for `v1.0.0`; it is intentionally not
+     evidence for later local hardening work.
    - Severity: P0 release blocker.
 
 3. **The final v1 target explicitly requires live production green gates.**
@@ -196,6 +211,11 @@ tracked, but they must not silently redefine the core `v1` blocker set.
 | Multimodal Telegram | Open decision | Post-v1 feature plan | P2 |
 
 ## Execution Plan
+
+The phase history below is retained for auditability. For the current post-v1
+candidate path, use `docs/planning/current-v1-release-boundary.md`,
+`docs/operations/release-evidence-index.md`, and the P0 section in
+`docs/planning/v1-reality-audit-and-roadmap.md`.
 
 ### Phase 0 - Freeze The Current Release Boundary
 
@@ -495,42 +515,41 @@ Tasks:
 
 - `PRJ-934` V1 Final Go/No-Go Review
   - Status: DONE
-  - Output: `docs/planning/v1-final-go-no-go-review.md` records the final
-    decision as `NO-GO / HOLD` for the release marker.
-  - Production currently serves
-    `ed1c4d981314787d76252985b53c14ea1d7886ed`, while local `HEAD` is
-    `92f7bf3af16502a1a3f661aa16bf6a9ead92e0cd`.
-  - Core deployed production gates remain green for the deployed SHA, but the
-    current local candidate is not yet deployed and must not be tagged as
-    released.
+  - Output: `docs/planning/v1-final-go-no-go-review.md` now preserves the
+    PRJ-934 NO-GO/HOLD snapshot as historical and points current release truth
+    to PRJ-955 and PRJ-1115.
 
 - `PRJ-935` V1 Release Notes And Operator Handoff
   - Status: DONE
   - Output: `docs/planning/v1-release-notes-and-operator-handoff.md` records
-    capabilities, known limits, release smoke, incident evidence, rollback, and
-    support triage under the current `NO-GO / HOLD` marker posture.
+    capabilities, known limits, release smoke, incident evidence, rollback,
+    support triage, and the current `v1.0.0` released-marker posture.
 
 - `PRJ-936` V1 Tag And Release Marker
-  - Status: BLOCKED
-  - Output: `docs/planning/v1-release-marker-blocker.md` records that no
-    release marker was created because PRJ-934 is `NO-GO / HOLD`.
-  - Create a release tag only after the selected release SHA has green
-    production smoke and acceptance evidence.
+  - Status: RESOLVED by PRJ-955 for `v1.0.0`
+  - Output: `docs/planning/v1-release-marker-blocker.md` records that the
+    marker blocker was resolved for selected SHA
+    `5e64f494e2aac8d29cea532d95f7039ed6029213`.
+  - Future markers still require selected-SHA deploy parity, production smoke,
+    and acceptance evidence before creation.
+
+- `PRJ-955` Create release marker only after green production evidence
+  - Status: DONE
+  - Output: `v1.0.0` created for selected SHA
+    `5e64f494e2aac8d29cea532d95f7039ed6029213`.
 
 ## Priority Queue
 
-### P0 Blockers
+### P0 Current Blockers For A Future Local-HEAD Release Claim
 
-1. `PRJ-903` Freeze Current V1 Release Boundary
-2. `PRJ-904` V1 Commit Scope Audit
-3. `PRJ-905` V1 Candidate Validation Gate
-4. `PRJ-906` Publish V1 Candidate
-5. `PRJ-907` Production Release Smoke With Deploy Parity
-6. `PRJ-908` Production Incident Evidence Bundle
-7. `PRJ-910` Core V1 Acceptance Bundle
-8. `PRJ-923` Final V1 Acceptance Refresh
-9. `PRJ-911` V1 Rollback And Recovery Drill
-10. `PRJ-912` V1 Data Privacy And Debug Posture Check
+1. `PRJ-952` Recover Coolify source automation or run approved fallback -
+   BLOCKED_EXTERNAL.
+2. `PRJ-953` Rerun production release smoke for selected SHA -
+   READY_AFTER_PRJ-952.
+3. `PRJ-954` Refresh v1 acceptance bundle for current selected SHA -
+   READY_AFTER_PRJ-953.
+4. `PRJ-955` Create or move release marker only after green production
+   evidence - READY_AFTER_PRJ-954 for any future marker.
 
 ### P1 Product And Operations
 
@@ -550,11 +569,11 @@ Tasks:
     follow-up test gaps
 12. `PRJ-933` Provider Payload Leakage Audit - DONE locally with follow-up
     provider/red-team evidence gaps
-13. `PRJ-934` V1 Final Go/No-Go Review - DONE with `NO-GO / HOLD`
-    release-marker decision
-14. `PRJ-935` V1 Release Notes And Operator Handoff - DONE with HOLD posture
-15. `PRJ-936` V1 Tag And Release Marker - BLOCKED by `NO-GO / HOLD`
-    release-marker posture
+13. `PRJ-934` V1 Final Go/No-Go Review - DONE; historical NO-GO snapshot is
+    retained, current marker truth is PRJ-955/PRJ-1115
+14. `PRJ-935` V1 Release Notes And Operator Handoff - DONE for current
+    released-marker posture
+15. `PRJ-936` V1 Tag And Release Marker - RESOLVED by PRJ-955 for `v1.0.0`
 
 ### P2 Extensions
 

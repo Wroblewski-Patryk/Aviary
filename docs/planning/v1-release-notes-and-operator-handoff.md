@@ -9,6 +9,15 @@ Posture: `v1.0.0` released for core no-UI/web-supported v1
 Release marker `v1.0.0` has been created for the selected production SHA after
 release reality audit and release smoke passed.
 
+Current release truth after PRJ-1115:
+
+- `v1.0.0` remains the released core marker for selected SHA
+  `5e64f494e2aac8d29cea532d95f7039ed6029213`
+- current local `HEAD` `5ff12953289bbca680fd5d9f8b3d8780a8f4be55` is not
+  deployed and remains `HOLD_REVISION_DRIFT`
+- future local work needs a new selected SHA, deploy parity, and release smoke
+  before any new release claim
+
 | Revision | SHA |
 | --- | --- |
 | Current local `HEAD` at PRJ-934 review | `92f7bf3af16502a1a3f661aa16bf6a9ead92e0cd` |
@@ -55,7 +64,7 @@ release reality audit and release smoke passed.
 - PRJ-955 created the `v1.0.0` release marker after the selected release SHA had
   green production evidence.
 
-## Required Before Release Marker
+## Required Before A Future Release Marker
 
 1. Choose the target release SHA.
 2. If the target is the current local candidate, deploy it.
@@ -67,7 +76,8 @@ release reality audit and release smoke passed.
 6. Export or reference the current incident evidence bundle when relevant.
 7. Decide whether blocked launch-channel evidence is accepted as blocked,
    waived, or required before the public claim.
-8. Create PRJ-936 release marker only after the selected SHA has green evidence.
+8. Create or move a release marker only after the selected SHA has green
+   evidence.
 
 ## Production Smoke
 
@@ -162,11 +172,13 @@ Rollback path:
 
 ## Handoff Decision
 
-Operators can use this handoff to continue release closure, but the current
-state is not tag-ready.
+Operators can use this handoff for the released `v1.0.0` core marker and for
+future post-v1 release candidates.
 
 Next valid paths:
 
-1. deploy and smoke the chosen release SHA, then run PRJ-936
-2. keep the release marker on hold and resolve or waive the remaining evidence
-   gaps explicitly
+1. keep `v1.0.0` as the current released core marker
+2. for a future candidate, deploy and smoke the selected SHA before creating or
+   moving any marker
+3. resolve external launch-channel gaps (`PRJ-909`, `PRJ-918`) before expanding
+   the public claim beyond the current core/web-supported posture

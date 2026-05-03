@@ -1,5 +1,23 @@
 import type { ReactNode } from "react";
 
+export function PublicNavLinkList({
+  items,
+  href = "#aviary-home",
+}: {
+  items: string[];
+  href?: string;
+}) {
+  return (
+    <nav className="aion-public-nav-links" aria-label="Public navigation">
+      {items.map((item) => (
+        <a key={item} className="aion-public-nav-link" href={href}>
+          {item}
+        </a>
+      ))}
+    </nav>
+  );
+}
+
 export function MotifFigurePanel({
   highlights,
   artSrc,
@@ -34,6 +52,77 @@ export function MotifFigurePanel({
         </article>
       ))}
     </div>
+  );
+}
+
+export function PublicTrustPillList({
+  items,
+  className,
+  itemClassName,
+  iconClassName,
+}: {
+  items: Array<{ label: string; icon: string }>;
+  className: string;
+  itemClassName: string;
+  iconClassName: string;
+}) {
+  return (
+    <div className={className}>
+      {items.map((item) => (
+        <span key={item.label} className={itemClassName}>
+          <span className={iconClassName} aria-hidden="true">
+            <PublicGlyph kind={item.icon} />
+          </span>
+          {item.label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+export function PublicFeatureCardList({
+  items,
+}: {
+  items: Array<{
+    icon: string;
+    title: string;
+    body: string;
+  }>;
+}) {
+  return (
+    <div className="aion-public-feature-strip">
+      {items.map((pillar) => (
+        <article key={pillar.title} className="aion-public-feature-card">
+          <span className="aion-public-feature-icon" aria-hidden="true">
+            <PublicGlyph kind={pillar.icon} />
+          </span>
+          <p className="aion-public-feature-title">{pillar.title}</p>
+          <p className="aion-public-feature-body">{pillar.body}</p>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+export function PublicTrustBand({
+  items,
+}: {
+  items: Array<{
+    icon: string;
+    label: string;
+  }>;
+}) {
+  return (
+    <footer className="aion-public-trust-band">
+      {items.map((item) => (
+        <article key={item.label} className="aion-public-trust-item">
+          <span className="aion-public-trust-icon" aria-hidden="true">
+            <PublicGlyph kind={item.icon} />
+          </span>
+          <p>{item.label}</p>
+        </article>
+      ))}
+    </footer>
   );
 }
 

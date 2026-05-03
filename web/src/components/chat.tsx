@@ -1,4 +1,5 @@
 import { forwardRef, type FormEvent, type ReactNode } from "react";
+import type { AppChatHistoryEntry } from "../lib/api";
 import type { ChatDeliveryState } from "../lib/chat-transcript";
 
 export type ChatCognitiveBeltItem = {
@@ -140,6 +141,55 @@ export const ChatTranscriptShell = forwardRef<
     </div>
   );
 });
+
+export function ChatTranscriptMessageList({
+  messages,
+  preview,
+  userSpeakerLabel,
+  assistantSpeakerLabel,
+  getDeliveryState,
+  getDeliveryLabel,
+  getTimestampLabel,
+  renderMessage,
+  registerMessageRef,
+}: {
+  messages: AppChatHistoryEntry[];
+  preview: boolean;
+  userSpeakerLabel: string;
+  assistantSpeakerLabel: string;
+  getDeliveryState: (message: AppChatHistoryEntry) => ChatDeliveryState | null;
+  getDeliveryLabel: (deliveryState: ChatDeliveryState | null) => string | null;
+  getTimestampLabel: (message: AppChatHistoryEntry) => string;
+  renderMessage: (message: AppChatHistoryEntry) => ReactNode;
+  registerMessageRef: (messageId: string, node: HTMLDivElement | null) => void;
+}) {
+  return (
+    <>
+      {messages.map((message) => {
+        const isUser = message.role === "user";
+        const deliveryState = getDeliveryState(message);
+        const deliveryLabel = getDeliveryLabel(deliveryState);
+
+        return (
+          <ChatTranscriptMessageRow
+            key={message.message_id}
+            ref={(node) => {
+              registerMessageRef(message.message_id, node);
+            }}
+            isUser={isUser}
+            preview={preview}
+            speakerLabel={isUser ? userSpeakerLabel : assistantSpeakerLabel}
+            timestampLabel={getTimestampLabel(message)}
+            deliveryState={deliveryState}
+            deliveryLabel={deliveryLabel}
+          >
+            {renderMessage(message)}
+          </ChatTranscriptMessageRow>
+        );
+      })}
+    </>
+  );
+}
 
 export function ChatCognitiveBelt({
   items,
