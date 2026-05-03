@@ -95,6 +95,31 @@ Last updated: 2026-05-03
     inputs unblock `PRJ-962` Telegram smoke or `PRJ-963` organizer provider
     smoke first
 
+## Fresh Provider Request Response Examples (2026-05-03)
+
+- `PRJ-964` is DONE:
+  - `.codex/tasks/PRJ-964-provider-request-response-examples.md`
+- result:
+  - added sanitized provider request/response examples:
+    - `docs/integrations/provider-request-response-examples.md`
+  - examples cover current provider-backed paths:
+    - ClickUp task create/list/update
+    - Google Calendar availability read
+    - Google Drive metadata list
+    - DuckDuckGo knowledge search
+    - generic HTTP page read
+  - examples include ready, action-output, failure, and provider-not-ready
+    shapes without secrets or private provider payload bodies
+  - linked the examples from `docs/integrations/index.md`
+- validation:
+  - provider client/action code inspection:
+    - `backend/app/core/action.py`
+    - `backend/app/integrations/**`
+  - markdown/reference check
+  - placeholder scan for secret-bearing examples
+- next smallest useful task:
+  - `PRJ-965` OpenAPI-to-web type sync plan or generator
+
 ## Fresh Revision-Aware Production Health Monitor (2026-05-03)
 
 - `PRJ-957` is DONE:
@@ -226,7 +251,9 @@ Last updated: 2026-05-03
   - `PRJ-962` Execute production Telegram live-mode smoke: BLOCKED_EXTERNAL
   - `PRJ-963` Execute organizer provider activation smoke: BLOCKED_EXTERNAL
 - P2:
-  - `PRJ-964` Add provider request/response examples: READY
+  - `PRJ-964` Add provider request/response examples: DONE
+    - task: `.codex/tasks/PRJ-964-provider-request-response-examples.md`
+    - completed in this iteration with sanitized ready/failure examples
   - `PRJ-965` Add OpenAPI-to-web type sync plan or generator: READY
   - `PRJ-966` Add stable frontend route e2e smoke: READY
   - `PRJ-967` Split `web/src/App.tsx` after e2e coverage:

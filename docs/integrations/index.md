@@ -38,6 +38,15 @@ Grounded in:
 | OpenAI | `backend/app/integrations/openai/client.py`, `backend/app/integrations/openai/prompting.py` | OpenAI provider settings when enabled | model calls, prompting support, embeddings/classification where configured | OpenAI client/config and embedding strategy policies | `backend/tests/test_openai_client.py`, `backend/tests/test_openai_prompting.py`, `backend/tests/test_embedding_strategy.py` | This is not part of connector authorization matrix; provider behavior depends on configured model/feature flags. |
 | Delivery router | `backend/app/integrations/delivery_router.py` | provider settings for selected channel | app/Telegram delivery routing | runtime/action delivery path | `backend/tests/test_delivery_router.py`, `backend/tests/test_runtime_pipeline.py` | Delivery success depends on channel readiness and user link/profile state. |
 
+## Sanitized Examples
+
+Provider request/response examples now live in:
+
+- [Provider Request/Response Examples](provider-request-response-examples.md)
+
+The examples cover current provider-backed paths and known failure shapes
+without exposing secrets, raw provider payload bodies, or private user data.
+
 ## Connector Authorization Matrix
 
 These operations are defined by `_OPERATION_POLICIES` in
@@ -116,7 +125,6 @@ Frontend:
 ## Known Gaps
 
 - Live provider smoke is blocked when credentials are not configured.
-- Provider-specific request/response examples are not checked in.
 - Calendar and Drive mutation operations are policy-defined but not
   provider-backed live paths in this pass.
 - No generated provider capability matrix exists beyond this manually curated
