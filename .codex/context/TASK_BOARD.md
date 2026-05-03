@@ -2,6 +2,30 @@
 
 Last updated: 2026-05-03
 
+## Fresh V1 Deploy Parity Blocker (2026-05-03)
+
+- `PRJ-938` is BLOCKED:
+  - `.codex/tasks/PRJ-938-v1-deploy-parity-blocked-by-source-automation.md`
+- result:
+  - `origin/main` was pushed to
+    `4d9d3a40fc07b83a6441c974bc31f78879353db7`
+  - production release smoke waited 900 seconds for deploy parity
+  - production remained on
+    `ed1c4d981314787d76252985b53c14ea1d7886ed`
+  - no v1 release marker or tag was created
+- validation:
+  - `git push origin main`
+  - `.\backend\scripts\run_release_smoke.ps1 -BaseUrl "https://aviary.luckysparrow.ch" -WaitForDeployParity -DeployParityMaxWaitSeconds 900 -DeployParityPollSeconds 30 -HealthRetryMaxAttempts 10 -HealthRetryDelaySeconds 10`
+  - result: failed because `runtime_build_revision` stayed on
+    `ed1c4d981314787d76252985b53c14ea1d7886ed`
+  - `GET https://aviary.luckysparrow.ch/health`
+  - `GET https://aviary.luckysparrow.ch/settings`
+- next smallest useful task:
+  - verify Coolify deployment history/source connection for app
+    `jr1oehwlzl8tcn3h8gh2vvih`, then run the approved webhook fallback with
+    operator-provided URL/secret or Coolify UI redeploy as exception-only
+    fallback, and rerun release smoke
+
 ## Fresh Aviary Repository Truth Repair For V1 Deploy (2026-05-03)
 
 - `PRJ-937` is DONE:
