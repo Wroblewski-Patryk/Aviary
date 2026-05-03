@@ -4,7 +4,8 @@ Last updated: 2026-05-03
 
 This map documents the current browser shell without requiring a broad
 component refactor. It is grounded in `web/src/App.tsx`,
-`web/src/routes.ts`, `web/src/lib/api.ts`, and `web/src/index.css`.
+`web/src/routes.ts`, `web/src/components/shared.tsx`, `web/src/lib/api.ts`,
+and `web/src/index.css`.
 
 ## Headless Route Smoke
 
@@ -30,6 +31,7 @@ a route-mount guard, not a screenshot parity suite.
 | Route list and route normalization | `web/src/routes.ts` | `RoutePath`, `ROUTES`, `normalizeRoute`, `navigate`, `navigatePublicEntry` |
 | Public/auth shell | `web/src/App.tsx` | Public home, login/register modal, session bootstrap, logout/reset redirects |
 | Authenticated product shell | `web/src/App.tsx` | Sidebar, mobile tab bar, utility bar, route rendering, route copy |
+| Shared presentational panels | `web/src/components/shared.tsx` | `StatePanel`, `FeedbackBanner` |
 | API client | `web/src/lib/api.ts` | Typed fetch wrapper and app-facing endpoint methods |
 | Styling | `web/src/index.css` | Route layouts, product shell visuals, responsive behavior, state styling |
 
@@ -93,7 +95,7 @@ claim component-level separation beyond the extracted route contract.
 | Routing and labels | `normalizeRoute`, `navigate`, `routeLabel`, `routeDescription` | all routes |
 | Public shell | public home render branch, `AviaryWordmark`, `PublicGlyph` | `/`, `/login` |
 | Shell chrome | `SidebarGlyph`, `ShellNavButton`, `SidebarBrandBlock`, `ShellUtilityBar` | authenticated routes |
-| Shared panels | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel` | dashboard and module routes |
+| Shared panels | `StatePanel`, `FeedbackBanner` in `web/src/components/shared.tsx`; `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel` still in `web/src/App.tsx` | dashboard and module routes |
 | Chat helpers | `renderChatMarkdown`, `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems`, `ChatFlowStage` | `/chat` |
 | Tool helpers | `toolStatusClass`, `formatToolState`, `formatToolLinkState`, `summarizeToolAction` | `/tools`, `/integrations` |
 | Profile/settings helpers | `normalizeUiLanguage`, `resolveUiLanguage`, `normalizeUtcOffset`, `utcOffsetOption` | `/settings`, bootstrap |
@@ -103,7 +105,8 @@ claim component-level separation beyond the extracted route contract.
 
 - `web/src/App.tsx` remains the route-rendering/component/state owner for most
   of the browser shell, while route type/list/history helpers now live in
-  `web/src/routes.ts`.
+  `web/src/routes.ts` and the first shared panels now live in
+  `web/src/components/shared.tsx`.
 - Static/fallback copy still exists for several module routes when backend
   overview fields are absent.
 - The current dedicated frontend route smoke covers the public shell and core

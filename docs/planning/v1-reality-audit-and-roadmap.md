@@ -81,7 +81,8 @@ current blocker is release reality:
 | PRJ-965 | Add OpenAPI-to-web type sync plan or generator | DONE | web API client route/method drift can be checked against generated OpenAPI |
 | PRJ-966 | Add stable frontend route e2e smoke | DONE | public, auth, dashboard, chat, personality, and tools routes have repeatable headless smoke coverage |
 | PRJ-967 | Split route ownership out of `web/src/App.tsx` | DONE | route type/list/normalization/history helpers live in `web/src/routes.ts`; build and route smoke pass |
-| PRJ-971 | Extract first route-rendering component from `web/src/App.tsx` | READY_AFTER_PRJ-967 | one low-risk route view or shared shell cluster moves behind route smoke without visual behavior change |
+| PRJ-971 | Extract first shared panel components from `web/src/App.tsx` | DONE | `StatePanel` and `FeedbackBanner` live in `web/src/components/shared.tsx`; build and route smoke pass |
+| PRJ-972 | Extract next shared shell component cluster from `web/src/App.tsx` | READY_AFTER_PRJ-971 | one additional pure shell cluster moves behind route smoke without visual behavior change |
 | PRJ-968 | Add release evidence index | DONE | `docs/operations/release-evidence-index.md` shows current candidate lineage, production SHA, release tag target, blockers, and next action |
 | PRJ-969 | Add Coolify fallback secret/runbook readiness check | DONE | `check_coolify_fallback_readiness.py` reports whether approved webhook fallback inputs are present without triggering deploy |
 | PRJ-970 | Add release go/no-go command wrapper | DONE | `run_release_go_no_go.py` composes release reality audit with release-smoke posture and prints GO/HOLD |

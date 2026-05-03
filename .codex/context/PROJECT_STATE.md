@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-971` completed first shared panel component extraction:
+  - task:
+    - `.codex/tasks/PRJ-971-shared-panel-component-extraction.md`
+  - result:
+    - added `web/src/components/shared.tsx`
+    - moved `StatePanel` and `FeedbackBanner` out of `web/src/App.tsx`
+    - preserved existing markup, classes, route behavior, API usage, and state
+      ownership
+    - updated the frontend route/component map and v1 roadmap with the new
+      shared panel owner
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=6`
+  - next execution priority:
+    - `PRJ-972` extract another pure shared shell component cluster from
+      `web/src/App.tsx` behind the route smoke gate
+
 - 2026-05-03: `PRJ-970` completed the release go/no-go wrapper:
   - task:
     - `.codex/tasks/PRJ-970-release-go-no-go-wrapper.md`

@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+## Fresh Shared Panel Component Extraction (2026-05-03)
+
+- `PRJ-971` is DONE:
+  - `.codex/tasks/PRJ-971-shared-panel-component-extraction.md`
+- result:
+  - added `web/src/components/shared.tsx`
+  - moved `StatePanel` and `FeedbackBanner` out of `web/src/App.tsx`
+  - preserved existing markup, classes, route behavior, API usage, and state
+    ownership
+  - updated the frontend route/component map and v1 roadmap with the new
+    shared panel owner
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=6`
+- next smallest useful task:
+  - `PRJ-972` extract another pure shared shell component cluster from
+    `web/src/App.tsx` behind the same route smoke gate
+
 ## Fresh Release Go/No-Go Wrapper (2026-05-03)
 
 - `PRJ-970` is DONE:
@@ -408,7 +428,11 @@ Last updated: 2026-05-03
   - `PRJ-970` Add release go/no-go command wrapper: DONE
     - completed in this iteration with a structured GO/HOLD wrapper
   - `PRJ-971` Extract first route-rendering component from `web/src/App.tsx`:
-    READY_AFTER_PRJ-967
+    DONE
+    - completed in this iteration by moving `StatePanel` and `FeedbackBanner`
+      to `web/src/components/shared.tsx`
+  - `PRJ-972` Extract next shared shell component cluster from `web/src/App.tsx`:
+    READY_AFTER_PRJ-971
 
 ## Fresh V1 Deploy Parity Blocker (2026-05-03)
 
