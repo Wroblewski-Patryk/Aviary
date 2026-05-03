@@ -133,3 +133,12 @@ presentation and progress-bar element. `App()` still owns `chatCognitiveBelt`
 data construction, planning/health summary derivation, and `chatGoalCard`
 progress calculation. The next safe chat step is another audit before touching
 topbar, portrait/support panel, or transcript shell ownership.
+
+`PRJ-1010` selected chat topbar extraction as the next implementation slice:
+
+- move `aion-chat-topbar`, headline/title/live-status chrome, and route-posture
+  labels behind a `ChatTopbar` component
+- keep `chatActiveSummary`, linked-channel summary, preferred-language
+  formatting, and all route data derivation in `App()`
+- defer portrait/support panel because it is visual-composition sensitive
+- defer transcript shell/container because it owns loading state and refs

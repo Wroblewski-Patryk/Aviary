@@ -2,6 +2,22 @@
 
 Last updated: 2026-05-03
 
+## Fresh Chat Extraction Target Audit (2026-05-03)
+
+- `PRJ-1010` is DONE:
+  - `.codex/tasks/PRJ-1010-next-chat-extraction-target-audit.md`
+- result:
+  - selected chat topbar extraction as the next safe chat route slice
+  - kept `chatActiveSummary`, linked-channel summary, preferred-language
+    formatting, and route data derivation in `App()`
+  - deferred portrait/support panel because it is visual-composition sensitive
+  - deferred transcript shell/container because it owns loading state and refs
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1011` extract chat topbar presentation from `web/src/App.tsx`
+
 ## Fresh Chat Cognitive Belt Extraction (2026-05-03)
 
 - `PRJ-1009` is DONE:
