@@ -17,7 +17,7 @@ timeline row, and tools component extractions.
 | `/plans` | 4626 | Module-style overview route using shared cards and `ModuleOverviewBar` | Inner module panels remain future candidates |
 | `/goals` | 4716 | Module-style overview route using shared cards and `ModuleOverviewBar` | Inner module panels remain future candidates |
 | `/insights` | 4812 | Module-style overview route using shared note/stat/side-panel patterns | Side-panel/row chrome extracted in PRJ-995; broader route module extraction can wait |
-| `/automations` | 4911 | Module-style route mixed with health-derived scheduler posture and shared side-panel patterns | Health helper ownership remains a later provider-aware candidate |
+| `/automations` | 4911 | Module-style route mixed with health-derived scheduler posture and shared side-panel patterns | Align simple overview/stat presentation with existing shared module components before health helper movement |
 | `/integrations` | 5009 | Tools/health provider readiness branch; already benefits from tool helper extraction | Align simple overview/stat/readiness row presentation with existing shared module components before provider helper movement |
 | `/settings` | 5112 | Form-heavy branch; preference card/fact and side panel shells live in `web/src/components/settings.tsx`; settings formatting helpers live in `web/src/lib/settings-formatting.ts` | No immediate extraction needed in this cluster |
 | `/tools` | 5289 | Tools presentation cluster extracted to `web/src/components/tools.tsx`; route state remains in `App()` | No immediate extraction needed in this cluster |
@@ -304,3 +304,10 @@ and the decorative provider-map panel.
 route shell while preserving `aion-integrations-*` selectors and keeping
 `integrationItems`, `integrationStatCards`, `integrationReadinessRows`,
 provider rows, and provider readiness semantics in `App()`.
+
+`PRJ-1030` selected `/automations` shared-shell alignment as the next
+implementation slice. The route still owns health-derived scheduler and
+attention data in `App()`, but its overview bar and stat row match existing
+`ModuleOverviewBar` and `ModuleStatRow` usage. `conversationChannelStatus`,
+integrations provider rows, memory signal cards, and decorative panels remain
+deferred.

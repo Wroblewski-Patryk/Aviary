@@ -2,6 +2,21 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-1030` completed automations shared-shell audit:
+  - task:
+    - `.codex/tasks/PRJ-1030-next-route-helper-cleanup-after-integrations-audit.md`
+  - result:
+    - selected `/automations` shared-shell alignment as the next frontend v1
+      architecture slice
+    - target components: `ModuleOverviewBar` and `ModuleStatRow`
+    - deferred `conversationChannelStatus`, provider/health helper movement,
+      integrations provider rows, memory signal cards, and decorative panels
+  - validation:
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-1031` align automations route with shared module shell components
+
 - 2026-05-03: `PRJ-1029` completed integrations shared-shell alignment:
   - task:
     - `.codex/tasks/PRJ-1029-integrations-shared-shell-alignment.md`
