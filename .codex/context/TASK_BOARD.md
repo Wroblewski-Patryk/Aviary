@@ -2,6 +2,22 @@
 
 Last updated: 2026-05-03
 
+## Fresh Dead Channel Helper Audit (2026-05-03)
+
+- `PRJ-1032` is DONE:
+  - `.codex/tasks/PRJ-1032-next-frontend-architecture-after-automations-audit.md`
+- result:
+  - found `conversationChannelStatus` is declared but no longer called in
+    `web/src/App.tsx`
+  - selected dead-code removal instead of helper extraction
+  - deferred live provider/health helper movement, integrations provider rows,
+    memory signal cards, and decorative panels
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1033` remove unused conversation channel status helper
+
 ## Fresh Automations Shared Shell Alignment (2026-05-03)
 
 - `PRJ-1031` is DONE:

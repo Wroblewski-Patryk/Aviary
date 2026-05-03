@@ -317,3 +317,10 @@ deferred.
 `aion-automations-*` selectors and keeping `automationStatCards`,
 `automationFlowRows`, scheduler summary, attention metrics, and proactive state
 in `App()`.
+
+`PRJ-1032` checked the next health/channel helper candidate and found
+`conversationChannelStatus` is no longer called in `App.tsx`; the only matches
+are the type and function declarations. The next implementation slice is
+therefore dead-code removal, not helper extraction. Live provider/health helper
+movement, integrations provider rows, memory signal cards, and decorative panels
+remain deferred for separate audits.

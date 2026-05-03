@@ -2,6 +2,21 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-1032` completed dead channel helper audit:
+  - task:
+    - `.codex/tasks/PRJ-1032-next-frontend-architecture-after-automations-audit.md`
+  - result:
+    - found `conversationChannelStatus` is declared but no longer called in
+      `web/src/App.tsx`
+    - selected dead-code removal instead of helper extraction
+    - deferred live provider/health helper movement, integrations provider
+      rows, memory signal cards, and decorative panels
+  - validation:
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-1033` remove unused conversation channel status helper
+
 - 2026-05-03: `PRJ-1031` completed automations shared-shell alignment:
   - task:
     - `.codex/tasks/PRJ-1031-automations-shared-shell-alignment.md`
