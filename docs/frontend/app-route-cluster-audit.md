@@ -30,7 +30,8 @@ timeline row, and tools component extractions.
 | Markdown rendering | `renderInlineMarkdown`, `renderMarkdownLines`, `renderChatMarkdown` in `App.tsx` | `/chat` | Behavior-sensitive; needs focused tests before moving |
 | Chat transcript metadata | `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems` in `App.tsx` | `/chat` | Candidate for `web/src/lib/chat-formatting.ts` after transcript component extraction |
 | Learned-state summaries | `recentActivityRows`, `summaryLines`, `stringValue`, `formatTimestamp` in `web/src/lib/learned-state-formatting.ts` | dashboard and module routes | Extracted in PRJ-997 |
-| Health/channel summaries | `conversationChannelStatus` in `App.tsx` | dashboard, automations, integrations | Defer until provider/integration route ownership is clearer |
+| Health/channel summaries | `conversationChannelStatus` in `App.tsx` | dashboard, automations, integrations | Deferred in PRJ-998 until provider/integration route ownership is clearer |
+| Metric formatting | `numberValue`, `scaledMetricSize` in `App.tsx` | dashboard, automations, integrations, tools summary projections | Selected for PRJ-999 because these helpers are pure and lower-risk than provider telemetry |
 | Settings formatting | `normalizeUiLanguage`, `resolveUiLanguage`, `normalizeUtcOffset`, `utcOffsetOption`, `localeOptionDisplay` in `web/src/lib/settings-formatting.ts` | `/settings`, bootstrap | Extracted in PRJ-993 |
 
 ## Next Slice
@@ -55,3 +56,11 @@ cleanup. `PRJ-997` extracted learned-state summary helpers:
 - keep route-specific derived arrays and UI copy in `App()`
 - keep health/channel telemetry helpers in `App()` until integrations/provider
   route ownership is clearer
+
+`PRJ-998` deferred `conversationChannelStatus` because it encodes Telegram
+provider and health semantics. The next implementation slice is `PRJ-999`,
+which should extract pure metric formatting helpers:
+
+- move `numberValue` and `scaledMetricSize` to a small metric formatting module
+- keep `conversationChannelStatus` in `App()`
+- run `npm run build` and the 14-route smoke

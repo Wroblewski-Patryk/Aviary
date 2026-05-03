@@ -2,6 +2,20 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-998` completed health/channel helper audit:
+  - task:
+    - `.codex/tasks/PRJ-998-health-channel-helper-extraction-audit.md`
+  - result:
+    - deferred `conversationChannelStatus` until provider/integration route
+      ownership is clearer
+    - selected pure metric helper extraction as the next lower-risk slice
+    - updated the frontend route cluster audit and v1 roadmap
+  - validation:
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-999` extract metric formatting helpers from `web/src/App.tsx`
+
 - 2026-05-03: `PRJ-997` completed learned-state helper extraction:
   - task:
     - `.codex/tasks/PRJ-997-learned-state-helper-extraction.md`
