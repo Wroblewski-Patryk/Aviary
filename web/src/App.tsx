@@ -4853,20 +4853,17 @@ export default function App() {
 
           {route === "/automations" ? (
             <div className="aion-automations-canvas grid gap-4">
-              <section className="aion-automations-overview-bar">
-                <span className="aion-chat-headline-emblem" aria-hidden="true" />
-                <div className="aion-automations-overview-copy">
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.automations.eyebrow}</p>
-                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.automations.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.automations.subtitle}</p>
-                </div>
-                <div className="aion-automations-overview-status" aria-label="Automation status">
-                  <span>{copy.automations.proactive}</span>
-                  <strong>{proactiveEnabled ? copy.common.on : copy.common.off}</strong>
-                </div>
-              </section>
+              <ModuleOverviewBar
+                routeKey="automations"
+                eyebrow={copy.automations.eyebrow}
+                title={copy.automations.title}
+                subtitle={copy.automations.subtitle}
+                statusLabel={copy.automations.proactive}
+                statusValue={proactiveEnabled ? copy.common.on : copy.common.off}
+                statusAriaLabel="Automation status"
+              />
 
-              <section className="aion-automations-stat-row" aria-label="Automation summary">
+              <ModuleStatRow routeKey="automations" ariaLabel="Automation summary">
                 {automationStatCards.map((item) => (
                   <RouteStatCard
                     key={item.label}
@@ -4876,7 +4873,7 @@ export default function App() {
                     detail={item.detail}
                   />
                 ))}
-              </section>
+              </ModuleStatRow>
 
               <div className="aion-automations-layout">
                 <section className="aion-automations-flow-panel">

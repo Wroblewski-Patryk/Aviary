@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-1031` completed automations shared-shell alignment:
+  - task:
+    - `.codex/tasks/PRJ-1031-automations-shared-shell-alignment.md`
+  - result:
+    - reused `ModuleOverviewBar` and `ModuleStatRow` in `/automations`
+    - preserved `aion-automations-*` selectors through shared route keys
+    - kept health-derived scheduler, attention, and proactive data in `App()`
+    - left side panels and health/channel helper ownership untouched
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=14`
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-1032` audit next frontend architecture slice after automations
+      shell alignment
+
 - 2026-05-03: `PRJ-1030` completed automations shared-shell audit:
   - task:
     - `.codex/tasks/PRJ-1030-next-route-helper-cleanup-after-integrations-audit.md`

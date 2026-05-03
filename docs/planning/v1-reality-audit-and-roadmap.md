@@ -141,7 +141,8 @@ current blocker is release reality:
 | PRJ-1028 | Audit next frontend v1 architecture slice after dot-row extraction | DONE | selected `/integrations` shared-shell alignment while deferring provider/health helper movement |
 | PRJ-1029 | Align integrations route with shared module shell components | DONE | `/integrations` uses existing shared overview/stat/dot-row components while route data and provider semantics stay in `App()` |
 | PRJ-1030 | Audit next frontend route/helper cleanup after integrations shell alignment | DONE | selected `/automations` shared-shell alignment while deferring health/provider helper movement |
-| PRJ-1031 | Align automations route with shared module shell components | READY_AFTER_PRJ-1030 | use existing shared overview/stat components for `/automations` while health-derived scheduler and attention data stay in `App()` |
+| PRJ-1031 | Align automations route with shared module shell components | DONE | `/automations` uses existing shared overview/stat components while health-derived scheduler and attention data stay in `App()` |
+| PRJ-1032 | Audit next frontend architecture slice after automations shell alignment | READY_AFTER_PRJ-1031 | choose whether health/channel helpers, integrations provider rows, memory signal cards, or route data model extraction should move next |
 | PRJ-968 | Add release evidence index | DONE | `docs/operations/release-evidence-index.md` shows current candidate lineage, production SHA, release tag target, blockers, and next action |
 | PRJ-969 | Add Coolify fallback secret/runbook readiness check | DONE | `check_coolify_fallback_readiness.py` reports whether approved webhook fallback inputs are present without triggering deploy |
 | PRJ-970 | Add release go/no-go command wrapper | DONE | `run_release_go_no_go.py` composes release reality audit with release-smoke posture and prints GO/HOLD |

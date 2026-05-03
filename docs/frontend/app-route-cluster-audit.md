@@ -311,3 +311,9 @@ attention data in `App()`, but its overview bar and stat row match existing
 `ModuleOverviewBar` and `ModuleStatRow` usage. `conversationChannelStatus`,
 integrations provider rows, memory signal cards, and decorative panels remain
 deferred.
+
+`PRJ-1031` implemented that slice. `/automations` now uses
+`ModuleOverviewBar` and `ModuleStatRow` for the route shell while preserving
+`aion-automations-*` selectors and keeping `automationStatCards`,
+`automationFlowRows`, scheduler summary, attention metrics, and proactive state
+in `App()`.
