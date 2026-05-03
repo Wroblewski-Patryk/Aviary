@@ -2,6 +2,31 @@
 
 Last updated: 2026-05-03
 
+## Fresh V1.0.0 Release Marker (2026-05-03)
+
+- `PRJ-955` is DONE:
+  - `.codex/tasks/PRJ-955-create-v1-release-marker.md`
+- result:
+  - force deploy converged production to selected SHA
+    `5e64f494e2aac8d29cea532d95f7039ed6029213`
+  - release reality audit returned `GO_FOR_SELECTED_SHA`
+  - production release smoke with deploy parity passed
+  - annotated tag `v1.0.0` was created and pushed to origin
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\audit_release_reality.py --base-url "https://aviary.luckysparrow.ch" --timeout-seconds 20; Pop-Location`
+  - result: `GO_FOR_SELECTED_SHA`
+  - `.\backend\scripts\run_release_smoke.ps1 -BaseUrl "https://aviary.luckysparrow.ch" -WaitForDeployParity -DeployParityMaxWaitSeconds 300 -DeployParityPollSeconds 15 -HealthRetryMaxAttempts 5 -HealthRetryDelaySeconds 5`
+  - result: passed; backend and web revisions both
+    `5e64f494e2aac8d29cea532d95f7039ed6029213`
+  - `git tag -a v1.0.0 5e64f494e2aac8d29cea532d95f7039ed6029213 -m "Aviary v1.0.0"`
+  - `git push origin v1.0.0`
+- remaining explicit follow-ups:
+  - `PRJ-957` revision-aware production health monitor
+  - `PRJ-958` AI red-team scenario execution
+  - `PRJ-959..PRJ-961` security/privacy regressions
+  - `PRJ-962` Telegram live-mode smoke, blocked by operator inputs
+  - `PRJ-963` organizer provider activation smoke, blocked by credentials
+
 ## Fresh Release Reality Audit Script (2026-05-03)
 
 - `PRJ-956` is DONE:

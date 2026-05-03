@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-955` created the v1.0.0 release marker:
+  - task:
+    - `.codex/tasks/PRJ-955-create-v1-release-marker.md`
+  - result:
+    - force deploy converged production to selected SHA
+      `5e64f494e2aac8d29cea532d95f7039ed6029213`
+    - release reality audit returned `GO_FOR_SELECTED_SHA`
+    - production release smoke with deploy parity passed
+    - annotated tag `v1.0.0` was created and pushed to origin
+  - validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\audit_release_reality.py --base-url "https://aviary.luckysparrow.ch" --timeout-seconds 20; Pop-Location`
+    - result: `GO_FOR_SELECTED_SHA`
+    - `.\backend\scripts\run_release_smoke.ps1 -BaseUrl "https://aviary.luckysparrow.ch" -WaitForDeployParity -DeployParityMaxWaitSeconds 300 -DeployParityPollSeconds 15 -HealthRetryMaxAttempts 5 -HealthRetryDelaySeconds 5`
+    - result: passed; backend and web revisions both
+      `5e64f494e2aac8d29cea532d95f7039ed6029213`
+    - `git tag -a v1.0.0 5e64f494e2aac8d29cea532d95f7039ed6029213 -m "Aviary v1.0.0"`
+    - `git push origin v1.0.0`
+  - next execution priority:
+    - continue post-v1 hardening with `PRJ-957` revision-aware production
+      health monitor and the remaining explicit launch-channel/security
+      follow-ups
+
 - 2026-05-03: `PRJ-956` completed the release reality audit script:
   - task:
     - `.codex/tasks/PRJ-956-release-reality-audit-script.md`

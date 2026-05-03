@@ -1,15 +1,13 @@
 # V1 Release Marker Blocker
 
 Date: 2026-05-03
-Task: `PRJ-936`
-Status: BLOCKED
+Task: `PRJ-936` / `PRJ-955`
+Status: RESOLVED for `v1.0.0`
 
 ## Decision
 
-No release tag or marker was created.
-
-This is intentional. PRJ-934 recorded `NO-GO / HOLD` because production is not
-serving the current local candidate SHA.
+Release tag `v1.0.0` was created and pushed after production served the
+selected SHA and release smoke with deploy parity passed.
 
 ## Blocking Facts
 
@@ -22,11 +20,14 @@ serving the current local candidate SHA.
 | Production backend revision after 900-second deploy-parity wait | `ed1c4d981314787d76252985b53c14ea1d7886ed` |
 | Production web revision after deploy-parity wait | `ed1c4d981314787d76252985b53c14ea1d7886ed` |
 | PRJ-938 release smoke result | BLOCKED: production did not converge to pushed candidate within 900 seconds |
-| Release marker posture | `NO-GO / HOLD` |
+| Selected v1.0.0 SHA | `5e64f494e2aac8d29cea532d95f7039ed6029213` |
+| Release reality audit for selected SHA | `GO_FOR_SELECTED_SHA` |
+| Production release smoke for selected SHA | PASSED |
+| Release marker posture | `v1.0.0` created and pushed |
 
 ## Unblock Checklist
 
-Before creating a release marker:
+For the next release marker:
 
 - choose the target release SHA
 - deploy that SHA to production if it is not already deployed
@@ -71,4 +72,5 @@ After green evidence only:
 git tag <release-tag> <selected-release-sha>
 ```
 
-Do not run the tag command until the unblock checklist is satisfied.
+The `v1.0.0` tag was created only after the unblock checklist was satisfied for
+`5e64f494e2aac8d29cea532d95f7039ed6029213`.

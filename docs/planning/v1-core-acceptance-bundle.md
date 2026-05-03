@@ -4,9 +4,13 @@ Last updated: 2026-05-03
 
 ## Status
 
-Core no-UI `v1` is GO for the current production revision:
+Core no-UI/web-supported `v1.0.0` is GO for the production revision:
 
-- `0984440a8a2a283942e4aa2c190e3964d0dadc9c`
+- `5e64f494e2aac8d29cea532d95f7039ed6029213`
+
+Release marker:
+
+- `v1.0.0`
 
 This is a core runtime acceptance result, not a claim that every product,
 provider, security, AI, or web-polish follow-up is complete.
@@ -20,7 +24,7 @@ provider, security, AI, or web-polish follow-up is complete.
 | Website reading | `/health.connectors.web_knowledge_tools.website_reading_workflow` | `ready_for_direct_and_search_first_review` | Health and incident bundle expose direct URL and search-first page review readiness with no blockers | No core blocker |
 | Tool-grounded learning | `/health.learned_state.tool_grounded_learning` | `tool_grounded_learning_surface_ready` | Health and incident bundle expose action-owned external read summaries only, semantic memory layer, and no raw payload storage | Privacy/security hardening remains a separate `PRJ-912/PRJ-933` check |
 | Time-aware planned work | `/health.v1_readiness` | `foreground_due_delivery_and_recurring_reevaluation_ready` | Behavior validation and health expose planned-work policy owner, delivery path, and recurrence owner; scheduler external evidence is recent and aligned | No core blocker |
-| Deploy parity | `/health.deployment` and release smoke | runtime/web/local SHA match | Release smoke passed with deploy parity for `0984440a8a2a283942e4aa2c190e3964d0dadc9c` | Every later commit requires fresh deploy parity smoke |
+| Deploy parity | `/health.deployment` and release smoke | runtime/web/local SHA match | Release reality audit returned `GO_FOR_SELECTED_SHA`; release smoke passed with deploy parity for `5e64f494e2aac8d29cea532d95f7039ed6029213` | Every later commit requires fresh deploy parity smoke |
 
 ## Evidence Set
 
@@ -33,8 +37,10 @@ Local candidate validation:
 
 Production validation:
 
-- release smoke after PRJ-929 queue cleanup passed with deploy parity for:
-  `0984440a8a2a283942e4aa2c190e3964d0dadc9c`
+- release reality audit returned `GO_FOR_SELECTED_SHA` for:
+  `5e64f494e2aac8d29cea532d95f7039ed6029213`
+- release smoke passed with deploy parity for:
+  `5e64f494e2aac8d29cea532d95f7039ed6029213`
 - strict-mode incident evidence bundle export passed with:
   `incident_evidence_source=health_snapshot_strict_mode`
 - release smoke with the strict-mode incident bundle passed
@@ -114,8 +120,8 @@ broader public or web-led release claim:
   because production is not serving the current local candidate SHA
 - `PRJ-935` release notes and operator handoff: DONE with
   `docs/planning/v1-release-notes-and-operator-handoff.md`
-- `PRJ-936` release marker remains blocked until the chosen release SHA has
-  green production evidence; blocker record:
+- `PRJ-955` created and pushed `v1.0.0` after the chosen release SHA had green
+  production evidence; prior blocker record:
   `docs/planning/v1-release-marker-blocker.md`
 
 ## Go / No-Go
@@ -124,8 +130,8 @@ broader public or web-led release claim:
 - Production deploy parity: GO
 - Production incident-evidence bundle: GO
 - Core no-UI v1 declaration: GO
-- Current local candidate release marker: NO-GO / HOLD
-- Public/web-led v1 launch marker: HOLD until the remaining launch-channel,
+- Current selected release marker: GO, `v1.0.0`
+- Public/web-led broader launch marker: HOLD until the remaining launch-channel,
   rollback, privacy/debug, and AI/security hardening gates are complete or
   explicitly waived by a documented release decision.
 

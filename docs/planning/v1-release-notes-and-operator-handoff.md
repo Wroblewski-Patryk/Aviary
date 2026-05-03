@@ -1,21 +1,22 @@
 # V1 Release Notes And Operator Handoff
 
 Date: 2026-05-03
-Task: `PRJ-935`
-Posture: HOLD for release marker
+Task: `PRJ-935` / `PRJ-955`
+Posture: `v1.0.0` released for core no-UI/web-supported v1
 
 ## Current Decision
 
-Do not create a v1 release marker yet.
-
-PRJ-934 found that production is healthy for the currently deployed revision,
-but production is not serving the current local candidate.
+Release marker `v1.0.0` has been created for the selected production SHA after
+release reality audit and release smoke passed.
 
 | Revision | SHA |
 | --- | --- |
 | Current local `HEAD` at PRJ-934 review | `92f7bf3af16502a1a3f661aa16bf6a9ead92e0cd` |
 | Production `/health.deployment.runtime_build_revision` at PRJ-934 review | `ed1c4d981314787d76252985b53c14ea1d7886ed` |
 | Production web shell build revision at PRJ-934 review | `ed1c4d981314787d76252985b53c14ea1d7886ed` |
+| Selected `v1.0.0` SHA | `5e64f494e2aac8d29cea532d95f7039ed6029213` |
+| Release reality audit | `GO_FOR_SELECTED_SHA` |
+| Production release smoke | PASSED |
 
 ## What Is Ready
 
@@ -37,7 +38,8 @@ but production is not serving the current local candidate.
 
 ## Known Limits
 
-- Current local `HEAD` has not reached production.
+- `v1.0.0` is deployed and smoke-verified; later commits still require their
+  own deploy parity evidence before being claimed as production.
 - PRJ-909 Telegram live-mode smoke is blocked until an operator provides:
   - `TELEGRAM_BOT_TOKEN`
   - `TELEGRAM_WEBHOOK_SECRET`
@@ -50,8 +52,8 @@ but production is not serving the current local candidate.
   documented for deeper two-user, provider, incident-sentinel, and frontend
   fixture checks.
 - Direct Coolify deployment-history confirmation remains operator-owned.
-- PRJ-936 release marker is blocked until the selected release SHA has green
-  production evidence.
+- PRJ-955 created the `v1.0.0` release marker after the selected release SHA had
+  green production evidence.
 
 ## Required Before Release Marker
 

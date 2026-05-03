@@ -1,17 +1,16 @@
 # V1 Final Go/No-Go Review
 
 Date: 2026-05-03
-Task: `PRJ-934`
-Decision: NO-GO / HOLD for final release marker
+Task: `PRJ-934` / `PRJ-955`
+Decision: GO for `v1.0.0` core no-UI/web-supported release marker
 
 ## Summary
 
-The current repository has strong core `v1` evidence, but the final release
-marker must not be created yet. Production is not serving the current local
-candidate commit, and several launch-channel or evidence gaps remain explicit.
+The repository now has green production evidence for the selected v1 SHA, and
+the `v1.0.0` release marker has been created. Several broader launch-channel or
+evidence gaps remain explicit follow-ups.
 
-This review closes PRJ-934 as a decision record. It does not close PRJ-935
-release notes/operator handoff or PRJ-936 release marker.
+This review is superseded by PRJ-955 for the release marker decision.
 
 ## Revision Check
 
@@ -22,6 +21,7 @@ release notes/operator handoff or PRJ-936 release marker.
 | Production web shell meta `aion-web-build-revision` | `ed1c4d981314787d76252985b53c14ea1d7886ed` | Matches production backend, not local `HEAD` |
 | Production trigger posture | `source_automation` / `primary_automation` | Policy surface is healthy |
 | Production final acceptance gate states | all inspected core states green | Core production posture is still green for deployed SHA |
+| Selected `v1.0.0` SHA after PRJ-955 | `5e64f494e2aac8d29cea532d95f7039ed6029213` | Release reality audit and release smoke passed |
 
 Commands used:
 
@@ -38,7 +38,7 @@ Invoke-RestMethod -Uri "https://aviary.luckysparrow.ch/settings" -TimeoutSec 20
 | Core no-UI v1 already deployed at `ed1c4d9...` | GO | Existing acceptance bundle and production health remain green for that deployed revision. |
 | Current local repository candidate `92f7bf3...` | NO-GO / HOLD | Production is not serving this SHA; release smoke with deploy parity would fail until deployment catches up or a release SHA is intentionally frozen. |
 | Public/web-led v1 launch marker | NO-GO / HOLD | PRJ-935 handoff and PRJ-936 marker are not complete; launch-channel and evidence gaps remain explicit. |
-| Release tag/marker | BLOCKED | Tags must come after green production smoke and acceptance evidence, not before. |
+| Release tag/marker | GO | `v1.0.0` was created after green production smoke and acceptance evidence. |
 
 ## P0 Review
 
@@ -88,8 +88,8 @@ current core/web-supported v1 posture.
 
 ## Final Decision
 
-Do not create a release marker now.
+`v1.0.0` is the release marker for selected SHA
+`5e64f494e2aac8d29cea532d95f7039ed6029213`.
 
-The correct next task is PRJ-935 release notes and operator handoff, written
-with this HOLD posture, or a deploy-and-smoke task if the user/operator wants
-the current local `HEAD` to become the release candidate.
+Continue post-v1 hardening and broader launch-channel evidence as follow-up
+work.
