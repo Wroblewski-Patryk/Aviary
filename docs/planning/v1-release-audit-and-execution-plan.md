@@ -451,8 +451,14 @@ Goal: make AI behavior safe enough for a real user-facing launch.
 Tasks:
 
 - `PRJ-931` V1 AI Red-Team Scenario Pack
-  - Cover prompt injection, tool boundary bypass attempts, data exfiltration,
-    unauthorized memory access, and connector misuse.
+  - Status: DONE
+  - Output: `docs/security/v1-ai-red-team-scenario-pack.md` and
+    `docs/security/v1-ai-red-team-scenarios.json` cover prompt injection, tool
+    boundary bypass attempts, data exfiltration, unauthorized memory access,
+    connector misuse, malicious web content, memory corruption, and malformed
+    inputs.
+  - This closes the reproducible scenario-pack gap only; executed pass/fail
+    red-team evidence still requires a separate run or waiver.
 
 - `PRJ-932` Cross-User And Session Isolation Audit
   - Verify app auth, Telegram linked identity, reset behavior, chat history,
@@ -509,7 +515,7 @@ Tasks:
    credentials
 8. `PRJ-920` Minimal External Health Monitor - DONE locally
 9. `PRJ-921` Release Evidence Archive Standard - DONE locally
-10. `PRJ-931` V1 AI Red-Team Scenario Pack
+10. `PRJ-931` V1 AI Red-Team Scenario Pack - DONE locally
 11. `PRJ-932` Cross-User And Session Isolation Audit
 12. `PRJ-933` Provider Payload Leakage Audit
 

@@ -2,6 +2,31 @@
 
 Last updated: 2026-05-03
 
+## Fresh V1 AI Red-Team Scenario Pack (2026-05-03)
+
+- `PRJ-931` is DONE:
+  - `.codex/tasks/PRJ-931-v1-ai-red-team-scenario-pack.md`
+  - `docs/security/v1-ai-red-team-scenario-pack.md`
+  - `docs/security/v1-ai-red-team-scenarios.json`
+- result:
+  - created reproducible scenario coverage for prompt injection, hidden
+    instruction extraction, tool-boundary bypass, data exfiltration,
+    unauthorized memory access, connector misuse, malicious web content,
+    memory corruption, and malformed/mixed-language inputs
+  - release docs now distinguish scenario-pack creation from executed pass/fail
+    red-team evidence
+  - testing docs now point at the scenario pack as reusable input
+- validation:
+  - reviewed `AI_TESTING_PROTOCOL.md`, AI red-team agent instructions, secure
+    development lifecycle, testing guidance, and release plan
+  - JSON scenario pack parse check
+  - local reference check
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - execute this pack for pass/fail evidence, or continue to `PRJ-932`
+    cross-user and session isolation audit
+
 ## Fresh Release Evidence Archive Standard (2026-05-03)
 
 - `PRJ-921` is DONE:

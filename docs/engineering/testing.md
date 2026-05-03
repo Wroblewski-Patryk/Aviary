@@ -585,6 +585,12 @@ Useful migration verification command:
 
 AI features require repeatable multi-turn validation using `AI_TESTING_PROTOCOL.md`. Required coverage includes memory consistency, multi-step context stability, adversarial contradiction handling, role break and prompt injection resistance, memory corruption resistance, edge cases, data leakage, and unauthorized access attempts.
 
+The current v1 red-team scenario pack lives in
+`docs/security/v1-ai-red-team-scenario-pack.md`, with machine-readable
+scenarios in `docs/security/v1-ai-red-team-scenarios.json`. Treat that pack as
+reproducible scenario input, not as passing evidence until an execution report
+records pass/fail results.
+
 Runtime features require integration validation using `INTEGRATION_CHECKLIST.md`. A feature is not complete until real UI/client paths, API contracts, database schema or migrations, validation, loading states, error states, refresh or restart behavior, and regression risk are verified.
 
 Completion evidence must satisfy `DEFINITION_OF_DONE.md` and include exact commands, manual checks, scenario results, and residual risks.

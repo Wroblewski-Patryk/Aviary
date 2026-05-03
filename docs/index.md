@@ -73,6 +73,7 @@ evidence.
 - [Runtime Ops Runbook](operations/runtime-ops-runbook.md)
 - [Service Reliability And Observability](operations/service-reliability-and-observability.md)
 - [V1 Release Evidence Archive Standard](planning/v1-release-evidence-archive-standard.md)
+- [V1 AI Red-Team Scenario Pack](security/v1-ai-red-team-scenario-pack.md)
 - [Environment And Config](architecture/26_env_and_config.md)
 - [Runtime Behavior Testing](architecture/29_runtime_behavior_testing.md)
 
