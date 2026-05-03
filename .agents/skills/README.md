@@ -13,3 +13,4 @@ Project-local skills can be stored in this folder.
 - reflection-task triage
 - memory or profile data inspection
 - Coolify deploy verification
+- `adopt_template_into_existing_project/` guides safe migration of an existing repository onto this agent workflow.

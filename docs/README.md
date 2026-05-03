@@ -149,3 +149,9 @@ Additional cross-project standards synced from the shared agent template:
 - `docs/security/v1-cross-user-session-isolation-audit.md`
 - `docs/security/v1-provider-payload-leakage-audit.md`
 - `docs/ux/evidence-driven-ux-review.md`
+
+## Existing Project Adoption
+
+- `governance/existing-project-adoption-playbook.md`
+- `governance/agent-readiness-checklist.md`
+- `governance/template-adoption-decision-log.md` (optional for existing repos)
