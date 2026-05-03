@@ -40,6 +40,7 @@ import {
   SidebarBrandBlock,
   type SidebarIconKind,
 } from "./components/shell";
+import { ToolsSummaryCard } from "./components/tools";
 import { ROUTES, navigate, navigatePublicEntry, normalizeRoute, type RoutePath } from "./routes";
 
 type AuthMode = "login" | "register";
@@ -5837,11 +5838,12 @@ export default function App() {
                     note: copy.tools.summaryLinkRequiredNote,
                   },
                 ].map((card) => (
-                  <article key={card.title} className="aion-tools-summary-card">
-                    <p className="aion-tools-summary-label">{card.title}</p>
-                    <p className="aion-tools-summary-value">{card.value}</p>
-                    <p className="aion-tools-summary-note">{card.note}</p>
-                  </article>
+                  <ToolsSummaryCard
+                    key={card.title}
+                    title={card.title}
+                    value={card.value}
+                    note={card.note}
+                  />
                 ))}
                 </div>
               </section>

@@ -9,7 +9,7 @@ component refactor. It is grounded in `web/src/App.tsx`,
 `web/src/components/shell.tsx`, `web/src/components/public-shell.tsx`, and
 `web/src/components/app-icons.tsx`, `web/src/components/chat.tsx`, and
 `web/src/components/dashboard.tsx`, `web/src/components/personality.tsx`, and
-`web/src/index.css`.
+`web/src/components/tools.tsx`, and `web/src/index.css`.
 
 ## Headless Route Smoke
 
@@ -44,6 +44,7 @@ parity suite.
 | Chat components | `web/src/components/chat.tsx` | `ChatFlowStage` |
 | Dashboard components | `web/src/components/dashboard.tsx` | `DashboardSignalCard` |
 | Personality components | `web/src/components/personality.tsx` | `PersonalityTimelineRow` |
+| Tools components | `web/src/components/tools.tsx` | `ToolsSummaryCard` |
 | Shared presentational panels | `web/src/components/shared.tsx` | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel`, `RouteStatCard`, `RouteNoteCard` |
 | API client | `web/src/lib/api.ts` | Typed fetch wrapper and app-facing endpoint methods |
 | Tools formatting helpers | `web/src/lib/tool-formatting.ts` | `toolStatusClass`, `formatToolState`, `formatToolLinkState`, `summarizeToolAction` |
@@ -115,6 +116,7 @@ claim component-level separation beyond the extracted route contract.
 | Chat helpers | `renderChatMarkdown`, `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems` in `web/src/App.tsx`; `ChatFlowStage` in `web/src/components/chat.tsx` | `/chat` |
 | Personality route components | `PersonalityTimelineRow` in `web/src/components/personality.tsx` | memory, reflections, plans, personality |
 | Tool helpers | `toolStatusClass`, `formatToolState`, `formatToolLinkState`, `summarizeToolAction` in `web/src/lib/tool-formatting.ts` | `/tools`, `/integrations` |
+| Tools components | `ToolsSummaryCard` in `web/src/components/tools.tsx` | `/tools` |
 | Profile/settings helpers | `normalizeUiLanguage`, `resolveUiLanguage`, `normalizeUtcOffset`, `utcOffsetOption` | `/settings`, bootstrap |
 | Learned-state helpers | `recentActivityRows`, `summaryLines`, `conversationChannelStatus`, dashboard/personality derived summaries | dashboard, personality, memory, reflections, plans, goals, insights, automations |
 

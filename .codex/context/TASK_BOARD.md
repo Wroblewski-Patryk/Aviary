@@ -2,6 +2,24 @@
 
 Last updated: 2026-05-03
 
+## Fresh Tools Summary Card Extraction (2026-05-03)
+
+- `PRJ-985` is DONE:
+  - `.codex/tasks/PRJ-985-tools-summary-card-extraction.md`
+- result:
+  - added `web/src/components/tools.tsx`
+  - moved tools summary-card markup into `ToolsSummaryCard`
+  - kept tools overview API/state and summary data construction in `App()`
+  - updated the frontend route/component map and v1 roadmap
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+- next smallest useful task:
+  - `PRJ-986` extract tools item fact-card component cluster from
+    `web/src/App.tsx`
+
 ## Fresh Tool Route Helper Extraction (2026-05-03)
 
 - `PRJ-984` is DONE:
@@ -747,7 +765,11 @@ Last updated: 2026-05-03
     - completed in this iteration by moving pure tool formatting helpers to
       `web/src/lib/tool-formatting.ts`
   - `PRJ-985` Extract tools summary card component cluster from `web/src/App.tsx`:
-    READY_AFTER_PRJ-984
+    DONE
+    - completed in this iteration by moving tools summary cards to
+      `web/src/components/tools.tsx`
+  - `PRJ-986` Extract tools item fact-card component cluster from `web/src/App.tsx`:
+    READY_AFTER_PRJ-985
 
 ## Fresh V1 Deploy Parity Blocker (2026-05-03)
 
