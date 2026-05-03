@@ -2,6 +2,29 @@
 
 Last updated: 2026-05-03
 
+## Fresh PRJ-816 Chat Canonical Parity Closure (2026-05-03)
+
+- `PRJ-816` is DONE:
+  - `.codex/tasks/PRJ-816-chat-canonical-parity-closure-lane.md`
+- result:
+  - the chat canonical parity lane is no longer a stale `IN_PROGRESS` item
+  - historical v4-target work is preserved as the first major chat structure
+    convergence lane
+  - active chat truth has moved to Chat v5:
+    - `docs/ux/assets/aion-chat-canonical-reference-v5.png`
+    - `docs/ux/design-memory.md`
+    - `PRJ-861` Chat v5 canonical reference freeze
+    - `PRJ-862` Chat v5 two-column implementation
+    - `PRJ-872` chat `99%` canonical evidence pass
+    - `PRJ-875` canonical UI final route sweep
+- validation:
+  - reviewed PRJ-816 task history, current chat source, design memory,
+    flagship baseline transfer, and later board/project proof
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - review `PRJ-820` public home live crop and closure pass for stale status
+
 ## Fresh PRJ-800G Public Home Production Parity Closure (2026-05-03)
 
 - `PRJ-800G` is DONE:

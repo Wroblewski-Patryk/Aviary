@@ -4,8 +4,8 @@
 - ID: PRJ-816
 - Title: Close the chat route toward canonical parity
 - Task Type: design
-- Current Stage: implementation
-- Status: IN_PROGRESS
+- Current Stage: release
+- Status: DONE
 - Owner: Frontend Builder
 - Depends on: PRJ-800L, PRJ-796
 - Priority: P1
@@ -77,9 +77,9 @@ One implementation slice that:
 - build and focused diff checks pass
 
 ## Definition of Done
-- [ ] Chat layout is materially closer to the canonical composition.
-- [ ] The strongest remaining drift is smaller than the pre-slice structural gap.
-- [ ] Validation evidence is attached.
+- [x] Chat layout is materially closer to the canonical composition.
+- [x] The strongest remaining drift is smaller than the pre-slice structural gap.
+- [x] Validation evidence is attached.
 
 ## Stage Exit Criteria
 - [x] The output matches the declared `Current Stage`.
@@ -100,6 +100,14 @@ One implementation slice that:
 - Manual checks:
   - compared the canonical chat reference with the latest stored desktop proofs
     and targeted the largest structural drift first
+  - 2026-05-03 closure sync reviewed `web/src/App.tsx`,
+    `web/src/index.css`, `docs/ux/design-memory.md`,
+    `docs/ux/flagship-baseline-transfer.md`, `.codex/context/TASK_BOARD.md`,
+    and `.codex/context/PROJECT_STATE.md`
+  - confirmed later `PRJ-861`, `PRJ-862`, `PRJ-872`, and `PRJ-875` supersede
+    this v4-target lane with the active Chat v5 canonical reference,
+    implementation, and route-sweep proof
+  - `git diff --check` passed
 - Screenshots/logs:
   - current audit uses:
     - `docs/ux/assets/aion-chat-canonical-reference-v4.png`
@@ -174,15 +182,32 @@ One implementation slice that:
 - [x] Existing systems were reused where applicable.
 - [x] No workaround paths were introduced.
 - [x] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
+- [x] Definition of Done evidence is attached.
 - [x] Relevant validations were run.
 - [x] Docs or context were updated if repository truth changed.
-- [ ] Learning journal was updated if a recurring pitfall was confirmed.
+- [x] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes
 - The current session cannot run fresh in-app browser screenshots because the
   available Node runtime is below the browser plugin minimum. This slice uses
   the canonical asset plus the freshest available stored route proofs instead.
+- The v4 target from this task is historical. The active chat canonical target
+  is now `docs/ux/assets/aion-chat-canonical-reference-v5.png`.
+
+## 2026-05-03 Closure Sync
+
+- This chat canonical parity lane is historical and no longer an active
+  `IN_PROGRESS` task.
+- The task closed the first major structural gap by moving chat toward a
+  transcript-first route with embodied stage, cognitive rail, and calmer
+  composer treatment.
+- Later active proof owners:
+  - `PRJ-861` Chat v5 canonical reference freeze
+  - `PRJ-862` Chat v5 two-column implementation
+  - `PRJ-872` chat `99%` canonical evidence pass
+  - `PRJ-875` canonical UI final route sweep
+- Current design memory records Chat v5 as the active target and should guide
+  future chat work instead of reopening this v4 parity lane.
 
 ## Production-Grade Required Contract
 
@@ -299,3 +324,29 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - keep the existing shared chat background artwork and canonical persona,
     but adapt the route through structure and context hierarchy instead of
     inventing a separate being
+
+## Closure Result Report
+
+- Goal:
+  - close stale `PRJ-816` after confirming later Chat v5 tasks carry the active
+    route target and proof
+- Scope:
+  - task status, task evidence, and context sync only
+- Implementation Plan:
+  - verify current chat source and design memory
+  - record later Chat v5 proof owners
+  - mark the historical task done
+  - update project context and task board
+- Acceptance Criteria:
+  - no stale `IN_PROGRESS` state remains for `PRJ-816`
+  - v4 target is marked historical
+  - active chat truth points to Chat v5 docs and PRJ-872/PRJ-875 evidence
+  - no route, API, auth, DB, or runtime behavior changes are introduced
+- Definition of Done:
+  - original build and diff evidence is preserved
+  - current source/design-memory review is recorded
+  - later screenshot/build proof ownership is recorded
+  - context files are updated
+  - `git diff --check` passes
+- Next:
+  - review `PRJ-820` public home live crop and closure pass for stale status
