@@ -343,3 +343,9 @@ movement, and decorative panels remain deferred.
 shared route-keyed value-row presentation while `integrationProviderRows`,
 `integrationProviderDisplayRows`, provider readiness values, and fallback
 selection stay in `App()`.
+
+`PRJ-1036` selected memory signal card extraction as the next implementation
+slice. The remaining `aion-memory-signal-*` cards have a simple
+`meta/title/body` shape and can move behind a route-keyed `ModuleMetaCardList`
+while `memorySignalCards` stays in `App()`. Dashboard and goal progress rows
+remain deferred because they include sizing/progress visuals.

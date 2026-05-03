@@ -2,6 +2,22 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-1036` completed memory signal card audit:
+  - task:
+    - `.codex/tasks/PRJ-1036-next-live-cleanup-after-provider-row-audit.md`
+  - result:
+    - selected memory signal meta-card extraction as the next live frontend
+      cleanup
+    - target shape: `meta/title/body`
+    - kept `memorySignalCards` data and copy construction in `App()`
+    - deferred dashboard and goal progress rows because they include sizing and
+      progress visuals
+  - validation:
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-1037` extract shared module meta-card list for memory signals
+
 - 2026-05-03: `PRJ-1035` completed integrations provider row extraction:
   - task:
     - `.codex/tasks/PRJ-1035-integrations-provider-value-row-list.md`
