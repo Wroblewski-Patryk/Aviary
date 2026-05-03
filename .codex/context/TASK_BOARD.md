@@ -2,6 +2,39 @@
 
 Last updated: 2026-05-03
 
+## Fresh PRJ-822 Public Home Header And Proof Closure (2026-05-03)
+
+- `PRJ-822` is DONE:
+  - `.codex/tasks/PRJ-822-home-header-and-proof-iconography-pass.md`
+- result:
+  - the public-home header and proof iconography pass is no longer a stale
+    `IN_PROGRESS` item
+  - historical implementation is preserved:
+    - micro-proof row uses semantic `PublicGlyph` icons
+    - public nav link/button rhythm is calmer
+    - hero body and CTA spacing remain part of the first-viewport polish
+  - current public landing source keeps `aion-public-nav`,
+    `aion-public-micro-proof-row`, `aion-public-micro-proof-icon`, and
+    `PublicGlyph`
+  - current public landing truth remains chrome-free per `PRJ-782`:
+    - browser mockup frames in generated canonical previews are presentation
+      context only
+    - product UI must not implement simulated browser controls or title bars
+  - later proof owners remain:
+    - `PRJ-869` public home landing `99%` canonical pass
+    - `PRJ-875` canonical UI final route sweep
+- validation:
+  - reviewed PRJ-822 task history, current public landing source, design
+    memory, user clarification, and later board/project proof
+  - `Select-String -Path web\src\App.tsx,web\src\index.css -Pattern
+    "aion-public-browser|WindowChrome|aion-window-chrome"`
+  - result: no matches
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - review `PRJ-823` public-home bridge and trust closure pass for stale
+    status
+
 ## Fresh PRJ-820 Public Home Live Crop Closure (2026-05-03)
 
 - `PRJ-820` is DONE:

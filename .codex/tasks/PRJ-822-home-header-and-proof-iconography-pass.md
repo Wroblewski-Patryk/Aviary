@@ -4,8 +4,8 @@
 - ID: PRJ-822
 - Title: Home Header And Proof Iconography Pass
 - Task Type: design
-- Current Stage: implementation
-- Status: IN_PROGRESS
+- Current Stage: release
+- Status: DONE
 - Owner: Frontend Builder
 - Depends on: PRJ-820
 - Priority: P1
@@ -60,15 +60,15 @@ styles.
 - focused validation passes
 
 ## Definition of Done
-- [ ] micro-proof row is upgraded
-- [ ] header and hero rhythm are refined
-- [ ] task board and project state are synced
-- [ ] focused validation evidence is attached
+- [x] micro-proof row is upgraded
+- [x] header and hero rhythm are refined
+- [x] task board and project state are synced
+- [x] focused validation evidence is attached
 
 ## Stage Exit Criteria
-- [ ] The output matches the declared `Current Stage`.
-- [ ] Work from later stages was not mixed in without explicit approval.
-- [ ] Risks and assumptions for this stage are stated clearly.
+- [x] The output matches the declared `Current Stage`.
+- [x] Work from later stages was not mixed in without explicit approval.
+- [x] Risks and assumptions for this stage are stated clearly.
 
 ## Forbidden
 - new systems without approval
@@ -131,19 +131,46 @@ styles.
 - Staged rollout or feature flag: no
 
 ## Review Checklist (mandatory)
-- [ ] Current stage is declared and respected.
-- [ ] Deliverable for the current stage is complete.
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
-- [ ] Learning journal was updated if a recurring pitfall was confirmed.
+- [x] Current stage is declared and respected.
+- [x] Deliverable for the current stage is complete.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
+- [x] Learning journal update was not required; no new recurring pitfall was
+  confirmed in this closure sync.
 
 ## Notes
 This slice stays on the first viewport only.
+
+## Closure Sync - 2026-05-03
+
+- Current release status:
+  - DONE as a historical public-home first-viewport iconography and header
+    rhythm slice.
+- Current source truth:
+  - `web/src/App.tsx` renders the public micro-proof row with
+    `aion-public-micro-proof-icon` and `PublicGlyph`.
+  - `web/src/index.css` keeps the route-local public nav, micro-proof, hero
+    body, and CTA rhythm refinements from this slice.
+- Superseding proof owners:
+  - `PRJ-869` public home landing `99%` canonical pass.
+  - `PRJ-875` canonical UI final route sweep.
+  - `PRJ-782` shell-frame decision resolution.
+- Browser/mockup note:
+  - canonical screenshot browser frames are presentation context only.
+  - product UI must not simulate browser controls, title bars, or fake window
+    chrome.
+- Closure evidence:
+  - reviewed this task history, current public landing source, design memory,
+    user clarification, and later project/board proof.
+  - `Select-String -Path web\src\App.tsx,web\src\index.css -Pattern
+    "aion-public-browser|WindowChrome|aion-window-chrome"` returned no
+    matches in the current source.
+  - no runtime files were changed by this closure sync.
 
 ## Production-Grade Required Contract
 
