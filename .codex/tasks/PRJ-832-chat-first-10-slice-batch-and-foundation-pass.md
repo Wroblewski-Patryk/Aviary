@@ -4,8 +4,8 @@
 - ID: PRJ-832
 - Title: Chat first 10 slice batch and foundation pass
 - Task Type: design
-- Current Stage: implementation
-- Status: IN_PROGRESS
+- Current Stage: release
+- Status: DONE
 - Owner: Frontend Builder
 - Depends on: PRJ-816, PRJ-831
 - Priority: P1
@@ -71,14 +71,14 @@ covering topbar calmness, transcript cadence, and bubble-material foundations.
 - stay within the declared current stage unless explicit approval changes it
 
 ## Definition of Done
-- [ ] Chat 100-slice map is written.
-- [ ] First bounded chat foundation batch is implemented.
-- [ ] Focused validation evidence is attached.
+- [x] Chat 100-slice map is written.
+- [x] First bounded chat foundation batch is implemented.
+- [x] Focused validation evidence is attached.
 
 ## Stage Exit Criteria
-- [ ] The output matches the declared `Current Stage`.
-- [ ] Work from later stages was not mixed in without explicit approval.
-- [ ] Risks and assumptions for this stage are stated clearly.
+- [x] The output matches the declared `Current Stage`.
+- [x] Work from later stages was not mixed in without explicit approval.
+- [x] Risks and assumptions for this stage are stated clearly.
 
 ## Forbidden
 - new systems without approval
@@ -157,20 +157,46 @@ covering topbar calmness, transcript cadence, and bubble-material foundations.
 - Staged rollout or feature flag: none
 
 ## Review Checklist (mandatory)
-- [ ] Current stage is declared and respected.
-- [ ] Deliverable for the current stage is complete.
-- [ ] Architecture alignment confirmed.
-- [ ] Existing systems were reused where applicable.
-- [ ] No workaround paths were introduced.
-- [ ] No logic duplication was introduced.
-- [ ] Definition of Done evidence is attached.
-- [ ] Relevant validations were run.
-- [ ] Docs or context were updated if repository truth changed.
-- [ ] Learning journal was updated if a recurring pitfall was confirmed.
+- [x] Current stage is declared and respected.
+- [x] Deliverable for the current stage is complete.
+- [x] Architecture alignment confirmed.
+- [x] Existing systems were reused where applicable.
+- [x] No workaround paths were introduced.
+- [x] No logic duplication was introduced.
+- [x] Definition of Done evidence is attached.
+- [x] Relevant validations were run.
+- [x] Docs or context were updated if repository truth changed.
+- [x] Learning journal update was not required; no new recurring pitfall was
+  confirmed in this closure sync.
 
 ## Notes
 This task intentionally redirects the active surface group from `dashboard` to
 `chat` by explicit user instruction.
+
+## Closure Sync - 2026-05-03
+
+- Current release status:
+  - DONE as a historical Chat v4/foundation lane and dedicated chat 100-slice
+    map opener.
+- Current source truth:
+  - `web/src/App.tsx` keeps the chat route data flow, transcript contract,
+    composer/send flow, and route-owned chat support surfaces.
+  - `web/src/index.css` keeps the chat topbar, transcript, bubble, composer,
+    portrait, rail, action-row, memory-row, and title-hierarchy refinements
+    from the route lane.
+  - `docs/planning/chat-canonical-100-slice-closure-map.md` remains useful as
+    historical route-lane planning.
+- Superseding proof owners:
+  - `docs/ux/assets/aion-chat-canonical-reference-v5.png`.
+  - `docs/ux/design-memory.md` Chat v5 canonical composition.
+  - `PRJ-861` Chat v5 canonical reference freeze.
+  - `PRJ-862` Chat v5 two-column implementation.
+  - `PRJ-872` chat `99%` canonical evidence pass.
+  - `PRJ-875` canonical UI final route sweep.
+- Closure evidence:
+  - reviewed this task history, current chat source, design memory,
+    flagship baseline transfer, and later project/board proof.
+  - no runtime files were changed by this closure sync.
 
 ## Production-Grade Required Contract
 

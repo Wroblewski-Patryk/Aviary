@@ -2,6 +2,31 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-832` completed chat foundation lane closure:
+  - task:
+    - `.codex/tasks/PRJ-832-chat-first-10-slice-batch-and-foundation-pass.md`
+  - result:
+    - the chat first 10 slice batch and foundation pass is no longer a stale
+      `IN_PROGRESS` item
+    - historical implementation is preserved: dedicated chat 100-slice map,
+      early topbar/transcript/bubble/portrait/rail/action-row/memory-row/
+      composer/title-hierarchy batches, and preserved transcript/composer
+      contracts
+    - active chat truth has moved to Chat v5:
+      - `docs/ux/assets/aion-chat-canonical-reference-v5.png`
+      - `docs/ux/design-memory.md`
+      - `PRJ-861` Chat v5 canonical reference freeze
+      - `PRJ-862` Chat v5 two-column implementation
+      - `PRJ-872` chat `99%` canonical evidence pass
+      - `PRJ-875` canonical UI final route sweep
+  - validation:
+    - PRJ-832 history, current chat source, design memory, flagship baseline
+      transfer, and later board/project proof were reviewed
+    - `git diff --check` passed
+  - next execution priority:
+    - audit remaining non-DONE task statuses and separate true blockers from
+      stale status anomalies
+
 - 2026-05-03: `PRJ-831` completed dashboard first 10 slice closure:
   - task:
     - `.codex/tasks/PRJ-831-dashboard-first-10-slice-batch-and-intro-pass.md`
