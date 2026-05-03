@@ -90,6 +90,7 @@ evidence.
 - [Experience Quality Bar](ux/experience-quality-bar.md)
 - [Design Memory](ux/design-memory.md)
 - [Screen Quality Checklist](ux/screen-quality-checklist.md)
+- [Dashboard Proof Matrix](ux/dashboard-proof-matrix.md)
 - [Canonical Visual Implementation Workflow](ux/canonical-visual-implementation-workflow.md)
 - [Background And Decorative Asset Strategy](ux/background-and-decorative-asset-strategy.md)
 

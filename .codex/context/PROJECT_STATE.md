@@ -2,6 +2,29 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-728` completed dashboard proof matrix repair:
+  - task:
+    - `.codex/tasks/PRJ-728-dashboard-proof-across-states-accessibility-and-breakpoints.md`
+  - created:
+    - `docs/ux/dashboard-proof-matrix.md`
+  - updated:
+    - `docs/index.md`
+    - `docs/README.md`
+  - result:
+    - dashboard evidence is now tracked as a matrix covering breakpoints,
+      states, input modes, accessibility posture, and screenshot artifacts
+    - verified local desktop/mobile dashboard proof is preserved
+    - dashboard-specific tablet, empty-state, keyboard traversal, touch-target,
+      contrast, and reduced-motion proof gaps are explicit instead of hidden
+    - no UI behavior, test bypass, or acceptance overclaim was introduced
+  - validation:
+    - screen-quality checklist, dashboard planning contract, task-board proof
+      history, and local artifact paths were reviewed
+    - `git diff --check` passed
+  - next execution priority:
+    - review `PRJ-729` for personality IA/motif mapping status before selecting
+      the next implementation or sync slice
+
 - 2026-05-03: `PRJ-727` completed stale dashboard continuity sections queue sync:
   - task:
     - `.codex/tasks/PRJ-727-dashboard-continuity-flow-and-module-entry-sections.md`
