@@ -18,7 +18,7 @@ timeline row, and tools component extractions.
 | `/goals` | 4716 | Module-style overview route using shared cards and `ModuleOverviewBar` | Inner module panels remain future candidates |
 | `/insights` | 4812 | Module-style overview route using shared note/stat/side-panel patterns | Side-panel/row chrome extracted in PRJ-995; broader route module extraction can wait |
 | `/automations` | 4911 | Module-style route mixed with health-derived scheduler posture and shared side-panel patterns | Health helper ownership remains a later provider-aware candidate |
-| `/integrations` | 5009 | Tools/health provider readiness branch; already benefits from tool helper extraction | Defer until provider/health ownership audit |
+| `/integrations` | 5009 | Tools/health provider readiness branch; already benefits from tool helper extraction | Align simple overview/stat/readiness row presentation with existing shared module components before provider helper movement |
 | `/settings` | 5112 | Form-heavy branch; preference card/fact and side panel shells live in `web/src/components/settings.tsx`; settings formatting helpers live in `web/src/lib/settings-formatting.ts` | No immediate extraction needed in this cluster |
 | `/tools` | 5289 | Tools presentation cluster extracted to `web/src/components/tools.tsx`; route state remains in `App()` | No immediate extraction needed in this cluster |
 | `/personality` | 5505 | Visual/personality branch; partially uses `PersonalityTimelineRow` | Defer until callout/card ownership can be split without changing canonical visuals |
@@ -290,3 +290,11 @@ rows now share route-keyed dot-row presentation while `plansContextCards` and
 `goalGuidanceCards` stay in `App()`. The remaining module route cleanup
 candidates are now either single-route card shapes, route data/helper slices, or
 decorative panels that should be audited separately.
+
+`PRJ-1028` selected `/integrations` shared-shell alignment as the next
+implementation slice. The route still owns provider/tool data in `App()`, but
+its overview bar, stat row, and readiness detail dot rows match existing shared
+component shapes. The next task should reuse `ModuleOverviewBar`,
+`ModuleStatRow`, and `ModuleDotRowList` for those simple presentation shells
+while deferring `conversationChannelStatus`, provider/health helper movement,
+and the decorative provider-map panel.

@@ -2,6 +2,22 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-1028` completed integrations shared-shell audit:
+  - task:
+    - `.codex/tasks/PRJ-1028-next-frontend-v1-slice-after-dot-row-audit.md`
+  - result:
+    - selected `/integrations` shared-shell alignment as the next frontend v1
+      architecture slice
+    - target components: `ModuleOverviewBar`, `ModuleStatRow`, and
+      `ModuleDotRowList`
+    - deferred provider/health helper movement and decorative provider-map
+      panels
+  - validation:
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-1029` align integrations route with shared module shell components
+
 - 2026-05-03: `PRJ-1027` completed module dot-row list extraction:
   - task:
     - `.codex/tasks/PRJ-1027-module-dot-row-list-extraction.md`
