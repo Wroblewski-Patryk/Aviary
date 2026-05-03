@@ -2,6 +2,24 @@
 
 Last updated: 2026-05-03
 
+## Fresh Post Settings Route Cluster Audit (2026-05-03)
+
+- `PRJ-994` is DONE:
+  - `.codex/tasks/PRJ-994-post-settings-route-cluster-audit.md`
+- result:
+  - refreshed `docs/frontend/app-route-cluster-audit.md` after tools/settings
+    cleanup
+  - updated current `web/src/App.tsx` route branch anchors
+  - selected shared insights/automations side-panel extraction as the next
+    lower-risk route slice
+  - updated the v1 roadmap
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-995` extract shared module side-panel presentation for insights and
+    automations
+
 ## Fresh Settings Formatting Helper Extraction (2026-05-03)
 
 - `PRJ-993` is DONE:

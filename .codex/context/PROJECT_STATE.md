@@ -2,6 +2,23 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-994` completed post-settings route cluster audit:
+  - task:
+    - `.codex/tasks/PRJ-994-post-settings-route-cluster-audit.md`
+  - result:
+    - refreshed `docs/frontend/app-route-cluster-audit.md` after
+      tools/settings cleanup
+    - updated current `web/src/App.tsx` route branch anchors
+    - selected shared insights/automations side-panel extraction as the next
+      lower-risk route slice
+    - updated the v1 roadmap
+  - validation:
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-995` extract shared module side-panel presentation for insights and
+      automations
+
 - 2026-05-03: `PRJ-993` completed settings formatting helper extraction:
   - task:
     - `.codex/tasks/PRJ-993-settings-formatting-helper-extraction.md`
