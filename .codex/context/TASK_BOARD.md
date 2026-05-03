@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+## Fresh App Icon Cluster Extraction (2026-05-03)
+
+- `PRJ-976` is DONE:
+  - `.codex/tasks/PRJ-976-app-icon-cluster-extraction.md`
+- result:
+  - added `web/src/components/app-icons.tsx`
+  - moved `ChevronDownIcon`, `CloseIcon`, `PlusIcon`, `MicrophoneIcon`, and
+    `SendArrowIcon` out of `web/src/App.tsx`
+  - preserved SVG markup and all auth/sidebar/chat control behavior
+  - updated the frontend route/component map and v1 roadmap with icon module
+    ownership
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=6`
+- next smallest useful task:
+  - `PRJ-977` extract `ChatFlowStage` from `web/src/App.tsx` behind the same
+    build and route-smoke gate
+
 ## Fresh Public Glyph Extraction (2026-05-03)
 
 - `PRJ-975` is DONE:
@@ -532,7 +552,11 @@ Last updated: 2026-05-03
     - completed in this iteration by moving `PublicGlyph` to
       `web/src/components/public-shell.tsx`
   - `PRJ-976` Extract app icon/control component cluster from `web/src/App.tsx`:
-    READY_AFTER_PRJ-975
+    DONE
+    - completed in this iteration by moving pure SVG icon primitives to
+      `web/src/components/app-icons.tsx`
+  - `PRJ-977` Extract chat flow stage component from `web/src/App.tsx`:
+    READY_AFTER_PRJ-976
 
 ## Fresh V1 Deploy Parity Blocker (2026-05-03)
 

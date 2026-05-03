@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-976` completed app icon cluster extraction:
+  - task:
+    - `.codex/tasks/PRJ-976-app-icon-cluster-extraction.md`
+  - result:
+    - added `web/src/components/app-icons.tsx`
+    - moved `ChevronDownIcon`, `CloseIcon`, `PlusIcon`, `MicrophoneIcon`, and
+      `SendArrowIcon` out of `web/src/App.tsx`
+    - preserved SVG markup and all auth/sidebar/chat control behavior
+    - updated the frontend route/component map and v1 roadmap with icon
+      module ownership
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=6`
+  - next execution priority:
+    - `PRJ-977` extract `ChatFlowStage` from `web/src/App.tsx` behind the same
+      build and route-smoke gate
+
 - 2026-05-03: `PRJ-975` completed public glyph extraction:
   - task:
     - `.codex/tasks/PRJ-975-public-glyph-extraction.md`
