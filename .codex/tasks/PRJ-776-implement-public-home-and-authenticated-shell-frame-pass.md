@@ -4,8 +4,8 @@
 - ID: PRJ-776
 - Title: Implement public home and authenticated shell frame pass
 - Task Type: design
-- Current Stage: implementation
-- Status: IN_PROGRESS
+- Current Stage: release
+- Status: DONE
 - Owner: Frontend Builder
 - Depends on: PRJ-775
 - Priority: P1
@@ -60,9 +60,9 @@ One working frontend slice in `web/src/App.tsx` and `web/src/index.css` that:
 - no route contracts, API calls, or state ownership rules change
 
 ## Definition of Done
-- [ ] Public home is structurally rebuilt around the canonical landing composition.
-- [ ] Authenticated shell has a reusable frame pass that can host dashboard, chat, and personality.
-- [ ] Focused validation for the touched frontend scope is attached.
+- [x] Public home is structurally rebuilt around the canonical landing composition.
+- [x] Authenticated shell has a reusable frame pass that can host dashboard, chat, and personality.
+- [x] Focused validation for the touched frontend scope is attached.
 
 ## Stage Exit Criteria
 - [x] The output matches the declared `Current Stage`.
@@ -82,6 +82,15 @@ One working frontend slice in `web/src/App.tsx` and `web/src/index.css` that:
   - `git diff --check -- web/src/App.tsx web/src/index.css`
 - Manual checks:
   - structural review of `!me` branch and authenticated shell wrapper
+  - 2026-05-03 closure sync reviewed later superseding shell work:
+    - `docs/ux/design-memory.md`
+    - `docs/ux/flagship-baseline-transfer.md`
+    - `.codex/context/TASK_BOARD.md`
+    - `web/src/App.tsx`
+    - `web/src/index.css`
+  - confirmed later `PRJ-782` removed `WindowChrome` from public and authenticated shells
+  - confirmed current shell frame is represented by `aion-public-shell-frame`, `aion-shell-window`, and `aion-shell-frame-canonical`
+  - `git diff --check` passed
 - Screenshots/logs:
   - browser screenshot parity still pending in the next loop
 - High-risk checks:
@@ -149,7 +158,7 @@ One working frontend slice in `web/src/App.tsx` and `web/src/index.css` that:
 - [x] Definition of Done evidence is attached.
 - [x] Relevant validations were run.
 - [x] Docs or context were updated if repository truth changed.
-- [ ] Learning journal was updated if a recurring pitfall was confirmed.
+- [x] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes
 - This task intentionally stops before the dashboard-specific structural pass.
@@ -211,3 +220,46 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - structural dashboard pass on top of the new framed parent layout
 - Decisions made:
   - reuse existing auth and route logic; change only the public composition and shell framing
+
+## 2026-05-03 Closure Sync
+
+- This task is closed as a historical implementation slice.
+- The original `WindowChrome` direction was superseded by later evidence:
+  - `PRJ-782` removed `WindowChrome` from public and authenticated shell
+    branches after deploy review showed fake browser chrome was unwanted.
+  - `docs/ux/design-memory.md` now records the active rule: keep shells
+    premium, inset, and composed, but do not simulate browser controls, title
+    bars, or fake window chrome.
+  - `docs/ux/flagship-baseline-transfer.md` now records the current
+    transferable shell frame baseline.
+- Current implementation reality:
+  - public shell uses `aion-public-shell-frame` / `aion-public-window`
+  - authenticated shell uses `aion-shell-window` and
+    `aion-shell-frame-canonical`
+  - no backend, auth, or route contract changed in this closure sync
+- Remaining proof and transfer gaps are tracked in:
+  - `docs/ux/flagship-baseline-transfer.md`
+  - `docs/ux/dashboard-proof-matrix.md`
+
+## Closure Result Report
+
+- Goal:
+  - Close PRJ-776 without reintroducing the superseded `WindowChrome` pattern.
+- Scope:
+  - Task status synchronization and evidence consolidation only.
+- Implementation Plan:
+  - Verify the original task result, later superseding PRJ-782 decision,
+    current shell implementation, and durable UX docs.
+  - Mark task complete and update context truth.
+- Acceptance Criteria:
+  - PRJ-776 no longer remains a stale `IN_PROGRESS` item.
+  - The final active shell-frame rule points to current docs and code.
+  - No removed fake-chrome pattern is revived.
+- Definition of Done:
+  - Satisfied by original implementation validation, later PRJ-782 correction,
+    current source review, context updates, and `git diff --check`.
+- Result:
+  - PRJ-776 is closed as a historical public-home/authenticated-shell frame
+    slice.
+- Next:
+  - Review `PRJ-779` for dashboard structural convergence status.

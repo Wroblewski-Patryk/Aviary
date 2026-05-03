@@ -2,6 +2,31 @@
 
 Last updated: 2026-05-03
 
+## Fresh PRJ-776 Public Home And Shell Frame Closure (2026-05-03)
+
+- `PRJ-776` is DONE:
+  - `.codex/tasks/PRJ-776-implement-public-home-and-authenticated-shell-frame-pass.md`
+- result:
+  - the historical public-home/authenticated-shell frame task is no longer a
+    stale `IN_PROGRESS` item
+  - its original implementation is preserved as history, while the later
+    `PRJ-782` correction remains active source of truth:
+    - `WindowChrome` must not be revived
+    - public and authenticated shells should remain premium and framed without
+      fake browser controls
+  - current shell-frame truth points to:
+    - `docs/ux/design-memory.md`
+    - `docs/ux/flagship-baseline-transfer.md`
+    - `web/src/App.tsx`
+    - `web/src/index.css`
+- validation:
+  - reviewed PRJ-776 task history, PRJ-782 board evidence, current shell code,
+    design memory, and flagship baseline transfer
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - review `PRJ-779` for dashboard structural convergence status
+
 ## Fresh PRJ-743 Flagship Polish Lane Closure (2026-05-03)
 
 - `PRJ-743` is DONE:

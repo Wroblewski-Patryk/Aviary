@@ -2,6 +2,27 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-776` completed public-home/authenticated-shell frame closure:
+  - task:
+    - `.codex/tasks/PRJ-776-implement-public-home-and-authenticated-shell-frame-pass.md`
+  - result:
+    - the public-home/authenticated-shell frame task is no longer a stale
+      `IN_PROGRESS` item
+    - original PRJ-776 implementation history remains documented, while later
+      PRJ-782 evidence remains the active correction that removed
+      `WindowChrome`
+    - current shell-frame truth points to `docs/ux/design-memory.md`,
+      `docs/ux/flagship-baseline-transfer.md`, `web/src/App.tsx`, and
+      `web/src/index.css`
+    - no UI behavior, route contract, auth contract, backend contract, or
+      removed fake-chrome pattern was introduced
+  - validation:
+    - PRJ-776 history, PRJ-782 board evidence, current shell code, design
+      memory, and flagship baseline transfer were reviewed
+    - `git diff --check` passed
+  - next execution priority:
+    - review `PRJ-779` for dashboard structural convergence status
+
 - 2026-05-03: `PRJ-743` completed flagship polish lane closure:
   - task:
     - `.codex/tasks/PRJ-743-dashboard-chat-personality-canonical-polish-and-proof.md`
