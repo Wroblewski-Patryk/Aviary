@@ -2,6 +2,36 @@
 
 Last updated: 2026-05-03
 
+## Fresh Flagship Baseline Transfer Sync (2026-05-03)
+
+- `PRJ-731` is DONE:
+  - `.codex/tasks/PRJ-731-cross-module-proof-design-memory-update-and-future-app-baseline-sync.md`
+- created:
+  - `docs/ux/flagship-baseline-transfer.md`
+- updated:
+  - `docs/index.md`
+  - `docs/README.md`
+- result:
+  - cross-module proof scope, design-memory sync rules, and future-app transfer
+    expectations now live in one durable baseline note
+  - current transferable UX sources are explicitly linked:
+    - `docs/ux/design-memory.md`
+    - `docs/ux/dashboard-proof-matrix.md`
+    - `docs/ux/personality-module-map.md`
+    - `docs/ux/canonical-web-screen-reference-set.md`
+  - known proof gaps remain explicit instead of blocking the whole baseline
+- validation:
+  - reviewed design memory, dashboard proof matrix, personality module map, and
+    PRJ-875/final route-sweep evidence in the task board
+  - `git diff --check`
+  - result: passed
+- result:
+  - PRJ-724 through PRJ-731 visual-system lane task-file drift is now closed or
+    repaired with durable docs
+- next smallest useful task:
+  - return to the task board and select the next READY item outside the stale
+    PRJ-724..PRJ-731 visual-system lane
+
 ## Fresh Personality Implementation Status Sync (2026-05-03)
 
 - `PRJ-730` is DONE:

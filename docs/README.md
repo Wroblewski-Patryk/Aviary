@@ -114,6 +114,7 @@ near-term coordination direction without rewriting the canonical architecture.
 - `ux/design-memory.md`
 - `ux/dashboard-proof-matrix.md`
 - `ux/personality-module-map.md`
+- `ux/flagship-baseline-transfer.md`
 
 Use these files for explicit follow-up on dual-loop coordination, attention
 gating, batched conversation handling, and future external productivity

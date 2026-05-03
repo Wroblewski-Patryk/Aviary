@@ -92,6 +92,7 @@ evidence.
 - [Screen Quality Checklist](ux/screen-quality-checklist.md)
 - [Dashboard Proof Matrix](ux/dashboard-proof-matrix.md)
 - [Personality Module Map](ux/personality-module-map.md)
+- [Flagship Baseline Transfer](ux/flagship-baseline-transfer.md)
 - [Canonical Visual Implementation Workflow](ux/canonical-visual-implementation-workflow.md)
 - [Background And Decorative Asset Strategy](ux/background-and-decorative-asset-strategy.md)
 
