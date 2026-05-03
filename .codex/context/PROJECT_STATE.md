@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-935` completed v1 release notes and operator handoff:
+  - new task:
+    - `.codex/tasks/PRJ-935-v1-release-notes-and-operator-handoff.md`
+  - new planning source:
+    - `docs/planning/v1-release-notes-and-operator-handoff.md`
+  - result:
+    - recorded capabilities, known limits, release smoke commands, incident
+      evidence export, rollback path, and support triage
+    - handoff explicitly preserves the `NO-GO / HOLD` release-marker posture
+      from `PRJ-934`
+    - `PRJ-936` remains blocked until the chosen release SHA has green
+      production evidence
+  - validation:
+    - release docs and runtime ops runbook cross-check
+    - `git diff --check` passed with CRLF normalization warnings only
+  - next execution priority:
+    - keep `PRJ-936` blocked, or deploy the selected release candidate and
+      rerun production release smoke before creating any release marker
+
 - 2026-05-03: `PRJ-934` completed the v1 final go/no-go review:
   - new task:
     - `.codex/tasks/PRJ-934-v1-final-go-no-go-review.md`
@@ -26,9 +45,8 @@ Last updated: 2026-05-03
     - production `GET https://aviary.luckysparrow.ch/settings`
     - `git diff --check` passed with CRLF normalization warnings only
   - next execution priority:
-    - `PRJ-935` release notes and operator handoff with the current HOLD
-      posture, or deploy the selected release candidate and rerun production
-      release smoke
+    - keep `PRJ-936` blocked, or deploy the selected release candidate and
+      rerun production release smoke before creating any release marker
 
 - 2026-05-03: `PRJ-930` completed deployment trigger SLO evidence:
   - new task:

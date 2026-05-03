@@ -1,6 +1,6 @@
 # V1 Core Acceptance Bundle
 
-Last updated: 2026-05-02
+Last updated: 2026-05-03
 
 ## Status
 
@@ -112,8 +112,10 @@ broader public or web-led release claim:
 - `PRJ-934` final go/no-go review: DONE with
   `docs/planning/v1-final-go-no-go-review.md`; release marker is `NO-GO / HOLD`
   because production is not serving the current local candidate SHA
-- `PRJ-935..PRJ-936` handoff and release marker remain open; PRJ-936 is blocked
-  until the chosen release SHA has green production evidence
+- `PRJ-935` release notes and operator handoff: DONE with
+  `docs/planning/v1-release-notes-and-operator-handoff.md`
+- `PRJ-936` release marker remains blocked until the chosen release SHA has
+  green production evidence
 
 ## Go / No-Go
 
@@ -130,6 +132,6 @@ broader public or web-led release claim:
 
 Rerun `PRJ-909` when Telegram operator preconditions are available. Until then,
 continue with locally actionable public-launch hardening, starting with
-`PRJ-935` release notes and operator handoff, or deploy the selected release
-candidate and rerun production release smoke if the marker should target the
-current local `HEAD`.
+deploying the selected release candidate and rerunning production release smoke
+if the marker should target the current local `HEAD`; otherwise keep PRJ-936
+blocked and record any explicit waiver decisions.

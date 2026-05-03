@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+## Fresh V1 Release Notes And Operator Handoff (2026-05-03)
+
+- `PRJ-935` is DONE:
+  - `.codex/tasks/PRJ-935-v1-release-notes-and-operator-handoff.md`
+  - `docs/planning/v1-release-notes-and-operator-handoff.md`
+- result:
+  - recorded capabilities, known limits, release smoke commands, incident
+    evidence export, rollback path, and support triage
+  - handoff explicitly preserves the `NO-GO / HOLD` release-marker posture from
+    `PRJ-934`
+  - `PRJ-936` remains blocked until the chosen release SHA has green production
+    evidence
+- validation:
+  - release docs and runtime ops runbook cross-check
+  - `git diff --check`
+  - result: passed with CRLF normalization warnings only
+- next smallest useful task:
+  - keep `PRJ-936` blocked, or deploy the selected release candidate and rerun
+    production release smoke before creating any release marker
+
 ## Fresh V1 Final Go/No-Go Review (2026-05-03)
 
 - `PRJ-934` is DONE:
@@ -27,8 +47,8 @@ Last updated: 2026-05-03
   - `git diff --check`
   - result: passed with CRLF normalization warnings only
 - next smallest useful task:
-  - `PRJ-935` release notes and operator handoff with the current HOLD posture,
-    or deploy the selected release candidate and rerun production release smoke
+  - keep `PRJ-936` blocked, or deploy the selected release candidate and rerun
+    production release smoke before creating any release marker
 
 ## Fresh Deployment Trigger SLO Evidence (2026-05-03)
 

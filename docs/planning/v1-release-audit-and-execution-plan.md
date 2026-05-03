@@ -505,8 +505,10 @@ Tasks:
     released.
 
 - `PRJ-935` V1 Release Notes And Operator Handoff
-  - Record capabilities, known limits, rollback, smoke commands, and support
-    triage.
+  - Status: DONE
+  - Output: `docs/planning/v1-release-notes-and-operator-handoff.md` records
+    capabilities, known limits, release smoke, incident evidence, rollback, and
+    support triage under the current `NO-GO / HOLD` marker posture.
 
 - `PRJ-936` V1 Tag And Release Marker
   - Create a release tag only after production smoke and acceptance bundle are
@@ -547,6 +549,7 @@ Tasks:
     provider/red-team evidence gaps
 13. `PRJ-934` V1 Final Go/No-Go Review - DONE with `NO-GO / HOLD`
     release-marker decision
+14. `PRJ-935` V1 Release Notes And Operator Handoff - DONE with HOLD posture
 
 ### P2 Extensions
 
