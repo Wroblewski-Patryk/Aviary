@@ -253,3 +253,17 @@ and `RouteStatCard` mapping in `App()`.
 `web/src/components/shared.tsx`. `/memory` and `/reflections` now share
 route-keyed recent activity row chrome while keeping panel headings,
 `personalityRecentActivity` ownership, and slicing in `App()`.
+
+`PRJ-1024` reviewed the remaining module-route inner card clusters after
+activity-list extraction. The next safe implementation slice is a shared
+route-keyed title/body card-list component for:
+
+- `/reflections` prompt cards
+- `/plans` next-step cards
+- `/goals` signal cards
+
+This target preserves the current route-specific class names through explicit
+route/card keys, keeps all card data and copy construction in `App()`, and
+avoids the higher-risk decorative goal horizon panel. Memory signal cards are
+deferred because they include a `meta` field; plans/goals dot-row context lists
+are deferred because their chrome differs from the simple title/body cards.

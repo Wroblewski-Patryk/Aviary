@@ -134,7 +134,8 @@ current blocker is release reality:
 | PRJ-1021 | Extract shared module stat row wrapper | DONE | `ModuleStatRow` lives in `web/src/components/shared.tsx`; memory/reflections/plans/goals stat-row wrappers use it; full route smoke passes with `route_count=14` |
 | PRJ-1022 | Audit next module route cleanup target after stat row extraction | DONE | selected shared module activity list extraction for memory/reflections recent movement rows |
 | PRJ-1023 | Extract shared module activity list | DONE | `ModuleActivityList` lives in `web/src/components/shared.tsx`; memory/reflections recent activity rows use it; full route smoke passes with `route_count=14` |
-| PRJ-1024 | Audit next module route cleanup target after activity list extraction | READY_AFTER_PRJ-1023 | choose whether prompt/signal/context card lists or decorative route panels should move next |
+| PRJ-1024 | Audit next module route cleanup target after activity list extraction | DONE | selected shared route-keyed title/body card list extraction for reflection prompts, planning suggestions, and goal signals |
+| PRJ-1025 | Extract shared module text card list | READY_AFTER_PRJ-1024 | `ModuleTextCardList` covers reflection prompt cards, planning step cards, and goal signal cards while data construction stays in `App()` |
 | PRJ-968 | Add release evidence index | DONE | `docs/operations/release-evidence-index.md` shows current candidate lineage, production SHA, release tag target, blockers, and next action |
 | PRJ-969 | Add Coolify fallback secret/runbook readiness check | DONE | `check_coolify_fallback_readiness.py` reports whether approved webhook fallback inputs are present without triggering deploy |
 | PRJ-970 | Add release go/no-go command wrapper | DONE | `run_release_go_no_go.py` composes release reality audit with release-smoke posture and prints GO/HOLD |

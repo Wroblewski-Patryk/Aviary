@@ -2,6 +2,24 @@
 
 Last updated: 2026-05-03
 
+## Fresh Module Text Card List Audit (2026-05-03)
+
+- `PRJ-1024` is DONE:
+  - `.codex/tasks/PRJ-1024-next-module-cleanup-after-activity-list-audit.md`
+- result:
+  - selected a shared route-keyed title/body card-list component as the next
+    module route cleanup slice
+  - target routes: `/reflections` prompt cards, `/plans` next-step cards, and
+    `/goals` signal cards
+  - deferred memory signal cards because they include `meta`
+  - deferred dot-row context lists and decorative goal horizon panels because
+    they are different visual shapes
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1025` extract shared module text card list
+
 ## Fresh Module Activity List Extraction (2026-05-03)
 
 - `PRJ-1023` is DONE:
