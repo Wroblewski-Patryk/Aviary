@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+## Fresh Dead Frontend Component Cleanup (2026-05-03)
+
+- `PRJ-983` is DONE:
+  - `.codex/tasks/PRJ-983-remove-dead-frontend-components.md`
+- result:
+  - public route smoke confirmed `MotifFigurePanel` is still live
+  - moved `MotifFigurePanel` into `web/src/components/public-shell.tsx`
+  - confirmed `PersonalityLayerCard` had no live `web/src` references
+  - removed the unused `PersonalityLayerCard` definition from `web/src/App.tsx`
+  - avoided moving dead code into new component modules
+  - updated the v1 roadmap
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+- next smallest useful task:
+  - `PRJ-984` extract tool route helper logic from `web/src/App.tsx`
+
 ## Fresh Route Note Card Extraction (2026-05-03)
 
 - `PRJ-982` is DONE:
@@ -700,7 +719,11 @@ Last updated: 2026-05-03
     - completed in this iteration by moving matching route note cards to
       `RouteNoteCard`
   - `PRJ-983` Remove or relocate dead frontend component definitions:
-    READY_AFTER_PRJ-982
+    DONE
+    - completed in this iteration by relocating live `MotifFigurePanel` and
+      removing unused `PersonalityLayerCard`
+  - `PRJ-984` Extract tool route helper logic from `web/src/App.tsx`:
+    READY_AFTER_PRJ-983
 
 ## Fresh V1 Deploy Parity Blocker (2026-05-03)
 

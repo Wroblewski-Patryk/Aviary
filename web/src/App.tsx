@@ -16,7 +16,7 @@ import { ChevronDownIcon, CloseIcon, MicrophoneIcon, PlusIcon, SendArrowIcon } f
 import { ChatFlowStage } from "./components/chat";
 import { DashboardSignalCard } from "./components/dashboard";
 import { PersonalityTimelineRow } from "./components/personality";
-import { PublicGlyph } from "./components/public-shell";
+import { MotifFigurePanel, PublicGlyph } from "./components/public-shell";
 import {
   FeedbackBanner,
   FlowRail,
@@ -2202,81 +2202,6 @@ function summaryLines(sectionKey: string, payload: unknown): string[] {
     ];
   }
   return [prettyJson(payload).slice(0, 140)];
-}
-
-function MotifFigurePanel({
-  highlights,
-  artSrc = CANONICAL_PERSONA_FIGURE_SRC,
-  scenic = false,
-  overlay,
-}: {
-  highlights: Array<{ label: string; value: string }>;
-  artSrc?: string;
-  scenic?: boolean;
-  overlay?: ReactNode;
-}) {
-  return (
-    <div
-      className={`aion-landing-motif-stage ${scenic ? "aion-landing-motif-stage-scenic" : ""}`}
-    >
-      <div className="aion-landing-motif-orbit" aria-hidden="true" />
-      {scenic ? (
-        <div
-          aria-hidden="true"
-          className="aion-landing-motif-scene"
-          style={{ backgroundImage: `url("${artSrc}")` }}
-        />
-      ) : (
-        <img alt="" aria-hidden="true" className="aion-landing-motif-art" src={artSrc} />
-      )}
-      {overlay ? <div className="aion-landing-motif-overlay">{overlay}</div> : null}
-      {highlights.map((item, index) => (
-        <article
-          key={item.label}
-          className={`aion-landing-motif-note aion-landing-motif-note-${index + 1}`}
-        >
-          <p className="aion-landing-motif-note-label">{item.label}</p>
-          <p className="aion-landing-motif-note-value">{item.value}</p>
-        </article>
-      ))}
-    </div>
-  );
-}
-
-function PersonalityLayerCard({
-  zone,
-  title,
-  symbol,
-  body,
-  highlights,
-}: {
-  zone: string;
-  title: string;
-  symbol: string;
-  body: string;
-  highlights: string[];
-}) {
-  return (
-    <article className="aion-panel-soft rounded-[1.7rem] p-4">
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.22em] text-base-800">{zone}</p>
-          <h4 className="mt-2 font-display text-2xl text-base-900">{title}</h4>
-        </div>
-        <span className="aion-chip flex h-11 w-11 items-center justify-center rounded-full text-lg font-semibold text-base-900">
-          {symbol}
-        </span>
-      </div>
-      <p className="text-sm leading-7 text-base-800">{body}</p>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {highlights.map((item) => (
-          <span key={item} className="aion-chip-ghost rounded-full px-3 py-1 text-xs font-medium">
-            {item}
-          </span>
-        ))}
-      </div>
-    </article>
-  );
 }
 
 export default function App() {

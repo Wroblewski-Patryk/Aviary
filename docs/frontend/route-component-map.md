@@ -36,7 +36,7 @@ parity suite.
 | --- | --- | --- |
 | Route list and route normalization | `web/src/routes.ts` | `RoutePath`, `ROUTES`, `normalizeRoute`, `navigate`, `navigatePublicEntry` |
 | Public/auth shell | `web/src/App.tsx` | Public home, login/register modal, session bootstrap, logout/reset redirects |
-| Public shell helpers | `web/src/components/public-shell.tsx` | `PublicGlyph` SVG selection used by public proof and feature sections |
+| Public shell helpers | `web/src/components/public-shell.tsx` | `MotifFigurePanel`, `PublicGlyph` |
 | Authenticated product shell | `web/src/App.tsx` | Sidebar layout, mobile tab bar, route rendering, route copy |
 | Shell chrome helpers | `web/src/components/shell.tsx` | `SidebarIconKind`, `ShellNavButton`, `AviaryWordmark`, `SidebarBrandBlock`, `ShellUtilityBar` |
 | App icon primitives | `web/src/components/app-icons.tsx` | `ChevronDownIcon`, `CloseIcon`, `PlusIcon`, `MicrophoneIcon`, `SendArrowIcon` |
@@ -106,7 +106,7 @@ claim component-level separation beyond the extracted route contract.
 | --- | --- | --- |
 | Routing and labels | `normalizeRoute`, `navigate`, `routeLabel`, `routeDescription` | all routes |
 | Dashboard components | `DashboardSignalCard` in `web/src/components/dashboard.tsx` | dashboard |
-| Public shell | public home render branch in `web/src/App.tsx`, `AviaryWordmark` in `web/src/components/shell.tsx`, `PublicGlyph` in `web/src/components/public-shell.tsx` | `/`, `/login` |
+| Public shell | public home render branch in `web/src/App.tsx`, `AviaryWordmark` in `web/src/components/shell.tsx`, `MotifFigurePanel` and `PublicGlyph` in `web/src/components/public-shell.tsx` | `/`, `/login` |
 | Shell chrome | `SidebarGlyph`, `ShellNavButton`, `SidebarBrandBlock`, `AviaryWordmark`, `ShellUtilityBar` in `web/src/components/shell.tsx` | authenticated routes |
 | App control icons | `ChevronDownIcon`, `CloseIcon`, `PlusIcon`, `MicrophoneIcon`, `SendArrowIcon` in `web/src/components/app-icons.tsx` | public auth modal, sidebar, chat composer |
 | Shared panels | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel`, `RouteStatCard`, `RouteNoteCard` in `web/src/components/shared.tsx` | dashboard and module routes |

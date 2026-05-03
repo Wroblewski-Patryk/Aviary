@@ -1,3 +1,42 @@
+import type { ReactNode } from "react";
+
+export function MotifFigurePanel({
+  highlights,
+  artSrc,
+  scenic = false,
+  overlay,
+}: {
+  highlights: Array<{ label: string; value: string }>;
+  artSrc: string;
+  scenic?: boolean;
+  overlay?: ReactNode;
+}) {
+  return (
+    <div className={`aion-landing-motif-stage ${scenic ? "aion-landing-motif-stage-scenic" : ""}`}>
+      <div className="aion-landing-motif-orbit" aria-hidden="true" />
+      {scenic ? (
+        <div
+          aria-hidden="true"
+          className="aion-landing-motif-scene"
+          style={{ backgroundImage: `url("${artSrc}")` }}
+        />
+      ) : (
+        <img alt="" aria-hidden="true" className="aion-landing-motif-art" src={artSrc} />
+      )}
+      {overlay ? <div className="aion-landing-motif-overlay">{overlay}</div> : null}
+      {highlights.map((item, index) => (
+        <article
+          key={item.label}
+          className={`aion-landing-motif-note aion-landing-motif-note-${index + 1}`}
+        >
+          <p className="aion-landing-motif-note-label">{item.label}</p>
+          <p className="aion-landing-motif-note-value">{item.value}</p>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 export function PublicGlyph({ kind }: { kind: string }) {
   if (kind === "understanding") {
     return (
