@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+## Fresh Tools Fact Card Extraction (2026-05-03)
+
+- `PRJ-986` is DONE:
+  - `.codex/tasks/PRJ-986-tools-item-fact-card-extraction.md`
+- result:
+  - added `ToolsFactCard` to `web/src/components/tools.tsx`
+  - moved repeated tools item fact-card chrome out of `web/src/App.tsx`
+  - kept availability/provider/link values, toggle handling, and saving state
+    in the existing tools route context
+  - updated the frontend route/component map and v1 roadmap
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+- next smallest useful task:
+  - `PRJ-987` extract tools detail-card component cluster from
+    `web/src/App.tsx`
+
 ## Fresh Tools Summary Card Extraction (2026-05-03)
 
 - `PRJ-985` is DONE:

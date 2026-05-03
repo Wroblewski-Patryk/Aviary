@@ -40,7 +40,7 @@ import {
   SidebarBrandBlock,
   type SidebarIconKind,
 } from "./components/shell";
-import { ToolsSummaryCard } from "./components/tools";
+import { ToolsFactCard, ToolsSummaryCard } from "./components/tools";
 import { ROUTES, navigate, navigatePublicEntry, normalizeRoute, type RoutePath } from "./routes";
 
 type AuthMode = "login" | "register";
@@ -5907,14 +5907,12 @@ export default function App() {
                             </div>
 
                             <div className="aion-tools-fact-grid">
-                              <div className="aion-tools-fact-card">
-                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.availability}</p>
+                              <ToolsFactCard label={copy.tools.availability}>
                                 <p className="mt-2 text-base font-semibold text-base-900">
                                   {item.enabled ? copy.common.on : copy.common.off}
                                 </p>
-                              </div>
-                              <div className="aion-tools-fact-card">
-                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.provider}</p>
+                              </ToolsFactCard>
+                              <ToolsFactCard label={copy.tools.provider}>
                                 <p className="mt-2 text-base font-semibold text-base-900">
                                   {item.provider.name.replaceAll("_", " ")}
                                 </p>
@@ -5925,9 +5923,8 @@ export default function App() {
                                       ? copy.tools.providerConfiguredValue
                                       : copy.tools.providerNotConfiguredValue}
                                 </p>
-                              </div>
-                              <div className="aion-tools-fact-card">
-                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.control}</p>
+                              </ToolsFactCard>
+                              <ToolsFactCard label={copy.tools.control}>
                                 {item.user_control.toggle_allowed ? (
                                   <label className="mt-2 flex items-center gap-3">
                                     <input
@@ -5950,13 +5947,12 @@ export default function App() {
                                 ) : (
                                   <p className="mt-2 text-base font-semibold text-base-900">{copy.tools.readOnly}</p>
                                 )}
-                              </div>
-                              <div className="aion-tools-fact-card">
-                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.linkState}</p>
+                              </ToolsFactCard>
+                              <ToolsFactCard label={copy.tools.linkState}>
                                 <p className="mt-2 text-base font-semibold text-base-900">
                                   {formatToolLinkState(item.link_state, copy.tools)}
                                 </p>
-                              </div>
+                              </ToolsFactCard>
                             </div>
 
                             <div className="space-y-3">
