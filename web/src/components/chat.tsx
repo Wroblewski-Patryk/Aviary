@@ -112,6 +112,35 @@ export const ChatTranscriptMessageRow = forwardRef<
   );
 });
 
+export const ChatTranscriptShell = forwardRef<
+  HTMLDivElement,
+  {
+    loadingFallback?: ReactNode;
+    transcript: ReactNode;
+    composer: ReactNode;
+  }
+>(function ChatTranscriptShell(
+  {
+    loadingFallback,
+    transcript,
+    composer,
+  },
+  ref,
+) {
+  return (
+    <div className="aion-chat-thread-column">
+      <div
+        ref={ref}
+        className="aion-chat-transcript"
+      >
+        {loadingFallback}
+        {transcript}
+      </div>
+      {composer}
+    </div>
+  );
+});
+
 export function ChatCognitiveBelt({
   items,
   goalProgress,

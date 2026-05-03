@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-03
 
+## Fresh Chat Transcript Shell Extraction (2026-05-03)
+
+- `PRJ-1015` is DONE:
+  - `.codex/tasks/PRJ-1015-chat-transcript-shell-extraction.md`
+- result:
+  - added `ChatTranscriptShell` to `web/src/components/chat.tsx`
+  - moved thread-column and transcript-container presentation out of
+    `web/src/App.tsx`
+  - kept loading fallback selection, message mapping, message refs,
+    delivery-state/label calculation, timestamp formatting, markdown rendering,
+    composer state/handlers, and route data helpers in `App()`
+  - updated frontend route/component map, route cluster audit, and v1 roadmap
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1016` audit chat route data-helper extraction after shell cleanup
+
 ## Fresh Chat Post-Portrait Extraction Audit (2026-05-03)
 
 - `PRJ-1014` is DONE:

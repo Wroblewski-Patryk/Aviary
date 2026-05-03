@@ -30,6 +30,7 @@ timeline row, and tools component extractions.
 | Markdown rendering | `renderChatMarkdown` in `web/src/lib/chat-markdown.tsx`; characterization in `web/scripts/chat-markdown-characterization.mjs` | `/chat` | Extracted and characterized in PRJ-1003 |
 | Chat transcript metadata | `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems` in `web/src/lib/chat-transcript.ts` | `/chat` | Extracted in PRJ-1001 |
 | Chat transcript row | `ChatTranscriptMessageRow` in `web/src/components/chat.tsx` | `/chat` | Extracted in PRJ-1007; mapping, refs, delivery, timestamp, and markdown remain in `App()` |
+| Chat transcript shell | `ChatTranscriptShell` in `web/src/components/chat.tsx` | `/chat` | Extracted in PRJ-1015; container ref, loading fallback, rows, and composer are passed explicitly |
 | Chat composer shell | `ChatComposerShell` in `web/src/components/chat.tsx` | `/chat` | Extracted in PRJ-1005; send behavior remains in `App()` |
 | Chat cognitive belt | `ChatCognitiveBelt` in `web/src/components/chat.tsx` | `/chat` | Extracted in PRJ-1009; card data and goal-progress derivation remain in `App()` |
 | Chat topbar | `ChatTopbar` in `web/src/components/chat.tsx` | `/chat` | Extracted in PRJ-1011; active summary and posture labels remain in `App()` |
@@ -183,3 +184,10 @@ implementation slice:
   `renderChatMarkdown(...)` in `App()`
 - defer chat route data-helper extraction because it is broader than a shell
   presentation slice
+
+`PRJ-1015` implemented the shell slice with `ChatTranscriptShell` in
+`web/src/components/chat.tsx`. The component owns the thread-column and
+transcript-container classes and forwards the container ref. `App()` still owns
+loading fallback selection, message mapping, message refs, delivery-state and
+delivery-label calculation, timestamp formatting, markdown rendering, composer
+state/handlers, and chat route data helpers.

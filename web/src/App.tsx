@@ -51,6 +51,7 @@ import {
   ChatPortraitPanel,
   ChatTopbar,
   ChatTranscriptMessageRow,
+  ChatTranscriptShell,
   type ChatCognitiveBeltItem,
 } from "./components/chat";
 import { DashboardSignalCard } from "./components/dashboard";
@@ -4385,20 +4386,19 @@ export default function App() {
                 />
 
                 <div className="aion-chat-stage">
-                  <div className="aion-chat-thread-column">
-                    <div
-                      ref={transcriptContainerRef}
-                      className="aion-chat-transcript"
-                    >
-                      {historyLoading && transcriptItems.length === 0 ? (
+                  <ChatTranscriptShell
+                    ref={transcriptContainerRef}
+                    loadingFallback={
+                      historyLoading && transcriptItems.length === 0 ? (
                         <StatePanel
                           tone="neutral"
                           title={copy.common.stateLoadingTitle}
                           body={copy.common.loading}
                           loading
                         />
-                      ) : null}
-                      {visibleTranscriptItems.map((message) => {
+                      ) : null
+                    }
+                    transcript={visibleTranscriptItems.map((message) => {
                         const isUser = message.role === "user";
                         const deliveryState = isUser ? chatDeliveryState(message) : null;
                         const deliveryLabel =
@@ -4426,26 +4426,27 @@ export default function App() {
                             {renderChatMarkdown(message.text)}
                           </ChatTranscriptMessageRow>
                         );
-                      })}
-                    </div>
-
-                    <ChatComposerShell
-                      quickActions={chatQuickActions}
-                      text={chatText}
-                      placeholder={copy.chat.placeholder}
-                      sending={sendingMessage}
-                      sendLabel={copy.chat.send}
-                      note="AION may make mistakes. Consider checking important information."
-                      addIcon={<PlusIcon />}
-                      voiceIcon={<MicrophoneIcon />}
-                      sendIcon={<SendArrowIcon />}
-                      onQuickAction={setChatText}
-                      onTextChange={setChatText}
-                      onSubmit={(event) => {
-                        void handleSendMessage(event);
-                      }}
-                    />
-                  </div>
+                      })
+                    }
+                    composer={
+                      <ChatComposerShell
+                        quickActions={chatQuickActions}
+                        text={chatText}
+                        placeholder={copy.chat.placeholder}
+                        sending={sendingMessage}
+                        sendLabel={copy.chat.send}
+                        note="AION may make mistakes. Consider checking important information."
+                        addIcon={<PlusIcon />}
+                        voiceIcon={<MicrophoneIcon />}
+                        sendIcon={<SendArrowIcon />}
+                        onQuickAction={setChatText}
+                        onTextChange={setChatText}
+                        onSubmit={(event) => {
+                          void handleSendMessage(event);
+                        }}
+                      />
+                    }
+                  />
 
                   <ChatPortraitPanel
                     currentFocus={chatCurrentFocus}
