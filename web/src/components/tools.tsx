@@ -32,3 +32,18 @@ export function ToolsFactCard({
     </div>
   );
 }
+
+export function ToolsDetailCard({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="aion-tools-detail-card">
+      <p className="text-xs uppercase tracking-[0.18em] text-base-800">{label}</p>
+      {children}
+    </div>
+  );
+}

@@ -40,7 +40,7 @@ import {
   SidebarBrandBlock,
   type SidebarIconKind,
 } from "./components/shell";
-import { ToolsFactCard, ToolsSummaryCard } from "./components/tools";
+import { ToolsDetailCard, ToolsFactCard, ToolsSummaryCard } from "./components/tools";
 import { ROUTES, navigate, navigatePublicEntry, normalizeRoute, type RoutePath } from "./routes";
 
 type AuthMode = "login" | "register";
@@ -5956,17 +5956,15 @@ export default function App() {
                             </div>
 
                             <div className="space-y-3">
-                              <div className="aion-tools-detail-card">
-                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.currentStatus}</p>
+                              <ToolsDetailCard label={copy.tools.currentStatus}>
                                 <p className="mt-2 text-sm leading-7 text-base-900">{item.status_reason}</p>
-                              </div>
+                              </ToolsDetailCard>
 
-                              <div className="aion-tools-detail-card">
-                                <p className="text-xs uppercase tracking-[0.18em] text-base-800">{copy.tools.nextStep}</p>
+                              <ToolsDetailCard label={copy.tools.nextStep}>
                                 <p className="mt-2 text-sm leading-7 text-base-900">
                                   {summarizeToolAction(item.next_actions, copy.tools.noAction)}
                                 </p>
-                              </div>
+                              </ToolsDetailCard>
 
                               {item.id === "telegram" &&
                               item.user_control.requested_enabled &&

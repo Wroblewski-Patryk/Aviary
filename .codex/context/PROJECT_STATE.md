@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-987` completed tools detail-card extraction:
+  - task:
+    - `.codex/tasks/PRJ-987-tools-detail-card-extraction.md`
+  - result:
+    - added `ToolsDetailCard` to `web/src/components/tools.tsx`
+    - moved tools current-status and next-step detail-card chrome out of
+      `web/src/App.tsx`
+    - kept next-action summarization and Telegram link-code behavior in the
+      existing tools route context
+    - updated the frontend route/component map and v1 roadmap
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=14`
+  - next execution priority:
+    - `PRJ-988` extract tools technical-detail panel component cluster from
+      `web/src/App.tsx`
+
 - 2026-05-03: `PRJ-986` completed tools item fact-card extraction:
   - task:
     - `.codex/tasks/PRJ-986-tools-item-fact-card-extraction.md`
