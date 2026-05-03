@@ -93,6 +93,39 @@ export function FlowRail({
   );
 }
 
+export function ModuleOverviewBar({
+  routeKey,
+  eyebrow,
+  title,
+  subtitle,
+  statusLabel,
+  statusValue,
+  statusAriaLabel,
+}: {
+  routeKey: string;
+  eyebrow: ReactNode;
+  title: ReactNode;
+  subtitle: ReactNode;
+  statusLabel: ReactNode;
+  statusValue: ReactNode;
+  statusAriaLabel: string;
+}) {
+  return (
+    <section className={`aion-${routeKey}-overview-bar`}>
+      <span className="aion-chat-headline-emblem" aria-hidden="true" />
+      <div className={`aion-${routeKey}-overview-copy`}>
+        <p className="text-sm uppercase tracking-[0.24em] text-base-800">{eyebrow}</p>
+        <h2 className="mt-1.5 font-display text-4xl text-base-900">{title}</h2>
+        <p className="mt-2 text-sm leading-6 text-base-800">{subtitle}</p>
+      </div>
+      <div className={`aion-${routeKey}-overview-status`} aria-label={statusAriaLabel}>
+        <span>{statusLabel}</span>
+        <strong>{statusValue}</strong>
+      </div>
+    </section>
+  );
+}
+
 export function RouteHeroPanel({
   eyebrow,
   title,

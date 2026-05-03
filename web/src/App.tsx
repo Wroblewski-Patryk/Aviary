@@ -63,6 +63,7 @@ import {
   FlowRail,
   InsightPanel,
   ModuleEntryCard,
+  ModuleOverviewBar,
   ModuleRouteSidePanel,
   ModuleRouteSideRow,
   RouteNoteCard,
@@ -4440,18 +4441,15 @@ export default function App() {
 
           {route === "/memory" ? (
             <div className="aion-memory-canvas grid gap-4">
-              <section className="aion-memory-overview-bar">
-                <span className="aion-chat-headline-emblem" aria-hidden="true" />
-                <div className="aion-memory-overview-copy">
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.memory.eyebrow}</p>
-                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.memory.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.memory.subtitle}</p>
-                </div>
-                <div className="aion-memory-overview-status" aria-label="Memory status">
-                  <span>{copy.memory.continuity}</span>
-                  <strong>{memoryPatternCount} {memoryPatternUnit}</strong>
-                </div>
-              </section>
+              <ModuleOverviewBar
+                routeKey="memory"
+                eyebrow={copy.memory.eyebrow}
+                title={copy.memory.title}
+                subtitle={copy.memory.subtitle}
+                statusLabel={copy.memory.continuity}
+                statusValue={`${memoryPatternCount} ${memoryPatternUnit}`}
+                statusAriaLabel="Memory status"
+              />
 
               <section className="aion-memory-stat-row" aria-label="Memory summary">
                 {memoryStatCards.map((item) => (
@@ -4535,18 +4533,15 @@ export default function App() {
 
           {route === "/reflections" ? (
             <div className="aion-reflections-canvas grid gap-4">
-              <section className="aion-reflections-overview-bar">
-                <span className="aion-chat-headline-emblem" aria-hidden="true" />
-                <div className="aion-reflections-overview-copy">
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.reflections.eyebrow}</p>
-                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.reflections.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.reflections.subtitle}</p>
-                </div>
-                <div className="aion-reflections-overview-status" aria-label="Reflection status">
-                  <span>{copy.reflections.slowLearning}</span>
-                  <strong>{reflectionInsightCount} {reflectionInsightUnit}</strong>
-                </div>
-              </section>
+              <ModuleOverviewBar
+                routeKey="reflections"
+                eyebrow={copy.reflections.eyebrow}
+                title={copy.reflections.title}
+                subtitle={copy.reflections.subtitle}
+                statusLabel={copy.reflections.slowLearning}
+                statusValue={`${reflectionInsightCount} ${reflectionInsightUnit}`}
+                statusAriaLabel="Reflection status"
+              />
 
               <section className="aion-reflections-stat-row" aria-label="Reflection summary">
                 {reflectionStatCards.map((item) => (
@@ -4625,18 +4620,15 @@ export default function App() {
 
           {route === "/plans" ? (
             <div className="aion-plans-canvas grid gap-4">
-              <section className="aion-plans-overview-bar">
-                <span className="aion-chat-headline-emblem" aria-hidden="true" />
-                <div className="aion-plans-overview-copy">
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.plans.eyebrow}</p>
-                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.plans.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.plans.subtitle}</p>
-                </div>
-                <div className="aion-plans-overview-status" aria-label="Planning status">
-                  <span>{copy.plans.activeGoals}</span>
-                  <strong>{plansGoalCount} {plansGoalUnit}</strong>
-                </div>
-              </section>
+              <ModuleOverviewBar
+                routeKey="plans"
+                eyebrow={copy.plans.eyebrow}
+                title={copy.plans.title}
+                subtitle={copy.plans.subtitle}
+                statusLabel={copy.plans.activeGoals}
+                statusValue={`${plansGoalCount} ${plansGoalUnit}`}
+                statusAriaLabel="Planning status"
+              />
 
               <section className="aion-plans-stat-row" aria-label="Planning summary">
                 {plansStatCards.map((item) => (
@@ -4715,18 +4707,15 @@ export default function App() {
 
           {route === "/goals" ? (
             <div className="aion-goals-canvas grid gap-4">
-              <section className="aion-goals-overview-bar">
-                <span className="aion-chat-headline-emblem" aria-hidden="true" />
-                <div className="aion-goals-overview-copy">
-                  <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.goals.eyebrow}</p>
-                  <h2 className="mt-1.5 font-display text-4xl text-base-900">{copy.goals.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-base-800">{copy.goals.subtitle}</p>
-                </div>
-                <div className="aion-goals-overview-status" aria-label="Goal status">
-                  <span>{copy.goals.active}</span>
-                  <strong>{goalsCount} {goalsUnit}</strong>
-                </div>
-              </section>
+              <ModuleOverviewBar
+                routeKey="goals"
+                eyebrow={copy.goals.eyebrow}
+                title={copy.goals.title}
+                subtitle={copy.goals.subtitle}
+                statusLabel={copy.goals.active}
+                statusValue={`${goalsCount} ${goalsUnit}`}
+                statusAriaLabel="Goal status"
+              />
 
               <section className="aion-goals-stat-row" aria-label="Goal summary">
                 {goalsStatCards.map((item) => (

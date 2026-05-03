@@ -12,10 +12,10 @@ timeline row, and tools component extractions.
 | --- | ---: | --- | --- |
 | `/dashboard` | 4058 | Large visual flagship branch; partially uses `DashboardSignalCard` and shared panels | Defer broad moves until a screenshot-parity slice is active |
 | `/chat` | 4353 | High-behavior branch now split across chat helpers/components; route state, API calls, send behavior, and message mapping remain in `App()` | No immediate chat extraction before a fresh behavior/state audit |
-| `/memory` | 4441 | Module-style overview route using shared cards with route-local overview bar chrome | PRJ-1018 selected shared module overview bar extraction next |
-| `/reflections` | 4536 | Module-style overview route using shared cards with route-local overview bar chrome | Candidate for the same module overview bar extraction |
-| `/plans` | 4626 | Module-style overview route using shared cards with route-local overview bar chrome | Candidate for the same module overview bar extraction |
-| `/goals` | 4716 | Module-style overview route using shared cards with route-local overview bar chrome | Candidate for the same module overview bar extraction |
+| `/memory` | 4441 | Module-style overview route using shared cards and `ModuleOverviewBar` | Inner module panels remain future candidates |
+| `/reflections` | 4536 | Module-style overview route using shared cards and `ModuleOverviewBar` | Inner module panels remain future candidates |
+| `/plans` | 4626 | Module-style overview route using shared cards and `ModuleOverviewBar` | Inner module panels remain future candidates |
+| `/goals` | 4716 | Module-style overview route using shared cards and `ModuleOverviewBar` | Inner module panels remain future candidates |
 | `/insights` | 4812 | Module-style overview route using shared note/stat/side-panel patterns | Side-panel/row chrome extracted in PRJ-995; broader route module extraction can wait |
 | `/automations` | 4911 | Module-style route mixed with health-derived scheduler posture and shared side-panel patterns | Health helper ownership remains a later provider-aware candidate |
 | `/integrations` | 5009 | Tools/health provider readiness branch; already benefits from tool helper extraction | Defer until provider/health ownership audit |
@@ -221,3 +221,8 @@ next safe frontend architecture slice is a shared module overview bar:
   labels through explicit props
 - defer dashboard/personality because they are flagship visual surfaces
 - defer provider/health helpers until a provider-aware ownership audit
+
+`PRJ-1019` implemented that slice with `ModuleOverviewBar` in
+`web/src/components/shared.tsx`. `/memory`, `/reflections`, `/plans`, and
+`/goals` now pass route key, copy, status label/value, and aria label explicitly
+while preserving existing route-specific selectors and route data ownership.

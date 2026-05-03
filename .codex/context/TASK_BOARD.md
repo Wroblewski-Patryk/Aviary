@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-03
 
+## Fresh Module Overview Bar Extraction (2026-05-03)
+
+- `PRJ-1019` is DONE:
+  - `.codex/tasks/PRJ-1019-module-overview-bar-extraction.md`
+- result:
+  - added `ModuleOverviewBar` to `web/src/components/shared.tsx`
+  - replaced repeated overview bars for `/memory`, `/reflections`, `/plans`,
+    and `/goals`
+  - preserved route-keyed CSS selectors, aria labels, copy, status labels, and
+    route data ownership in `App()`
+  - updated frontend route/component map, route cluster audit, and v1 roadmap
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1020` audit next module route cleanup target after overview bar
+    extraction
+
 ## Fresh Post-Chat Frontend Architecture Audit (2026-05-03)
 
 - `PRJ-1018` is DONE:
