@@ -26,14 +26,14 @@ Keep the repository predictable, easy to scan, and friendly for human and AI con
 ## Documentation Rules
 
 - Keep long-form project documentation under `docs/`.
-- Preserve the existing numbered files under `docs/basics/` because they already act as the original narrative map for AION.
+- Preserve the existing numbered files under `docs/architecture/` because they act as the canonical narrative map for AION.
 - Put newer operational and governance docs in category folders such as:
-  - `docs/assumptions/`
+  - `docs/implementation/`
   - `docs/governance/`
   - `docs/engineering/`
   - `docs/planning/`
   - `docs/operations/`
-- When a Codex run discovers a repo fact that should not yet overwrite the canonical story, record it in `docs/assumptions/` first.
+- When a Codex run discovers a repo fact that should not yet overwrite the canonical story, record it in `docs/implementation/` or the relevant category folder first.
 
 ## Code Layout Rules
 
@@ -52,7 +52,7 @@ Keep the repository predictable, easy to scan, and friendly for human and AI con
 When adding new docs:
 
 1. Prefer an existing `docs/` subfolder.
-2. If the content is current-state and still fluid, place it in `docs/assumptions/`.
+2. If the content is current-state and still fluid, place it in `docs/implementation/` or the relevant category folder.
 3. Update `docs/README.md` so the new file is discoverable.
 
 ## Cross-Repo Boundary

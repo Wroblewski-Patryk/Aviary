@@ -82,6 +82,8 @@ near-term coordination direction without rewriting the canonical architecture.
 
 - `governance/working-agreements.md`
 - `governance/repository-structure-policy.md`
+- `governance/language-policy.md`
+- `governance/subagent-delegation-policy.md`
 - `governance/function-coverage-ledger-standard.md`
 - `governance/autonomous-engineering-loop.md`
 - `governance/function-coverage-ledger-template.csv`

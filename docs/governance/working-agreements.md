@@ -8,8 +8,8 @@ These agreements adapt the shared documentation template to the current Personal
 
 - Prefer small, auditable changes.
 - Keep implementation aligned with the event-driven runtime contract.
-- Treat `docs/basics/` as architecture intent and the category docs as repo-derived operating guidance.
-- Update assumptions before rewriting deeper narrative docs when the repo is still evolving quickly.
+- Treat `docs/architecture/` as architecture intent and the category docs as repo-derived operating guidance.
+- Update current-state implementation notes before rewriting deeper narrative docs when the repo is still evolving quickly.
 
 ## Coding Agreements
 
@@ -21,8 +21,8 @@ These agreements adapt the shared documentation template to the current Personal
 
 ## Documentation Agreements
 
-- Add or update `docs/assumptions/` whenever a Codex pass uncovers a new current-state baseline.
-- Promote stable assumptions into the relevant numbered docs when the implementation and intended design converge.
+- Add or update `docs/implementation/` or the relevant category folder whenever a Codex pass uncovers a new current-state baseline.
+- Promote stable implementation facts into the relevant numbered architecture docs when the implementation and intended design converge.
 - Keep `docs/README.md` current enough that a new contributor can find the right document within a minute.
 
 ## Operational Agreements
