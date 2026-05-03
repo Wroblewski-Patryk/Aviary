@@ -275,3 +275,11 @@ card-list component while preserving their route-specific class selectors and
 keeping all route data arrays in `App()`. The next module cleanup target should
 be audited separately before touching memory signal cards, dot-row
 guidance/context lists, or decorative route panels.
+
+`PRJ-1026` selected shared dot-row list extraction as the next implementation
+slice. `/plans` context rows and `/goals` guidance rows share the same row
+shape: wrapper grid, article row, decorative dot, title, and body. A
+route-keyed `ModuleDotRowList` can preserve the existing
+`aion-plans-context-*` and `aion-goals-guidance-*` selectors while keeping
+`plansContextCards` and `goalGuidanceCards` in `App()`. Memory signal cards and
+goal horizon rows remain deferred because their shapes are different.

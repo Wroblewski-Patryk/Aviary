@@ -2,6 +2,20 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-1026` completed module dot-row list audit:
+  - task:
+    - `.codex/tasks/PRJ-1026-next-module-cleanup-after-text-card-list-audit.md`
+  - result:
+    - selected a shared route-keyed dot-row list as the next module route
+      cleanup slice
+    - target routes: `/plans` context rows and `/goals` guidance rows
+    - deferred memory signal cards and decorative goal horizon rows/panels
+  - validation:
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-1027` extract shared module dot-row list
+
 - 2026-05-03: `PRJ-1025` completed module text-card list extraction:
   - task:
     - `.codex/tasks/PRJ-1025-module-text-card-list-extraction.md`

@@ -2,6 +2,24 @@
 
 Last updated: 2026-05-03
 
+## Fresh Module Dot Row List Audit (2026-05-03)
+
+- `PRJ-1026` is DONE:
+  - `.codex/tasks/PRJ-1026-next-module-cleanup-after-text-card-list-audit.md`
+- result:
+  - selected a shared route-keyed dot-row list as the next module route cleanup
+    slice
+  - target routes: `/plans` context rows and `/goals` guidance rows
+  - deferred memory signal cards because only `/memory` currently uses the
+    `meta` shape
+  - deferred decorative goal horizon rows and route panels because they are
+    visually richer
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1027` extract shared module dot-row list
+
 ## Fresh Module Text Card List Extraction (2026-05-03)
 
 - `PRJ-1025` is DONE:
