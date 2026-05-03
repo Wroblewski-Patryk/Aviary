@@ -4,8 +4,8 @@
 - ID: PRJ-742
 - Title: Add Dashboard Route And Canonical Flagship Shell
 - Task Type: design
-- Current Stage: verification
-- Status: COMPLETE
+- Current Stage: release
+- Status: DONE
 - Owner: Frontend Builder
 - Depends on: PRJ-739
 - Priority: P0
@@ -133,3 +133,22 @@ This slice adds the missing flagship route without adding a new backend
 contract. The implementation reuses existing web-loaded overview,
 history, tools, and account data so the dashboard remains one more shell
 surface rather than a new system.
+
+## Closure Sync - 2026-05-03
+
+- Current release status:
+  - DONE. This was previously marked `COMPLETE`, which is not the canonical
+    closed task status used by the current queue audit.
+- Current source truth:
+  - `web/src/App.tsx` keeps `/dashboard` as a first-class authenticated route
+    and includes the dashboard implementation under `aion-dashboard-*` hooks.
+  - the shared authenticated shell remains present under `aion-shell-*` hooks.
+- Superseding proof owners:
+  - `PRJ-831` dashboard first 10 slice lane.
+  - `PRJ-870` dashboard `99%` canonical evidence pass.
+  - `PRJ-875` canonical UI final route sweep.
+  - `docs/ux/dashboard-proof-matrix.md`.
+- Closure evidence:
+  - reviewed this task status, current dashboard/shell source, design memory,
+    flagship baseline transfer, and later board/project proof.
+  - no runtime files were changed by this closure sync.

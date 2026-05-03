@@ -2,6 +2,23 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-742` normalized dashboard route task status:
+  - task:
+    - `.codex/tasks/PRJ-742-add-dashboard-route-and-canonical-flagship-shell.md`
+  - result:
+    - old `COMPLETE` status was normalized to canonical closed status `DONE`
+    - historical dashboard route baseline and flagship shell work remain
+      preserved
+    - current dashboard proof remains owned by `PRJ-831`, `PRJ-870`,
+      `PRJ-875`, and `docs/ux/dashboard-proof-matrix.md`
+  - validation:
+    - PRJ-742 status, current dashboard/shell source, design memory, flagship
+      baseline transfer, and later board/project proof were reviewed
+    - `git diff --check` passed
+  - next execution priority:
+    - inspect `PRJ-643` backlog status and decide whether it is still
+      actionable
+
 - 2026-05-03: `PRJ-832` completed chat foundation lane closure:
   - task:
     - `.codex/tasks/PRJ-832-chat-first-10-slice-batch-and-foundation-pass.md`
