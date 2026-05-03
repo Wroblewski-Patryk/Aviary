@@ -2,6 +2,24 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-830` completed authenticated sidebar quote CSS closure:
+  - task:
+    - `.codex/tasks/PRJ-830-authenticated-sidebar-quote-css-consolidation-pass.md`
+  - result:
+    - the authenticated sidebar quote CSS consolidation task is no longer a
+      stale `IN_PROGRESS` item
+    - historical implementation is preserved: older overridden quote-closure
+      CSS was removed and one canonical live quote block remains with stable
+      punctuation content and final spacing values
+    - current source keeps `aion-sidebar-quote-*` hooks and one quote CSS block
+  - validation:
+    - PRJ-830 history, current sidebar quote source, design memory, flagship
+      baseline transfer, and later board/project proof were reviewed
+    - `git diff --check` passed
+  - next execution priority:
+    - review `PRJ-831` dashboard first 10 slice batch and intro pass for stale
+      status
+
 - 2026-05-03: `PRJ-829` completed authenticated sidebar final rhythm closure:
   - task:
     - `.codex/tasks/PRJ-829-authenticated-sidebar-final-gap-and-copy-rhythm-pass.md`
