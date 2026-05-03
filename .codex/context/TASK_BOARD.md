@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-03
 
+## Fresh Chat Cognitive Belt Extraction (2026-05-03)
+
+- `PRJ-1009` is DONE:
+  - `.codex/tasks/PRJ-1009-chat-cognitive-belt-extraction.md`
+- result:
+  - added `ChatCognitiveBelt` and `ChatCognitiveBeltItem` to
+    `web/src/components/chat.tsx`
+  - moved conversation-context card-list presentation and goal progress-bar
+    chrome out of `web/src/App.tsx`
+  - kept `chatCognitiveBelt` data construction, planning/health summary
+    derivation, and `chatGoalCard.progress` ownership in `App()`
+  - updated frontend route/component map, route cluster audit, and v1 roadmap
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1010` audit next chat extraction target after cognitive belt cleanup
+
 ## Fresh Chat Presentation Extraction Audit (2026-05-03)
 
 - `PRJ-1008` is DONE:

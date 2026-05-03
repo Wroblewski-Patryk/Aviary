@@ -31,6 +31,7 @@ timeline row, and tools component extractions.
 | Chat transcript metadata | `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems` in `web/src/lib/chat-transcript.ts` | `/chat` | Extracted in PRJ-1001 |
 | Chat transcript row | `ChatTranscriptMessageRow` in `web/src/components/chat.tsx` | `/chat` | Extracted in PRJ-1007; mapping, refs, delivery, timestamp, and markdown remain in `App()` |
 | Chat composer shell | `ChatComposerShell` in `web/src/components/chat.tsx` | `/chat` | Extracted in PRJ-1005; send behavior remains in `App()` |
+| Chat cognitive belt | `ChatCognitiveBelt` in `web/src/components/chat.tsx` | `/chat` | Extracted in PRJ-1009; card data and goal-progress derivation remain in `App()` |
 | Learned-state summaries | `recentActivityRows`, `summaryLines`, `stringValue`, `formatTimestamp` in `web/src/lib/learned-state-formatting.ts` | dashboard and module routes | Extracted in PRJ-997 |
 | Health/channel summaries | `conversationChannelStatus` in `App.tsx` | dashboard, automations, integrations | Deferred in PRJ-998 until provider/integration route ownership is clearer |
 | Metric formatting | `numberValue`, `scaledMetricSize` in `web/src/lib/metric-formatting.ts` | dashboard, automations, integrations, tools summary projections | Extracted in PRJ-999 |
@@ -125,3 +126,10 @@ props without changing the canonical chat layout.
 - defer the portrait/support panel because it is more tightly coupled to the
   canonical chat composition and should be audited separately
 - defer the transcript shell/container because it owns loading state and refs
+
+`PRJ-1009` implemented the cognitive belt slice with `ChatCognitiveBelt` in
+`web/src/components/chat.tsx`. The component owns only the card-list
+presentation and progress-bar element. `App()` still owns `chatCognitiveBelt`
+data construction, planning/health summary derivation, and `chatGoalCard`
+progress calculation. The next safe chat step is another audit before touching
+topbar, portrait/support panel, or transcript shell ownership.

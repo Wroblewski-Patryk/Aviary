@@ -44,7 +44,13 @@ import {
   type UiLanguageCode,
 } from "./lib/settings-formatting";
 import { ChevronDownIcon, CloseIcon, MicrophoneIcon, PlusIcon, SendArrowIcon } from "./components/app-icons";
-import { ChatComposerShell, ChatFlowStage, ChatTranscriptMessageRow } from "./components/chat";
+import {
+  ChatCognitiveBelt,
+  ChatComposerShell,
+  ChatFlowStage,
+  ChatTranscriptMessageRow,
+  type ChatCognitiveBeltItem,
+} from "./components/chat";
 import { DashboardSignalCard } from "./components/dashboard";
 import { PersonalityTimelineRow } from "./components/personality";
 import { MotifFigurePanel, PublicGlyph } from "./components/public-shell";
@@ -3068,7 +3074,7 @@ export default function App() {
     action: "Edit",
   };
   const chatPrimarySuggestedAction = chatSuggestedActions[0];
-  const chatCognitiveBelt = [
+  const chatCognitiveBelt: ChatCognitiveBeltItem[] = [
     {
       key: "intent",
       eyebrow: "Current intent",
@@ -4382,26 +4388,10 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="aion-chat-cognitive-belt" aria-label="Conversation context">
-                  {chatCognitiveBelt.map((item) => (
-                    <article
-                      key={item.key}
-                      className={`aion-chat-belt-card aion-chat-belt-card-${item.tone}`}
-                    >
-                      <div className="aion-chat-belt-card-head">
-                        <p className="aion-chat-belt-eyebrow">{item.eyebrow}</p>
-                        <span className="aion-chat-belt-meta">{item.meta}</span>
-                      </div>
-                      <h3 className="aion-chat-belt-title">{item.title}</h3>
-                      <p className="aion-chat-belt-body">{item.body}</p>
-                      {item.key === "goal" ? (
-                        <div className="aion-chat-belt-progress" aria-hidden="true">
-                          <span style={{ width: chatGoalCard.progress }} />
-                        </div>
-                      ) : null}
-                    </article>
-                  ))}
-                </div>
+                <ChatCognitiveBelt
+                  items={chatCognitiveBelt}
+                  goalProgress={chatGoalCard.progress}
+                />
 
                 <div className="aion-chat-stage">
                   <div className="aion-chat-thread-column">

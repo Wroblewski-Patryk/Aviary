@@ -1,6 +1,15 @@
 import { forwardRef, type FormEvent, type ReactNode } from "react";
 import type { ChatDeliveryState } from "../lib/chat-transcript";
 
+export type ChatCognitiveBeltItem = {
+  key: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  meta: string;
+  tone: "lead" | "soft" | "progress";
+};
+
 export function ChatFlowStage({
   label,
   title,
@@ -72,6 +81,37 @@ export const ChatTranscriptMessageRow = forwardRef<
     </div>
   );
 });
+
+export function ChatCognitiveBelt({
+  items,
+  goalProgress,
+}: {
+  items: ChatCognitiveBeltItem[];
+  goalProgress: string;
+}) {
+  return (
+    <div className="aion-chat-cognitive-belt" aria-label="Conversation context">
+      {items.map((item) => (
+        <article
+          key={item.key}
+          className={`aion-chat-belt-card aion-chat-belt-card-${item.tone}`}
+        >
+          <div className="aion-chat-belt-card-head">
+            <p className="aion-chat-belt-eyebrow">{item.eyebrow}</p>
+            <span className="aion-chat-belt-meta">{item.meta}</span>
+          </div>
+          <h3 className="aion-chat-belt-title">{item.title}</h3>
+          <p className="aion-chat-belt-body">{item.body}</p>
+          {item.key === "goal" ? (
+            <div className="aion-chat-belt-progress" aria-hidden="true">
+              <span style={{ width: goalProgress }} />
+            </div>
+          ) : null}
+        </article>
+      ))}
+    </div>
+  );
+}
 
 export function ChatComposerShell({
   quickActions,
