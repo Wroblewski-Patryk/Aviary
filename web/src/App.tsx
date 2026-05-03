@@ -22,6 +22,7 @@ import {
   FlowRail,
   InsightPanel,
   ModuleEntryCard,
+  RouteNoteCard,
   RouteHeroPanel,
   RouteStatCard,
   StatePanel,
@@ -5515,10 +5516,12 @@ export default function App() {
                     <h3 className="mt-2 font-display text-2xl text-base-900">{copy.insights.sensemakingNotes}</h3>
                     <div className="mt-5 grid gap-3">
                       {insightClarityCards.map((item) => (
-                        <article key={item.title} className="aion-insights-note-card">
-                          <h4 className="aion-insights-note-title">{item.title}</h4>
-                          <p className="aion-insights-note-body">{item.body}</p>
-                        </article>
+                        <RouteNoteCard
+                          key={item.title}
+                          routeKey="insights"
+                          title={item.title}
+                          body={item.body}
+                        />
                       ))}
                     </div>
                   </section>
@@ -5609,10 +5612,12 @@ export default function App() {
                     <h3 className="mt-2 font-display text-2xl text-base-900">{copy.automations.guardrails}</h3>
                     <div className="mt-5 grid gap-3">
                       {automationBoundaryCards.map((item) => (
-                        <article key={item.title} className="aion-automations-note-card">
-                          <h4 className="aion-automations-note-title">{item.title}</h4>
-                          <p className="aion-automations-note-body">{item.body}</p>
-                        </article>
+                        <RouteNoteCard
+                          key={item.title}
+                          routeKey="automations"
+                          title={item.title}
+                          body={item.body}
+                        />
                       ))}
                     </div>
                   </section>
@@ -5706,10 +5711,12 @@ export default function App() {
                     <h3 className="mt-2 font-display text-2xl text-base-900">{copy.integrations.connectionRules}</h3>
                     <div className="mt-5 grid gap-3">
                       {integrationBoundaryCards.map((item) => (
-                        <article key={item.title} className="aion-integrations-note-card">
-                          <h4 className="aion-integrations-note-title">{item.title}</h4>
-                          <p className="aion-integrations-note-body">{item.body}</p>
-                        </article>
+                        <RouteNoteCard
+                          key={item.title}
+                          routeKey="integrations"
+                          title={item.title}
+                          body={item.body}
+                        />
                       ))}
                     </div>
                   </section>

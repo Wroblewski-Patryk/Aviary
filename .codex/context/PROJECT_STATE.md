@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-982` completed route note card extraction:
+  - task:
+    - `.codex/tasks/PRJ-982-route-note-card-extraction.md`
+  - result:
+    - added `RouteNoteCard` to `web/src/components/shared.tsx`
+    - replaced matching note-card markup for insights, automations, and
+      integrations
+    - preserved route-specific CSS selectors through explicit `routeKey`
+    - left non-matching prompt, step, and signal card variants route-local
+    - updated the frontend route/component map and v1 roadmap
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=14`
+  - next execution priority:
+    - `PRJ-983` confirm and remove or relocate dead frontend component
+      definitions
+
 - 2026-05-03: `PRJ-981` completed shared route stat card extraction:
   - task:
     - `.codex/tasks/PRJ-981-shared-route-stat-card-extraction.md`

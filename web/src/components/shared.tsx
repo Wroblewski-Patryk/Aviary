@@ -171,6 +171,23 @@ export function RouteStatCard({
   );
 }
 
+export function RouteNoteCard({
+  routeKey,
+  title,
+  body,
+}: {
+  routeKey: string;
+  title: ReactNode;
+  body: ReactNode;
+}) {
+  return (
+    <article className={`aion-${routeKey}-note-card`}>
+      <h4 className={`aion-${routeKey}-note-title`}>{title}</h4>
+      <p className={`aion-${routeKey}-note-body`}>{body}</p>
+    </article>
+  );
+}
+
 export function FeedbackBanner({
   tone,
   title,
