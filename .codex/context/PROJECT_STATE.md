@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-977` completed chat flow stage extraction:
+  - task:
+    - `.codex/tasks/PRJ-977-chat-flow-stage-extraction.md`
+  - result:
+    - added `web/src/components/chat.tsx`
+    - moved `ChatFlowStage` out of `web/src/App.tsx`
+    - preserved chat flow-stage markup, classes, and active-state prop behavior
+    - left transcript, composer, send, and API state in `App()`
+    - updated the frontend route/component map and v1 roadmap with chat
+      component ownership
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=6`
+  - next execution priority:
+    - `PRJ-978` extract `PersonalityTimelineRow` from `web/src/App.tsx`
+      behind the same build and route-smoke gate
+
 - 2026-05-03: `PRJ-976` completed app icon cluster extraction:
   - task:
     - `.codex/tasks/PRJ-976-app-icon-cluster-extraction.md`

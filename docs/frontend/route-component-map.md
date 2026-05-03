@@ -6,7 +6,8 @@ This map documents the current browser shell without requiring a broad
 component refactor. It is grounded in `web/src/App.tsx`,
 `web/src/routes.ts`, `web/src/components/shared.tsx`, `web/src/lib/api.ts`,
 `web/src/components/shell.tsx`, `web/src/components/public-shell.tsx`, and
-`web/src/components/app-icons.tsx`, and `web/src/index.css`.
+`web/src/components/app-icons.tsx`, `web/src/components/chat.tsx`, and
+`web/src/index.css`.
 
 ## Headless Route Smoke
 
@@ -35,6 +36,7 @@ a route-mount guard, not a screenshot parity suite.
 | Authenticated product shell | `web/src/App.tsx` | Sidebar layout, mobile tab bar, route rendering, route copy |
 | Shell chrome helpers | `web/src/components/shell.tsx` | `SidebarIconKind`, `ShellNavButton`, `AviaryWordmark`, `SidebarBrandBlock`, `ShellUtilityBar` |
 | App icon primitives | `web/src/components/app-icons.tsx` | `ChevronDownIcon`, `CloseIcon`, `PlusIcon`, `MicrophoneIcon`, `SendArrowIcon` |
+| Chat components | `web/src/components/chat.tsx` | `ChatFlowStage` |
 | Shared presentational panels | `web/src/components/shared.tsx` | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel` |
 | API client | `web/src/lib/api.ts` | Typed fetch wrapper and app-facing endpoint methods |
 | Styling | `web/src/index.css` | Route layouts, product shell visuals, responsive behavior, state styling |
@@ -101,7 +103,7 @@ claim component-level separation beyond the extracted route contract.
 | Shell chrome | `SidebarGlyph`, `ShellNavButton`, `SidebarBrandBlock`, `AviaryWordmark`, `ShellUtilityBar` in `web/src/components/shell.tsx` | authenticated routes |
 | App control icons | `ChevronDownIcon`, `CloseIcon`, `PlusIcon`, `MicrophoneIcon`, `SendArrowIcon` in `web/src/components/app-icons.tsx` | public auth modal, sidebar, chat composer |
 | Shared panels | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel` in `web/src/components/shared.tsx` | dashboard and module routes |
-| Chat helpers | `renderChatMarkdown`, `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems`, `ChatFlowStage` | `/chat` |
+| Chat helpers | `renderChatMarkdown`, `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems` in `web/src/App.tsx`; `ChatFlowStage` in `web/src/components/chat.tsx` | `/chat` |
 | Tool helpers | `toolStatusClass`, `formatToolState`, `formatToolLinkState`, `summarizeToolAction` | `/tools`, `/integrations` |
 | Profile/settings helpers | `normalizeUiLanguage`, `resolveUiLanguage`, `normalizeUtcOffset`, `utcOffsetOption` | `/settings`, bootstrap |
 | Learned-state helpers | `recentActivityRows`, `summaryLines`, `conversationChannelStatus`, dashboard/personality derived summaries | dashboard, personality, memory, reflections, plans, goals, insights, automations |
@@ -114,7 +116,8 @@ claim component-level separation beyond the extracted route contract.
   `web/src/components/shared.tsx`. Shell branding, nav helpers, and the utility
   bar now live in `web/src/components/shell.tsx`; public glyphs now live in
   `web/src/components/public-shell.tsx`; pure control icons now live in
-  `web/src/components/app-icons.tsx`.
+  `web/src/components/app-icons.tsx`; the first chat presentational component
+  now lives in `web/src/components/chat.tsx`.
 - Static/fallback copy still exists for several module routes when backend
   overview fields are absent.
 - The current dedicated frontend route smoke covers the public shell and core

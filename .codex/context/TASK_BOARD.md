@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+## Fresh Chat Flow Stage Extraction (2026-05-03)
+
+- `PRJ-977` is DONE:
+  - `.codex/tasks/PRJ-977-chat-flow-stage-extraction.md`
+- result:
+  - added `web/src/components/chat.tsx`
+  - moved `ChatFlowStage` out of `web/src/App.tsx`
+  - preserved chat flow-stage markup, classes, and active-state prop behavior
+  - left transcript, composer, send, and API state in `App()`
+  - updated the frontend route/component map and v1 roadmap with chat
+    component ownership
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=6`
+- next smallest useful task:
+  - `PRJ-978` extract `PersonalityTimelineRow` from `web/src/App.tsx`
+    behind the same build and route-smoke gate
+
 ## Fresh App Icon Cluster Extraction (2026-05-03)
 
 - `PRJ-976` is DONE:
@@ -556,7 +576,11 @@ Last updated: 2026-05-03
     - completed in this iteration by moving pure SVG icon primitives to
       `web/src/components/app-icons.tsx`
   - `PRJ-977` Extract chat flow stage component from `web/src/App.tsx`:
-    READY_AFTER_PRJ-976
+    DONE
+    - completed in this iteration by moving `ChatFlowStage` to
+      `web/src/components/chat.tsx`
+  - `PRJ-978` Extract personality timeline row component from `web/src/App.tsx`:
+    READY_AFTER_PRJ-977
 
 ## Fresh V1 Deploy Parity Blocker (2026-05-03)
 
