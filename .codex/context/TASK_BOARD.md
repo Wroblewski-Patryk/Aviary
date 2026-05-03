@@ -2,6 +2,22 @@
 
 Last updated: 2026-05-03
 
+## Fresh Post-Chat Frontend Architecture Audit (2026-05-03)
+
+- `PRJ-1018` is DONE:
+  - `.codex/tasks/PRJ-1018-post-chat-frontend-architecture-audit.md`
+- result:
+  - refreshed current `web/src/App.tsx` route branch anchors after chat cleanup
+  - selected shared module overview bar extraction for `/memory`,
+    `/reflections`, `/plans`, and `/goals`
+  - deferred dashboard/personality because they are flagship visual surfaces
+  - deferred provider/health helpers until a provider-aware ownership audit
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1019` extract shared module overview bar component
+
 ## Fresh Chat Route Model Helper Extraction (2026-05-03)
 
 - `PRJ-1017` is DONE:

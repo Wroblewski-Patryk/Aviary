@@ -10,18 +10,18 @@ timeline row, and tools component extractions.
 
 | Route branch | Start line in `App.tsx` | Current extraction posture | Recommended next action |
 | --- | ---: | --- | --- |
-| `/dashboard` | 4388 | Large visual flagship branch; partially uses `DashboardSignalCard` and shared panels | Defer broad moves until a screenshot-parity slice is active |
-| `/chat` | 4559 | High-behavior branch with optimistic transcript, markdown rendering, delivery state, and extracted composer shell | PRJ-1005 extracted composer shell chrome; audit transcript message-row extraction next |
-| `/memory` | 4889 | Module-style overview route using shared cards | Good later candidate for route module extraction |
-| `/reflections` | 4984 | Module-style overview route using shared cards | Good later candidate for route module extraction |
-| `/plans` | 5074 | Module-style overview route using shared cards | Good later candidate for route module extraction |
-| `/goals` | 5164 | Module-style overview route using shared cards | Good later candidate for route module extraction |
-| `/insights` | 5260 | Module-style overview route using shared note/stat/side-panel patterns | Side-panel/row chrome extracted in PRJ-995; broader route module extraction can wait |
-| `/automations` | 5357 | Module-style route mixed with health-derived scheduler posture and shared side-panel patterns | Side-panel/row chrome extracted in PRJ-995; health helper ownership remains a later candidate |
-| `/integrations` | 5453 | Tools/health provider readiness branch; already benefits from tool helper extraction | Candidate after module side-panel extraction because it has provider/health coupling |
-| `/settings` | 5556 | Form-heavy branch; preference card/fact and side panel shells live in `web/src/components/settings.tsx`; settings formatting helpers live in `web/src/lib/settings-formatting.ts` | No immediate extraction needed in this cluster |
-| `/tools` | 5733 | Tools presentation cluster extracted to `web/src/components/tools.tsx`; route state remains in `App()` | No immediate extraction needed in this cluster |
-| `/personality` | 5949 | Visual/personality branch; partially uses `PersonalityTimelineRow` | Defer until callout/card ownership can be split without changing canonical visuals |
+| `/dashboard` | 4058 | Large visual flagship branch; partially uses `DashboardSignalCard` and shared panels | Defer broad moves until a screenshot-parity slice is active |
+| `/chat` | 4353 | High-behavior branch now split across chat helpers/components; route state, API calls, send behavior, and message mapping remain in `App()` | No immediate chat extraction before a fresh behavior/state audit |
+| `/memory` | 4441 | Module-style overview route using shared cards with route-local overview bar chrome | PRJ-1018 selected shared module overview bar extraction next |
+| `/reflections` | 4536 | Module-style overview route using shared cards with route-local overview bar chrome | Candidate for the same module overview bar extraction |
+| `/plans` | 4626 | Module-style overview route using shared cards with route-local overview bar chrome | Candidate for the same module overview bar extraction |
+| `/goals` | 4716 | Module-style overview route using shared cards with route-local overview bar chrome | Candidate for the same module overview bar extraction |
+| `/insights` | 4812 | Module-style overview route using shared note/stat/side-panel patterns | Side-panel/row chrome extracted in PRJ-995; broader route module extraction can wait |
+| `/automations` | 4911 | Module-style route mixed with health-derived scheduler posture and shared side-panel patterns | Health helper ownership remains a later provider-aware candidate |
+| `/integrations` | 5009 | Tools/health provider readiness branch; already benefits from tool helper extraction | Defer until provider/health ownership audit |
+| `/settings` | 5112 | Form-heavy branch; preference card/fact and side panel shells live in `web/src/components/settings.tsx`; settings formatting helpers live in `web/src/lib/settings-formatting.ts` | No immediate extraction needed in this cluster |
+| `/tools` | 5289 | Tools presentation cluster extracted to `web/src/components/tools.tsx`; route state remains in `App()` | No immediate extraction needed in this cluster |
+| `/personality` | 5505 | Visual/personality branch; partially uses `PersonalityTimelineRow` | Defer until callout/card ownership can be split without changing canonical visuals |
 
 ## Remaining Helper Clusters
 
@@ -210,3 +210,14 @@ focus, linked-channel fallback, intent card, motivation metrics, goal card, and
 related-memory projections from explicit summary inputs. `App()` still owns chat
 API calls, chat state, transcript reconciliation, send behavior, message
 mapping, and route rendering.
+
+`PRJ-1018` re-checked current route anchors after the chat cleanup lane. The
+next safe frontend architecture slice is a shared module overview bar:
+
+- add a route-keyed `ModuleOverviewBar` shared component
+- replace the repeated overview bar chrome for `/memory`, `/reflections`,
+  `/plans`, and `/goals`
+- preserve route-specific CSS classes, copy, status labels, values, and aria
+  labels through explicit props
+- defer dashboard/personality because they are flagship visual surfaces
+- defer provider/health helpers until a provider-aware ownership audit
