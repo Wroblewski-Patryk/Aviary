@@ -365,3 +365,10 @@ card composition and should be handled by a dedicated dashboard audit.
 progress/value row presentation while `goalHorizonRows` remains in `App()`.
 The component preserves `aion-goals-list`, `aion-goals-row-*`, and
 `aion-goals-progress` selectors.
+
+`PRJ-1040` selected dashboard progress list extraction as the next
+implementation slice. Because `/dashboard` is the flagship surface, the next
+component should live in `web/src/components/dashboard.tsx`, not the generic
+shared component module. `dashboardGoalRows` and progress-width calculations
+should remain in `App()`, while the row/list presentation moves behind a
+`DashboardProgressList` component.

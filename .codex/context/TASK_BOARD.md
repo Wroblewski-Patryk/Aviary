@@ -2,6 +2,23 @@
 
 Last updated: 2026-05-03
 
+## Fresh Dashboard Progress List Audit (2026-05-03)
+
+- `PRJ-1040` is DONE:
+  - `.codex/tasks/PRJ-1040-next-cleanup-after-goal-horizon-audit.md`
+- result:
+  - selected dashboard-specific progress list extraction as the next frontend
+    cleanup
+  - target component: `DashboardProgressList` in
+    `web/src/components/dashboard.tsx`
+  - kept `dashboardGoalRows` and progress-width calculations in `App()`
+  - deferred route data-helper extraction and broad dashboard visual panel work
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1041` extract dashboard progress list component
+
 ## Fresh Goal Horizon Row Extraction (2026-05-03)
 
 - `PRJ-1039` is DONE:
