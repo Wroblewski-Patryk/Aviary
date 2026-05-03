@@ -240,3 +240,11 @@ slice:
 `web/src/components/shared.tsx`. `/memory`, `/reflections`, `/plans`, and
 `/goals` now use a route-keyed stat-row wrapper while keeping stat card arrays
 and `RouteStatCard` mapping in `App()`.
+
+`PRJ-1022` selected the recent activity list as the next implementation slice:
+
+- add a route-keyed `ModuleActivityList` shared component
+- replace repeated recent activity row markup for `/memory` and `/reflections`
+- keep `personalityRecentActivity` data ownership and slicing in `App()`
+- defer decorative main panels because their visual structure is more
+  route-specific

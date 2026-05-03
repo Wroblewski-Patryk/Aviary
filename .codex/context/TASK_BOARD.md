@@ -2,6 +2,21 @@
 
 Last updated: 2026-05-03
 
+## Fresh Module Activity List Audit (2026-05-03)
+
+- `PRJ-1022` is DONE:
+  - `.codex/tasks/PRJ-1022-next-module-cleanup-after-stat-row-audit.md`
+- result:
+  - selected shared module activity list extraction for memory/reflections
+    recent movement rows
+  - kept `personalityRecentActivity` data ownership and slicing in `App()`
+  - deferred decorative inner panels because they are more route-specific
+- validation:
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1023` extract shared module activity list
+
 ## Fresh Module Stat Row Extraction (2026-05-03)
 
 - `PRJ-1021` is DONE:
