@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-961` completed strict-mode incident sentinel regression:
+  - task:
+    - `.codex/tasks/PRJ-961-strict-mode-incident-sentinel-regression.md`
+  - result:
+    - added strict-mode incident bundle regression for debug-disabled fallback
+    - seeded synthetic provider payload sentinels through the debug request text
+    - asserted generated `manifest.json`, `incident_evidence.json`, and
+      `health_snapshot.json` exclude the debug payload sentinels and debug user
+      id
+    - confirmed fallback evidence keeps
+      `capture_source=health_snapshot_strict_mode` and
+      `debug_payload_included=false`
+  - validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_incident_evidence_bundle_script.py; Pop-Location`
+    - result: `3 passed`
+  - next execution priority:
+    - `PRJ-964` provider request/response examples, unless external operator
+      inputs unblock `PRJ-962` Telegram smoke or `PRJ-963` organizer provider
+      smoke first
+
 - 2026-05-03: `PRJ-960` completed provider payload sentinel regressions:
   - task:
     - `.codex/tasks/PRJ-960-provider-payload-sentinel-regressions.md`

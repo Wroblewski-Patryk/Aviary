@@ -75,6 +75,26 @@ Last updated: 2026-05-03
 - next smallest useful task:
   - `PRJ-961` strict-mode incident sentinel regression
 
+## Fresh Strict-Mode Incident Sentinel Regression (2026-05-03)
+
+- `PRJ-961` is DONE:
+  - `.codex/tasks/PRJ-961-strict-mode-incident-sentinel-regression.md`
+- result:
+  - added strict-mode incident bundle regression for debug-disabled fallback
+  - seeded synthetic provider payload sentinels through the debug request text
+  - asserted generated `manifest.json`, `incident_evidence.json`, and
+    `health_snapshot.json` exclude the debug payload sentinels and debug user id
+  - confirmed fallback evidence keeps
+    `capture_source=health_snapshot_strict_mode` and
+    `debug_payload_included=false`
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_incident_evidence_bundle_script.py; Pop-Location`
+  - result: `3 passed`
+- next smallest useful task:
+  - `PRJ-964` provider request/response examples, unless external operator
+    inputs unblock `PRJ-962` Telegram smoke or `PRJ-963` organizer provider
+    smoke first
+
 ## Fresh Revision-Aware Production Health Monitor (2026-05-03)
 
 - `PRJ-957` is DONE:
@@ -199,7 +219,10 @@ Last updated: 2026-05-03
     - task: `.codex/tasks/PRJ-960-provider-payload-sentinel-regressions.md`
     - completed in this iteration with backend projection sentinels and
       frontend sanitized API types
-  - `PRJ-961` Add strict-mode incident sentinel regression: READY
+  - `PRJ-961` Add strict-mode incident sentinel regression: DONE
+    - task: `.codex/tasks/PRJ-961-strict-mode-incident-sentinel-regression.md`
+    - completed in this iteration with strict-mode bundle sentinel exclusion
+      coverage
   - `PRJ-962` Execute production Telegram live-mode smoke: BLOCKED_EXTERNAL
   - `PRJ-963` Execute organizer provider activation smoke: BLOCKED_EXTERNAL
 - P2:

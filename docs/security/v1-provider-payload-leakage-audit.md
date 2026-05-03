@@ -2,7 +2,8 @@
 
 Date: 2026-05-03
 Task: `PRJ-933`
-Status: DONE; `PRJ-960` added provider payload sentinel regressions
+Status: DONE; `PRJ-960` added provider payload sentinel regressions and
+`PRJ-961` added strict-mode incident bundle sentinel coverage
 
 ## Purpose
 
@@ -75,6 +76,14 @@ Push-Location .\web; npm run build; Pop-Location
 
 Result: passed.
 
+Strict-mode incident bundle sentinel regression:
+
+```powershell
+Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_incident_evidence_bundle_script.py; Pop-Location
+```
+
+Result: `3 passed`.
+
 Additional checks:
 
 - route/repository/policy inspection
@@ -89,8 +98,7 @@ Additional checks:
 - The PRJ-931 AI red-team scenario pack has first live execution evidence from
   `PRJ-958`, but it remains `REVIEW_REQUIRED` until assistant reply text can be
   captured for scoring.
-- Add explicit strict-mode incident-bundle regression that searches exported
-  JSON for known synthetic provider payload sentinels.
+- Strict-mode incident-bundle sentinel regression is complete in `PRJ-961`.
 - Frontend route smoke with injected overview fixtures is still useful once a
   frontend test runner exists; `PRJ-960` adds the current API type/build
   contract instead.
@@ -102,3 +110,5 @@ tools overview, health, or strict-mode incident evidence paths. The fixed
 proposal snapshot closes the only confirmed public learned-state projection
 leak candidate found during this audit. `PRJ-960` now pins app overview, tools
 overview, and health projections with synthetic provider payload sentinels.
+`PRJ-961` also pins strict-mode incident bundle export so health-derived
+evidence excludes debug payload text and synthetic provider payload sentinels.

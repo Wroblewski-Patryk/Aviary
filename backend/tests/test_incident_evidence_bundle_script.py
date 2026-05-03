@@ -250,3 +250,53 @@ def test_main_exports_health_only_bundle_when_debug_payload_is_disabled(monkeypa
         assert health_snapshot["status"] == "ok"
     finally:
         server.stop()
+
+
+def test_main_health_only_bundle_excludes_debug_payload_sentinels(monkeypatch, tmp_path: Path) -> None:
+    server = _BundleServer(debug_payload_disabled=True).start()
+    try:
+        output_root = tmp_path / "bundles"
+        sentinel_text = (
+            "CLICKUP_RAW_BODY_SENTINEL_DO_NOT_RENDER "
+            "GOOGLE_CALENDAR_PRIVATE_EVENT_SENTINEL "
+            "GOOGLE_DRIVE_FILE_CONTENT_SENTINEL "
+            "TELEGRAM_PROVIDER_UPDATE_SENTINEL"
+        )
+
+        monkeypatch.setattr(
+            MODULE,
+            "_parse_args",
+            lambda: Namespace(
+                base_url=server.base_url,
+                text=sentinel_text,
+                user_id="provider-payload-sentinel-user",
+                output_root=str(output_root),
+                capture_mode="incident",
+                debug_token="",
+                behavior_validation_report_path="",
+                trace_id="trace-strict-sentinel",
+                disable_health_only_fallback=False,
+            ),
+        )
+
+        exit_code = MODULE.main()
+
+        assert exit_code == 0
+        bundle_dirs = list(output_root.iterdir())
+        assert len(bundle_dirs) == 1
+        bundle_dir = bundle_dirs[0]
+        manifest_text = (bundle_dir / "manifest.json").read_text(encoding="utf-8")
+        incident_evidence_text = (bundle_dir / "incident_evidence.json").read_text(encoding="utf-8")
+        health_snapshot_text = (bundle_dir / "health_snapshot.json").read_text(encoding="utf-8")
+        incident_evidence = json.loads(incident_evidence_text)
+
+        assert incident_evidence["capture_source"] == "health_snapshot_strict_mode"
+        assert incident_evidence["debug_payload_included"] is False
+        assert "provider-payload-sentinel-user" not in manifest_text
+        assert "provider-payload-sentinel-user" not in incident_evidence_text
+        for sentinel in sentinel_text.split():
+            assert sentinel not in manifest_text
+            assert sentinel not in incident_evidence_text
+            assert sentinel not in health_snapshot_text
+    finally:
+        server.stop()
