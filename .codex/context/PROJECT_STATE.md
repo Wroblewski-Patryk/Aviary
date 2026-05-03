@@ -2,6 +2,27 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-1017` completed chat route model helper extraction:
+  - task:
+    - `.codex/tasks/PRJ-1017-chat-route-model-helper-extraction.md`
+  - result:
+    - added `web/src/lib/chat-route-model.ts`
+    - moved chat quick actions, current focus, linked-channel fallback, intent
+      card, motivation metrics, goal card, and related-memory projections out
+      of `web/src/App.tsx`
+    - kept chat API calls, state, transcript behavior, send behavior, and route
+      rendering in `App()`
+    - updated frontend route/component map, route cluster audit, and v1 roadmap
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=14`
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-1018` audit remaining frontend architecture gaps after chat cleanup
+
 - 2026-05-03: `PRJ-1016` completed chat route data-helper audit:
   - task:
     - `.codex/tasks/PRJ-1016-chat-route-data-helper-audit.md`

@@ -28,6 +28,7 @@ timeline row, and tools component extractions.
 | Helper cluster | Current owner | Routes | Posture |
 | --- | --- | --- | --- |
 | Markdown rendering | `renderChatMarkdown` in `web/src/lib/chat-markdown.tsx`; characterization in `web/scripts/chat-markdown-characterization.mjs` | `/chat` | Extracted and characterized in PRJ-1003 |
+| Chat route display model | `buildChatRouteModel` in `web/src/lib/chat-route-model.ts` | `/chat` | Extracted in PRJ-1017; API calls, state, send behavior, transcript behavior, and rendering remain in `App()` |
 | Chat transcript metadata | `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems` in `web/src/lib/chat-transcript.ts` | `/chat` | Extracted in PRJ-1001 |
 | Chat transcript row | `ChatTranscriptMessageRow` in `web/src/components/chat.tsx` | `/chat` | Extracted in PRJ-1007; mapping, refs, delivery, timestamp, and markdown remain in `App()` |
 | Chat transcript shell | `ChatTranscriptShell` in `web/src/components/chat.tsx` | `/chat` | Extracted in PRJ-1015; container ref, loading fallback, rows, and composer are passed explicitly |
@@ -202,3 +203,10 @@ next implementation slice:
 - keep chat API calls, chat state, transcript mapping, send behavior, and route
   rendering in `App()`
 - preserve current fallback strings and route display behavior
+
+`PRJ-1017` implemented that slice with `buildChatRouteModel` in
+`web/src/lib/chat-route-model.ts`. The helper owns quick actions, current
+focus, linked-channel fallback, intent card, motivation metrics, goal card, and
+related-memory projections from explicit summary inputs. `App()` still owns chat
+API calls, chat state, transcript reconciliation, send behavior, message
+mapping, and route rendering.

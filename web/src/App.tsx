@@ -25,6 +25,7 @@ import {
   summaryLines,
 } from "./lib/learned-state-formatting";
 import { numberValue, scaledMetricSize } from "./lib/metric-formatting";
+import { buildChatRouteModel } from "./lib/chat-route-model";
 import {
   chatDeliveryState,
   reconcileLocalTranscriptItems,
@@ -2534,42 +2535,21 @@ export default function App() {
       icon: "settings" as const,
     },
   ];
-  const chatQuickActions = ["Plan my day"];
-  const chatCurrentFocus =
-    stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "Daily planning" : "Conversation continuity";
-  const chatLinkedChannelsStatus = recentChannelsLabel === copy.common.noData ? "App only" : recentChannelsLabel;
-  const chatIntentCard = {
-    title: "Plan my day",
-    body: "Choose the next calm step.",
-    status: stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "Live" : "Ready",
-    emphasis: stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "High" : "Steady",
-  };
-  const chatMotivationMetrics = [
-    { label: "Importance", value: stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "0.80" : "0.62" },
-    { label: "Urgency", value: stringValue(planningSummary?.active_task_count, "0") !== "0" ? "0.50" : "0.32" },
-    { label: "Valence", value: "+0.20" },
-    { label: "Arousal", value: "0.60" },
-  ];
-  const chatGoalCard = {
-    title: "Project: Next meaningful step",
-    body:
-      stringValue(planningSummary?.active_goal_count, "0") !== "0"
-        ? "Protect the current plan."
-        : "Shape the next focus point.",
-    progress: stringValue(planningSummary?.active_goal_count, "0") !== "0" ? "72%" : "36%",
-  };
-  const chatRelatedMemory = [
-    {
-      title: `${stringValue(preferenceSummary?.learned_preference_count, "0")} learned cues`,
-      body: "Preferences stay near.",
-      when: "Recent",
-    },
-    {
-      title: `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} reusable patterns`,
-      body: "Summaries stay near.",
-      when: "Today",
-    },
-  ];
+  const {
+    quickActions: chatQuickActions,
+    currentFocus: chatCurrentFocus,
+    linkedChannelsStatus: chatLinkedChannelsStatus,
+    intentCard: chatIntentCard,
+    motivationMetrics: chatMotivationMetrics,
+    goalCard: chatGoalCard,
+    relatedMemory: chatRelatedMemory,
+  } = buildChatRouteModel({
+    planningSummary,
+    preferenceSummary,
+    knowledgeSummary,
+    recentChannelsLabel,
+    noDataLabel: copy.common.noData,
+  });
   const memoryStatCards = [
     {
       label: copy.memory.semantic,
