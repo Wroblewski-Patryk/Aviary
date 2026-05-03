@@ -192,6 +192,33 @@ export function ModuleTextCardList({
   );
 }
 
+export function ModuleDotRowList({
+  routeKey,
+  rowKey,
+  items,
+}: {
+  routeKey: string;
+  rowKey: string;
+  items: Array<{
+    title: ReactNode;
+    body: ReactNode;
+  }>;
+}) {
+  return (
+    <div className="mt-4 grid gap-3">
+      {items.map((item) => (
+        <article key={String(item.title)} className={`aion-${routeKey}-${rowKey}-row`}>
+          <span className={`aion-${routeKey}-${rowKey}-dot`} aria-hidden="true" />
+          <div>
+            <p className="text-sm font-semibold text-base-900">{item.title}</p>
+            <p className="mt-1 text-sm leading-6 text-base-800">{item.body}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 export function RouteHeroPanel({
   eyebrow,
   title,

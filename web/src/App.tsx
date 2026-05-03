@@ -64,6 +64,7 @@ import {
   InsightPanel,
   ModuleEntryCard,
   ModuleActivityList,
+  ModuleDotRowList,
   ModuleOverviewBar,
   ModuleRouteSidePanel,
   ModuleRouteSideRow,
@@ -4663,17 +4664,7 @@ export default function App() {
 
                   <section className="aion-plans-side-panel">
                     <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.plans.planningContext}</p>
-                    <div className="mt-4 grid gap-3">
-                      {plansContextCards.map((card) => (
-                        <article key={card.title} className="aion-plans-context-row">
-                          <span className="aion-plans-context-dot" aria-hidden="true" />
-                          <div>
-                            <p className="text-sm font-semibold text-base-900">{card.title}</p>
-                            <p className="mt-1 text-sm leading-6 text-base-800">{card.body}</p>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
+                    <ModuleDotRowList routeKey="plans" rowKey="context" items={plansContextCards} />
                   </section>
                 </aside>
               </div>
@@ -4749,17 +4740,7 @@ export default function App() {
 
                   <section className="aion-goals-side-panel">
                     <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.goals.relatedGuidance}</p>
-                    <div className="mt-4 grid gap-3">
-                      {goalGuidanceCards.map((card) => (
-                        <article key={card.title} className="aion-goals-guidance-row">
-                          <span className="aion-goals-guidance-dot" aria-hidden="true" />
-                          <div>
-                            <p className="text-sm font-semibold text-base-900">{card.title}</p>
-                            <p className="mt-1 text-sm leading-6 text-base-800">{card.body}</p>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
+                    <ModuleDotRowList routeKey="goals" rowKey="guidance" items={goalGuidanceCards} />
                   </section>
                 </aside>
               </div>

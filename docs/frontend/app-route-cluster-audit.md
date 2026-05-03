@@ -283,3 +283,10 @@ route-keyed `ModuleDotRowList` can preserve the existing
 `aion-plans-context-*` and `aion-goals-guidance-*` selectors while keeping
 `plansContextCards` and `goalGuidanceCards` in `App()`. Memory signal cards and
 goal horizon rows remain deferred because their shapes are different.
+
+`PRJ-1027` implemented that slice with `ModuleDotRowList` in
+`web/src/components/shared.tsx`. `/plans` context rows and `/goals` guidance
+rows now share route-keyed dot-row presentation while `plansContextCards` and
+`goalGuidanceCards` stay in `App()`. The remaining module route cleanup
+candidates are now either single-route card shapes, route data/helper slices, or
+decorative panels that should be audited separately.

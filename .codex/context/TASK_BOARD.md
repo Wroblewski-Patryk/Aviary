@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+## Fresh Module Dot Row List Extraction (2026-05-03)
+
+- `PRJ-1027` is DONE:
+  - `.codex/tasks/PRJ-1027-module-dot-row-list-extraction.md`
+- result:
+  - added `ModuleDotRowList` to `web/src/components/shared.tsx`
+  - replaced plans context row and goals guidance row map markup
+  - preserved `aion-plans-context-*` and `aion-goals-guidance-*` selectors
+  - kept `plansContextCards` and `goalGuidanceCards` in `App()`
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=14`
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - `PRJ-1028` audit next frontend v1 architecture slice after dot-row
+    extraction
+
 ## Fresh Module Dot Row List Audit (2026-05-03)
 
 - `PRJ-1026` is DONE:

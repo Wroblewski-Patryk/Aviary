@@ -137,7 +137,8 @@ current blocker is release reality:
 | PRJ-1024 | Audit next module route cleanup target after activity list extraction | DONE | selected shared route-keyed title/body card list extraction for reflection prompts, planning suggestions, and goal signals |
 | PRJ-1025 | Extract shared module text card list | DONE | `ModuleTextCardList` covers reflection prompt cards, planning step cards, and goal signal cards while data construction stays in `App()` |
 | PRJ-1026 | Audit next module cleanup target after text card list extraction | DONE | selected shared route-keyed dot-row list extraction for plans context rows and goal guidance rows |
-| PRJ-1027 | Extract shared module dot-row list | READY_AFTER_PRJ-1026 | `ModuleDotRowList` covers plans context rows and goal guidance rows while route data stays in `App()` |
+| PRJ-1027 | Extract shared module dot-row list | DONE | `ModuleDotRowList` covers plans context rows and goal guidance rows while route data stays in `App()` |
+| PRJ-1028 | Audit next frontend v1 architecture slice after dot-row extraction | READY_AFTER_PRJ-1027 | decide whether to continue module UI extraction, move route data helpers, or shift to provider/health ownership |
 | PRJ-968 | Add release evidence index | DONE | `docs/operations/release-evidence-index.md` shows current candidate lineage, production SHA, release tag target, blockers, and next action |
 | PRJ-969 | Add Coolify fallback secret/runbook readiness check | DONE | `check_coolify_fallback_readiness.py` reports whether approved webhook fallback inputs are present without triggering deploy |
 | PRJ-970 | Add release go/no-go command wrapper | DONE | `run_release_go_no_go.py` composes release reality audit with release-smoke posture and prints GO/HOLD |
