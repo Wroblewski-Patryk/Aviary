@@ -41,6 +41,19 @@ npm run build
 Pop-Location
 ```
 
+Headless frontend route smoke command:
+
+```powershell
+Push-Location .\web
+npm run smoke:routes
+Pop-Location
+```
+
+The route smoke serves `web/dist` locally, uses synthetic app-facing API data,
+and runs Chrome or Edge in headless mode. It must not open a visible browser
+window. Use it after route-shell changes and before splitting route ownership
+out of `web/src/App.tsx`.
+
 Behavior-validation command (system-debug + scenario harness baseline):
 
 ```powershell
@@ -111,6 +124,9 @@ Incident-evidence bundle export helper:
 - Web client shell changes:
   - keep `web/` as a thin client over backend-owned contracts
   - require at least one successful production build
+  - run `Push-Location .\web; npm run smoke:routes; Pop-Location` when the
+    change touches public/authenticated route mounting or route-shell
+    structure
   - when the shell route topology changes, confirm release smoke still proves
     `"/"`, `"/chat"`, `"/settings"`, `"/tools"`, and `"/personality"` all
     resolve to the same deployed web revision

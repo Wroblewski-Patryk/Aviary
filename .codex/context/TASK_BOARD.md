@@ -2,6 +2,35 @@
 
 Last updated: 2026-05-03
 
+## Fresh Stable Frontend Route Smoke (2026-05-03)
+
+- `PRJ-966` is DONE:
+  - `.codex/tasks/PRJ-966-stable-frontend-route-e2e-smoke.md`
+- result:
+  - added `web/scripts/route-smoke.mjs`
+  - added `npm run smoke:routes`
+  - route smoke serves `web/dist` locally, supplies synthetic app-facing API
+    responses, and runs Chrome/Edge headlessly with no visible browser window
+  - current coverage proves route mounting for:
+    - `/`
+    - `/login`
+    - `/dashboard`
+    - `/chat`
+    - `/personality`
+    - `/tools`
+  - route markers use stable top-level route container classes from
+    `web/src/App.tsx`
+  - testing and frontend route docs now describe the command and its limits
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=6`
+- next smallest useful task:
+  - `PRJ-967` split `web/src/App.tsx` now that the core route-mount smoke is
+    available, unless release-evidence tasks `PRJ-968..PRJ-970` are prioritized
+    first
+
 ## Fresh V1 AI Red-Team Live Execution (2026-05-03)
 
 - `PRJ-958` is DONE with `REVIEW_REQUIRED`:

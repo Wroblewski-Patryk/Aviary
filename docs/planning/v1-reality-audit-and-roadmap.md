@@ -47,7 +47,7 @@ current blocker is release reality:
 | Final release tag/marker | BLOCKED | PRJ-936 and PRJ-938 correctly block marker creation |
 | Telegram-led launch claim | BLOCKED | PRJ-909 needs operator token/secret/chat preconditions |
 | Organizer/provider daily-use launch claim | BLOCKED | PRJ-918 needs provider credentials |
-| Public/web-led v1 confidence | PARTIAL | frontend exists, but stable frontend e2e coverage is still missing |
+| Public/web-led v1 confidence | IMPROVED | frontend exists and `PRJ-966` adds repeatable headless route-mount smoke for root, the login shell, dashboard, chat, personality, and tools |
 
 ## Roadmap
 
@@ -79,7 +79,7 @@ current blocker is release reality:
 | --- | --- | --- | --- |
 | PRJ-964 | Add provider request/response examples | DONE | provider docs include sanitized examples for ready/failure paths without secrets |
 | PRJ-965 | Add OpenAPI-to-web type sync plan or generator | DONE | web API client route/method drift can be checked against generated OpenAPI |
-| PRJ-966 | Add stable frontend route e2e smoke | READY | public, auth, dashboard, chat, personality, and tools routes have repeatable smoke coverage |
+| PRJ-966 | Add stable frontend route e2e smoke | DONE | public, auth, dashboard, chat, personality, and tools routes have repeatable headless smoke coverage |
 | PRJ-967 | Split `web/src/App.tsx` after e2e coverage | READY_AFTER_PRJ-966 | route/component extraction reduces monolith without changing behavior |
 | PRJ-968 | Add release evidence index | READY | one index shows current candidate, production SHA, smoke status, blockers, and next action |
 | PRJ-969 | Add Coolify fallback secret/runbook readiness check | READY | operator docs and local check clearly show whether approved webhook fallback can be run |
@@ -124,5 +124,5 @@ Results:
 - The current core acceptance bundle still needs a fresh SHA refresh after
   deploy parity is recovered.
 - Live provider and Telegram smokes remain external-input blockers.
-- Frontend confidence is currently route-map and task-evidence based rather
-  than a stable e2e test command.
+- Frontend confidence now has a stable headless route-mount smoke command, but
+  full visual parity and interaction e2e remain separate future work.

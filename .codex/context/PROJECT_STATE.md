@@ -2,6 +2,27 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-966` completed stable frontend route smoke coverage:
+  - task:
+    - `.codex/tasks/PRJ-966-stable-frontend-route-e2e-smoke.md`
+  - result:
+    - added `web/scripts/route-smoke.mjs`
+    - added `npm run smoke:routes`
+    - smoke serves built `web/dist` locally and supplies synthetic app-facing
+      API responses for route mounting
+    - Chrome/Edge runs in headless mode with no visible browser window
+    - current route smoke covers `/`, `/login`, `/dashboard`, `/chat`,
+      `/personality`, and `/tools`
+    - frontend testing and route docs now record the command and its limits
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=6`
+  - next execution priority:
+    - `PRJ-967` split `web/src/App.tsx` behind the new route smoke safety net,
+      or `PRJ-968` release evidence index if release proof needs to lead
+
 - 2026-05-03: `PRJ-965` completed OpenAPI/web API sync checking:
   - task:
     - `.codex/tasks/PRJ-965-openapi-web-api-sync-check.md`

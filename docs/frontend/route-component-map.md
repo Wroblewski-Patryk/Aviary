@@ -6,6 +6,23 @@ This map documents the current browser shell without requiring a component
 refactor. It is grounded in `web/src/App.tsx`, `web/src/lib/api.ts`, and
 `web/src/index.css`.
 
+## Headless Route Smoke
+
+`web/scripts/route-smoke.mjs` provides the current route-mount smoke. Run it
+after a production build:
+
+```powershell
+Push-Location .\web
+npm run build
+npm run smoke:routes
+Pop-Location
+```
+
+The smoke serves `web/dist`, supplies synthetic app-facing API responses, runs
+Chrome or Edge headlessly, and checks stable top-level route container markers
+for `/`, `/login`, `/dashboard`, `/chat`, `/personality`, and `/tools`. It is
+a route-mount guard, not a screenshot parity suite.
+
 ## Current Ownership Model
 
 | Area | Owner File | Responsibility |
@@ -88,8 +105,8 @@ claim component-level separation.
   browser shell.
 - Static/fallback copy still exists for several module routes when backend
   overview fields are absent.
-- No dedicated frontend unit/e2e suite was introduced in this slice; the stable
-  automated evidence remains backend route tests, web route tests, and build or
-  smoke evidence from task records.
+- The current dedicated frontend route smoke covers the public shell and core
+  authenticated routes, but full interaction e2e and screenshot parity remain
+  separate future work.
 - Route-level data dependencies are documented here, but component extraction
   ownership is not yet a code convention.

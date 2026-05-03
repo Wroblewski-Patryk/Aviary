@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "npm exec tsc -b && npm exec vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "smoke:routes": "node scripts/route-smoke.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
