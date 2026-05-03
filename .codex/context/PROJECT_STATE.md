@@ -2,6 +2,24 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-1037` completed memory signal card extraction:
+  - task:
+    - `.codex/tasks/PRJ-1037-memory-signal-meta-card-list.md`
+  - result:
+    - added `ModuleMetaCardList` to `web/src/components/shared.tsx`
+    - replaced memory signal card markup
+    - preserved `aion-memory-signal-*` selectors
+    - kept `memorySignalCards` in `App()`
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=14`
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-1038` audit next frontend cleanup after memory signal extraction
+
 - 2026-05-03: `PRJ-1036` completed memory signal card audit:
   - task:
     - `.codex/tasks/PRJ-1036-next-live-cleanup-after-provider-row-audit.md`

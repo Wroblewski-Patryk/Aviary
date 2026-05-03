@@ -192,6 +192,34 @@ export function ModuleTextCardList({
   );
 }
 
+export function ModuleMetaCardList({
+  routeKey,
+  cardKey,
+  items,
+}: {
+  routeKey: string;
+  cardKey: string;
+  items: Array<{
+    meta: ReactNode;
+    title: ReactNode;
+    body: ReactNode;
+  }>;
+}) {
+  return (
+    <div className="mt-5 grid gap-3">
+      {items.map((item) => (
+        <article key={String(item.title)} className={`aion-${routeKey}-${cardKey}-card`}>
+          <div>
+            <p className={`aion-${routeKey}-${cardKey}-meta`}>{item.meta}</p>
+            <h4 className={`aion-${routeKey}-${cardKey}-title`}>{item.title}</h4>
+          </div>
+          <p className={`aion-${routeKey}-${cardKey}-body`}>{item.body}</p>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 export function ModuleDotRowList({
   routeKey,
   rowKey,

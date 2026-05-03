@@ -64,6 +64,7 @@ import {
   ModuleEntryCard,
   ModuleActivityList,
   ModuleDotRowList,
+  ModuleMetaCardList,
   ModuleOverviewBar,
   ModuleRouteSidePanel,
   ModuleRouteSideRow,
@@ -4392,17 +4393,7 @@ export default function App() {
                   <section className="aion-memory-side-panel aion-memory-side-panel-live">
                     <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.memory.recent}</p>
                     <h3 className="mt-2 font-display text-2xl text-base-900">{copy.memory.continuityNearConversation}</h3>
-                    <div className="mt-5 grid gap-3">
-                      {memorySignalCards.map((item) => (
-                        <article key={item.title} className="aion-memory-signal-card">
-                          <div>
-                            <p className="aion-memory-signal-meta">{item.meta}</p>
-                            <h4 className="aion-memory-signal-title">{item.title}</h4>
-                          </div>
-                          <p className="aion-memory-signal-body">{item.body}</p>
-                        </article>
-                      ))}
-                    </div>
+                    <ModuleMetaCardList routeKey="memory" cardKey="signal" items={memorySignalCards} />
                   </section>
 
                   <section className="aion-memory-side-panel aion-memory-side-panel-recent">

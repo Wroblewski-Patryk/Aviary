@@ -349,3 +349,7 @@ slice. The remaining `aion-memory-signal-*` cards have a simple
 `meta/title/body` shape and can move behind a route-keyed `ModuleMetaCardList`
 while `memorySignalCards` stays in `App()`. Dashboard and goal progress rows
 remain deferred because they include sizing/progress visuals.
+
+`PRJ-1037` implemented that slice with `ModuleMetaCardList` in
+`web/src/components/shared.tsx`. `/memory` signal cards now share route-keyed
+meta-card presentation while `memorySignalCards` remains in `App()`.
