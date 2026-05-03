@@ -91,6 +91,7 @@ evidence.
 - [Design Memory](ux/design-memory.md)
 - [Screen Quality Checklist](ux/screen-quality-checklist.md)
 - [Dashboard Proof Matrix](ux/dashboard-proof-matrix.md)
+- [Personality Module Map](ux/personality-module-map.md)
 - [Canonical Visual Implementation Workflow](ux/canonical-visual-implementation-workflow.md)
 - [Background And Decorative Asset Strategy](ux/background-and-decorative-asset-strategy.md)
 

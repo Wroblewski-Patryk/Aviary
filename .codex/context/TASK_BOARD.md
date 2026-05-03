@@ -2,6 +2,31 @@
 
 Last updated: 2026-05-03
 
+## Fresh Personality Module Map Repair (2026-05-03)
+
+- `PRJ-729` is DONE:
+  - `.codex/tasks/PRJ-729-freeze-personality-module-information-architecture-and-motif-mapping.md`
+- created:
+  - `docs/ux/personality-module-map.md`
+- updated:
+  - `docs/index.md`
+  - `docs/README.md`
+- result:
+  - `/personality` IA, architecture-to-visual mapping, and shared-component
+    reuse are now recorded in one durable map
+  - the route remains tied to `GET /app/personality/overview`,
+    `web/src/App.tsx`, `web/src/index.css`, and the shared dashboard/motif
+    component language
+  - known gaps are explicit: tablet-specific personality proof and future
+    component extraction remain follow-up concerns, not hidden blockers
+- validation:
+  - reviewed personality planning direction, task-board history, current
+    route code, and later PRJ-865/PRJ-871 canonical screenshot evidence
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - review `PRJ-730` for implementation status on shared visual foundations
+
 ## Fresh Dashboard Proof Matrix Repair (2026-05-03)
 
 - `PRJ-728` is DONE:

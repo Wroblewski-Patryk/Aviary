@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-729` completed personality module map repair:
+  - task:
+    - `.codex/tasks/PRJ-729-freeze-personality-module-information-architecture-and-motif-mapping.md`
+  - created:
+    - `docs/ux/personality-module-map.md`
+  - updated:
+    - `docs/index.md`
+    - `docs/README.md`
+  - result:
+    - `/personality` IA, architecture-to-visual mapping, backend data boundary,
+      and shared-component reuse contract now live in one durable map
+    - existing route ownership remains in `web/src/App.tsx` and
+      `web/src/index.css` over `GET /app/personality/overview`
+    - no component extraction, backend contract change, route behavior change,
+      or duplicate visual system was introduced
+  - validation:
+    - personality planning direction, task-board history, route code, and
+      later canonical screenshot evidence were reviewed
+    - `git diff --check` passed
+  - next execution priority:
+    - review `PRJ-730` for implementation status on shared visual foundations
+
 - 2026-05-03: `PRJ-728` completed dashboard proof matrix repair:
   - task:
     - `.codex/tasks/PRJ-728-dashboard-proof-across-states-accessibility-and-breakpoints.md`
