@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-937` repaired Aviary repository truth before the v1 deploy:
+  - task:
+    - `.codex/tasks/PRJ-937-sync-aviary-repository-truth-and-deploy-v1-candidate.md`
+  - result:
+    - current deploy-source truth now names `Wroblewski-Patryk/Aviary` as the
+      active canonical GitHub/Coolify repository
+    - `Personality` is recorded as the former repository/product-shell name,
+      not the active production deploy source
+    - the next release action is push `main` to `origin`, wait for Coolify
+      source automation, and run production release smoke with deploy parity
+  - validation:
+    - `git remote -v` confirmed local `origin` points at
+      `https://github.com/Wroblewski-Patryk/Aviary.git`
+    - `git rev-parse HEAD` returned
+      `d728e69d9e9050f8dc6e58f7b590bed49e66133a` before this repair
+    - repository-truth search across `.codex` and `docs`
+  - next execution priority:
+    - commit this source-truth repair, push `main`, then run release smoke
+      against `https://aviary.luckysparrow.ch`
+
 - 2026-05-03: `PRJ-936` recorded the v1 release marker blocker:
   - task:
     - `.codex/tasks/PRJ-936-v1-tag-and-release-marker.md`

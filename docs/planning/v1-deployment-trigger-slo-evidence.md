@@ -41,6 +41,9 @@ The machine-visible baseline is exposed through `/health.deployment` by
 
 1. Push `main`.
 2. Let Coolify source automation enqueue a deployment for the canonical app:
+   - source repository: `Wroblewski-Patryk/Aviary`
+   - note: `Personality` is the former repository name, not the active
+     production deploy source
    - project: `icmgqml9uw3slzch9m9ok23z`
    - environment: `qxooi9coxat272krzjx221fv`
    - application: `jr1oehwlzl8tcn3h8gh2vvih`

@@ -820,7 +820,9 @@ Repo-driven Coolify deployment-automation baseline (`PRJ-597`):
      an acceptable primary-source variant
    - after a repository rename, verify both the local git remote and the
      Coolify source repository path; the current canonical repository is
-     `Wroblewski-Patryk/Personality`
+     `Wroblewski-Patryk/Aviary`
+   - `Personality` is the former repository/product-shell name; production
+     deploy truth must not drift back to `Wroblewski-Patryk/Personality`
    - for Docker Compose deployments, keep the compose file pointing at the
      application-owned placeholder `${APP_BUILD_REVISION:-unknown}` instead of
      referencing `SOURCE_COMMIT` directly

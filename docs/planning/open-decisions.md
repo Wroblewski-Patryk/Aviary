@@ -520,10 +520,12 @@ Current execution note:
 - `PRJ-616` is now complete:
   - the canonical Coolify production app was corrected from `Public GitHub` to
     the GitHub App source `vps-luckysparrow`
-  - the source repository path was corrected from the pre-rename
-    `Wroblewski-Patryk/LuckySparrow` to `Wroblewski-Patryk/Personality`
-  - local `origin` now matches the renamed repository, so repo push target and
-    deploy-source truth no longer drift
+  - the source repository path was corrected from the older repository names to
+    the current canonical `Wroblewski-Patryk/Aviary`
+  - local `origin` now matches
+    `https://github.com/Wroblewski-Patryk/Aviary.git`, so repo push target and
+    deploy-source truth no longer drift; `Personality` is a former repository
+    name, not the active production source
 - `PRJ-617` is now complete:
   - planning/context and ops truth now treat `Public GitHub` on the canonical
     production app as deployment drift instead of an acceptable source posture

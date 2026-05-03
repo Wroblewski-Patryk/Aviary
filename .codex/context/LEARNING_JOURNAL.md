@@ -925,10 +925,9 @@ fixes for this repository.
     though a comparable app in the same Coolify instance still auto-deployed.
 - Root cause:
   - the canonical Coolify app had drifted onto the `Public GitHub` source and
-    still referenced the pre-rename repository path
-    `Wroblewski-Patryk/LuckySparrow`; the intended GitHub App source
-    `vps-luckysparrow` was no longer attached to the renamed
-    `Wroblewski-Patryk/Personality` repository.
+    still referenced an older repository path; the intended GitHub App source
+    `vps-luckysparrow` was no longer attached to the current canonical
+    `Wroblewski-Patryk/Aviary` repository.
 - Guardrail:
   - when production auto-deploy stops after a repository rename, verify both
     the local git remote and the Coolify `Source` page for the canonical app
@@ -936,7 +935,8 @@ fixes for this repository.
 - Preferred pattern:
   - select the correct Coolify team scope first, then keep the canonical app on
     the GitHub App source `vps-luckysparrow` with repository
-    `Wroblewski-Patryk/Personality` and branch `main`.
+    `Wroblewski-Patryk/Aviary` and branch `main`; treat `Personality` as the
+    former repository name, not the active deploy source.
 - Avoid:
   - treating `Public GitHub` on the canonical production app as an acceptable
     source variant

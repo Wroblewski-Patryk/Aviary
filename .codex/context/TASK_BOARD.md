@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-03
 
+## Fresh Aviary Repository Truth Repair For V1 Deploy (2026-05-03)
+
+- `PRJ-937` is DONE:
+  - `.codex/tasks/PRJ-937-sync-aviary-repository-truth-and-deploy-v1-candidate.md`
+- result:
+  - repaired current deploy-source truth so `Wroblewski-Patryk/Aviary` is the
+    active canonical GitHub/Coolify repository
+  - recorded `Personality` as the former repository/product-shell name, not
+    the active production deploy source
+  - kept the next release action explicit: commit this repair, push `main`,
+    and run production release smoke with deploy parity
+- validation:
+  - `git remote -v`
+  - result: local `origin` points at
+    `https://github.com/Wroblewski-Patryk/Aviary.git`
+  - `git rev-parse HEAD`
+  - result: `d728e69d9e9050f8dc6e58f7b590bed49e66133a` before this repair
+  - repository-truth search across `.codex` and `docs`
+- next smallest useful task:
+  - push `main` to `origin`, wait for Coolify source automation, and run
+    production release smoke against `https://aviary.luckysparrow.ch`
+
 ## Fresh V1 Release Marker Blocker (2026-05-03)
 
 - `PRJ-936` is BLOCKED:
@@ -7504,11 +7526,12 @@ Last updated: 2026-05-03
   - Evidence:
     - the canonical Coolify app `jr1oehwlzl8tcn3h8gh2vvih` was corrected from
       `Public GitHub` to the GitHub App source `vps-luckysparrow`
-    - the source repository was corrected from the pre-rename
-      `Wroblewski-Patryk/LuckySparrow` to `Wroblewski-Patryk/Personality`
+    - the source repository was corrected from the older repository names to
+      the current canonical `Wroblewski-Patryk/Aviary`
     - local `origin` was aligned to
-      `https://github.com/Wroblewski-Patryk/Personality.git` so push target and
-      deploy source now describe the same repository
+      `https://github.com/Wroblewski-Patryk/Aviary.git` so push target and
+      deploy source now describe the same repository; `Personality` is the
+      former repository name
     - the bounded fallback posture remains webhook first, then UI redeploy only
       when source automation proof is missing
 
