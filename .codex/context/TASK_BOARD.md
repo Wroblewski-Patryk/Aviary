@@ -2,6 +2,31 @@
 
 Last updated: 2026-05-03
 
+## Fresh Deployment Trigger SLO Evidence (2026-05-03)
+
+- `PRJ-930` is DONE:
+  - `.codex/tasks/PRJ-930-deployment-trigger-slo-evidence.md`
+  - `docs/planning/v1-deployment-trigger-slo-evidence.md`
+- result:
+  - recorded the Coolify deployment-trigger SLO, primary source-automation
+    proof path, webhook/UI exception-only fallback path, and release-smoke
+    validation path
+  - linked the existing `/health.deployment` policy, webhook evidence artifact,
+    deploy-parity smoke, and evidence archive rule
+  - documented that direct Coolify deployment-history proof remains
+    operator-owned for final production release closure
+  - manual redeploy remains recovery evidence only, not source-automation
+    reliability proof
+- validation:
+  - deployment policy/script/runbook inspection
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py -k "deployment_evidence or deploy_parity or runtime_build_revision or trigger_main or backend_operator_scripts"; Pop-Location`
+  - result: `20 passed, 32 deselected`
+  - `git diff --check`
+  - result: passed with CRLF normalization warnings only
+- next smallest useful task:
+  - `PRJ-934` final go/no-go review once remaining evidence gaps are accepted
+    or closed
+
 ## Fresh Provider Payload Leakage Audit (2026-05-03)
 
 - `PRJ-933` is DONE:
@@ -25,8 +50,8 @@ Last updated: 2026-05-03
   - `git diff --check`
   - result: passed with CRLF normalization warnings only
 - next smallest useful task:
-  - `PRJ-930` deployment trigger SLO evidence or `PRJ-934` final go/no-go
-    review once remaining evidence gaps are accepted or closed
+  - `PRJ-934` final go/no-go review once remaining evidence gaps are accepted
+    or closed
 
 ## Fresh Cross-User Session Isolation Audit (2026-05-03)
 

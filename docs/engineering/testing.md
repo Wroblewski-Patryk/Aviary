@@ -603,6 +603,13 @@ memory, and frontend usage boundaries, and pins the regression that
 `planning_state.pending_proposals` exposes proposal metadata plus payload keys,
 not raw proposal payload bodies.
 
+Deployment-trigger SLO evidence lives in
+`docs/planning/v1-deployment-trigger-slo-evidence.md`. Focused regression
+coverage for the webhook evidence artifact and release-smoke deploy-parity
+checks lives in `backend/tests/test_deployment_trigger_scripts.py`; direct
+Coolify deployment-history confirmation remains an operator-owned production
+release step.
+
 Runtime features require integration validation using `INTEGRATION_CHECKLIST.md`. A feature is not complete until real UI/client paths, API contracts, database schema or migrations, validation, loading states, error states, refresh or restart behavior, and regression risk are verified.
 
 Completion evidence must satisfy `DEFINITION_OF_DONE.md` and include exact commands, manual checks, scenario results, and residual risks.

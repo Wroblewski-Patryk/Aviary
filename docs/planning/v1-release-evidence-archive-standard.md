@@ -42,6 +42,7 @@ payloads, tokens, or private user data.
 | Behavior validation | `docs/planning/v1-core-acceptance-bundle.md`, `docs/engineering/testing.md` | `artifacts/behavior_validation/report.json` | `backend/scripts/run_behavior_validation.ps1` | behavior-validation gate result |
 | Rollback and recovery | `docs/planning/v1-rollback-and-recovery-drill.md` | local operator notes if rerun | Ops/Release task | documented rollback target and recovery smoke |
 | External health monitor | `docs/planning/v1-minimal-external-health-monitor.md` | automation run history | Codex automation | hourly read-only production `/health` check |
+| Deployment trigger SLO | `docs/planning/v1-deployment-trigger-slo-evidence.md` | `artifacts/deploy/coolify-webhook.json` when fallback is used | Coolify source automation, `backend/scripts/trigger_coolify_deploy_webhook.py`, release smoke | Coolify history for primary automation plus deploy-parity smoke; webhook evidence only for exception fallback |
 
 ## Current V1 Archive Pointers
 
@@ -121,5 +122,7 @@ Before claiming a release marker:
 - No external long-term archive storage is configured.
 - Generated artifacts are not checksum-indexed in committed docs.
 - AI/security reports are still future `PRJ-931..PRJ-933` work.
-- `PRJ-930` deployment trigger SLO evidence is still separate.
+- `PRJ-930` deployment trigger SLO evidence lives in
+  `docs/planning/v1-deployment-trigger-slo-evidence.md`; direct Coolify
+  deployment-history proof remains operator-owned for final release closure.
 - `PRJ-909` and `PRJ-918` remain blocked by operator/provider inputs.

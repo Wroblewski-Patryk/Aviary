@@ -95,7 +95,10 @@ broader public or web-led release claim:
   `aion-production-health-monitor`
 - `PRJ-921` release-evidence archive: DONE with
   `docs/planning/v1-release-evidence-archive-standard.md`
-- `PRJ-930` deployment trigger SLO evidence
+- `PRJ-930` deployment trigger SLO evidence: DONE with
+  `docs/planning/v1-deployment-trigger-slo-evidence.md`; direct Coolify
+  deployment-history proof remains operator-owned for the final release
+  declaration
 - `PRJ-931` AI red-team scenario pack: DONE with
   `docs/security/v1-ai-red-team-scenario-pack.md`; execution results remain a
   separate release-hardening evidence item
@@ -122,5 +125,5 @@ broader public or web-led release claim:
 
 Rerun `PRJ-909` when Telegram operator preconditions are available. Until then,
 continue with locally actionable public-launch hardening, starting with
-`PRJ-930` deployment trigger SLO evidence or `PRJ-934` final go/no-go review
-when the remaining evidence gaps are accepted or closed.
+`PRJ-934` final go/no-go review when the remaining evidence gaps are accepted
+or closed.

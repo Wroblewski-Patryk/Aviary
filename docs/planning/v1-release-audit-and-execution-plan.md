@@ -441,8 +441,13 @@ Tasks:
     operator explicitly selects a sanitized artifact for repository history.
 
 - `PRJ-930` Deployment Trigger SLO Evidence
-  - Prove Coolify source automation triggers reliably enough or document manual
-    redeploy as an exception-only fallback.
+  - Status: DONE
+  - Output: `docs/planning/v1-deployment-trigger-slo-evidence.md` records the
+    Coolify deployment-trigger SLO, primary source-automation proof path,
+    webhook/UI exception-only fallback path, release-smoke validation, and the
+    operator-owned Coolify history proof gap.
+  - Manual redeploy remains recovery evidence only; it does not replace
+    source-automation reliability proof.
 
 ### Phase 7 - AI And Security Hardening
 
@@ -538,7 +543,8 @@ Tasks:
 ### P2 Extensions
 
 1. `PRJ-919` Tool Authorization UX Tightening
-2. `PRJ-930` Deployment Trigger SLO Evidence
+2. `PRJ-930` Deployment Trigger SLO Evidence - DONE locally with
+   operator-owned Coolify history proof gap
 3. multimodal Telegram plan and implementation after v1
 4. mobile Expo restart from the approved stack baseline after web/backend v1
 
