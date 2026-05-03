@@ -2,6 +2,27 @@
 
 Last updated: 2026-05-03
 
+## Fresh Shared Shell Panel Cluster Extraction (2026-05-03)
+
+- `PRJ-972` is DONE:
+  - `.codex/tasks/PRJ-972-shared-shell-panel-cluster-extraction.md`
+- result:
+  - expanded `web/src/components/shared.tsx`
+  - moved `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, and `InsightPanel`
+    out of `web/src/App.tsx`
+  - preserved markup, props, CSS classes, route behavior, API usage, and state
+    ownership
+  - updated the frontend route/component map and v1 roadmap with the expanded
+    shared panel owner
+- validation:
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+  - result: `status=ok`, `route_count=6`
+- next smallest useful task:
+  - `PRJ-973` extract shell chrome component cluster from `web/src/App.tsx`
+    behind the same route smoke gate
+
 ## Fresh Shared Panel Component Extraction (2026-05-03)
 
 - `PRJ-971` is DONE:
@@ -432,7 +453,11 @@ Last updated: 2026-05-03
     - completed in this iteration by moving `StatePanel` and `FeedbackBanner`
       to `web/src/components/shared.tsx`
   - `PRJ-972` Extract next shared shell component cluster from `web/src/App.tsx`:
-    READY_AFTER_PRJ-971
+    DONE
+    - completed in this iteration by moving `ModuleEntryCard`, `FlowRail`,
+      `RouteHeroPanel`, and `InsightPanel` to `web/src/components/shared.tsx`
+  - `PRJ-973` Extract shell chrome component cluster from `web/src/App.tsx`:
+    READY_AFTER_PRJ-972
 
 ## Fresh V1 Deploy Parity Blocker (2026-05-03)
 

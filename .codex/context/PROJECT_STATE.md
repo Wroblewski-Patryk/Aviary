@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-972` completed shared shell panel cluster extraction:
+  - task:
+    - `.codex/tasks/PRJ-972-shared-shell-panel-cluster-extraction.md`
+  - result:
+    - expanded `web/src/components/shared.tsx`
+    - moved `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, and
+      `InsightPanel` out of `web/src/App.tsx`
+    - preserved markup, props, CSS classes, route behavior, API usage, and
+      state ownership
+    - updated the frontend route/component map and v1 roadmap with the
+      expanded shared panel owner
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=6`
+  - next execution priority:
+    - `PRJ-973` extract shell chrome component cluster from `web/src/App.tsx`
+      behind the route smoke gate
+
 - 2026-05-03: `PRJ-971` completed first shared panel component extraction:
   - task:
     - `.codex/tasks/PRJ-971-shared-panel-component-extraction.md`

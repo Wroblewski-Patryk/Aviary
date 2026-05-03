@@ -31,7 +31,7 @@ a route-mount guard, not a screenshot parity suite.
 | Route list and route normalization | `web/src/routes.ts` | `RoutePath`, `ROUTES`, `normalizeRoute`, `navigate`, `navigatePublicEntry` |
 | Public/auth shell | `web/src/App.tsx` | Public home, login/register modal, session bootstrap, logout/reset redirects |
 | Authenticated product shell | `web/src/App.tsx` | Sidebar, mobile tab bar, utility bar, route rendering, route copy |
-| Shared presentational panels | `web/src/components/shared.tsx` | `StatePanel`, `FeedbackBanner` |
+| Shared presentational panels | `web/src/components/shared.tsx` | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel` |
 | API client | `web/src/lib/api.ts` | Typed fetch wrapper and app-facing endpoint methods |
 | Styling | `web/src/index.css` | Route layouts, product shell visuals, responsive behavior, state styling |
 
@@ -95,7 +95,7 @@ claim component-level separation beyond the extracted route contract.
 | Routing and labels | `normalizeRoute`, `navigate`, `routeLabel`, `routeDescription` | all routes |
 | Public shell | public home render branch, `AviaryWordmark`, `PublicGlyph` | `/`, `/login` |
 | Shell chrome | `SidebarGlyph`, `ShellNavButton`, `SidebarBrandBlock`, `ShellUtilityBar` | authenticated routes |
-| Shared panels | `StatePanel`, `FeedbackBanner` in `web/src/components/shared.tsx`; `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel` still in `web/src/App.tsx` | dashboard and module routes |
+| Shared panels | `StatePanel`, `FeedbackBanner`, `ModuleEntryCard`, `FlowRail`, `RouteHeroPanel`, `InsightPanel` in `web/src/components/shared.tsx` | dashboard and module routes |
 | Chat helpers | `renderChatMarkdown`, `transcriptMetadataSummary`, `chatDeliveryState`, `reconcileLocalTranscriptItems`, `ChatFlowStage` | `/chat` |
 | Tool helpers | `toolStatusClass`, `formatToolState`, `formatToolLinkState`, `summarizeToolAction` | `/tools`, `/integrations` |
 | Profile/settings helpers | `normalizeUiLanguage`, `resolveUiLanguage`, `normalizeUtcOffset`, `utcOffsetOption` | `/settings`, bootstrap |
