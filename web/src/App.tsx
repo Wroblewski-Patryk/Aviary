@@ -12,6 +12,12 @@ import {
   type AppTelegramLinkStartResponse,
   type AppToolsOverviewResponse,
 } from "./lib/api";
+import {
+  formatToolLinkState,
+  formatToolState,
+  summarizeToolAction,
+  toolStatusClass,
+} from "./lib/tool-formatting";
 import { ChevronDownIcon, CloseIcon, MicrophoneIcon, PlusIcon, SendArrowIcon } from "./components/app-icons";
 import { ChatFlowStage } from "./components/chat";
 import { DashboardSignalCard } from "./components/dashboard";
@@ -1967,56 +1973,6 @@ function localeLanguageLabel(option: (typeof UI_LANGUAGE_OPTIONS)[number], local
 
 function localeOptionDisplay(option: (typeof UI_LANGUAGE_OPTIONS)[number], locale: ResolvedUiLanguageCode) {
   return `${option.iconToken} ${option.nativeLabel}${localeLanguageLabel(option, locale) === option.nativeLabel ? "" : ` · ${localeLanguageLabel(option, locale)}`}`;
-}
-
-function toolStatusClass(status: string) {
-  if (status === "integral_active" || status === "provider_ready") {
-    return "badge-success";
-  }
-  if (status === "provider_ready_link_required") {
-    return "badge-warning";
-  }
-  if (status === "planned_placeholder") {
-    return "badge-ghost";
-  }
-  return "badge-outline";
-}
-
-function formatToolState(status: string, toolsCopy: typeof UI_COPY.en.tools) {
-  if (status === "integral_active") {
-    return toolsCopy.statusAlwaysOn;
-  }
-  if (status === "provider_ready") {
-    return toolsCopy.statusReadyToUse;
-  }
-  if (status === "provider_ready_link_required") {
-    return toolsCopy.statusLinkRequired;
-  }
-  if (status === "planned_placeholder") {
-    return toolsCopy.statusPlanned;
-  }
-  return toolsCopy.statusNeedsReview;
-}
-
-function formatToolLinkState(status: string, toolsCopy: typeof UI_COPY.en.tools) {
-  if (status === "linked") {
-    return toolsCopy.linkStateLinkedValue;
-  }
-  if (status === "not_linked") {
-    return toolsCopy.linkStateNotLinkedValue;
-  }
-  if (status === "link_required") {
-    return toolsCopy.linkStateRequiredValue;
-  }
-  return toolsCopy.linkStateUnknownValue;
-}
-
-function summarizeToolAction(nextActions: string[], fallback: string) {
-  const action = nextActions[0];
-  if (!action) {
-    return fallback;
-  }
-  return action.replaceAll("_", " ");
 }
 
 function numberValue(value: unknown, fallback = 0) {

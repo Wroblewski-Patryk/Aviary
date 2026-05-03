@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-984` completed tool route helper extraction:
+  - task:
+    - `.codex/tasks/PRJ-984-tool-route-helper-extraction.md`
+  - result:
+    - added `web/src/lib/tool-formatting.ts`
+    - moved `toolStatusClass`, `formatToolState`, `formatToolLinkState`, and
+      `summarizeToolAction` out of `web/src/App.tsx`
+    - kept tools route state, API calls, and rendering in `App()`
+    - avoided importing `UI_COPY` by using a small structural copy type
+    - updated the frontend route/component map and v1 roadmap
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=14`
+  - next execution priority:
+    - `PRJ-985` extract tools summary card component cluster from
+      `web/src/App.tsx`
+
 - 2026-05-03: `PRJ-983` completed dead frontend component cleanup:
   - task:
     - `.codex/tasks/PRJ-983-remove-dead-frontend-components.md`

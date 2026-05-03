@@ -94,7 +94,8 @@ current blocker is release reality:
 | PRJ-981 | Extract shared stat-card component cluster from `web/src/App.tsx` | DONE | `RouteStatCard` lives in `web/src/components/shared.tsx`; full route smoke passes with `route_count=14` |
 | PRJ-982 | Extract route note/side-card component cluster from `web/src/App.tsx` | DONE | `RouteNoteCard` lives in `web/src/components/shared.tsx`; full route smoke passes with `route_count=14` |
 | PRJ-983 | Remove or relocate dead frontend component definitions | DONE | live `MotifFigurePanel` was moved to `web/src/components/public-shell.tsx`; unused `PersonalityLayerCard` was removed; full route smoke passes with `route_count=14` |
-| PRJ-984 | Extract tool route helper logic from `web/src/App.tsx` | READY_AFTER_PRJ-983 | tool status/link/action formatting helpers move to a dedicated module without changing tools or integrations behavior |
+| PRJ-984 | Extract tool route helper logic from `web/src/App.tsx` | DONE | tool status/link/action formatting helpers live in `web/src/lib/tool-formatting.ts`; full route smoke passes with `route_count=14` |
+| PRJ-985 | Extract tools summary card component cluster from `web/src/App.tsx` | READY_AFTER_PRJ-984 | tools summary cards move behind explicit props without tools overview behavior change |
 | PRJ-968 | Add release evidence index | DONE | `docs/operations/release-evidence-index.md` shows current candidate lineage, production SHA, release tag target, blockers, and next action |
 | PRJ-969 | Add Coolify fallback secret/runbook readiness check | DONE | `check_coolify_fallback_readiness.py` reports whether approved webhook fallback inputs are present without triggering deploy |
 | PRJ-970 | Add release go/no-go command wrapper | DONE | `run_release_go_no_go.py` composes release reality audit with release-smoke posture and prints GO/HOLD |
