@@ -2,6 +2,29 @@
 
 Last updated: 2026-05-03
 
+## Fresh Release Evidence Index (2026-05-03)
+
+- `PRJ-968` is DONE:
+  - `.codex/tasks/PRJ-968-release-evidence-index.md`
+  - `docs/operations/release-evidence-index.md`
+- result:
+  - added one operator-facing index for current release evidence
+  - recorded the deployed `v1.0.0` tag target:
+    `5e64f494e2aac8d29cea532d95f7039ed6029213`
+  - recorded current production backend and web meta revisions:
+    `5e64f494e2aac8d29cea532d95f7039ed6029213`
+  - recorded that local `main` has moved ahead and cannot inherit the
+    `v1.0.0` production acceptance claim without fresh deploy parity evidence
+  - linked the index from the release evidence archive standard
+- validation:
+  - read-only production `/health` check
+  - read-only production `/settings` web meta check
+  - `git for-each-ref refs/tags/v1.0.0 --format='%(objectname) %(objecttype) %(*objectname)'`
+  - `git diff --check`
+- next smallest useful task:
+  - `PRJ-969` Coolify fallback secret/runbook readiness check, then `PRJ-970`
+    release go/no-go wrapper
+
 ## Fresh Route Ownership Extraction (2026-05-03)
 
 - `PRJ-967` is DONE:
@@ -332,7 +355,8 @@ Last updated: 2026-05-03
   - `PRJ-967` Split route ownership out of `web/src/App.tsx`: DONE
     - completed in this iteration by moving route type/list/history helpers to
       `web/src/routes.ts`
-  - `PRJ-968` Add release evidence index: READY
+  - `PRJ-968` Add release evidence index: DONE
+    - completed in this iteration with `docs/operations/release-evidence-index.md`
   - `PRJ-969` Add Coolify fallback secret/runbook readiness check: READY
   - `PRJ-970` Add release go/no-go command wrapper: READY_AFTER_PRJ-956
   - `PRJ-971` Extract first route-rendering component from `web/src/App.tsx`:

@@ -2,6 +2,29 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-968` completed the release evidence index:
+  - task:
+    - `.codex/tasks/PRJ-968-release-evidence-index.md`
+  - result:
+    - added `docs/operations/release-evidence-index.md`
+    - recorded deployed `v1.0.0` tag target:
+      `5e64f494e2aac8d29cea532d95f7039ed6029213`
+    - recorded production backend and web meta revisions:
+      `5e64f494e2aac8d29cea532d95f7039ed6029213`
+    - recorded production `status=ok`, `release_readiness.ready=true`, and
+      `v1_readiness.final_acceptance_state=core_v1_bundle_ready`
+    - recorded that local `main` has moved ahead and needs fresh deploy parity
+      before newer commits can inherit the release acceptance claim
+    - linked the index from `docs/planning/v1-release-evidence-archive-standard.md`
+  - validation:
+    - `Invoke-RestMethod -Uri 'https://aviary.luckysparrow.ch/health' -TimeoutSec 30`
+    - `curl.exe -s -L --max-time 30 https://aviary.luckysparrow.ch/settings`
+    - `git for-each-ref refs/tags/v1.0.0 --format='%(objectname) %(objecttype) %(*objectname)'`
+    - `git diff --check`
+  - next execution priority:
+    - `PRJ-969` Coolify fallback secret/runbook readiness check, then
+      `PRJ-970` release go/no-go wrapper
+
 - 2026-05-03: `PRJ-967` completed route ownership extraction from
   `web/src/App.tsx`:
   - task:

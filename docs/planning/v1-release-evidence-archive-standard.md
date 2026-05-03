@@ -36,6 +36,7 @@ payloads, tokens, or private user data.
 
 | Evidence Class | Committed Pointer | Generated Local Output | Producer | Verification |
 | --- | --- | --- | --- | --- |
+| Release evidence index | `docs/operations/release-evidence-index.md` | none | Ops/Release task | production `/health`, web meta revision, and release tag target checks |
 | Final acceptance bundle | `docs/planning/v1-core-acceptance-bundle.md` | `.codex/artifacts/prj923-final-v1-acceptance/...` | PRJ-923 release task | release smoke with incident bundle |
 | Incident evidence bundle | `docs/planning/v1-production-incident-evidence-bundle.md` | `.codex/artifacts/prj922-production-safe-incident-evidence/...` or `artifacts/incident_evidence/...` | `backend/scripts/export_incident_evidence_bundle.py` | `backend/scripts/run_release_smoke.ps1 -IncidentEvidenceBundlePath` |
 | Release smoke | `docs/planning/v1-core-acceptance-bundle.md`, `docs/planning/v1-release-audit-and-execution-plan.md` | local shell output or task evidence | `backend/scripts/run_release_smoke.ps1` | smoke exit code and summarized revision parity |
@@ -56,6 +57,7 @@ Current committed summary:
 - [V1 Production Incident Evidence Bundle](v1-production-incident-evidence-bundle.md)
 - [V1 Release Audit And Execution Plan](v1-release-audit-and-execution-plan.md)
 - [Runtime Ops Runbook](../operations/runtime-ops-runbook.md)
+- [Release Evidence Index](../operations/release-evidence-index.md)
 
 Current local evidence roots:
 
