@@ -63,6 +63,7 @@ import {
   FlowRail,
   InsightPanel,
   ModuleEntryCard,
+  ModuleActivityList,
   ModuleOverviewBar,
   ModuleRouteSidePanel,
   ModuleRouteSideRow,
@@ -4515,17 +4516,10 @@ export default function App() {
 
                   <section className="aion-memory-side-panel aion-memory-side-panel-recent">
                     <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.memory.recentMovement}</p>
-                    <div className="mt-4 grid gap-3">
-                      {personalityRecentActivity.slice(0, 4).map((item) => (
-                        <article key={item.key} className="aion-memory-activity-row">
-                          <span className="aion-memory-activity-dot" aria-hidden="true" />
-                          <div>
-                            <p className="text-sm font-semibold text-base-900">{item.title}</p>
-                            <p className="mt-1 text-xs uppercase tracking-[0.16em] text-base-800">{item.when}</p>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
+                    <ModuleActivityList
+                      routeKey="memory"
+                      items={personalityRecentActivity.slice(0, 4)}
+                    />
                   </section>
                 </aside>
               </div>
@@ -4602,17 +4596,10 @@ export default function App() {
 
                   <section className="aion-reflections-side-panel">
                     <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.reflections.recentMovement}</p>
-                    <div className="mt-4 grid gap-3">
-                      {personalityRecentActivity.slice(0, 4).map((item) => (
-                        <article key={item.key} className="aion-reflections-activity-row">
-                          <span className="aion-reflections-activity-dot" aria-hidden="true" />
-                          <div>
-                            <p className="text-sm font-semibold text-base-900">{item.title}</p>
-                            <p className="mt-1 text-xs uppercase tracking-[0.16em] text-base-800">{item.when}</p>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
+                    <ModuleActivityList
+                      routeKey="reflections"
+                      items={personalityRecentActivity.slice(0, 4)}
+                    />
                   </section>
                 </aside>
               </div>

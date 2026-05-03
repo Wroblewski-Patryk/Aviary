@@ -248,3 +248,8 @@ and `RouteStatCard` mapping in `App()`.
 - keep `personalityRecentActivity` data ownership and slicing in `App()`
 - defer decorative main panels because their visual structure is more
   route-specific
+
+`PRJ-1023` implemented that slice with `ModuleActivityList` in
+`web/src/components/shared.tsx`. `/memory` and `/reflections` now share
+route-keyed recent activity row chrome while keeping panel headings,
+`personalityRecentActivity` ownership, and slicing in `App()`.

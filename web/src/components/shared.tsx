@@ -142,6 +142,32 @@ export function ModuleStatRow({
   );
 }
 
+export function ModuleActivityList({
+  routeKey,
+  items,
+}: {
+  routeKey: string;
+  items: Array<{
+    key: string;
+    title: ReactNode;
+    when: ReactNode;
+  }>;
+}) {
+  return (
+    <div className="mt-4 grid gap-3">
+      {items.map((item) => (
+        <article key={item.key} className={`aion-${routeKey}-activity-row`}>
+          <span className={`aion-${routeKey}-activity-dot`} aria-hidden="true" />
+          <div>
+            <p className="text-sm font-semibold text-base-900">{item.title}</p>
+            <p className="mt-1 text-xs uppercase tracking-[0.16em] text-base-800">{item.when}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 export function RouteHeroPanel({
   eyebrow,
   title,

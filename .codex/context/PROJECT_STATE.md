@@ -2,6 +2,26 @@
 
 Last updated: 2026-05-03
 
+- 2026-05-03: `PRJ-1023` completed module activity list extraction:
+  - task:
+    - `.codex/tasks/PRJ-1023-module-activity-list-extraction.md`
+  - result:
+    - added `ModuleActivityList` to `web/src/components/shared.tsx`
+    - replaced recent activity row markup for `/memory` and `/reflections`
+    - kept panel headings, `personalityRecentActivity` ownership, and slicing
+      in `App()`
+    - updated frontend route/component map, route cluster audit, and v1 roadmap
+  - validation:
+    - `Push-Location .\web; npm run build; Pop-Location`
+    - result: passed
+    - `Push-Location .\web; npm run smoke:routes; Pop-Location`
+    - result: `status=ok`, `route_count=14`
+    - `git diff --check`
+    - result: passed
+  - next execution priority:
+    - `PRJ-1024` audit next module route cleanup target after activity list
+      extraction
+
 - 2026-05-03: `PRJ-1022` completed module activity list audit:
   - task:
     - `.codex/tasks/PRJ-1022-next-module-cleanup-after-stat-row-audit.md`
