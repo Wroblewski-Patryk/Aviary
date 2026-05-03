@@ -2,31 +2,36 @@
 
 Last updated: 2026-05-03
 
-## Fresh PRJ-782 Shell Frame Decision Blocker (2026-05-03)
+## Fresh PRJ-782 Shell Frame Decision Resolution (2026-05-03)
 
-- `PRJ-782` is BLOCKED:
+- `PRJ-782` is DONE:
   - `.codex/tasks/PRJ-782-remove-window-chrome-and-audit-layout-frame-drift.md`
 - result:
-  - the historical shell-frame cleanup task is no longer a stale unchecked
-    `IN_PROGRESS` item, but it cannot be closed as `DONE`
-  - current source removed the old `WindowChrome` component, but later
-    public-home work reintroduced browser-like chrome under
-    `aion-public-browser-chrome`
+  - user clarified that browser chrome in canonical images is generated
+    browser/mockup preview context and must be ignored in implementation
+  - removed later public-home browser-like chrome under
+    `aion-public-browser-*`
   - durable UX truth remains in `docs/ux/design-memory.md`:
     - do not simulate browser controls, title bars, or fake window chrome
+    - ignore browser mockup frames in canonical reference images
   - later proof tasks carry the active frame/sidebar/shell trail:
     - `PRJ-800A` authenticated shell frame exactness
     - `PRJ-800B` sidebar pixel-close refinement
     - `PRJ-868` canonical layout foundation
     - `PRJ-875` canonical UI final route sweep
 - validation:
-  - reviewed PRJ-782 task history, current shell source, design memory,
-    flagship baseline transfer, and later board evidence
+  - reviewed PRJ-782 task history, current shell source, design memory, user
+    clarification, and later board evidence
+  - `Select-String -Path web\src\App.tsx,web\src\index.css -Pattern
+    "aion-public-browser|WindowChrome|aion-window-chrome"`
+  - result: no matches
+  - `Push-Location .\web; npm run build; Pop-Location`
+  - result: passed
   - `git diff --check`
   - result: passed
 - next smallest useful task:
-  - decide whether public home keeps the later browser-window frame or returns
-    to the frame-first/no-browser-controls rule before closing PRJ-784
+  - review `PRJ-784` for public-home first-viewport canonical status on the
+    chrome-free landing shell
 
 ## Fresh PRJ-781 Sidebar Desktop Spine Closure (2026-05-03)
 

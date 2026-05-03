@@ -4,8 +4,8 @@
 - ID: PRJ-782
 - Title: Remove fake window chrome and realign flagship layout framing
 - Task Type: design
-- Current Stage: planning
-- Status: BLOCKED
+- Current Stage: release
+- Status: DONE
 - Owner: Frontend Builder
 - Depends on: PRJ-776, PRJ-781
 - Priority: P1
@@ -67,7 +67,7 @@ One frontend slice that:
 - build and focused diff checks pass
 
 ## Definition of Done
-- [ ] Fake browser chrome is removed from shared layout surfaces.
+- [x] Fake browser chrome is removed from shared layout surfaces.
 - [x] Canonical docs reflect the new frame-first shell rule.
 - [x] Focused frontend validation evidence is attached.
 
@@ -101,6 +101,15 @@ One frontend slice that:
     browser-like chrome under `aion-public-browser-chrome`, so the component
     removal is true but the broader no-fake-controls rule is not currently
     satisfied
+  - 2026-05-03 user clarified that browser/mockup chrome in canonical images
+    is presentation context and must be ignored in implementation
+  - removed `aion-public-browser-chrome`, `aion-public-browser-dots`,
+    `aion-public-browser-address`, and `aion-public-browser-actions` from the
+    public landing source and CSS
+  - `Select-String -Path web\src\App.tsx,web\src\index.css -Pattern
+    "aion-public-browser|WindowChrome|aion-window-chrome"` returned no
+    matches
+  - `Push-Location .\web; npm run build; Pop-Location` passed
   - confirmed design memory records the frame-first rule:
     no simulated browser controls, title bars, or fake window chrome
   - confirmed later `PRJ-800A`, `PRJ-800B`, `PRJ-868`, and `PRJ-875` carry
@@ -183,24 +192,23 @@ One frontend slice that:
 - This slice intentionally removes the rejected shell ornament before more
   dashboard-local polishing.
 
-## 2026-05-03 Decision Blocker Sync
+## 2026-05-03 Decision Resolution Sync
 
-- This is a historical shell-frame correction slice, but it cannot be closed
-  as `DONE` while current public-home code contains browser-like shell
-  ornament under `aion-public-browser-chrome`.
+- This is a historical shell-frame correction slice and is now closed after
+  removing the later public-home browser-like shell ornament under
+  `aion-public-browser-chrome`.
 - Current runtime shell code does not expose the rejected `WindowChrome`
-  component or `aion-window-chrome*` styling, but later public-home work
-  reintroduced browser controls under a different class family.
+  component, `aion-window-chrome*` styling, or public `aion-public-browser-*`
+  chrome controls as canonical layout.
 - `docs/ux/design-memory.md` is the durable source of truth for the
   frame-first rule: shells may be premium and inset, but must not simulate
   browser controls or fake window chrome.
-- Later `PRJ-800A`, `PRJ-800B`, `PRJ-868`, and `PRJ-875` carry the active
-  frame, sidebar, and route-sweep proof trail.
-- Decision required:
-  - either keep the later browser-window reference as the canonical landing
-    direction and update `PRJ-782` plus design memory, or remove
-    `aion-public-browser-chrome` from public home and preserve the
-    frame-first/no-browser-controls rule.
+- User clarification:
+  - if canonical images show a browser mockup, ignore the browser frame because
+    it is generated preview context, not desired product UI.
+- Later `PRJ-800A`, `PRJ-800B`, `PRJ-868`, and `PRJ-875` remain useful proof
+  trail entries, but future visual passes must ignore browser mockup chrome
+  from reference images.
 
 ## Production-Grade Required Contract
 
@@ -256,6 +264,10 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - `Push-Location .\web; npm run build; Pop-Location`
   - `git diff --check -- web/src/App.tsx web/src/index.css docs/planning/layout-dashboard-public-home-canonical-master-audit.md docs/ux/design-memory.md docs/ux/canonical-web-screen-reference-set.md .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .codex/tasks/PRJ-782-remove-window-chrome-and-audit-layout-frame-drift.md`
   - local screenshot review via `.codex/artifacts/local-public-home-no-window-chrome-2026-04-29.png`
+  - 2026-05-03:
+    - `Select-String -Path web\src\App.tsx,web\src\index.css -Pattern "aion-public-browser|WindowChrome|aion-window-chrome"`
+      returned no matches
+    - `Push-Location .\web; npm run build; Pop-Location` passed
 - What is incomplete:
   - public landing still needs another parity pass for hero density and lower storytelling rhythm
   - dashboard still needs a new structural convergence slice on the cleaned shell
@@ -269,24 +281,26 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
 ## Closure Result Report
 
 - Goal:
-  - identify why `PRJ-782` cannot be closed without a product/design decision
+  - close `PRJ-782` after resolving the product/design decision
 - Scope:
-  - task status, task evidence, and context sync only
+  - public landing browser chrome removal, design memory, task evidence, and
+    context sync
 - Implementation Plan:
-  - verify current shell source and durable UX decision docs
-  - identify later proof owners
-  - mark the historical task blocked if later source contradicts the decision
+  - apply the user decision that browser mockups in references are ignored
+  - remove public `aion-public-browser-*` chrome markup and CSS
+  - update design memory with the mockup-ignore rule
   - update project context and board state
 - Acceptance Criteria:
-  - no stale `IN_PROGRESS` state remains for `PRJ-782`
-  - the `WindowChrome` versus public browser-chrome mismatch is explicit
+  - no stale blocked state remains for `PRJ-782`
+  - no public browser chrome markup or CSS remains
+  - canonical screenshot browser mockups are explicitly ignored
   - no runtime, route, auth, or backend behavior changes are introduced
 - Definition of Done:
   - original validation evidence is preserved
-  - current source review is recorded
-  - later `PRJ-800A`, `PRJ-800B`, `PRJ-868`, and `PRJ-875` ownership is recorded
+  - current source is corrected
+  - durable UX rule is recorded
   - context files are updated
   - `git diff --check` passes
 - Next:
-  - obtain a decision on whether public home should keep the later
-    browser-window frame or return to the frame-first/no-browser-controls rule
+  - review `PRJ-784` for public-home first-viewport canonical status on the
+    chrome-free landing shell

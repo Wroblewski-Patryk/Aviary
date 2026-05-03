@@ -4831,21 +4831,6 @@ export default function App() {
               <span>1</span>
               <strong>Landing Page</strong>
             </div>
-            <div className="aion-public-browser-chrome" aria-hidden="true">
-              <div className="aion-public-browser-dots">
-                <span />
-                <span />
-                <span />
-              </div>
-              <div className="aion-public-browser-address">
-                <span>aion.ai</span>
-              </div>
-              <div className="aion-public-browser-actions">
-                <span />
-                <span />
-                <span />
-              </div>
-            </div>
             <div className="aion-public-window-body">
               <header className="aion-public-nav">
                 <AviaryWordmark compact />

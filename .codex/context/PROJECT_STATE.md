@@ -2,27 +2,31 @@
 
 Last updated: 2026-05-03
 
-- 2026-05-03: `PRJ-782` reached a shell-frame decision blocker:
+- 2026-05-03: `PRJ-782` completed shell-frame decision resolution:
   - task:
     - `.codex/tasks/PRJ-782-remove-window-chrome-and-audit-layout-frame-drift.md`
   - result:
-    - the shell-frame cleanup task is no longer a stale unchecked
-      `IN_PROGRESS` item, but it cannot be closed as `DONE`
-    - current source removed the old `WindowChrome` component, but later
-      public-home work reintroduced browser-like chrome under
-      `aion-public-browser-chrome`
+    - user clarified that browser chrome in canonical images is generated
+      browser/mockup preview context and must be ignored in implementation
+    - removed later public-home browser-like chrome under
+      `aion-public-browser-*`
     - durable UX truth remains in `docs/ux/design-memory.md`: do not simulate
       browser controls, title bars, or fake window chrome
+    - design memory now explicitly says to ignore browser mockup frames in
+      canonical reference images
     - later PRJ-800A, PRJ-800B, PRJ-868, and PRJ-875 work remains the active
       frame/sidebar/shell proof trail
   - validation:
-    - PRJ-782 history, current shell source, design memory, flagship baseline
-      transfer, and later board evidence were reviewed
+    - PRJ-782 history, current shell source, design memory, user clarification,
+      and later board evidence were reviewed
+    - `Select-String -Path web\src\App.tsx,web\src\index.css -Pattern
+      "aion-public-browser|WindowChrome|aion-window-chrome"` returned no
+      matches
+    - `Push-Location .\web; npm run build; Pop-Location` passed
     - `git diff --check` passed
   - next execution priority:
-    - decide whether public home keeps the later browser-window frame or
-      returns to the frame-first/no-browser-controls rule before closing
-      PRJ-784
+    - review `PRJ-784` for public-home first-viewport canonical status on the
+      chrome-free landing shell
 
 - 2026-05-03: `PRJ-781` completed sidebar desktop spine closure:
   - task:
