@@ -2,6 +2,29 @@
 
 Last updated: 2026-05-03
 
+## Fresh PRJ-781 Sidebar Desktop Spine Closure (2026-05-03)
+
+- `PRJ-781` is DONE:
+  - `.codex/tasks/PRJ-781-implement-canonical-sidebar-desktop-spine-pass.md`
+- result:
+  - the historical sidebar desktop spine task is no longer a stale
+    `IN_PROGRESS` item
+  - current source contains `SidebarGlyph`, `SidebarBrandBlock`, icon-led nav,
+    the health/identity/quote support stack, and `.aion-sidebar-*` CSS
+  - later implementation and proof tasks carry the active sidebar/shell trail:
+    - `PRJ-800B` sidebar pixel-close refinement
+    - `PRJ-868` canonical layout foundation
+    - `PRJ-875` canonical UI final route sweep
+  - the route-inventory mismatch remains explicit and no route was silently
+    invented
+- validation:
+  - reviewed PRJ-781 task history, current sidebar source, design memory,
+    flagship baseline transfer, and later board evidence
+  - `git diff --check`
+  - result: passed
+- next smallest useful task:
+  - review `PRJ-782` for WindowChrome removal and layout-frame drift status
+
 ## Fresh PRJ-780 Canonical Sidebar Planning Closure (2026-05-03)
 
 - `PRJ-780` is DONE:

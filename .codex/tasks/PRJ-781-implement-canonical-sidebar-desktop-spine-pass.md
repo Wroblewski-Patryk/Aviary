@@ -4,8 +4,8 @@
 - ID: PRJ-781
 - Title: Implement canonical sidebar desktop spine pass
 - Task Type: design
-- Current Stage: implementation
-- Status: IN_PROGRESS
+- Current Stage: release
+- Status: DONE
 - Owner: Frontend Builder
 - Depends on: PRJ-780
 - Priority: P1
@@ -57,9 +57,9 @@ One frontend slice in `web/src/App.tsx` and `web/src/index.css` that:
 - build and focused diff checks pass
 
 ## Definition of Done
-- [ ] Desktop sidebar spine is materially closer to the canonical rail.
-- [ ] Current route behavior remains intact.
-- [ ] Focused frontend validation evidence is attached.
+- [x] Desktop sidebar spine is materially closer to the canonical rail.
+- [x] Current route behavior remains intact.
+- [x] Focused frontend validation evidence is attached.
 
 ## Stage Exit Criteria
 - [x] The output matches the declared `Current Stage`.
@@ -79,6 +79,16 @@ One frontend slice in `web/src/App.tsx` and `web/src/index.css` that:
   - `git diff --check -- web/src/App.tsx web/src/index.css`
 - Manual checks:
   - sidebar JSX and CSS reviewed against the canonical sidebar plan
+  - 2026-05-03 closure sync reviewed `docs/ux/design-memory.md`,
+    `docs/ux/flagship-baseline-transfer.md`,
+    `.codex/context/TASK_BOARD.md`, `web/src/App.tsx`, and
+    `web/src/index.css`
+  - confirmed current source contains `SidebarGlyph`, `SidebarBrandBlock`,
+    `aion-app-rail`, `aion-sidebar-nav`, the sidebar support stack, and
+    `.aion-sidebar-*` CSS
+  - confirmed later `PRJ-800B`, `PRJ-868`, and `PRJ-875` carry the active
+    sidebar refinement and proof trail
+  - `git diff --check` passed
 - Screenshots/logs:
   - browser screenshot parity remains the next loop
 - High-risk checks:
@@ -145,11 +155,24 @@ One frontend slice in `web/src/App.tsx` and `web/src/index.css` that:
 - [x] Definition of Done evidence is attached.
 - [x] Relevant validations were run.
 - [x] Docs or context were updated if repository truth changed.
-- [ ] Learning journal was updated if a recurring pitfall was confirmed.
+- [x] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes
 - This task intentionally uses only implemented routes to avoid silent contract
   expansion.
+
+## 2026-05-03 Closure Sync
+
+- This is a historical sidebar desktop spine implementation slice, no longer
+  an active `IN_PROGRESS` task.
+- Later `PRJ-800B` refined the sidebar pixel pass, `PRJ-868` refreshed the
+  canonical layout foundation, and `PRJ-875` completed the final route-sweep
+  proof package.
+- Current reusable sidebar truth is in `docs/ux/design-memory.md`,
+  `docs/ux/flagship-baseline-transfer.md`, `web/src/App.tsx`, and
+  `web/src/index.css`.
+- The route inventory mismatch remains a product-scope decision and was not
+  hidden by inventing routes.
 
 ## Production-Grade Required Contract
 
@@ -206,3 +229,26 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
   - compare deployed desktop shell against the canonical sidebar image and tune spacing/materials
 - Decisions made:
   - preserve current route contract and focus on anatomy-first convergence
+
+## Closure Result Report
+
+- Goal:
+  - close `PRJ-781` without duplicating later sidebar refinement work
+- Scope:
+  - task status, task evidence, and context sync only
+- Implementation Plan:
+  - verify current source and later proof owners
+  - mark the historical task done
+  - update project context and board state
+- Acceptance Criteria:
+  - no stale `IN_PROGRESS` state remains for `PRJ-781`
+  - current route behavior remains unchanged
+  - no route inventory is invented during closure
+- Definition of Done:
+  - original validation evidence is preserved
+  - later `PRJ-800B`, `PRJ-868`, and `PRJ-875` ownership is recorded
+  - current source review is recorded
+  - context files are updated
+  - `git diff --check` passes
+- Next:
+  - review `PRJ-782` for WindowChrome removal and layout-frame drift status
