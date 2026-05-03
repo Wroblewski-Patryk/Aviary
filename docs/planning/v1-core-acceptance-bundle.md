@@ -102,7 +102,10 @@ broader public or web-led release claim:
 - `PRJ-932` cross-user/session isolation audit: DONE with
   `docs/security/v1-cross-user-session-isolation-audit.md`; follow-up two-user
   regression gaps remain
-- `PRJ-933` provider payload leakage audit
+- `PRJ-933` provider payload leakage audit: DONE with
+  `docs/security/v1-provider-payload-leakage-audit.md`; follow-up live
+  provider, red-team execution, strict-mode incident sentinel, and frontend
+  fixture smoke gaps remain
 - `PRJ-934..PRJ-936` final go/no-go, handoff, and release marker
 
 ## Go / No-Go
@@ -119,5 +122,5 @@ broader public or web-led release claim:
 
 Rerun `PRJ-909` when Telegram operator preconditions are available. Until then,
 continue with locally actionable public-launch hardening, starting with
-`PRJ-930` deployment trigger SLO evidence or `PRJ-933` provider payload
-leakage audit.
+`PRJ-930` deployment trigger SLO evidence or `PRJ-934` final go/no-go review
+when the remaining evidence gaps are accepted or closed.

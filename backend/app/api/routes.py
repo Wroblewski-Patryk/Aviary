@@ -166,6 +166,38 @@ def _recent_activity_snapshot(memory_items: list[dict], *, limit: int = 5) -> li
     return activity
 
 
+def _pending_proposal_snapshot(proposals: list[dict], *, limit: int = 8) -> list[dict[str, Any]]:
+    snapshot: list[dict[str, Any]] = []
+    for proposal in proposals:
+        if not isinstance(proposal, dict):
+            continue
+        item: dict[str, Any] = {}
+        for key in (
+            "proposal_id",
+            "proposal_type",
+            "summary",
+            "confidence",
+            "source_event_id",
+            "status",
+            "decision_reason",
+            "research_policy",
+            "allowed_tools",
+            "decided_at",
+            "updated_at",
+            "created_at",
+        ):
+            if key in proposal:
+                item[key] = proposal.get(key)
+        payload = proposal.get("payload")
+        if isinstance(payload, dict):
+            item["payload_present"] = bool(payload)
+            item["payload_keys"] = sorted(str(key)[:64] for key in payload.keys())
+        snapshot.append(item)
+        if len(snapshot) >= limit:
+            break
+    return snapshot
+
+
 def _normalize_auth_email(value: str) -> str:
     normalized = str(value or "").strip().lower()
     if "@" not in normalized or "." not in normalized.split("@", 1)[-1]:
@@ -634,8 +666,11 @@ async def _build_learned_state_snapshot(*, request: Request, user_id: str) -> di
         await memory_repository.get_recent_for_user(user_id=user_id, limit=5),
         limit=5,
     )
-    pending_proposals = await memory_repository.get_pending_subconscious_proposals(
-        user_id=user_id,
+    pending_proposals = _pending_proposal_snapshot(
+        await memory_repository.get_pending_subconscious_proposals(
+            user_id=user_id,
+            limit=8,
+        ),
         limit=8,
     )
     theta_loader = getattr(memory_repository, "get_user_theta", None)

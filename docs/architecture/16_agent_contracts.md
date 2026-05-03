@@ -1534,6 +1534,10 @@ Canonical introspection surfaces for that baseline:
      - `learned_knowledge.reflection_growth_summary`
      - `role_skill_state.selection_visibility_summary`
      - `planning_state.continuity_summary`
+   - `planning_state.pending_proposals` is a bounded proposal metadata
+     projection for inspection callers; raw proposal `payload` bodies stay in
+     the repository/runtime handoff contract and are not returned through this
+     learned-state snapshot
    - role/skill visibility remains metadata-only:
      - skill registry and role-skill policy may be inspected
      - current-turn selected role and selected skills are still read from

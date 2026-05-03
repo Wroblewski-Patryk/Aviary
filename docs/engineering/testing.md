@@ -596,6 +596,13 @@ The current cross-user/session isolation audit lives in
 API route evidence plus follow-up gaps for explicit two-user transcript,
 reset, session-cookie-switching, and Telegram relink/conflict regressions.
 
+The current provider payload leakage audit lives in
+`docs/security/v1-provider-payload-leakage-audit.md`. It records the app
+overview, tools overview, chat history, health, incident evidence, durable
+memory, and frontend usage boundaries, and pins the regression that
+`planning_state.pending_proposals` exposes proposal metadata plus payload keys,
+not raw proposal payload bodies.
+
 Runtime features require integration validation using `INTEGRATION_CHECKLIST.md`. A feature is not complete until real UI/client paths, API contracts, database schema or migrations, validation, loading states, error states, refresh or restart behavior, and regression risk are verified.
 
 Completion evidence must satisfy `DEFINITION_OF_DONE.md` and include exact commands, manual checks, scenario results, and residual risks.

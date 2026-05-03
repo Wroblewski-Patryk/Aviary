@@ -75,6 +75,7 @@ evidence.
 - [V1 Release Evidence Archive Standard](planning/v1-release-evidence-archive-standard.md)
 - [V1 AI Red-Team Scenario Pack](security/v1-ai-red-team-scenario-pack.md)
 - [V1 Cross-User Session Isolation Audit](security/v1-cross-user-session-isolation-audit.md)
+- [V1 Provider Payload Leakage Audit](security/v1-provider-payload-leakage-audit.md)
 - [Environment And Config](architecture/26_env_and_config.md)
 - [Runtime Behavior Testing](architecture/29_runtime_behavior_testing.md)
 

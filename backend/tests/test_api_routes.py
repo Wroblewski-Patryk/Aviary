@@ -5570,6 +5570,22 @@ def test_app_personality_overview_uses_authenticated_user() -> None:
             "importance": 0.91,
         },
     ]
+    repository.pending_proposals = [
+        {
+            "proposal_id": 23,
+            "proposal_type": "research_topic",
+            "summary": "Review provider response without leaking it.",
+            "payload": {
+                "raw_web_page": "<html>private provider page</html>",
+                "provider_response": {"task": "private clickup task body"},
+            },
+            "confidence": 0.83,
+            "status": "pending",
+            "research_policy": "read_only",
+            "allowed_tools": ["knowledge_search"],
+            "source_event_id": "evt-provider-read",
+        }
+    ]
 
     response = client.get("/app/personality/overview")
 
@@ -5587,6 +5603,12 @@ def test_app_personality_overview_uses_authenticated_user() -> None:
         }
     ]
     assert "payload" not in body["recent_activity"][0]
+    pending_proposal = body["planning_state"]["pending_proposals"][0]
+    assert pending_proposal["proposal_id"] == 23
+    assert pending_proposal["payload_present"] is True
+    assert pending_proposal["payload_keys"] == ["provider_response", "raw_web_page"]
+    assert "payload" not in pending_proposal
+    assert "private provider page" not in str(body)
 
 
 def test_app_tools_overview_requires_authenticated_session() -> None:

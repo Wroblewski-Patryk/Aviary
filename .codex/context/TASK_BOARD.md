@@ -2,6 +2,32 @@
 
 Last updated: 2026-05-03
 
+## Fresh Provider Payload Leakage Audit (2026-05-03)
+
+- `PRJ-933` is DONE:
+  - `.codex/tasks/PRJ-933-provider-payload-leakage-audit.md`
+  - `docs/security/v1-provider-payload-leakage-audit.md`
+- result:
+  - audited app personality overview, tools overview, chat history, health,
+    strict-mode incident evidence, durable memory, and frontend overview usage
+  - fixed the only confirmed projection leak candidate:
+    `planning_state.pending_proposals` now returns proposal metadata,
+    `payload_present`, and `payload_keys` instead of raw proposal `payload`
+  - durable repository/runtime payload storage remains unchanged for internal
+    handoff contracts
+  - follow-up evidence gaps remain for live provider credential smoke, executed
+    AI red-team exfiltration scenarios, strict-mode incident sentinel
+    regression, and frontend fixture-based payload sentinel smoke
+- validation:
+  - route/repository/policy/frontend usage inspection
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "personality_overview or tools_overview or internal_state or incident or raw_payload"; Pop-Location`
+  - result: `8 passed, 111 deselected`
+  - `git diff --check`
+  - result: passed with CRLF normalization warnings only
+- next smallest useful task:
+  - `PRJ-930` deployment trigger SLO evidence or `PRJ-934` final go/no-go
+    review once remaining evidence gaps are accepted or closed
+
 ## Fresh Cross-User Session Isolation Audit (2026-05-03)
 
 - `PRJ-932` is DONE:

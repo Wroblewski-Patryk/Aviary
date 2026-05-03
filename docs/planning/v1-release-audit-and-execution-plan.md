@@ -470,8 +470,17 @@ Tasks:
     session-cookie-switching, and Telegram relink/conflict regressions.
 
 - `PRJ-933` Provider Payload Leakage Audit
-  - Confirm raw web page, task, calendar, drive, Telegram, and memory payloads
-    do not leak through durable memory, health, app overview, or UI routes.
+  - Status: DONE
+  - Output: `docs/security/v1-provider-payload-leakage-audit.md` records the
+    inspected app overview, tools overview, chat history, health, incident
+    evidence, durable memory, and frontend usage boundaries.
+  - Fixed the only confirmed projection leak candidate: raw subconscious
+    proposal `payload` is no longer returned through learned-state planning
+    snapshots; callers receive proposal metadata, `payload_present`, and
+    `payload_keys` only.
+  - Follow-up evidence gaps remain for live provider credential smoke, executed
+    AI red-team exfiltration scenarios, strict-mode incident-bundle sentinel
+    regression, and frontend fixture-based payload sentinel smoke.
 
 ### Phase 8 - Final V1 Declaration
 
@@ -523,7 +532,8 @@ Tasks:
 10. `PRJ-931` V1 AI Red-Team Scenario Pack - DONE locally
 11. `PRJ-932` Cross-User And Session Isolation Audit - DONE locally with
     follow-up test gaps
-12. `PRJ-933` Provider Payload Leakage Audit
+12. `PRJ-933` Provider Payload Leakage Audit - DONE locally with follow-up
+    provider/red-team evidence gaps
 
 ### P2 Extensions
 
