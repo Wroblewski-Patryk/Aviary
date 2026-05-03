@@ -1,8 +1,8 @@
 # V1 Deployment Trigger SLO Evidence
 
-Date: 2026-05-03
-Task: `PRJ-930`
-Status: DONE locally with operator-owned production-history proof gap
+Date: 2026-05-04
+Task: `PRJ-930`, refreshed by `PRJ-1132`
+Status: current `v1.0.1` release parity green; source/webhook reliability is a future-candidate follow-up
 
 ## Purpose
 
@@ -29,13 +29,45 @@ The machine-visible baseline is exposed through `/health.deployment` by
 
 ## Evidence Classes
 
-| Evidence | Owner | Current local status |
+| Evidence | Owner | Current status |
 | --- | --- | --- |
-| Coolify deployment history for canonical app | Operator / Coolify UI | UNVERIFIED locally; required before final release declaration when source automation is the claimed path |
+| Coolify deployment history for canonical app | Operator / Coolify UI | VERIFIED for PRJ-1128 UI fallback recovery; source automation did not converge during PRJ-1125 |
 | `/health.deployment` policy surface | Backend runtime | Covered by route tests and release-smoke validation |
-| Webhook fallback evidence artifact | `backend/scripts/trigger_coolify_deploy_webhook.py` | Covered by script tests; use only when source automation is delayed or missing |
-| Release smoke deploy parity | `backend/scripts/run_release_smoke.ps1` / `.sh` | Covered by deployment-trigger script tests and prior production smoke evidence |
+| Webhook fallback evidence artifact | `backend/scripts/trigger_coolify_deploy_webhook.py` | Covered by script tests; currently blocked locally by missing webhook URL and secret |
+| Release smoke deploy parity | `backend/scripts/run_release_smoke.ps1` / `.sh` | Passed for current selected SHA and tag `v1.0.1` |
 | Evidence archive pointer | `docs/planning/v1-release-evidence-archive-standard.md` | Updated for PRJ-930 |
+
+## Current V1.0.1 Evidence
+
+`v1.0.1` is the current selected-SHA release marker:
+
+- selected SHA:
+  `3b46ed3878a8560c3adb147fcadf064818ccc322`
+- tag object:
+  `b016c4f33051805cfa09664f79bbe57f5b30811b`
+- production backend revision:
+  `3b46ed3878a8560c3adb147fcadf064818ccc322`
+- production web meta revision:
+  `3b46ed3878a8560c3adb147fcadf064818ccc322`
+- selected-tag go/no-go:
+  `run_release_go_no_go.py --selected-tag v1.0.1 --monitor-mode` ->
+  `verdict=GO`, audit `GO_FOR_SELECTED_SHA`, smoke `exit_code=0`
+
+For this candidate, deployment-trigger evidence is:
+
+1. PRJ-1125: push to `origin/main` did not converge through source automation
+   within the bounded deploy-parity wait.
+2. PRJ-1128: approved Coolify UI fallback on canonical app
+   `jr1oehwlzl8tcn3h8gh2vvih` deployed commit `3b46ed3` successfully.
+3. PRJ-1131: `v1.0.1` was created only after release audit and release smoke
+   were green.
+4. PRJ-1132: webhook fallback readiness is still `blocked` until
+   `COOLIFY_DEPLOY_WEBHOOK_URL` and `COOLIFY_DEPLOY_WEBHOOK_SECRET` are
+   available to the operator task.
+
+This means the current release is green, but future selected candidates should
+not claim source/webhook automation reliability until Coolify source history or
+webhook fallback evidence proves that path for the new candidate.
 
 ## Primary Path
 
@@ -67,7 +99,7 @@ fallback for a post-v1 candidate, freeze the selected SHA. Do not trigger a
 deploy for `HEAD` if the intended release scope still exists only as
 uncommitted local changes.
 
-Current PRJ-1115/PRJ-1121 posture:
+Historical PRJ-1115/PRJ-1121 posture:
 
 - deployed `v1.0.0` selected SHA:
   `5e64f494e2aac8d29cea532d95f7039ed6029213`
@@ -77,7 +109,7 @@ Current PRJ-1115/PRJ-1121 posture:
 - fallback readiness is blocked until an operator provides webhook URL and
   webhook secret
 
-Operator sequence for PRJ-952:
+Current operator sequence for the next selected candidate:
 
 1. Decide whether the next candidate is the current committed `HEAD` or a new
    commit that includes the local working-tree changes.
@@ -126,8 +158,9 @@ Pop-Location
 ```
 
 Only after backend revision, web revision, release readiness, and release smoke
-all match the selected SHA should PRJ-953/PRJ-954/PRJ-955 move forward for a
-future marker.
+all match the selected SHA should release marker work move forward for a future
+candidate. `v1.0.1` already satisfies that requirement for
+`3b46ed3878a8560c3adb147fcadf064818ccc322`.
 
 ## Exception-Only Fallback
 
@@ -182,7 +215,8 @@ Expected coverage:
 PRJ-930 is locally closed because the SLO, evidence schema, fallback posture,
 and release-smoke enforcement are documented and regression-covered.
 
-Final production release still requires operator confirmation that Coolify
-deployment history for the canonical app contains the intended pushed commit,
-unless the release explicitly records webhook/UI fallback as exception-only
-recovery evidence.
+For `v1.0.1`, final production release evidence records UI fallback as the
+exception-only recovery path. The next selected candidate should either prove
+that Coolify source automation enqueued and deployed the pushed commit, or
+capture webhook fallback evidence with the existing helper before release
+smoke.

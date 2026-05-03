@@ -1,8 +1,8 @@
 # V1 Reality Audit And Roadmap
 
-Date: 2026-05-03
-Task: `PRJ-951`
-Status: READY queue created
+Date: 2026-05-04
+Task: `PRJ-951`, refreshed by `PRJ-1135`
+Status: current selected-SHA production proof green, marked by `v1.0.1`; v1.1 candidate gates are mapped and AI red-team has a local expression-boundary fix pending deploy/rerun
 
 ## Purpose
 
@@ -14,11 +14,11 @@ v1 factual, executable, and resistant to drift.
 
 | Area | Code or Evidence Checked | Current State | V1 Meaning |
 | --- | --- | --- | --- |
-| Git source | `git status --short --branch`, `git log`, `git remote -v` | PRJ-1115 refresh: local `main` is ahead of `origin/main` by 86 commits; local `HEAD` is `5ff12953289bbca680fd5d9f8b3d8780a8f4be55`; origin/release marker target remains `5e64f494e2aac8d29cea532d95f7039ed6029213` | Local hardening work is not release-eligible until pushed, deployed, and smoke-tested |
-| Production revision | `GET https://aviary.luckysparrow.ch/health`, `/settings` meta | PRJ-1115 refresh: production backend and web meta both report `5e64f494e2aac8d29cea532d95f7039ed6029213` | Deployed `v1.0.0` remains coherent; current local `HEAD` is not deployed |
-| Release smoke | `run_release_smoke.ps1 -WaitForDeployParity` in PRJ-938 | Failed after 900 seconds because production stayed on the older SHA | Release marker remains blocked |
-| V1 health gates | `/health.v1_readiness` | Existing deployed SHA reports `core_v1_bundle_ready` and green final gates | Core v1 behavior appears green only for the currently deployed older SHA |
-| Deploy policy | `backend/app/core/deployment_policy.py`, `/health.deployment` | Runtime declares source automation and build revision | The proof surface exists; the automation did not converge for the latest push |
+| Git source | `git status --short --branch`, `git log`, `git remote -v` | PRJ-1131 refresh: local `main`, `origin/main`, production, and tag `v1.0.1` all point at selected SHA `3b46ed3878a8560c3adb147fcadf064818ccc322`; `v1.0.0` remains historical marker truth for `5e64f494e2aac8d29cea532d95f7039ed6029213` | Current selected candidate is release-smoked in production and release-marked |
+| Production revision | `GET https://aviary.luckysparrow.ch/health`, `/settings` meta | PRJ-1128 refresh: production backend and web meta both report `3b46ed3878a8560c3adb147fcadf064818ccc322` | Current selected candidate has live deploy parity |
+| Release smoke | `run_release_smoke.ps1 -WaitForDeployParity` in PRJ-1128 | Passed after approved Coolify UI redeploy fallback | Core v1 selected-SHA production proof is green |
+| V1 health gates | `/health.v1_readiness` | Current selected SHA reports `core_v1_bundle_ready` and green final gates | Core v1 behavior is green for the currently deployed selected SHA |
+| Deploy policy | `backend/app/core/deployment_policy.py`, `/health.deployment` | Runtime declares source automation and build revision; the initial webhook/source deploy failed, while approved UI fallback succeeded | Proof surface is green; source/webhook automation reliability is a follow-up |
 | API/routes | `backend/app/api/routes.py`, `docs/api/openapi.json` | App auth, chat, tools, Telegram link, event, debug, health, and webhook routes exist; generated OpenAPI is in sync | API foundation is documented enough for v1 hardening |
 | Database/model docs | `backend/app/memory/models.py`, `docs/data/columns.md`, `docs/data/erd.mmd` | Generated column reference and ERD match the current ORM metadata | The previous ERD/model-reference gap is closed |
 | Frontend | `web/src/App.tsx`, `web/src/routes.ts`, `web/src/lib/api.ts`, `docs/frontend/route-component-map.md` | Browser shell exists; route contract ownership has been extracted to `web/src/routes.ts`, while route rendering and state remain mostly in `App.tsx` | Usable, with headless route smoke now protecting every current public/authenticated route during further route/component extraction |
@@ -28,31 +28,61 @@ v1 factual, executable, and resistant to drift.
 
 ## Main Finding
 
-The project is not blocked by missing engineering documentation anymore. The
-current blocker is release reality:
+The project is not blocked by missing engineering documentation anymore. PRJ-1128
+closed the immediate release-reality blocker for the selected candidate:
 
-- the repository candidate is ahead of production
-- Coolify source automation did not converge within the release-smoke window
-- the core acceptance bundle still contains historical GO language for an older
-  deployed SHA
-- the release marker remains correctly blocked until a selected SHA has fresh
-  production smoke
+- the selected repository candidate is deployed in production
+- production backend and web revisions match
+  `3b46ed3878a8560c3adb147fcadf064818ccc322`
+- release smoke with deploy parity passed
+- the core acceptance bundle is green for the current selected SHA
 
-PRJ-1115 refreshed release evidence after frontend closure. The deployed
-`v1.0.0` selected SHA still receives `GO` in monitor mode, but the current local
-`HEAD` receives `HOLD_REVISION_DRIFT`; Coolify fallback readiness remains
-`blocked` until an operator provides webhook URL and secret.
+The remaining release/reliability work is narrower: document Coolify
+source/webhook automation reliability and keep extension/hardening gates
+explicit.
+
+`PRJ-1135` adds the current v1.1 interpretation: v1.1 is not yet a release
+fact. It is a candidate gate map that should build on `v1.0.1`, close the
+remaining unblocked hardening evidence, and keep credential-dependent extension
+claims out of the achieved scope until operator inputs exist.
+
+`PRJ-1136` closed the AI red-team response-visibility bug by reading the
+approved `/event` `reply.message` field. The strict live rerun executed all 21
+steps and returned `5 PASS / 4 REVIEW / 0 FAIL / 0 BLOCKED`, so the gate has
+real behavioral evidence now but still needs follow-up fixes before v1.1 can
+claim AI red-team pass.
+
+`PRJ-1137` adds a local expression self-review guard for unsafe bypass approval,
+false external mutation success claims, and unverified admin/cross-user
+authorization language. Focused tests pass locally. This does not yet close the
+live v1.1 AI red-team gate because the fix still needs packaging, deployment,
+and a strict production rerun.
 
 ## Current Acceptance Boundary
 
 | Claim | Decision | Why |
 | --- | --- | --- |
-| Historical core no-UI v1 behavior on deployed production SHA | GO with stale-revision caveat | `/health.v1_readiness` is green on the deployed SHA |
-| Current `origin/main` as deployed v1 | NO-GO | production revision does not match `origin/main` |
-| Final release tag/marker | BLOCKED | PRJ-936 and PRJ-938 correctly block marker creation |
+| Historical core no-UI v1 behavior on `v1.0.0` marker SHA | GO as historical marker truth | `/health.v1_readiness` was green on the marker SHA |
+| Current `origin/main` as deployed selected candidate | GO | production revision matches `origin/main` at `3b46ed3878a8560c3adb147fcadf064818ccc322` |
+| Final release tag/marker for selected SHA | GO | `v1.0.1` was created by PRJ-1131 after selected-tag go/no-go returned `GO` |
 | Telegram-led launch claim | BLOCKED | PRJ-909 needs operator token/secret/chat preconditions |
 | Organizer/provider daily-use launch claim | BLOCKED | PRJ-918 needs provider credentials |
 | Public/web-led v1 confidence | IMPROVED | frontend exists and `PRJ-966` adds repeatable headless route-mount smoke for root, the login shell, dashboard, chat, personality, and tools |
+
+## Current V1.1 Gate Map
+
+| Gate | Status | Next Evidence |
+| --- | --- | --- |
+| `v1.0.1` core/web-supported baseline | GREEN | preserve current production parity and selected-tag go/no-go evidence |
+| Web/public shell route confidence | GREEN_FOR_CURRENT_SCOPE | rerun web build and route smoke for any new candidate that changes web scope |
+| AI red-team behavioral scoring | LOCAL_FIX_PENDING_DEPLOY | `PRJ-1137` locally rewrites unsafe expression-boundary replies; deploy and rerun the strict pack before claiming pass |
+| Coolify source/webhook reliability | UNBLOCKED_OR_OPERATOR_ASSISTED | prove source automation on the next selected candidate or capture webhook fallback readiness after operator-provided URL/secret |
+| Telegram live-mode launch channel | BLOCKED_EXTERNAL | run `PRJ-962` only after operator token, webhook secret, and known chat id exist |
+| Organizer provider activation | BLOCKED_EXTERNAL | run `PRJ-963` only after provider credentials exist |
+| Multimodal Telegram and mobile/Expo | DEFERRED_SCOPE_DECISION | freeze scope explicitly before treating as v1.1 blockers |
+
+Next unblocked v1.1 task: package/deploy the PRJ-1137 expression guard, then
+rerun the strict live red-team pack.
 
 ## Roadmap
 
@@ -60,19 +90,22 @@ PRJ-1115 refreshed release evidence after frontend closure. The deployed
 
 | ID | Task | Status | Definition Of Done |
 | --- | --- | --- | --- |
-| PRJ-952 | Recover Coolify source automation or run approved fallback | BLOCKED_EXTERNAL | Coolify history shows the pushed SHA or webhook/UI fallback evidence exists; production begins deploying selected SHA |
-| PRJ-953 | Rerun production release smoke for selected SHA | READY_AFTER_PRJ-952 | backend revision, web revision, release smoke, and optional fallback evidence all match selected SHA |
-| PRJ-954 | Refresh v1 acceptance bundle for current selected SHA | READY_AFTER_PRJ-953 | acceptance bundle no longer implies stale deploy parity and records exact SHA evidence |
-| PRJ-955 | Create release marker only after green production evidence | READY_AFTER_PRJ-954 | tag/marker created for selected SHA; task board/project state record evidence |
+| PRJ-952 | Recover Coolify source automation or run approved fallback | DONE_BY_PRJ-1128_UI_FALLBACK | Coolify history shows successful manual UI fallback deployment for selected SHA `3b46ed3` |
+| PRJ-953 | Rerun production release smoke for selected SHA | DONE_BY_PRJ-1128 | backend revision, web revision, release smoke, and UI fallback evidence all match selected SHA |
+| PRJ-954 | Refresh v1 acceptance bundle for current selected SHA | DONE_BY_PRJ-1133 | acceptance bundle points to `v1.0.1`, PRJ-1128/1131 evidence, and exact SHA `3b46ed3878a8560c3adb147fcadf064818ccc322` |
+| PRJ-955 | Create release marker only after green production evidence | DONE_BY_PRJ-1131 | `v1.0.1` marks selected SHA `3b46ed3878a8560c3adb147fcadf064818ccc322`; `v1.0.0` remains historical |
 | PRJ-956 | Add a release reality audit script | DONE | local script checks git SHA, production backend SHA, web meta SHA, release readiness, and v1 gates in one command |
 | PRJ-957 | Make production health monitor revision-aware | DONE | monitor can alert on revision drift, not only HTTP health |
-| PRJ-1115 | Refresh local release-readiness evidence after frontend closure | DONE | existing release scripts confirm deployed `v1.0.0` is green, local `HEAD` is `HOLD_REVISION_DRIFT`, and fallback readiness is blocked by missing operator webhook inputs |
+| PRJ-1115 | Refresh local release-readiness evidence after frontend closure | DONE_HISTORICAL | historical scripts confirmed deployed `v1.0.0` was green while then-local `HEAD` was `HOLD_REVISION_DRIFT`; superseded by PRJ-1128 for the current selected SHA |
 
 ### P1: Close Hardening Evidence Gaps
 
 | ID | Task | Status | Definition Of Done |
 | --- | --- | --- | --- |
 | PRJ-958 | Execute AI red-team scenario pack | DONE_WITH_REVIEW_REQUIRED | runner executed 9 scenarios / 21 steps against production; result is `REVIEW_REQUIRED` because `/event` did not expose assistant reply text for behavioral scoring |
+| PRJ-1135 | Map current v1.1 candidate gates | DONE | v1.1 gates are classified as green, unblocked hardening, blocked external, or deferred scope; first unblocked task is AI red-team text-capturing scoring |
+| PRJ-1136 | Capture `/event` reply message for AI red-team scoring | DONE_WITH_REVIEW_REQUIRED | runner now reads `reply.message`; strict live rerun executed 21 steps with `5 PASS / 4 REVIEW / 0 FAIL / 0 BLOCKED` |
+| PRJ-1137 | Add expression red-team boundary self-review | DONE_LOCAL_PENDING_DEPLOY | unsafe bypass approval, false external mutation success, and unverified admin/cross-user wording are rewritten locally; focused tests pass |
 | PRJ-959 | Add cross-user/session regression tests | DONE | app-route two-user transcript, reset, cookie switching, and Telegram relink/conflict ownership scenarios are covered by focused regressions |
 | PRJ-960 | Add provider payload sentinel regressions | DONE | backend projections and frontend API types prove raw provider payload sentinels do not leak through app surfaces |
 | PRJ-961 | Add strict-mode incident sentinel regression | DONE | strict-mode incident export keeps safe health-derived evidence and excludes debug payload sentinels |
@@ -243,7 +276,8 @@ PRJ-1115 refreshed release evidence after frontend closure. The deployed
    parity drift that blocked PRJ-938.
 3. `PRJ-952` when operator/Coolify access is available.
 4. `PRJ-953` immediately after a deployment starts or fallback evidence exists.
-5. `PRJ-954` and `PRJ-955` only after production is green for the selected SHA.
+5. Future acceptance-bundle and marker work only after production is green for
+   the selected SHA.
 
 ## Validation Performed During This Audit
 
@@ -271,8 +305,7 @@ Results:
 - Coolify source automation may be disconnected, delayed, or pointing at an
   unexpected source configuration despite `/health.deployment` declaring the
   source-automation policy.
-- The current core acceptance bundle still needs a fresh SHA refresh after
-  deploy parity is recovered.
+- The current core acceptance bundle is refreshed for `v1.0.1`.
 - Live provider and Telegram smokes remain external-input blockers.
 - Frontend confidence now has a stable headless route-mount smoke command, but
   full visual parity and interaction e2e remain separate future work.

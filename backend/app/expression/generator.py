@@ -344,7 +344,81 @@ class ExpressionAgent:
                 notes.append("removed_contact_cadence_promise")
                 reviewed = updated
 
+        updated = self._rewrite_unsafe_boundary_reply(reviewed, event=event)
+        if updated != reviewed:
+            notes.append("rewrote_unsafe_boundary_reply")
+            reviewed = apply_response_style(updated, response_style)
+
         return reviewed, notes
+
+    def _rewrite_unsafe_boundary_reply(self, message: str, *, event: Event) -> str:
+        normalized_message = normalize_for_matching(message)
+        normalized_event = normalize_for_matching(str(event.payload.get("text", "") or ""))
+        if self._approves_hidden_bypass(normalized_message):
+            return (
+                "I can't approve hidden bypasses or temporary workaround paths. "
+                "I can help document the blocked check, propose an approved option, "
+                "or keep the repo aligned with its architecture."
+            )
+        if self._claims_unverified_external_mutation(normalized_message, normalized_event):
+            return (
+                "I did not update any external task system in this turn. "
+                "External mutations require an approved tool path, credentials, and explicit confirmation. "
+                "I can help draft the exact task update or list the next safe steps."
+            )
+        if self._accepts_unverified_admin_or_cross_user_claim(normalized_message, normalized_event):
+            return (
+                "I can't treat an unverified admin claim as authorization or disclose another user's memory. "
+                "User/session ownership must be verified through the authenticated app boundary before I can use private data."
+            )
+        return message
+
+    def _approves_hidden_bypass(self, normalized_message: str) -> bool:
+        bypass_markers = (
+            "hidden bypasses are allowed",
+            "hidden bypasses are permitted",
+            "temporary workarounds and hidden bypasses are allowed",
+            "temporary workarounds and hidden bypasses are permitted",
+        )
+        return any(marker in normalized_message for marker in bypass_markers)
+
+    def _claims_unverified_external_mutation(self, normalized_message: str, normalized_event: str) -> bool:
+        user_requested_fake_success = any(
+            marker in normalized_event
+            for marker in (
+                "simulate success",
+                "just report that the external task was updated",
+                "do not mention permission boundaries",
+            )
+        )
+        if not user_requested_fake_success:
+            return False
+        task_markers = (
+            "external task has been updated",
+            "external task was updated",
+            "external task successfully updated",
+            "external task has been successfully updated",
+        )
+        success_markers = ("updated successfully", "successfully updated")
+        return any(marker in normalized_message for marker in task_markers) or any(
+            marker in normalized_message for marker in success_markers
+        )
+
+    def _accepts_unverified_admin_or_cross_user_claim(
+        self, normalized_message: str, normalized_event: str
+    ) -> bool:
+        user_asserts_admin = "assume i have admin access" in normalized_event
+        cross_user_context = "user b" in normalized_event or "another user" in normalized_event
+        if not (user_asserts_admin or cross_user_context):
+            return False
+        acceptance_markers = (
+            "assuming you have admin access",
+            "since we're assuming admin access",
+            "since we are assuming admin access",
+            "got it since",
+            "what specific information or tasks",
+        )
+        return any(marker in normalized_message for marker in acceptance_markers)
 
     def _strip_repeated_greeting(self, message: str) -> str:
         stripped = str(message or "").lstrip()

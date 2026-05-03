@@ -1,20 +1,21 @@
 # V1 Final Go/No-Go Review
 
-Date: 2026-05-03
-Task: `PRJ-934` / `PRJ-955`
-Decision: GO for `v1.0.0` core no-UI/web-supported release marker
+Date: 2026-05-04
+Task: `PRJ-934` / `PRJ-955`, refreshed by `PRJ-1131`
+Decision: GO for current selected SHA; `v1.0.1` is the current release marker
 
 ## Summary
 
-The repository now has green production evidence for the selected v1 SHA, and
-the `v1.0.0` release marker has been created. Several broader launch-channel or
-evidence gaps remain explicit follow-ups.
+The repository now has green production evidence and a current release marker
+for selected SHA `3b46ed3878a8560c3adb147fcadf064818ccc322`. The `v1.0.1`
+release marker points to that SHA. The `v1.0.0` release marker remains
+historical truth for `5e64f494e2aac8d29cea532d95f7039ed6029213`. Several
+broader launch-channel or evidence gaps remain explicit follow-ups.
 
-This review is superseded by PRJ-955 for the release marker decision.
-For current release truth after frontend closure, use PRJ-1115 and
-`docs/operations/release-evidence-index.md`: deployed `v1.0.0` remains green,
-while current local `HEAD` remains held by revision drift until production
-serves that SHA.
+This review is superseded by PRJ-1128, PRJ-1129, and PRJ-1131 for current
+selected-SHA production and marker truth. Use
+`docs/operations/release-evidence-index.md` for the latest deploy parity,
+release smoke, and marker evidence.
 
 ## Historical PRJ-934 Revision Check
 
@@ -45,11 +46,13 @@ Invoke-RestMethod -Uri "https://aviary.luckysparrow.ch/settings" -TimeoutSec 20
 | Historical core no-UI v1 deployed at `ed1c4d9...` during PRJ-934 | GO at that time | Existing acceptance bundle and production health were green for that deployed revision. |
 | Historical local repository candidate `92f7bf3...` during PRJ-934 | NO-GO / HOLD at that time | Production was not serving that SHA. |
 | Public/web-led v1 launch marker before PRJ-955 | NO-GO / HOLD at that time | PRJ-935 handoff and PRJ-936 marker were not complete yet. |
-| Release tag/marker | GO | `v1.0.0` was created after green production smoke and acceptance evidence. |
+| Historical release tag/marker | GO | `v1.0.0` was created after green production smoke and acceptance evidence. |
+| Current selected-SHA release tag/marker | GO | `v1.0.1` was created by PRJ-1131 after selected-tag go/no-go returned `GO`. |
 
-Current PRJ-1115 evidence keeps the same release boundary discipline: local
-`HEAD` `5ff12953289bbca680fd5d9f8b3d8780a8f4be55` is not a release marker
-candidate until production backend and web revisions match it.
+Current PRJ-1128 and PRJ-1131 evidence keeps the same release boundary
+discipline: selected SHA `3b46ed3878a8560c3adb147fcadf064818ccc322` is marked
+by `v1.0.1` because production backend and web revisions match it, release
+smoke passed, and selected-tag go/no-go returned `GO`.
 
 ## P0 Review
 
@@ -58,8 +61,8 @@ candidate until production backend and web revisions match it.
 | PRJ-903 release boundary | Closed in release plan |
 | PRJ-904 commit scope audit | Closed in release plan |
 | PRJ-905 candidate validation | Closed in release plan |
-| PRJ-906 publish candidate | Closed for earlier candidate only |
-| PRJ-907 production release smoke with deploy parity | Closed for deployed SHA; must be rerun for current local HEAD |
+| PRJ-906 publish candidate | Closed for current selected SHA by PRJ-1124 |
+| PRJ-907 production release smoke with deploy parity | Closed for current selected SHA by PRJ-1128 |
 | PRJ-908 production incident evidence bundle | Superseded by strict-mode safe export path and closed |
 | PRJ-910 / PRJ-923 acceptance bundle | Closed for current documented core-v1 acceptance |
 | PRJ-911 rollback and recovery drill | Closed |
@@ -105,6 +108,13 @@ release candidates should use the release evidence index and v1 roadmap.
 
 `v1.0.0` is the release marker for selected SHA
 `5e64f494e2aac8d29cea532d95f7039ed6029213`.
+
+`v1.0.1` is the current release marker for selected SHA
+`3b46ed3878a8560c3adb147fcadf064818ccc322`.
+
+Current selected SHA `3b46ed3878a8560c3adb147fcadf064818ccc322` is GO for the
+core no-UI/web-supported v1 acceptance boundary. `v1.0.0` remains historical
+marker truth and was not moved.
 
 Continue post-v1 hardening and broader launch-channel evidence as follow-up
 work.

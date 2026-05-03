@@ -1,6 +1,6 @@
 # V1 Minimal External Health Monitor
 
-Last updated: 2026-05-03
+Last updated: 2026-05-04
 
 ## Status
 
@@ -13,7 +13,7 @@ checks against the selected release marker.
 - Automation ID: `aion-production-health-monitor`
 - Schedule: hourly
 - Target: `https://aviary.luckysparrow.ch/health`
-- Release marker target: `v1.0.0`
+- Release marker target: `v1.0.1`
 - Status: active
 
 ## Evidence
@@ -28,7 +28,7 @@ Revision-aware command:
 Push-Location .\backend
 ..\.venv\Scripts\python .\scripts\audit_release_reality.py `
   --base-url "https://aviary.luckysparrow.ch" `
-  --selected-tag v1.0.0 `
+  --selected-tag v1.0.1 `
   --monitor-mode
 Pop-Location
 ```

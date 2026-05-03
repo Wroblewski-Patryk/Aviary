@@ -1,6 +1,6 @@
 # Production Health Monitor
 
-Last updated: 2026-05-03
+Last updated: 2026-05-04
 
 ## Purpose
 
@@ -31,13 +31,13 @@ The monitor checks and reports through the revision-aware release reality audit:
 - `connectors.organizer_tool_stack.readiness_state`
 - obvious failed or degraded readiness fields
 
-Canonical v1.0.0 monitor command:
+Canonical `v1.0.1` monitor command:
 
 ```powershell
 Push-Location .\backend
 ..\.venv\Scripts\python .\scripts\audit_release_reality.py `
   --base-url "https://aviary.luckysparrow.ch" `
-  --selected-tag v1.0.0 `
+  --selected-tag v1.0.1 `
   --monitor-mode
 Pop-Location
 ```
@@ -45,6 +45,9 @@ Pop-Location
 `--monitor-mode` intentionally allows local `HEAD` or `origin/main` to advance
 after the release marker. It still fails when production backend or web shell
 revisions drift from the selected release tag.
+
+Historical `v1.0.0` checks remain valid only when intentionally monitoring the
+older marker target.
 
 ## Alert Criteria
 

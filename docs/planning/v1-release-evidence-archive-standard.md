@@ -1,6 +1,6 @@
 # V1 Release Evidence Archive Standard
 
-Last updated: 2026-05-03
+Last updated: 2026-05-04
 
 ## Status
 
@@ -49,7 +49,15 @@ payloads, tokens, or private user data.
 
 Current core no-UI v1 revision:
 
-- `0984440a8a2a283942e4aa2c190e3964d0dadc9c`
+- `3b46ed3878a8560c3adb147fcadf064818ccc322`
+
+Current release marker:
+
+- `v1.0.1`
+
+Historical release marker:
+
+- `v1.0.0`
 
 Current committed summary:
 
@@ -62,6 +70,7 @@ Current committed summary:
 Current local evidence roots:
 
 - `.codex/artifacts/prj923-final-v1-acceptance/`
+- `.codex/tmp/incident-evidence-after-coolify-ui/`
 - `.codex/artifacts/prj922-production-safe-incident-evidence/`
 - `artifacts/behavior_validation/`
 - `artifacts/incident_evidence/`
@@ -125,6 +134,7 @@ Before claiming a release marker:
 - Generated artifacts are not checksum-indexed in committed docs.
 - AI/security reports are still future `PRJ-931..PRJ-933` work.
 - `PRJ-930` deployment trigger SLO evidence lives in
-  `docs/planning/v1-deployment-trigger-slo-evidence.md`; direct Coolify
-  deployment-history proof remains operator-owned for final release closure.
+  `docs/planning/v1-deployment-trigger-slo-evidence.md`; `v1.0.1` records
+  approved UI fallback recovery while source/webhook automation reliability
+  remains a future-candidate follow-up.
 - `PRJ-909` and `PRJ-918` remain blocked by operator/provider inputs.

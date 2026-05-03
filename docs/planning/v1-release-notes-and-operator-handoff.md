@@ -1,22 +1,26 @@
 # V1 Release Notes And Operator Handoff
 
-Date: 2026-05-03
-Task: `PRJ-935` / `PRJ-955`
-Posture: `v1.0.0` released for core no-UI/web-supported v1
+Date: 2026-05-04
+Task: `PRJ-935` / `PRJ-955`, refreshed by `PRJ-1134`
+Posture: current selected SHA is production-green and marked by `v1.0.1`
 
 ## Current Decision
 
-Release marker `v1.0.0` has been created for the selected production SHA after
-release reality audit and release smoke passed.
+Release marker `v1.0.1` has been created for the current selected production
+SHA after selected-tag go/no-go returned `GO`.
 
-Current release truth after PRJ-1115:
+Current release truth after PRJ-1128 and PRJ-1129:
 
-- `v1.0.0` remains the released core marker for selected SHA
+- `v1.0.1` is the current release marker for selected SHA
+  `3b46ed3878a8560c3adb147fcadf064818ccc322`
+- `v1.0.0` remains the historical released core marker for selected SHA
   `5e64f494e2aac8d29cea532d95f7039ed6029213`
-- current local `HEAD` `5ff12953289bbca680fd5d9f8b3d8780a8f4be55` is not
-  deployed and remains `HOLD_REVISION_DRIFT`
-- future local work needs a new selected SHA, deploy parity, and release smoke
-  before any new release claim
+- current selected SHA `3b46ed3878a8560c3adb147fcadf064818ccc322` is deployed,
+  release-smoked, and revision-aligned in production
+- release audit for the current selected SHA returns `GO_FOR_SELECTED_SHA`
+- selected-tag go/no-go for `v1.0.1` returns `GO`
+- future marker work must keep this SHA frozen or select a new SHA, then rerun
+  deploy parity and release smoke before any new release claim
 
 | Revision | SHA |
 | --- | --- |
@@ -24,8 +28,11 @@ Current release truth after PRJ-1115:
 | Production `/health.deployment.runtime_build_revision` at PRJ-934 review | `ed1c4d981314787d76252985b53c14ea1d7886ed` |
 | Production web shell build revision at PRJ-934 review | `ed1c4d981314787d76252985b53c14ea1d7886ed` |
 | Selected `v1.0.0` SHA | `5e64f494e2aac8d29cea532d95f7039ed6029213` |
-| Release reality audit | `GO_FOR_SELECTED_SHA` |
-| Production release smoke | PASSED |
+| Current selected SHA after PRJ-1128 | `3b46ed3878a8560c3adb147fcadf064818ccc322` |
+| Current release tag after PRJ-1131 | `v1.0.1` |
+| Current release tag object | `b016c4f33051805cfa09664f79bbe57f5b30811b` |
+| Current release reality audit | `GO_FOR_SELECTED_SHA` |
+| Current production release smoke | PASSED |
 
 ## What Is Ready
 
@@ -47,8 +54,8 @@ Current release truth after PRJ-1115:
 
 ## Known Limits
 
-- `v1.0.0` is deployed and smoke-verified; later commits still require their
-  own deploy parity evidence before being claimed as production.
+- `v1.0.0` is historical marker truth; `v1.0.1` is the current release marker
+  for selected SHA `3b46ed3878a8560c3adb147fcadf064818ccc322`.
 - PRJ-909 Telegram live-mode smoke is blocked until an operator provides:
   - `TELEGRAM_BOT_TOKEN`
   - `TELEGRAM_WEBHOOK_SECRET`
@@ -60,9 +67,13 @@ Current release truth after PRJ-1115:
 - PRJ-932 and PRJ-933 intentionally leave follow-up regression/evidence gaps
   documented for deeper two-user, provider, incident-sentinel, and frontend
   fixture checks.
-- Direct Coolify deployment-history confirmation remains operator-owned.
-- PRJ-955 created the `v1.0.0` release marker after the selected release SHA had
-  green production evidence.
+- Direct Coolify deployment-history confirmation for PRJ-1128 was completed by
+  explicit operator UI access; source/webhook automation reliability remains a
+  follow-up.
+- PRJ-955 created the `v1.0.0` release marker after the historical selected
+  release SHA had green production evidence.
+- PRJ-1131 created and pushed the `v1.0.1` release marker after the current
+  selected SHA had green production evidence.
 
 ## Required Before A Future Release Marker
 
@@ -172,13 +183,14 @@ Rollback path:
 
 ## Handoff Decision
 
-Operators can use this handoff for the released `v1.0.0` core marker and for
-future post-v1 release candidates.
+Operators can use this handoff for the current `v1.0.1` marker truth,
+historical `v1.0.0` marker truth, and future post-v1 release candidates.
 
 Next valid paths:
 
-1. keep `v1.0.0` as the current released core marker
-2. for a future candidate, deploy and smoke the selected SHA before creating or
+1. keep `v1.0.1` as the current released core marker truth
+2. keep `v1.0.0` as historical released core marker truth
+3. for a future candidate, deploy and smoke the selected SHA before creating or
    moving any marker
-3. resolve external launch-channel gaps (`PRJ-909`, `PRJ-918`) before expanding
+4. resolve external launch-channel gaps (`PRJ-909`, `PRJ-918`) before expanding
    the public claim beyond the current core/web-supported posture

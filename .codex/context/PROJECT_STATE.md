@@ -2,6 +2,358 @@
 
 Last updated: 2026-05-04
 
+- 2026-05-04: `PRJ-1139` packaged the validated v1.1 AI red-team candidate:
+  - task:
+    - `.codex/tasks/PRJ-1139-package-v1-1-ai-red-team-candidate.md`
+  - result:
+    - candidate commit created; exact pushed SHA is read from
+      `git rev-parse HEAD` after final amend
+    - `.codex/tmp` and generated `artifacts` were excluded from staging
+    - no deployment, environment variables, secrets, endpoint, debug path, or
+      release marker changed
+  - validation:
+    - PRJ-1138 validation applies:
+      - backend `1050 passed`
+      - web build passed
+      - route smoke `status=ok`, `route_count=14`
+      - diff hygiene passed
+    - staged scope check excluded `.codex/tmp` and `artifacts`
+  - next execution priority:
+    - push current candidate HEAD, deploy it, then rerun strict AI red-team
+      against production
+
+- 2026-05-04: `PRJ-1138` validated the current v1.1 AI red-team local-fix
+  candidate:
+  - task:
+    - `.codex/tasks/PRJ-1138-v1-1-ai-red-team-candidate-validation.md`
+  - result:
+    - backend full suite is green with the PRJ-1137 expression guard
+    - web build and route smoke are green
+    - candidate is ready for intentional packaging/push/deploy flow
+    - no deployment, environment variables, secrets, endpoint, debug path, or
+      release marker changed
+  - validation:
+    - backend `pytest -q` -> `1050 passed`
+    - web `npm run build` -> passed
+    - web `npm run smoke:routes` -> `status=ok`, `route_count=14`
+    - `git diff --check` -> passed with LF/CRLF warnings only
+  - next execution priority:
+    - package and push the validated candidate, deploy through the approved
+      release path, then rerun strict AI red-team against production
+
+- 2026-05-04: `PRJ-1137` locally fixed expression red-team boundary wording:
+  - task:
+    - `.codex/tasks/PRJ-1137-expression-red-team-boundary-self-review.md`
+  - result:
+    - `backend/app/expression/generator.py` now rewrites unsafe expression
+      output when generated text approves hidden bypasses, claims an external
+      task update without action evidence, or accepts unverified admin/cross-user
+      authority
+    - `backend/tests/test_expression_agent.py` covers the three unsafe wording
+      families
+    - `docs/security/v1-ai-red-team-execution-report.md` and planning docs now
+      record the gate as local fix pending deploy/rerun
+    - no endpoint, debug path, side-effect path, environment variable, secret,
+      deployment, or release marker changed
+  - validation:
+    - `pytest -q tests/test_expression_agent.py tests/test_ai_red_team_scenarios_script.py`
+      -> `30 passed`
+    - `pytest -q tests/test_openai_prompting.py` -> `2 passed`
+  - next execution priority:
+    - run broader backend validation, package/deploy the candidate, then rerun
+      strict AI red-team against production before claiming v1.1 AI pass
+
+- 2026-05-04: `PRJ-1136` fixed AI red-team reply-message capture and reran
+  strict live evidence:
+  - task:
+    - `.codex/tasks/PRJ-1136-ai-red-team-event-reply-message-capture.md`
+  - result:
+    - `backend/scripts/run_ai_red_team_scenarios.py` now reads the approved
+      `/event` `reply.message` field while preserving `reply.text`
+      compatibility
+    - `backend/tests/test_ai_red_team_scenarios_script.py` covers
+      `reply.message` capture and broader review sentinels
+    - `docs/security/v1-ai-red-team-execution-report.md` now records that the
+      response-visibility bug is fixed and the remaining gate is behavioral
+      review
+    - strict live artifact:
+      `artifacts/ai-red-team/prj1136-live-report-strict-v3.json`
+    - strict live result:
+      `5 PASS / 4 REVIEW / 0 FAIL / 0 BLOCKED`, recommendation
+      `REVIEW_REQUIRED`
+    - no deployment, environment variables, secrets, endpoint, or debug bypass
+      changed
+  - validation:
+    - `pytest -q tests/test_ai_red_team_scenarios_script.py` -> `6 passed`
+    - live strict red-team rerun against `https://aviary.luckysparrow.ch`
+      executed 21 steps and captured reply excerpts
+  - next execution priority:
+    - fix or explicitly risk-accept `AIRT-001`, `AIRT-002`, `AIRT-003`, and
+      `AIRT-005` before v1.1 can claim AI red-team pass
+
+- 2026-05-04: `PRJ-1135` mapped the current v1.1 candidate boundary:
+  - task:
+    - `.codex/tasks/PRJ-1135-current-v1-1-boundary-and-gate-map.md`
+  - result:
+    - `docs/planning/current-v1-release-boundary.md` now records the current
+      v1.1 candidate gate posture
+    - `docs/planning/v1-reality-audit-and-roadmap.md` and
+      `docs/planning/v1-release-audit-and-execution-plan.md` now state that
+      v1.1 is mapped but not achieved
+    - AI red-team behavioral scoring is the first unblocked v1.1 hardening
+      slice because `PRJ-958` remains `REVIEW_REQUIRED`
+    - Telegram live-mode and organizer provider activation remain
+      `BLOCKED_EXTERNAL` until operator credentials exist
+    - no deployment, runtime code, environment variables, secrets, or release
+      marker changed
+  - validation:
+    - targeted scan for v1.1, `PRJ-958`, `PRJ-962`, `PRJ-963`,
+      `BLOCKED_EXTERNAL`, and `REVIEW_REQUIRED` in touched planning docs
+    - `git diff --check`
+  - next execution priority:
+    - implement a text-capturing AI red-team scoring path for the existing
+      scenario pack, then rerun the pack and replace `REVIEW_REQUIRED` with
+      pass/fail evidence
+
+- 2026-05-04: `PRJ-1134` cleaned stale release handoff and marker blocker
+  paths after `v1.0.1`:
+  - task:
+    - `.codex/tasks/PRJ-1134-release-handoff-marker-blocker-stale-path-cleanup.md`
+  - result:
+    - `docs/planning/v1-release-notes-and-operator-handoff.md` no longer
+      lists creating a marker for
+      `3b46ed3878a8560c3adb147fcadf064818ccc322` as a next path
+    - `docs/planning/v1-release-marker-blocker.md` now records `v1.0.1` as
+      the current resolved marker and `v1.0.0` as historical
+    - `docs/operations/runtime-ops-runbook.md` current monitor-mode example now
+      uses `--selected-tag v1.0.1`
+    - no deployment, runtime code, environment variables, secrets, or release
+      marker changed
+  - validation:
+    - `run_release_go_no_go.py --selected-tag v1.0.1 --monitor-mode`
+      -> `verdict=GO`, audit `GO_FOR_SELECTED_SHA`, smoke `exit_code=0`
+    - existing `aion-production-health-monitor` automation card rendered in
+      the Codex app; local automation metadata was not available for safe
+      direct edit
+    - stale wording scan over touched docs
+    - `git diff --check`
+  - next execution priority:
+    - continue release-truth stale scan or move to the next unblocked
+      extension/hardening gate
+
+- 2026-05-04: `PRJ-1133` refreshed the current v1 acceptance bundle:
+  - task:
+    - `.codex/tasks/PRJ-1133-current-v1-acceptance-bundle-refresh.md`
+  - result:
+    - `docs/planning/v1-core-acceptance-bundle.md` now names `v1.0.1` and
+      selected SHA `3b46ed3878a8560c3adb147fcadf064818ccc322` as current
+      core no-UI/web-supported v1 acceptance truth
+    - `v1.0.0` remains historical marker truth for
+      `5e64f494e2aac8d29cea532d95f7039ed6029213`
+    - `PRJ-954` is marked done in the roadmap and release execution plan
+    - production health monitor docs now use `--selected-tag v1.0.1`
+    - no deployment, runtime code, environment variables, secrets, or release
+      marker changed
+  - validation:
+    - `run_release_go_no_go.py --selected-tag v1.0.1 --monitor-mode`
+      -> `verdict=GO`, audit `GO_FOR_SELECTED_SHA`, smoke `exit_code=0`
+    - `audit_release_reality.py --selected-tag v1.0.1 --monitor-mode`
+      -> `GO_FOR_SELECTED_SHA`
+    - `git for-each-ref refs/tags/v1.0.1`
+      -> tag object and target commit verified
+    - `git diff --check`
+  - next execution priority:
+    - choose the next unblocked extension or hardening gate; Telegram live-mode
+      and organizer provider activation still need operator credentials
+
+- 2026-05-04: `PRJ-1132` refreshed Coolify automation reliability truth:
+  - task:
+    - `.codex/tasks/PRJ-1132-coolify-automation-reliability-truth-refresh.md`
+  - result:
+    - `docs/planning/v1-deployment-trigger-slo-evidence.md` now distinguishes
+      current `v1.0.1` release success from future-candidate automation
+      reliability follow-up
+    - PRJ-1125 is documented as source automation not converging for selected
+      SHA `3b46ed3878a8560c3adb147fcadf064818ccc322`
+    - PRJ-1128 is documented as successful exception-only UI fallback recovery
+    - webhook fallback readiness is documented as blocked until an operator
+      provides webhook URL and secret
+    - no deployment, runtime code, environment variables, or secrets changed
+  - validation:
+    - `run_release_go_no_go.py --selected-tag v1.0.1 --monitor-mode`
+      -> `verdict=GO`, audit `GO_FOR_SELECTED_SHA`, smoke `exit_code=0`
+    - `check_coolify_fallback_readiness.py --before-sha 5e64f494e2aac8d29cea532d95f7039ed6029213 --after-sha 3b46ed3878a8560c3adb147fcadf064818ccc322`
+      -> `ready=false`; failed checks: `webhook_url`,
+      `webhook_secret_present`, `webhook_secret_length`
+    - `git diff --check`
+  - next execution priority:
+    - before the next selected candidate, prove Coolify source automation
+      through deployment history or capture webhook fallback evidence with
+      operator-provided inputs
+
+- 2026-05-04: `PRJ-1131` created the current selected-SHA release marker:
+  - task:
+    - `.codex/tasks/PRJ-1131-release-marker-for-current-selected-sha.md`
+  - result:
+    - annotated tag `v1.0.1` was created and pushed to `origin`
+    - tag object:
+      `b016c4f33051805cfa09664f79bbe57f5b30811b`
+    - tag target commit:
+      `3b46ed3878a8560c3adb147fcadf064818ccc322`
+    - `v1.0.0` remains historical marker truth for
+      `5e64f494e2aac8d29cea532d95f7039ed6029213`
+    - no runtime code, deployment branch, environment variables, or secrets
+      changed
+  - validation:
+    - `run_release_go_no_go.py --selected-tag v1.0.1 --monitor-mode`
+      -> `verdict=GO`, audit `GO_FOR_SELECTED_SHA`, smoke `exit_code=0`
+    - `git for-each-ref refs/tags/v1.0.1`
+      -> tag object and target commit verified
+    - `git push origin v1.0.1`
+      -> `[new tag] v1.0.1 -> v1.0.1`
+    - `git diff --check`
+  - next execution priority:
+    - document Coolify source/webhook automation reliability evidence so future
+      selected candidates do not require the UI fallback exception
+
+- 2026-05-04: `PRJ-1130` refreshed current release notes and go/no-go truth:
+  - task:
+    - `.codex/tasks/PRJ-1130-current-release-notes-and-go-no-go-refresh.md`
+  - result:
+    - `docs/planning/v1-release-notes-and-operator-handoff.md` now points to
+      PRJ-1128/1129 as current selected-SHA production proof
+    - `docs/planning/v1-final-go-no-go-review.md` now states selected SHA
+      `3b46ed3878a8560c3adb147fcadf064818ccc322` is GO for the core
+      no-UI/web-supported v1 acceptance boundary
+    - `v1.0.0` remains historical marker truth for
+      `5e64f494e2aac8d29cea532d95f7039ed6029213`
+    - no runtime code, deployment, environment variables, secrets, or release
+      marker changed
+  - validation:
+    - `audit_release_reality.py --selected-sha 3b46ed3878a8560c3adb147fcadf064818ccc322`
+      -> `GO_FOR_SELECTED_SHA`
+    - `git diff --check`
+  - next execution priority:
+    - execute a dedicated release-marker task for the selected SHA, or document
+      Coolify source/webhook automation reliability evidence
+
+- 2026-05-04: `PRJ-1129` refreshed current v1 truth after Coolify recovery:
+  - task:
+    - `.codex/tasks/PRJ-1129-current-v1-truth-refresh-after-coolify-recovery.md`
+  - result:
+    - `docs/planning/current-v1-release-boundary.md` and
+      `docs/planning/v1-release-audit-and-execution-plan.md` now treat PRJ-1128
+      as the active selected-SHA production proof
+    - selected candidate
+      `3b46ed3878a8560c3adb147fcadf064818ccc322` is documented as deployed,
+      health-green, release-smoked, and revision-aligned
+    - older PRJ-1125 through PRJ-1127 drift/503 evidence is explicitly
+      historical and superseded by PRJ-1128
+    - no runtime code, deployment, environment variables, secrets, or release
+      marker changed
+  - validation:
+    - targeted stale wording scan across current release docs and context
+    - `audit_release_reality.py --selected-sha 3b46ed3878a8560c3adb147fcadf064818ccc322`
+      -> `GO_FOR_SELECTED_SHA`
+    - `git diff --check`
+  - next execution priority:
+    - document Coolify source/webhook automation reliability evidence, or
+      prepare an explicit release marker decision for the already-green selected
+      SHA
+
+- 2026-05-04: `PRJ-1128` restored production through the approved Coolify UI
+  fallback and proved deploy parity:
+  - task:
+    - `.codex/tasks/PRJ-1128-coolify-ui-redeploy-release-smoke-recovery.md`
+  - result:
+    - canonical Coolify app `jr1oehwlzl8tcn3h8gh2vvih` was redeployed through
+      the existing UI `Deploy` action after explicit user-provided access
+    - latest manual deployment for commit `3b46ed3` succeeded:
+      `2026-05-03 22:57:33 UTC` to `2026-05-03 22:59:10 UTC`, duration
+      `01m 37s`
+    - production `/health` returned HTTP `200`
+    - production backend and web revisions both report
+      `3b46ed3878a8560c3adb147fcadf064818ccc322`
+    - release audit returned `GO_FOR_SELECTED_SHA`
+    - release smoke with deploy parity passed
+    - release-smoke incident evidence bundle export works again
+    - no runtime code, environment variables, or tracked secrets were changed
+  - validation:
+    - Coolify deployment history/log inspection
+    - `Invoke-WebRequest https://aviary.luckysparrow.ch/health`
+    - `audit_release_reality.py --selected-sha 3b46ed3878a8560c3adb147fcadf064818ccc322`
+    - `run_release_smoke.ps1 -BaseUrl https://aviary.luckysparrow.ch -WaitForDeployParity`
+    - `export_incident_evidence_bundle.py --capture-mode release_smoke`
+  - next execution priority:
+    - create a narrow follow-up for Coolify source/webhook automation
+      reliability evidence if the UI fallback exception should be reduced
+
+- 2026-05-04: `PRJ-1127` created the production 503 operator handoff
+  (historical; superseded by PRJ-1128):
+  - task:
+    - `.codex/tasks/PRJ-1127-production-503-operator-handoff.md`
+  - historical result:
+    - production remains `503 Service Unavailable`
+    - release audit verdict remains `HOLD_HEALTH_OR_WEB_REVISION_MISSING`
+    - no deploy webhook credentials are available locally
+    - incident evidence export is blocked because public `/health` returns
+      `HTTP 503 ... no available server`
+    - `docs/operations/runtime-ops-runbook.md` now includes a repeated
+      `503 no available server` Coolify operator checklist
+    - no production fallback or workaround was executed
+  - validation:
+    - `audit_release_reality.py --selected-sha 3b46ed3878a8560c3adb147fcadf064818ccc322`
+    - environment variable name check for deploy/Coolify webhook inputs
+    - `export_incident_evidence_bundle.py --base-url https://aviary.luckysparrow.ch`
+    - `git diff --check`
+  - superseded next execution priority:
+    - PRJ-1128 restored the canonical app and proved release smoke/deploy parity
+
+- 2026-05-04: `PRJ-1126` verified production 503 against local Coolify-shape
+  smoke (historical; superseded by PRJ-1128):
+  - task:
+    - `.codex/tasks/PRJ-1126-production-503-local-coolify-shape-smoke.md`
+  - historical result:
+    - production `/health` and `/settings` now return `503 Service Unavailable`
+      with body `no available server`
+    - local targeted deployment/web route tests passed: `69 passed`
+    - local isolated `docker-compose.coolify.yml` smoke built and started the
+      candidate with dummy non-secret env values
+    - local app container became `healthy`
+    - local container `/health` and `/settings` returned `200`
+    - local compose project was torn down
+    - no production fallback or workaround was executed
+  - validation:
+    - `curl.exe -i -L --max-time 30 https://aviary.luckysparrow.ch/health`
+    - `curl.exe -i -L --max-time 30 https://aviary.luckysparrow.ch/settings`
+    - `pytest -q tests/test_deployment_trigger_scripts.py tests/test_web_routes.py`
+    - local Docker Compose smoke for `db`, `migrate`, and `app`
+    - `git diff --check`
+  - superseded next execution priority:
+    - PRJ-1128 restored production availability and deploy parity
+
+- 2026-05-04: `PRJ-1125` recorded the post-push Coolify deploy trigger blocker
+  (historical; superseded by PRJ-1128):
+  - task:
+    - `.codex/tasks/PRJ-1125-post-push-coolify-deploy-trigger-blocker-evidence.md`
+  - historical result:
+    - pushed candidate:
+      `3b46ed3878a8560c3adb147fcadf064818ccc322`
+    - production backend and web revisions remained:
+      `5e64f494e2aac8d29cea532d95f7039ed6029213`
+    - release audit stayed `HOLD_REVISION_DRIFT`
+    - bounded deploy parity wait timed out after 900 seconds
+    - fallback readiness stayed `blocked` because webhook URL and secret are
+      missing
+    - no manual deploy trigger or workaround was executed
+  - validation:
+    - `audit_release_reality.py --selected-sha 3b46ed3878a8560c3adb147fcadf064818ccc322`
+    - `run_release_smoke.ps1 -WaitForDeployParity -DeployParityMaxWaitSeconds 900`
+    - `check_coolify_fallback_readiness.py --before-sha 5e64f494e2aac8d29cea532d95f7039ed6029213 --after-sha 3b46ed3878a8560c3adb147fcadf064818ccc322`
+    - `git diff --check`
+  - superseded next execution priority:
+    - PRJ-1128 used the approved Coolify UI fallback and release smoke passed
+
 - 2026-05-04: `PRJ-1124` packaged and pushed the current workspace candidate:
   - task:
     - `.codex/tasks/PRJ-1124-package-current-workspace-candidate.md`

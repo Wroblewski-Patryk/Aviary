@@ -1418,6 +1418,32 @@ transport failures during deploy convergence. Treat repeated `503` after the
 retry budget as a real availability problem; treat one brief `503` followed by
 green smoke as normal transient convergence rather than as deploy failure.
 
+When public production returns repeated `503 Service Unavailable` with body
+`no available server`, the reverse proxy has no healthy app backend. After the
+release-smoke retry budget is exhausted, use this operator checklist before
+changing code:
+
+1. Confirm the canonical Coolify app and team scope:
+   - application: `jr1oehwlzl8tcn3h8gh2vvih`
+   - repository: `Wroblewski-Patryk/Aviary`
+   - branch: `main`
+2. Check Coolify deployment history for the selected pushed SHA.
+3. Inspect the latest deployment logs in this order:
+   - `db` health
+   - one-shot `migrate` exit code
+   - `app` container startup and `/health` healthcheck
+   - `maintenance_cadence` and `proactive_cadence` after `migrate`
+4. If `migrate` failed, treat it as schema/dependency ownership first.
+5. If `app` failed while local `docker-compose.coolify.yml` smoke passes,
+   compare Coolify environment overrides against the repo compose defaults,
+   especially `DATABASE_URL`, `STARTUP_SCHEMA_MODE`, `APP_BUILD_REVISION`,
+   `APP_ENV`, and provider secret presence.
+6. Restore availability through the approved path:
+   - source automation redeploy for the selected SHA
+   - approved webhook fallback with evidence
+   - Coolify UI redeploy for the same canonical app when webhook is unavailable
+7. Rerun production release smoke with deploy parity before moving any marker.
+
 Optional debug payload with token:
 
 ```powershell
@@ -1552,14 +1578,14 @@ Push-Location .\backend
 Pop-Location
 ```
 
-For monitoring the already deployed `v1.0.0` marker while local `main` has
-moved ahead, use:
+For monitoring the already deployed current `v1.0.1` marker while local `main`
+has moved ahead, use:
 
 ```powershell
 Push-Location .\backend
 ..\.venv\Scripts\python .\scripts\run_release_go_no_go.py `
   --base-url https://aviary.luckysparrow.ch `
-  --selected-tag v1.0.0 `
+  --selected-tag v1.0.1 `
   --monitor-mode
 Pop-Location
 ```
@@ -1951,3 +1977,54 @@ If a request path fails:
    - delivery failures expose whether the problem is missing `chat_id`,
      Telegram API failure, or transport exception
 6. inspect structured logs for `event_id`, `trace_id`, and action status
+
+## Coolify 503 Recovery Notes
+
+When public production returns `503 Service Unavailable` with body
+`no available server`, use the existing Coolify application as the recovery
+surface before changing repository code:
+
+1. Switch to `Root Team` if the canonical Aviary project is not visible.
+2. Open project `icmgqml9uw3slzch9m9ok23z`, environment
+   `qxooi9coxat272krzjx221fv`, application `jr1oehwlzl8tcn3h8gh2vvih`.
+3. Confirm the application is `aviary (localhost)` and inspect `Deployments`
+   and `Logs`.
+4. If the latest deployment imported the correct selected SHA but the app is
+   `Exited`, use the existing UI `Deploy` action as the approved manual
+   fallback.
+5. After a successful terminal deployment, verify:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python .\scripts\audit_release_reality.py `
+  --base-url https://aviary.luckysparrow.ch `
+  --selected-sha 3b46ed3878a8560c3adb147fcadf064818ccc322
+.\scripts\run_release_smoke.ps1 `
+  -BaseUrl "https://aviary.luckysparrow.ch" `
+  -WaitForDeployParity
+Pop-Location
+```
+
+PRJ-1128 recovery evidence: manual Coolify UI deployment for commit `3b46ed3`
+succeeded in `01m 37s`; public `/health` returned HTTP `200`; backend and web
+revisions both matched
+`3b46ed3878a8560c3adb147fcadf064818ccc322`; release smoke passed.
+
+PRJ-1131 marker evidence: annotated tag `v1.0.1` now marks selected SHA
+`3b46ed3878a8560c3adb147fcadf064818ccc322`; selected-tag go/no-go returned
+`GO`.
+
+PRJ-1132 automation reliability posture:
+
+- current `v1.0.1` release parity is green
+- source automation did not converge for the selected SHA during the bounded
+  PRJ-1125 deploy-parity wait
+- webhook fallback readiness is currently `blocked` without operator-provided
+  `COOLIFY_DEPLOY_WEBHOOK_URL` and `COOLIFY_DEPLOY_WEBHOOK_SECRET`
+- future selected candidates should prove Coolify source automation through
+  deployment history, or capture webhook fallback evidence before release smoke
+  if source automation is delayed
+
+Do not store Coolify credentials in repository files. Keep UI fallback usage
+as an operator exception and create separate evidence if source/webhook
+automation reliability needs improvement.

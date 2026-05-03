@@ -1,13 +1,17 @@
 # V1 Release Marker Blocker
 
-Date: 2026-05-03
-Task: `PRJ-936` / `PRJ-955`
-Status: RESOLVED for `v1.0.0`
+Date: 2026-05-04
+Task: `PRJ-936` / `PRJ-955`, refreshed by `PRJ-1134`
+Status: RESOLVED for current marker `v1.0.1`; `v1.0.0` remains historical
 
 ## Decision
 
-Release tag `v1.0.0` was created and pushed after production served the
-selected SHA and release smoke with deploy parity passed.
+Release tag `v1.0.1` is the current marker for selected SHA
+`3b46ed3878a8560c3adb147fcadf064818ccc322`. It was created and pushed after
+production served the selected SHA and selected-tag go/no-go returned `GO`.
+
+Release tag `v1.0.0` remains historical marker truth for selected SHA
+`5e64f494e2aac8d29cea532d95f7039ed6029213`.
 
 ## Blocking Facts
 
@@ -23,11 +27,14 @@ selected SHA and release smoke with deploy parity passed.
 | Selected v1.0.0 SHA | `5e64f494e2aac8d29cea532d95f7039ed6029213` |
 | Release reality audit for selected SHA | `GO_FOR_SELECTED_SHA` |
 | Production release smoke for selected SHA | PASSED |
-| Release marker posture | `v1.0.0` created and pushed |
+| Historical release marker posture | `v1.0.0` created and pushed |
+| Current selected SHA after PRJ-1128 | `3b46ed3878a8560c3adb147fcadf064818ccc322` |
+| Current release marker posture | `v1.0.1` created and pushed |
+| Current selected-tag go/no-go | `GO` |
 
 ## Unblock Checklist
 
-For the next release marker:
+For any future release marker after `v1.0.1`:
 
 - choose the target release SHA
 - deploy that SHA to production if it is not already deployed
@@ -43,7 +50,7 @@ For the next release marker:
 - update release notes and acceptance bundle if the target SHA or decision
   changes
 
-Current operator unblock path after PRJ-938:
+Current operator path for future selected candidates:
 
 - verify Coolify deployment history/source connection for canonical app
   `jr1oehwlzl8tcn3h8gh2vvih`
@@ -72,5 +79,6 @@ After green evidence only:
 git tag <release-tag> <selected-release-sha>
 ```
 
-The `v1.0.0` tag was created only after the unblock checklist was satisfied for
-`5e64f494e2aac8d29cea532d95f7039ed6029213`.
+The `v1.0.1` tag was created only after the unblock checklist was satisfied for
+`3b46ed3878a8560c3adb147fcadf064818ccc322`. The `v1.0.0` tag remains historical
+and was not moved.

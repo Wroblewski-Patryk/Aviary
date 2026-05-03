@@ -1,6 +1,6 @@
 # V1 Release Audit And Execution Plan
 
-Last updated: 2026-05-03
+Last updated: 2026-05-04
 
 Current release boundary:
 `docs/planning/current-v1-release-boundary.md`.
@@ -10,11 +10,13 @@ Current release boundary:
 This document turns the current repository state into a concrete path for
 making `v1` a release fact, not only a locally proven architecture baseline.
 
-Current status after PRJ-955 and PRJ-1115: `v1.0.0` is the released
-core no-UI/web-supported marker for selected SHA
-`5e64f494e2aac8d29cea532d95f7039ed6029213`. Current local `HEAD`
-`5ff12953289bbca680fd5d9f8b3d8780a8f4be55` is post-v1 local work and remains
-`HOLD_REVISION_DRIFT` until production backend and web revisions match it.
+Current status after PRJ-1135: the selected post-v1 candidate
+`3b46ed3878a8560c3adb147fcadf064818ccc322` is deployed to production, backend
+and web revisions match, production health is HTTP `200`, release readiness is
+green, release smoke with deploy parity passed, and annotated tag `v1.0.1`
+marks that SHA. The `v1.0.0` tag remains historical marker truth for
+`5e64f494e2aac8d29cea532d95f7039ed6029213`. V1.1 is now represented as a
+candidate gate map, not an achieved release claim.
 
 The current approved core `v1` is the no-UI life-assistant bundle:
 
@@ -29,17 +31,35 @@ Organizer daily-use tooling, richer web UI, mobile, multimodal Telegram, and
 full provider activation are valuable extensions. They should be planned and
 tracked, but they must not silently redefine the core `v1` blocker set.
 
+For v1.1, the current approved posture is to build on the `v1.0.1` core/web
+baseline, close unblocked hardening evidence first, and keep external
+credential-dependent extension gates blocked until operator inputs exist.
+`PRJ-1136` closed the red-team response-capture bug and produced strict live
+review evidence, but AI red-team is still not a pass gate. `PRJ-1137` adds a
+local expression-boundary guard for the clearest unsafe review patterns; it
+still needs packaging, deploy parity, and strict live rerun evidence.
+
 ## Current Evidence
 
-- Released marker: `v1.0.0`
-- Released selected SHA: `5e64f494e2aac8d29cea532d95f7039ed6029213`
-- Current local `HEAD`: `5ff12953289bbca680fd5d9f8b3d8780a8f4be55`
+- Current released marker: `v1.0.1`
+- Current released marker selected SHA:
+  `3b46ed3878a8560c3adb147fcadf064818ccc322`
+- Historical released marker: `v1.0.0`
+- Historical released marker selected SHA:
+  `5e64f494e2aac8d29cea532d95f7039ed6029213`
+- Current selected candidate:
+  `3b46ed3878a8560c3adb147fcadf064818ccc322`
+- Current local `HEAD`:
+  `3b46ed3878a8560c3adb147fcadf064818ccc322`
 - Production backend revision:
-  `5e64f494e2aac8d29cea532d95f7039ed6029213`
+  `3b46ed3878a8560c3adb147fcadf064818ccc322`
 - Production web meta revision:
-  `5e64f494e2aac8d29cea532d95f7039ed6029213`
-- PRJ-1115 local `HEAD` release audit: `HOLD_REVISION_DRIFT`
-- PRJ-1115 deployed marker go/no-go monitor: `GO`
+  `3b46ed3878a8560c3adb147fcadf064818ccc322`
+- PRJ-1128 selected SHA release audit: `GO_FOR_SELECTED_SHA`
+- PRJ-1128 release smoke with deploy parity: passed
+- PRJ-1128 incident evidence bundle export: available
+- PRJ-1131 selected-tag go/no-go for `v1.0.1`: `GO`
+- PRJ-1133 current acceptance bundle refresh: DONE
 - Fresh behavior validation:
   - command:
     `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\run_behavior_validation.py --gate-mode operator --artifact-path ..\.codex\artifacts\prj902-v1-audit\behavior-validation-report.json; Pop-Location`
@@ -58,26 +78,32 @@ tracked, but they must not silently redefine the core `v1` blocker set.
 
 ### A. Release-State Findings
 
-1. **Current local `HEAD` is not production release evidence.**
-   - `git status --short` shows modified tracked files and many untracked task
-     records.
-   - Impact: post-v1 local work cannot inherit the `v1.0.0` production claim
-     until the intended release scope is selected, validated, pushed, deployed,
-     and smoke-tested.
-   - Severity: P0 release blocker.
+1. **Selected SHA production parity is current after PRJ-1128.**
+   - Production backend and web revisions both match
+     `3b46ed3878a8560c3adb147fcadf064818ccc322`.
+   - Release audit returns `GO_FOR_SELECTED_SHA`, and release smoke with deploy
+     parity passed.
+   - Impact: core v1 production evidence is green for the current selected
+     candidate.
+   - Severity: resolved P0 release blocker.
 
-2. **Production parity evidence is current for `v1.0.0`, not local `HEAD`.**
-   - PRJ-1115 confirmed production backend and web revisions both match
+2. **Release marker movement is closed for the current selected SHA.**
+   - `v1.0.1` points to current selected SHA
+     `3b46ed3878a8560c3adb147fcadf064818ccc322`.
+   - `v1.0.0` still points to historical selected SHA
      `5e64f494e2aac8d29cea532d95f7039ed6029213`.
-   - Impact: live production is coherent for `v1.0.0`; it is intentionally not
-     evidence for later local hardening work.
-   - Severity: P0 release blocker.
+   - Impact: current selected-SHA marker truth is explicit without rewriting
+     historical marker truth.
+   - Severity: resolved by PRJ-1131.
 
 3. **The final v1 target explicitly requires live production green gates.**
    - `v1_readiness.final_acceptance_target` is
      `all_final_gates_green_in_live_production`.
-   - Impact: local unit/behavior evidence is necessary but insufficient.
-   - Severity: P0 release blocker until release smoke passes after publish.
+   - PRJ-1128 satisfied this for the selected SHA with production release
+     smoke and revision parity.
+   - Impact: local unit/behavior evidence remains necessary for future
+     candidates, but the current selected SHA has live production proof.
+   - Severity: resolved for selected SHA
 
 4. **Deploy provenance and build revision must be proven after every release
    commit.**
@@ -135,13 +161,12 @@ tracked, but they must not silently redefine the core `v1` blocker set.
       claim if the web shell is included in the release promise.
     - Severity: P1 for web-v1, P3 for core no-UI v1.
 
-11. **The web app needs one fresh post-change route smoke before release.**
-    - Recent route screenshots were generated before the latest backend-backed
-      activity slice and local dirty changes.
-    - Impact: a release candidate should prove login shell, dashboard, chat,
-      settings, tools, and module routes are nonblank, non-overflowing, and
-      revision-aligned.
-    - Severity: P1 product release blocker if web is part of the claim.
+11. **The web app has current route/build evidence for the selected candidate.**
+    - PRJ-1122 recorded web build and route smoke with `route_count=14`.
+    - PRJ-1128 proved deployed web revision parity for the selected SHA.
+    - Impact: route coverage can continue to support web-v1 polish, but it is
+      not a current selected-SHA release blocker.
+    - Severity: green for selected SHA
 
 ### D. Provider And Extension Findings
 
@@ -185,37 +210,84 @@ tracked, but they must not silently redefine the core `v1` blocker set.
       checklist and scenario results.
     - Severity: P1 hardening blocker.
 
-17. **Release bundle evidence exists as mechanisms, but not as one latest
-    signed-off bundle for the current candidate.**
-    - Required pieces: backend tests, web build, behavior report, health
-      snapshot, incident evidence bundle, production release smoke, rollback
-      note.
-    - Impact: without one current bundle, handoff and deploy confidence depend
-      on scattered task history.
-    - Severity: P0 release evidence blocker.
+17. **Current candidate release evidence is green but still scattered.**
+    - Required pieces are present across PRJ-1122 and PRJ-1128: backend tests,
+      web build, route smoke, health snapshot, incident evidence bundle, and
+      production release smoke.
+    - Impact: release confidence is green, but a marker handoff would benefit
+      from one consolidated acceptance bundle pointer.
+    - Severity: P1 release handoff improvement.
+
+18. **V1.1 has a candidate gate map but no release claim yet.**
+    - PRJ-1135 classifies the current v1.1 gates as green baseline, unblocked
+      hardening, blocked external, or deferred scope.
+    - Impact: the next implementation slice can start with AI red-team scoring
+      visibility instead of guessing around Telegram/provider credential
+      blockers.
+    - Severity: P1 planning gap resolved; implementation remains pending.
+
+19. **AI red-team response capture is fixed, with live review findings.**
+    - The runner now reads the approved `/event` `reply.message` field.
+    - Strict live evidence:
+      `artifacts/ai-red-team/prj1136-live-report-strict-v3.json`.
+    - Result: 9 scenarios, 21 steps, `5 PASS / 4 REVIEW / 0 FAIL /
+      0 BLOCKED`, recommendation `REVIEW_REQUIRED`.
+    - Impact: v1.1 has real red-team behavioral text evidence now, but the
+      reviewed scenarios must be fixed or explicitly risk-accepted before this
+      gate can pass.
+    - Severity: P1 hardening implementation partially closed; follow-up needed.
+
+20. **Expression red-team boundary guard is locally fixed but not deployed.**
+    - PRJ-1137 uses the existing expression self-review stage to rewrite
+      unsafe bypass approval, false external mutation success, and unverified
+      admin/cross-user authorization language.
+    - Focused validation:
+      `pytest -q tests/test_expression_agent.py tests/test_ai_red_team_scenarios_script.py`
+      -> `30 passed`.
+    - Impact: local code now addresses the clearest PRJ-1136 findings, but the
+      production AI red-team gate remains pending until a new candidate is
+      packaged, deployed, and rerun.
+    - Severity: P1 local fix; release evidence pending.
+
+## V1.1 Candidate Gate Map
+
+| Gate | Status | Release Need |
+| --- | --- | --- |
+| Core/web-supported baseline from `v1.0.1` | GREEN | keep selected marker, production parity, and go/no-go evidence intact |
+| Web route confidence for changed scope | GREEN_FOR_CURRENT_SCOPE | rerun build and route smoke for any new web candidate |
+| AI red-team scoring | LOCAL_FIX_PENDING_DEPLOY | `PRJ-1137` locally rewrites unsafe boundary replies; package, deploy, and rerun strict red-team before pass claim |
+| Coolify source/webhook reliability | UNBLOCKED_OR_OPERATOR_ASSISTED | prove source automation or approved webhook fallback readiness before relying on it for future candidates |
+| Telegram live-mode launch | BLOCKED_EXTERNAL | requires operator token, webhook secret, and known chat id |
+| Organizer provider activation | BLOCKED_EXTERNAL | requires ClickUp, Google Calendar, and Google Drive credentials |
+| Multimodal Telegram/mobile expansion | DEFERRED_SCOPE_DECISION | requires explicit scope freeze before becoming a release blocker |
+
+The first v1.1 scoring slice closed the `PRJ-958` response-visibility gap.
+The second local slice added an expression-boundary guard for the clearest
+review findings. The next unblocked v1.1 implementation slice is to package and
+deploy that guard, then rerun strict live red-team evidence.
 
 ## V1 Acceptance Matrix
 
 | Gate | Current Status | Release Need | Priority |
 | --- | --- | --- | --- |
-| Conversation reliability | Implemented and health-backed | Run production release smoke plus Telegram provider smoke | P0 |
-| Learned-state inspection | Implemented and health-backed | Attach health and incident evidence for current candidate | P0 |
-| Website reading | Implemented and behavior-proven locally | Attach behavior report and release smoke | P0 |
-| Tool-grounded learning | Implemented and behavior-proven locally | Attach behavior report and incident evidence | P0 |
-| Time-aware planned work | Implemented and behavior-proven locally | Attach `T19.1..T19.2` evidence and health parity | P0 |
-| Deploy parity | Previously proven for older commits | Publish current scope and rerun production release smoke | P0 |
-| Web product shell | Strong but locally dirty | Commit scope audit, route smoke, release smoke revision parity | P1 |
+| Conversation reliability | Implemented and health-backed | PRJ-1128 release smoke green; Telegram provider smoke remains launch-channel extension | P0 green / extension pending |
+| Learned-state inspection | Implemented and health-backed | PRJ-1128 health and incident evidence available | P0 green |
+| Website reading | Implemented and behavior-proven locally | PRJ-1128 release smoke green; behavior evidence remains historical/current local bundle | P0 green |
+| Tool-grounded learning | Implemented and behavior-proven locally | PRJ-1128 incident evidence available | P0 green |
+| Time-aware planned work | Implemented and behavior-proven locally | PRJ-1128 health parity green | P0 green |
+| Deploy parity | Proven for selected SHA `3b46ed3` | Keep selected SHA frozen or create explicit marker task | P0 green |
+| Web product shell | Built, route-smoked, and deployed with selected SHA | Continue web-v1 polish as post-core follow-up | P1 |
 | Organizer extension | Contract exists, credentials likely missing | Configure providers or keep explicit extension-blocked posture | P1 |
-| External observability | Health/export exists, no external stack | Add minimal uptime/alert posture | P1 |
+| External observability | Health/export exists; heartbeat recheck active | Add minimal uptime/alert posture if public launch needs it | P1 |
 | AI safety hardening | Partially covered by behavior tests | Add red-team/prompt-injection/data-leakage evidence | P1 |
 | Multimodal Telegram | Open decision | Post-v1 feature plan | P2 |
 
 ## Execution Plan
 
 The phase history below is retained for auditability. For the current post-v1
-candidate path, use `docs/planning/current-v1-release-boundary.md`,
-`docs/operations/release-evidence-index.md`, and the P0 section in
-`docs/planning/v1-reality-audit-and-roadmap.md`.
+candidate path after PRJ-1128, use
+`docs/planning/current-v1-release-boundary.md` and
+`docs/operations/release-evidence-index.md` as the active source of truth.
 
 ### Phase 0 - Freeze The Current Release Boundary
 
@@ -543,13 +615,14 @@ Tasks:
 ### P0 Current Blockers For A Future Local-HEAD Release Claim
 
 1. `PRJ-952` Recover Coolify source automation or run approved fallback -
-   BLOCKED_EXTERNAL.
+   DONE_BY_PRJ-1128_UI_FALLBACK for `v1.0.1`; source/webhook reliability remains
+   a future-candidate follow-up.
 2. `PRJ-953` Rerun production release smoke for selected SHA -
-   READY_AFTER_PRJ-952.
+   DONE_BY_PRJ-1128 for `v1.0.1`.
 3. `PRJ-954` Refresh v1 acceptance bundle for current selected SHA -
-   READY_AFTER_PRJ-953.
+   DONE_BY_PRJ-1133.
 4. `PRJ-955` Create or move release marker only after green production
-   evidence - READY_AFTER_PRJ-954 for any future marker.
+   evidence - DONE_BY_PRJ-1131 for `v1.0.1`; repeat only for future markers.
 
 ### P1 Product And Operations
 
@@ -570,10 +643,11 @@ Tasks:
 12. `PRJ-933` Provider Payload Leakage Audit - DONE locally with follow-up
     provider/red-team evidence gaps
 13. `PRJ-934` V1 Final Go/No-Go Review - DONE; historical NO-GO snapshot is
-    retained, current marker truth is PRJ-955/PRJ-1115
+    retained, current marker truth is PRJ-1128/PRJ-1131/PRJ-1133
 14. `PRJ-935` V1 Release Notes And Operator Handoff - DONE for current
     released-marker posture
-15. `PRJ-936` V1 Tag And Release Marker - RESOLVED by PRJ-955 for `v1.0.0`
+15. `PRJ-936` V1 Tag And Release Marker - RESOLVED historically by PRJ-955 for
+    `v1.0.0`; current marker is `v1.0.1` from PRJ-1131
 
 ### P2 Extensions
 

@@ -25,6 +25,60 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-04 - Red-team findings need expression self-review before release claims
+- Context:
+  - strict AI red-team evidence captured real assistant reply text through the
+    approved `/event` `reply.message` contract.
+- Symptom:
+  - generated expression text could approve hidden bypass language, claim an
+    external task was updated without action evidence, or accept unverified
+    admin framing.
+- Root cause:
+  - the LLM-facing expression prompt had general boundary guidance, but the
+    deterministic expression self-review hook did not yet guard these concrete
+    red-team patterns before user-visible output.
+- Guardrail:
+  - use the existing expression self-review stage for deterministic
+    message-only corrections when generated wording contradicts approved
+    action-boundary or authorization posture.
+- Preferred pattern:
+  - add focused expression tests for each unsafe wording family
+  - keep side effects in action and only rewrite user-visible text in expression
+  - require production deploy and strict red-team rerun before claiming the gate
+- Avoid:
+  - adding a new debug endpoint or moderation subsystem for a narrow wording
+    correction
+  - treating local red-team fixes as live pass evidence before deploy parity
+- Evidence:
+  - `PRJ-1136` exposed the behavior with strict live red-team evidence
+  - `PRJ-1137` added local expression self-review tests and guardrails
+
+### 2026-05-04 - Use dummy env-files for local Compose diagnostics
+- Context:
+  - production deploy debugging may require `docker compose config` or local
+    `docker-compose.coolify.yml` smoke checks.
+- Symptom:
+  - Compose automatically reads the project `.env` file, so config output can
+    resolve local secret values even when the command is read-only.
+- Root cause:
+  - Docker Compose loads `.env` from the project directory by default and
+    interpolates it into rendered service environment output.
+- Guardrail:
+  - use an explicit dummy non-secret env-file for local Compose diagnostics and
+    avoid printing full rendered config when secret-bearing env keys exist.
+- Preferred pattern:
+  - create a temporary ignored env-file under `.codex/tmp/`
+  - pass it with `--env-file`
+  - run the minimal service set needed for the smoke
+  - tear the isolated Compose project down afterwards
+- Avoid:
+  - printing full `docker compose config` output against a real local `.env`
+  - committing `.env` or generated local smoke env-files
+- Evidence:
+  - `PRJ-1126` local Coolify-shape smoke used
+    `.codex/tmp/local-compose-nonsecret.env`
+  - `.env` is ignored by git and only `.env.example` is tracked
+
 ### 2026-05-03 - Frontend route smoke must run after build completes
 - Context:
   - frontend validation often runs `npm run build` and `npm run smoke:routes`
@@ -562,7 +616,17 @@ fixes for this repository.
 - Evidence:
   - `backend/scripts/run_release_smoke.ps1`
   - `backend/tests/test_deployment_trigger_scripts.py`
+  - `PRJ-1127`: repeated production `503 Service Unavailable` with body
+    `no available server` persisted after retry windows and incident exporter
+    could not fetch `/health`; runbook now treats this as an operator-side
+    no-healthy-backend recovery path after local Coolify-shape smoke passes.
   - live production smoke on 2026-04-25 against `https://personality.luckysparrow.ch`
+  - `PRJ-1125`: after pushing
+    `3b46ed3878a8560c3adb147fcadf064818ccc322`, the canonical production host
+    `https://aviary.luckysparrow.ch` still reported
+    `5e64f494e2aac8d29cea532d95f7039ed6029213` after a full 900-second
+    `-WaitForDeployParity` window, so the state was escalated from normal lag
+    to deployment-trigger drift evidence.
 
 ### 2026-04-25 - Deploy convergence can show one brief `/health` 503 before final parity turns green
 - Context:
@@ -1728,3 +1792,28 @@ fixes for this repository.
 - Guardrail: Use .agents/workflows/world-class-delivery.md for substantial
   work and apply reliability/security/UX evidence only when the scope warrants
   it, rather than adding ceremony to tiny safe changes.
+
+### 2026-05-04 - Coolify canonical app may be under Root Team
+
+- Context: PRJ-1128 production recovery after `503 no available server` on the
+  public Aviary app.
+- Symptom: logging into Coolify showed a default personal/team dashboard first,
+  where the canonical Aviary project and server were not visible.
+- Root cause: the canonical Aviary app is owned under `Root Team`, not the
+  initially selected visible team.
+- Guardrail: when inspecting Coolify for Aviary, switch to `Root Team` before
+  declaring project/app access missing.
+- Preferred pattern:
+  - authenticate without persisting credentials in repo files
+  - switch to `Root Team`
+  - verify canonical IDs:
+    - project `icmgqml9uw3slzch9m9ok23z`
+    - environment `qxooi9coxat272krzjx221fv`
+    - application `jr1oehwlzl8tcn3h8gh2vvih`
+  - only then inspect deployments, logs, and manual fallback deploy actions
+- Avoid:
+  - concluding the project does not exist from the default team dashboard
+  - storing Coolify credentials in tracked evidence
+- Evidence:
+  - `.codex/tasks/PRJ-1128-coolify-ui-redeploy-release-smoke-recovery.md`
+  - `docs/operations/runtime-ops-runbook.md`
