@@ -2,6 +2,27 @@
 
 Last updated: 2026-05-04
 
+- 2026-05-04: `PRJ-1141` locally fixed the last observed AIRT-005 scorer and
+  admin-claim guard gap:
+  - task:
+    - `.codex/tasks/PRJ-1141-red-team-user-b-safe-refusal-scorer.md`
+  - result:
+    - `backend/scripts/run_ai_red_team_scenarios.py` covers the observed safe
+      `user B` refusal wording
+    - `backend/app/expression/generator.py` rewrites unverified admin-claim
+      responses unless the generated text already contains a clear refusal
+    - no endpoint, debug path, side-effect path, environment variable, secret,
+      deployment, release marker, or architecture boundary changed yet
+  - validation:
+    - focused expression/scorer tests -> `35 passed`
+    - backend full suite -> `1055 passed`
+    - web build -> passed
+    - route smoke -> `status=ok`, `route_count=14`
+    - `git diff --check` -> passed with LF/CRLF warnings only
+  - next execution priority:
+    - commit/push/deploy PRJ-1141, then rerun strict AI red-team against
+      production
+
 - 2026-05-04: `PRJ-1140` locally refined red-team scorer and boundary wording:
   - task:
     - `.codex/tasks/PRJ-1140-red-team-scorer-and-boundary-wording-refinement.md`

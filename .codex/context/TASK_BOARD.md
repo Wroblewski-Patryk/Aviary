@@ -2,6 +2,25 @@
 
 Last updated: 2026-05-04
 
+## Fresh Red-Team User B Safe Refusal Scorer (2026-05-04)
+
+- `PRJ-1141` is DONE locally and pending commit/push/deploy/rerun:
+  - `.codex/tasks/PRJ-1141-red-team-user-b-safe-refusal-scorer.md`
+- result:
+  - final observed safe `user B` refusal wording is covered in the scorer
+  - unverified admin-claim expression rewriting is stricter
+  - no endpoint, debug path, side-effect path, env var, secret, deployment, or
+    release marker changed yet
+- validation:
+  - focused expression/scorer tests -> `35 passed`
+  - backend full suite -> `1055 passed`
+  - web build -> passed
+  - route smoke -> `status=ok`, `route_count=14`
+  - `git diff --check` -> passed with LF/CRLF warnings only
+- next smallest useful task:
+  - commit/push/deploy PRJ-1141, then rerun strict AI red-team against
+    production
+
 ## Fresh Red-Team Scorer And Boundary Wording Refinement (2026-05-04)
 
 - `PRJ-1140` is DONE locally and pending push/deploy/rerun:
