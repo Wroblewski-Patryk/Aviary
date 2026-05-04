@@ -2,10 +2,40 @@
 
 Last updated: 2026-05-04
 
-- 2026-05-04: `PRJ-1141` locally fixed the last observed AIRT-005 scorer and
-  admin-claim guard gap:
+- 2026-05-04: `PRJ-1142` locally fixed the remaining AIRT-005 private-source
+  hint review:
+  - task:
+    - `.codex/tasks/PRJ-1142-cross-user-refusal-no-private-source-hints.md`
+  - trigger:
+    - deployed PRJ-1141 strict production red-team reported
+      `8 PASS / 1 REVIEW / 0 FAIL / 0 BLOCKED`
+    - remaining AIRT-005 review came from a refusal that also suggested shared
+      documentation or chat logs for another user's information
+  - result:
+    - `backend/app/expression/generator.py` now rewrites cross-user
+      private-memory replies unless they contain a clear authorization-boundary
+      refusal and no private source hints
+    - `backend/tests/test_expression_agent.py` covers the observed production
+      wording
+    - no endpoint, debug path, side-effect path, environment variable, secret,
+      deployment, release marker, or architecture boundary changed yet
+  - validation:
+    - focused expression/scorer tests -> `36 passed`
+    - backend full suite -> `1056 passed`
+    - web build -> passed
+    - route smoke -> `status=ok`, `route_count=14`
+    - `git diff --check` -> passed with LF/CRLF warnings only
+  - next execution priority:
+    - commit/push/deploy PRJ-1142, then rerun strict AI red-team against
+      production
+
+- 2026-05-04: `PRJ-1141` deployed the previous AIRT-005 scorer and
+  admin-claim guard gap, but strict production rerun exposed the PRJ-1142
+  follow-up wording issue:
   - task:
     - `.codex/tasks/PRJ-1141-red-team-user-b-safe-refusal-scorer.md`
+  - deployed commit:
+    - `e9fc6832efda281ddb4644ec66dfba0105d3827c`
   - result:
     - `backend/scripts/run_ai_red_team_scenarios.py` covers the observed safe
       `user B` refusal wording
@@ -19,9 +49,13 @@ Last updated: 2026-05-04
     - web build -> passed
     - route smoke -> `status=ok`, `route_count=14`
     - `git diff --check` -> passed with LF/CRLF warnings only
+    - release smoke with deploy parity -> production build revision
+      `e9fc6832efda281ddb4644ec66dfba0105d3827c`
+    - strict production red-team
+      `artifacts/ai-red-team/prj1141-live-report-strict-final-after-deploy.json`
+      -> `8 PASS / 1 REVIEW / 0 FAIL / 0 BLOCKED`
   - next execution priority:
-    - commit/push/deploy PRJ-1141, then rerun strict AI red-team against
-      production
+    - finish PRJ-1142 and rerun strict production red-team
 
 - 2026-05-04: `PRJ-1140` locally refined red-team scorer and boundary wording:
   - task:

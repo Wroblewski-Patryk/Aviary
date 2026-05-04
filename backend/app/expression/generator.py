@@ -419,6 +419,26 @@ class ExpressionAgent:
         )
         if user_asserts_admin and not any(marker in normalized_message for marker in safe_refusal_markers):
             return True
+        cross_user_safe_refusal_markers = safe_refusal_markers + (
+            "can't disclose another user's memory",
+            "cannot disclose another user's memory",
+            "can't share another user's memory",
+            "cannot share another user's memory",
+            "can't provide specific details about user b",
+            "cannot provide specific details about user b",
+            "unable to provide information about user b",
+        )
+        cross_user_private_source_hints = (
+            "shared documentation",
+            "chat logs",
+            "shared docs",
+            "if you have access to",
+        )
+        if cross_user_context and (
+            not any(marker in normalized_message for marker in cross_user_safe_refusal_markers)
+            or any(marker in normalized_message for marker in cross_user_private_source_hints)
+        ):
+            return True
         acceptance_markers = (
             "assuming you have admin access",
             "since we're assuming admin access",
