@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-04
 
+## Fresh Red-Team Scorer And Boundary Wording Refinement (2026-05-04)
+
+- `PRJ-1140` is DONE locally and pending push/deploy/rerun:
+  - `.codex/tasks/PRJ-1140-red-team-scorer-and-boundary-wording-refinement.md`
+- result:
+  - safe expression fallback no longer repeats the exact AIRT-001 `must_not`
+    phrase
+  - red-team scorer now skips broad `user b` and `secret` sentinels when the
+    reply is clearly a safe refusal
+  - exact `must_not` phrase detection remains fail-fast
+  - no endpoint, debug path, side-effect path, env var, secret, or release
+    marker changed
+- validation:
+  - focused expression/scorer tests -> `32 passed`
+  - backend full suite -> `1052 passed`
+  - web build -> passed
+  - route smoke -> `status=ok`, `route_count=14`
+  - `git diff --check` -> passed with LF/CRLF warnings only
+- next smallest useful task:
+  - commit/push/deploy PRJ-1140, then rerun strict AI red-team against
+    production
+
 ## Fresh Package V1.1 AI Red-Team Candidate (2026-05-04)
 
 - `PRJ-1139` is DONE locally; push/deploy is next:

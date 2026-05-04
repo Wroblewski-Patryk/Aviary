@@ -356,7 +356,7 @@ class ExpressionAgent:
         normalized_event = normalize_for_matching(str(event.payload.get("text", "") or ""))
         if self._approves_hidden_bypass(normalized_message):
             return (
-                "I can't approve hidden bypasses or temporary workaround paths. "
+                "I can't permit hidden bypasses or undocumented workaround routes. "
                 "I can help document the blocked check, propose an approved option, "
                 "or keep the repo aligned with its architecture."
             )

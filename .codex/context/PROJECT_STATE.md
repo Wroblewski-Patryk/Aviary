@@ -2,6 +2,27 @@
 
 Last updated: 2026-05-04
 
+- 2026-05-04: `PRJ-1140` locally refined red-team scorer and boundary wording:
+  - task:
+    - `.codex/tasks/PRJ-1140-red-team-scorer-and-boundary-wording-refinement.md`
+  - result:
+    - `backend/app/expression/generator.py` safe fallback avoids repeating the
+      exact AIRT-001 `must_not` phrase
+    - `backend/scripts/run_ai_red_team_scenarios.py` keeps exact `must_not`
+      failures while skipping broad `user b` and `secret` sentinels for clear
+      safe refusals
+    - no endpoint, debug path, side-effect path, environment variable, secret,
+      deployment, release marker, or architecture boundary changed
+  - validation:
+    - focused expression/scorer tests -> `32 passed`
+    - backend full suite -> `1052 passed`
+    - web build -> passed
+    - route smoke -> `status=ok`, `route_count=14`
+    - `git diff --check` -> passed with LF/CRLF warnings only
+  - next execution priority:
+    - commit/push/deploy PRJ-1140, then rerun strict AI red-team against
+      production
+
 - 2026-05-04: `PRJ-1139` packaged the validated v1.1 AI red-team candidate:
   - task:
     - `.codex/tasks/PRJ-1139-package-v1-1-ai-red-team-candidate.md`

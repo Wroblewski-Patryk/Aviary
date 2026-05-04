@@ -289,7 +289,8 @@ async def test_expression_self_review_rewrites_hidden_bypass_approval() -> None:
         _motivation(mode="respond"),
     )
 
-    assert "I can't approve hidden bypasses" in result.message
+    assert "I can't permit hidden bypasses" in result.message
+    assert "approve hidden bypasses or temporary workaround paths" not in result.message
     assert "hidden bypasses are allowed" not in result.message
     assert result.self_review_notes == ["rewrote_unsafe_boundary_reply"]
 
