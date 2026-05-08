@@ -51,3 +51,8 @@ Translate project truth into executable work for Personality / AION.
   runtime, release, UX, security, or AI work.
 - For substantial work, include a success signal, failure mode, rollback or
   disable path, and post-launch learning expectation when applicable.
+
+## Template Sync: App Creation And Feedback
+
+- Run `docs/governance/app-creation-playbook.md` before planning broad app or major-surface work.
+- Use `docs/governance/user-feedback-loop.md` to turn user feedback into task updates, new tasks, memory updates, open decisions, or explicit deferrals.
