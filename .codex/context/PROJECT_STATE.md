@@ -2,6 +2,34 @@
 
 Last updated: 2026-05-04
 
+- 2026-05-08: `PRJ-1145` found Coolify source automation drift after docs-only
+  publication:
+  - task:
+    - `.codex/tasks/PRJ-1145-publish-v1-1-publication-evidence.md`
+  - result:
+    - docs-only commits were published to `origin/main`
+    - production remains healthy but stale on
+      `74216d29e84355c1820216aea9c78ead871f5c40`
+    - current `origin/main` is
+      `da80cc1241a57b5f35f9966ed5600f2dbcec45d2`
+    - `v1.1.0` remains fixed on
+      `d6bf35251577ce71848b33eb109c560cbf74778a`
+  - validation:
+    - release smoke wait mode for `7e14fdf...` -> failed after 600s on
+      revision drift
+    - release reality audit for `7e14fdf...` -> `HOLD_REVISION_DRIFT`
+    - Coolify fallback readiness -> `ready=false`, missing webhook URL/secret
+    - release smoke wait mode for `da80cc1...` -> failed after 600s on
+      revision drift
+    - Coolify login succeeded, API deploy endpoint returned `401` without
+      Bearer token
+    - Livewire team-switch probe returned `419`; deeper session-token
+      inspection was stopped for security reasons
+  - next execution priority:
+    - operator triggers Coolify UI redeploy for canonical app
+      `jr1oehwlzl8tcn3h8gh2vvih`, or provides approved Coolify webhook/API
+      token fallback inputs; then rerun release smoke with deploy parity
+
 - 2026-05-08: `PRJ-1144` published the v1.1 source-truth sync:
   - task:
     - `.codex/tasks/PRJ-1144-publish-v1-1-source-truth-sync.md`
