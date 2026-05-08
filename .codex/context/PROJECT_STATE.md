@@ -2,10 +2,14 @@
 
 Last updated: 2026-05-04
 
-- 2026-05-04: `PRJ-1142` locally fixed the remaining AIRT-005 private-source
-  hint review:
+- 2026-05-04: `PRJ-1142` fixed the remaining AIRT-005 private-source hint
+  review and released v1.1.0:
   - task:
     - `.codex/tasks/PRJ-1142-cross-user-refusal-no-private-source-hints.md`
+  - selected marker:
+    - `v1.1.0`
+  - selected SHA:
+    - `d6bf35251577ce71848b33eb109c560cbf74778a`
   - trigger:
     - deployed PRJ-1141 strict production red-team reported
       `8 PASS / 1 REVIEW / 0 FAIL / 0 BLOCKED`
@@ -18,16 +22,23 @@ Last updated: 2026-05-04
     - `backend/tests/test_expression_agent.py` covers the observed production
       wording
     - no endpoint, debug path, side-effect path, environment variable, secret,
-      deployment, release marker, or architecture boundary changed yet
+      or architecture boundary changed
   - validation:
     - focused expression/scorer tests -> `36 passed`
     - backend full suite -> `1056 passed`
     - web build -> passed
     - route smoke -> `status=ok`, `route_count=14`
     - `git diff --check` -> passed with LF/CRLF warnings only
+    - release smoke with deploy parity -> production build revision
+      `d6bf35251577ce71848b33eb109c560cbf74778a`
+    - strict production red-team
+      `artifacts/ai-red-team/prj1142-live-report-strict-final-after-deploy.json`
+      -> `9 PASS / 0 REVIEW / 0 FAIL / 0 BLOCKED`, recommendation `DONE`
+    - selected-SHA release go/no-go -> `GO`
+    - `v1.1.0` selected-tag release go/no-go -> `GO`
   - next execution priority:
-    - commit/push/deploy PRJ-1142, then rerun strict AI red-team against
-      production
+    - run Telegram live-mode or organizer provider extension smokes when the
+      required external credentials are available
 
 - 2026-05-04: `PRJ-1141` deployed the previous AIRT-005 scorer and
   admin-claim guard gap, but strict production rerun exposed the PRJ-1142
@@ -117,7 +128,8 @@ Last updated: 2026-05-04
     - package and push the validated candidate, deploy through the approved
       release path, then rerun strict AI red-team against production
 
-- 2026-05-04: `PRJ-1137` locally fixed expression red-team boundary wording:
+- 2026-05-04: `PRJ-1137` locally fixed expression red-team boundary wording
+  and is now superseded by deployed/released PRJ-1142 evidence:
   - task:
     - `.codex/tasks/PRJ-1137-expression-red-team-boundary-self-review.md`
   - result:
@@ -128,7 +140,7 @@ Last updated: 2026-05-04
     - `backend/tests/test_expression_agent.py` covers the three unsafe wording
       families
     - `docs/security/v1-ai-red-team-execution-report.md` and planning docs now
-      record the gate as local fix pending deploy/rerun
+      record the later PRJ-1142/v1.1.0 production pass
     - no endpoint, debug path, side-effect path, environment variable, secret,
       deployment, or release marker changed
   - validation:
@@ -136,11 +148,11 @@ Last updated: 2026-05-04
       -> `30 passed`
     - `pytest -q tests/test_openai_prompting.py` -> `2 passed`
   - next execution priority:
-    - run broader backend validation, package/deploy the candidate, then rerun
-      strict AI red-team against production before claiming v1.1 AI pass
+    - none for this historical entry; PRJ-1142 closed the live gate
 
 - 2026-05-04: `PRJ-1136` fixed AI red-team reply-message capture and reran
-  strict live evidence:
+  strict live evidence; its historical review findings are now closed by
+  PRJ-1142:
   - task:
     - `.codex/tasks/PRJ-1136-ai-red-team-event-reply-message-capture.md`
   - result:
@@ -164,10 +176,11 @@ Last updated: 2026-05-04
     - live strict red-team rerun against `https://aviary.luckysparrow.ch`
       executed 21 steps and captured reply excerpts
   - next execution priority:
-    - fix or explicitly risk-accept `AIRT-001`, `AIRT-002`, `AIRT-003`, and
-      `AIRT-005` before v1.1 can claim AI red-team pass
+    - none for this historical entry; PRJ-1142 strict production rerun returned
+      `DONE`
 
-- 2026-05-04: `PRJ-1135` mapped the current v1.1 candidate boundary:
+- 2026-05-04: `PRJ-1135` mapped the initial v1.1 candidate boundary, later
+  superseded by the achieved `v1.1.0` marker:
   - task:
     - `.codex/tasks/PRJ-1135-current-v1-1-boundary-and-gate-map.md`
   - result:
@@ -175,9 +188,8 @@ Last updated: 2026-05-04
       v1.1 candidate gate posture
     - `docs/planning/v1-reality-audit-and-roadmap.md` and
       `docs/planning/v1-release-audit-and-execution-plan.md` now state that
-      v1.1 is mapped but not achieved
-    - AI red-team behavioral scoring is the first unblocked v1.1 hardening
-      slice because `PRJ-958` remains `REVIEW_REQUIRED`
+      v1.1 is achieved for the unblocked hardening marker scope
+    - AI red-team behavioral scoring is green through PRJ-1142
     - Telegram live-mode and organizer provider activation remain
       `BLOCKED_EXTERNAL` until operator credentials exist
     - no deployment, runtime code, environment variables, secrets, or release
@@ -187,9 +199,8 @@ Last updated: 2026-05-04
       `BLOCKED_EXTERNAL`, and `REVIEW_REQUIRED` in touched planning docs
     - `git diff --check`
   - next execution priority:
-    - implement a text-capturing AI red-team scoring path for the existing
-      scenario pack, then rerun the pack and replace `REVIEW_REQUIRED` with
-      pass/fail evidence
+    - none for this historical entry; externally blocked extension smokes
+      remain the next possible follow-up when credentials exist
 
 - 2026-05-04: `PRJ-1134` cleaned stale release handoff and marker blocker
   paths after `v1.0.1`:

@@ -1,8 +1,8 @@
 # V1 Reality Audit And Roadmap
 
 Date: 2026-05-04
-Task: `PRJ-951`, refreshed by `PRJ-1135`
-Status: current selected-SHA production proof green, marked by `v1.0.1`; v1.1 candidate gates are mapped and AI red-team has a local expression-boundary fix pending deploy/rerun
+Task: `PRJ-951`, refreshed by `PRJ-1142`
+Status: current selected-SHA production proof green, marked by `v1.0.1`; v1.1 hardening proof green, marked by `v1.1.0`
 
 ## Purpose
 
@@ -41,22 +41,16 @@ The remaining release/reliability work is narrower: document Coolify
 source/webhook automation reliability and keep extension/hardening gates
 explicit.
 
-`PRJ-1135` adds the current v1.1 interpretation: v1.1 is not yet a release
-fact. It is a candidate gate map that should build on `v1.0.1`, close the
-remaining unblocked hardening evidence, and keep credential-dependent extension
+`PRJ-1135` added the current v1.1 interpretation: v1.1 builds on `v1.0.1`,
+closes unblocked hardening evidence, and keeps credential-dependent extension
 claims out of the achieved scope until operator inputs exist.
 
 `PRJ-1136` closed the AI red-team response-visibility bug by reading the
-approved `/event` `reply.message` field. The strict live rerun executed all 21
-steps and returned `5 PASS / 4 REVIEW / 0 FAIL / 0 BLOCKED`, so the gate has
-real behavioral evidence now but still needs follow-up fixes before v1.1 can
-claim AI red-team pass.
-
-`PRJ-1137` adds a local expression self-review guard for unsafe bypass approval,
-false external mutation success claims, and unverified admin/cross-user
-authorization language. Focused tests pass locally. This does not yet close the
-live v1.1 AI red-team gate because the fix still needs packaging, deployment,
-and a strict production rerun.
+approved `/event` `reply.message` field. `PRJ-1137`, `PRJ-1140`, `PRJ-1141`,
+and `PRJ-1142` closed the observed expression-boundary and scorer gaps. The
+strict production rerun against deployed revision
+`d6bf35251577ce71848b33eb109c560cbf74778a` returned `9 PASS / 0 REVIEW /
+0 FAIL / 0 BLOCKED`, and selected-tag go/no-go for `v1.1.0` returned `GO`.
 
 ## Current Acceptance Boundary
 
@@ -65,6 +59,7 @@ and a strict production rerun.
 | Historical core no-UI v1 behavior on `v1.0.0` marker SHA | GO as historical marker truth | `/health.v1_readiness` was green on the marker SHA |
 | Current `origin/main` as deployed selected candidate | GO | production revision matches `origin/main` at `3b46ed3878a8560c3adb147fcadf064818ccc322` |
 | Final release tag/marker for selected SHA | GO | `v1.0.1` was created by PRJ-1131 after selected-tag go/no-go returned `GO` |
+| V1.1 hardening marker for selected SHA | GO | `v1.1.0` marks `d6bf35251577ce71848b33eb109c560cbf74778a` after strict AI red-team `DONE`, deploy parity, and selected-tag go/no-go `GO` |
 | Telegram-led launch claim | BLOCKED | PRJ-909 needs operator token/secret/chat preconditions |
 | Organizer/provider daily-use launch claim | BLOCKED | PRJ-918 needs provider credentials |
 | Public/web-led v1 confidence | IMPROVED | frontend exists and `PRJ-966` adds repeatable headless route-mount smoke for root, the login shell, dashboard, chat, personality, and tools |
@@ -75,14 +70,15 @@ and a strict production rerun.
 | --- | --- | --- |
 | `v1.0.1` core/web-supported baseline | GREEN | preserve current production parity and selected-tag go/no-go evidence |
 | Web/public shell route confidence | GREEN_FOR_CURRENT_SCOPE | rerun web build and route smoke for any new candidate that changes web scope |
-| AI red-team behavioral scoring | LOCAL_FIX_PENDING_DEPLOY | `PRJ-1137` locally rewrites unsafe expression-boundary replies; deploy and rerun the strict pack before claiming pass |
-| Coolify source/webhook reliability | UNBLOCKED_OR_OPERATOR_ASSISTED | prove source automation on the next selected candidate or capture webhook fallback readiness after operator-provided URL/secret |
+| AI red-team behavioral scoring | GREEN | `PRJ-1142` strict production pack returned `9 PASS / 0 REVIEW / 0 FAIL / 0 BLOCKED` |
+| Coolify source/webhook reliability | GREEN_FOR_SOURCE_AUTOMATION | source automation deployed the `v1.1.0` selected SHA and release smoke proved revision parity |
 | Telegram live-mode launch channel | BLOCKED_EXTERNAL | run `PRJ-962` only after operator token, webhook secret, and known chat id exist |
 | Organizer provider activation | BLOCKED_EXTERNAL | run `PRJ-963` only after provider credentials exist |
 | Multimodal Telegram and mobile/Expo | DEFERRED_SCOPE_DECISION | freeze scope explicitly before treating as v1.1 blockers |
 
-Next unblocked v1.1 task: package/deploy the PRJ-1137 expression guard, then
-rerun the strict live red-team pack.
+Next unblocked v1.1 task: keep hardening evidence as a regression gate and run
+credential-dependent Telegram or organizer extension smokes only after operator
+inputs exist.
 
 ## Roadmap
 
@@ -103,9 +99,12 @@ rerun the strict live red-team pack.
 | ID | Task | Status | Definition Of Done |
 | --- | --- | --- | --- |
 | PRJ-958 | Execute AI red-team scenario pack | DONE_WITH_REVIEW_REQUIRED | runner executed 9 scenarios / 21 steps against production; result is `REVIEW_REQUIRED` because `/event` did not expose assistant reply text for behavioral scoring |
-| PRJ-1135 | Map current v1.1 candidate gates | DONE | v1.1 gates are classified as green, unblocked hardening, blocked external, or deferred scope; first unblocked task is AI red-team text-capturing scoring |
+| PRJ-1135 | Map current v1.1 candidate gates | DONE | v1.1 gates were classified as green, unblocked hardening, blocked external, or deferred scope; PRJ-1142 later closed the unblocked AI red-team hardening gate |
 | PRJ-1136 | Capture `/event` reply message for AI red-team scoring | DONE_WITH_REVIEW_REQUIRED | runner now reads `reply.message`; strict live rerun executed 21 steps with `5 PASS / 4 REVIEW / 0 FAIL / 0 BLOCKED` |
-| PRJ-1137 | Add expression red-team boundary self-review | DONE_LOCAL_PENDING_DEPLOY | unsafe bypass approval, false external mutation success, and unverified admin/cross-user wording are rewritten locally; focused tests pass |
+| PRJ-1137 | Add expression red-team boundary self-review | DONE | unsafe bypass approval, false external mutation success, and unverified admin/cross-user wording are rewritten |
+| PRJ-1140 | Refine AI red-team scoring and boundary wording | DONE | safe boundary wording no longer trips exact `must_not` phrases and broad sentinels preserve fail-fast behavior |
+| PRJ-1141 | Close AI red-team user access review | DONE_WITH_FOLLOW_UP | deployed scorer/admin-claim refinement reduced strict production red-team to `8 PASS / 1 REVIEW / 0 FAIL / 0 BLOCKED` |
+| PRJ-1142 | Cross-user refusal without private source hints | DONE | strict production red-team returned `9 PASS / 0 REVIEW / 0 FAIL / 0 BLOCKED`, release go/no-go returned `GO`, and `v1.1.0` marks `d6bf35251577ce71848b33eb109c560cbf74778a` |
 | PRJ-959 | Add cross-user/session regression tests | DONE | app-route two-user transcript, reset, cookie switching, and Telegram relink/conflict ownership scenarios are covered by focused regressions |
 | PRJ-960 | Add provider payload sentinel regressions | DONE | backend projections and frontend API types prove raw provider payload sentinels do not leak through app surfaces |
 | PRJ-961 | Add strict-mode incident sentinel regression | DONE | strict-mode incident export keeps safe health-derived evidence and excludes debug payload sentinels |

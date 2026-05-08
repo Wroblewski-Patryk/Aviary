@@ -10,13 +10,15 @@ Current release boundary:
 This document turns the current repository state into a concrete path for
 making `v1` a release fact, not only a locally proven architecture baseline.
 
-Current status after PRJ-1135: the selected post-v1 candidate
-`3b46ed3878a8560c3adb147fcadf064818ccc322` is deployed to production, backend
+Current status after PRJ-1142: the selected post-v1 candidate
+`3b46ed3878a8560c3adb147fcadf064818ccc322` remains deployed and marked by
+`v1.0.1`; the v1.1 hardening candidate
+`d6bf35251577ce71848b33eb109c560cbf74778a` is deployed to production, backend
 and web revisions match, production health is HTTP `200`, release readiness is
-green, release smoke with deploy parity passed, and annotated tag `v1.0.1`
-marks that SHA. The `v1.0.0` tag remains historical marker truth for
-`5e64f494e2aac8d29cea532d95f7039ed6029213`. V1.1 is now represented as a
-candidate gate map, not an achieved release claim.
+green, strict AI red-team is clean, release smoke with deploy parity passed,
+selected-tag go/no-go returned `GO`, and annotated tag `v1.1.0` marks that SHA.
+The `v1.0.0` tag remains historical marker truth for
+`5e64f494e2aac8d29cea532d95f7039ed6029213`.
 
 The current approved core `v1` is the no-UI life-assistant bundle:
 
@@ -35,15 +37,18 @@ For v1.1, the current approved posture is to build on the `v1.0.1` core/web
 baseline, close unblocked hardening evidence first, and keep external
 credential-dependent extension gates blocked until operator inputs exist.
 `PRJ-1136` closed the red-team response-capture bug and produced strict live
-review evidence, but AI red-team is still not a pass gate. `PRJ-1137` adds a
-local expression-boundary guard for the clearest unsafe review patterns; it
-still needs packaging, deploy parity, and strict live rerun evidence.
+review evidence. `PRJ-1137`, `PRJ-1140`, `PRJ-1141`, and `PRJ-1142` closed the
+observed expression-boundary and scorer gaps. AI red-team is now a pass gate for
+`v1.1.0`.
 
 ## Current Evidence
 
 - Current released marker: `v1.0.1`
 - Current released marker selected SHA:
   `3b46ed3878a8560c3adb147fcadf064818ccc322`
+- Current v1.1 hardening marker: `v1.1.0`
+- Current v1.1 hardening marker selected SHA:
+  `d6bf35251577ce71848b33eb109c560cbf74778a`
 - Historical released marker: `v1.0.0`
 - Historical released marker selected SHA:
   `5e64f494e2aac8d29cea532d95f7039ed6029213`
@@ -60,6 +65,12 @@ still needs packaging, deploy parity, and strict live rerun evidence.
 - PRJ-1128 incident evidence bundle export: available
 - PRJ-1131 selected-tag go/no-go for `v1.0.1`: `GO`
 - PRJ-1133 current acceptance bundle refresh: DONE
+- PRJ-1142 strict production AI red-team:
+  `9 PASS / 0 REVIEW / 0 FAIL / 0 BLOCKED`, recommendation `DONE`
+- PRJ-1142 selected-SHA go/no-go:
+  `GO`
+- `v1.1.0` selected-tag go/no-go:
+  `GO`
 - Fresh behavior validation:
   - command:
     `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\run_behavior_validation.py --gate-mode operator --artifact-path ..\.codex\artifacts\prj902-v1-audit\behavior-validation-report.json; Pop-Location`
@@ -202,13 +213,13 @@ still needs packaging, deploy parity, and strict live rerun evidence.
       uptime/health monitor and alert route.
     - Severity: P1 ops hardening.
 
-16. **AI red-team evidence is not part of the latest v1 release bundle.**
-    - Behavior validation is strong, but production hardening standards require
-      AI testing for prompt injection, data leakage, and unauthorized access
-      when AI/user data are involved.
-    - Impact: a world-class v1 claim should include a reproducible AI safety
-      checklist and scenario results.
-    - Severity: P1 hardening blocker.
+16. **AI red-team evidence is green for the v1.1 hardening marker.**
+    - Strict production AI testing for prompt injection, data leakage, and
+      unauthorized access returned `DONE` against
+      `d6bf35251577ce71848b33eb109c560cbf74778a`.
+    - Impact: v1.1 has reproducible AI safety scenario results for the selected
+      marker.
+    - Severity: resolved for `v1.1.0`.
 
 17. **Current candidate release evidence is green but still scattered.**
     - Required pieces are present across PRJ-1122 and PRJ-1128: backend tests,
@@ -218,36 +229,22 @@ still needs packaging, deploy parity, and strict live rerun evidence.
       from one consolidated acceptance bundle pointer.
     - Severity: P1 release handoff improvement.
 
-18. **V1.1 has a candidate gate map but no release claim yet.**
-    - PRJ-1135 classifies the current v1.1 gates as green baseline, unblocked
-      hardening, blocked external, or deferred scope.
-    - Impact: the next implementation slice can start with AI red-team scoring
-      visibility instead of guessing around Telegram/provider credential
-      blockers.
-    - Severity: P1 planning gap resolved; implementation remains pending.
+18. **V1.1 has a release marker for the unblocked hardening scope.**
+    - `v1.1.0` marks
+      `d6bf35251577ce71848b33eb109c560cbf74778a` after deploy parity, strict
+      AI red-team `DONE`, and selected-tag go/no-go `GO`.
+    - Impact: the remaining Telegram/provider tasks are external extension
+      gates, not hidden blockers for the achieved v1.1 marker.
+    - Severity: resolved for current scope.
 
-19. **AI red-team response capture is fixed, with live review findings.**
+19. **AI red-team response capture is fixed, with clean live findings.**
     - The runner now reads the approved `/event` `reply.message` field.
     - Strict live evidence:
-      `artifacts/ai-red-team/prj1136-live-report-strict-v3.json`.
-    - Result: 9 scenarios, 21 steps, `5 PASS / 4 REVIEW / 0 FAIL /
-      0 BLOCKED`, recommendation `REVIEW_REQUIRED`.
-    - Impact: v1.1 has real red-team behavioral text evidence now, but the
-      reviewed scenarios must be fixed or explicitly risk-accepted before this
-      gate can pass.
-    - Severity: P1 hardening implementation partially closed; follow-up needed.
-
-20. **Expression red-team boundary guard is locally fixed but not deployed.**
-    - PRJ-1137 uses the existing expression self-review stage to rewrite
-      unsafe bypass approval, false external mutation success, and unverified
-      admin/cross-user authorization language.
-    - Focused validation:
-      `pytest -q tests/test_expression_agent.py tests/test_ai_red_team_scenarios_script.py`
-      -> `30 passed`.
-    - Impact: local code now addresses the clearest PRJ-1136 findings, but the
-      production AI red-team gate remains pending until a new candidate is
-      packaged, deployed, and rerun.
-    - Severity: P1 local fix; release evidence pending.
+      `artifacts/ai-red-team/prj1142-live-report-strict-final-after-deploy.json`.
+    - Result: 9 scenarios, 21 steps, `9 PASS / 0 REVIEW / 0 FAIL /
+      0 BLOCKED`, recommendation `DONE`.
+    - Impact: v1.1 has clean red-team behavioral text evidence.
+    - Severity: resolved.
 
 ## V1.1 Candidate Gate Map
 
@@ -255,8 +252,8 @@ still needs packaging, deploy parity, and strict live rerun evidence.
 | --- | --- | --- |
 | Core/web-supported baseline from `v1.0.1` | GREEN | keep selected marker, production parity, and go/no-go evidence intact |
 | Web route confidence for changed scope | GREEN_FOR_CURRENT_SCOPE | rerun build and route smoke for any new web candidate |
-| AI red-team scoring | LOCAL_FIX_PENDING_DEPLOY | `PRJ-1137` locally rewrites unsafe boundary replies; package, deploy, and rerun strict red-team before pass claim |
-| Coolify source/webhook reliability | UNBLOCKED_OR_OPERATOR_ASSISTED | prove source automation or approved webhook fallback readiness before relying on it for future candidates |
+| AI red-team scoring | GREEN | strict production red-team returned `9 PASS / 0 REVIEW / 0 FAIL / 0 BLOCKED` for `v1.1.0` selected SHA |
+| Coolify source/webhook reliability | GREEN_FOR_SOURCE_AUTOMATION | source automation deployed `d6bf35251577ce71848b33eb109c560cbf74778a`; release smoke proved revision parity |
 | Telegram live-mode launch | BLOCKED_EXTERNAL | requires operator token, webhook secret, and known chat id |
 | Organizer provider activation | BLOCKED_EXTERNAL | requires ClickUp, Google Calendar, and Google Drive credentials |
 | Multimodal Telegram/mobile expansion | DEFERRED_SCOPE_DECISION | requires explicit scope freeze before becoming a release blocker |

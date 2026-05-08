@@ -4,8 +4,8 @@
 - ID: PRJ-1142
 - Title: Cross-User Refusal Without Private Source Hints
 - Task Type: fix
-- Current Stage: release
-- Status: REVIEW
+- Current Stage: post-release
+- Status: DONE
 - Owner: Backend Builder
 - Depends on: PRJ-1141
 - Priority: P0
@@ -49,8 +49,7 @@ or authorization is verified by the authenticated app boundary.
 - Post-launch learning needed: no
 
 ## Deliverable For This Stage
-Commit and deploy the locally validated fix, then rerun strict production
-red-team evidence.
+Record post-release evidence after `v1.1.0` selected-tag go/no-go.
 
 ## Constraints
 - use existing systems and approved mechanisms
@@ -79,8 +78,8 @@ red-team evidence.
 ## Definition of Done
 - [x] `DEFINITION_OF_DONE.md` requirements are satisfied for the touched scope.
 - [x] Focused and relevant regression tests pass.
-- [ ] Production strict red-team evidence is recorded after deploy.
-- [ ] Context files are updated.
+- [x] Production strict red-team evidence is recorded after deploy.
+- [x] Context files are updated.
 
 ## Stage Exit Criteria
 - [x] The output matches the declared `Current Stage`.
@@ -106,7 +105,14 @@ red-team evidence.
 - Manual checks:
   - `git diff --check` -> passed with LF/CRLF warnings only
 - Screenshots/logs: not applicable
-- High-risk checks: pending strict production red-team rerun
+- High-risk checks:
+  - strict production red-team
+    `artifacts/ai-red-team/prj1142-live-report-strict-final-after-deploy.json`
+    -> `9 PASS / 0 REVIEW / 0 FAIL / 0 BLOCKED`, recommendation `DONE`
+  - selected-SHA release go/no-go
+    `.codex/tmp/release-go-no-go-prj1142-final.json` -> `GO`
+  - selected-tag release go/no-go
+    `.codex/tmp/release-go-no-go-v1.1.0.json` -> `GO`
 - Coverage ledger updated: not applicable
 - Coverage rows closed or changed: none
 
@@ -141,15 +147,16 @@ red-team evidence.
 - Secret handling: no secrets touched
 - Security tests or scans: focused expression test and strict red-team rerun
 - Fail-closed behavior: canonical refusal
-- Residual risk: pending live rerun
+- Residual risk: credential-dependent Telegram and organizer extension smokes
+  remain blocked by external inputs and are outside the `v1.1.0` marker scope
 
 - `AI_TESTING_PROTOCOL.md` reviewed: yes
 - Memory consistency scenarios: AIRT-005 unauthorized memory access
 - Multi-step context scenarios: strict pack has two AIRT-005 steps
 - Adversarial or role-break scenarios: unverified admin claim
 - Prompt injection checks: included in strict pack
-- Data leakage and unauthorized access checks: pending live rerun
-- Result: pending
+- Data leakage and unauthorized access checks: strict production pack passed
+- Result: `DONE`
 
 ## Review Checklist (mandatory)
 - [x] Process self-audit completed before implementation.
@@ -180,9 +187,9 @@ red-team evidence.
   - `.codex/tasks/PRJ-1142-cross-user-refusal-no-private-source-hints.md`
 - How tested: focused tests, full backend suite, web build, route smoke, and
   diff hygiene all passed locally.
-- What is incomplete: commit/push/deploy parity and strict production red-team
-  rerun remain.
-- Next steps: commit, push, wait for deploy parity, rerun strict red-team.
+- What is incomplete: credential-dependent Telegram and organizer extension
+  smokes remain blocked by external inputs.
+- Next steps: run extension smokes when credentials are available.
 - Decisions made: reuse expression self-review as the approved boundary.
 
 ## Autonomous Loop Evidence
@@ -214,7 +221,8 @@ red-team evidence.
 ### 5. Verify and Test
 - Validation performed: focused tests, full backend suite, web build, route
   smoke, and diff hygiene.
-- Result: local validation passed; production rerun pending.
+- Result: local validation passed, production strict red-team returned `DONE`,
+  and selected-tag go/no-go for `v1.1.0` returned `GO`.
 
 ### 6. Self-Review
 - Simpler option considered: scorer-only allowlist. Rejected because the live
@@ -226,6 +234,10 @@ red-team evidence.
   had a real privacy-boundary wording gap.
 
 ### 7. Update Documentation and Knowledge
-- Docs updated: task/context updates only until production evidence is final.
+- Docs updated:
+  - `docs/security/v1-ai-red-team-execution-report.md`
+  - `docs/planning/current-v1-release-boundary.md`
+  - `docs/planning/v1-reality-audit-and-roadmap.md`
+  - `docs/planning/v1-release-audit-and-execution-plan.md`
 - Context updated: `TASK_BOARD.md`, `PROJECT_STATE.md`
 - Learning journal updated: not applicable.

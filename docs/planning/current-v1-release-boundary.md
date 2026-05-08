@@ -31,6 +31,9 @@ with release-smoke evidence tied to the deployed revision.
 `v1.0.1` is the current selected-SHA release marker for selected SHA
 `3b46ed3878a8560c3adb147fcadf064818ccc322`.
 
+`v1.1.0` is the current v1.1 hardening marker for selected SHA
+`d6bf35251577ce71848b33eb109c560cbf74778a`.
+
 `v1.0.0` remains the historical released core marker for selected SHA
 `5e64f494e2aac8d29cea532d95f7039ed6029213`.
 
@@ -147,15 +150,15 @@ baseline instead of redefining core v1. Its current gate posture is:
 | --- | --- | --- |
 | Core/web-supported baseline | GREEN | preserve `v1.0.1` production parity and go/no-go evidence |
 | Public/web route confidence | GREEN_FOR_CURRENT_SCOPE | keep web build and route smoke current for any new candidate |
-| AI red-team scoring | LOCAL_FIX_PENDING_DEPLOY | `PRJ-1136` captures `reply.message`; `PRJ-1137` adds local expression self-review for unsafe boundary replies; package, deploy, and rerun the strict pack before v1.1 can claim this gate |
-| Coolify source/webhook reliability | UNBLOCKED_OR_OPERATOR_ASSISTED | prove source automation for the next candidate or capture approved webhook fallback readiness once URL and secret are provided |
+| AI red-team scoring | GREEN | `PRJ-1142` strict production rerun against `d6bf35251577ce71848b33eb109c560cbf74778a` returned `9 PASS / 0 REVIEW / 0 FAIL / 0 BLOCKED`; `v1.1.0` selected-tag go/no-go returned `GO` |
+| Coolify source/webhook reliability | GREEN_FOR_SOURCE_AUTOMATION | source automation deployed the `d6bf35251577ce71848b33eb109c560cbf74778a` candidate and release smoke proved revision parity |
 | Telegram live-mode launch channel | BLOCKED_EXTERNAL | operator token, webhook secret, and known chat id are required before smoke |
 | Organizer provider activation | BLOCKED_EXTERNAL | ClickUp, Google Calendar, and Google Drive credentials are required before smoke |
 | Multimodal/mobile expansion | DEFERRED | requires explicit scope decision before entering a v1.1 blocker set |
 
-The first v1.1 hardening implementation target was closed by `PRJ-1136`: the
-existing `/event` runner now captures redacted assistant reply text from the
-approved `reply.message` contract. `PRJ-1137` locally fixes the clearest
-expression-boundary review patterns from the strict run. The next unblocked
-v1.1 target is to package and deploy the local guard, then rerun the strict
-pack against the deployed revision.
+The first v1.1 hardening implementation target is now closed: strict production
+AI red-team execution is clean, source automation deployed the selected
+candidate, release smoke proved revision parity, and annotated tag `v1.1.0`
+marks `d6bf35251577ce71848b33eb109c560cbf74778a`. Credential-dependent
+Telegram and organizer extension gates remain outside the achieved v1.1 marker
+until operator inputs exist.
