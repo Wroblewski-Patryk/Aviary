@@ -1,10 +1,15 @@
-# AGENTS.md - Personality / AION
+# AGENTS.md - Aviary / Personality / AION
 
 ## Purpose
 
 This repository uses a project-specific multi-agent workflow so Codex and
-related agents can evolve AION without drifting away from the current Python
-runtime, contracts, docs, deployment reality, or product-shell UX direction.
+related agents can evolve Aviary / AION without drifting away from the current
+Python runtime, contracts, docs, deployment reality, or product-shell UX
+direction.
+
+The product is called Aviary. The folder is still named `Personality` because
+the repository folder has not been renamed yet. Treat `Aviary` and
+`Personality` as the same project in this workspace.
 
 ## Canonical Context
 
@@ -14,11 +19,14 @@ Read these before starting non-trivial work:
 - `.codex/context/TASK_BOARD.md`
 - `.codex/context/LEARNING_JOURNAL.md`
 - `.agents/core/operating-system.md`
+- `.agents/core/project-memory-index.md`
+- `.agents/core/mission-control.md`
 - `.agents/core/execution-loop.md`
 - `.agents/core/anti-regression.md`
 - `.agents/core/quality-gates.md`
 - `.agents/state/current-focus.md`
 - `.agents/state/known-issues.md`
+- `.agents/state/module-confidence-ledger.md`
 - `.agents/state/regression-log.md`
 - `.agents/state/system-health.md`
 - `.agents/state/next-steps.md`
@@ -64,6 +72,42 @@ Read these before starting non-trivial work:
 - Implementation must stay aligned with approved architecture docs.
 - If implementation does not fit architecture, stop and report the mismatch
   instead of forcing a workaround.
+- After architecture, module, runtime, route, data, UX, or deployment changes,
+  refresh `.agents/core/project-memory-index.md` governed indexes in the same
+  mission. Architecture decisions left only in chat, commits, or scattered
+  planning notes are not source of truth.
+
+### 1A. Project Memory And Module Confidence
+
+- Read `.agents/core/project-memory-index.md` before selecting non-trivial
+  implementation work.
+- Keep `.agents/state/module-confidence-ledger.md` as the truthful map of
+  modules, journeys, working state, evidence, defects, and next proof or fix.
+- Before implementing new features, resolve or explicitly defer P0/P1
+  `BROKEN`, `BLOCKED`, `IMPLEMENTED_NOT_VERIFIED`, and evidence-missing module
+  rows that affect the current release objective.
+- Do not report "almost done", "close", "should work", or similar optimistic
+  states. Use only evidence-backed states: `verified`, `implemented, not
+  verified`, `partially verified`, `blocked`, or `failed`.
+- The user must not be the first tester of a core journey. For browser, mobile,
+  API, auth, data, AI, memory, runtime behavior, or deployment flows, run a
+  real journey proof or record why it could not run and what risk remains.
+- A task or mission that changes a module must update the module confidence
+  ledger before it can be marked `DONE`.
+
+### 1B. Mission-Based Work Blocks
+
+- Follow `.agents/core/mission-control.md` for long-running autonomous work.
+- Mission control supersedes older wording that says every execution nudge must
+  end after exactly one tiny task. A mission may run for hours and include
+  multiple small slices when they serve one coherent objective.
+- Every mission must define current state, target outcome, owned scope,
+  exclusions, validation gates, checkpoint cadence, stop conditions, and
+  handoff expectations.
+- Update project state, task board, system health, next steps, project status
+  dashboard, and module confidence at checkpoints, not only at the end.
+- Keep the mission bounded. Do not merge unrelated objectives just because the
+  agent has available time.
 
 ### 2. Critical Prohibitions
 
@@ -286,10 +330,13 @@ If the user sends a short execution nudge such as `rob`, `dzialaj`, `start`,
      release confidence is unclear, or a handoff/incident needs a module map
 5. If planning docs, board, and `.agents/state/next-steps.md` drift, sync them
    before implementation.
-6. Implement exactly one small slice.
-7. Run relevant validation.
-8. Update task, project state, docs, and `.agents/state/*` in the same cycle.
-9. Return files changed, tests run, deployment impact, and the next tiny task.
+6. Define a mission block or continue the active mission block.
+7. Execute the next coherent checkpoint or set of tightly related slices.
+8. Run relevant validation and real journey proofs.
+9. Update task, project state, docs, project status dashboard when affected,
+   module confidence, and `.agents/state/*` in the same cycle.
+10. Return mission status, files changed, tests run, deployment impact,
+   residual risk, and the next checkpoint.
 
 ## UX/UI Rule
 
