@@ -17,3 +17,7 @@ pytest-cache-files-*/
 .playwright-cli/
 .tmp/
 .codex/artifacts/
+.codex/tmp/
+artifacts/
+mobile/.expo-web-export/
+web/debug.log

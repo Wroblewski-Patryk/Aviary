@@ -6,6 +6,24 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-12: `PRJ-1180` ignored generated local UI deploy artifacts:
+  - task:
+    - `.codex/tasks/PRJ-1180-v15-mobile-local-deploy-hygiene.md`
+  - result:
+    - `.gitignore` now ignores `.codex/tmp/`, `artifacts/`,
+      `mobile/.expo-web-export/`, and `web/debug.log`
+    - active mobile preview export was not deleted because the preview remains
+      intentionally available on `http://127.0.0.1:8093`
+    - native device proof remains blocked because `adb` and `emulator` are not
+      available in this environment
+  - validation:
+    - `git status --short -- .codex/tmp artifacts mobile/.expo-web-export web/debug.log`
+      -> no output after ignore update
+    - `git diff --check` -> PASS with LF/CRLF warnings only
+  - next execution priority:
+    - capture Expo Go/simulator proof when Android tooling or a device is
+      available
+
 - 2026-05-12: `PRJ-1179` added a one-command local deploy path for the v1.5 mobile UI preview:
   - task:
     - `.codex/tasks/PRJ-1179-v15-mobile-local-deploy-command.md`

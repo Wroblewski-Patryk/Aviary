@@ -6,7 +6,7 @@ Last updated: 2026-05-12
 
 1. Continue `v1.5` native/mobile UI from the verified shell seed:
    - plan: `docs/planning/v1.5-mobile-ui-plan.md`
-   - latest task: `.codex/tasks/PRJ-1179-v15-mobile-local-deploy-command.md`
+   - latest task: `.codex/tasks/PRJ-1180-v15-mobile-local-deploy-hygiene.md`
    - evidence:
      `.codex/artifacts/prj1158-mobile-native-shell/mobile-shell-390x1200-v2.png`
      `.codex/artifacts/prj1159-mobile-chat-route/mobile-chat-390x1200-v2.png`,
@@ -29,6 +29,8 @@ Last updated: 2026-05-12
      `http://127.0.0.1:8093`
    - local deploy:
      `Push-Location .\mobile; npm run deploy:ui-mobile-local`
+   - git hygiene:
+     generated preview/cache/log artifacts are ignored by `.gitignore`
 
 2. Preserve the completed `v1.1` web UI responsive quality baseline:
    - plan: `docs/planning/v1.1-web-ui-responsive-plan.md`

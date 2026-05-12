@@ -4,6 +4,24 @@ Last updated: 2026-05-12
 
 ## Project Status Dashboard (2026-05-12)
 
+- `PRJ-1180` is DONE:
+  - `.codex/tasks/PRJ-1180-v15-mobile-local-deploy-hygiene.md`
+- result:
+  - `.gitignore` now ignores generated local deploy/cache/log artifacts:
+    `.codex/tmp/`, `artifacts/`, `mobile/.expo-web-export/`, and
+    `web/debug.log`
+  - active preview export was preserved because the local mobile UI preview is
+    intentionally still running on `http://127.0.0.1:8093`
+  - `adb` and `emulator` remain unavailable, so native device proof is still
+    blocked by environment tooling
+- validation:
+  - `git status --short -- .codex/tmp artifacts mobile/.expo-web-export web/debug.log`
+    -> no output after ignore update
+  - `git diff --check` -> PASS with LF/CRLF warnings only
+- next smallest useful task:
+  - capture Expo Go/simulator proof when Android tooling or a device is
+    available
+
 - `PRJ-1179` is DONE:
   - `.codex/tasks/PRJ-1179-v15-mobile-local-deploy-command.md`
 - result:
