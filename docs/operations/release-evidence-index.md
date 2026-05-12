@@ -14,23 +14,25 @@ deployed.
 | Field | Value |
 | --- | --- |
 | Local branch | `main` |
-| Local selected candidate | `43837bb183c8975845b99b65a03cea5ccf4903a0` |
-| Local relation to `origin/main` | equal after PRJ-1185 v1.5 mobile UI production deploy |
+| Local selected UI candidate | `43837bb183c8975845b99b65a03cea5ccf4903a0` |
+| Latest verified evidence-only commit | `1b801d6813d8b6a0763a0ef996466392762e1b37` |
+| Local relation to `origin/main` | equal after PRJ-1185 evidence refresh |
 | Current release tag | `v1.0.1` |
 | Current release tag object | `b016c4f33051805cfa09664f79bbe57f5b30811b` |
 | Current release tag target commit | `3b46ed3878a8560c3adb147fcadf064818ccc322` |
 | Historical release tag | `v1.0.0` |
 | Historical release tag object | `b5d8379df1898aa5533bd72a7a1631d6044f2125` |
 | Historical release tag target commit | `5e64f494e2aac8d29cea532d95f7039ed6029213` |
-| Production backend revision | `43837bb183c8975845b99b65a03cea5ccf4903a0` |
-| Production web meta revision | `43837bb183c8975845b99b65a03cea5ccf4903a0` |
+| Production backend revision | `1b801d6813d8b6a0763a0ef996466392762e1b37` at final PRJ-1185 smoke; verify with `/health` before treating as current after later docs commits |
+| Production web meta revision | `1b801d6813d8b6a0763a0ef996466392762e1b37` at final PRJ-1185 smoke; verify with `/settings` before treating as current after later docs commits |
 | Production health | `ok`; HTTP `200` after PRJ-1185 Coolify source deploy |
 | Production release readiness | `true` |
 | Production v1 final acceptance | `core_v1_bundle_ready` |
 | Production deploy parity | `deploy_parity_surface_ready` |
 | Selected candidate release verdict | `GO_FOR_SELECTED_SHA`; `v1.0.1` go/no-go `GO` in PRJ-1131 |
 | Current workspace local validation | `passed`; backend pytest, web typecheck/build/route smoke, mobile typecheck/preview smoke/device doctor |
-| Current packaged candidate SHA | `43837bb183c8975845b99b65a03cea5ccf4903a0` |
+| Current packaged UI candidate SHA | `43837bb183c8975845b99b65a03cea5ccf4903a0` |
+| Current packaged evidence SHA | `1b801d6813d8b6a0763a0ef996466392762e1b37` |
 | Post-push deploy parity wait | initially `failed`; recovered by approved Coolify UI redeploy in PRJ-1128 |
 | Local Coolify-shape candidate smoke | `passed`; build, migrate, app health, `/health`, and `/settings` |
 | Incident evidence export | `available`; PRJ-1128 exported a release-smoke bundle |
@@ -136,6 +138,21 @@ Push-Location .\backend; ..\.venv\Scripts\python .\scripts\run_release_go_no_go.
     - `deployment_runtime_build_revision=43837bb183c8975845b99b65a03cea5ccf4903a0`
     - `web_shell_build_revision=43837bb183c8975845b99b65a03cea5ccf4903a0`
     - `deployment_local_repo_head_sha=43837bb183c8975845b99b65a03cea5ccf4903a0`
+  - post-evidence commit:
+    `1b801d6813d8b6a0763a0ef996466392762e1b37`
+  - final post-evidence production smoke:
+    `.\backend\scripts\run_release_smoke.ps1 -BaseUrl "https://aviary.luckysparrow.ch" -HealthRetryMaxAttempts 12 -HealthRetryDelaySeconds 10 -WaitForDeployParity -DeployParityMaxWaitSeconds 600 -DeployParityPollSeconds 20`
+    -> PASS
+  - final post-evidence revision evidence:
+    - `health_status=ok`
+    - `release_ready=true`
+    - `deployment_runtime_build_revision=1b801d6813d8b6a0763a0ef996466392762e1b37`
+    - `web_shell_build_revision=1b801d6813d8b6a0763a0ef996466392762e1b37`
+    - `deployment_local_repo_head_sha=1b801d6813d8b6a0763a0ef996466392762e1b37`
+  - note:
+    future evidence-only commits change the production revision without
+    changing the v1.5 UI product candidate; verify `/health` before treating
+    this snapshot as the latest production SHA
   - residual blocker:
     native Expo Go/simulator proof remains blocked until Android platform tools
     or a supported device is available
