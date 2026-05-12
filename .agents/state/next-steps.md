@@ -15,10 +15,12 @@ Last updated: 2026-05-12
      `https://github.com/Wroblewski-Patryk/Aviary/pull/new/codex/v15-mobile-ui-deploy-commits`
    - promotion handoff:
      `docs/operations/v15-mobile-ui-pr-and-production-promotion-handoff-2026-05-12.md`
-   - local preview remains available at `http://127.0.0.1:8093`
-   - production is green for the merge commit; release smoke passed with
-     runtime and web shell revisions matching
-     `43837bb183c8975845b99b65a03cea5ccf4903a0`
+   - local preview is intentionally stopped after validation cleanup; restart
+     it with `Push-Location .\mobile; npm run deploy:ui-mobile-local` when
+     another preview proof is needed
+   - production is green for the merge commit and final cleanup commit;
+     release smoke passed with runtime and web shell revisions matching
+     `07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b`
    - local conflict posture: `git merge-tree` showed no conflict output
      against `origin/main`
    - next smallest slice: install Android platform tools or connect a
@@ -50,7 +52,8 @@ Last updated: 2026-05-12
    - next smallest slice: capture Expo Go/simulator proof when Android tooling
      or a device is available.
    - local preview:
-     `http://127.0.0.1:8093`
+     stopped after validation cleanup; use `npm run deploy:ui-mobile-local`
+     to restart it on `http://127.0.0.1:8093`
    - local deploy:
      `Push-Location .\mobile; npm run deploy:ui-mobile-local`
    - git hygiene:

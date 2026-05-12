@@ -22,10 +22,14 @@ the same project.
       `43837bb183c8975845b99b65a03cea5ccf4903a0`
     - the first smoke attempt saw transient deploy-window `503`; extended
       retry passed
-    - final closure smoke and browser proof later passed for
-      `ff48b9b331aa2c924fa2a0025c0813883564b24a`; Chrome rendered
+    - final closure smoke and browser proof later passed; Chrome rendered
       `https://aviary.luckysparrow.ch/` with `Poznaj Aviary` and production
       JS/CSS assets
+    - cleanup follow-up commit
+      `07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b` also passed production
+      release smoke with runtime/web shell revisions matching
+    - validation-owned local mobile preview on `8093` was stopped after
+      command-line confirmation
   - validation:
     - backend: `1074 passed`
     - web: `tsc`, `vite build`, `smoke:routes` -> PASS; `route_count=14`
@@ -33,8 +37,8 @@ the same project.
       `doctor:ui-mobile-device` -> PASS; preview smoke `failed_count=0`;
       doctor `status=blocked`, missing `adb`, `emulator`
     - production smoke -> PASS; `health_status=ok`, `release_ready=true`,
-      `deployment_runtime_build_revision=43837bb183c8975845b99b65a03cea5ccf4903a0`,
-      `web_shell_build_revision=43837bb183c8975845b99b65a03cea5ccf4903a0`
+      `deployment_runtime_build_revision=07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b`,
+      `web_shell_build_revision=07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b`
     - closure production browser proof -> PASS; screenshot:
       `.codex/artifacts/prj1185-production-ui-browser-proof/production-home-1440x1200.png`
   - next execution priority:

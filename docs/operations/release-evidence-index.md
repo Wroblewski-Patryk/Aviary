@@ -15,16 +15,16 @@ deployed.
 | --- | --- |
 | Local branch | `main` |
 | Local selected UI candidate | `43837bb183c8975845b99b65a03cea5ccf4903a0` |
-| Latest committed closure-proof revision | `ff48b9b331aa2c924fa2a0025c0813883564b24a` |
-| Local relation to `origin/main` | equal after PRJ-1185 closure-proof refresh |
+| Latest committed closure-proof revision | `07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b` |
+| Local relation to `origin/main` | equal after PRJ-1185 cleanup refresh |
 | Current release tag | `v1.0.1` |
 | Current release tag object | `b016c4f33051805cfa09664f79bbe57f5b30811b` |
 | Current release tag target commit | `3b46ed3878a8560c3adb147fcadf064818ccc322` |
 | Historical release tag | `v1.0.0` |
 | Historical release tag object | `b5d8379df1898aa5533bd72a7a1631d6044f2125` |
 | Historical release tag target commit | `5e64f494e2aac8d29cea532d95f7039ed6029213` |
-| Production backend revision | live value must be read from `/health`; closure proof confirmed `ff48b9b331aa2c924fa2a0025c0813883564b24a` |
-| Production web meta revision | live value must be read from `/settings`; closure proof confirmed `ff48b9b331aa2c924fa2a0025c0813883564b24a` |
+| Production backend revision | live value must be read from `/health`; cleanup proof confirmed `07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b` |
+| Production web meta revision | live value must be read from `/settings`; cleanup proof confirmed `07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b` |
 | Production health | `ok`; HTTP `200` after PRJ-1185 Coolify source deploy and closure proof |
 | Production release readiness | `true` |
 | Production v1 final acceptance | `core_v1_bundle_ready` |
@@ -32,7 +32,7 @@ deployed.
 | Selected candidate release verdict | `GO_FOR_SELECTED_SHA`; `v1.0.1` go/no-go `GO` in PRJ-1131 |
 | Current workspace local validation | `passed`; backend pytest, web typecheck/build/route smoke, mobile typecheck/preview smoke/device doctor |
 | Current packaged UI candidate SHA | `43837bb183c8975845b99b65a03cea5ccf4903a0` |
-| Current packaged closure-proof SHA | `ff48b9b331aa2c924fa2a0025c0813883564b24a` |
+| Current packaged closure-proof SHA | `07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b` |
 | Post-push deploy parity wait | initially `failed`; recovered by approved Coolify UI redeploy in PRJ-1128 |
 | Local Coolify-shape candidate smoke | `passed`; build, migrate, app health, `/health`, and `/settings` |
 | Incident evidence export | `available`; PRJ-1128 exported a release-smoke bundle |
@@ -50,9 +50,12 @@ The current post-marker UI deployment evidence is PRJ-1185. PR #1 merged the
 v1.5 mobile/web UI candidate at
 `43837bb183c8975845b99b65a03cea5ccf4903a0`, production release smoke passed,
 and follow-up browser proof confirmed the public UI render on
-`https://aviary.luckysparrow.ch/`. Later evidence-only commits may update the
-live production revision without changing the v1.5 UI product candidate; always
-read `/health` and `/settings` for the latest deployed SHA.
+`https://aviary.luckysparrow.ch/`. Later evidence-only or cleanup commits may
+update the live production revision without changing the v1.5 UI product
+candidate; always read `/health` and `/settings` for the latest deployed SHA.
+The latest cleanup proof confirmed
+`07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b` in production and stopped the
+validation-owned local mobile preview process on `8093`.
 
 PRJ-1115 is retained as historical evidence for the `v1.0.0` marker. PRJ-1128
 is the current post-v1 candidate recovery point, PRJ-1131 created and pushed

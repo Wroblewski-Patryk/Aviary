@@ -11,9 +11,13 @@ Last updated: 2026-05-12
     - production release smoke passed for merge commit
       `43837bb183c8975845b99b65a03cea5ccf4903a0`
     - production runtime and web shell revisions both match the merge commit
-    - final closure smoke and browser proof later passed for
-      `ff48b9b331aa2c924fa2a0025c0813883564b24a`; production rendered
+    - final closure smoke and browser proof later passed; production rendered
       `Poznaj Aviary` with JS/CSS assets
+    - cleanup follow-up commit
+      `07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b` also passed production
+      release smoke with runtime/web shell revisions matching
+    - validation-owned local mobile preview on `8093` was stopped after
+      command-line confirmation
   - first smoke attempt hit a transient deploy-window `503`; the extended retry
     passed
   - native Expo Go/simulator proof remains blocked by missing `adb` and
@@ -27,8 +31,8 @@ Last updated: 2026-05-12
   - production:
     `.\backend\scripts\run_release_smoke.ps1 -BaseUrl "https://aviary.luckysparrow.ch" -HealthRetryMaxAttempts 12 -HealthRetryDelaySeconds 10 -WaitForDeployParity -DeployParityMaxWaitSeconds 600 -DeployParityPollSeconds 20`
     -> PASS; `health_status=ok`, `release_ready=true`,
-    `deployment_runtime_build_revision=43837bb183c8975845b99b65a03cea5ccf4903a0`,
-    `web_shell_build_revision=43837bb183c8975845b99b65a03cea5ccf4903a0`
+    `deployment_runtime_build_revision=07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b`,
+    `web_shell_build_revision=07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b`
   - production browser proof:
     Chrome headless rendered `https://aviary.luckysparrow.ch/`; DOM included
     `<title>Aviary</title>`, `aion-public-home`, `Poznaj Aviary`, and
