@@ -6,6 +6,7 @@ Last updated: 2026-05-12
 
 | Check | Command or method | Result | Evidence | Notes |
 | --- | --- | --- | --- | --- |
+| v1.5 mobile native proof readiness | `npm run doctor:ui-mobile-device`; `npm run typecheck`; `npm run smoke:ui-mobile-preview` | BLOCKED | PRJ-1182 | Device-proof doctor writes `.codex/artifacts/prj1182-mobile-device-proof-doctor/report.json` and currently reports `status=blocked`, missing `adb` and `emulator`; local preview smoke remains green. |
 | v1.5 mobile local preview handoff | operations handoff plus `npm run smoke:ui-mobile-preview`; `git diff --check` | PASS | PRJ-1181 | `docs/operations/v15-mobile-ui-local-preview-handoff-2026-05-12.md` records run, validation, screenshot, risk, blocker, and resume instructions; smoke stayed green with `preview_health.ok=true`, `screenshot_count=10`, `failed_count=0`. |
 | v1.5 mobile local deploy git hygiene | `git status --short -- .codex/tmp artifacts mobile/.expo-web-export web/debug.log`; `git diff --check` | PASS | PRJ-1180 | Generated local deploy/cache/log artifacts are ignored; active preview export was preserved; `adb` and `emulator` remain unavailable for native device proof. |
 | v1.5 mobile local deploy command | `PORT=8094 npm run deploy:ui-mobile-local`; `npm run smoke:ui-mobile-preview`; `npm run typecheck` | PASS | PRJ-1179 | One-command local deploy was verified on test port `8094`; `/__preview_health` returned `app=aviary-mobile-ui-preview`, `route_count=5`; test process stopped; user preview on `8093` remained available and smoke stayed green. |
@@ -84,4 +85,4 @@ posture. Provider mutation remains action-owned and confirmation-gated.
 ## Quality Gate Notes
 
 Latest task evidence:
-`.codex/tasks/PRJ-1181-v15-mobile-ui-local-preview-handoff.md`.
+`.codex/tasks/PRJ-1182-v15-mobile-device-proof-doctor.md`.

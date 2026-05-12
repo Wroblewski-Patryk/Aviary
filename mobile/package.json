@@ -13,6 +13,7 @@
     "preview:ui-mobile": "node scripts/serve-mobile-preview.mjs",
     "deploy:ui-mobile-local": "npm run export:ui-mobile && node scripts/serve-mobile-preview.mjs",
     "smoke:ui-mobile-preview": "node scripts/mobile-preview-smoke.mjs",
+    "doctor:ui-mobile-device": "node scripts/mobile-device-proof-doctor.mjs",
     "audit:ui-mobile": "expo export --platform web --output-dir .expo-web-export && node scripts/mobile-ui-audit.mjs"
   },
   "dependencies": {

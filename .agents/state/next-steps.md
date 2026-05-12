@@ -6,7 +6,7 @@ Last updated: 2026-05-12
 
 1. Continue `v1.5` native/mobile UI from the verified shell seed:
    - plan: `docs/planning/v1.5-mobile-ui-plan.md`
-   - latest task: `.codex/tasks/PRJ-1181-v15-mobile-ui-local-preview-handoff.md`
+   - latest task: `.codex/tasks/PRJ-1182-v15-mobile-device-proof-doctor.md`
    - handoff: `docs/operations/v15-mobile-ui-local-preview-handoff-2026-05-12.md`
    - evidence:
      `.codex/artifacts/prj1158-mobile-native-shell/mobile-shell-390x1200-v2.png`
@@ -32,6 +32,10 @@ Last updated: 2026-05-12
      `Push-Location .\mobile; npm run deploy:ui-mobile-local`
    - git hygiene:
      generated preview/cache/log artifacts are ignored by `.gitignore`
+   - native proof readiness:
+     `Push-Location .\mobile; npm run doctor:ui-mobile-device; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+     currently reports `status=blocked` because `adb` and `emulator` are
+     unavailable
 
 2. Preserve the completed `v1.1` web UI responsive quality baseline:
    - plan: `docs/planning/v1.1-web-ui-responsive-plan.md`

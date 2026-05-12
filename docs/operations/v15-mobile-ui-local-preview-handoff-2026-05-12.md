@@ -78,6 +78,7 @@ Push-Location .\mobile
 npm run typecheck
 npm run audit:ui-mobile
 npm run smoke:ui-mobile-preview
+npm run doctor:ui-mobile-device
 Pop-Location
 ```
 
@@ -90,6 +91,8 @@ Expected current evidence:
 - `npm run smoke:ui-mobile-preview` -> `preview_health.ok=true`,
   `route_count=5`, `viewport_count=2`, `screenshot_count=10`,
   `failed_count=0`
+- `npm run doctor:ui-mobile-device` -> currently `status=blocked` with
+  missing `adb` and `emulator`
 
 ## Screenshots And Artifacts
 
@@ -97,6 +100,8 @@ Expected current evidence:
   `.codex/artifacts/prj1164-mobile-ui-audit/report.json`
 - Running-preview smoke report:
   `.codex/artifacts/prj1177-mobile-ui-preview-smoke/report.json`
+- Device-proof readiness report:
+  `.codex/artifacts/prj1182-mobile-device-proof-doctor/report.json`
 - Representative preview screenshots:
   `.codex/artifacts/prj1177-mobile-ui-preview-smoke/preview-home-phone-390x1200.png`
   `.codex/artifacts/prj1177-mobile-ui-preview-smoke/preview-chat-tablet-820x1180.png`
@@ -124,6 +129,8 @@ Generated preview/cache/log outputs are ignored by `.gitignore`:
 - Known blockers:
   - `adb` is unavailable in this environment.
   - `emulator` is unavailable in this environment.
+  - run `npm run doctor:ui-mobile-device` to refresh this blocker before
+    attempting native proof.
 - Open decisions:
   - Keep route rail or move to native tabs after device proof.
   - Select native auth transport before live app-facing data wiring.
@@ -140,6 +147,7 @@ Generated preview/cache/log outputs are ignored by `.gitignore`:
   files; no product code unless device proof finds a real defect.
 - Validation to run:
   - Expo Go/simulator route walkthrough
+  - `npm run doctor:ui-mobile-device`
   - `npm run typecheck`
   - `npm run audit:ui-mobile`
   - `npm run smoke:ui-mobile-preview`

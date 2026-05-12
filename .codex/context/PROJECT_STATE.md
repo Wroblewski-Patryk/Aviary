@@ -6,6 +6,29 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-12: `PRJ-1182` added a v1.5 mobile device-proof doctor:
+  - task:
+    - `.codex/tasks/PRJ-1182-v15-mobile-device-proof-doctor.md`
+  - result:
+    - `mobile/package.json` now exposes `doctor:ui-mobile-device`
+    - `mobile/scripts/mobile-device-proof-doctor.mjs` checks native proof
+      tooling and writes
+      `.codex/artifacts/prj1182-mobile-device-proof-doctor/report.json`
+    - current environment reports `status=blocked` with missing `adb` and
+      `emulator`
+    - local preview proof remains green and separate from native proof
+  - validation:
+    - `Push-Location .\mobile; npm run doctor:ui-mobile-device; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+      -> PASS; `status=blocked`, missing `adb`, `emulator`
+    - `Push-Location .\mobile; npm run typecheck; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+      -> PASS
+    - `Push-Location .\mobile; npm run smoke:ui-mobile-preview; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+      -> PASS; `preview_health.ok=true`, `route_count=5`,
+      `viewport_count=2`, `screenshot_count=10`, `failed_count=0`
+  - next execution priority:
+    - install Android platform tools or connect a supported device, then
+      capture Expo Go/simulator proof
+
 - 2026-05-12: `PRJ-1181` added a v1.5 mobile UI local preview handoff:
   - task:
     - `.codex/tasks/PRJ-1181-v15-mobile-ui-local-preview-handoff.md`
