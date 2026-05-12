@@ -1,6 +1,6 @@
 # Codebase Map
 
-Last updated: 2026-05-03
+Last updated: 2026-05-11
 
 This map describes the current repository structure verified from code. It is a
 navigation aid, not a replacement for the canonical architecture.
@@ -12,11 +12,11 @@ navigation aid, not a replacement for the canonical architecture.
 | Backend runtime | `backend/app/` | FastAPI app, AION runtime stages, policies, persistence, integrations, workers |
 | Backend tests | `backend/tests/` | Unit, integration, route, policy, runtime, schema, and script tests |
 | Backend migrations | `backend/migrations/` | Alembic migration environment and versioned schema changes |
-| Backend scripts | `backend/scripts/` | Operator and validation entrypoints |
+| Backend scripts | `backend/scripts/` | Operator, validation, architecture audit, and project-status dashboard entrypoints |
 | Web shell | `web/src/` | React/Vite browser client, route rendering, API client, styling |
 | Mobile | `mobile/` | Expo-managed React Native scaffold using the shared backend-owned app contract boundary |
 | Deployment | `docker-compose.yml`, `docker-compose.coolify.yml`, `docker/` | Local and Coolify/container deployment shape |
-| Docs and context | `docs/`, `.codex/`, `.agents/` | Source of truth, task contracts, workflows, handoffs |
+| Docs and context | `docs/`, `.codex/`, `.agents/` | Source of truth, task contracts, workflows, handoffs, generated architecture completion radar |
 
 ## Backend Modules
 
@@ -114,6 +114,23 @@ route, state, API, and helper ownership below the coarse `web/src/App.tsx`
 level. Component extraction is still a GAP; the map documents current
 ownership without forcing a refactor.
 
+Route-state proof for the current web shell lives in
+`web/scripts/route-smoke.mjs`. As of `PRJ-931`, the smoke command validates all
+14 current public/authenticated routes after a fresh build and checks route
+markers, non-empty body text, absence of framework overlays, and accessible
+names for visible interactive controls.
+
+## Architecture Evidence Artifacts
+
+| Artifact | Owner | Purpose |
+| --- | --- | --- |
+| `backend/scripts/audit_architecture_implementation_map.py` | Planning + QA/Test | Regenerates the architecture implementation CSV/report and row command packs |
+| `backend/scripts/generate_project_status_dashboard.py` | Planning + QA/Test | Converts the architecture audit into the current project status dashboard |
+| `docs/operations/architecture-implementation-map-2026-05-10.csv` | Documentation | Machine-readable architecture implementation matrix |
+| `docs/operations/architecture-implementation-audit-2026-05-10.md` | Documentation | Human-readable architecture implementation audit |
+| `docs/operations/project-status-dashboard.md` | Documentation | Current readiness, blockers, evidence gaps, and next-task selection surface |
+| `docs/operations/project-status-dashboard.json` | Documentation | Tool-readable form of the same project status |
+
 ## Background Jobs And Queues
 
 | Area | Files | Data |
@@ -148,7 +165,8 @@ ownership without forcing a refactor.
 
 Tests live under `backend/tests/` and map mostly by module name:
 
-- API/routes: `test_api_routes.py`, `test_web_routes.py`.
+- API/routes: `test_api_routes.py`, `test_web_routes.py`; web route-state
+  smoke: `web/scripts/route-smoke.mjs`.
 - Runtime pipeline and graph: `test_runtime_pipeline.py`,
   `test_graph_stage_adapters.py`, `test_graph_state_contract.py`.
 - Stage agents: `test_context_agent.py`, `test_planning_agent.py`,

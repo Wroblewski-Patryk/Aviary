@@ -3,12 +3,15 @@ import re
 from app.core.action_delivery import action_delivery_envelope_matches_plan
 from app.core.contracts import (
     ActionDelivery,
+    ActionExecutionObservation,
+    ActionLoopSummaryOutput,
     ActionResult,
     CancelPlannedWorkItemDomainIntent,
     CalendarSchedulingIntentDomainIntent,
     CompletePlannedWorkItemDomainIntent,
     ConnectedDriveAccessDomainIntent,
     ConnectorCapabilityDiscoveryDomainIntent,
+    ConnectorPermissionGateOutput,
     ContextOutput,
     Event,
     ExternalTaskSyncDomainIntent,
@@ -40,6 +43,10 @@ from app.core.connector_policy import (
     connector_guardrail_snapshot,
     connector_intent_policy_violation,
 )
+from app.core.connector_confirmation import (
+    build_connector_confirmation_replay_snapshot,
+    build_pending_connector_confirmation_payload,
+)
 from app.integrations.calendar.google_calendar_client import GoogleCalendarAvailabilityClient
 from app.integrations.cloud_drive.google_drive_client import GoogleDriveMetadataClient
 from app.integrations.delivery_router import DeliveryRouter
@@ -67,6 +74,7 @@ from app.core.tool_grounded_learning import (
 class ActionExecutor:
     GENERIC_TOPIC_TAGS = {"general"}
     PERSISTABLE_LANGUAGE_SOURCES = {"explicit_request", "diacritic_signal", "keyword_signal"}
+    WEBSITE_REVIEW_MAX_STEPS = 2
 
     def __init__(
         self,
@@ -200,6 +208,17 @@ class ActionExecutor:
         drive_connector_guardrail = str(intent_updates["drive_connector_guardrail"])
         connector_expansion_guardrail = str(intent_updates["connector_expansion_guardrail"])
         executed_intents = list(intent_updates["executed_intents"])
+        pending_connector_confirmation = build_pending_connector_confirmation_payload(
+            event=event,
+            plan=plan,
+            action_result=action_result,
+        )
+        connector_confirmation_replay = build_connector_confirmation_replay_snapshot(
+            event=event,
+            plan=plan,
+            action_result=action_result,
+            pending_confirmation=pending_connector_confirmation,
+        )
 
         payload = {
             "payload_version": 1,
@@ -245,6 +264,8 @@ class ActionExecutor:
             "plan_steps": plan.steps,
             "action": action_result.status,
             "action_actions": list(action_result.actions),
+            "pending_connector_confirmation": pending_connector_confirmation,
+            "connector_confirmation_replay": connector_confirmation_replay,
             "assistant_visibility": self._assistant_transcript_visibility(
                 event=event,
                 action_result=action_result,
@@ -350,17 +371,40 @@ class ActionExecutor:
         executed_actions: list[str] = []
         notes: list[str] = []
         learning_candidates: list[ToolGroundedLearningCandidate] = []
+        observations: list[ActionExecutionObservation] = []
+        latest_search_selected_url = ""
+        latest_search_source_reference = ""
 
         for intent in plan.domain_intents:
             if isinstance(intent, ExternalTaskSyncDomainIntent):
-                if (
-                    self.clickup_task_client is None
-                    or not getattr(self.clickup_task_client, "ready", False)
-                    or intent.provider_hint != "clickup"
-                ):
+                if intent.provider_hint != "clickup":
                     continue
+                if self.clickup_task_client is None or not getattr(self.clickup_task_client, "ready", False):
+                    return self._clickup_provider_blocked_result(intent)
 
                 if intent.operation == "create_task":
+                    if not self._connector_intent_confirmed(plan=plan, intent=intent):
+                        executed_actions.append("clickup_mutation_confirmation_required")
+                        task_name = self._connector_task_name(intent.task_hint)
+                        notes.append(
+                            "ClickUp task creation requires explicit confirmation before mutation."
+                        )
+                        observations.append(
+                            self._action_observation(
+                                tool_id="clickup",
+                                operation="task_system.clickup_create_task",
+                                provider_path="clickup:create_task",
+                                source_reference=task_name,
+                                bounded_summary=(
+                                    "ClickUp task creation was not executed because "
+                                    "explicit confirmation is still required."
+                                ),
+                                confidence=0.0,
+                                blocker="confirmation_required",
+                                next_step_relevance="needs_confirmation",
+                            )
+                        )
+                        continue
                     task_name = self._connector_task_name(intent.task_hint)
                     try:
                         result = await self.clickup_task_client.create_task(
@@ -377,6 +421,17 @@ class ActionExecutor:
                     executed_actions.append("clickup_create_task")
                     task_id = str(result.get("id", "unknown"))
                     notes.append(f"ClickUp task created ({task_id}) for '{task_name}'.")
+                    observations.append(
+                        self._action_observation(
+                            tool_id="clickup",
+                            operation="task_system.clickup_create_task",
+                            provider_path="clickup:create_task",
+                            source_reference=task_id,
+                            bounded_summary=f"Created ClickUp task '{task_name}' with id '{task_id}'.",
+                            confidence=0.82,
+                            next_step_relevance="mutation_evidence_for_final_reply",
+                        )
+                    )
                     continue
 
                 if intent.operation == "list_tasks":
@@ -399,16 +454,39 @@ class ActionExecutor:
                         notes.append(
                             "ClickUp task read returned: " + ", ".join(task_names[:3]) + "."
                         )
+                        task_summary = "ClickUp tasks observed: " + ", ".join(task_names[:3])
+                        observations.append(
+                            self._action_observation(
+                                tool_id="clickup",
+                                operation="task_system.clickup_list_tasks",
+                                provider_path="clickup:list_tasks",
+                                source_reference="clickup:list_tasks",
+                                bounded_summary=task_summary,
+                                confidence=0.78,
+                            )
+                        )
                         learning_candidates.append(
                             self._tool_learning_candidate(
                                 source_family="task_system",
                                 source_operation="list_tasks",
-                                content="ClickUp tasks observed: " + ", ".join(task_names[:3]),
+                                content=task_summary,
                                 source_reference="clickup:list_tasks",
                             )
                         )
                     else:
                         notes.append("ClickUp task read returned no visible tasks.")
+                        observations.append(
+                            self._action_observation(
+                                tool_id="clickup",
+                                operation="task_system.clickup_list_tasks",
+                                provider_path="clickup:list_tasks",
+                                source_reference="clickup:list_tasks",
+                                bounded_summary="ClickUp task read returned no visible tasks.",
+                                confidence=0.62,
+                                blocker="empty_result",
+                                next_step_relevance="empty_read_evidence",
+                            )
+                        )
                     continue
 
                 if intent.operation == "update_task":
@@ -422,6 +500,42 @@ class ActionExecutor:
                         )
 
                     matched_task = self._match_clickup_task(intent.task_hint, tasks)
+                    matched_task_name = self._connector_task_name(str(matched_task.get("name", ""))) if matched_task else ""
+                    if not self._connector_intent_confirmed(plan=plan, intent=intent):
+                        executed_actions.append("clickup_list_tasks")
+                        if matched_task_name:
+                            notes.append(
+                                "ClickUp task update requires explicit confirmation before mutation. "
+                                f"Matched candidate: {matched_task_name}."
+                            )
+                            bounded_summary = (
+                                "ClickUp update candidate observed before confirmation: "
+                                f"{matched_task_name}."
+                            )
+                            source_reference = str(matched_task.get("id", "clickup:list_tasks") if matched_task else "clickup:list_tasks")
+                        else:
+                            notes.append(
+                                "ClickUp task update requires explicit confirmation before mutation, "
+                                "and no bounded task match was found."
+                            )
+                            bounded_summary = (
+                                "ClickUp update was not executed because explicit confirmation is required "
+                                "and no bounded task match was found."
+                            )
+                            source_reference = "clickup:list_tasks"
+                        observations.append(
+                            self._action_observation(
+                                tool_id="clickup",
+                                operation="task_system.clickup_list_tasks",
+                                provider_path="clickup:list_tasks",
+                                source_reference=source_reference,
+                                bounded_summary=bounded_summary,
+                                confidence=0.66 if matched_task_name else 0.42,
+                                blocker="confirmation_required",
+                                next_step_relevance="needs_confirmation",
+                            )
+                        )
+                        continue
                     if matched_task is None:
                         return ActionResult(
                             status="fail",
@@ -453,6 +567,20 @@ class ActionExecutor:
                     updated_status = str(updated.get("status", status_hint) or status_hint)
                     notes.append(
                         f"ClickUp task updated ({task_id}) for '{updated_name}' with status '{updated_status}'."
+                    )
+                    observations.append(
+                        self._action_observation(
+                            tool_id="clickup",
+                            operation="task_system.clickup_update_task",
+                            provider_path="clickup:update_task",
+                            source_reference=task_id,
+                            bounded_summary=(
+                                f"Updated ClickUp task '{updated_name}' ({task_id}) "
+                                f"to status '{updated_status}'."
+                            ),
+                            confidence=0.82,
+                            next_step_relevance="mutation_evidence_for_final_reply",
+                        )
                     )
                     continue
 
@@ -492,17 +620,30 @@ class ActionExecutor:
                         + "; ".join(normalized_slots)
                         + "."
                     )
+                    calendar_summary = (
+                        "Calendar availability observed: "
+                        f"{availability.get('window_start')} -> {availability.get('window_end')} "
+                        f"{availability.get('time_zone')} busy={availability.get('busy_window_count', 0)} "
+                        "top_free_slots="
+                        + "; ".join(normalized_slots)
+                    )
+                    observations.append(
+                        self._action_observation(
+                            tool_id="google_calendar",
+                            operation="calendar.google_calendar_read_availability",
+                            provider_path="google_calendar:read_availability",
+                            source_reference=str(
+                                availability.get("window_start") or intent.time_hint or "calendar:read_availability"
+                            ),
+                            bounded_summary=calendar_summary,
+                            confidence=0.76,
+                        )
+                    )
                     learning_candidates.append(
                         self._tool_learning_candidate(
                             source_family="calendar",
                             source_operation="read_availability",
-                            content=(
-                                "Calendar availability observed: "
-                                f"{availability.get('window_start')} -> {availability.get('window_end')} "
-                                f"{availability.get('time_zone')} busy={availability.get('busy_window_count', 0)} "
-                                "top_free_slots="
-                                + "; ".join(normalized_slots)
-                            ),
+                            content=calendar_summary,
                             source_reference=str(availability.get("window_start") or intent.time_hint or "calendar:read_availability"),
                         )
                     )
@@ -512,16 +653,31 @@ class ActionExecutor:
                         f"({availability.get('window_start')} -> {availability.get('window_end')}, "
                         f"{availability.get('time_zone')}) found no bounded free-slot preview."
                     )
+                    calendar_summary = (
+                        "Calendar availability observed: "
+                        f"{availability.get('window_start')} -> {availability.get('window_end')} "
+                        f"{availability.get('time_zone')} busy={availability.get('busy_window_count', 0)} "
+                        "no_top_free_slots"
+                    )
+                    observations.append(
+                        self._action_observation(
+                            tool_id="google_calendar",
+                            operation="calendar.google_calendar_read_availability",
+                            provider_path="google_calendar:read_availability",
+                            source_reference=str(
+                                availability.get("window_start") or intent.time_hint or "calendar:read_availability"
+                            ),
+                            bounded_summary=calendar_summary,
+                            confidence=0.7,
+                            blocker="no_free_slot_preview",
+                            next_step_relevance="availability_blocker_evidence",
+                        )
+                    )
                     learning_candidates.append(
                         self._tool_learning_candidate(
                             source_family="calendar",
                             source_operation="read_availability",
-                            content=(
-                                "Calendar availability observed: "
-                                f"{availability.get('window_start')} -> {availability.get('window_end')} "
-                                f"{availability.get('time_zone')} busy={availability.get('busy_window_count', 0)} "
-                                "no_top_free_slots"
-                            ),
+                            content=calendar_summary,
                             source_reference=str(availability.get("window_start") or intent.time_hint or "calendar:read_availability"),
                         )
                     )
@@ -551,16 +707,39 @@ class ActionExecutor:
                 if files:
                     preview = [self._connector_drive_preview(item) for item in files[:3]]
                     notes.append("Google Drive metadata read returned: " + "; ".join(preview) + ".")
+                    drive_summary = "Google Drive files observed: " + "; ".join(preview)
+                    observations.append(
+                        self._action_observation(
+                            tool_id="google_drive",
+                            operation="cloud_drive.google_drive_list_files",
+                            provider_path="google_drive:list_files",
+                            source_reference=str(intent.file_hint or "google_drive:list_files"),
+                            bounded_summary=drive_summary,
+                            confidence=0.76,
+                        )
+                    )
                     learning_candidates.append(
                         self._tool_learning_candidate(
                             source_family="cloud_drive",
                             source_operation="list_files",
-                            content="Google Drive files observed: " + "; ".join(preview),
+                            content=drive_summary,
                             source_reference=str(intent.file_hint or "google_drive:list_files"),
                         )
                     )
                 else:
                     notes.append("Google Drive metadata read returned no visible files.")
+                    observations.append(
+                        self._action_observation(
+                            tool_id="google_drive",
+                            operation="cloud_drive.google_drive_list_files",
+                            provider_path="google_drive:list_files",
+                            source_reference=str(intent.file_hint or "google_drive:list_files"),
+                            bounded_summary="Google Drive metadata read returned no visible files.",
+                            confidence=0.62,
+                            blocker="empty_result",
+                            next_step_relevance="empty_read_evidence",
+                        )
+                    )
                 continue
 
             if isinstance(intent, KnowledgeSearchDomainIntent):
@@ -585,17 +764,42 @@ class ActionExecutor:
                 executed_actions.append("duckduckgo_search_web")
                 if results:
                     preview = [self._search_result_preview(item) for item in results[:3]]
+                    latest_search_selected_url = str(results[0].get("url", "") or "").strip()
+                    latest_search_source_reference = intent.query_hint
                     notes.append("Web search returned: " + "; ".join(preview) + ".")
+                    search_summary = f"Web search for '{intent.query_hint.strip()}': " + "; ".join(preview)
+                    observations.append(
+                        self._action_observation(
+                            tool_id="web_search",
+                            operation="knowledge_search.search_web",
+                            provider_path="duckduckgo_html:search_web",
+                            source_reference=intent.query_hint,
+                            bounded_summary=search_summary,
+                            confidence=0.72,
+                        )
+                    )
                     learning_candidates.append(
                         self._tool_learning_candidate(
                             source_family="knowledge_search",
                             source_operation="search_web",
-                            content=f"Web search for '{intent.query_hint.strip()}': " + "; ".join(preview),
+                            content=search_summary,
                             source_reference=intent.query_hint,
                         )
                     )
                 else:
                     notes.append("Web search returned no bounded results.")
+                    observations.append(
+                        self._action_observation(
+                            tool_id="web_search",
+                            operation="knowledge_search.search_web",
+                            provider_path="duckduckgo_html:search_web",
+                            source_reference=intent.query_hint,
+                            bounded_summary="Web search returned no bounded results.",
+                            confidence=0.58,
+                            blocker="empty_result",
+                            next_step_relevance="empty_read_evidence",
+                        )
+                    )
                 continue
 
             if isinstance(intent, WebBrowserAccessDomainIntent):
@@ -608,10 +812,35 @@ class ActionExecutor:
                     continue
                 target_url = self._extract_url(intent.page_hint)
                 if not target_url:
+                    if self._plan_selects_skill(plan, "website_review"):
+                        website_review_result = await self._execute_search_first_website_review(
+                            query_hint=intent.page_hint,
+                            selected_url=latest_search_selected_url,
+                            selected_url_source_reference=latest_search_source_reference,
+                        )
+                        if website_review_result.status == "fail":
+                            return website_review_result
+                        executed_actions.extend(website_review_result.actions)
+                        notes.append(website_review_result.notes)
+                        learning_candidates.extend(website_review_result.tool_learning_candidates)
+                        observations.extend(website_review_result.observations)
+                        continue
                     return ActionResult(
                         status="fail",
                         actions=["generic_http_read_page"],
                         notes="Browser page read failed: no bounded URL was provided.",
+                        observations=[
+                            self._action_observation(
+                                tool_id="web_browser",
+                                operation="web_browser.read_page",
+                                provider_path="generic_http:read_page",
+                                source_reference=intent.page_hint,
+                                bounded_summary="Browser page read failed because no bounded URL was provided.",
+                                confidence=0.0,
+                                blocker="missing_bounded_url",
+                                next_step_relevance="clarification_required",
+                            )
+                        ],
                     )
                 try:
                     page = await self.web_browser_client.read_page(url=target_url, excerpt_length=500)
@@ -623,19 +852,30 @@ class ActionExecutor:
                     )
                 executed_actions.append("generic_http_read_page")
                 excerpt = " ".join(str(page.get("excerpt", "") or "").split())[:220]
+                page_summary = (
+                    f"Page read {page.get('title') or 'untitled'} "
+                    f"({str(page.get('url', ''))[:120]}): {excerpt}"
+                ).strip()
                 notes.append(
                     "Browser page read returned: "
                     f"{page.get('title') or 'untitled'} [{page.get('content_type')}] "
                     f"{str(page.get('url', ''))[:120]}. Summary: {excerpt or 'no bounded excerpt available'}."
                 )
+                observations.append(
+                    self._action_observation(
+                        tool_id="web_browser",
+                        operation="web_browser.read_page",
+                        provider_path="generic_http:read_page",
+                        source_reference=str(page.get("url", "") or target_url),
+                        bounded_summary=page_summary,
+                        confidence=0.74,
+                    )
+                )
                 learning_candidates.append(
                     self._tool_learning_candidate(
                         source_family="web_browser",
                         source_operation="read_page",
-                        content=(
-                            f"Page read {page.get('title') or 'untitled'} "
-                            f"({str(page.get('url', ''))[:120]}): {excerpt}"
-                        ).strip(),
+                        content=page_summary,
                         source_reference=str(page.get("url", "") or target_url),
                     )
                 )
@@ -649,6 +889,191 @@ class ActionExecutor:
             actions=executed_actions,
             notes=" ".join(notes),
             tool_learning_candidates=learning_candidates,
+            observations=observations,
+            action_loop=self._action_loop_summary(
+                plan=plan,
+                status="success",
+                actions=executed_actions,
+                observations=observations,
+            ),
+        )
+
+    async def _execute_search_first_website_review(
+        self,
+        *,
+        query_hint: str,
+        selected_url: str = "",
+        selected_url_source_reference: str = "",
+    ) -> ActionResult:
+        if self.web_browser_client is None or not getattr(self.web_browser_client, "ready", False):
+            return ActionResult(
+                status="fail",
+                actions=["generic_http_read_page"],
+                notes="Website review failed: web browser client is not ready.",
+                observations=[
+                    self._action_observation(
+                        tool_id="web_browser",
+                        operation="web_browser.read_page",
+                        provider_path="generic_http:read_page",
+                        source_reference=query_hint,
+                        bounded_summary="Website review could not read a page because the web browser client is not ready.",
+                        confidence=0.0,
+                        blocker="web_browser_client_not_ready",
+                        next_step_relevance="provider_blocker",
+                    )
+                ],
+            )
+
+        executed_actions: list[str] = []
+        notes: list[str] = []
+        learning_candidates: list[ToolGroundedLearningCandidate] = []
+        observations: list[ActionExecutionObservation] = []
+        target_url = self._extract_url(selected_url)
+
+        if not target_url:
+            if self.knowledge_search_client is None or not getattr(self.knowledge_search_client, "ready", False):
+                return ActionResult(
+                    status="fail",
+                    actions=["duckduckgo_search_web"],
+                    notes="Website review failed: no bounded URL was provided and search is not ready.",
+                    observations=[
+                        self._action_observation(
+                            tool_id="web_search",
+                            operation="knowledge_search.search_web",
+                            provider_path="duckduckgo_html:search_web",
+                            source_reference=query_hint,
+                            bounded_summary="Website review could not find a target page because search is not ready.",
+                            confidence=0.0,
+                            blocker="search_client_not_ready",
+                            next_step_relevance="provider_blocker",
+                        )
+                    ],
+                )
+            try:
+                results = await self.knowledge_search_client.search_web(query=query_hint, limit=3)
+            except Exception as exc:
+                return ActionResult(
+                    status="fail",
+                    actions=["duckduckgo_search_web"],
+                    notes=f"Website review search failed: {type(exc).__name__}: {exc}",
+                )
+
+            executed_actions.append("duckduckgo_search_web")
+            if not results:
+                notes.append("Website review search returned no bounded target page.")
+                observations.append(
+                    self._action_observation(
+                        tool_id="web_search",
+                        operation="knowledge_search.search_web",
+                        provider_path="duckduckgo_html:search_web",
+                        source_reference=query_hint,
+                        bounded_summary="Website review search returned no bounded target page.",
+                        confidence=0.52,
+                        blocker="empty_result",
+                        next_step_relevance="clarification_required",
+                    )
+                )
+                return ActionResult(status="success", actions=executed_actions, notes=" ".join(notes), observations=observations)
+
+            preview = [self._search_result_preview(item) for item in results[:3]]
+            selected = results[0]
+            target_url = self._extract_url(str(selected.get("url", "") or ""))
+            notes.append("Website review search selected: " + preview[0] + ".")
+            search_summary = f"Website review search for '{query_hint.strip()}': " + "; ".join(preview)
+            observations.append(
+                self._action_observation(
+                    tool_id="web_search",
+                    operation="knowledge_search.search_web",
+                    provider_path="duckduckgo_html:search_web",
+                    source_reference=query_hint,
+                    bounded_summary=search_summary,
+                    confidence=0.7,
+                    next_step_relevance="selected_first_result_for_page_review",
+                )
+            )
+            learning_candidates.append(
+                self._tool_learning_candidate(
+                    source_family="knowledge_search",
+                    source_operation="search_web",
+                    content=search_summary,
+                    source_reference=query_hint,
+                )
+            )
+        elif selected_url_source_reference:
+            notes.append(f"Website review reused search-selected target: {target_url}.")
+
+        if not target_url:
+            return ActionResult(
+                status="fail",
+                actions=executed_actions or ["generic_http_read_page"],
+                notes="Website review failed: selected search result did not include a bounded URL.",
+                observations=[
+                    *observations,
+                    self._action_observation(
+                        tool_id="web_browser",
+                        operation="web_browser.read_page",
+                        provider_path="generic_http:read_page",
+                        source_reference=query_hint,
+                        bounded_summary="Website review could not read a page because the selected result had no bounded URL.",
+                        confidence=0.0,
+                        blocker="selected_result_missing_url",
+                        next_step_relevance="clarification_required",
+                    ),
+                ],
+            )
+
+        try:
+            page = await self.web_browser_client.read_page(url=target_url, excerpt_length=500)
+        except Exception as exc:
+            return ActionResult(
+                status="fail",
+                actions=[*executed_actions, "generic_http_read_page"],
+                notes=f"Website review page read failed: {type(exc).__name__}: {exc}",
+            )
+
+        executed_actions.append("generic_http_read_page")
+        excerpt = " ".join(str(page.get("excerpt", "") or "").split())[:220]
+        page_summary = (
+            f"Website review page read {page.get('title') or 'untitled'} "
+            f"({str(page.get('url', ''))[:120]}): {excerpt}"
+        ).strip()
+        notes.append(
+            "Website review page read returned: "
+            f"{page.get('title') or 'untitled'} [{page.get('content_type')}] "
+            f"{str(page.get('url', ''))[:120]}. Summary: {excerpt or 'no bounded excerpt available'}."
+        )
+        observations.append(
+            self._action_observation(
+                tool_id="web_browser",
+                operation="web_browser.read_page",
+                provider_path="generic_http:read_page",
+                source_reference=str(page.get("url", "") or target_url),
+                bounded_summary=page_summary,
+                confidence=0.74,
+                next_step_relevance="website_review_satisfied",
+            )
+        )
+        learning_candidates.append(
+            self._tool_learning_candidate(
+                source_family="web_browser",
+                source_operation="read_page",
+                content=page_summary,
+                source_reference=str(page.get("url", "") or target_url),
+            )
+        )
+        notes.append(f"Website review loop completed within {self.WEBSITE_REVIEW_MAX_STEPS} steps.")
+        return ActionResult(
+            status="success",
+            actions=executed_actions,
+            notes=" ".join(notes),
+            tool_learning_candidates=learning_candidates,
+            observations=observations,
+            action_loop=self._action_loop_summary(
+                plan=None,
+                status="success",
+                actions=executed_actions,
+                observations=observations,
+            ),
         )
 
     def _merge_connector_execution_with_delivery(
@@ -669,6 +1094,11 @@ class ActionExecutor:
                 *connector_execution_result.tool_learning_candidates,
                 *delivery_result.tool_learning_candidates,
             ],
+            observations=[
+                *connector_execution_result.observations,
+                *delivery_result.observations,
+            ],
+            action_loop=connector_execution_result.action_loop,
         )
 
     async def _persist_tool_grounded_learning(
@@ -713,6 +1143,130 @@ class ActionExecutor:
             content=" ".join(str(content).split())[:500],
             source_reference=" ".join(str(source_reference).split())[:200],
         )
+
+    def _action_observation(
+        self,
+        *,
+        tool_id: str,
+        operation: str,
+        provider_path: str,
+        bounded_summary: str,
+        source_reference: str = "",
+        confidence: float = 0.0,
+        blocker: str | None = None,
+        next_step_relevance: str = "available_for_expression_and_memory",
+    ) -> ActionExecutionObservation:
+        return ActionExecutionObservation(
+            tool_id=" ".join(str(tool_id).split())[:80],
+            operation=" ".join(str(operation).split())[:120],
+            provider_path=" ".join(str(provider_path).split())[:120],
+            source_reference=" ".join(str(source_reference).split())[:200],
+            bounded_summary=" ".join(str(bounded_summary).split())[:500],
+            confidence=max(0.0, min(1.0, float(confidence))),
+            blocker=(" ".join(str(blocker).split())[:120] if blocker else None),
+            next_step_relevance=" ".join(str(next_step_relevance).split())[:160],
+            raw_payload_included=False,
+        )
+
+    def _action_loop_summary(
+        self,
+        *,
+        plan: PlanOutput | None,
+        status: str,
+        actions: list[str],
+        observations: list[ActionExecutionObservation],
+    ) -> ActionLoopSummaryOutput:
+        blockers: list[str] = []
+        for observation in observations:
+            if observation.blocker and observation.blocker not in blockers:
+                blockers.append(observation.blocker)
+
+        relevance_values = {observation.next_step_relevance for observation in observations}
+        if "confirmation_required" in blockers or "needs_confirmation" in relevance_values:
+            completion_state = "needs_confirmation"
+        elif "clarification_required" in relevance_values:
+            completion_state = "needs_clarification"
+        elif "step_limit" in blockers:
+            completion_state = "step_limit"
+        elif status != "success" or blockers:
+            completion_state = "blocked"
+        else:
+            completion_state = "satisfied"
+
+        selected_skill_ids: list[str] = []
+        if plan is not None:
+            for skill in plan.selected_skills:
+                if skill.skill_id not in selected_skill_ids:
+                    selected_skill_ids.append(skill.skill_id)
+
+        used_tools: list[str] = []
+        for observation in observations:
+            if observation.tool_id not in used_tools:
+                used_tools.append(observation.tool_id)
+        if not used_tools:
+            for action in actions:
+                if action not in used_tools:
+                    used_tools.append(action)
+
+        return ActionLoopSummaryOutput(
+            step_count=len(observations),
+            selected_skill_ids=selected_skill_ids,
+            used_tools=used_tools,
+            completion_state=completion_state,
+            blockers=blockers,
+            raw_payload_included=False,
+        )
+
+    def _clickup_provider_blocked_result(self, intent: ExternalTaskSyncDomainIntent) -> ActionResult:
+        observations = [
+            self._action_observation(
+                tool_id="clickup",
+                operation=f"task_system.clickup_{intent.operation}",
+                provider_path=f"clickup:{intent.operation}",
+                source_reference=intent.task_hint,
+                bounded_summary="ClickUp provider client is not ready for the requested operation.",
+                confidence=0.0,
+                blocker="clickup_client_not_ready",
+                next_step_relevance="provider_blocker",
+            )
+        ]
+        return ActionResult(
+            status="success",
+            actions=["clickup_provider_blocked"],
+            notes="ClickUp execution blocked: provider client is not ready.",
+            observations=observations,
+            action_loop=self._action_loop_summary(
+                plan=None,
+                status="success",
+                actions=["clickup_provider_blocked"],
+                observations=observations,
+            ),
+        )
+
+    def _connector_intent_confirmed(
+        self,
+        *,
+        plan: PlanOutput,
+        intent: ExternalTaskSyncDomainIntent,
+    ) -> bool:
+        gate = self._matching_task_connector_gate(plan=plan, intent=intent)
+        return bool(gate is not None and gate.requires_confirmation and gate.allowed)
+
+    def _matching_task_connector_gate(
+        self,
+        *,
+        plan: PlanOutput,
+        intent: ExternalTaskSyncDomainIntent,
+    ) -> ConnectorPermissionGateOutput | None:
+        for gate in plan.connector_permission_gates:
+            if gate.connector_kind != "task_system":
+                continue
+            if str(gate.provider_hint or "") != str(intent.provider_hint or ""):
+                continue
+            if gate.operation != intent.operation:
+                continue
+            return gate
+        return None
 
     def _connector_task_name(self, task_hint: str) -> str:
         normalized = " ".join(str(task_hint or "").split())
@@ -1151,6 +1705,10 @@ class ActionExecutor:
                 if violation is not None:
                     violations.append(violation)
         return violations
+
+    def _plan_selects_skill(self, plan: PlanOutput, skill_id: str) -> bool:
+        expected = str(skill_id or "").strip().lower()
+        return any(str(skill.skill_id or "").strip().lower() == expected for skill in plan.selected_skills)
 
     def _match_goal_for_task(self, task_name: str, active_goals: list[dict]) -> int | None:
         task_tokens = self._text_tokens(task_name)

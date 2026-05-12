@@ -974,18 +974,18 @@ Rules:
 5. action must validate connector intent posture against that shared policy
    before any delivery or external execution path continues
 6. current MVP execution baseline is intentionally narrow:
-   - `task_system:create_task` with `provider_hint=clickup` is the first live
-     provider-backed action path when both `CLICKUP_API_TOKEN` and
+   - `task_system:list_tasks` with `provider_hint=clickup` is the first live
+     provider-backed task-system read path when both `CLICKUP_API_TOKEN` and
      `CLICKUP_LIST_ID` are configured
-   - the next selected live read-capable expansion path is
-     `task_system:list_tasks` with `provider_hint=clickup`, so the repo can
-     widen provider-backed connector coverage without reopening calendar or
-     cloud-drive read scope first
+   - `task_system:create_task` and `task_system:update_task` with
+     `provider_hint=clickup` are provider-backed mutation paths only after a
+     matching connector permission gate has `requires_confirmation=true` and
+     `allowed=true`
    - `calendar` and `cloud_drive` remain permission-gated planning surfaces;
      only the explicitly approved bounded read paths below may execute through
      provider adapters
-   - other `task_system` operations remain policy-only until pre-action read
-     paths and additional provider adapters are introduced
+   - other `task_system` operations remain policy-only until their own bounded
+     contracts and provider adapters are introduced
 7. `/health.connectors.execution_baseline` must expose whether the selected
    live paths are configured and whether all other connector families remain in
    policy-only posture by design
@@ -1051,7 +1051,10 @@ Rules:
     now frozen as:
     - `knowledge_search:search_web` with `provider_hint=duckduckgo_html`
     - `web_browser:read_page` with `provider_hint=generic_http`
-    - `task_system:update_task` with `provider_hint=clickup`
+    - `task_system:list_tasks` with `provider_hint=clickup`
+    - `task_system:create_task` and `task_system:update_task` with
+      `provider_hint=clickup`, but only behind explicit allowed confirmation
+      gates
 18. safe output boundaries for those slices must stay action-owned:
     - search returns bounded result evidence only:
       - title
@@ -1065,10 +1068,25 @@ Rules:
       - content type
       - bounded text excerpt
       - truncation note
-    - ClickUp update returns bounded mutation evidence only:
+    - ClickUp task reads return bounded task evidence only:
+      - task id
+      - task name preview
+      - bounded status or list-position summary when available
+    - ClickUp create/update returns bounded mutation evidence only after
+      confirmation:
       - task id
       - task name preview
       - updated status or field summary
+    - unconfirmed ClickUp create/update returns a bounded
+      `confirmation_required` observation and must not mutate provider state
+    - future app-facing confirmation must bind approval to one source event or
+      trace, connector kind, provider, operation, mode, bounded candidate
+      summary, and source reference before action receives a matching allowed
+      connector permission gate
+    - generic follow-up chat text, tool preference toggles, provider
+      readiness, and skill metadata must not authorize mutation
+    - confirmation must fail closed on user/session mismatch, stale evidence,
+      provider mismatch, operation mismatch, or candidate drift
 19. the first live website-reading workflow is now frozen as one bounded
     user-facing behavior baseline:
     - direct page review when the turn already contains a URL
@@ -1115,7 +1133,8 @@ Rules:
 24. behavior validation for this lane should prove the live bounded slices as:
     - `T14.1` analyst-driven web search via `duckduckgo_html`
     - `T14.2` analyst-driven page read via `generic_http`
-    - `T14.3` executor-aligned ClickUp task update through the action layer
+    - `T14.3` executor-aligned ClickUp update triage through the action layer,
+      with mutation blocked until explicit confirmation
 25. user authorization remains the owner of tool activation:
     - a tool family or provider path may be available only when the user has
       enabled it through the approved authorization surface
@@ -1302,6 +1321,13 @@ Rules:
 12. runtime debug and health surfaces should expose the loop policy owner,
     step count, selected skills, used tools, completion state, and blockers
     without leaking secrets or raw provider payloads.
+
+`ActionResult.action_loop` is the action-owned bounded summary for these
+fields. It may include the loop summary policy owner, execution owner, step
+count, selected skill ids, used tool ids, completion state, blockers, and an
+explicit `raw_payload_included=false` signal. It must summarize existing
+action observations and connector policy outcomes; it must not introduce a new
+provider behavior path or carry raw provider payloads.
 
 Initial approved skill-tool bindings:
 

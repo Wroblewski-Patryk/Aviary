@@ -274,7 +274,7 @@ async function waitForDevtools(port) {
   const endpoint = `http://127.0.0.1:${port}/json/list`;
   for (let attempt = 0; attempt < 80; attempt += 1) {
     try {
-      const response = await fetch(endpoint);
+      const response = await fetch(endpoint, { signal: AbortSignal.timeout(1000) });
       if (response.ok) {
         const targets = await response.json();
         const page = targets.find((target) => target.type === "page");
@@ -296,16 +296,23 @@ function connectCdp(webSocketUrl) {
   const pending = new Map();
   const events = [];
 
-  socket.addEventListener("message", (event) => {
-    const message = JSON.parse(event.data);
+  socket.addEventListener("message", async (event) => {
+    const rawData =
+      typeof event.data === "string"
+        ? event.data
+        : event.data instanceof Blob
+          ? await event.data.text()
+          : Buffer.from(event.data).toString("utf8");
+    const message = JSON.parse(rawData);
     if (message.method) {
       events.push(message);
     }
     if (!message.id || !pending.has(message.id)) {
       return;
     }
-    const { resolveMessage, rejectMessage } = pending.get(message.id);
+    const { resolveMessage, rejectMessage, timeout } = pending.get(message.id);
     pending.delete(message.id);
+    clearTimeout(timeout);
     if (message.error) {
       rejectMessage(new Error(message.error.message));
       return;
@@ -321,7 +328,11 @@ function connectCdp(webSocketUrl) {
           nextId += 1;
           socket.send(JSON.stringify({ id, method, params }));
           return new Promise((resolveMessage, rejectMessage) => {
-            pending.set(id, { resolveMessage, rejectMessage });
+            const timeout = setTimeout(() => {
+              pending.delete(id);
+              rejectMessage(new Error(`Timed out waiting for CDP response to ${method}.`));
+            }, 10000);
+            pending.set(id, { resolveMessage, rejectMessage, timeout });
           });
         },
         close() {
@@ -561,11 +572,18 @@ try {
   const baseUrl = `http://${address.address}:${address.port}`;
   chrome = spawn(
     chromePath(),
-    [
-      "--headless=new",
-      "--disable-gpu",
-      "--disable-extensions",
-      "--disable-background-networking",
+      [
+        "--headless=new",
+        "--disable-gpu",
+        "--disable-gpu-sandbox",
+        "--disable-software-rasterizer",
+        "--disable-gpu-compositing",
+        "--disable-accelerated-2d-canvas",
+        "--disable-accelerated-video-decode",
+        "--disable-webgl",
+        "--disable-features=VizDisplayCompositor",
+        "--disable-extensions",
+        "--disable-background-networking",
       "--no-first-run",
       "--no-default-browser-check",
       `--remote-debugging-port=${devtoolsPort}`,

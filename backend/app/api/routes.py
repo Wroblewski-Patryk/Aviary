@@ -11,6 +11,8 @@ from app.api.schemas import (
     AppAuthUserResponse,
     AppChatHistoryEntry,
     AppChatHistoryResponse,
+    AppConnectorConfirmationRequest,
+    AppConnectorConfirmationResponse,
     AppChatMessageRequest,
     AppChatMessageResponse,
     AppLoginRequest,
@@ -31,6 +33,7 @@ from app.api.schemas import (
     SetWebhookRequest,
 )
 from app.api.health_response import HealthResponseSections, build_health_response
+from app.core.action_delivery import build_action_delivery_execution_envelope
 from app.core.attention import (
     AttentionTurnCoordinator,
     attention_coordination_readiness_snapshot,
@@ -46,6 +49,11 @@ from app.core.debug_compat import (
     debug_query_compat_sunset_snapshot,
 )
 from app.core.events import looks_like_telegram_update, normalize_event
+from app.core.contracts import (
+    ActionDelivery,
+    ConnectorPermissionGateOutput,
+    PlanOutput,
+)
 from app.core.background_adaptive_outputs import summarize_loaded_adaptive_state
 from app.core.identity_policy import identity_policy_snapshot
 from app.core.learned_state_policy import learned_state_policy_snapshot
@@ -64,6 +72,7 @@ from app.core.connector_policy import (
     connector_authorization_matrix_snapshot,
     connector_capability_proposal_snapshot,
 )
+from app.core.connector_confirmation import build_pending_connector_confirmation_payload
 from app.core.connector_execution import (
     connector_execution_baseline_snapshot,
     organizer_tool_stack_snapshot,
@@ -128,6 +137,7 @@ AUTH_SESSION_TTL_HOURS_DEFAULT = 24 * 30
 AUTH_PBKDF2_ITERATIONS = 200_000
 TELEGRAM_LINK_CODE_TTL_SECONDS = 900
 RESET_DATA_CONFIRMATION_TEXT = "RESET MY DATA"
+CONNECTOR_CONFIRMATION_FRESHNESS_SECONDS = 15 * 60
 
 
 def _runtime_from_request(request: Request) -> RuntimeOrchestrator:
@@ -289,6 +299,124 @@ def _app_settings_payload(*, profile: dict | None, preferences: dict | None) -> 
         "utc_offset": profile.get("utc_offset", DEFAULT_UTC_OFFSET),
         "proactive_opt_in": preferences.get("proactive_opt_in"),
     }
+
+
+def _normalized_confirmation_value(value: object, *, max_length: int | None = None) -> str:
+    normalized = " ".join(str(value or "").split())
+    if max_length is not None:
+        normalized = normalized[:max_length]
+    return normalized
+
+
+def _confirmation_payload_matches_submission(
+    *,
+    pending_confirmation: dict[str, Any],
+    submitted: AppConnectorConfirmationRequest,
+) -> bool:
+    expected = {
+        "source_event_id": _normalized_confirmation_value(pending_confirmation.get("source_event_id"), max_length=128),
+        "trace_id": _normalized_confirmation_value(pending_confirmation.get("trace_id"), max_length=128),
+        "connector_kind": _normalized_confirmation_value(pending_confirmation.get("connector_kind"), max_length=64),
+        "provider_hint": _normalized_confirmation_value(pending_confirmation.get("provider_hint"), max_length=64),
+        "operation": _normalized_confirmation_value(pending_confirmation.get("operation"), max_length=64),
+        "mode": _normalized_confirmation_value(pending_confirmation.get("mode"), max_length=64),
+        "candidate_summary": _normalized_confirmation_value(pending_confirmation.get("candidate_summary"), max_length=500),
+        "source_reference": _normalized_confirmation_value(pending_confirmation.get("source_reference"), max_length=200),
+    }
+    actual = {
+        "source_event_id": _normalized_confirmation_value(submitted.source_event_id, max_length=128),
+        "trace_id": _normalized_confirmation_value(submitted.trace_id, max_length=128),
+        "connector_kind": _normalized_confirmation_value(submitted.connector_kind, max_length=64),
+        "provider_hint": _normalized_confirmation_value(submitted.provider_hint, max_length=64),
+        "operation": _normalized_confirmation_value(submitted.operation, max_length=64),
+        "mode": _normalized_confirmation_value(submitted.mode, max_length=64),
+        "candidate_summary": _normalized_confirmation_value(submitted.candidate_summary, max_length=500),
+        "source_reference": _normalized_confirmation_value(submitted.source_reference, max_length=200),
+    }
+    return expected == actual
+
+
+def _confirmation_rejection(
+    *,
+    reason: str,
+    pending_confirmation: dict[str, Any] | None = None,
+    status_code: int = 409,
+) -> None:
+    raise HTTPException(
+        status_code=status_code,
+        detail=AppConnectorConfirmationResponse(
+            status="rejected",
+            reason=reason,
+            execution_allowed=False,
+            pending_confirmation=pending_confirmation,
+        ).model_dump(mode="json", exclude_none=True),
+    )
+
+
+def _replay_snapshot_matches_pending(
+    *,
+    replay_snapshot: dict[str, Any],
+    pending_confirmation: dict[str, Any],
+) -> bool:
+    if _normalized_confirmation_value(replay_snapshot.get("source_event_id"), max_length=128) != _normalized_confirmation_value(
+        pending_confirmation.get("source_event_id"), max_length=128
+    ):
+        return False
+    if _normalized_confirmation_value(replay_snapshot.get("trace_id"), max_length=128) != _normalized_confirmation_value(
+        pending_confirmation.get("trace_id"), max_length=128
+    ):
+        return False
+    gate = replay_snapshot.get("connector_permission_gate")
+    if not isinstance(gate, dict):
+        return False
+    observation = replay_snapshot.get("observation")
+    if not isinstance(observation, dict):
+        return False
+    return {
+        "connector_kind": _normalized_confirmation_value(gate.get("connector_kind"), max_length=64),
+        "provider_hint": _normalized_confirmation_value(gate.get("provider_hint"), max_length=64),
+        "operation": _normalized_confirmation_value(gate.get("operation"), max_length=64),
+        "mode": _normalized_confirmation_value(gate.get("mode"), max_length=64),
+        "source_reference": _normalized_confirmation_value(observation.get("source_reference"), max_length=200),
+        "candidate_summary": _normalized_confirmation_value(observation.get("bounded_summary"), max_length=500),
+    } == {
+        "connector_kind": _normalized_confirmation_value(pending_confirmation.get("connector_kind"), max_length=64),
+        "provider_hint": _normalized_confirmation_value(pending_confirmation.get("provider_hint"), max_length=64),
+        "operation": _normalized_confirmation_value(pending_confirmation.get("operation"), max_length=64),
+        "mode": _normalized_confirmation_value(pending_confirmation.get("mode"), max_length=64),
+        "source_reference": _normalized_confirmation_value(pending_confirmation.get("source_reference"), max_length=200),
+        "candidate_summary": _normalized_confirmation_value(pending_confirmation.get("candidate_summary"), max_length=500),
+    }
+
+
+def _build_confirmed_connector_replay_plan(
+    *,
+    replay_snapshot: dict[str, Any],
+) -> PlanOutput:
+    intent_payload = replay_snapshot.get("intent")
+    gate_payload = replay_snapshot.get("connector_permission_gate")
+    if not isinstance(intent_payload, dict) or not isinstance(gate_payload, dict):
+        raise ValueError("confirmation_replay_snapshot_incomplete")
+
+    stored_gate = ConnectorPermissionGateOutput.model_validate(gate_payload)
+    if not stored_gate.requires_confirmation or stored_gate.allowed:
+        raise ValueError("confirmation_replay_gate_not_pending")
+    allowed_gate = stored_gate.model_copy(
+        update={
+            "allowed": True,
+            "reason": "explicit_user_confirmation_received",
+        }
+    )
+    return PlanOutput.model_validate(
+        {
+            "goal": "Execute confirmed connector action.",
+            "steps": ["execute_confirmed_connector_replay"],
+            "needs_action": True,
+            "needs_response": False,
+            "domain_intents": [intent_payload],
+            "connector_permission_gates": [allowed_gate.model_dump(mode="json")],
+        }
+    )
 
 
 def _event_with_user_utc_offset(event, profile: dict | None):
@@ -935,6 +1063,7 @@ async def _handle_event_request(
     payload: dict[str, Any],
     request: Request,
     include_debug: bool,
+    include_pending_confirmation: bool = False,
 ) -> dict[str, Any]:
     settings = _settings_from_request(request)
     looks_like_telegram = looks_like_telegram_update(payload)
@@ -1050,6 +1179,15 @@ async def _handle_event_request(
             motivation_mode=result.motivation.mode,
             action_status=result.action_result.status,
             reflection_triggered=result.reflection_triggered,
+        ),
+        pending_confirmation=(
+            build_pending_connector_confirmation_payload(
+                event=result.event,
+                plan=result.plan,
+                action_result=result.action_result,
+            )
+            if include_pending_confirmation
+            else None
         ),
         debug=result if include_debug else None,
         system_debug=result.system_debug if include_debug else None,
@@ -1578,13 +1716,125 @@ async def app_chat_message(
         },
         request=request,
         include_debug=False,
+        include_pending_confirmation=True,
     )
     return {
         "event_id": event_response["event_id"],
         "trace_id": event_response["trace_id"],
         "reply": event_response["reply"],
         "runtime": event_response.get("runtime"),
+        "pending_confirmation": event_response.get("pending_confirmation"),
     }
+
+
+@router.post(
+    "/app/connectors/confirm",
+    response_model=AppConnectorConfirmationResponse,
+    response_model_exclude_none=True,
+)
+async def app_confirm_connector_action(
+    body: AppConnectorConfirmationRequest,
+    request: Request,
+) -> dict[str, Any]:
+    user, _ = await _require_app_auth(request)
+    user_id = str(user["id"])
+    memory_repository = _memory_repository_from_request(request)
+    loader = getattr(memory_repository, "get_episode_by_event_id_for_user", None)
+    if not callable(loader):
+        _confirmation_rejection(reason="confirmation_evidence_store_unavailable")
+
+    memory_item = await loader(
+        user_id=user_id,
+        event_id=_normalized_confirmation_value(body.source_event_id, max_length=128),
+    )
+    if not isinstance(memory_item, dict):
+        _confirmation_rejection(reason="confirmation_evidence_not_found", status_code=404)
+
+    payload = memory_item.get("payload") if isinstance(memory_item.get("payload"), dict) else {}
+    pending_confirmation = payload.get("pending_connector_confirmation")
+    if not isinstance(pending_confirmation, dict):
+        _confirmation_rejection(reason="pending_confirmation_not_found")
+    if str(pending_confirmation.get("status", "")).strip() != "pending_confirmation":
+        _confirmation_rejection(
+            reason="pending_confirmation_not_active",
+            pending_confirmation=pending_confirmation,
+        )
+    if not _confirmation_payload_matches_submission(
+        pending_confirmation=pending_confirmation,
+        submitted=body,
+    ):
+        _confirmation_rejection(
+            reason="confirmation_evidence_mismatch",
+            pending_confirmation=pending_confirmation,
+        )
+
+    event_timestamp = memory_item.get("event_timestamp") or memory_item.get("timestamp")
+    if isinstance(event_timestamp, datetime):
+        timestamp = event_timestamp
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.replace(tzinfo=timezone.utc)
+        age_seconds = (datetime.now(timezone.utc) - timestamp.astimezone(timezone.utc)).total_seconds()
+        if age_seconds > CONNECTOR_CONFIRMATION_FRESHNESS_SECONDS:
+            _confirmation_rejection(
+                reason="confirmation_evidence_stale",
+                pending_confirmation=pending_confirmation,
+            )
+    else:
+        _confirmation_rejection(
+            reason="confirmation_evidence_timestamp_missing",
+            pending_confirmation=pending_confirmation,
+        )
+
+    replay_snapshot = payload.get("connector_confirmation_replay")
+    if not isinstance(replay_snapshot, dict):
+        _confirmation_rejection(
+            reason="confirmation_replay_unavailable",
+            pending_confirmation=pending_confirmation,
+        )
+    if not _replay_snapshot_matches_pending(
+        replay_snapshot=replay_snapshot,
+        pending_confirmation=pending_confirmation,
+    ):
+        _confirmation_rejection(
+            reason="confirmation_replay_evidence_mismatch",
+            pending_confirmation=pending_confirmation,
+        )
+
+    try:
+        replay_plan = _build_confirmed_connector_replay_plan(
+            replay_snapshot=replay_snapshot,
+        )
+    except ValueError as exc:
+        _confirmation_rejection(
+            reason=str(exc),
+            pending_confirmation=pending_confirmation,
+        )
+
+    runtime = _runtime_from_request(request)
+    action_executor = getattr(runtime, "action_executor", None)
+    if action_executor is None or not callable(getattr(action_executor, "execute", None)):
+        _confirmation_rejection(
+            reason="confirmation_action_executor_unavailable",
+            pending_confirmation=pending_confirmation,
+        )
+    delivery = ActionDelivery(
+        message="",
+        tone="neutral",
+        channel="api",
+        language="en",
+        execution_envelope=build_action_delivery_execution_envelope(replay_plan),
+    )
+    action_result = await action_executor.execute(replay_plan, delivery)
+    status = "executed" if action_result.status in {"success", "partial"} else "blocked"
+    return AppConnectorConfirmationResponse(
+        status=status,
+        reason="confirmation_replay_executed" if status == "executed" else "confirmation_replay_blocked",
+        execution_allowed=True,
+        action_status=action_result.status,
+        actions=list(action_result.actions),
+        notes=action_result.notes,
+        pending_confirmation=pending_confirmation,
+    ).model_dump(mode="json", exclude_none=True)
 
 
 @router.get("/app/personality/overview", response_model=AppPersonalityOverviewResponse)

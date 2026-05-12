@@ -1,12 +1,18 @@
 import { createServer } from "node:http";
 import { spawn } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
-import { extname, join, normalize, resolve } from "node:path";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, extname, join, normalize, resolve } from "node:path";
+import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
+const REPO_ROOT = resolve(ROOT, "..");
 const DIST = join(ROOT, "dist");
 const INDEX = join(DIST, "index.html");
+const require = createRequire(import.meta.url);
+
+const args = process.argv.slice(2);
 
 const ROUTES = [
   { path: "/", marker: "aion-public-home", authenticated: false },
@@ -34,6 +40,53 @@ const MIME_TYPES = {
   ".svg": "image/svg+xml",
   ".webp": "image/webp",
 };
+
+const RESPONSIVE_VIEWPORTS = {
+  desktop: { width: 1440, height: 960 },
+  tablet: { width: 1024, height: 900 },
+  mobile: { width: 390, height: 844 },
+};
+
+function optionValue(name) {
+  const index = args.indexOf(name);
+  if (index === -1) {
+    return "";
+  }
+  return args[index + 1] ?? "";
+}
+
+function listOption(name) {
+  const raw = optionValue(name);
+  if (!raw) {
+    return [];
+  }
+  return raw
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function routeSlug(routePath) {
+  if (routePath === "/") {
+    return "home";
+  }
+  return routePath.replace(/^\//, "").replace(/[^a-z0-9-]+/gi, "-");
+}
+
+function resolveArtifactPath(value) {
+  if (!value) {
+    return "";
+  }
+  return resolve(REPO_ROOT, value);
+}
+
+const screenshotDir = resolveArtifactPath(optionValue("--screenshots"));
+const reportPath = resolveArtifactPath(optionValue("--report"));
+const requestedScreenshotRoutes = new Set(listOption("--screenshot-routes"));
+const requestedViewportNames = listOption("--viewports");
+const screenshotViewportNames =
+  requestedViewportNames.length > 0 ? requestedViewportNames : Object.keys(RESPONSIVE_VIEWPORTS);
+const failOnUiFindings = args.includes("--fail-on-ui-findings");
 
 function jsonResponse(response, status, payload) {
   const body = JSON.stringify(payload);
@@ -188,6 +241,7 @@ function mockApi(request, response) {
               link_required: false,
               link_state: "not_required",
               capabilities: ["chat"],
+              skill_tool_bindings: [],
               next_actions: [],
               source_of_truth: ["app_tools_overview_contract"],
             },
@@ -214,6 +268,16 @@ function mockApi(request, response) {
               link_required: false,
               link_state: "not_required",
               capabilities: ["create_task", "list_tasks"],
+              skill_tool_bindings: [
+                {
+                  skill_id: "clickup_task_management",
+                  label: "ClickUp task management",
+                  posture: "confirmation_required_for_mutation",
+                  allowed_operations: ["list_tasks", "create_task", "update_task"],
+                  execution_owner: "action",
+                  authority: "metadata_only",
+                },
+              ],
               next_actions: ["configure_provider_credentials"],
               source_of_truth: ["connector_execution_baseline"],
             },
@@ -282,8 +346,19 @@ function startServer() {
 
 function chromePath() {
   const configured = process.env.CHROME_PATH;
+  const localAppData = process.env.LOCALAPPDATA;
+  const playwrightRoot = localAppData ? join(localAppData, "ms-playwright") : "";
+  const playwrightShells = existsSync(playwrightRoot)
+    ? readdirSync(playwrightRoot, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory() && entry.name.startsWith("chromium_headless_shell-"))
+        .map((entry) => join(playwrightRoot, entry.name, "chrome-win", "headless_shell.exe"))
+        .filter((candidate) => existsSync(candidate))
+        .sort()
+        .reverse()
+    : [];
   const candidates = [
     configured,
+    ...playwrightShells,
     "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
     "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe",
@@ -304,18 +379,75 @@ function chromePath() {
   throw new Error("Chrome/Edge executable was not found. Set CHROME_PATH to run the route smoke.");
 }
 
-function dumpDom(executable, url) {
+function loadPlaywright() {
+  const candidateRoots = [
+    join(ROOT, "node_modules"),
+    process.env.USERPROFILE
+      ? join(
+          process.env.USERPROFILE,
+          ".cache",
+          "codex-runtimes",
+          "codex-primary-runtime",
+          "dependencies",
+          "node",
+          "node_modules",
+        )
+      : "",
+  ].filter(Boolean);
+  for (const candidateRoot of candidateRoots) {
+    try {
+      const resolved = require.resolve("playwright", { paths: [candidateRoot] });
+      return require(resolved);
+    } catch {
+      // Try the next local runtime.
+    }
+  }
+  return null;
+}
+
+function dumpDom(executable, url, marker) {
   return new Promise((resolveDump, rejectDump) => {
+    const profileDir = mkdtempSync(join(tmpdir(), "aion-route-smoke-"));
+    let settled = false;
+    function cleanup() {
+      try {
+        rmSync(profileDir, { recursive: true, force: true });
+      } catch (error) {
+        console.warn(`Warning: Chrome profile cleanup is still locked: ${error.message}`);
+      }
+    }
+    function finish(callback, value) {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      clearTimeout(timeout);
+      cleanup();
+      callback(value);
+    }
     const child = spawn(
       executable,
       [
         "--headless=new",
         "--disable-gpu",
+        "--disable-gpu-sandbox",
+        "--disable-software-rasterizer",
+        "--disable-gpu-compositing",
+        "--disable-accelerated-2d-canvas",
+        "--disable-accelerated-video-decode",
+        "--disable-webgl",
+        "--disable-features=VizDisplayCompositor",
         "--disable-extensions",
         "--disable-background-networking",
+        "--disable-breakpad",
+        "--disable-crash-reporter",
+        "--disable-component-update",
+        "--disable-metrics",
+        "--disable-metrics-reporting",
+        "--noerrdialogs",
         "--no-first-run",
         "--no-default-browser-check",
-        "--virtual-time-budget=5000",
+        `--user-data-dir=${profileDir}`,
         "--dump-dom",
         url,
       ],
@@ -323,19 +455,29 @@ function dumpDom(executable, url) {
     );
     let stdout = "";
     let stderr = "";
+    const timeout = setTimeout(() => {
+      child.kill("SIGKILL");
+      if (stdout.includes(marker)) {
+        finish(resolveDump, stdout);
+        return;
+      }
+      finish(rejectDump, new Error(`Chrome timed out while dumping DOM for ${url}.`));
+    }, 45000);
     child.stdout.on("data", (chunk) => {
       stdout += chunk.toString();
     });
     child.stderr.on("data", (chunk) => {
       stderr += chunk.toString();
     });
-    child.on("error", rejectDump);
+    child.on("error", (error) => {
+      finish(rejectDump, error);
+    });
     child.on("close", (code) => {
       if (code !== 0) {
-        rejectDump(new Error(`Chrome exited with ${code}: ${stderr}`));
+        finish(rejectDump, new Error(`Chrome exited with ${code}: ${stderr}`));
         return;
       }
-      resolveDump(stdout);
+      finish(resolveDump, stdout);
     });
   });
 }
@@ -345,33 +487,193 @@ if (!existsSync(INDEX)) {
   process.exit(1);
 }
 
+async function collectRenderedState(page, marker) {
+  return page.evaluate((expectedMarker) => {
+    const bodyText = document.body?.innerText?.replace(/\s+/g, " ").trim() ?? "";
+    const viewportWidth = document.documentElement.clientWidth;
+    const frameworkOverlay = Boolean(
+      document.querySelector("[data-vite-error-overlay], nextjs-portal, vite-error-overlay"),
+    );
+    const isVisible = (element) => {
+      const style = window.getComputedStyle(element);
+      return (
+        style.display !== "none" &&
+        style.visibility !== "hidden" &&
+        Number(style.opacity) !== 0 &&
+        element.getClientRects().length > 0
+      );
+    };
+    const unnamedInteractive = Array.from(
+      document.querySelectorAll("button, a[href], input, select, textarea, [role='button'], [role='link']"),
+    ).filter((element) => {
+      if (!isVisible(element)) {
+        return false;
+      }
+      const ariaLabel = element.getAttribute("aria-label")?.trim();
+      const ariaLabelledBy = element.getAttribute("aria-labelledby")?.trim();
+      const htmlLabels =
+        "labels" in element && element.labels instanceof NodeList
+          ? element.labels.length
+          : 0;
+      const title = element.getAttribute("title")?.trim();
+      const text = element.textContent?.replace(/\s+/g, " ").trim();
+      return !ariaLabel && !ariaLabelledBy && htmlLabels === 0 && !title && !text;
+    });
+    const overflowingElements = Array.from(document.body?.querySelectorAll("*") ?? [])
+      .filter((element) => {
+        if (!isVisible(element)) {
+          return false;
+        }
+        const rect = element.getBoundingClientRect();
+        return rect.right > viewportWidth + 1 || rect.left < -1;
+      })
+      .slice(0, 8)
+      .map((element) => {
+        const className = typeof element.className === "string" ? element.className : "";
+        const rect = element.getBoundingClientRect();
+        return {
+          tag: element.tagName.toLowerCase(),
+          className: className.split(/\s+/).slice(0, 4).join(" "),
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          width: Math.round(rect.width),
+        };
+      });
+    return {
+      markerFound: document.documentElement.outerHTML.includes(expectedMarker),
+      bodyTextLength: bodyText.length,
+      frameworkOverlay,
+      horizontalOverflow:
+        document.documentElement.scrollWidth > document.documentElement.clientWidth + 1 ||
+        document.body.scrollWidth > document.documentElement.clientWidth + 1,
+      viewportWidth,
+      documentWidth: document.documentElement.scrollWidth,
+      bodyWidth: document.body.scrollWidth,
+      unnamedInteractiveCount: unnamedInteractive.length,
+      unnamedInteractivePreview: unnamedInteractive.slice(0, 5).map((element) => {
+        const className = typeof element.className === "string" ? element.className : "";
+        return `${element.tagName.toLowerCase()}${className ? `.${className.split(/\s+/).slice(0, 3).join(".")}` : ""}`;
+      }),
+      overflowingElementCount: overflowingElements.length,
+      overflowingElementPreview: overflowingElements,
+    };
+  }, marker);
+}
+
 const server = await startServer();
 try {
   const address = server.address();
   const baseUrl = `http://${address.address}:${address.port}`;
-  const executable = chromePath();
+  const playwright = loadPlaywright();
   const results = [];
-  for (const route of ROUTES) {
-    const dom = await dumpDom(executable, `${baseUrl}${route.path}`);
-    const passed = dom.includes(route.marker);
-    results.push({
-      route: route.path,
-      marker: route.marker,
-      authenticated: route.authenticated,
-      passed,
-      diagnostic_excerpt: passed ? "" : dom.replace(/\s+/g, " ").slice(0, 320),
-    });
+  const uiAuditResults = [];
+  if (playwright?.chromium) {
+    const browser = await playwright.chromium.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 1366, height: 900 } });
+      for (const route of ROUTES) {
+        await page.goto(`${baseUrl}${route.path}`, { waitUntil: "networkidle", timeout: 30000 });
+        const dom = await page.content();
+        const state = await collectRenderedState(page, route.marker);
+        const passed =
+          state.markerFound &&
+          state.bodyTextLength > 0 &&
+          !state.frameworkOverlay &&
+          state.unnamedInteractiveCount === 0;
+        results.push({
+          route: route.path,
+          marker: route.marker,
+          authenticated: route.authenticated,
+          passed,
+          rendered_path: new URL(page.url()).pathname,
+          title: await page.title(),
+          state,
+          diagnostic_excerpt: passed ? "" : dom.replace(/\s+/g, " ").slice(0, 320),
+        });
+      }
+      if (screenshotDir) {
+        mkdirSync(screenshotDir, { recursive: true });
+        const screenshotRoutes = ROUTES.filter((route) => {
+          if (requestedScreenshotRoutes.size === 0) {
+            return true;
+          }
+          return requestedScreenshotRoutes.has(route.path);
+        });
+        for (const viewportName of screenshotViewportNames) {
+          const viewport = RESPONSIVE_VIEWPORTS[viewportName];
+          if (!viewport) {
+            throw new Error(`Unknown responsive viewport "${viewportName}".`);
+          }
+          await page.setViewportSize(viewport);
+          for (const route of screenshotRoutes) {
+            await page.goto(`${baseUrl}${route.path}`, { waitUntil: "networkidle", timeout: 30000 });
+            const fileName = `${viewportName}-${routeSlug(route.path)}.png`;
+            const screenshotPath = join(screenshotDir, fileName);
+            const state = await collectRenderedState(page, route.marker);
+            await page.screenshot({ path: screenshotPath, fullPage: true });
+            const passed =
+              state.markerFound &&
+              state.bodyTextLength > 0 &&
+              !state.frameworkOverlay &&
+              !state.horizontalOverflow &&
+              state.unnamedInteractiveCount === 0;
+            uiAuditResults.push({
+              route: route.path,
+              viewport: viewportName,
+              viewport_size: viewport,
+              passed,
+              screenshot: normalize(screenshotPath),
+              state,
+            });
+          }
+        }
+      }
+    } finally {
+      await browser.close();
+    }
+  } else {
+    if (screenshotDir) {
+      throw new Error("Responsive UI screenshot audit requires Playwright.");
+    }
+    const executable = chromePath();
+    for (const route of ROUTES) {
+      const dom = await dumpDom(executable, `${baseUrl}${route.path}`, route.marker);
+      const passed = dom.includes(route.marker);
+      results.push({
+        route: route.path,
+        marker: route.marker,
+        authenticated: route.authenticated,
+        passed,
+        diagnostic_excerpt: passed ? "" : dom.replace(/\s+/g, " ").slice(0, 320),
+      });
+    }
   }
   const failed = results.filter((result) => !result.passed);
+  const failedUiAudit = uiAuditResults.filter((result) => !result.passed);
   const report = {
     kind: "frontend_route_smoke_report",
-    schema_version: 1,
+    schema_version: 2,
     route_count: results.length,
-    status: failed.length === 0 ? "ok" : "failed",
+    status: failed.length === 0 && (!failOnUiFindings || failedUiAudit.length === 0) ? "ok" : "failed",
     results,
+    ui_audit:
+      uiAuditResults.length > 0
+        ? {
+            artifact_dir: normalize(screenshotDir),
+            viewport_count: screenshotViewportNames.length,
+            screenshot_count: uiAuditResults.length,
+            status: failedUiAudit.length === 0 ? "ok" : "findings",
+            failed_count: failedUiAudit.length,
+            results: uiAuditResults,
+          }
+        : null,
   };
+  if (reportPath) {
+    mkdirSync(dirname(reportPath), { recursive: true });
+    writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+  }
   console.log(JSON.stringify(report, null, 2));
-  process.exitCode = failed.length === 0 ? 0 : 1;
+  process.exitCode = failed.length === 0 && (!failOnUiFindings || failedUiAudit.length === 0) ? 0 : 1;
 } finally {
   await new Promise((resolveClose) => server.close(resolveClose));
 }

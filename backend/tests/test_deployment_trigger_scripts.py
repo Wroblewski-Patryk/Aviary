@@ -138,6 +138,7 @@ CAPABILITY_CATALOG_APPROVED_TOOL_FAMILIES = [
     "task_system",
     "web_browser",
 ]
+CAPABILITY_CATALOG_SKILL_CATALOG_COUNT = 9
 V1_REQUIRED_BEHAVIOR_SCENARIOS = [
     "T13.1",
     "T14.1",
@@ -444,7 +445,7 @@ def _capability_catalog_snapshot() -> dict[str, object]:
             "skill_execution_boundary": "metadata_only_capability_hints",
             "action_skill_execution_allowed": False,
             "selection_visibility_summary": {},
-            "catalog_count": 5,
+            "catalog_count": 9,
             "catalog": [
                 {
                     "skill_id": "emotional_support",
@@ -476,6 +477,30 @@ def _capability_catalog_snapshot() -> dict[str, object]:
                     "capability_family": "connector_boundary",
                     "side_effect_posture": "metadata_only",
                 },
+                {
+                    "skill_id": "website_review",
+                    "label": "Website review",
+                    "capability_family": "analysis",
+                    "side_effect_posture": "metadata_only",
+                },
+                {
+                    "skill_id": "web_research",
+                    "label": "Web research",
+                    "capability_family": "analysis",
+                    "side_effect_posture": "metadata_only",
+                },
+                {
+                    "skill_id": "clickup_task_management",
+                    "label": "ClickUp task management",
+                    "capability_family": "connector_boundary",
+                    "side_effect_posture": "metadata_only",
+                },
+                {
+                    "skill_id": "work_partner_task_management",
+                    "label": "Work partner task management",
+                    "capability_family": "connector_boundary",
+                    "side_effect_posture": "metadata_only",
+                },
             ],
             "described_skill_ids": [
                 "emotional_support",
@@ -483,6 +508,10 @@ def _capability_catalog_snapshot() -> dict[str, object]:
                 "execution_planning",
                 "memory_recall",
                 "connector_boundary_review",
+                "website_review",
+                "web_research",
+                "clickup_task_management",
+                "work_partner_task_management",
             ],
             "runtime_selection_surface": "system_debug.adaptive_state.selected_skills",
             "learning_posture": "registry_metadata_only",
@@ -2276,7 +2305,7 @@ def test_release_smoke_allows_optional_deployment_evidence_to_be_omitted(
     assert summary["capability_catalog_policy_owner"] == "backend_capability_catalog_policy"
     assert summary["capability_catalog_approved_tool_families"] == CAPABILITY_CATALOG_APPROVED_TOOL_FAMILIES
     assert summary["capability_catalog_skill_execution_boundary"] == "metadata_only_capability_hints"
-    assert summary["capability_catalog_catalog_count"] == 5
+    assert summary["capability_catalog_catalog_count"] == CAPABILITY_CATALOG_SKILL_CATALOG_COUNT
     assert summary["capability_catalog_organizer_stack_state"] == "provider_credentials_missing"
     assert summary["capability_catalog_organizer_activation_state"] == "provider_activation_incomplete"
     assert summary["capability_catalog_execution_baseline_owner"] == "connector_execution_registry"
@@ -2677,7 +2706,7 @@ def test_release_smoke_verifies_incident_evidence_bundle_when_bundle_path_is_pro
     assert summary["incident_bundle_capability_catalog_skill_execution_boundary"] == (
         "metadata_only_capability_hints"
     )
-    assert summary["incident_bundle_capability_catalog_catalog_count"] == 5
+    assert summary["incident_bundle_capability_catalog_catalog_count"] == CAPABILITY_CATALOG_SKILL_CATALOG_COUNT
     assert summary["incident_bundle_capability_catalog_organizer_stack_state"] == (
         "provider_credentials_missing"
     )

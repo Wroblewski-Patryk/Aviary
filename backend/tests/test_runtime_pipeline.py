@@ -5254,7 +5254,7 @@ async def test_runtime_pipeline_executes_provider_backed_clickup_task_read_path(
     assert "ClickUp task read returned: Release checklist, Docs sync." in result.action_result.notes
 
 
-async def test_runtime_pipeline_executes_provider_backed_clickup_task_update_path() -> None:
+async def test_runtime_pipeline_triages_clickup_task_update_until_confirmation() -> None:
     memory = FakeMemoryRepository(recent_memory=[])
     runtime = RuntimeOrchestrator(
         perception_agent=PerceptionAgent(),
@@ -5283,8 +5283,15 @@ async def test_runtime_pipeline_executes_provider_backed_clickup_task_update_pat
     result = await runtime.run(event)
 
     assert result.action_result.status == "success"
-    assert "clickup_update_task" in result.action_result.actions
-    assert "ClickUp task updated (clk_1)" in result.action_result.notes
+    assert "clickup_list_tasks" in result.action_result.actions
+    assert "clickup_update_task" not in result.action_result.actions
+    assert "ClickUp task update requires explicit confirmation before mutation." in result.action_result.notes
+    assert result.action_result.observations[0].blocker == "confirmation_required"
+    assert result.action_result.observations[0].next_step_relevance == "needs_confirmation"
+    assert result.memory_record is not None
+    assert result.memory_record.payload["pending_connector_confirmation"]["status"] == "pending_confirmation"
+    assert result.memory_record.payload["pending_connector_confirmation"]["operation"] == "update_task"
+    assert result.memory_record.payload["pending_connector_confirmation"]["provider_hint"] == "clickup"
 
 
 async def test_runtime_pipeline_executes_provider_backed_google_calendar_read_path() -> None:
@@ -5384,6 +5391,12 @@ async def test_runtime_pipeline_executes_provider_backed_web_search_path() -> No
     assert result.action_result.status == "success"
     assert "duckduckgo_search_web" in result.action_result.actions
     assert "Web search returned: Release notes (https://example.com/release-notes)." in result.action_result.notes
+    assert result.action_result.observations
+    assert result.action_result.observations[0].policy_owner == "action_execution_observation_contract"
+    assert result.action_result.observations[0].tool_id == "web_search"
+    assert result.action_result.observations[0].raw_payload_included is False
+    assert result.system_debug is not None
+    assert result.system_debug.action_result.observations[0].tool_id == "web_search"
 
 
 async def test_runtime_pipeline_executes_provider_backed_browser_page_read_path() -> None:
@@ -5417,6 +5430,71 @@ async def test_runtime_pipeline_executes_provider_backed_browser_page_read_path(
     assert result.action_result.status == "success"
     assert "generic_http_read_page" in result.action_result.actions
     assert "Browser page read returned: Release notes [text/html] https://example.com/release-notes." in result.action_result.notes
+    assert result.action_result.observations[0].tool_id == "web_browser"
+    assert result.action_result.observations[0].operation == "web_browser.read_page"
+    assert result.action_result.observations[0].raw_payload_included is False
+
+
+async def test_runtime_pipeline_executes_search_first_website_review_loop() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    search_client = FakeDuckDuckGoSearchClient()
+    browser_client = FakeGenericHttpPageClient()
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=FakeOpenAIClient()),
+        action_executor=ActionExecutor(
+            memory_repository=memory,
+            telegram_client=FakeTelegramClient(),
+            knowledge_search_client=search_client,
+            web_browser_client=browser_client,
+        ),
+        memory_repository=memory,
+        reflection_worker=FakeReflectionWorker(),
+    )
+    event = Event(
+        event_id="evt-website-review-loop",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "Review the release notes website for deployment risk."},
+        meta=EventMeta(user_id="u-1", trace_id="t-website-review-loop"),
+    )
+
+    result = await runtime.run(event)
+
+    assert result.action_result.status == "success"
+    assert "website_review" in [skill.skill_id for skill in result.role.selected_skills]
+    assert "web_browser_access_intent" in [intent.intent_type for intent in result.plan.domain_intents]
+    assert "duckduckgo_search_web" in result.action_result.actions
+    assert "generic_http_read_page" in result.action_result.actions
+    assert "Website review search selected: Release notes (https://example.com/release-notes)." in (
+        result.action_result.notes
+    )
+    assert "Website review loop completed within 2 steps." in result.action_result.notes
+    assert search_client.calls == [{"query": "Review the release notes website for deployment risk.", "limit": "3"}]
+    assert browser_client.calls == [{"url": "https://example.com/release-notes", "excerpt_length": "500"}]
+    assert [observation.tool_id for observation in result.action_result.observations] == [
+        "web_search",
+        "web_browser",
+    ]
+    assert result.action_result.observations[0].next_step_relevance == "selected_first_result_for_page_review"
+    assert result.action_result.observations[1].next_step_relevance == "website_review_satisfied"
+    assert all(observation.raw_payload_included is False for observation in result.action_result.observations)
+    assert result.system_debug is not None
+    assert result.system_debug.action_result.observations[1].tool_id == "web_browser"
+    assert result.system_debug.action_result.action_loop is not None
+    assert result.system_debug.action_result.action_loop.step_count == 2
+    assert result.system_debug.action_result.action_loop.selected_skill_ids == [
+        "structured_reasoning",
+        "website_review",
+        "web_research",
+    ]
+    assert result.system_debug.action_result.action_loop.used_tools == ["web_search", "web_browser"]
+    assert result.system_debug.action_result.action_loop.completion_state == "satisfied"
 
 
 async def test_runtime_pipeline_surfaces_work_partner_orchestration_baseline() -> None:
@@ -5458,14 +5536,29 @@ async def test_runtime_pipeline_surfaces_work_partner_orchestration_baseline() -
         "structured_reasoning",
         "execution_planning",
         "connector_boundary_review",
+        "web_research",
+        "clickup_task_management",
+        "work_partner_task_management",
     ]
     assert "knowledge_search_intent" in intent_types
     assert "external_task_sync_intent" in intent_types
     assert "duckduckgo_search_web" in result.action_result.actions
-    assert "clickup_update_task" in result.action_result.actions
+    assert "clickup_list_tasks" in result.action_result.actions
+    assert "clickup_update_task" not in result.action_result.actions
+    assert any(
+        observation.blocker == "confirmation_required"
+        and observation.next_step_relevance == "needs_confirmation"
+        for observation in result.action_result.observations
+    )
+    assert result.memory_record is not None
+    assert result.memory_record.payload["pending_connector_confirmation"]["operation"] == "update_task"
     assert result.system_debug is not None
     assert result.system_debug.adaptive_state["role_skill_policy"]["current_role_name"] == "work_partner"
     assert result.system_debug.adaptive_state["role_skill_policy"]["work_partner_role_state"] == "selected"
+    assert result.system_debug.action_result.action_loop is not None
+    assert result.system_debug.action_result.action_loop.completion_state == "needs_confirmation"
+    assert result.system_debug.action_result.action_loop.blockers == ["confirmation_required"]
+    assert result.system_debug.action_result.action_loop.used_tools == ["clickup", "web_search"]
 
 
 def _build_behavior_runtime(
@@ -6832,14 +6925,19 @@ async def test_runtime_behavior_role_governed_tool_usage_scenarios() -> None:
         passed = (
             result.role.selected == "executor"
             and "external_task_sync_intent" in intent_types
-            and "clickup_update_task" in result.action_result.actions
+            and "clickup_list_tasks" in result.action_result.actions
+            and "clickup_update_task" not in result.action_result.actions
+            and any(
+                observation.blocker == "confirmation_required"
+                for observation in result.action_result.observations
+            )
             and "execution_planning" in selected_skill_ids
             and "connector_boundary_review" in selected_skill_ids
             and payload.get("task_connector_update") == "update_task:mutate_with_confirmation:clickup"
         )
         return BehaviorScenarioCheck(
             passed=passed,
-            reason="executor_clickup_update_via_action_boundary" if passed else "executor_clickup_update_regression",
+            reason="executor_clickup_update_confirmation_gate" if passed else "executor_clickup_update_regression",
             trace_id=result.event.meta.trace_id,
             notes=(
                 f"role={result.role.selected};"
@@ -6881,12 +6979,15 @@ async def test_runtime_behavior_work_partner_scenarios() -> None:
         passed = (
             result.role.selected == "work_partner"
             and "duckduckgo_search_web" in result.action_result.actions
-            and "clickup_update_task" in result.action_result.actions
-            and selected_skill_ids == [
-                "structured_reasoning",
-                "execution_planning",
-                "connector_boundary_review",
-            ]
+            and "clickup_list_tasks" in result.action_result.actions
+            and "clickup_update_task" not in result.action_result.actions
+            and any(
+                observation.blocker == "confirmation_required"
+                for observation in result.action_result.observations
+            )
+            and "structured_reasoning" in selected_skill_ids
+            and "execution_planning" in selected_skill_ids
+            and "connector_boundary_review" in selected_skill_ids
             and policy.get("current_role_name") == "work_partner"
             and policy.get("work_partner_role_state") == "selected"
         )

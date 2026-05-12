@@ -277,6 +277,18 @@ Examples:
 
 Action answers "what is executed in the world or in durable state."
 Action consumes the explicit response-execution handoff as its delivery input.
+For bounded tool work, action also owns provider-step observations. Read-only
+steps may run when their typed intents and permission posture allow it.
+Mutation steps, including ClickUp task creation or update, must stop with a
+confirmation-required blocker unless the matching connector permission gate is
+explicitly allowed for that action.
+
+First-party app confirmation is a separate handoff contract, not a free-form
+chat-text shortcut. A confirmation UI or API must bind the user's approval to
+the original source event or trace, connector kind, provider, operation, and
+bounded candidate evidence, then re-enter action with the same typed intent and
+an allowed matching connector permission gate. If that binding cannot be
+proved, action keeps the mutation blocked.
 
 ### Step 13. Episodic Memory Write
 
