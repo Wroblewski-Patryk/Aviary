@@ -44,6 +44,7 @@ export type ToolsDirectoryLabels = {
   noLinkCode: string;
   technicalDetails: string;
   capabilities: string;
+  skillBindings: string;
 };
 
 export type ToolsDirectoryCommonLabels = {
@@ -302,6 +303,13 @@ function ToolsDirectoryItem({
             <ToolsTechnicalDetailPanel
               label={labels.capabilities}
               values={item.capabilities}
+              emptyLabel={commonLabels.noData}
+            />
+            <ToolsTechnicalDetailPanel
+              label={labels.skillBindings}
+              values={item.skill_tool_bindings.map((binding) =>
+                `${binding.label}: ${binding.posture}`,
+              )}
               emptyLabel={commonLabels.noData}
             />
             <ToolsTechnicalDetailPanel

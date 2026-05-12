@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from app.agents.role import RoleAgent
 from app.core.contracts import AffectiveAssessmentOutput, ContextOutput, Event, EventMeta, PerceptionOutput
+from app.core.skill_registry import skill_registry_snapshot
 
 
 def _event(text: str) -> Event:
@@ -100,6 +101,56 @@ def test_role_agent_selects_work_partner_for_explicit_work_orchestration_request
     assert "structured_reasoning" in selected_skill_ids
     assert "execution_planning" in selected_skill_ids
     assert "connector_boundary_review" in selected_skill_ids
+
+
+def test_skill_registry_exposes_tool_aware_metadata_without_execution_authority() -> None:
+    snapshot = skill_registry_snapshot()
+    catalog = {item["skill_id"]: item for item in snapshot["catalog"]}
+
+    assert snapshot["catalog_count"] == 9
+    assert catalog["website_review"]["allowed_tools"] == [
+        "knowledge_search.search_web",
+        "web_browser.read_page",
+    ]
+    assert catalog["web_research"]["allowed_tools"] == [
+        "knowledge_search.search_web",
+        "web_browser.read_page",
+    ]
+    assert catalog["clickup_task_management"]["allowed_tools"] == [
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_create_task",
+        "task_system.clickup_update_task",
+    ]
+    assert catalog["work_partner_task_management"]["allowed_tools"] == [
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_create_task",
+        "task_system.clickup_update_task",
+    ]
+    for skill_id in (
+        "website_review",
+        "web_research",
+        "clickup_task_management",
+        "work_partner_task_management",
+    ):
+        assert catalog[skill_id]["side_effect_posture"] == "metadata_only"
+        assert catalog[skill_id]["tool_execution_allowed"] is False
+        assert catalog[skill_id]["execution_owner"] == "action"
+        assert catalog[skill_id]["authorization_boundary"] == "connector_permission_gates"
+
+
+def test_role_agent_selects_tool_aware_skills_as_metadata_only_hints() -> None:
+    result = RoleAgent().run(
+        event=_event("Be my work partner and search the web, review https://example.com, then check ClickUp tasks."),
+        perception=_perception("question", "planning", "request_help"),
+        context=_context(),
+    )
+
+    selected = {skill.skill_id: skill for skill in result.selected_skills}
+    assert "website_review" in selected
+    assert "web_research" in selected
+    assert "clickup_task_management" in selected
+    assert "work_partner_task_management" in selected
+    assert all(skill.side_effect_posture == "metadata_only" for skill in selected.values())
 
 
 def test_role_agent_uses_mentor_for_general_questions() -> None:

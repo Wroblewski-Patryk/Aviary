@@ -1,5 +1,5 @@
 import { forwardRef, type FormEvent, type ReactNode } from "react";
-import type { AppChatHistoryEntry } from "../lib/api";
+import type { AppChatHistoryEntry, AppPendingConnectorConfirmation } from "../lib/api";
 import type { ChatDeliveryState } from "../lib/chat-transcript";
 
 export type ChatCognitiveBeltItem = {
@@ -10,6 +10,8 @@ export type ChatCognitiveBeltItem = {
   meta: string;
   tone: "lead" | "soft" | "progress";
 };
+
+export type PendingConnectorConfirmationState = "idle" | "submitting" | "success" | "error";
 
 export function ChatFlowStage({
   label,
@@ -287,10 +289,19 @@ export function ChatComposerShell({
   sending,
   sendLabel,
   note,
+  pendingConfirmation,
+  pendingConfirmationLabel,
+  pendingConfirmationBlockedLabel,
+  pendingConfirmationConfirmLabel,
+  pendingConfirmationSubmittingLabel,
+  pendingConfirmationCompleteLabel,
+  pendingConfirmationState,
+  pendingConfirmationFeedback,
   addIcon,
   voiceIcon,
   sendIcon,
   onQuickAction,
+  onConfirmPendingConfirmation,
   onTextChange,
   onSubmit,
 }: {
@@ -300,13 +311,28 @@ export function ChatComposerShell({
   sending: boolean;
   sendLabel: string;
   note: string;
+  pendingConfirmation: AppPendingConnectorConfirmation | null;
+  pendingConfirmationLabel: string;
+  pendingConfirmationBlockedLabel: string;
+  pendingConfirmationConfirmLabel: string;
+  pendingConfirmationSubmittingLabel: string;
+  pendingConfirmationCompleteLabel: string;
+  pendingConfirmationState: PendingConnectorConfirmationState;
+  pendingConfirmationFeedback: string | null;
   addIcon: ReactNode;
   voiceIcon: ReactNode;
   sendIcon: ReactNode;
   onQuickAction: (value: string) => void;
+  onConfirmPendingConfirmation: () => void;
   onTextChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
+  const pendingConfirmationBusy = pendingConfirmationState === "submitting";
+  const pendingConfirmationEyebrow =
+    !pendingConfirmation && pendingConfirmationState === "success"
+      ? pendingConfirmationCompleteLabel
+      : pendingConfirmationLabel;
+
   return (
     <div className="aion-chat-composer-zone">
       <div className="aion-chat-action-tray">
@@ -323,6 +349,49 @@ export function ChatComposerShell({
           </button>
         ))}
       </div>
+      {pendingConfirmation || pendingConfirmationFeedback ? (
+        <section className="aion-chat-pending-confirmation" aria-live="polite">
+          <div className="aion-chat-pending-confirmation-copy">
+            <p className="aion-chat-pending-confirmation-eyebrow">
+              {pendingConfirmationEyebrow}
+            </p>
+            {pendingConfirmation ? (
+              <>
+                <p className="aion-chat-pending-confirmation-title">
+                  {pendingConfirmation.provider_hint ?? pendingConfirmation.connector_kind}
+                  {" / "}
+                  {pendingConfirmation.operation}
+                </p>
+                <p className="aion-chat-pending-confirmation-body">
+                  {pendingConfirmation.candidate_summary}
+                </p>
+              </>
+            ) : null}
+            {pendingConfirmationFeedback ? (
+              <p
+                className={`aion-chat-pending-confirmation-feedback aion-chat-pending-confirmation-feedback-${pendingConfirmationState}`}
+              >
+                {pendingConfirmationFeedback}
+              </p>
+            ) : null}
+          </div>
+          {pendingConfirmation ? (
+            <div className="aion-chat-pending-confirmation-actions">
+              <span className="aion-chat-pending-confirmation-chip">
+                {pendingConfirmationBlockedLabel}
+              </span>
+              <button
+                className="aion-chat-pending-confirmation-button"
+                disabled={pendingConfirmationBusy}
+                type="button"
+                onClick={onConfirmPendingConfirmation}
+              >
+                {pendingConfirmationBusy ? pendingConfirmationSubmittingLabel : pendingConfirmationConfirmLabel}
+              </button>
+            </div>
+          ) : null}
+        </section>
+      ) : null}
       <form className="aion-chat-composer" onSubmit={onSubmit}>
         <div className="aion-chat-mode-tabs" aria-label="Conversation mode">
           {["Ask", "Plan", "Reflect", "Execute"].map((mode, index) => (
@@ -340,6 +409,7 @@ export function ChatComposerShell({
           </button>
           <div className="aion-chat-input-stack">
             <textarea
+              aria-label={placeholder}
               className="aion-chat-input"
               placeholder={placeholder}
               value={text}

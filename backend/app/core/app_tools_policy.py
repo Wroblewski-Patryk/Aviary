@@ -29,6 +29,7 @@ def _tool_item(
     link_required: bool = False,
     link_state: str = "not_applicable",
     capabilities: list[str] | None = None,
+    skill_tool_bindings: list[dict[str, Any]] | None = None,
     next_actions: list[str] | None = None,
     source_of_truth: list[str] | None = None,
 ) -> dict[str, Any]:
@@ -55,8 +56,27 @@ def _tool_item(
         "link_required": link_required,
         "link_state": link_state,
         "capabilities": list(capabilities or []),
+        "skill_tool_bindings": list(skill_tool_bindings or []),
         "next_actions": list(next_actions or []),
         "source_of_truth": list(source_of_truth or []),
+    }
+
+
+def _skill_tool_binding(
+    *,
+    skill_id: str,
+    label: str,
+    posture: str,
+    allowed_operations: list[str],
+    execution_owner: str = "action",
+) -> dict[str, Any]:
+    return {
+        "skill_id": skill_id,
+        "label": label,
+        "posture": posture,
+        "allowed_operations": list(allowed_operations),
+        "execution_owner": execution_owner,
+        "authority": "metadata_only_not_execution_authority",
     }
 
 
@@ -210,6 +230,28 @@ def app_tools_overview_snapshot(
                 "task_system.clickup_list_tasks",
                 "task_system.clickup_update_task",
             ],
+            skill_tool_bindings=[
+                _skill_tool_binding(
+                    skill_id="clickup_task_management",
+                    label="ClickUp task management",
+                    posture="read_only_and_confirmation_gated_mutation",
+                    allowed_operations=[
+                        "task_system.clickup_list_tasks",
+                        "task_system.clickup_create_task",
+                        "task_system.clickup_update_task",
+                    ],
+                ),
+                _skill_tool_binding(
+                    skill_id="work_partner_task_management",
+                    label="Work partner task management",
+                    posture="read_only_and_confirmation_gated_mutation",
+                    allowed_operations=[
+                        "task_system.clickup_list_tasks",
+                        "task_system.clickup_create_task",
+                        "task_system.clickup_update_task",
+                    ],
+                ),
+            ],
             next_actions=[
                 str(organizer_stack["activation_snapshot"]["provider_requirements"]["clickup"]["next_action"])
             ],
@@ -274,6 +316,20 @@ def app_tools_overview_snapshot(
             user_toggle_allowed=False,
             user_preference_supported=False,
             capabilities=["knowledge_search.search_web", "knowledge_search.suggest_search"],
+            skill_tool_bindings=[
+                _skill_tool_binding(
+                    skill_id="web_research",
+                    label="Web research",
+                    posture="read_only",
+                    allowed_operations=["knowledge_search.search_web"],
+                ),
+                _skill_tool_binding(
+                    skill_id="website_review",
+                    label="Website review",
+                    posture="read_only_search_support",
+                    allowed_operations=["knowledge_search.search_web"],
+                ),
+            ],
             source_of_truth=[
                 "/health.connectors.execution_baseline.knowledge_search.search_web",
                 "/health.connectors.web_knowledge_tools",
@@ -295,6 +351,20 @@ def app_tools_overview_snapshot(
             user_toggle_allowed=False,
             user_preference_supported=False,
             capabilities=["web_browser.read_page", "web_browser.suggest_page_review"],
+            skill_tool_bindings=[
+                _skill_tool_binding(
+                    skill_id="website_review",
+                    label="Website review",
+                    posture="read_only",
+                    allowed_operations=["web_browser.read_page", "web_browser.suggest_page_review"],
+                ),
+                _skill_tool_binding(
+                    skill_id="web_research",
+                    label="Web research",
+                    posture="optional_read_only_page_review",
+                    allowed_operations=["web_browser.read_page"],
+                ),
+            ],
             source_of_truth=[
                 "/health.connectors.execution_baseline.web_browser.read_page",
                 "/health.connectors.web_knowledge_tools",

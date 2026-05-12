@@ -1,6 +1,6 @@
 # Frontend Route And Component Map
 
-Last updated: 2026-05-03
+Last updated: 2026-05-11
 
 This map documents the current browser shell without requiring a broad
 component refactor. It is grounded in `web/src/App.tsx`,
@@ -32,8 +32,22 @@ Chrome or Edge headlessly, and checks stable top-level route container markers
 for `/`, `/login`, and every current authenticated app route in
 `web/src/routes.ts`: `/dashboard`, `/chat`, `/memory`, `/reflections`,
 `/plans`, `/goals`, `/insights`, `/automations`, `/integrations`, `/settings`,
-`/tools`, and `/personality`. It is a route-mount guard, not a screenshot
-parity suite.
+`/tools`, and `/personality`. The same script also owns the `v1.1` responsive
+UI baseline command:
+
+```powershell
+Push-Location .\web
+npm run build
+npm run audit:ui-responsive
+Pop-Location
+```
+
+The responsive audit captures selected route screenshots for desktop, tablet,
+and mobile web and writes
+`.codex/artifacts/prj1150-v11-ui-responsive-audit/report.json`. It proves
+route render, framework overlay absence, document-level horizontal overflow
+absence, and visible interactive accessible names. It is not a full aesthetic
+parity claim; canonical visual drift still needs route-by-route review.
 
 ## Tools Directory Characterization
 

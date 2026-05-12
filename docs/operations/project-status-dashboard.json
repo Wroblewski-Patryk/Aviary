@@ -1,0 +1,247 @@
+{
+  "blockers": [],
+  "bucket_counts": {
+    "DEFERRED": 4,
+    "READY": 11
+  },
+  "canonical_matrix": "docs/operations/architecture-implementation-map-2026-05-10.csv",
+  "completion": {
+    "all_scope_ready_percent": 73.3,
+    "ready_rows": 11,
+    "selected_scope_ready_percent": 100.0,
+    "selected_scope_ready_rows": 11,
+    "selected_scope_rows": 11,
+    "total_rows": 15
+  },
+  "date": "2026-05-11",
+  "deferred_scope": [
+    {
+      "bucket": "DEFERRED",
+      "capability": "ClickUp/Calendar/Drive organizer stack",
+      "id": "ARCH-CONNECTORS-001",
+      "module": "connectors",
+      "next_verification": "Run provider activation smoke after ClickUp/Calendar/Drive credentials exist and organizer launch scope expands.",
+      "owner": "Backend + Ops",
+      "priority": "P1",
+      "risk": "Daily-use organizer claims require real provider proof.",
+      "validation_command_pack": "Push-Location .\\backend; ..\\.venv\\Scripts\\python -m pytest -q tests/test_action_executor.py tests/test_connector_policy.py tests/test_api_routes.py -k \"connector or tools_overview or tools_preferences\"; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "DEFERRED",
+      "capability": "Source-driven deployment reliability",
+      "id": "ARCH-DEPLOY-AUTO-001",
+      "module": "operations",
+      "next_verification": "On the next release candidate, capture source/webhook deploy convergence or explicit fallback evidence.",
+      "owner": "Ops/Release",
+      "priority": "P1",
+      "risk": "Manual fallback can hide source automation drift for the next candidate.",
+      "validation_command_pack": "Run candidate deploy from source/webhook, then capture release go/no-go and web meta revision evidence in docs/operations/release-evidence-index.md."
+    },
+    {
+      "bucket": "DEFERRED",
+      "capability": "Proactive and planned work",
+      "id": "ARCH-PROACTIVE-001",
+      "module": "proactive",
+      "next_verification": "Run target proactive sample only when proactive launch scope expands.",
+      "owner": "Backend + Ops",
+      "priority": "P1",
+      "risk": "Proactive mistakes can annoy users or violate communication boundaries.",
+      "validation_command_pack": "Push-Location .\\backend; ..\\.venv\\Scripts\\python -m pytest -q tests/test_scheduler_worker.py tests/test_planned_action_observer.py tests/test_runtime_pipeline.py -k \"scheduler or proactive or planned\"; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "DEFERRED",
+      "capability": "Future mobile client",
+      "id": "ARCH-MOBILE-001",
+      "module": "mobile",
+      "next_verification": "Restart mobile scope only after an explicit product/release decision.",
+      "owner": "Mobile + Planning",
+      "priority": "P2",
+      "risk": "Mobile can drift if treated as implemented product surface too early.",
+      "validation_command_pack": "Scope-decision row only; create mobile scope decision before runtime/device proof."
+    }
+  ],
+  "definition_of_100_percent": [
+    "All selected-scope P0/P1 rows are READY or explicitly deferred/waived.",
+    "No V1_BLOCKER rows remain without owner-approved external blocker status.",
+    "Implemented-needs-evidence rows have current local or target proof.",
+    "Deferred rows have explicit scope decisions and are not silently counted as shipped.",
+    "Every meaningful architecture change refreshes this dashboard and its source matrix."
+  ],
+  "evidence_gaps": [],
+  "next_actions": [
+    {
+      "bucket": "DEFERRED",
+      "capability": "ClickUp/Calendar/Drive organizer stack",
+      "id": "ARCH-CONNECTORS-001",
+      "module": "connectors",
+      "next_verification": "Run provider activation smoke after ClickUp/Calendar/Drive credentials exist and organizer launch scope expands.",
+      "owner": "Backend + Ops",
+      "priority": "P1",
+      "risk": "Daily-use organizer claims require real provider proof.",
+      "validation_command_pack": "Push-Location .\\backend; ..\\.venv\\Scripts\\python -m pytest -q tests/test_action_executor.py tests/test_connector_policy.py tests/test_api_routes.py -k \"connector or tools_overview or tools_preferences\"; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "DEFERRED",
+      "capability": "Proactive and planned work",
+      "id": "ARCH-PROACTIVE-001",
+      "module": "proactive",
+      "next_verification": "Run target proactive sample only when proactive launch scope expands.",
+      "owner": "Backend + Ops",
+      "priority": "P1",
+      "risk": "Proactive mistakes can annoy users or violate communication boundaries.",
+      "validation_command_pack": "Push-Location .\\backend; ..\\.venv\\Scripts\\python -m pytest -q tests/test_scheduler_worker.py tests/test_planned_action_observer.py tests/test_runtime_pipeline.py -k \"scheduler or proactive or planned\"; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "DEFERRED",
+      "capability": "Source-driven deployment reliability",
+      "id": "ARCH-DEPLOY-AUTO-001",
+      "module": "operations",
+      "next_verification": "On the next release candidate, capture source/webhook deploy convergence or explicit fallback evidence.",
+      "owner": "Ops/Release",
+      "priority": "P1",
+      "risk": "Manual fallback can hide source automation drift for the next candidate.",
+      "validation_command_pack": "Run candidate deploy from source/webhook, then capture release go/no-go and web meta revision evidence in docs/operations/release-evidence-index.md."
+    },
+    {
+      "bucket": "DEFERRED",
+      "capability": "Future mobile client",
+      "id": "ARCH-MOBILE-001",
+      "module": "mobile",
+      "next_verification": "Restart mobile scope only after an explicit product/release decision.",
+      "owner": "Mobile + Planning",
+      "priority": "P2",
+      "risk": "Mobile can drift if treated as implemented product surface too early.",
+      "validation_command_pack": "Scope-decision row only; create mobile scope decision before runtime/device proof."
+    }
+  ],
+  "next_without_external_inputs": null,
+  "phase": "architecture complete for selected scope with deferred extensions",
+  "priority_counts": {
+    "P0": 7,
+    "P1": 7,
+    "P2": 1
+  },
+  "ready_core": [
+    {
+      "bucket": "READY",
+      "capability": "Skill-guided bounded tool use",
+      "id": "ARCH-ACTION-LOOP-001",
+      "module": "action",
+      "next_verification": "Plan deeper execute-observe-adjust only from a narrow evidence-backed task.",
+      "owner": "Backend + QA",
+      "priority": "P0",
+      "risk": "Tool execution must not bypass confirmation or leak raw provider payloads.",
+      "validation_command_pack": "Push-Location .\\backend; ..\\.venv\\Scripts\\python -m pytest -q tests/test_action_executor.py tests/test_runtime_pipeline.py -k \"website_review_loop or work_partner_orchestration_baseline or triages_clickup_task_update_until_confirmation\"; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "READY",
+      "capability": "AI red-team and boundary refusals",
+      "id": "ARCH-AI-SECURITY-001",
+      "module": "AI safety",
+      "next_verification": "Rerun red-team pack after prompt, expression, action, auth, or provider changes.",
+      "owner": "Security + QA",
+      "priority": "P0",
+      "risk": "AI boundary failures can leak data or falsely claim actions.",
+      "validation_command_pack": ".\\backend\\scripts\\run_behavior_validation.ps1 -GateMode operator; review docs/security/v1-ai-red-team-scenario-pack.md"
+    },
+    {
+      "bucket": "READY",
+      "capability": "First-party authenticated shell",
+      "id": "ARCH-AUTH-APP-001",
+      "module": "app shell",
+      "next_verification": "Keep cross-user/session regressions in the release gate.",
+      "owner": "Backend + Frontend",
+      "priority": "P0",
+      "risk": "Auth/session drift risks cross-user data exposure.",
+      "validation_command_pack": "Push-Location .\\backend; ..\\.venv\\Scripts\\python -m pytest -q tests/test_api_routes.py tests/test_config.py -k \"auth or session or login or register or logout\"; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "READY",
+      "capability": "Memory and deferred reflection",
+      "id": "ARCH-MEMORY-REFLECTION-001",
+      "module": "memory",
+      "next_verification": "Keep relation and memory consistency in future AI/runtime changes.",
+      "owner": "Backend + QA",
+      "priority": "P0",
+      "risk": "Memory/reflection drift affects personality continuity and privacy.",
+      "validation_command_pack": "Push-Location .\\backend; ..\\.venv\\Scripts\\python -m pytest -q tests/test_memory_repository.py tests/test_reflection_worker.py tests/test_runtime_pipeline.py; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "READY",
+      "capability": "Release evidence and deploy parity",
+      "id": "ARCH-RELEASE-OPS-001",
+      "module": "operations",
+      "next_verification": "Refresh release evidence index for every selected candidate.",
+      "owner": "Ops/Release",
+      "priority": "P0",
+      "risk": "Deploy drift makes all release claims unreliable.",
+      "validation_command_pack": "Push-Location .\\backend; ..\\.venv\\Scripts\\python .\\scripts\\run_release_go_no_go.py; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "READY",
+      "capability": "Canonical stage flow",
+      "id": "ARCH-RUNTIME-001",
+      "module": "runtime",
+      "next_verification": "Keep full backend gate after shared runtime contract changes.",
+      "owner": "Backend + QA",
+      "priority": "P0",
+      "risk": "Stage-order drift would corrupt all higher-level behavior.",
+      "validation_command_pack": "Push-Location .\\backend; ..\\.venv\\Scripts\\python -m pytest -q tests/test_runtime_pipeline.py tests/test_graph_stage_adapters.py tests/test_graph_state_contract.py; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "READY",
+      "capability": "First-party web shell",
+      "id": "ARCH-WEB-ROUTES-001",
+      "module": "web",
+      "next_verification": "Keep route smoke in every route/frontend architecture change.",
+      "owner": "Frontend + QA",
+      "priority": "P0",
+      "risk": "Route breakage blocks user-facing product usage.",
+      "validation_command_pack": "Push-Location .\\web; npm run smoke:routes; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "READY",
+      "capability": "Traceability and codebase maps",
+      "id": "ARCH-DOC-MAPS-001",
+      "module": "documentation",
+      "next_verification": "Keep secondary maps refreshed whenever architecture audit rows materially change.",
+      "owner": "Documentation",
+      "priority": "P1",
+      "risk": "Future drift is still possible if architecture rows change without refreshing maps.",
+      "validation_command_pack": "Refresh docs/architecture/traceability-matrix.md and docs/architecture/codebase-map.md from docs/operations/architecture-implementation-map-2026-05-10.csv; then rerun the audit/dashboard generators and git diff --check."
+    },
+    {
+      "bucket": "READY",
+      "capability": "Architecture and execution truth",
+      "id": "ARCH-DOCS-GOV-001",
+      "module": "documentation",
+      "next_verification": "Use this matrix to select future evidence/fix tasks before inventing new work.",
+      "owner": "Planning + Documentation",
+      "priority": "P1",
+      "risk": "Stale docs cause repeated wrong tasks and hidden regressions.",
+      "validation_command_pack": "Push-Location .\\backend; ..\\.venv\\Scripts\\python .\\scripts\\audit_architecture_implementation_map.py; if ($LASTEXITCODE -eq 0) { ..\\.venv\\Scripts\\python .\\scripts\\generate_project_status_dashboard.py }; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "READY",
+      "capability": "Test and evidence ownership",
+      "id": "ARCH-TEST-EVIDENCE-001",
+      "module": "quality",
+      "next_verification": "Keep row-specific command packs current when architecture rows or validation ownership change.",
+      "owner": "QA/Test",
+      "priority": "P1",
+      "risk": "Weak evidence ownership causes repeated broad test runs and missed focused regressions.",
+      "validation_command_pack": "Push-Location .\\backend; ..\\.venv\\Scripts\\python .\\scripts\\audit_architecture_implementation_map.py; if ($LASTEXITCODE -eq 0) { ..\\.venv\\Scripts\\python .\\scripts\\generate_project_status_dashboard.py }; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    },
+    {
+      "bucket": "READY",
+      "capability": "Experience quality evidence",
+      "id": "ARCH-WEB-UX-001",
+      "module": "web",
+      "next_verification": "Keep route-state/accessibility smoke in route-shell and shared-control changes.",
+      "owner": "Frontend + QA",
+      "priority": "P1",
+      "risk": "A route can mount successfully while still missing state/accessibility polish.",
+      "validation_command_pack": "Push-Location .\\web; npm exec -- tsc -b --pretty false; if ($LASTEXITCODE -eq 0) { npm exec -- vite build }; if ($LASTEXITCODE -eq 0) { npm run smoke:routes }; $exit=$LASTEXITCODE; Pop-Location; exit $exit"
+    }
+  ]
+}

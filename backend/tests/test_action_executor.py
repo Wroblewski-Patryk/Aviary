@@ -8,6 +8,7 @@ from app.core.contracts import (
     ActionDelivery,
     ActionDeliveryConnectorIntent,
     ActionDeliveryExecutionEnvelope,
+    ActionExecutionObservation,
     ActionResult,
     BehaviorFeedbackOutput,
     CancelPlannedWorkItemDomainIntent,
@@ -33,6 +34,7 @@ from app.core.contracts import (
     ProactiveDeliveryGuardOutput,
     ReschedulePlannedWorkItemDomainIntent,
     RoleOutput,
+    SkillCapabilityOutput,
     UpsertPlannedWorkItemDomainIntent,
     UpdateProactivePreferenceDomainIntent,
     UpdateProactiveStateDomainIntent,
@@ -332,7 +334,13 @@ def _motivation() -> MotivationOutput:
     )
 
 
-def _plan(*, domain_intents=None, proactive_delivery_guard: ProactiveDeliveryGuardOutput | None = None) -> PlanOutput:
+def _plan(
+    *,
+    domain_intents=None,
+    proactive_delivery_guard: ProactiveDeliveryGuardOutput | None = None,
+    connector_permission_gates=None,
+    selected_skills=None,
+) -> PlanOutput:
     return PlanOutput(
         goal="reply",
         steps=["reply"],
@@ -340,6 +348,34 @@ def _plan(*, domain_intents=None, proactive_delivery_guard: ProactiveDeliveryGua
         needs_response=True,
         domain_intents=domain_intents if domain_intents is not None else [NoopDomainIntent()],
         proactive_delivery_guard=proactive_delivery_guard,
+        connector_permission_gates=list(connector_permission_gates or []),
+        selected_skills=list(selected_skills or []),
+    )
+
+
+def _confirmed_clickup_gate(operation: str) -> ConnectorPermissionGateOutput:
+    return ConnectorPermissionGateOutput(
+        connector_kind="task_system",
+        provider_hint="clickup",
+        operation=operation,
+        mode="mutate_with_confirmation",
+        requires_opt_in=True,
+        requires_confirmation=True,
+        allowed=True,
+        reason="explicit_user_confirmation_received",
+    )
+
+
+def _unconfirmed_clickup_gate(operation: str) -> ConnectorPermissionGateOutput:
+    return ConnectorPermissionGateOutput(
+        connector_kind="task_system",
+        provider_hint="clickup",
+        operation=operation,
+        mode="mutate_with_confirmation",
+        requires_opt_in=True,
+        requires_confirmation=True,
+        allowed=False,
+        reason="explicit_user_confirmation_required",
     )
 
 
@@ -430,6 +466,105 @@ async def test_persist_episode_captures_tool_grounded_learning_from_read_results
     )
 
 
+@pytest.mark.asyncio()
+async def test_persist_episode_stores_bounded_pending_connector_confirmation() -> None:
+    memory = FakeMemoryRepository()
+    action = ActionExecutor(
+        memory_repository=memory,
+        telegram_client=FakeTelegramClient(),
+    )
+    event = _event("Mark Ship v1 done in ClickUp.")
+    plan = _plan(
+        domain_intents=[
+            ExternalTaskSyncDomainIntent(
+                operation="update_task",
+                provider_hint="clickup",
+                mode="mutate_with_confirmation",
+                task_hint="Ship v1",
+                status_hint="done",
+            )
+        ],
+        connector_permission_gates=[_unconfirmed_clickup_gate("update_task")],
+    )
+    action_result = ActionResult(
+        status="success",
+        actions=["clickup_list_tasks", "api_response"],
+        notes="ClickUp task update requires explicit confirmation before mutation.",
+        observations=[
+            ActionExecutionObservation(
+                tool_id="clickup",
+                operation="task_system.clickup_list_tasks",
+                provider_path="clickup:list_tasks",
+                source_reference="task-123",
+                bounded_summary="ClickUp update candidate observed before confirmation: Ship v1.",
+                confidence=0.66,
+                blocker="confirmation_required",
+                next_step_relevance="needs_confirmation",
+                raw_payload_included=False,
+            )
+        ],
+    )
+
+    record = await action.persist_episode(
+        event,
+        _perception(["task"]),
+        _context(),
+        _motivation(),
+        _role(),
+        plan,
+        action_result,
+        _expression(),
+    )
+
+    assert record.payload["pending_connector_confirmation"] == {
+        "status": "pending_confirmation",
+        "source_event_id": "evt-1",
+        "trace_id": "t-1",
+        "connector_kind": "task_system",
+        "provider_hint": "clickup",
+        "operation": "update_task",
+        "mode": "mutate_with_confirmation",
+        "candidate_summary": "ClickUp update candidate observed before confirmation: Ship v1.",
+        "source_reference": "task-123",
+        "reason": "explicit_user_confirmation_required",
+    }
+    replay = record.payload["connector_confirmation_replay"]
+    assert replay["status"] == "replay_snapshot_ready"
+    assert replay["source_event_id"] == "evt-1"
+    assert replay["trace_id"] == "t-1"
+    assert replay["replay_owner"] == "action"
+    assert replay["execution_allowed"] is False
+    assert replay["intent"] == {
+        "intent_type": "external_task_sync_intent",
+        "operation": "update_task",
+        "provider_hint": "clickup",
+        "mode": "mutate_with_confirmation",
+        "task_hint": "Ship v1",
+        "status_hint": "done",
+    }
+    assert replay["connector_permission_gate"] == {
+        "connector_kind": "task_system",
+        "provider_hint": "clickup",
+        "operation": "update_task",
+        "mode": "mutate_with_confirmation",
+        "requires_opt_in": True,
+        "requires_confirmation": True,
+        "allowed": False,
+        "reason": "explicit_user_confirmation_required",
+    }
+    assert replay["observation"] == {
+        "tool_id": "clickup",
+        "operation": "task_system.clickup_list_tasks",
+        "provider_path": "clickup:list_tasks",
+        "source_reference": "task-123",
+        "bounded_summary": "ClickUp update candidate observed before confirmation: Ship v1.",
+        "confidence": 0.66,
+        "blocker": "confirmation_required",
+        "next_step_relevance": "needs_confirmation",
+        "raw_payload_included": False,
+    }
+
+
 async def test_execute_uses_api_delivery_contract_for_api_responses() -> None:
     memory_repository = FakeMemoryRepository()
     telegram_client = FakeTelegramClient()
@@ -490,6 +625,65 @@ async def test_execute_appends_bounded_web_results_to_delivery_message() -> None
     assert "https://luckysparrow.ch" in delivered_text
 
 
+async def test_execute_runs_search_first_website_review_loop_for_ambiguous_page_target() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    search_client = FakeDuckDuckGoSearchClient()
+    browser_client = FakeGenericHttpPageClient()
+    executor = ActionExecutor(
+        memory_repository=memory_repository,
+        telegram_client=telegram_client,
+        knowledge_search_client=search_client,
+        web_browser_client=browser_client,
+    )
+    plan = _plan(
+        domain_intents=[
+            WebBrowserAccessDomainIntent(
+                operation="read_page",
+                provider_hint="generic_http",
+                mode="read_only",
+                page_hint="review the release notes website",
+            )
+        ],
+        selected_skills=[
+            SkillCapabilityOutput(
+                skill_id="website_review",
+                label="Website review",
+                capability_family="analysis",
+                reason="website_review_request_detected",
+            )
+        ],
+    )
+
+    result = await executor.execute(
+        plan,
+        _delivery(
+            channel="api",
+            execution_envelope=build_action_delivery_execution_envelope(plan),
+        ),
+    )
+
+    assert result.status == "success"
+    assert result.actions == ["duckduckgo_search_web", "generic_http_read_page", "api_response"]
+    assert "Website review search selected: Release notes (https://example.com/release-notes)." in result.notes
+    assert "Website review loop completed within 2 steps." in result.notes
+    assert search_client.calls == [{"query": "review the release notes website", "limit": "3"}]
+    assert browser_client.calls == [{"url": "https://example.com/release-notes", "excerpt_length": "500"}]
+    assert [observation.tool_id for observation in result.observations] == ["web_search", "web_browser"]
+    assert result.observations[0].next_step_relevance == "selected_first_result_for_page_review"
+    assert result.observations[1].next_step_relevance == "website_review_satisfied"
+    assert all(observation.raw_payload_included is False for observation in result.observations)
+    assert result.action_loop is not None
+    assert result.action_loop.policy_owner == "action_loop_execution_summary_policy"
+    assert result.action_loop.execution_owner == "action"
+    assert result.action_loop.step_count == 2
+    assert result.action_loop.selected_skill_ids == ["website_review"]
+    assert result.action_loop.used_tools == ["web_search", "web_browser"]
+    assert result.action_loop.completion_state == "satisfied"
+    assert result.action_loop.blockers == []
+    assert result.action_loop.raw_payload_included is False
+
+
 async def test_execute_fails_when_telegram_delivery_contract_has_no_chat_id() -> None:
     memory_repository = FakeMemoryRepository()
     telegram_client = FakeTelegramClient()
@@ -517,7 +711,7 @@ async def test_execute_handles_telegram_delivery_exception_as_fail_result() -> N
     assert telegram_client.calls == [{"chat_id": 123456, "text": "hello", "parse_mode": None}]
 
 
-async def test_execute_runs_provider_backed_clickup_task_creation_before_delivery() -> None:
+async def test_execute_blocks_clickup_task_creation_until_confirmation() -> None:
     memory_repository = FakeMemoryRepository()
     telegram_client = FakeTelegramClient()
     clickup_client = FakeClickUpTaskClient()
@@ -536,6 +730,44 @@ async def test_execute_runs_provider_backed_clickup_task_creation_before_deliver
                 task_hint="Create launch checklist in ClickUp",
             )
         ]
+    )
+
+    result = await executor.execute(
+        plan,
+        _delivery(
+            channel="api",
+            execution_envelope=build_action_delivery_execution_envelope(plan),
+        ),
+    )
+
+    assert result.status == "success"
+    assert result.actions == ["clickup_mutation_confirmation_required", "api_response"]
+    assert "ClickUp task creation requires explicit confirmation before mutation." in result.notes
+    assert clickup_client.calls == []
+    assert result.observations[0].blocker == "confirmation_required"
+    assert result.observations[0].next_step_relevance == "needs_confirmation"
+
+
+async def test_execute_runs_confirmed_provider_backed_clickup_task_creation_before_delivery() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    clickup_client = FakeClickUpTaskClient()
+    executor = ActionExecutor(
+        memory_repository=memory_repository,
+        telegram_client=telegram_client,
+        clickup_task_client=clickup_client,
+    )
+
+    plan = _plan(
+        domain_intents=[
+            ExternalTaskSyncDomainIntent(
+                operation="create_task",
+                provider_hint="clickup",
+                mode="mutate_with_confirmation",
+                task_hint="Create launch checklist in ClickUp",
+            )
+        ],
+        connector_permission_gates=[_confirmed_clickup_gate("create_task")],
     )
 
     result = await executor.execute(
@@ -575,7 +807,8 @@ async def test_execute_fails_when_provider_backed_clickup_execution_errors() -> 
                 mode="mutate_with_confirmation",
                 task_hint="Create launch checklist in ClickUp",
             )
-        ]
+        ],
+        connector_permission_gates=[_confirmed_clickup_gate("create_task")],
     )
 
     result = await executor.execute(
@@ -625,10 +858,59 @@ async def test_execute_runs_provider_backed_clickup_task_read_before_delivery() 
     assert result.status == "success"
     assert result.actions == ["clickup_list_tasks", "api_response"]
     assert "ClickUp task read returned: Release checklist, Docs sync." in result.notes
+    assert [item.model_dump(mode="json") for item in result.observations] == [
+        {
+            "policy_owner": "action_execution_observation_contract",
+            "tool_id": "clickup",
+            "operation": "task_system.clickup_list_tasks",
+            "provider_path": "clickup:list_tasks",
+            "source_reference": "clickup:list_tasks",
+            "bounded_summary": "ClickUp tasks observed: Release checklist, Docs sync",
+            "confidence": 0.78,
+            "blocker": None,
+            "next_step_relevance": "available_for_expression_and_memory",
+            "raw_payload_included": False,
+        }
+    ]
     assert clickup_client.calls == [{"operation": "list_tasks", "limit": "5"}]
 
 
-async def test_execute_runs_provider_backed_clickup_task_update_before_delivery() -> None:
+async def test_execute_reports_clickup_provider_blocker_when_client_is_not_ready() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    executor = ActionExecutor(
+        memory_repository=memory_repository,
+        telegram_client=telegram_client,
+        clickup_task_client=FakeClickUpTaskClient(ready=False),
+    )
+
+    plan = _plan(
+        domain_intents=[
+            ExternalTaskSyncDomainIntent(
+                operation="list_tasks",
+                provider_hint="clickup",
+                mode="read_only",
+                task_hint="current sprint",
+            )
+        ]
+    )
+
+    result = await executor.execute(
+        plan,
+        _delivery(
+            channel="api",
+            execution_envelope=build_action_delivery_execution_envelope(plan),
+        ),
+    )
+
+    assert result.status == "success"
+    assert result.actions == ["clickup_provider_blocked", "api_response"]
+    assert "ClickUp execution blocked: provider client is not ready." in result.notes
+    assert result.observations[0].blocker == "clickup_client_not_ready"
+    assert result.observations[0].next_step_relevance == "provider_blocker"
+
+
+async def test_execute_triages_clickup_task_update_until_confirmation() -> None:
     memory_repository = FakeMemoryRepository()
     telegram_client = FakeTelegramClient()
     clickup_client = FakeClickUpTaskClient()
@@ -648,6 +930,53 @@ async def test_execute_runs_provider_backed_clickup_task_update_before_delivery(
                 status_hint="done",
             )
         ]
+    )
+
+    result = await executor.execute(
+        plan,
+        _delivery(
+            channel="api",
+            execution_envelope=build_action_delivery_execution_envelope(plan),
+        ),
+    )
+
+    assert result.status == "success"
+    assert result.actions == ["clickup_list_tasks", "api_response"]
+    assert "ClickUp task update requires explicit confirmation before mutation." in result.notes
+    assert "Matched candidate: Release checklist." in result.notes
+    assert clickup_client.calls == [{"operation": "list_tasks", "limit": "10"}]
+    assert result.observations[0].operation == "task_system.clickup_list_tasks"
+    assert result.observations[0].blocker == "confirmation_required"
+    assert result.observations[0].next_step_relevance == "needs_confirmation"
+    assert result.action_loop is not None
+    assert result.action_loop.step_count == 1
+    assert result.action_loop.used_tools == ["clickup"]
+    assert result.action_loop.completion_state == "needs_confirmation"
+    assert result.action_loop.blockers == ["confirmation_required"]
+    assert result.action_loop.raw_payload_included is False
+
+
+async def test_execute_runs_confirmed_provider_backed_clickup_task_update_before_delivery() -> None:
+    memory_repository = FakeMemoryRepository()
+    telegram_client = FakeTelegramClient()
+    clickup_client = FakeClickUpTaskClient()
+    executor = ActionExecutor(
+        memory_repository=memory_repository,
+        telegram_client=telegram_client,
+        clickup_task_client=clickup_client,
+    )
+
+    plan = _plan(
+        domain_intents=[
+            ExternalTaskSyncDomainIntent(
+                operation="update_task",
+                provider_hint="clickup",
+                mode="mutate_with_confirmation",
+                task_hint="release checklist",
+                status_hint="done",
+            )
+        ],
+        connector_permission_gates=[_confirmed_clickup_gate("update_task")],
     )
 
     result = await executor.execute(
@@ -815,6 +1144,22 @@ async def test_execute_runs_provider_backed_web_search_before_delivery() -> None
     assert result.status == "success"
     assert result.actions == ["duckduckgo_search_web", "api_response"]
     assert "Web search returned: Release notes (https://example.com/release-notes)" in result.notes
+    assert result.observations[0].model_dump(mode="json") == {
+        "policy_owner": "action_execution_observation_contract",
+        "tool_id": "web_search",
+        "operation": "knowledge_search.search_web",
+        "provider_path": "duckduckgo_html:search_web",
+        "source_reference": "latest release notes",
+        "bounded_summary": (
+            "Web search for 'latest release notes': "
+            "Release notes (https://example.com/release-notes); "
+            "Deployment guide (https://example.com/deploy)"
+        ),
+        "confidence": 0.72,
+        "blocker": None,
+        "next_step_relevance": "available_for_expression_and_memory",
+        "raw_payload_included": False,
+    }
     assert search_client.calls == [{"query": "latest release notes", "limit": "5"}]
 
 
@@ -850,6 +1195,21 @@ async def test_execute_runs_provider_backed_browser_page_read_before_delivery() 
     assert result.status == "success"
     assert result.actions == ["generic_http_read_page", "api_response"]
     assert "Browser page read returned: Release notes [text/html] https://example.com/release-notes." in result.notes
+    assert result.observations[0].model_dump(mode="json") == {
+        "policy_owner": "action_execution_observation_contract",
+        "tool_id": "web_browser",
+        "operation": "web_browser.read_page",
+        "provider_path": "generic_http:read_page",
+        "source_reference": "https://example.com/release-notes",
+        "bounded_summary": (
+            "Page read Release notes (https://example.com/release-notes): "
+            "Important changes."
+        ),
+        "confidence": 0.74,
+        "blocker": None,
+        "next_step_relevance": "available_for_expression_and_memory",
+        "raw_payload_included": False,
+    }
     assert browser_client.calls == [{"url": "https://example.com/release-notes", "excerpt_length": "500"}]
 
 

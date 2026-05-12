@@ -1143,6 +1143,27 @@ class MemoryRepository:
             for row in rows
         ]
 
+    async def get_episode_by_event_id_for_user(self, *, user_id: str, event_id: str) -> dict | None:
+        async with self.session_factory() as session:
+            statement = (
+                select(AionMemory)
+                .where(
+                    AionMemory.user_id == str(user_id).strip(),
+                    AionMemory.event_id == str(event_id).strip(),
+                )
+                .order_by(AionMemory.id.desc())
+                .limit(1)
+            )
+            result = await session.execute(statement)
+            row = result.scalar_one_or_none()
+
+        if row is None:
+            return None
+        return {
+            **self._serialize_memory(row),
+            "event_timestamp": row.event_timestamp,
+        }
+
     async def get_recent_chat_transcript_for_user(self, user_id: str, limit: int = 10) -> list[dict[str, Any]]:
         normalized_limit = max(1, int(limit))
         batch_size = max(normalized_limit, 10)

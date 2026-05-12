@@ -25,6 +25,209 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-11 - Keep one-off mobile screenshot servers out of closure evidence
+- Context:
+  - PRJ-1171 attempted an inline Node fallback server plus headless Chromium
+    long-viewport capture after the repeatable mobile UI audit had passed.
+- Symptom:
+  - the inline capture command timed out twice and left a local listener on the
+    validation port until explicitly stopped.
+- Root cause:
+  - ad hoc screenshot servers are less reliable than the repository-owned
+    `npm run audit:ui-mobile` harness in this Windows desktop session.
+- Guardrail:
+  - prefer extending `mobile/scripts/mobile-ui-audit.mjs` as a committed,
+    repeatable script before requiring long-scroll CTA screenshots as closure
+    evidence.
+- Preferred pattern:
+  - use `npm run audit:ui-mobile` for current route proof, and make scroll or
+    full-page proof a narrow audited script enhancement task instead of an
+    inline one-off command.
+- Avoid:
+  - treating an ad hoc capture timeout as product failure, or leaving the
+    fallback server process running after validation.
+- Evidence:
+  - ports `8091` and `8092` were checked and cleaned; no
+    `chrome-headless-shell` process remained after cleanup.
+
+### 2026-05-10 - Rerun full pytest outside sandbox after basetemp PermissionError
+- Context:
+  - PRJ-925 ran the full backend confidence gate after adding
+    `ActionResult.action_loop`.
+- Symptom:
+  - sandboxed pytest progressed through the suite but many tests errored during
+    setup with `PermissionError` while creating the shared
+    `.codex/tmp/pytest-prj925-full-backend` basetemp directory.
+- Root cause:
+  - Windows sandbox permissions can reject pytest fixture temp-directory
+    creation or reuse even when the application code and tests are otherwise
+    healthy.
+- Guardrail:
+  - when a full-suite pytest run fails only on temp-directory creation, rerun
+    the same gate outside sandbox according to the escalation policy before
+    treating it as an application regression.
+- Preferred pattern:
+  - record both the sandboxed failure and the escalated rerun result; keep the
+    final confidence decision tied to the successful full-suite rerun.
+- Avoid:
+  - changing product code or test expectations to mask a temp-directory
+    permission error.
+- Evidence:
+  - sandboxed PRJ-925 run produced `953 passed, 121 errors` with
+    `PermissionError` on the pytest basetemp path.
+  - escalated PRJ-925 rerun passed with `1074 passed`.
+
+### 2026-05-08 - Keep release-smoke contracts aligned with skill registry expansion
+- Context:
+  - PRJ-822 ran a full backend confidence gate after the skill-guided bounded
+    action-loop and connector-confirmation slices.
+- Symptom:
+  - full pytest failed in release-smoke assertions expecting
+    `capability_catalog_catalog_count == 5` while the current canonical
+    capability catalog exposes `9` skills.
+  - the work-partner orchestration baseline expected only the original
+    strategy skills and an immediate ClickUp update action, even though the
+    current architecture adds web/ClickUp metadata and keeps mutation behind
+    confirmation.
+- Root cause:
+  - focused implementation slices updated runtime/API behavior and newer tests,
+    but older release-smoke and orchestration assertions still encoded the
+    previous skill catalog and mutation expectation.
+- Guardrail:
+  - after expanding `backend/app/core/skill_registry.py`, run the full backend
+    gate and update release-smoke/runtime behavior assertions in the same
+    architecture lane.
+- Preferred pattern:
+  - assert the current catalog count through a named test constant, and assert
+    confirmation-gated mutation behavior (`clickup_update_task` absent,
+    pending connector confirmation present) for unconfirmed work-partner
+    updates.
+- Avoid:
+  - treating selected skill metadata as authorization to execute provider
+    mutations.
+- Evidence:
+  - PRJ-822 updated stale test-contract expectations and full backend pytest
+    passed with `1074 passed`.
+
+### 2026-05-08 - Do not claim rendered frontend proof when local browser paths are blocked
+- Context:
+  - PRJ-816 and PRJ-817 tried to validate the app chat connector confirmation
+    UI through local rendered browser paths.
+- Symptom:
+  - the in-app Browser rejected local Vite navigation with
+    `net::ERR_BLOCKED_BY_CLIENT`.
+  - a dynamic headless CDP characterization attempt opened the CDP connection
+    but timed out before page commands completed in this session.
+- Root cause:
+  - local browser automation can be unavailable in the current desktop
+    sandbox/session even when the frontend build itself is healthy.
+  - Vite processes started as ordinary child/background commands may be cleaned
+    up when the command returns, producing misleading short-lived `ready`
+    output followed by `ERR_CONNECTION_REFUSED`.
+  - Chrome/CDP interaction may require running the focused browser
+    characterization outside sandbox restrictions; otherwise CDP can connect
+    but fail to answer page/runtime commands.
+- Guardrail:
+  - do not claim screenshot, console, or interaction proof when the browser
+    path is blocked.
+  - record rendered evidence as a follow-up and use a narrower repeatable
+    source-contract characterization only when it honestly matches the proof
+    available.
+- Preferred pattern:
+  - run `npm exec -- tsc -b --pretty false`, `npm exec -- vite build`, and a
+    focused characterization script that checks the contract it can actually
+    prove.
+  - for repeatable browser proof, keep the app server and Chrome interaction
+    inside the same harness, or run the harness outside sandbox restrictions
+    when local Chrome/CDP otherwise stops responding.
+- Avoid:
+  - treating a source-contract characterization as visual parity or real
+    browser interaction evidence.
+- Evidence:
+  - `PRJ-817` added `npm run test:connector-confirmation` after rendered paths
+    were blocked.
+  - `PRJ-818` added bounded timeouts to Chrome/CDP harnesses; route smoke now
+    fails fast with `Chrome timed out while dumping DOM`, and CDP scripts fail
+    fast on `Page.enable` in this host.
+  - `PRJ-820` recovered real browser proof by using a dedicated app-server plus
+    Chrome/CDP harness and running the focused browser characterization outside
+    sandbox restrictions.
+
+### 2026-05-08 - Keep frontend smoke mock payloads aligned with app-facing API types
+- Context:
+  - PRJ-821 repaired the broad route smoke harness after the browser rendering
+    path was restored.
+- Symptom:
+  - after replacing Chrome `--dump-dom` with a CDP render path, 13 of 14 route
+    markers passed, but `/tools` rendered a blank root and missed
+    `aion-tools-canvas`.
+- Root cause:
+  - the route smoke `/app/tools/overview` mock still used an older
+    `AppToolItem` shape and omitted `skill_tool_bindings`, while the current
+    `ToolsDirectoryItem` maps that field.
+- Guardrail:
+  - when a browser route smoke fails on one route, compare the synthetic mock
+    payload with `web/src/lib/api.ts` before treating the screen as broken.
+- Preferred pattern:
+  - keep broad smoke mocks in parity with the app-facing TypeScript contract
+    and focused characterization mocks for the same surface.
+- Avoid:
+  - adding route-specific marker exceptions or swallowing render crashes in the
+    smoke harness.
+- Evidence:
+  - PRJ-821 added `skill_tool_bindings` to the route-smoke tools mock and
+    `npm run smoke:routes` passed with `14` routes and status `ok`.
+
+### 2026-05-08 - Use explicit pytest basetemp for tmp_path repository tests
+- Context:
+  - PRJ-813 added a real `MemoryRepository` regression that uses pytest
+    `tmp_path` on Windows.
+- Symptom:
+  - repository tests failed during setup before executing code with
+    `PermissionError` against `C:\Users\wrobl\AppData\Local\Temp\pytest-of-wrobl`.
+  - setting `TEMP` and `TMP` was not sufficient because pytest still used its
+    own existing base temp path.
+- Root cause:
+  - the active Windows test environment can deny access to pytest's default
+    numbered temp root.
+- Guardrail:
+  - for focused repository tests that use `tmp_path`, pass an explicit
+    `--basetemp` under the workspace and request sandbox escalation if the
+    sandbox cannot create the directory.
+- Preferred pattern:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py -k "<selector>" --basetemp ..\.codex\tmp\<task-id>; Pop-Location`
+- Avoid:
+  - interpreting a setup-time temp-root `PermissionError` as a repository code
+    regression.
+- Evidence:
+  - PRJ-813: default temp failed before test execution; rerun with
+    `--basetemp ..\.codex\tmp\pytest-prj813` passed after sandbox escalation.
+
+### 2026-05-08 - Use explicit npm exec separator for direct frontend checks
+- Context:
+  - PRJ-811 needed focused frontend validation after a small chat UI change.
+- Symptom:
+  - `npm run build` using `npm exec tsc -b && npm exec vite build` failed in
+    Vite on Windows with an emitted `index.html` path treated as a relative
+    asset name.
+- Root cause:
+  - `npm exec` without `--` can parse command arguments differently on this
+    Windows toolchain; using `npm exec -- vite build` runs the intended Vite
+    command directly.
+- Guardrail:
+  - when diagnosing frontend validation, run direct commands with the explicit
+    separator before deciding whether an app code change broke the build.
+- Preferred pattern:
+  - `Push-Location .\web; npm exec -- vite build; Pop-Location`
+  - use `npm exec -- tsc -b` when intentionally checking TypeScript, and treat
+    existing unrelated errors as a separate task.
+- Avoid:
+  - assuming a Vite path-emission failure from `npm exec vite build` is caused
+    by the current UI edit.
+- Evidence:
+  - PRJ-811: `npm exec -- vite build` passed, while Browser local navigation
+    was blocked by `net::ERR_BLOCKED_BY_CLIENT`.
+
 ### 2026-05-04 - Red-team findings need expression self-review before release claims
 - Context:
   - strict AI red-team evidence captured real assistant reply text through the
@@ -1817,3 +2020,94 @@ fixes for this repository.
 - Evidence:
   - `.codex/tasks/PRJ-1128-coolify-ui-redeploy-release-smoke-recovery.md`
   - `docs/operations/runtime-ops-runbook.md`
+
+### 2026-05-11 - PowerShell command packs must preserve native exit codes
+
+- Context: PRJ-930 web UX route-state validation on Windows.
+- Symptom: `Push-Location .\web; npm run smoke:routes; Pop-Location` surfaced
+  a route-smoke stack trace, but the shell command returned exit code `0`
+  because `Pop-Location` was the final successful PowerShell command.
+- Root cause: native command failures can be masked when a later PowerShell
+  cmdlet succeeds and the script does not explicitly preserve `$LASTEXITCODE`.
+- Guardrail: generated command packs that use `Push-Location` must capture the
+  native exit code before `Pop-Location` and then `exit $exit`.
+- Preferred pattern:
+  - `Push-Location .\web; npm run smoke:routes; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+  - for chained commands, run later commands only when `$LASTEXITCODE -eq 0`
+    and preserve the final native exit code before popping the location
+- Avoid:
+  - treating a tool wrapper exit code as proof when command output contains a
+    stack trace or failure text
+  - recording `Push-Location; native command; Pop-Location` as a release gate
+    without exit-code preservation
+- Evidence:
+  - `.codex/tasks/PRJ-930-run-web-ux-route-state-evidence-pass.md`
+  - `backend/scripts/audit_architecture_implementation_map.py`
+
+### 2026-05-11 - Chrome/CDP route smoke can fail as a validation harness issue
+
+- Context: PRJ-930 `ARCH-WEB-UX-001` evidence pass.
+- Symptom: Browser plugin reported no active Codex browser pane; committed
+  Chrome/CDP route smoke timed out on `Page.enable` or `Runtime.evaluate`, while
+  TypeScript build and Vite build passed.
+- Root cause: local browser/CDP automation can fail before app assertions in
+  this Windows host. This is not enough evidence to claim the product route is
+  broken, but it blocks route-state proof.
+- Guardrail: record this as a validation blocker, clean up browser/dev-server
+  processes, and repair or replace the browser harness before marking web UX
+  architecture rows `READY`.
+- Preferred pattern:
+  - attempt Browser plugin first
+  - use exit-code-preserving command packs
+  - distinguish browser harness failure from product UI failure
+  - verify and stop validation-owned Chrome/Vite processes before handoff
+- Avoid:
+  - counting typecheck/build as route-state proof
+  - leaving leaked headless Chrome or dev-server processes after failed proof
+- Evidence:
+  - `.codex/tasks/PRJ-930-run-web-ux-route-state-evidence-pass.md`
+  - `.agents/state/known-issues.md`
+
+### 2026-05-11 - Successful responsive audits can leave headless Chrome processes
+
+- Context: PRJ-1153 v1.1 tools tablet readability validation after several
+  responsive screenshot audit runs.
+- Symptom: `npm run audit:ui-responsive` passed, but a post-validation process
+  check found four `chrome-headless-shell` processes still running.
+- Root cause: Playwright/Chromium cleanup can lag or fail after repeated local
+  screenshot audits even when route assertions pass.
+- Guardrail: after UI/browser testing, always run the narrow cleanup check for
+  `chrome-headless-shell` and stop only those validation processes before
+  handoff.
+- Preferred pattern:
+  - `Get-Process chrome-headless-shell -ErrorAction SilentlyContinue`
+  - if present, stop those processes and rerun the same narrow check
+  - also verify the dev-server port used by the audit is not still listening
+- Avoid:
+  - treating a green screenshot audit as sufficient cleanup evidence
+  - leaving Playwright headless processes running after a UI task
+- Evidence:
+  - `.codex/tasks/PRJ-1153-v11-tools-tablet-readability.md`
+  - `.agents/state/system-health.md`
+
+### 2026-05-11 - Responsive audit closed-context failures need cleanup and rerun
+
+- Context: PRJ-1155 settings mobile density validation.
+- Symptom: build passed, but the first responsive audit failed before product
+  assertions with `Target page, context or browser has been closed`.
+- Root cause: local Playwright/browser context closed during the audit harness
+  path; the rerun passed after the narrow browser cleanup check.
+- Guardrail: classify this as a validation-harness failure unless a product
+  assertion fails; clean up headless browser processes, rerun the same
+  exit-code-preserving audit, and record both attempts.
+- Preferred pattern:
+  - preserve the build/audit exit code
+  - run the narrow `chrome-headless-shell` cleanup check
+  - rerun `npm run audit:ui-responsive`
+  - only mark the UI task verified after the rerun passes
+- Avoid:
+  - treating a closed-context exception as product evidence
+  - marking a UI task done on build-only evidence
+- Evidence:
+  - `.codex/tasks/PRJ-1155-v11-settings-mobile-density.md`
+  - `.agents/state/system-health.md`

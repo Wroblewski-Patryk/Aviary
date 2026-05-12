@@ -7,6 +7,147 @@ This plan translates the repo analysis into an execution roadmap that brings the
 The goal is not to add more features first.
 The goal is to make the current AION runtime more correct, more inspectable, and easier to extend without architectural drift.
 
+## Current Skill-Guided Bounded Action Loop Queue
+
+- `PRJ-807` is now complete.
+- Action can now execute the first approved read-only website-review loop:
+  `knowledge_search.search_web` -> `web_browser.read_page`.
+- The loop is action-owned, runs only when `website_review` is selected and no
+  bounded URL is already present, records bounded observations, and stops within
+  the two-step website-review posture.
+- Validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_action_executor.py; Pop-Location`
+    -> `48 passed`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py -k "website_review or web_search or page_read or role_skill"; Pop-Location`
+    -> `4 passed, 106 deselected`
+- Next smallest useful task:
+  - `PRJ-809` Sync runtime docs, ops notes, and behavior evidence after the
+    first bounded action-loop slices.
+
+Queue update:
+
+- `PRJ-808` is now complete.
+- ClickUp read remains provider-backed through `list_tasks`.
+- ClickUp create/update mutations now require a matching connector permission
+  gate with `requires_confirmation=true` and `allowed=true`.
+- Normal planner-emitted ClickUp update requests perform read-only candidate
+  triage and stop with a `confirmation_required` observation instead of
+  mutating provider state.
+- Validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_action_executor.py; Pop-Location`
+    -> `51 passed`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py -k "clickup or role_governed_tool_usage or work_partner_scenarios"; Pop-Location`
+    -> `4 passed, 106 deselected`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_connector_policy.py; Pop-Location`
+    -> `6 passed`
+
+- `PRJ-809` is now complete.
+- Runtime docs, ops notes, and behavior evidence now distinguish:
+  - action-owned bounded observations
+  - provider readiness versus mutation authorization
+  - ClickUp read-only triage versus confirmation-gated mutation
+  - `confirmation_required` and `clickup_client_not_ready` blocker meanings
+- `PRJ-810` is now complete.
+- App-facing connector confirmation is now frozen as a contract before any
+  endpoint or UI implementation.
+- Future UI/API confirmation must bind to one source event or trace, connector
+  kind, provider, operation, mode, bounded candidate summary, and source
+  reference before action receives an allowed confirmation gate.
+- Generic follow-up chat text and tool preference toggles must not authorize
+  provider mutation.
+- `PRJ-811` is now complete.
+- `/app/chat/message` now exposes the bounded pending-confirmation response
+  and the web chat composer renders it as read-only blocked state.
+- `PRJ-812` is now complete.
+- Pending confirmation projection now uses one shared core helper, and the same
+  bounded evidence is persisted in episode payload as
+  `pending_connector_confirmation`.
+- `PRJ-813` is now complete.
+- `/app/connectors/confirm` now validates app-authenticated confirmation
+  submissions against server-side pending evidence, including freshness,
+  user-scope, trace, operation, and candidate-drift checks.
+- The endpoint intentionally fails closed with
+  `confirmation_replay_unavailable` until a replay-safe typed plan snapshot is
+  persisted.
+- `PRJ-814` is now complete.
+- pending confirmation episodes now include a replay-safe
+  `connector_confirmation_replay` snapshot with the matching typed intent,
+  not-yet-allowed gate, and bounded observation.
+- `/app/connectors/confirm` recognizes the snapshot but still fails closed
+  with `confirmation_replay_not_implemented`.
+- `PRJ-815` is now complete.
+- confirmed connector replay now reconstructs a replay plan from the persisted
+  snapshot, converts only the matching stored gate to `allowed=true`, and calls
+  `ActionExecutor.execute`.
+- replay remains protected by authenticated user, source event, freshness,
+  provider, operation, and candidate evidence checks.
+- `PRJ-816` is now complete.
+- web chat now renders confirmation controls around the existing
+  `/app/connectors/confirm` endpoint.
+- the frontend submits only the server-projected pending confirmation payload,
+  renders submitting/success/fail-closed feedback, and leaves provider mutation
+  ownership inside backend action replay.
+- `PRJ-817` is now complete.
+- `npm run test:connector-confirmation` now pins the frontend confirmation
+  source contract across API client wiring, bounded payload submission, state
+  transitions, localized copy, composer controls, aria-live feedback, and
+  responsive/error/success style hooks.
+- At the time of `PRJ-817`, dynamic rendered evidence was still blocked
+  locally: in-app Browser rejected local Vite with `net::ERR_BLOCKED_BY_CLIENT`,
+  and the headless CDP harness timed out after connection in that session.
+- `PRJ-818` is now complete.
+- Existing Chrome-based frontend harnesses now launch with additional
+  conservative headless GPU-disable flags, route smoke has a bounded DOM-dump
+  timeout, and CDP scripts have bounded DevTools discovery plus command
+  timeouts.
+- `PRJ-818` did not yet restore rendered proof in that host session, but it
+  converted long hangs into actionable failures:
+  `Chrome timed out while dumping DOM` and
+  `Timed out waiting for CDP response to Page.enable`.
+- `PRJ-819` is now complete.
+- `npm run test:connector-confirmation-render` now provides browserless React
+  server-rendered markup proof for `ChatComposerShell` confirmation states:
+  pending, submitting, success, and fail-closed error.
+- The rendered component proof verifies candidate details, disabled submitting
+  control, success feedback without a stale confirm button, and fail-closed
+  retry posture.
+- `PRJ-820` is now complete.
+- `npm run test:connector-confirmation-browser` now provides real Chrome/CDP
+  browser interaction proof for the app chat confirmation path:
+  chat send -> bounded pending confirmation -> fail-closed stale confirmation
+  retry -> successful confirmation cleanup.
+- The browser characterization proves the frontend submits the exact
+  server-projected bounded payload and does not keep a stale confirm control
+  after success.
+- `PRJ-821` is now complete.
+- `npm run smoke:routes` now uses Chrome/CDP `Runtime.evaluate`, waits for
+  route markers, and passes for all `14` public and authenticated web routes.
+- The `/tools` smoke mock now matches the current app-facing `AppToolItem`
+  contract by including `skill_tool_bindings`.
+- `PRJ-822` is now complete.
+- The post-confirmation architecture confidence gate is green:
+  - full backend pytest passed with `1074 passed`
+  - `npm run test:connector-confirmation` passed
+  - `npm run test:connector-confirmation-render` passed
+  - `npm run test:connector-confirmation-browser` passed
+  - `npm run smoke:routes` passed with status `ok`
+  - `npm exec -- tsc -b --pretty false` passed
+  - `npm exec -- vite build` passed
+- Stale test-contract expectations were corrected to the current architecture:
+  release-smoke now expects the `9` item skill catalog, and work-partner
+  orchestration now asserts expanded selected skill metadata plus
+  confirmation-gated ClickUp mutation behavior.
+- Current posture:
+  - the action-loop and connector-confirmation lane has source, server-render,
+    real-browser interaction, route-shell, and full-backend evidence
+  - skills remain metadata-only
+  - action remains the owner of provider calls and side effects
+  - provider mutation remains confirmation-gated
+- Next smallest useful task:
+  - choose a fresh stability or architecture-alignment slice from current
+    evidence; do not reopen browser-proof recovery unless a new failing smoke
+    identifies a concrete regression.
+
 ## Planned On 2026-05-02 For Passive/Active Runtime Trigger Boundary
 
 Fresh user direction now clarifies the second-layer architecture target:
@@ -302,12 +443,14 @@ Observed from the current repo:
   provider-backed and ready without credentials
 - ClickUp already has provider-backed create/list/update paths when configured
 - `/app/tools/overview` already exposes backend-owned tool truth
-- but tools overview does not yet expose skill-tool bindings
-- skill metadata does not yet describe `website_review`, `web_research`, or
-  ClickUp task-management strategies as tool-aware capabilities
-- action can execute multiple connector intents, but it does not yet expose a
-  first-class execute-observe-adjust loop with bounded observations and stop
-  conditions
+- tools overview now exposes skill-tool bindings for web search, web browser,
+  and ClickUp through `PRJ-804`
+- skill metadata now describes `website_review`, `web_research`,
+  `clickup_task_management`, and `work_partner_task_management` as
+  metadata-only tool-aware capabilities through `PRJ-805`
+- action can execute multiple connector intents and now exposes bounded
+  provider-step observations through `PRJ-806`, but it does not yet run a
+  first-class execute-observe-adjust loop with stop conditions
 
 ### New Queue
 
@@ -319,9 +462,26 @@ Observed from the current repo:
       staged implementation queue
     - no runtime behavior changed in this planning slice
 
-- `PRJ-804` Expose skill-tool bindings in tools overview.
-- `PRJ-805` Add skill registry metadata for tool-aware skills.
-- `PRJ-806` Introduce action execution observation contract.
+- `PRJ-804` Expose skill-tool bindings in tools overview. (complete)
+  - Result:
+    - `/app/tools/overview` now exposes metadata-only skill-tool bindings for
+      `web_search`, `web_browser`, and `clickup`
+    - the web Tools route renders those bindings in the existing technical
+      details panel
+- `PRJ-805` Add skill registry metadata for tool-aware skills. (complete)
+  - Result:
+    - runtime skill registry now exposes `9` metadata-only skills, including
+      `website_review`, `web_research`, `clickup_task_management`, and
+      `work_partner_task_management`
+    - tool-aware records carry allowed tools, limitations, action execution
+      ownership, and connector permission-gate authorization boundaries
+- `PRJ-806` Introduce action execution observation contract. (complete)
+  - Result:
+    - `ActionResult.observations` now carries bounded provider-step summaries
+      for existing provider-backed action paths
+    - runtime debug exposes those observations through
+      `system_debug.action_result`
+    - no new action loop was introduced in this slice
 - `PRJ-807` Add bounded read-only action loop for website review.
 - `PRJ-808` Extend the loop to ClickUp read and confirmation-gated mutation.
 - `PRJ-809` Sync runtime docs, ops notes, and behavior evidence.

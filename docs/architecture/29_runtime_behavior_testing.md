@@ -339,7 +339,7 @@ Post-convergence minimum scenario families now also include:
 - approved bounded tool-slice behavior for:
   - DuckDuckGo web search
   - generic HTTP page read
-  - ClickUp task update
+  - ClickUp task read and confirmation-gated task mutation
 - proactive delivery-ready versus anti-spam-blocked posture
 - observer-gated proactivity:
   - silent no-op when no due/actionable work exists
@@ -357,8 +357,10 @@ Current scenario anchors:
 - `T13.1`: no-UI `v1` reminder capture -> continuity -> proactive follow-up
 - `T14.1`: analyst-driven bounded web search via action-owned tool path
 - `T14.2`: analyst-driven bounded page read via action-owned tool path
-- `T14.3`: executor-aligned ClickUp update via action-owned connector path
+- `T14.3`: executor-aligned ClickUp update triage via action-owned connector
+  path, with mutation blocked until explicit confirmation
 - `T15.1`: work-partner organization via bounded search plus ClickUp update
+  triage, with mutation blocked until explicit confirmation
 - `T15.2`: work-partner decision support via bounded page-read browsing
 - `T16.1`: work-partner ClickUp task listing
 - `T16.2`: work-partner Google Calendar availability reads

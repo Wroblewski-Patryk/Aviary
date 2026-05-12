@@ -68,6 +68,30 @@ export type AppChatMessageResponse = {
     action_status: string;
     reflection_triggered: boolean;
   } | null;
+  pending_confirmation?: AppPendingConnectorConfirmation | null;
+};
+
+export type AppPendingConnectorConfirmation = {
+  status: "pending_confirmation";
+  source_event_id: string;
+  trace_id: string;
+  connector_kind: string;
+  provider_hint?: string | null;
+  operation: string;
+  mode: string;
+  candidate_summary: string;
+  source_reference: string;
+  reason: string;
+};
+
+export type AppConnectorConfirmationResponse = {
+  status: string;
+  reason: string;
+  execution_allowed: boolean;
+  action_status?: string | null;
+  actions?: string[];
+  notes?: string | null;
+  pending_confirmation?: AppPendingConnectorConfirmation | null;
 };
 
 export type AppRecentActivityItem = {
@@ -121,6 +145,15 @@ export type AppToolUserControl = {
   requested_enabled?: boolean | null;
 };
 
+export type AppSkillToolBinding = {
+  skill_id: string;
+  label: string;
+  posture: string;
+  allowed_operations: string[];
+  execution_owner: string;
+  authority: string;
+};
+
 export type AppToolItem = {
   id: string;
   label: string;
@@ -136,6 +169,7 @@ export type AppToolItem = {
   link_required: boolean;
   link_state: string;
   capabilities: string[];
+  skill_tool_bindings: AppSkillToolBinding[];
   next_actions: string[];
   source_of_truth: string[];
 };
@@ -292,6 +326,15 @@ export const api = {
       "/app/chat/message",
       { method: "POST" },
       { text },
+    );
+  },
+  confirmConnectorAction(
+    pendingConfirmation: AppPendingConnectorConfirmation,
+  ): Promise<AppConnectorConfirmationResponse> {
+    return requestJson<AppConnectorConfirmationResponse>(
+      "/app/connectors/confirm",
+      { method: "POST" },
+      { ...pendingConfirmation },
     );
   },
   getPersonalityOverview(): Promise<AppPersonalityOverviewResponse> {

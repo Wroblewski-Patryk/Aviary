@@ -5,6 +5,7 @@ import {
   type AppChatHistoryEntry,
   type AppHealthResponse,
   type AppMeResponse,
+  type AppPendingConnectorConfirmation,
   type AppPersonalityOverviewResponse,
   type AppResetDataResponse,
   type AppSettings,
@@ -227,6 +228,13 @@ const UI_COPY = {
         "Start the conversation here. New turns will appear in this shared thread as soon as they are exchanged.",
       placeholder: "Send a message...",
       composerHint: "Replies land back in this same transcript, so you can stay focused on one conversation.",
+      confirmationRequired: "Confirmation required",
+      confirmationBlocked: "Blocked",
+      confirmationConfirm: "Confirm",
+      confirmationSubmitting: "Confirming...",
+      confirmationComplete: "Confirmation complete",
+      confirmationExecuted: "Action executed.",
+      confirmationFailed: "Confirmation stayed blocked.",
       send: "Send message",
       sending: "Sending...",
       delivered: "Delivered",
@@ -302,6 +310,7 @@ const UI_COPY = {
       instruction: "Instruction",
       noLinkCode: "No active link code yet. Generate one when you are ready to confirm the chat.",
       capabilities: "Capabilities",
+      skillBindings: "Skill bindings",
       summaryGroupNote: "Clear groups for the tools you can browse here",
       summaryIntegralNote: "Capabilities that stay available as part of the product",
       summaryReadyNote: "Tools that are ready to use today",
@@ -731,6 +740,13 @@ const UI_COPY = {
         "Zacznij rozmowę tutaj. Nowe wiadomości pojawią się w tym samym wspólnym wątku zaraz po wymianie.",
       placeholder: "Napisz wiadomość...",
       composerHint: "Odpowiedzi wracają do tego samego transcriptu, żeby cały dialog został w jednym miejscu.",
+      confirmationRequired: "Wymagane potwierdzenie",
+      confirmationBlocked: "Zablokowane",
+      confirmationConfirm: "Potwierdź",
+      confirmationSubmitting: "Potwierdzanie...",
+      confirmationComplete: "Potwierdzenie zakończone",
+      confirmationExecuted: "Akcja wykonana.",
+      confirmationFailed: "Potwierdzenie pozostało zablokowane.",
       send: "Wyślij wiadomość",
       sending: "Wysyłanie...",
       delivered: "Dostarczono",
@@ -806,6 +822,7 @@ const UI_COPY = {
       instruction: "Instrukcja",
       noLinkCode: "Brak aktywnego kodu. Wygeneruj go, gdy będziesz gotowy potwierdzić czat.",
       capabilities: "Możliwości",
+      skillBindings: "Powiązane umiejętności",
       summaryGroupNote: "Czytelne grupy narzędzi, które możesz tutaj przeglądać",
       summaryIntegralNote: "Możliwości dostępne jako stała część produktu",
       summaryReadyNote: "Narzędzia gotowe do użycia dzisiaj",
@@ -1235,6 +1252,13 @@ const UI_COPY = {
         "Starte die Unterhaltung hier. Neue Nachrichten erscheinen direkt in diesem gemeinsamen Thread, sobald sie ausgetauscht wurden.",
       placeholder: "Sende eine Nachricht...",
       composerHint: "Antworten landen wieder in diesem selben Transkript, damit die ganze Unterhaltung an einem Ort bleibt.",
+      confirmationRequired: "Bestätigung erforderlich",
+      confirmationBlocked: "Blockiert",
+      confirmationConfirm: "Bestätigen",
+      confirmationSubmitting: "Bestätige...",
+      confirmationComplete: "Bestätigung abgeschlossen",
+      confirmationExecuted: "Aktion ausgeführt.",
+      confirmationFailed: "Bestätigung bleibt blockiert.",
       send: "Nachricht senden",
       sending: "Senden...",
       delivered: "Zugestellt",
@@ -1310,6 +1334,7 @@ const UI_COPY = {
       instruction: "Anleitung",
       noLinkCode: "Noch kein aktiver Code. Erzeuge ihn, wenn du den Chat bestĂ¤tigen willst.",
       capabilities: "FĂ¤higkeiten",
+      skillBindings: "Skill-Bindungen",
       summaryGroupNote: "Klare Gruppen für die Tools, die du hier durchsuchen kannst",
       summaryIntegralNote: "Fähigkeiten, die als Teil des Produkts verfügbar bleiben",
       summaryReadyNote: "Tools, die heute einsatzbereit sind",
@@ -1694,6 +1719,12 @@ export default function App() {
   const [sendingMessage, setSendingMessage] = useState(false);
   const [localTranscriptItems, setLocalTranscriptItems] = useState<AppChatHistoryEntry[]>([]);
   const [chatText, setChatText] = useState("");
+  const [pendingConnectorConfirmation, setPendingConnectorConfirmation] =
+    useState<AppPendingConnectorConfirmation | null>(null);
+  const [connectorConfirmationBusy, setConnectorConfirmationBusy] = useState(false);
+  const [connectorConfirmationFeedback, setConnectorConfirmationFeedback] = useState<string | null>(null);
+  const [connectorConfirmationFeedbackState, setConnectorConfirmationFeedbackState] =
+    useState<"idle" | "submitting" | "success" | "error">("idle");
   const [overview, setOverview] = useState<AppPersonalityOverviewResponse | null>(null);
   const [, setOverviewLoading] = useState(false);
   const [toolsOverview, setToolsOverview] = useState<AppToolsOverviewResponse | null>(null);
@@ -3416,10 +3447,14 @@ export default function App() {
     setLocalTranscriptItems((items) => [...items, localUserMessage]);
     setSendingMessage(true);
     setError(null);
+    setPendingConnectorConfirmation(null);
+    setConnectorConfirmationFeedback(null);
+    setConnectorConfirmationFeedbackState("idle");
     setChatText("");
 
     try {
       const reply = await api.sendChatMessage(text);
+      setPendingConnectorConfirmation(reply.pending_confirmation ?? null);
       const deliveredUserMessage: AppChatHistoryEntry = {
         ...localUserMessage,
         message_id: `${reply.event_id}:user`,
@@ -3470,6 +3505,32 @@ export default function App() {
       setError(caught instanceof Error ? caught.message : "Message delivery failed.");
     } finally {
       setSendingMessage(false);
+    }
+  }
+
+  async function handleConfirmPendingConnectorAction() {
+    if (!pendingConnectorConfirmation || connectorConfirmationBusy) {
+      return;
+    }
+
+    setConnectorConfirmationBusy(true);
+    setConnectorConfirmationFeedbackState("submitting");
+    setConnectorConfirmationFeedback(copy.chat.confirmationSubmitting);
+    setError(null);
+
+    try {
+      const response = await api.confirmConnectorAction(pendingConnectorConfirmation);
+      const responseNotes = typeof response.notes === "string" ? response.notes.trim() : "";
+      const responseStatus = response.action_status ? ` ${response.action_status}.` : "";
+
+      setPendingConnectorConfirmation(response.pending_confirmation ?? null);
+      setConnectorConfirmationFeedback(responseNotes || `${copy.chat.confirmationExecuted}${responseStatus}`);
+      setConnectorConfirmationFeedbackState("success");
+    } catch (caught) {
+      setConnectorConfirmationFeedback(caught instanceof Error ? caught.message : copy.chat.confirmationFailed);
+      setConnectorConfirmationFeedbackState("error");
+    } finally {
+      setConnectorConfirmationBusy(false);
     }
   }
 
@@ -4171,10 +4232,21 @@ export default function App() {
                         sending={sendingMessage}
                         sendLabel={copy.chat.send}
                         note="AION may make mistakes. Consider checking important information."
+                        pendingConfirmation={pendingConnectorConfirmation}
+                        pendingConfirmationLabel={copy.chat.confirmationRequired}
+                        pendingConfirmationBlockedLabel={copy.chat.confirmationBlocked}
+                        pendingConfirmationConfirmLabel={copy.chat.confirmationConfirm}
+                        pendingConfirmationSubmittingLabel={copy.chat.confirmationSubmitting}
+                        pendingConfirmationCompleteLabel={copy.chat.confirmationComplete}
+                        pendingConfirmationState={connectorConfirmationFeedbackState}
+                        pendingConfirmationFeedback={connectorConfirmationFeedback}
                         addIcon={<PlusIcon />}
                         voiceIcon={<MicrophoneIcon />}
                         sendIcon={<SendArrowIcon />}
                         onQuickAction={setChatText}
+                        onConfirmPendingConfirmation={() => {
+                          void handleConfirmPendingConnectorAction();
+                        }}
                         onTextChange={setChatText}
                         onSubmit={(event) => {
                           void handleSendMessage(event);

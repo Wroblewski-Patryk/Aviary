@@ -524,11 +524,43 @@ class ToolGroundedLearningCandidate(BaseModel):
     source_reference: str = ""
 
 
+class ActionExecutionObservation(BaseModel):
+    policy_owner: Literal["action_execution_observation_contract"] = "action_execution_observation_contract"
+    tool_id: str
+    operation: str
+    provider_path: str
+    source_reference: str = ""
+    bounded_summary: str
+    confidence: float = 0.0
+    blocker: str | None = None
+    next_step_relevance: str = "available_for_expression_and_memory"
+    raw_payload_included: bool = False
+
+
+class ActionLoopSummaryOutput(BaseModel):
+    policy_owner: Literal["action_loop_execution_summary_policy"] = "action_loop_execution_summary_policy"
+    execution_owner: Literal["action"] = "action"
+    step_count: int = 0
+    selected_skill_ids: list[str] = Field(default_factory=list)
+    used_tools: list[str] = Field(default_factory=list)
+    completion_state: Literal[
+        "satisfied",
+        "blocked",
+        "needs_confirmation",
+        "needs_clarification",
+        "step_limit",
+    ] = "satisfied"
+    blockers: list[str] = Field(default_factory=list)
+    raw_payload_included: bool = False
+
+
 class ActionResult(BaseModel):
     status: str
     actions: list[str] = Field(default_factory=list)
     notes: str
     tool_learning_candidates: list[ToolGroundedLearningCandidate] = Field(default_factory=list)
+    observations: list[ActionExecutionObservation] = Field(default_factory=list)
+    action_loop: ActionLoopSummaryOutput | None = None
 
 
 class ExpressionOutput(BaseModel):

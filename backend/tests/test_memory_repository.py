@@ -88,6 +88,49 @@ async def test_memory_repository_persists_structured_episode_payload(tmp_path) -
     await engine.dispose()
 
 
+async def test_memory_repository_loads_episode_by_user_and_event_id(tmp_path) -> None:
+    database_path = tmp_path / "memory-episode-by-event-id.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    timestamp = datetime.now(timezone.utc)
+    await repository.write_episode(
+        event_id="evt-confirm",
+        trace_id="trace-confirm",
+        source="api",
+        user_id="u-1",
+        event_timestamp=timestamp,
+        summary="Confirmation pending.",
+        payload={
+            "pending_connector_confirmation": {
+                "status": "pending_confirmation",
+                "source_event_id": "evt-confirm",
+                "trace_id": "trace-confirm",
+            },
+        },
+        importance=0.7,
+    )
+
+    loaded = await repository.get_episode_by_event_id_for_user(
+        user_id="u-1",
+        event_id="evt-confirm",
+    )
+    isolated = await repository.get_episode_by_event_id_for_user(
+        user_id="u-2",
+        event_id="evt-confirm",
+    )
+
+    assert loaded is not None
+    assert loaded["event_id"] == "evt-confirm"
+    assert loaded["payload"]["pending_connector_confirmation"]["status"] == "pending_confirmation"
+    assert loaded["event_timestamp"].replace(tzinfo=timezone.utc) == timestamp
+    assert isolated is None
+
+    await engine.dispose()
+
+
 async def test_memory_repository_exposes_memory_layer_vocabulary_and_conclusion_mapping(tmp_path) -> None:
     database_path = tmp_path / "memory-layer-vocabulary.db"
     engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")

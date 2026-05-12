@@ -340,6 +340,21 @@ Runtime behavior-validation baseline requires two explicit modes:
   expression, and action result
 - `user_simulation`: natural conversation checks without debug payload exposure
 
+For bounded action-loop work, `system_debug.action_result.action_loop` is the
+canonical summary surface for operator triage. It should expose the loop
+summary policy owner, execution owner, step count, selected skill ids, used
+tools, completion state, blockers, and `raw_payload_included=false` without
+raw provider payloads.
+
+Use `system_debug.action_result.observations` as the canonical per-step
+evidence surface after checking the summary. Each observation must stay
+summary-level and include tool id, operation, provider path, source reference,
+bounded summary, confidence or blocker, next-step relevance, and
+`raw_payload_included=false`. Use `confirmation_required` to distinguish a
+safe ClickUp mutation stop from provider failure, and use
+`clickup_client_not_ready` to distinguish missing ClickUp readiness from a
+planning failure.
+
 Behavior-driven scenario outcomes should be recorded in the canonical format:
 
 ```json

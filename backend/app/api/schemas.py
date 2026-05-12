@@ -25,6 +25,19 @@ class EventQueueResponse(BaseModel):
     source_count: int | None = None
 
 
+class PendingConnectorConfirmationResponse(BaseModel):
+    status: str = "pending_confirmation"
+    source_event_id: str
+    trace_id: str
+    connector_kind: str
+    provider_hint: str | None = None
+    operation: str
+    mode: str
+    candidate_summary: str
+    source_reference: str = ""
+    reason: str
+
+
 class EventResponse(BaseModel):
     event_id: str
     trace_id: str
@@ -32,6 +45,7 @@ class EventResponse(BaseModel):
     reply: EventReplyResponse | None = None
     runtime: EventRuntimeResponse | None = None
     queue: EventQueueResponse | None = None
+    pending_confirmation: PendingConnectorConfirmationResponse | None = None
     debug: RuntimeResult | None = None
     system_debug: RuntimeSystemDebugOutput | None = None
     incident_evidence: dict[str, Any] | None = None
@@ -67,6 +81,17 @@ class AppResetDataRequest(BaseModel):
 
 class AppChatMessageRequest(BaseModel):
     text: str = Field(min_length=1, max_length=4000)
+
+
+class AppConnectorConfirmationRequest(BaseModel):
+    source_event_id: str = Field(min_length=1, max_length=128)
+    trace_id: str = Field(min_length=1, max_length=128)
+    connector_kind: str = Field(min_length=1, max_length=64)
+    provider_hint: str | None = Field(default=None, max_length=64)
+    operation: str = Field(min_length=1, max_length=64)
+    mode: str = Field(min_length=1, max_length=64)
+    candidate_summary: str = Field(min_length=1, max_length=500)
+    source_reference: str = Field(default="", max_length=200)
 
 
 class AppAuthUserResponse(BaseModel):
@@ -119,6 +144,17 @@ class AppChatMessageResponse(BaseModel):
     runtime: EventRuntimeResponse | None = None
     event_id: str
     trace_id: str
+    pending_confirmation: PendingConnectorConfirmationResponse | None = None
+
+
+class AppConnectorConfirmationResponse(BaseModel):
+    status: str
+    reason: str
+    execution_allowed: bool = False
+    action_status: str | None = None
+    actions: list[str] = Field(default_factory=list)
+    notes: str = ""
+    pending_confirmation: PendingConnectorConfirmationResponse | None = None
 
 
 class AppPersonalityOverviewResponse(BaseModel):

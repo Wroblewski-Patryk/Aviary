@@ -1,6 +1,6 @@
 # Traceability Matrix
 
-Last updated: 2026-05-03
+Last updated: 2026-05-11
 
 Format:
 
@@ -10,6 +10,9 @@ Format:
 `UNVERIFIED` means it was not proven from code during this pass.
 Stable test ownership IDs are maintained in
 [Test Ownership Ledger](../engineering/test-ownership-ledger.md).
+The current architecture-completion radar is generated separately in
+[Project Status Dashboard](../operations/project-status-dashboard.md) from
+[Architecture Implementation Audit](../operations/architecture-implementation-audit-2026-05-10.md).
 
 | Feature | Frontend Entry | Backend Route/API | Service/Module | Database Model | Pipeline | Tests | Related Docs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -27,12 +30,16 @@ Stable test ownership IDs are maintained in
 | Scheduler/proactive/planned work | Health panels and chat outcomes indirectly | `GET /health`; external scripts | `workers/scheduler.py`, `proactive/engine.py`, `planned_action_observer.py`, scheduler/proactive policies | `AionSchedulerCadenceEvidence`, `AionPlannedWorkItem`, `AionSubconsciousProposal`, `AionMemory` | [Scheduler And Proactive Pipeline](../pipelines/scheduler-proactive.md) | `backend/tests/test_scheduler_worker.py`, `backend/tests/test_planned_action_observer.py`, `backend/tests/test_runtime_pipeline.py` | `docs/architecture/23_proactive_system.md`, `docs/operations/runtime-ops-runbook.md` |
 | Retrieval and embeddings | Personality/context behavior indirectly | Runtime context load; `/health.memory_retrieval` in health payload | `memory/embeddings.py`, `memory/openai_embedding_client.py`, `retrieval_policy`, `retrieval_lifecycle_policy` | `AionSemanticEmbedding`, `AionMemory`, `AionConclusion` | [Retrieval and memory context](../pipelines/index.md#retrieval-and-memory-context) | `backend/tests/test_embedding_strategy.py`, `backend/tests/test_memory_repository.py`, `backend/tests/test_runtime_pipeline.py` | [Data Model Reference](../data/index.md), `docs/architecture/04_memory_system.md`, `docs/architecture/29_runtime_behavior_testing.md` |
 | Deployment/release smoke | Operator scripts | `GET /health`, smoke endpoints | `backend/scripts/run_release_smoke.ps1`, deployment policies | Read-only over runtime/db state | [Release and deployment smoke](../pipelines/index.md#release-and-deployment-smoke) | `backend/tests/test_deployment_trigger_scripts.py`, `backend/tests/test_main_runtime_policy.py` | `docs/operations/runtime-ops-runbook.md`, `docs/architecture/28_local_windows_and_coolify_deploy.md` |
-| Web shell routes and localization | `web/src/App.tsx`, `web/src/index.css`, [Frontend Route And Component Map](../frontend/route-component-map.md) | App-facing APIs above | `web/src/lib/api.ts`; backend varies by route | Varies by route | [Web shell route rendering](../pipelines/index.md#web-shell-route-rendering) | `backend/tests/test_web_routes.py`; frontend build only (`GAP`: no dedicated frontend test suite found) | `docs/ux/*`, `docs/planning/web-ux-ui-productization-plan.md`, [Frontend Route And Component Map](../frontend/route-component-map.md) |
+| Web shell routes and localization | `web/src/App.tsx`, `web/src/index.css`, [Frontend Route And Component Map](../frontend/route-component-map.md) | App-facing APIs above | `web/src/lib/api.ts`; backend varies by route; `web/scripts/route-smoke.mjs` provides route-state proof | Varies by route | [Web shell route rendering](../pipelines/index.md#web-shell-route-rendering) | `backend/tests/test_web_routes.py`; `npm exec -- tsc -b --pretty false`; `npm exec -- vite build`; `npm run smoke:routes` | `docs/ux/*`, `docs/planning/web-ux-ui-productization-plan.md`, [Frontend Route And Component Map](../frontend/route-component-map.md), `PRJ-931` |
+| Architecture completion radar | `docs/operations/project-status-dashboard.md` | Not a runtime endpoint | `backend/scripts/audit_architecture_implementation_map.py`, `backend/scripts/generate_project_status_dashboard.py` | Not applicable | Documentation governance and release evidence selection | audit/dashboard generator command pack; `git diff --check` | `docs/operations/architecture-implementation-map-2026-05-10.csv`, `docs/operations/architecture-implementation-audit-2026-05-10.md`, `.agents/state/module-confidence-ledger.md` |
 
 ## Immediate Gaps
 
-- Frontend traceability now has a route/component map, but component ownership
-  remains mostly inside `web/src/App.tsx`.
+- Frontend traceability now has route-state smoke evidence, but visual parity
+  and responsive screenshot comparison remain task-specific rather than global
+  proof.
 - Test ownership is currently file-level in
   [Test Ownership Ledger](../engineering/test-ownership-ledger.md), not
   test-function-level.
+- `ARCH-CONNECTORS-001` remains blocked on external provider credentials;
+  this matrix does not convert that blocker into local implementation work.

@@ -171,6 +171,24 @@ Behavior-feedback learning triage:
 - unclear or low-confidence behavior feedback should remain descriptive-only;
   relation mutation after unclear feedback is a release blocker
 
+Bounded action-loop triage:
+
+- use runtime `system_debug.action_result.action_loop` first when inspecting a
+  tool-backed turn
+- `completion_state=satisfied` means the bounded action loop reached its
+  approved turn goal within policy
+- `completion_state=needs_confirmation` means action stopped before mutation
+  and a confirmation path must be used before any provider-side write
+- `completion_state=blocked`, `needs_clarification`, or `step_limit` means the
+  operator should inspect `blockers`, `selected_skill_ids`, and `used_tools`
+  before assuming a provider outage
+- use `system_debug.action_result.observations` for per-step proof after the
+  summary; observations must remain bounded and keep
+  `raw_payload_included=false`
+- `confirmation_required` is the expected blocker for safe ClickUp mutation
+  stops, while `clickup_client_not_ready` indicates provider readiness/config
+  rather than user confirmation state
+
 Communication-boundary historical backfill:
 
 - purpose:
@@ -1679,8 +1697,9 @@ Important health surfaces for current release checks:
   - `task_system.clickup_create_task.state=credentials_missing` means the repo
     is still in policy-only posture for task creation at runtime
   - `task_system.clickup_create_task.state=provider_backed_ready` means action
-    may execute ClickUp task creation after expression when the plan emits the
-    matching typed intent
+    has a provider-backed create adapter available, but action may execute it
+    only when the matching connector permission gate is explicitly confirmed
+    with `allowed=true`
   - `task_system.clickup_list_tasks.state=credentials_missing` means the repo
     is still policy-only for provider-backed task reads at runtime
   - `task_system.clickup_list_tasks.state=provider_backed_ready` means action
@@ -1693,8 +1712,11 @@ Important health surfaces for current release checks:
     bounded ClickUp update path exists but runtime lacks provider credentials
     for mutation execution
 - `task_system.clickup_update_task.state=provider_backed_ready` means action
-  may execute bounded `update_task` intents for matched ClickUp tasks while
-  keeping the mutation evidence status-level only
+  has a provider-backed update adapter available. Normal planner-emitted
+  update requests should first perform read-only `list_tasks` candidate triage
+  and stop with a `confirmation_required` observation; provider mutation is
+  allowed only when the matching connector permission gate is explicitly
+  confirmed with `allowed=true`.
 - `/health.connectors.organizer_tool_stack` is the shared operator surface for
   the frozen first production organizer stack:
   - `approved_operations`
@@ -1775,7 +1797,9 @@ Important health surfaces for current release checks:
      - requires `CLICKUP_API_TOKEN`
      - requires `CLICKUP_LIST_ID`
      - `list_tasks` remains `read_only` and opt-in gated
-     - `create_task` and `update_task` remain confirmation-bound mutations
+     - `create_task` and `update_task` remain confirmation-bound mutations;
+       unconfirmed requests must be visible as `confirmation_required` action
+       observations, not provider mutations
    - Google Calendar:
      - requires `GOOGLE_CALENDAR_ACCESS_TOKEN`
      - requires `GOOGLE_CALENDAR_CALENDAR_ID`

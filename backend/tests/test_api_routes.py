@@ -1,18 +1,22 @@
 import asyncio
 from datetime import datetime, timedelta, timezone
 from threading import Thread
-from time import sleep
+from time import sleep, time
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.api.routes import router
+from app.core.action import ActionExecutor
 from app.core.attention import AttentionTurnCoordinator
 from app.core.contracts import (
+    ActionExecutionObservation,
     ActionResult,
+    ConnectorPermissionGateOutput,
     ContextOutput,
     Event,
     EventMeta,
+    ExternalTaskSyncDomainIntent,
     ExpressionOutput,
     GoalRecordOutput,
     GoalProgressRecordOutput,
@@ -40,6 +44,9 @@ class FakeRuntime:
         action_status: str = "success",
         action_actions: list[str] | None = None,
         action_notes: str | None = None,
+        action_observations: list[ActionExecutionObservation] | None = None,
+        plan_domain_intents: list | None = None,
+        plan_connector_permission_gates: list[ConnectorPermissionGateOutput] | None = None,
     ):
         self.last_event: Event | None = None
         self.events: list[Event] = []
@@ -48,6 +55,9 @@ class FakeRuntime:
         self.action_status = action_status
         self.action_actions = list(action_actions) if action_actions is not None else None
         self.action_notes = action_notes
+        self.action_observations = list(action_observations or [])
+        self.plan_domain_intents = list(plan_domain_intents or [])
+        self.plan_connector_permission_gates = list(plan_connector_permission_gates or [])
 
     async def run(self, event: Event) -> RuntimeResult:
         if self.run_delay_seconds > 0:
@@ -65,6 +75,7 @@ class FakeRuntime:
             status=self.action_status,
             actions=action_actions,
             notes=action_notes,
+            observations=self.action_observations,
         )
         return RuntimeResult(
             event=event,
@@ -140,6 +151,8 @@ class FakeRuntime:
                 steps=["reply"],
                 needs_action=False,
                 needs_response=True,
+                domain_intents=self.plan_domain_intents,
+                connector_permission_gates=self.plan_connector_permission_gates,
             ),
             action_result=action_result,
             expression=ExpressionOutput(
@@ -264,6 +277,23 @@ class FakeTelegramClient:
     async def set_webhook(self, webhook_url: str, secret_token: str | None) -> dict:
         self.calls.append({"webhook_url": webhook_url, "secret_token": secret_token})
         return {"ok": True, "result": True}
+
+
+class FakeClickUpTaskClient:
+    def __init__(self, *, ready: bool = True):
+        self.ready = ready
+        self.calls: list[dict[str, str]] = []
+
+    async def list_tasks(self, *, limit: int = 10) -> list[dict]:
+        self.calls.append({"operation": "list_tasks", "limit": str(limit)})
+        return [
+            {"id": "clk_1", "name": "Ship v1"},
+            {"id": "clk_2", "name": "Docs sync"},
+        ]
+
+    async def update_task(self, *, task_id: str, status: str) -> dict:
+        self.calls.append({"operation": "update_task", "task_id": task_id, "status": status})
+        return {"id": task_id, "name": "Ship v1", "status": status}
 
 
 class FakeSettings:
@@ -491,6 +521,15 @@ class FakeMemoryRepository:
             for item in self.recent_memory
             if str(item.get("user_id", "")).strip() == str(user_id).strip()
         ][offset : offset + limit]
+
+    async def get_episode_by_event_id_for_user(self, *, user_id: str, event_id: str) -> dict | None:
+        for item in self.recent_memory:
+            if str(item.get("user_id", "")).strip() != str(user_id).strip():
+                continue
+            if str(item.get("event_id", "")).strip() != str(event_id).strip():
+                continue
+            return dict(item)
+        return None
 
     async def get_recent_chat_transcript_for_user(self, user_id: str, limit: int = 10) -> list[dict]:
         normalized_limit = max(1, int(limit))
@@ -1144,16 +1183,18 @@ def _client(
     google_calendar_timezone: str | None = None,
     google_drive_access_token: str | None = None,
     google_drive_folder_id: str | None = None,
+    runtime: FakeRuntime | None = None,
 ) -> tuple[TestClient, FakeRuntime, FakeTelegramClient]:
     app = FastAPI()
     app.include_router(router)
-    runtime = FakeRuntime(
-        reflection_triggered=reflection_triggered,
-        run_delay_seconds=run_delay_seconds,
-        action_status=runtime_action_status,
-        action_actions=runtime_action_actions,
-        action_notes=runtime_action_notes,
-    )
+    if runtime is None:
+        runtime = FakeRuntime(
+            reflection_triggered=reflection_triggered,
+            run_delay_seconds=run_delay_seconds,
+            action_status=runtime_action_status,
+            action_actions=runtime_action_actions,
+            action_notes=runtime_action_notes,
+        )
     telegram_client = FakeTelegramClient()
     memory_repository = FakeMemoryRepository(stats=reflection_stats)
     if scheduler_last_maintenance_tick_at is not None or scheduler_last_maintenance_summary is not None:
@@ -1639,13 +1680,20 @@ def test_health_endpoint_exposes_learned_state_introspection_posture() -> None:
         ],
     }
     assert body["capability_catalog"]["skill_catalog_posture"]["selection_visibility_summary"] == {}
-    assert body["capability_catalog"]["skill_catalog_posture"]["catalog_count"] == 5
-    assert body["capability_catalog"]["skill_catalog_posture"]["described_skill_ids"] == [
+    expected_skill_ids = [
         "emotional_support",
         "structured_reasoning",
         "execution_planning",
         "memory_recall",
         "connector_boundary_review",
+        "website_review",
+        "web_research",
+        "clickup_task_management",
+        "work_partner_task_management",
+    ]
+    assert body["capability_catalog"]["skill_catalog_posture"]["catalog_count"] == 9
+    assert body["capability_catalog"]["skill_catalog_posture"]["described_skill_ids"] == [
+        *expected_skill_ids,
     ]
     assert body["capability_catalog"]["skill_catalog_posture"]["runtime_selection_surface"] == (
         "system_debug.adaptive_state.selected_skills"
@@ -1846,13 +1894,17 @@ def test_internal_state_inspection_endpoint_exposes_learned_and_planning_state()
     assert body["capability_catalog"]["skill_catalog_posture"]["selection_visibility_summary"] == {
         "current_turn_selected_role_available_via": "system_debug.role",
         "current_turn_selected_skills_available_via": "system_debug.adaptive_state.selected_skills",
-        "catalog_skill_count": 5,
+        "catalog_skill_count": 9,
         "catalog_skill_ids": [
             "emotional_support",
             "structured_reasoning",
             "execution_planning",
             "memory_recall",
             "connector_boundary_review",
+            "website_review",
+            "web_research",
+            "clickup_task_management",
+            "work_partner_task_management",
         ],
         "metadata_only_skill_boundary": True,
         "work_partner_role_available": True,
@@ -1863,6 +1915,10 @@ def test_internal_state_inspection_endpoint_exposes_learned_and_planning_state()
         "execution_planning",
         "memory_recall",
         "connector_boundary_review",
+        "website_review",
+        "web_research",
+        "clickup_task_management",
+        "work_partner_task_management",
     ]
     assert body["capability_catalog"]["skill_catalog_posture"]["runtime_selection_surface"] == (
         "system_debug.adaptive_state.selected_skills"
@@ -1997,13 +2053,17 @@ def test_internal_state_inspection_endpoint_exposes_learned_and_planning_state()
     assert body["role_skill_state"]["selection_visibility_summary"] == {
         "current_turn_selected_role_available_via": "system_debug.role",
         "current_turn_selected_skills_available_via": "system_debug.adaptive_state.selected_skills",
-        "catalog_skill_count": 5,
+        "catalog_skill_count": 9,
         "catalog_skill_ids": [
             "emotional_support",
             "structured_reasoning",
             "execution_planning",
             "memory_recall",
             "connector_boundary_review",
+            "website_review",
+            "web_research",
+            "clickup_task_management",
+            "work_partner_task_management",
         ],
         "metadata_only_skill_boundary": True,
         "work_partner_role_available": True,
@@ -4646,6 +4706,7 @@ def test_runtime_behavior_durable_attention_burst_coalescing_stays_repository_ba
         attention_burst_window_ms=160,
         attention_coordination_mode="durable_inbox",
     )
+    memory_repository = client.app.state.memory_repository
     first_response: dict[str, object] = {}
 
     def _first_call() -> None:
@@ -4653,7 +4714,12 @@ def test_runtime_behavior_durable_attention_burst_coalescing_stays_repository_ba
 
     thread = Thread(target=_first_call)
     thread.start()
-    sleep(0.05)
+    deadline = time() + 1.0
+    while time() < deadline:
+        pending_turn = memory_repository.attention_turns.get(("999", "telegram:123"))
+        if pending_turn is not None and pending_turn.get("status") == "pending":
+            break
+        sleep(0.01)
     second = client.post("/event", json=_telegram_update(4102, "durable burst second"))
     thread.join(timeout=2.0)
 
@@ -5766,6 +5832,383 @@ def test_app_chat_message_localizes_runtime_timestamp_from_profile_utc_offset() 
     assert runtime.last_event.timestamp.utcoffset() == timedelta(hours=2)
 
 
+def test_app_chat_message_exposes_bounded_pending_connector_confirmation() -> None:
+    confirmation_observation = ActionExecutionObservation(
+        tool_id="clickup",
+        operation="task_system.clickup_list_tasks",
+        provider_path="clickup:list_tasks",
+        source_reference="task-123",
+        bounded_summary="ClickUp update candidate observed before confirmation: Ship v1.",
+        confidence=0.66,
+        blocker="confirmation_required",
+        next_step_relevance="needs_confirmation",
+        raw_payload_included=False,
+    )
+    permission_gate = ConnectorPermissionGateOutput(
+        connector_kind="task_system",
+        provider_hint="clickup",
+        operation="update_task",
+        mode="mutate_with_confirmation",
+        requires_opt_in=True,
+        requires_confirmation=True,
+        allowed=False,
+        reason="explicit_user_confirmation_required",
+    )
+    runtime = FakeRuntime(
+        action_observations=[confirmation_observation],
+        plan_domain_intents=[
+            ExternalTaskSyncDomainIntent(
+                operation="update_task",
+                provider_hint="clickup",
+                mode="mutate_with_confirmation",
+                task_hint="Ship v1",
+                status_hint="done",
+            )
+        ],
+        plan_connector_permission_gates=[permission_gate],
+    )
+    client, _, _ = _client(runtime=runtime)
+    client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+
+    response = client.post(
+        "/app/chat/message",
+        json={"text": "mark Ship v1 done in ClickUp"},
+    )
+
+    assert response.status_code == 200
+    pending_confirmation = response.json()["pending_confirmation"]
+    assert pending_confirmation == {
+        "status": "pending_confirmation",
+        "source_event_id": response.json()["event_id"],
+        "trace_id": response.json()["trace_id"],
+        "connector_kind": "task_system",
+        "provider_hint": "clickup",
+        "operation": "update_task",
+        "mode": "mutate_with_confirmation",
+        "candidate_summary": "ClickUp update candidate observed before confirmation: Ship v1.",
+        "source_reference": "task-123",
+        "reason": "explicit_user_confirmation_required",
+    }
+    assert "debug" not in response.json()
+    assert "system_debug" not in response.json()
+
+
+def _pending_confirmation_submission_payload(
+    *,
+    include_server_fields: bool = False,
+    **overrides,
+) -> dict:
+    payload = {
+        "source_event_id": "evt-confirm",
+        "trace_id": "trace-confirm",
+        "connector_kind": "task_system",
+        "provider_hint": "clickup",
+        "operation": "update_task",
+        "mode": "mutate_with_confirmation",
+        "candidate_summary": "ClickUp update candidate observed before confirmation: Ship v1.",
+        "source_reference": "task-123",
+    }
+    if include_server_fields:
+        payload["status"] = "pending_confirmation"
+        payload["reason"] = "explicit_user_confirmation_required"
+    payload.update(overrides)
+    return payload
+
+
+def _append_pending_confirmation_memory(
+    repository: FakeMemoryRepository,
+    *,
+    user_id: str,
+    event_id: str = "evt-confirm",
+    trace_id: str = "trace-confirm",
+    event_timestamp: datetime | None = None,
+    include_replay_snapshot: bool = False,
+) -> None:
+    payload = {
+        "pending_connector_confirmation": _pending_confirmation_submission_payload(
+            include_server_fields=True,
+            source_event_id=event_id,
+            trace_id=trace_id,
+        ),
+    }
+    if include_replay_snapshot:
+        payload["connector_confirmation_replay"] = {
+            "status": "replay_snapshot_ready",
+            "source_event_id": event_id,
+            "trace_id": trace_id,
+            "replay_owner": "action",
+            "execution_allowed": False,
+            "intent": {
+                "intent_type": "external_task_sync_intent",
+                "operation": "update_task",
+                "provider_hint": "clickup",
+                "mode": "mutate_with_confirmation",
+                "task_hint": "Ship v1",
+                "status_hint": "done",
+            },
+            "connector_permission_gate": {
+                "connector_kind": "task_system",
+                "provider_hint": "clickup",
+                "operation": "update_task",
+                "mode": "mutate_with_confirmation",
+                "requires_opt_in": True,
+                "requires_confirmation": True,
+                "allowed": False,
+                "reason": "explicit_user_confirmation_required",
+            },
+            "observation": {
+                "tool_id": "clickup",
+                "operation": "task_system.clickup_list_tasks",
+                "provider_path": "clickup:list_tasks",
+                "source_reference": "task-123",
+                "bounded_summary": "ClickUp update candidate observed before confirmation: Ship v1.",
+                "confidence": 0.66,
+                "blocker": "confirmation_required",
+                "next_step_relevance": "needs_confirmation",
+                "raw_payload_included": False,
+            },
+        }
+    repository.recent_memory.append(
+        {
+            "event_id": event_id,
+            "trace_id": trace_id,
+            "source": "api",
+            "user_id": user_id,
+            "event_timestamp": event_timestamp or datetime.now(timezone.utc),
+            "summary": "ClickUp confirmation pending.",
+            "payload": payload,
+            "importance": 0.7,
+        }
+    )
+
+
+def test_app_connector_confirmation_requires_authenticated_session() -> None:
+    client, _, _ = _client()
+
+    response = client.post(
+        "/app/connectors/confirm",
+        json=_pending_confirmation_submission_payload(),
+    )
+
+    assert response.status_code == 401
+
+
+def test_app_connector_confirmation_validates_server_side_evidence_and_fails_closed_without_replay() -> None:
+    client, _, _ = _client()
+    repository = client.app.state.memory_repository
+    register_response = client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+    user_id = register_response.json()["user"]["id"]
+    _append_pending_confirmation_memory(repository, user_id=user_id)
+
+    response = client.post(
+        "/app/connectors/confirm",
+        json=_pending_confirmation_submission_payload(),
+    )
+
+    assert response.status_code == 409
+    body = response.json()["detail"]
+    assert body["status"] == "rejected"
+    assert body["reason"] == "confirmation_replay_unavailable"
+    assert body["execution_allowed"] is False
+    assert body["pending_confirmation"]["source_event_id"] == "evt-confirm"
+    assert body["pending_confirmation"]["operation"] == "update_task"
+
+
+def test_app_connector_confirmation_rejects_replay_when_action_executor_is_unavailable() -> None:
+    client, _, _ = _client()
+    repository = client.app.state.memory_repository
+    register_response = client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+    user_id = register_response.json()["user"]["id"]
+    _append_pending_confirmation_memory(
+        repository,
+        user_id=user_id,
+        include_replay_snapshot=True,
+    )
+
+    response = client.post(
+        "/app/connectors/confirm",
+        json=_pending_confirmation_submission_payload(),
+    )
+
+    assert response.status_code == 409
+    body = response.json()["detail"]
+    assert body["status"] == "rejected"
+    assert body["reason"] == "confirmation_action_executor_unavailable"
+    assert body["execution_allowed"] is False
+
+
+def test_app_connector_confirmation_executes_confirmed_replay_through_action() -> None:
+    client, runtime, telegram = _client()
+    repository = client.app.state.memory_repository
+    clickup_client = FakeClickUpTaskClient()
+    runtime.action_executor = ActionExecutor(
+        memory_repository=repository,
+        telegram_client=telegram,
+        clickup_task_client=clickup_client,
+    )
+    register_response = client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+    user_id = register_response.json()["user"]["id"]
+    _append_pending_confirmation_memory(
+        repository,
+        user_id=user_id,
+        include_replay_snapshot=True,
+    )
+
+    response = client.post(
+        "/app/connectors/confirm",
+        json=_pending_confirmation_submission_payload(),
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "executed"
+    assert body["reason"] == "confirmation_replay_executed"
+    assert body["execution_allowed"] is True
+    assert body["action_status"] == "success"
+    assert body["actions"] == ["clickup_update_task"]
+    assert "ClickUp task updated" in body["notes"]
+    assert clickup_client.calls == [
+        {"operation": "list_tasks", "limit": "10"},
+        {"operation": "update_task", "task_id": "clk_1", "status": "complete"},
+    ]
+
+
+def test_app_connector_confirmation_rejects_replay_snapshot_drift() -> None:
+    client, _, _ = _client()
+    repository = client.app.state.memory_repository
+    register_response = client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+    user_id = register_response.json()["user"]["id"]
+    _append_pending_confirmation_memory(
+        repository,
+        user_id=user_id,
+        include_replay_snapshot=True,
+    )
+    repository.recent_memory[-1]["payload"]["connector_confirmation_replay"]["observation"][
+        "bounded_summary"
+    ] = "Different candidate."
+
+    response = client.post(
+        "/app/connectors/confirm",
+        json=_pending_confirmation_submission_payload(),
+    )
+
+    assert response.status_code == 409
+    body = response.json()["detail"]
+    assert body["reason"] == "confirmation_replay_evidence_mismatch"
+    assert body["execution_allowed"] is False
+
+
+def test_app_connector_confirmation_rejects_candidate_drift() -> None:
+    client, _, _ = _client()
+    repository = client.app.state.memory_repository
+    register_response = client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+    user_id = register_response.json()["user"]["id"]
+    _append_pending_confirmation_memory(repository, user_id=user_id)
+
+    response = client.post(
+        "/app/connectors/confirm",
+        json=_pending_confirmation_submission_payload(candidate_summary="Different task."),
+    )
+
+    assert response.status_code == 409
+    body = response.json()["detail"]
+    assert body["reason"] == "confirmation_evidence_mismatch"
+    assert body["execution_allowed"] is False
+
+
+def test_app_connector_confirmation_rejects_stale_evidence() -> None:
+    client, _, _ = _client()
+    repository = client.app.state.memory_repository
+    register_response = client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+    user_id = register_response.json()["user"]["id"]
+    _append_pending_confirmation_memory(
+        repository,
+        user_id=user_id,
+        event_timestamp=datetime.now(timezone.utc) - timedelta(minutes=20),
+    )
+
+    response = client.post(
+        "/app/connectors/confirm",
+        json=_pending_confirmation_submission_payload(),
+    )
+
+    assert response.status_code == 409
+    body = response.json()["detail"]
+    assert body["reason"] == "confirmation_evidence_stale"
+    assert body["execution_allowed"] is False
+
+
+def test_app_connector_confirmation_isolates_authenticated_users() -> None:
+    client, _, _ = _client()
+    repository = client.app.state.memory_repository
+    user_a = client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    ).json()["user"]["id"]
+    _append_pending_confirmation_memory(repository, user_id=user_a)
+    client.post("/app/auth/logout")
+    client.post(
+        "/app/auth/register",
+        json={
+            "email": "other@example.com",
+            "password": "super-secret-123",
+        },
+    )
+
+    response = client.post(
+        "/app/connectors/confirm",
+        json=_pending_confirmation_submission_payload(),
+    )
+
+    assert response.status_code == 404
+    assert response.json()["detail"]["reason"] == "confirmation_evidence_not_found"
+
+
 def test_app_personality_overview_uses_authenticated_user() -> None:
     client, _, _ = _client()
     repository = client.app.state.memory_repository
@@ -5998,6 +6441,69 @@ def test_app_tools_overview_exposes_grouped_backend_truth() -> None:
     assert knowledge["web_browser"]["status"] == "integral_active"
     assert knowledge["web_search"]["provider"]["ready"] is True
     assert knowledge["web_browser"]["provider"]["ready"] is True
+    assert knowledge["web_search"]["skill_tool_bindings"] == [
+        {
+            "skill_id": "web_research",
+            "label": "Web research",
+            "posture": "read_only",
+            "allowed_operations": ["knowledge_search.search_web"],
+            "execution_owner": "action",
+            "authority": "metadata_only_not_execution_authority",
+        },
+        {
+            "skill_id": "website_review",
+            "label": "Website review",
+            "posture": "read_only_search_support",
+            "allowed_operations": ["knowledge_search.search_web"],
+            "execution_owner": "action",
+            "authority": "metadata_only_not_execution_authority",
+        },
+    ]
+    assert knowledge["web_browser"]["skill_tool_bindings"] == [
+        {
+            "skill_id": "website_review",
+            "label": "Website review",
+            "posture": "read_only",
+            "allowed_operations": ["web_browser.read_page", "web_browser.suggest_page_review"],
+            "execution_owner": "action",
+            "authority": "metadata_only_not_execution_authority",
+        },
+        {
+            "skill_id": "web_research",
+            "label": "Web research",
+            "posture": "optional_read_only_page_review",
+            "allowed_operations": ["web_browser.read_page"],
+            "execution_owner": "action",
+            "authority": "metadata_only_not_execution_authority",
+        },
+    ]
+    assert task_management["clickup"]["skill_tool_bindings"] == [
+        {
+            "skill_id": "clickup_task_management",
+            "label": "ClickUp task management",
+            "posture": "read_only_and_confirmation_gated_mutation",
+            "allowed_operations": [
+                "task_system.clickup_list_tasks",
+                "task_system.clickup_create_task",
+                "task_system.clickup_update_task",
+            ],
+            "execution_owner": "action",
+            "authority": "metadata_only_not_execution_authority",
+        },
+        {
+            "skill_id": "work_partner_task_management",
+            "label": "Work partner task management",
+            "posture": "read_only_and_confirmation_gated_mutation",
+            "allowed_operations": [
+                "task_system.clickup_list_tasks",
+                "task_system.clickup_create_task",
+                "task_system.clickup_update_task",
+            ],
+            "execution_owner": "action",
+            "authority": "metadata_only_not_execution_authority",
+        },
+    ]
+    assert communication["internal_chat"]["skill_tool_bindings"] == []
 
     assert organizer["google_calendar"]["status"] == "provider_configuration_required"
     assert organizer["google_drive"]["status"] == "provider_configuration_required"
