@@ -4,7 +4,19 @@ Last updated: 2026-05-13
 
 ## NOW
 
-1. Continue from the verified runtime-layer baseline:
+1. Replace keyword-first perception with AI-assisted structured perception:
+   - known issue:
+     `ARCH-AI-PERCEPTION-001`
+   - reason:
+     language/topic/intent and affective interpretation should be model-owned
+     when AI is available; deterministic keyword hints should be an explicit
+     fallback only
+   - smallest safe slice:
+     add a provider-backed structured perception classifier with schema
+     validation, source diagnostics, fallback posture, tests for multilingual
+     examples, and health/debug visibility
+
+2. Continue from the verified runtime-layer baseline:
    - task:
      `.codex/tasks/PRJ-1195-runtime-layer-audit-and-polish-perception-fix.md`
    - audit:
@@ -15,7 +27,7 @@ Last updated: 2026-05-13
    - next smallest slice:
      move to native mobile device proof or external provider activation.
 
-2. Continue from the repaired production DB baseline:
+3. Continue from the repaired production DB baseline:
    - latest memory task:
      `.codex/tasks/PRJ-1194-topic-scoped-memory-summary-buckets.md`
    - current verified baseline:
@@ -49,7 +61,7 @@ Last updated: 2026-05-13
      ANN/vector-index migration only if retrieval volume makes query latency
      require it
 
-3. Capture native device proof for the deployed `v1.5` mobile UI:
+4. Capture native device proof for the deployed `v1.5` mobile UI:
    - branch: `codex/v15-mobile-ui-deploy-commits`
    - remote: `origin/codex/v15-mobile-ui-deploy-commits`
    - GitHub PR:
@@ -72,7 +84,7 @@ Last updated: 2026-05-13
      supported device, then run `npm run doctor:ui-mobile-device` and capture
      Expo Go/simulator proof
 
-4. Continue `v1.5` native/mobile UI from the verified shell seed:
+5. Continue `v1.5` native/mobile UI from the verified shell seed:
    - plan: `docs/planning/v1.5-mobile-ui-plan.md`
    - latest task: `.codex/tasks/PRJ-1182-v15-mobile-device-proof-doctor.md`
    - promotion handoff:
@@ -112,7 +124,7 @@ Last updated: 2026-05-13
    - PR creation URL:
      `https://github.com/Wroblewski-Patryk/Aviary/pull/new/codex/v15-mobile-ui-deploy-commits`
 
-5. Preserve the completed `v1.1` web UI responsive quality baseline:
+6. Preserve the completed `v1.1` web UI responsive quality baseline:
    - plan: `docs/planning/v1.1-web-ui-responsive-plan.md`
    - handoff task: `.codex/tasks/PRJ-1157-v11-web-ui-responsive-handoff.md`
    - evidence: `.codex/artifacts/prj1150-v11-ui-responsive-audit/report.json`
@@ -124,7 +136,7 @@ Last updated: 2026-05-13
    responsive handoff. Next smallest slice: plan `v1.5` mobile from these
    learnings or start a new narrow UI polish item from explicit feedback.
 
-6. Keep `npm run audit:ui-responsive` in the web validation set for shell,
+7. Keep `npm run audit:ui-responsive` in the web validation set for shell,
    route layout, navigation, and responsive UI changes.
 
 ## Previous Architecture Queue

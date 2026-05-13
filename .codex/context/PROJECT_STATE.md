@@ -24,6 +24,11 @@ the same project.
     - focused runtime-layer cue/invariant pack -> `4 passed, 129 deselected`
     - full backend pytest -> `1093 passed`
   - residual:
+    - user feedback after PRJ-1195 clarified that keyword hints must be treated
+      as deterministic fallback only; `ARCH-AI-PERCEPTION-001` now tracks the
+      target AI-assisted structured perception classifier
+    - AI-first perception remains follow-up work; current language/topic/intent
+      heuristics are not the desired long-term digital-being perception model
     - native device proof and external provider activation remain separate
       tracked gaps; no new cognitive subsystem is needed now
 

@@ -12,9 +12,10 @@ Canonical foreground order:
 ## Result
 
 The core runtime layers are implemented and test-backed for the current release
-path. The main code fix from this audit was a narrow Polish perception baseline
-repair: unaccented `dziekuje` is now recognized as a Polish language hint and
-positive engagement cue after normalization.
+path. The audit also exposed an important target-state gap: current
+language/topic/intent perception still starts from deterministic keyword hints.
+Those hints are acceptable only as a fallback when AI perception is unavailable
+or returns invalid output.
 
 ## Layer Status
 
@@ -23,7 +24,7 @@ positive engagement cue after normalization.
 | Event normalization | API/scheduler contracts | raw transport payload | canonical `Event` with event/trace metadata | verified | `tests/test_event_normalization.py`; runtime smoke | Transport-specific normalization remains outside cognitive stages. |
 | Attention / turn assembly | attention boundary | inbox, pending turns, scheduler prompts | foreground event candidate | verified for current backend path | `tests/test_runtime_pipeline.py`; scheduler tests; health surfaces | Native/mobile live transport proof remains separate UI/device work. |
 | Identity baseline | runtime + identity service | profile, auth user, preferences, theta | `IdentityOutput` | verified | `test_runtime_pipeline_api_source`; identity policy debug surface | Identity affects expression and context without becoming a separate persona. |
-| Perception | `PerceptionAgent` | event, recent memory, profile | topic, intent, language, affective fallback, behavior feedback | verified with PRJ-1195 fix | `tests/test_affective_contract.py`; `tests/test_language_runtime.py` | Polish `dziekuje` now survives normalization as a positive cue. |
+| Perception | `PerceptionAgent` | event, recent memory, profile | topic, intent, language, affective fallback, behavior feedback | partially verified; target-state gap recorded | `tests/test_affective_contract.py`; `tests/test_language_runtime.py`; `ARCH-AI-PERCEPTION-001` | Polish `dziekuje` now survives normalization in fallback, but target perception should be AI-assisted structured interpretation rather than hand-maintained word indexes. |
 | Affective assessment | `AffectiveAssessor` | perception fallback, optional classifier | final affective output and fallback reason | verified | `tests/test_affective_assessor.py`; runtime affective fallback tests | Production defaults may be fallback-only by policy, which is explicit in health/debug. |
 | Context | `ContextAgent` | event, perception, identity, memory, goals, tasks, theta | compressed `ContextOutput` | verified | memory/context/runtime packs through PRJ-1194 | Includes recent, semantic, relation, affective, goal/task, and foreground truth cues. |
 | Motivation | `MotivationEngine` | context, perception, theta, relations, goals/tasks | importance, urgency, valence, mode | verified | `tests/test_motivation_engine.py`; runtime goal/proactive packs | Adaptive tie-breaks are policy-gated. |
@@ -44,6 +45,7 @@ positive engagement cue after normalization.
 | External provider activation for organizer workflows | deferred | ClickUp, Google Calendar, and Google Drive credentials are not configured for expanded organizer claims. |
 | ANN/vector index migration | deferred | Current production pgvector ranking has no latency evidence requiring ANN/index work. |
 | AI-assisted affective classifier in production | policy-controlled | Production fallback-only posture is acceptable unless explicit affective AI rollout is selected. |
+| AI-assisted structured perception | open | `ARCH-AI-PERCEPTION-001`: language/topic/intent should be model-owned when AI is available, with deterministic keywords only as validated fallback. |
 
 ## Validation
 
@@ -54,6 +56,6 @@ positive engagement cue after normalization.
 
 ## Decision
 
-The runtime layers are good enough to move back to other product work. Future
-work should prioritize mobile device proof or provider activation before adding
-new cognitive layers.
+The runtime layers are good enough for the current backend release path, but
+future cognitive-runtime work should prioritize AI-assisted structured
+perception before further expanding deterministic keyword maps.

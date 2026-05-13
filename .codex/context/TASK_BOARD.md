@@ -19,6 +19,12 @@ Last updated: 2026-05-13
   - focused runtime-layer cue/invariant pack -> `4 passed, 129 deselected`
   - full backend pytest -> `1093 passed`
 - residual risk:
+  - User feedback after PRJ-1195 corrected the target-state interpretation:
+    keyword hints are acceptable only as deterministic fallback, not as the
+    digital-being perception model.
+  - Follow-up issue: `ARCH-AI-PERCEPTION-001` should add AI-assisted
+    structured perception for language/topic/intent/affect with validated
+    fallback posture.
   - native device proof and external provider activation remain separate
     tracked work
 
