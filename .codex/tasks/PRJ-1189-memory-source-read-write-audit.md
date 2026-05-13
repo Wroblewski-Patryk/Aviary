@@ -80,7 +80,7 @@ Close the read/write gap so long-term similar episodic memories can be retrieved
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py -k "memory or hybrid or semantic or preference or pet or recent"; ...` -> `17 passed, 95 deselected`
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_embedding_strategy.py tests/test_main_runtime_policy.py -k "source_kinds or relation_source_policy or retrieval"; ...` -> `3 passed, 59 deselected`
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; ...` -> `1080 passed`
-- Manual checks: code audit of memory source families and runtime context injection.
+- Manual checks: code audit of memory source families and runtime context injection; production non-temporal semantic recall proof on commit `d4d2911be77d1966803d85e052c94175f0da8e18`.
 - Screenshots/logs: not applicable.
 - High-risk checks: memory read/write regression coverage added for query embedding provider and semantically matched episodic retrieval.
 - Module confidence ledger updated: yes
@@ -108,6 +108,7 @@ Close the read/write gap so long-term similar episodic memories can be retrieved
 - Rollback note: revert the PRJ-1189 commit if semantic episodic retrieval causes unexpected context noise; recent temporal retrieval remains intact.
 - Observability or alerting impact: existing `memory_flow` and hybrid diagnostics now include vector episodic hit accounting.
 - Staged rollout or feature flag: existing `SEMANTIC_VECTOR_ENABLED` and `EMBEDDING_SOURCE_KINDS`.
+- Production proof: Coolify app container ran image `d4d2911be77d1966803d85e052c94175f0da8e18`; `/health.deployment.runtime_build_revision` matched; `/health.memory_retrieval` reported OpenAI `text-embedding-3-small`, `1536` dimensions, source kinds `episodic,semantic,affective`; non-temporal memory proof wrote dog-name episode `id=4`, wrote 15 filler episodes `id=5..19`, then asked `Jak ma na imie moj pies?`; response was `Your dog's name is Roki.` and `memory_flow` for trace `prod-semantic-nontemporal-read-d4d2911b` included `retrieved_memory_ids=['4', '5', '6', '7', '19', '18']`.
 
 ## Review Checklist
 - [x] Process self-audit completed before implementation.
@@ -128,9 +129,9 @@ Close the read/write gap so long-term similar episodic memories can be retrieved
 ## Result Report
 - Task summary: AION now reads semantically matched episodic vectors as foreground memory and builds query embeddings through the configured embedding provider.
 - Files changed: runtime, retrieval policy, memory repository, memory/runtime tests, architecture/runtime state ledgers.
-- How tested: targeted memory repository, runtime pipeline, embedding/retrieval policy packs, and full backend pytest.
+- How tested: targeted memory repository, runtime pipeline, embedding/retrieval policy packs, full backend pytest, and production non-temporal semantic recall smoke.
 - What is incomplete: native PostgreSQL ANN/operator ranking remains a future scale optimization.
-- Next steps: deploy and run production non-temporal semantic recall proof.
+- Next steps: add native PostgreSQL ANN/operator ranking proof when memory volume needs scale hardening.
 - Decisions made: episodic is part of the foreground baseline vector retrieval family because it is the first source in the configured rollout order and is required for long-term similar-event memory.
 
 ## Autonomous Loop Evidence
@@ -163,8 +164,8 @@ Close the read/write gap so long-term similar episodic memories can be retrieved
 - Implementation notes: reused existing repository/provider APIs and existing `aion_semantic_embedding` source records.
 
 ### 5. Verify and Test
-- Validation performed: targeted memory repository/runtime/retrieval policy tests and full backend pytest.
-- Result: all targeted tests passed; full backend pytest passed with `1080 passed`.
+- Validation performed: targeted memory repository/runtime/retrieval policy tests, full backend pytest, and production semantic recall smoke.
+- Result: all targeted tests passed; full backend pytest passed with `1080 passed`; production recalled `Roki` after the original episode was outside the newest filler sequence.
 
 ### 6. Self-Review
 - Simpler option considered: widening recent temporal limit only; rejected because it would not be semantic long-term retrieval.

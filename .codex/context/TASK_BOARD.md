@@ -15,6 +15,8 @@ Last updated: 2026-05-13
   - fixed hybrid memory bundling so vector-matched episodic rows outside the
     recent temporal window are loaded into the episodic context bundle
   - added diagnostics for `vector_episodic_hits`
+  - deployed commit `d4d2911be77d1966803d85e052c94175f0da8e18` to Coolify
+    and verified production non-temporal semantic recall
 - validation:
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py -k "vector_matched_episodic or query_embedding or hybrid_memory_bundle or semantic_embeddings"; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
     -> `4 passed, 65 deselected`
@@ -24,6 +26,16 @@ Last updated: 2026-05-13
     -> `3 passed, 59 deselected`
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
     -> `1080 passed`
+  - production proof:
+    - `/health.deployment.runtime_build_revision` matched
+      `d4d2911be77d1966803d85e052c94175f0da8e18`
+    - `/health.memory_retrieval` reported OpenAI `text-embedding-3-small`,
+      dimensions `1536`, and source kinds `episodic,semantic,affective`
+    - smoke user wrote dog-name episode `id=4`, then 15 filler episodes
+      `id=5..19`, then asked `Jak ma na imie moj pies?`
+    - production reply: `Your dog's name is Roki.`
+    - `memory_flow` for trace `prod-semantic-nontemporal-read-d4d2911b`
+      included `retrieved_memory_ids=['4', '5', '6', '7', '19', '18']`
 - residual risk:
   - native PostgreSQL ANN/operator ranking remains a future scale hardening
     item; current retrieval still ranks fetched vector rows in repository code

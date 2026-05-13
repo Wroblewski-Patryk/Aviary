@@ -17,10 +17,12 @@ Last updated: 2026-05-13
      the recent temporal window enter the context bundle
    - production proof:
      post-maintenance two-turn memory scenario answered `Roki`, persisted two
-     episodes, and wrote two 1536-dimensional semantic embeddings
+     episodes, and wrote two 1536-dimensional semantic embeddings; PRJ-1189
+     non-temporal semantic proof on commit `d4d2911` answered `Roki` after
+     15 filler episodes and retrieved original episode `id=4`
    - next smallest slice:
-     deploy PRJ-1189 and run a provider-backed semantic similarity proof that
-     is not relying on temporal recency
+     add native pgvector ANN/operator ranking proof when memory volume makes
+     scale hardening necessary
 
 2. Capture native device proof for the deployed `v1.5` mobile UI:
    - branch: `codex/v15-mobile-ui-deploy-commits`

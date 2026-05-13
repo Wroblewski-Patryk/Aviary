@@ -24,6 +24,12 @@ the same project.
     - runtime memory/hybrid pack -> `17 passed`
     - embedding/retrieval policy pack -> `3 passed`
     - full backend pytest -> `1080 passed`
+    - production Coolify runtime image and `/health.deployment` revision
+      matched `d4d2911be77d1966803d85e052c94175f0da8e18`
+    - production non-temporal semantic recall proof:
+      dog-name episode `id=4`, 15 filler episodes `id=5..19`, final answer
+      `Your dog's name is Roki.`, and `memory_flow` retrieved `id=4` for
+      trace `prod-semantic-nontemporal-read-d4d2911b`
   - residual:
     - native PostgreSQL ANN/operator ranking remains future hardening; current
       repository ranking is acceptable for the current memory-flow scale
