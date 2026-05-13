@@ -1,8 +1,45 @@
 # TASK_BOARD
 
-Last updated: 2026-05-12
+Last updated: 2026-05-13
 
-## Project Status Dashboard (2026-05-12)
+## Project Status Dashboard (2026-05-13)
+
+- `PRJ-1186` is DONE:
+  - `.codex/tasks/PRJ-1186-runtime-memory-flow-closure.md`
+- result:
+  - AION runtime memory is verified as non-write-only for the minimal current
+    scope:
+    - event is persisted as an episodic record with structured payload
+    - later runtime loads recent memory before context construction
+    - context compression uses a `2500` token budget
+    - expression can answer from retrieved memory without the user repeating
+      the remembered fact
+    - next episode is written after the response/action path
+  - runtime defaults now match the requested iteration:
+    `RECENT_MEMORY_LIMIT=6`, `RECENT_MESSAGE_LIMIT=12`,
+    `SEMANTIC_MEMORY_TOP_K=5`, `CONTEXT_TOKEN_BUDGET=2500`
+  - explicit response-style and collaboration preferences now persist as
+    conclusions through the action-owned domain-intent path, so later turns
+    load them as runtime preferences
+  - `/health.memory_retrieval.retrieval_depth_policy` now reports the same
+    6/5 depth used by runtime
+  - runtime emits `memory_flow` logging with trace/event IDs, write status,
+    retrieved counts/IDs, retrieval duration, and context token estimate
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py -k "memory or hybrid or preference or pet or recent"; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+    -> `17 passed, 95 deselected`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_action_executor.py tests/test_planning_agent.py tests/test_context_agent.py tests/test_expression_agent.py tests/test_runtime_pipeline.py tests/test_api_routes.py -k "memory or response_style or collaboration_preference or concise or context or semantic or hybrid or health_endpoint"; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+    -> `151 passed, 305 deselected`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+    -> `1076 passed`
+- residual risk:
+  - native pgvector SQL/operator proof and provider-backed OpenAI embedding
+    recall were not added in this local slice; existing semantic retrieval
+    remains repository-level cosine over stored embeddings and existing
+    deterministic/OpenAI embedding posture
+- next smallest useful task:
+  - add provider-backed semantic recall proof when production DB/OpenAI
+    embedding credentials are available
 
 - `PRJ-1185` is DONE:
   - `.codex/tasks/PRJ-1185-v15-mobile-ui-production-deploy-verified.md`

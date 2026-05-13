@@ -280,6 +280,12 @@ Embedding vector dimensions used by deterministic baseline and query vectors.
 
 Default: `32` (must be at least `1`).
 
+Coolify production defaults this value to `1536` to match
+`text-embedding-3-small` and the `aion_semantic_embedding.embedding`
+`vector(1536)` database column. Do not run the production OpenAI embedding
+provider with the local deterministic default unless the vector column is
+migrated to the same dimensionality.
+
 `EMBEDDING_SOURCE_KINDS`
 
 Comma-separated list of memory source families that should persist embedding

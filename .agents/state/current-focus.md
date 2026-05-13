@@ -1,8 +1,18 @@
 # Current Focus
 
-Last updated: 2026-05-12
+Last updated: 2026-05-13
 
 ## Active Focus
+
+`PRJ-1186` temporarily superseded the mobile continuation lane for a P0
+runtime-memory confidence closure. The current AION memory flow is now
+verified for the minimal end-to-end behavior: completed event write, later
+recent-memory retrieval, context compression, expression influence, and next
+episode write. Runtime defaults are `RECENT_MEMORY_LIMIT=6`,
+`RECENT_MESSAGE_LIMIT=12`, `SEMANTIC_MEMORY_TOP_K=5`, and
+`CONTEXT_TOKEN_BUDGET=2500`; full backend pytest passed with `1076 passed`.
+Provider-backed pgvector/OpenAI semantic recall proof remains a future
+environment-dependent follow-up.
 
 `v1.5` native/mobile UI is now the active UI continuation after the selected
 scope v1.1 web handoff. `PRJ-1158` seeds the Expo-managed mobile home shell,

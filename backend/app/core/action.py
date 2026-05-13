@@ -1380,10 +1380,28 @@ class ActionExecutor:
 
             if isinstance(intent, UpdateResponseStyleDomainIntent):
                 preference_update = f"response_style:{intent.style}"
+                if hasattr(self.memory_repository, "upsert_conclusion"):
+                    await self.memory_repository.upsert_conclusion(
+                        user_id=event.meta.user_id,
+                        kind="response_style",
+                        content=intent.style,
+                        confidence=0.95,
+                        source=intent.source,
+                        supporting_event_id=event.event_id,
+                    )
                 continue
 
             if isinstance(intent, UpdateCollaborationPreferenceDomainIntent):
                 collaboration_update = intent.preference
+                if hasattr(self.memory_repository, "upsert_conclusion"):
+                    await self.memory_repository.upsert_conclusion(
+                        user_id=event.meta.user_id,
+                        kind="collaboration_preference",
+                        content=intent.preference,
+                        confidence=0.93,
+                        source=intent.source,
+                        supporting_event_id=event.event_id,
+                    )
                 continue
 
             if isinstance(intent, UpdateProactivePreferenceDomainIntent):

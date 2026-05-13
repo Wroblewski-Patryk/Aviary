@@ -164,6 +164,13 @@ Typical retrieval layers:
 
 Retrieved memory must be filtered and compressed.
 
+Current foreground retrieval defaults:
+
+- recent episodic memory limit: `6`
+- semantic/conclusion top-k: `5`
+- app-facing recent transcript message limit: `12`
+- compressed context budget: about `2500` tokens
+
 ### Step 7. Context Construction
 
 Context combines:

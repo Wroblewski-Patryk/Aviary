@@ -86,6 +86,12 @@ class ExpressionAgent:
             )
             if direct_reply is not None:
                 message = direct_reply
+            elif memory_reply := self._direct_memory_recall_reply(
+                text=text,
+                context=context,
+                language=perception.language,
+            ):
+                message = memory_reply
             else:
                 llm_reply = await self.openai_client.generate_reply(
                     user_text=text,
@@ -522,6 +528,52 @@ class ExpressionAgent:
         if self._is_time_question(normalized):
             return self._format_current_time_reply(event.timestamp, language=language)
         return None
+
+    def _direct_memory_recall_reply(
+        self,
+        *,
+        text: str,
+        context: ContextOutput,
+        language: str,
+    ) -> str | None:
+        normalized_text = normalize_for_matching(text)
+        if not self._is_pet_name_recall_question(normalized_text):
+            return None
+        normalized_context = normalize_for_matching(context.summary)
+        patterns = (
+            r"(?:pies|psa|dog)(?:\s+\w+){0,6}\s+(?:ma na imie|nazywa sie|is named|name is)\s+([a-z0-9_-]+)",
+            r"(?:ma na imie|nazywa sie|is named|name is)\s+([a-z0-9_-]+)(?:\s+\w+){0,6}\s+(?:pies|psa|dog)",
+        )
+        for pattern in patterns:
+            match = re.search(pattern, normalized_context)
+            if match is None:
+                continue
+            pet_name = match.group(1).strip(" .,!?:;\"'")
+            if not pet_name:
+                continue
+            display_name = self._display_memory_name(context.summary, pet_name)
+            if language == "pl":
+                return f"Twoj pies ma na imie {display_name}."
+            return f"Your dog's name is {display_name}."
+        return None
+
+    def _is_pet_name_recall_question(self, normalized_text: str) -> bool:
+        markers = (
+            "jak ma na imie moj pies",
+            "jak nazywa sie moj pies",
+            "pamietasz jak ma na imie moj pies",
+            "what is my dogs name",
+            "what is my dog's name",
+            "do you remember my dogs name",
+            "do you remember my dog's name",
+        )
+        return any(marker in normalized_text for marker in markers)
+
+    def _display_memory_name(self, context_summary: str, normalized_name: str) -> str:
+        for token in re.findall(r"\b[\w-]+\b", context_summary):
+            if normalize_for_matching(token) == normalized_name:
+                return token.strip()
+        return normalized_name
 
     def _is_name_recall_question(self, normalized_text: str) -> bool:
         markers = (

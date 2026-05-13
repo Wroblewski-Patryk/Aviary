@@ -599,7 +599,7 @@ def _memory_retrieval_snapshot_from_settings(settings) -> dict[str, Any]:
     )
     snapshot["retrieval_depth_policy"] = retrieval_depth_policy_snapshot(
         episodic_limit=RuntimeOrchestrator.MEMORY_LOAD_LIMIT,
-        conclusion_limit=8,
+        conclusion_limit=RuntimeOrchestrator.SEMANTIC_MEMORY_TOP_K,
         semantic_vector_enabled=bool(getattr(settings, "semantic_vector_enabled", True)),
     )
     return snapshot

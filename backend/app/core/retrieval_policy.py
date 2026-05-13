@@ -17,8 +17,8 @@ def retrieval_depth_policy_snapshot(
     return {
         "episodic_limit": int(episodic_limit),
         "conclusion_limit": int(conclusion_limit),
-        "production_default_episodic_limit": 12,
-        "production_default_conclusion_limit": 8,
+        "production_default_episodic_limit": 6,
+        "production_default_conclusion_limit": 5,
         "semantic_vector_enabled": bool(semantic_vector_enabled),
         "retrieval_mode": "hybrid_vector_lexical" if semantic_vector_enabled else "lexical_only",
         "vector_hits": int(diagnostics.get("vector_hits", 0)),
@@ -28,7 +28,7 @@ def retrieval_depth_policy_snapshot(
         "policy_owner": "runtime_memory_load",
         "default_depth_alignment": (
             "aligned_with_production_default"
-            if int(episodic_limit) == 12 and int(conclusion_limit) == 8
+            if int(episodic_limit) == 6 and int(conclusion_limit) == 5
             else "custom_depth_override"
         ),
     }

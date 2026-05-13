@@ -70,6 +70,15 @@ def test_coolify_compose_defaults_embedding_model_to_openai_small() -> None:
     assert app_environment["EMBEDDING_MODEL"] == "${EMBEDDING_MODEL:-text-embedding-3-small}"
 
 
+def test_coolify_compose_defaults_embedding_dimensions_to_openai_small_vector_size() -> None:
+    compose_path = REPO_ROOT / "docker-compose.coolify.yml"
+    compose = yaml.safe_load(compose_path.read_text(encoding="utf-8"))
+
+    app_environment = compose["services"]["app"]["environment"]
+
+    assert app_environment["EMBEDDING_DIMENSIONS"] == "${EMBEDDING_DIMENSIONS:-1536}"
+
+
 def test_coolify_compose_maps_app_build_revision_to_coolify_source_commit() -> None:
     compose_path = REPO_ROOT / "docker-compose.coolify.yml"
     compose = yaml.safe_load(compose_path.read_text(encoding="utf-8"))

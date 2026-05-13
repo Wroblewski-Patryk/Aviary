@@ -333,6 +333,10 @@ class FakeMemoryRepository:
             self.user_preferences["proactive_opt_in"] = value
             self.user_preferences["proactive_opt_in_confidence"] = kwargs.get("confidence")
             self.user_preferences["proactive_opt_in_source"] = kwargs.get("source")
+        if kind in {"response_style", "collaboration_preference"}:
+            self.user_preferences[kind] = kwargs.get("content")
+            self.user_preferences[f"{kind}_confidence"] = kwargs.get("confidence")
+            self.user_preferences[f"{kind}_source"] = kwargs.get("source")
         return kwargs
 
     async def upsert_relation(self, **kwargs) -> dict:
@@ -946,7 +950,7 @@ async def test_runtime_pipeline_api_source() -> None:
     assert result.memory_record.payload["affect_label"] == "neutral"
     assert result.memory_record.payload["affect_needs_support"] is False
     assert result.reflection_triggered is True
-    assert memory.recent_limits[0] == 12
+    assert memory.recent_limits[0] == RuntimeOrchestrator.RECENT_MEMORY_LIMIT
     assert set(result.stage_timings_ms) == {
         "memory_load",
         "task_load",
@@ -1156,7 +1160,7 @@ async def test_runtime_pipeline_uses_hybrid_memory_bundle_when_supported() -> No
     assert memory.hybrid_calls[0]["query_text"] == "help me sequence this deploy blocker"
     assert memory.hybrid_calls[0]["query_embedding_dimensions"] == 32
     assert memory.hybrid_calls[0]["episodic_limit"] == RuntimeOrchestrator.MEMORY_LOAD_LIMIT
-    assert memory.hybrid_calls[0]["conclusion_limit"] == 8
+    assert memory.hybrid_calls[0]["conclusion_limit"] == RuntimeOrchestrator.SEMANTIC_MEMORY_TOP_K
     assert memory.hybrid_calls[0]["include_global"] is False
     assert result.action_result.status == "success"
     assert "deployment blocker" in result.context.summary
@@ -1192,7 +1196,7 @@ async def test_runtime_pipeline_uses_lexical_only_hybrid_query_when_semantic_vec
     assert len(memory.hybrid_calls) == 1
     assert memory.hybrid_calls[0]["query_embedding_dimensions"] == 0
     assert memory.hybrid_calls[0]["episodic_limit"] == RuntimeOrchestrator.MEMORY_LOAD_LIMIT
-    assert memory.hybrid_calls[0]["conclusion_limit"] == 8
+    assert memory.hybrid_calls[0]["conclusion_limit"] == RuntimeOrchestrator.SEMANTIC_MEMORY_TOP_K
 
 
 async def test_runtime_pipeline_uses_configured_embedding_dimensions_even_when_provider_falls_back_to_deterministic() -> None:
@@ -1394,7 +1398,7 @@ async def test_runtime_pipeline_loads_memory_beyond_latest_five_and_surfaces_ran
 
     result = await runtime.run(event)
 
-    assert memory.recent_limits[0] == 12
+    assert memory.recent_limits[0] == RuntimeOrchestrator.RECENT_MEMORY_LIMIT
     assert "deployment blocker follow-up" in result.context.summary
 
 
@@ -5564,6 +5568,7 @@ async def test_runtime_pipeline_surfaces_work_partner_orchestration_baseline() -
 def _build_behavior_runtime(
     memory_repository: FakeMemoryRepository,
     *,
+    openai_client: FakeOpenAIClient | None = None,
     clickup_task_client: FakeClickUpTaskClient | None = None,
     google_calendar_client: FakeGoogleCalendarClient | None = None,
     google_drive_client: FakeGoogleDriveClient | None = None,
@@ -5576,7 +5581,7 @@ def _build_behavior_runtime(
         motivation_engine=MotivationEngine(),
         role_agent=RoleAgent(),
         planning_agent=PlanningAgent(),
-        expression_agent=ExpressionAgent(openai_client=FakeOpenAIClient()),
+        expression_agent=ExpressionAgent(openai_client=openai_client or FakeOpenAIClient()),
         action_executor=ActionExecutor(
             memory_repository=memory_repository,
             telegram_client=FakeTelegramClient(),
@@ -6263,6 +6268,59 @@ async def test_runtime_behavior_memory_scenarios_cover_write_retrieve_influence_
     )
     assert len(results) == 1
     assert results[0].status == "pass"
+
+
+async def test_runtime_recalls_pet_name_from_previous_event_response() -> None:
+    memory = PersistingFakeMemoryRepository(recent_memory=[])
+    runtime = _build_behavior_runtime(memory)
+
+    first = await runtime.run(
+        _behavior_event(
+            event_id="evt-memory-pet-write-1",
+            trace_id="t-memory-pet-write-1",
+            text="Zapamietaj, ze moj pies ma na imie Roki.",
+        )
+    )
+    second = await runtime.run(
+        _behavior_event(
+            event_id="evt-memory-pet-read-1",
+            trace_id="t-memory-pet-read-1",
+            text="Jak ma na imie moj pies?",
+        )
+    )
+
+    assert first.memory_record is not None
+    assert "Relevant recent memory:" in second.context.summary
+    assert second.system_debug is not None
+    assert second.system_debug.memory_bundle.episodic
+    assert "Roki" in second.expression.message
+
+
+async def test_runtime_applies_concise_response_preference_on_following_turn() -> None:
+    memory = PersistingFakeMemoryRepository(recent_memory=[])
+    openai = FakeOpenAIClient()
+    runtime = _build_behavior_runtime(memory, openai_client=openai)
+
+    first = await runtime.run(
+        _behavior_event(
+            event_id="evt-memory-style-write-1",
+            trace_id="t-memory-style-write-1",
+            text="Wole krotkie odpowiedzi.",
+        )
+    )
+    second = await runtime.run(
+        _behavior_event(
+            event_id="evt-memory-style-read-1",
+            trace_id="t-memory-style-read-1",
+            text="Daj status backendu.",
+        )
+    )
+
+    assert first.memory_record is not None
+    assert memory.user_preferences.get("response_style") == "concise"
+    assert openai.calls
+    assert openai.calls[-1]["response_style"] == "concise"
+    assert second.expression.message == "Mocked OpenAI reply"
 
 
 async def test_runtime_behavior_continuity_scenario_covers_multi_session_personality_stability() -> None:

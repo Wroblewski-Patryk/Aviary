@@ -1,11 +1,12 @@
 # System Health
 
-Last updated: 2026-05-12
+Last updated: 2026-05-13
 
 ## Latest Validation Snapshot
 
 | Check | Command or method | Result | Evidence | Notes |
 | --- | --- | --- | --- | --- |
+| runtime memory flow closure | targeted memory/runtime/API tests; full backend pytest | PASS | PRJ-1186 | `tests/test_runtime_pipeline.py -k "memory or hybrid or preference or pet or recent"` -> `17 passed`; broader targeted backend pack -> `151 passed`; full backend gate -> `1076 passed`. Runtime memory now uses `RECENT_MEMORY_LIMIT=6`, `SEMANTIC_MEMORY_TOP_K=5`, `CONTEXT_TOKEN_BUDGET=2500`, logs `memory_flow`, recalls `Roki` from a previous event, and applies concise response preference on a later turn. |
 | v1.5 mobile UI production deployment | backend pytest; web tsc/build/route smoke; mobile typecheck/preview smoke/device doctor; `git push origin main`; production release smoke with deploy parity; production browser proof; cleanup check | PASS | PRJ-1185 | PR #1 is merged and production release smoke passed for UI merge commit `43837bb183c8975845b99b65a03cea5ccf4903a0`; closure smoke/browser proof passed for `ff48b9b331aa2c924fa2a0025c0813883564b24a`, with runtime and web shell revisions matching and `https://aviary.luckysparrow.ch/` rendering `Poznaj Aviary`. Final closure smoke also passed after ledger cleanup, and validation-owned mobile preview process on `8093` was stopped after command-line confirmation. First smoke attempt saw transient `503`; extended retry passed. Native proof remains blocked by missing `adb` and `emulator`. |
 | v1.5 mobile UI GitHub PR | GitHub connector PR creation; `git fetch origin main`; `git merge-base`; `git merge-tree`; `git diff --check` | PASS | PRJ-1184 | Historical PR creation gate: PR #1 was opened at `https://github.com/Wroblewski-Patryk/Aviary/pull/1`; local merge/conflict check found no content conflict with `origin/main`; PRJ-1185 later merged and production-verified it. |
 | v1.5 mobile UI PR and production promotion handoff | `npm run smoke:ui-mobile-preview`; `git diff --check` | PASS | PRJ-1183 | Historical promotion handoff gate: `docs/operations/v15-mobile-ui-pr-and-production-promotion-handoff-2026-05-12.md` records the pushed branch, PR URL, local preview URL, production promotion order, release-smoke command, rollback, and residual blockers; PRJ-1185 later completed production deployment. |
@@ -88,4 +89,4 @@ posture. Provider mutation remains action-owned and confirmation-gated.
 ## Quality Gate Notes
 
 Latest task evidence:
-`.codex/tasks/PRJ-1185-v15-mobile-ui-production-deploy-verified.md`.
+`.codex/tasks/PRJ-1186-runtime-memory-flow-closure.md`.

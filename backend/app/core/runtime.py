@@ -60,7 +60,11 @@ T = TypeVar("T")
 
 
 class RuntimeOrchestrator:
-    MEMORY_LOAD_LIMIT = 12
+    RECENT_MEMORY_LIMIT = 6
+    RECENT_MESSAGE_LIMIT = 12
+    SEMANTIC_MEMORY_TOP_K = 5
+    CONTEXT_TOKEN_BUDGET = 2500
+    MEMORY_LOAD_LIMIT = RECENT_MEMORY_LIMIT
 
     def __init__(
         self,
@@ -114,6 +118,18 @@ class RuntimeOrchestrator:
 
     def _present_label(self, value: object | None) -> str:
         return "yes" if value else "no"
+
+    def _estimate_context_tokens(self, value: str) -> int:
+        return max(1, int(len(str(value or "")) / 4)) if value else 0
+
+    def _memory_ids(self, memory: list[dict]) -> list[str]:
+        ids: list[str] = []
+        for item in memory:
+            raw_id = item.get("id") or item.get("event_id")
+            if raw_id is None:
+                continue
+            ids.append(str(raw_id))
+        return ids
 
     def _build_action_delivery(self, *, event: Event, expression: ExpressionOutput) -> ActionDelivery:
         plan = None
@@ -354,7 +370,7 @@ class RuntimeOrchestrator:
     ):
         retrieval_depth_policy = retrieval_depth_policy_snapshot(
             episodic_limit=self.MEMORY_LOAD_LIMIT,
-            conclusion_limit=8,
+            conclusion_limit=self.SEMANTIC_MEMORY_TOP_K,
             semantic_vector_enabled=self.semantic_vector_enabled,
             hybrid_diagnostics=hybrid_diagnostics,
         )
@@ -686,7 +702,7 @@ class RuntimeOrchestrator:
                     scope_key=conclusion_kwargs.get("scope_key"),
                     include_global=bool(conclusion_kwargs.get("include_global", False)),
                     episodic_limit=self.MEMORY_LOAD_LIMIT,
-                    conclusion_limit=8,
+                    conclusion_limit=self.SEMANTIC_MEMORY_TOP_K,
                 )
                 memory = list(hybrid_bundle.get("episodic", []))
                 semantic_conclusions = list(hybrid_bundle.get("semantic", []))
@@ -902,7 +918,7 @@ class RuntimeOrchestrator:
                 expression = expression.model_copy(update={"message": enriched_message})
         retrieval_depth_policy = retrieval_depth_policy_snapshot(
             episodic_limit=self.MEMORY_LOAD_LIMIT,
-            conclusion_limit=8,
+            conclusion_limit=self.SEMANTIC_MEMORY_TOP_K,
             semantic_vector_enabled=self.semantic_vector_enabled,
             hybrid_diagnostics=hybrid_diagnostics,
         )
@@ -1063,6 +1079,19 @@ class RuntimeOrchestrator:
 
         duration_ms = int((perf_counter() - started) * 1000)
         stage_timings_ms["total"] = duration_ms
+        semantic_count = max(0, len(user_conclusions) - len(affective_conclusions))
+        self.logger.info(
+            "memory_flow event_id=%s trace_id=%s memory_write_status=%s retrieved_recent_count=%s "
+            "retrieved_semantic_count=%s retrieved_memory_ids=%s retrieval_duration_ms=%s context_token_estimate=%s",
+            event.event_id,
+            event.meta.trace_id,
+            "stored" if memory_record is not None else "failed",
+            len(memory),
+            semantic_count,
+            self._memory_ids(memory),
+            stage_timings_ms.get("memory_load", 0),
+            min(self.CONTEXT_TOKEN_BUDGET, self._estimate_context_tokens(context.summary)),
+        )
         self.logger.info(
             "end event_id=%s trace_id=%s status=%s duration_ms=%s stage_timings_ms=%s",
             event.event_id,

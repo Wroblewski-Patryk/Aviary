@@ -1440,10 +1440,10 @@ def test_health_endpoint_returns_ok() -> None:
     assert body["memory_retrieval"]["semantic_retrieval_mode"] == "hybrid_vector_lexical"
     assert body["memory_retrieval"]["semantic_embedding_execution_class"] == "deterministic_baseline"
     assert body["memory_retrieval"]["retrieval_depth_policy"] == {
-        "episodic_limit": 12,
-        "conclusion_limit": 8,
-        "production_default_episodic_limit": 12,
-        "production_default_conclusion_limit": 8,
+        "episodic_limit": 6,
+        "conclusion_limit": 5,
+        "production_default_episodic_limit": 6,
+        "production_default_conclusion_limit": 5,
         "semantic_vector_enabled": True,
         "retrieval_mode": "hybrid_vector_lexical",
         "vector_hits": 0,
@@ -2219,10 +2219,10 @@ def test_health_endpoint_exposes_lexical_only_memory_retrieval_mode_when_semanti
     assert body["memory_retrieval"]["semantic_embedding_strict_rollout_ready"] is False
     assert body["memory_retrieval"]["semantic_embedding_warning_state"] == "vectors_disabled"
     assert body["memory_retrieval"]["retrieval_depth_policy"] == {
-        "episodic_limit": 12,
-        "conclusion_limit": 8,
-        "production_default_episodic_limit": 12,
-        "production_default_conclusion_limit": 8,
+        "episodic_limit": 6,
+        "conclusion_limit": 5,
+        "production_default_episodic_limit": 6,
+        "production_default_conclusion_limit": 5,
         "semantic_vector_enabled": False,
         "retrieval_mode": "lexical_only",
         "vector_hits": 0,

@@ -1,10 +1,25 @@
 # Next Steps
 
-Last updated: 2026-05-12
+Last updated: 2026-05-13
 
 ## NOW
 
-1. Capture native device proof for the deployed `v1.5` mobile UI:
+1. Add provider-backed semantic memory recall proof when credentials and target
+   environment are available:
+   - latest memory task:
+     `.codex/tasks/PRJ-1186-runtime-memory-flow-closure.md`
+   - current verified baseline:
+     recent temporal memory retrieval and context/expression influence are
+     verified with `RECENT_MEMORY_LIMIT=6`,
+     `SEMANTIC_MEMORY_TOP_K=5`, and `CONTEXT_TOKEN_BUDGET=2500`
+   - full backend proof:
+     `1076 passed`
+   - next smallest slice:
+     run a production-like DB/OpenAI embedding scenario proving semantic
+     retrieval returns a relevant stored episode or conclusion without relying
+     only on temporal recency
+
+2. Capture native device proof for the deployed `v1.5` mobile UI:
    - branch: `codex/v15-mobile-ui-deploy-commits`
    - remote: `origin/codex/v15-mobile-ui-deploy-commits`
    - GitHub PR:
@@ -27,7 +42,7 @@ Last updated: 2026-05-12
      supported device, then run `npm run doctor:ui-mobile-device` and capture
      Expo Go/simulator proof
 
-2. Continue `v1.5` native/mobile UI from the verified shell seed:
+3. Continue `v1.5` native/mobile UI from the verified shell seed:
    - plan: `docs/planning/v1.5-mobile-ui-plan.md`
    - latest task: `.codex/tasks/PRJ-1182-v15-mobile-device-proof-doctor.md`
    - promotion handoff:
@@ -67,7 +82,7 @@ Last updated: 2026-05-12
    - PR creation URL:
      `https://github.com/Wroblewski-Patryk/Aviary/pull/new/codex/v15-mobile-ui-deploy-commits`
 
-3. Preserve the completed `v1.1` web UI responsive quality baseline:
+4. Preserve the completed `v1.1` web UI responsive quality baseline:
    - plan: `docs/planning/v1.1-web-ui-responsive-plan.md`
    - handoff task: `.codex/tasks/PRJ-1157-v11-web-ui-responsive-handoff.md`
    - evidence: `.codex/artifacts/prj1150-v11-ui-responsive-audit/report.json`
@@ -79,7 +94,7 @@ Last updated: 2026-05-12
    responsive handoff. Next smallest slice: plan `v1.5` mobile from these
    learnings or start a new narrow UI polish item from explicit feedback.
 
-4. Keep `npm run audit:ui-responsive` in the web validation set for shell,
+5. Keep `npm run audit:ui-responsive` in the web validation set for shell,
    route layout, navigation, and responsive UI changes.
 
 ## Previous Architecture Queue

@@ -13,6 +13,8 @@ from app.memory.episodic import extract_episode_fields
 
 
 class ContextAgent:
+    CONTEXT_TOKEN_BUDGET = 2500
+    APPROX_CHARS_PER_TOKEN = 4
     GENERIC_TAGS = {"general"}
     SUPPORTED_CONCLUSION_KINDS = {
         "response_style",
@@ -902,6 +904,10 @@ class ContextAgent:
             + memory_hint
             + " Foreground awareness: "
             + foreground_awareness_summary
+        )
+        summary = self._clip_text(
+            summary,
+            self.CONTEXT_TOKEN_BUDGET * self.APPROX_CHARS_PER_TOKEN,
         )
         risk_level = 0.1 if text else 0.4
 
