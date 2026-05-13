@@ -330,6 +330,9 @@ Hybrid retrieval surfaces are now also explicit:
 - on PostgreSQL, semantic vector hits are ranked by native pgvector distance
   ordering in SQL; local SQLite/JSON fallback keeps Python cosine scoring over
   an expanded candidate pool
+- vector-matched episodic rows carry `retrieval_source=vector` and
+  `retrieval_similarity`, and context scoring treats vector relevance as a
+  semantic signal even when lexical overlap is low
 - runtime logs and memory diagnostics now expose hybrid retrieval signals
   (lexical/vector hit counts) for observability
 - episodic, semantic-conclusion, affective-conclusion, and relation embedding

@@ -6,6 +6,21 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-13: `PRJ-1191` preserved vector relevance through context selection:
+  - task:
+    - `.codex/tasks/PRJ-1191-vector-relevance-context-preservation.md`
+  - result:
+    - vector-matched episodic rows now expose `retrieval_source=vector` and
+      `retrieval_similarity`
+    - `ContextAgent` treats vector similarity as a semantic relevance signal
+      when lexical overlap is absent
+    - semantic vector hits are no longer made inert by lexical-only topical
+      filtering before context construction
+  - validation:
+    - context vector relevance pack -> `6 passed`
+    - memory repository vector metadata pack -> `2 passed`
+    - full backend pytest -> `1083 passed`
+
 - 2026-05-13: `PRJ-1190` added native pgvector semantic ranking:
   - task:
     - `.codex/tasks/PRJ-1190-native-pgvector-semantic-ranking.md`

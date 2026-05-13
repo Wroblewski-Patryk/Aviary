@@ -1180,6 +1180,13 @@ class MemoryRepository:
             ): float(hit.get("similarity", 0.0) or 0.0)
             for hit in vector_hits
         }
+        vector_by_kind_source_id = {
+            (
+                str(hit.get("source_kind", "")).strip().lower(),
+                str(hit.get("source_id", "")).strip().lower(),
+            ): float(hit.get("similarity", 0.0) or 0.0)
+            for hit in vector_hits
+        }
         vector_episodic_ids: list[int] = []
         for hit in vector_hits:
             if str(hit.get("source_kind", "")).strip().lower() != "episodic":
@@ -1196,7 +1203,14 @@ class MemoryRepository:
             ids=vector_episodic_ids,
         )
         vector_episodic_by_id = {
-            int(item["id"]): item
+            int(item["id"]): {
+                **item,
+                "retrieval_source": "vector",
+                "retrieval_similarity": vector_by_kind_source_id.get(
+                    ("episodic", str(item["id"])),
+                    vector_by_kind_source_id.get(("episodic", f"memory:{item['id']}"), 0.0),
+                ),
+            }
             for item in vector_episodic
             if item.get("id") is not None
         }

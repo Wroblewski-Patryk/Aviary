@@ -1088,6 +1088,9 @@ async def test_memory_repository_includes_vector_matched_episodic_memory_outside
 
     summaries = [str(item.get("summary", "")).lower() for item in bundle["episodic"]]
     assert any("project atlas uses sea green" in summary for summary in summaries)
+    vector_item = next(item for item in bundle["episodic"] if item.get("id") == old["id"])
+    assert vector_item["retrieval_source"] == "vector"
+    assert vector_item["retrieval_similarity"] > 0.99
     assert bundle["diagnostics"]["episodic_candidates"] == 12
     assert bundle["diagnostics"]["vector_episodic_hits"] == 1
 

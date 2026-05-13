@@ -919,6 +919,30 @@ def test_context_summary_includes_recent_memory_signal() -> None:
     assert "We deployed it successfully" in result.summary
 
 
+def test_context_summary_keeps_vector_retrieved_memory_without_lexical_overlap() -> None:
+    event = _event("canine name")
+    recent_memory = [
+        {
+            "id": 3,
+            "event_id": "evt-vector-roki",
+            "summary": (
+                "event=remembered companion label; memory_kind=semantic; memory_topics=animal,label; "
+                "response_language=en; context=old context; plan_goal=reply; action=success; "
+                "expression=Roki is the stored name"
+            ),
+            "importance": 0.5,
+            "retrieval_source": "vector",
+            "retrieval_similarity": 0.91,
+            "event_timestamp": datetime.now(timezone.utc),
+        }
+    ]
+
+    result = ContextAgent().run(event=event, perception=_perception(), recent_memory=recent_memory)
+
+    assert "Relevant recent memory:" in result.summary
+    assert "Roki is the stored name" in result.summary
+
+
 def test_clip_text_prefers_completed_sentence_when_it_fits() -> None:
     result = ContextAgent()._clip_text(
         "First complete sentence. Second sentence that should not fit cleanly.",

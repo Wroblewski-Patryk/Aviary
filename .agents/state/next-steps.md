@@ -6,7 +6,7 @@ Last updated: 2026-05-13
 
 1. Continue from the repaired production DB baseline:
    - latest memory task:
-     `.codex/tasks/PRJ-1190-native-pgvector-semantic-ranking.md`
+     `.codex/tasks/PRJ-1191-vector-relevance-context-preservation.md`
    - current verified baseline:
      Coolify production runs runtime memory with `RECENT_MEMORY_LIMIT=6`,
      `SEMANTIC_MEMORY_TOP_K=5`, OpenAI `text-embedding-3-small`, and pgvector
@@ -15,16 +15,17 @@ Last updated: 2026-05-13
      runtime query embeddings use the configured provider path, foreground
      vector retrieval includes `episodic`, and vector-matched episodes outside
      the recent temporal window enter the context bundle; PostgreSQL semantic
-     vector ranking uses native pgvector distance ordering
+     vector ranking uses native pgvector distance ordering; vector relevance
+     now survives context selection even when lexical overlap is absent
    - production proof:
      post-maintenance two-turn memory scenario answered `Roki`, persisted two
      episodes, and wrote two 1536-dimensional semantic embeddings; PRJ-1189
      non-temporal semantic proof on commit `d4d2911` answered `Roki` after
      15 filler episodes and retrieved original episode `id=4`
    - next smallest slice:
-     plan an ANN/index migration only if retrieval volume makes query latency
-     require it; otherwise continue memory quality work at consolidation,
-     summarization, and forgetting/decay policies
+     continue memory quality work at consolidation, summarization, and
+     forgetting/decay policies; plan an ANN/index migration only if retrieval
+     volume makes query latency require it
 
 2. Capture native device proof for the deployed `v1.5` mobile UI:
    - branch: `codex/v15-mobile-ui-deploy-commits`

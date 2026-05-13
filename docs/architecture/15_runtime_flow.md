@@ -176,6 +176,8 @@ Current foreground retrieval defaults:
 - PostgreSQL production vector ranking uses native pgvector distance ordering;
   local non-PostgreSQL fallback uses Python cosine scoring over a bounded
   expanded candidate pool
+- vector-matched episodic rows carry retrieval relevance metadata so semantic
+  hits can survive context filtering even when lexical overlap is low
 
 ### Step 7. Context Construction
 

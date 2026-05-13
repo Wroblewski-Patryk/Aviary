@@ -551,13 +551,17 @@ class ContextAgent:
         preferred_language: str,
         current_mode: str,
         perception: PerceptionOutput,
-    ) -> tuple[float, float, int, float, float]:
+    ) -> tuple[float, float, float, float, float, float]:
         fields = extract_episode_fields(memory_item)
         memory_language = self._memory_language(memory_item)
         memory_kind = self._memory_kind(memory_item)
         event_text = fields.get("event", "")
         memory_tokens = self._memory_topics(memory_item) or self._text_tokens(event_text)
         overlap = len(current_tokens.intersection(memory_tokens))
+        retrieval_similarity = float(memory_item.get("retrieval_similarity", 0.0) or 0.0)
+        semantic_signal = float(overlap)
+        if semantic_signal <= 0.0 and retrieval_similarity > 0.0:
+            semantic_signal = min(1.0, retrieval_similarity)
         language_bonus = 1.0 if memory_language == preferred_language else 0.4 if memory_language is None else 0.0
         mode_bonus = 1.0 if memory_kind == current_mode else 0.45 if memory_kind is None else 0.0
         affective_bonus = 0.0
@@ -573,7 +577,7 @@ class ContextAgent:
             affective_bonus += 0.7
         importance = float(memory_item.get("importance", 0.0))
 
-        return (language_bonus, mode_bonus, overlap, affective_bonus, importance)
+        return (language_bonus, mode_bonus, semantic_signal, affective_bonus, retrieval_similarity, importance)
 
     def _specific_topic_tags(self, perception: PerceptionOutput) -> set[str]:
         return {tag for tag in perception.topic_tags if tag not in self.GENERIC_TAGS}

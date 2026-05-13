@@ -4,6 +4,26 @@ Last updated: 2026-05-13
 
 ## Project Status Dashboard (2026-05-13)
 
+- `PRJ-1191` is DONE:
+  - `.codex/tasks/PRJ-1191-vector-relevance-context-preservation.md`
+- result:
+  - vector-matched episodic memories now carry `retrieval_source=vector` and
+    `retrieval_similarity`
+  - context scoring now treats vector similarity as a real semantic relevance
+    signal when lexical overlap is absent
+  - semantic vector matches are no longer dropped solely by lexical topical
+    filtering before prompt/context construction
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_context_agent.py -k "vector_retrieved_memory or recent_memory_signal or relevant_memory or topically_relevant or importance"; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+    -> `6 passed, 47 deselected`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py -k "vector_matched_episodic or semantic_embeddings or expanded_candidates"; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+    -> `2 passed, 69 deselected`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+    -> `1083 passed`
+- residual risk:
+  - richer consolidation, summarization, and decay policies remain future
+    memory-quality work
+
 - `PRJ-1190` is DONE:
   - `.codex/tasks/PRJ-1190-native-pgvector-semantic-ranking.md`
 - result:
