@@ -4,6 +4,31 @@ Last updated: 2026-05-13
 
 ## Project Status Dashboard (2026-05-13)
 
+- `PRJ-1187` is DONE:
+  - `.codex/tasks/PRJ-1187-production-openai-vector-dimension-alignment.md`
+- result:
+  - Coolify production now runs the runtime memory-flow closure from `main`
+  - production OpenAI embedding dimensions are aligned to pgvector
+    `vector(1536)` through `docker-compose.coolify.yml`
+  - pgvector-returned embedding arrays serialize without boolean evaluation,
+    so successful memory writes are reported as stored
+  - final production runtime revision verified:
+    `9252c9193219a374fd513287a022123fd0176715`
+  - `/health.memory_retrieval` reports OpenAI `text-embedding-3-small`,
+    embedding dimensions `1536`, and retrieval depth policy `6/5`
+  - production memory proof answered `Roki` from prior memory; DB rows for
+    `prod-memory-flow-final-20260513` show `aion_memory=2`,
+    `aion_semantic_embedding=2`, embedded rows `2`, dimensions `1536..1536`
+  - runtime `memory_flow` log reported `memory_write_status=stored`,
+    `retrieved_recent_count=1`, `retrieved_memory_ids=['1099']`
+- validation:
+  - targeted Coolify/config/API memory policy pack -> `13 passed`
+  - targeted pgvector serialization pack -> `3 passed`
+  - full backend after final fix -> `1078 passed`
+- residual risk:
+  - production DB reports a PostgreSQL collation version mismatch; it did not
+    block memory proof and should be handled in a separate DB maintenance task
+
 - `PRJ-1186` is DONE:
   - `.codex/tasks/PRJ-1186-runtime-memory-flow-closure.md`
 - result:

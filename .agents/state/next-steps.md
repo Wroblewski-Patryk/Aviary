@@ -4,20 +4,20 @@ Last updated: 2026-05-13
 
 ## NOW
 
-1. Add provider-backed semantic memory recall proof when credentials and target
-   environment are available:
+1. Plan a narrow production DB maintenance task for the PostgreSQL collation
+   version mismatch observed during PRJ-1187 production verification:
    - latest memory task:
-     `.codex/tasks/PRJ-1186-runtime-memory-flow-closure.md`
+     `.codex/tasks/PRJ-1187-production-openai-vector-dimension-alignment.md`
    - current verified baseline:
-     recent temporal memory retrieval and context/expression influence are
-     verified with `RECENT_MEMORY_LIMIT=6`,
-     `SEMANTIC_MEMORY_TOP_K=5`, and `CONTEXT_TOKEN_BUDGET=2500`
-   - full backend proof:
-     `1076 passed`
+     Coolify production runs runtime memory with `RECENT_MEMORY_LIMIT=6`,
+     `SEMANTIC_MEMORY_TOP_K=5`, OpenAI `text-embedding-3-small`, and pgvector
+     dimensions `1536`
+   - production proof:
+     the final two-turn memory scenario answered `Roki`, persisted two
+     episodes, and wrote two 1536-dimensional semantic embeddings
    - next smallest slice:
-     run a production-like DB/OpenAI embedding scenario proving semantic
-     retrieval returns a relevant stored episode or conclusion without relying
-     only on temporal recency
+     handle the DB collation warning as maintenance without changing runtime
+     memory behavior
 
 2. Capture native device proof for the deployed `v1.5` mobile UI:
    - branch: `codex/v15-mobile-ui-deploy-commits`

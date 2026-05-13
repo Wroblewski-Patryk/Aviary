@@ -6,6 +6,34 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-13: `PRJ-1187` deployed and verified production OpenAI vector memory:
+  - task:
+    - `.codex/tasks/PRJ-1187-production-openai-vector-dimension-alignment.md`
+  - deployed revisions:
+    - `978ce1c0ac73fb7e82f6c49e0087887393c371b2`
+    - final pgvector serialization fix:
+      `9252c9193219a374fd513287a022123fd0176715`
+  - result:
+    - Coolify production defaults `EMBEDDING_DIMENSIONS` to `1536`
+    - production health reports OpenAI `text-embedding-3-small` embeddings
+      with `1536` dimensions and runtime retrieval depth `6/5`
+    - pgvector array serialization no longer marks successful embedding writes
+      as failed
+    - production memory proof confirmed a later answer can depend on a prior
+      event without the user repeating the fact
+  - proof:
+    - final write trace: `prod-memory-flow-final-write-20260513`
+    - final recall trace: `prod-memory-flow-final-read-20260513`
+    - DB rows for proof user:
+      `aion_memory=2`, `aion_semantic_embedding=2`, dimensions `1536..1536`,
+      model `text-embedding-3-small`
+    - reply contained `Roki`
+    - `memory_flow` log reported `memory_write_status=stored`,
+      `retrieved_recent_count=1`, `retrieved_memory_ids=['1099']`
+  - residual:
+    - production PostgreSQL reports a collation version mismatch; separate DB
+      maintenance task recommended
+
 - 2026-05-13: `PRJ-1186` closed the minimal full AION runtime memory flow:
   - task:
     - `.codex/tasks/PRJ-1186-runtime-memory-flow-closure.md`
