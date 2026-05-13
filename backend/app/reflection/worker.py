@@ -29,6 +29,7 @@ from app.reflection.goal_conclusions import (
     derive_goal_progress_score,
     derive_goal_progress_trend,
 )
+from app.reflection.memory_topic_signals import derive_memory_topic_summary
 from app.reflection.relation_signals import derive_relation_updates
 from app.reflection.proposals import derive_subconscious_proposals
 from app.utils.goal_task_selection import priority_rank as shared_priority_rank
@@ -555,6 +556,13 @@ class ReflectionWorker:
         )
         if affective_conclusions:
             conclusions.extend(affective_conclusions)
+
+        memory_topic_summary = derive_memory_topic_summary(
+            recent_memory,
+            extract_memory_fields=self._extract_memory_fields,
+        )
+        if memory_topic_summary is not None:
+            conclusions.append(memory_topic_summary)
 
         goal_execution_state = derive_goal_execution_state(
             recent_memory=recent_memory,

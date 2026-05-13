@@ -69,6 +69,28 @@ def test_context_summary_includes_stable_user_preferences_from_conclusions() -> 
     assert "Stable user preferences: prefers concise responses." in result.summary
 
 
+def test_context_summary_includes_long_term_memory_topic_summary_from_conclusions() -> None:
+    result = ContextAgent().run(
+        event=_event("what do you remember about Roki"),
+        perception=_perception(),
+        recent_memory=[],
+        conclusions=[
+            {
+                "kind": "memory_topic_summary",
+                "content": (
+                    "Repeated memory topics: dog, roki. Recent evidence: "
+                    "user said 'Remember that my dog is named Roki.'"
+                ),
+                "confidence": 0.86,
+                "source": "background_reflection:topic_summary",
+            }
+        ],
+    )
+
+    assert "Long-term memory summary: Repeated memory topics: dog, roki." in result.summary
+    assert "Remember that my dog is named Roki" in result.summary
+
+
 def test_context_summary_includes_affective_support_pattern_from_conclusions() -> None:
     result = ContextAgent().run(
         event=_event("how should we proceed"),

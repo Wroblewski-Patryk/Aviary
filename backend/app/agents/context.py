@@ -35,6 +35,7 @@ class ContextAgent:
         "goal_milestone_risk",
         "goal_completion_criteria",
     }
+    MEMORY_SUMMARY_CONCLUSION_KINDS = {"memory_topic_summary"}
     STOPWORDS = {
         "a",
         "an",
@@ -140,6 +141,31 @@ class ContextAgent:
             return ""
 
         return " Stable user preferences: " + " | ".join(summarized) + "."
+
+    def _summarize_memory_conclusions(self, conclusions: list[dict] | None) -> str:
+        if not conclusions:
+            return ""
+
+        summarized: list[str] = []
+        seen: set[str] = set()
+        for conclusion in conclusions:
+            kind = str(conclusion.get("kind", "")).strip().lower()
+            if kind not in self.MEMORY_SUMMARY_CONCLUSION_KINDS:
+                continue
+            confidence = float(conclusion.get("confidence", 0.0) or 0.0)
+            if confidence < 0.7:
+                continue
+            content = self._clip_text(str(conclusion.get("content", "")).strip(), 360)
+            if not content or content in seen:
+                continue
+            seen.add(content)
+            summarized.append(content)
+            if len(summarized) >= 2:
+                break
+
+        if not summarized:
+            return ""
+        return " Long-term memory summary: " + " | ".join(summarized) + "."
 
     def _summarize_relations(self, relations: list[dict] | None) -> str:
         if not relations:
@@ -875,6 +901,7 @@ class ContextAgent:
             self._select_goal_milestone_history(goal_milestone_history or [], selected_goals=selected_goals)
         )
         conclusion_hint = self._summarize_conclusions(conclusions)
+        memory_conclusion_hint = self._summarize_memory_conclusions(conclusions)
         relation_hint = self._summarize_relations(relations)
         recency_hint = self._latest_memory_recency_hint(event=event, recent_memory=recent_memory or [])
         memory_hint = ""
@@ -903,6 +930,7 @@ class ContextAgent:
             + milestone_history_hint
             + goal_history_hint
             + conclusion_hint
+            + memory_conclusion_hint
             + relation_hint
             + recency_hint
             + memory_hint

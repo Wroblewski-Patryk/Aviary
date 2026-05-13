@@ -432,6 +432,18 @@ regression, not as an optional operator convenience. The bounded contract is:
 - follow-up turns may reuse recalled conclusions without silently re-running
   provider reads
 
+For memory-consolidation triage, check both the episodic/vector path and the
+semantic conclusion path:
+
+- reflection should write `memory_topic_summary` only after repeated
+  non-generic recent memory topics
+- `aion_conclusion.kind=memory_topic_summary` remains user-scoped and semantic
+  by repository layer defaults
+- if semantic source embeddings are enabled, the conclusion can materialize a
+  `source_kind=semantic` embedding through the existing conclusion write path
+- later runtime context should expose it as `Long-term memory summary`, not
+  only as a stored database row
+
 `GET /health` now also includes a fuller `capability_catalog` surface for
 operator and future UI/admin inspection.
 

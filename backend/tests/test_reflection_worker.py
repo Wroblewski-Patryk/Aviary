@@ -226,6 +226,56 @@ async def test_reflection_worker_reads_structured_episode_payload_before_legacy_
     ]
 
 
+async def test_reflection_worker_consolidates_repeated_memory_topics_into_semantic_summary() -> None:
+    repository = FakeMemoryRepository(
+        recent_memory=[
+            {
+                "payload": {
+                    "event": "Remember that my dog is named Roki.",
+                    "memory_kind": "semantic",
+                    "memory_topics": ["dog", "roki", "pet"],
+                    "action": "success",
+                    "expression": "I will remember that your dog is named Roki.",
+                },
+                "summary": "legacy summary should not be needed",
+            },
+            {
+                "payload": {
+                    "event": "Roki likes short walks in the evening.",
+                    "memory_kind": "semantic",
+                    "memory_topics": ["dog", "roki", "routine"],
+                    "action": "success",
+                    "expression": "Noted.",
+                },
+                "summary": "legacy summary should not be needed",
+            },
+            {
+                "payload": {
+                    "event": "My dog Roki is nervous around loud storms.",
+                    "memory_kind": "semantic",
+                    "memory_topics": ["dog", "roki", "storm"],
+                    "action": "success",
+                    "expression": "I will keep that in mind.",
+                },
+                "summary": "legacy summary should not be needed",
+            },
+        ]
+    )
+    worker = ReflectionWorker(memory_repository=repository)
+
+    result = await worker.reflect_user(user_id="u-1", event_id="evt-memory-topic-summary")
+
+    assert result is True
+    summary_update = next(
+        item for item in repository.conclusion_updates if item["kind"] == "memory_topic_summary"
+    )
+    assert summary_update["source"] == "background_reflection:topic_summary"
+    assert summary_update["confidence"] >= 0.7
+    assert "dog" in summary_update["content"]
+    assert "roki" in summary_update["content"]
+    assert "Remember that my dog is named Roki" in summary_update["content"]
+
+
 async def test_reflection_worker_derives_read_only_subconscious_proposals_from_recent_memory() -> None:
     repository = FakeMemoryRepository(
         recent_memory=[

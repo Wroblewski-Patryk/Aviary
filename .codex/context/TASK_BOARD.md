@@ -4,6 +4,23 @@ Last updated: 2026-05-13
 
 ## Project Status Dashboard (2026-05-13)
 
+- `PRJ-1193` is DONE locally:
+  - `.codex/tasks/PRJ-1193-memory-topic-summary-consolidation.md`
+- result:
+  - background reflection derives semantic `memory_topic_summary` conclusions
+    from repeated non-generic recent episodic topics
+  - topic summaries use existing `aion_conclusion`/semantic embedding
+    persistence and avoid new schema or dynamic per-topic conclusion kinds
+  - `ContextAgent` now injects high-confidence topic summaries as
+    `Long-term memory summary`
+- validation:
+  - targeted reflection/context/repository pack -> `3 passed`
+  - broader reflection/context/repository pack -> `177 passed`
+  - full backend pytest -> `1088 passed`
+- residual risk:
+  - a single rolling global topic summary is the minimal safe slice; multiple
+    durable per-topic buckets remain a future architecture decision
+
 - `PRJ-1192` is DONE:
   - `.codex/tasks/PRJ-1192-relation-vector-memory-runtime-closure.md`
 - result:

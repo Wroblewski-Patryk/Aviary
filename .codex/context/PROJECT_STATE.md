@@ -41,6 +41,25 @@ the same project.
     - ANN/index migration remains future scale hardening; richer
       consolidation and summarization remain future memory-quality work
 
+- 2026-05-13: `PRJ-1193` added minimal memory topic-summary consolidation:
+  - task:
+    - `.codex/tasks/PRJ-1193-memory-topic-summary-consolidation.md`
+  - result:
+    - background reflection now derives a semantic `memory_topic_summary`
+      conclusion from repeated non-generic recent episodic topics
+    - the summary persists through the existing `aion_conclusion` and semantic
+      embedding path, without a new table or dynamic conclusion-kind family
+    - `ContextAgent` injects high-confidence topic summaries as
+      `Long-term memory summary`, so consolidated memory can affect prompt
+      context instead of staying write-only
+  - validation:
+    - targeted reflection/context/repository pack -> `3 passed`
+    - broader reflection/context/repository pack -> `177 passed`
+    - full backend pytest -> `1088 passed`
+  - residual:
+    - topic-scoped multiple summary buckets and ANN/index scale hardening remain
+      future memory-quality work
+
 - 2026-05-13: `PRJ-1191` preserved vector relevance through context selection:
   - task:
     - `.codex/tasks/PRJ-1191-vector-relevance-context-preservation.md`

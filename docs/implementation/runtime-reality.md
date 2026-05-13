@@ -229,6 +229,25 @@ Current transition note:
   global fallback, reducing cross-goal leakage in context, motivation,
   planning, and milestone enrichment
 
+### Memory topic summaries
+
+Reflection now derives a compact semantic `memory_topic_summary` conclusion
+when repeated recent episodic records share non-generic memory topics. This
+uses the existing `aion_conclusion` and semantic-embedding path rather than a
+new memory table:
+
+- input: recent user-scoped episodic records loaded by `ReflectionWorker`
+- derivation owner: `app/reflection/memory_topic_signals.py`
+- persistence: `MemoryRepository.upsert_conclusion(...)`
+- memory layer: semantic by default through `conclusion_memory_layer(...)`
+- runtime consumption: `ContextAgent` injects high-confidence
+  `memory_topic_summary` rows as `Long-term memory summary`
+
+The current implementation intentionally keeps a single rolling global summary
+instead of dynamic per-topic conclusion kinds. Topic-scoped long-term summaries
+remain a future architecture decision if the product needs multiple durable
+topic buckets.
+
 ### Tool-grounded learning capture
 
 The live runtime now treats selected external reads as bounded learned-state

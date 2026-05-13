@@ -184,6 +184,7 @@ async def test_memory_repository_exposes_memory_layer_vocabulary_and_conclusion_
     )
     assert repository.conclusion_memory_layer("affective_support_pattern") == "affective"
     assert repository.conclusion_memory_layer("goal_milestone_risk") == "operational"
+    assert repository.conclusion_memory_layer("memory_topic_summary") == "semantic"
     assert repository.conclusion_memory_layer("custom_semantic_fact") == "semantic"
 
 
