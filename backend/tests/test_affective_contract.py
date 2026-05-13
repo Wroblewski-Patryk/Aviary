@@ -55,3 +55,16 @@ def test_perception_agent_emits_support_distress_affective_placeholder() -> None
     assert perception.affective.source == "deterministic_placeholder"
     assert perception.affective.confidence >= 0.61
     assert "overwhelmed" in perception.affective.evidence or "anxious" in perception.affective.evidence
+
+
+def test_perception_agent_emits_positive_affect_for_polish_thanks() -> None:
+    perception = PerceptionAgent().run(
+        _event("Dziękuję, super to wyszło."),
+        recent_memory=[],
+    )
+
+    assert perception.language == "pl"
+    assert perception.affective.affect_label == "positive_engagement"
+    assert perception.affective.needs_support is False
+    assert perception.affective.source == "deterministic_placeholder"
+    assert set(perception.affective.evidence).intersection({"dziekuje", "super"})

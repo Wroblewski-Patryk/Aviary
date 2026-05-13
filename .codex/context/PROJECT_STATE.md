@@ -6,6 +6,27 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-13: `PRJ-1195` audited runtime layers and repaired a Polish
+  perception cue:
+  - task:
+    - `.codex/tasks/PRJ-1195-runtime-layer-audit-and-polish-perception-fix.md`
+  - result:
+    - added `docs/operations/aion-runtime-layer-audit-2026-05-13.md` with
+      event, attention, identity, perception, affective assessment, context,
+      motivation, role/skills, planning, expression, action, episodic memory,
+      reflection, proactive, and debug/observability status
+    - confirmed the implemented foreground graph follows the architecture
+      order through expression/action and then runtime-owned memory/reflection
+      follow-ups
+    - fixed normalized Polish `dziekuje` as both a language hint and positive
+      engagement cue after `Dziękuję` loses diacritics for matching
+  - validation:
+    - focused runtime-layer cue/invariant pack -> `4 passed, 129 deselected`
+    - full backend pytest -> `1093 passed`
+  - residual:
+    - native device proof and external provider activation remain separate
+      tracked gaps; no new cognitive subsystem is needed now
+
 - 2026-05-13: `PRJ-1192` closed optional relation vector memory retrieval:
   - task:
     - `.codex/tasks/PRJ-1192-relation-vector-memory-runtime-closure.md`

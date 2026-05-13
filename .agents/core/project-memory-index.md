@@ -1,6 +1,6 @@
 # Project Memory Index
 
-Last updated: 2026-05-11
+Last updated: 2026-05-13
 
 ## Project Alias
 
@@ -38,7 +38,8 @@ continue from repository files alone:
   implementation ownership and surface maps.
 - `docs/planning/`: release plan and task sequencing.
 - `docs/operations/`: release, deploy, smoke, rollback, and target-environment
-  evidence.
+  evidence. Current runtime-layer audit:
+  `docs/operations/aion-runtime-layer-audit-2026-05-13.md`.
 
 If one of these files is missing, empty, stale, or still template-like, rebuild
 the minimum useful version from architecture docs, context files, accepted

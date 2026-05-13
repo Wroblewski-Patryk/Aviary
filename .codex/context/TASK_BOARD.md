@@ -4,6 +4,24 @@ Last updated: 2026-05-13
 
 ## Project Status Dashboard (2026-05-13)
 
+- `PRJ-1195` is DONE:
+  - `.codex/tasks/PRJ-1195-runtime-layer-audit-and-polish-perception-fix.md`
+- result:
+  - runtime layer audit added at
+    `docs/operations/aion-runtime-layer-audit-2026-05-13.md`
+  - non-memory digital-being layers are verified for the backend release path:
+    event/attention, identity, perception, affective assessment, context,
+    motivation, role/skills, planning, expression, action, memory/reflection,
+    proactive, and debug/observability
+  - normalized Polish `dziekuje` now works as a language hint and positive
+    engagement cue after matching removes diacritics from `Dziękuję`
+- validation:
+  - focused runtime-layer cue/invariant pack -> `4 passed, 129 deselected`
+  - full backend pytest -> `1093 passed`
+- residual risk:
+  - native device proof and external provider activation remain separate
+    tracked work
+
 - `PRJ-1194` is DONE:
   - `.codex/tasks/PRJ-1194-topic-scoped-memory-summary-buckets.md`
 - result:

@@ -27,6 +27,13 @@ def test_detect_language_prefers_explicit_request() -> None:
     assert result.source == "explicit_request"
 
 
+def test_detect_language_uses_polish_thanks_keyword_without_diacritics() -> None:
+    result = detect_language("dziekuje za pomoc")
+
+    assert result.code == "pl"
+    assert result.source == "keyword_signal"
+
+
 def test_language_continuity_policy_snapshot_pins_supported_language_boundary() -> None:
     snapshot = language_continuity_policy_snapshot()
 

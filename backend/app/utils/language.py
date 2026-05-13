@@ -39,6 +39,7 @@ LANGUAGE_HINT_WORDS = {
         "napraw",
         "plan",
         "dzieki",
+        "dziekuje",
         "moge",
     },
 }

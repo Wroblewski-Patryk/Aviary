@@ -120,6 +120,7 @@ class PerceptionAgent:
             "awesome",
             "dzieki",
             "dziękuję",
+            "dziekuje",
             "super",
         }
 
