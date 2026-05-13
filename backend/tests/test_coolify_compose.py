@@ -79,6 +79,18 @@ def test_coolify_compose_defaults_embedding_dimensions_to_openai_small_vector_si
     assert app_environment["EMBEDDING_DIMENSIONS"] == "${EMBEDDING_DIMENSIONS:-1536}"
 
 
+def test_coolify_compose_defaults_embedding_source_kinds_to_optional_relation_family() -> None:
+    compose_path = REPO_ROOT / "docker-compose.coolify.yml"
+    compose = yaml.safe_load(compose_path.read_text(encoding="utf-8"))
+
+    app_environment = compose["services"]["app"]["environment"]
+
+    assert (
+        app_environment["EMBEDDING_SOURCE_KINDS"]
+        == "${EMBEDDING_SOURCE_KINDS:-episodic,semantic,affective,relation}"
+    )
+
+
 def test_coolify_compose_maps_app_build_revision_to_coolify_source_commit() -> None:
     compose_path = REPO_ROOT / "docker-compose.coolify.yml"
     compose = yaml.safe_load(compose_path.read_text(encoding="utf-8"))

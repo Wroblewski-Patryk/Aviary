@@ -173,6 +173,10 @@ Current foreground retrieval defaults:
 - compressed context budget: about `2500` tokens
 - foreground vector retrieval source families: `episodic`, `semantic`, and
   `affective` when those source families are enabled
+- `relation` remains an optional follow-on vector source family; when enabled,
+  vector-matched relation records are revalidated and merged into the existing
+  relation/adaptive context path rather than redefining the steady-state
+  retrieval baseline
 - PostgreSQL production vector ranking uses native pgvector distance ordering;
   local non-PostgreSQL fallback uses Python cosine scoring over a bounded
   expanded candidate pool

@@ -692,6 +692,7 @@ class FakeHybridMemoryRepository(FakeMemoryRepository):
         self.query_embedding_calls: list[str] = []
         self.query_embedding = query_embedding or [0.1] * 32
         self.relations: list[dict] = []
+        self.vector_relations: list[dict] = []
 
     async def build_query_embedding(self, query_text: str) -> list[float]:
         self.query_embedding_calls.append(query_text)
@@ -740,6 +741,7 @@ class FakeHybridMemoryRepository(FakeMemoryRepository):
             "episodic": episodic_rows[:episodic_limit],
             "semantic": semantic[:conclusion_limit],
             "affective": affective[:conclusion_limit],
+            "relations": list(self.vector_relations),
             "diagnostics": {
                 "query_tokens": len(query_text.split()),
                 "episodic_candidates": len(episodic_rows),
@@ -747,6 +749,7 @@ class FakeHybridMemoryRepository(FakeMemoryRepository):
                 "affective_candidates": len(affective),
                 "episodic_lexical_hits": len(episodic_rows),
                 "vector_hits": 1,
+                "vector_relation_hits": len(self.vector_relations),
                 "semantic_selected": len(semantic[:conclusion_limit]),
                 "affective_selected": len(affective[:conclusion_limit]),
             },
@@ -5697,6 +5700,49 @@ async def test_runtime_pipeline_exposes_system_debug_surface_for_behavior_valida
     assert result.system_debug.adaptive_state["affective_assessment_policy"]["affective_assessment_owner"] == (
         "affective_assessment_rollout_policy"
     )
+
+
+async def test_runtime_pipeline_merges_vector_matched_relations_into_debug_state() -> None:
+    memory = FakeHybridMemoryRepository(
+        recent_memory=[
+            {
+                "event_id": "evt-prev-1",
+                "summary": "event=work through launch pressure",
+                "payload": {"text": "work through launch pressure"},
+                "importance": 0.7,
+            }
+        ]
+    )
+    memory.embedding_source_kinds = {"episodic", "semantic", "affective", "relation"}
+    memory.vector_relations = [
+        {
+            "id": 42,
+            "relation_type": "support_intensity_preference",
+            "relation_value": "high_support",
+            "confidence": 0.81,
+            "retrieval_source": "vector",
+            "retrieval_similarity": 0.94,
+        }
+    ]
+    runtime = _build_behavior_runtime(memory)
+
+    result = await runtime.run(
+        _behavior_event(
+            event_id="evt-vector-relation-runtime-1",
+            trace_id="t-vector-relation-runtime-1",
+            text="Can you stay extra supportive while I sort this launch?",
+        )
+    )
+
+    assert result.system_debug is not None
+    relations = result.system_debug.memory_bundle.relations
+    assert any(
+        relation.get("relation_type") == "support_intensity_preference"
+        and relation.get("retrieval_source") == "vector"
+        for relation in relations
+    )
+    assert result.system_debug.memory_bundle.diagnostics["vector_relation_hits"] == 1
+    assert result.system_debug.adaptive_state["relation_source_policy"]["relation_source_enabled"] is True
 
 
 async def test_runtime_pipeline_exposes_behavior_feedback_interpretation_in_system_debug() -> None:

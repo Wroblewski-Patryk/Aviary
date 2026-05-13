@@ -393,6 +393,10 @@ Retrieval lifecycle interpretation (`PRJ-504..PRJ-507`):
   than pending:
   relation records remain live adaptive inputs for context/role/planning, but
   relation embeddings do not define steady-state retrieval completion
+- when the optional `relation` source family is enabled, vector-matched
+  relation hits are loaded back as `aion_relation` records, pass through the
+  existing confidence decay/revalidation policy, and are merged into runtime
+  relation state with `retrieval_source=vector` and `retrieval_similarity`
 - `/health.memory_retrieval` now also exposes explicit relation-source policy
   evidence:
   `retrieval_lifecycle_relation_source_policy_owner`,

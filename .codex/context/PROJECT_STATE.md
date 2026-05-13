@@ -6,6 +6,29 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-13: `PRJ-1192` closed optional relation vector memory retrieval:
+  - task:
+    - `.codex/tasks/PRJ-1192-relation-vector-memory-runtime-closure.md`
+  - result:
+    - relation semantic-vector hits now resolve back to revalidated
+      `aion_relation` records when the optional `relation` source family is
+      enabled
+    - hybrid retrieval returns vector-matched relations with
+      `retrieval_source=vector` and `retrieval_similarity`
+    - runtime merges vector-matched relations into the existing relation state,
+      adaptive preferences, and `system_debug.memory_bundle.relations`
+    - Coolify production defaults `EMBEDDING_SOURCE_KINDS` to
+      `episodic,semantic,affective,relation` while preserving relation as an
+      optional follow-on family
+  - validation:
+    - relation memory pack -> `4 passed, 68 deselected`
+    - runtime relation debug pack -> `2 passed, 111 deselected`
+    - Coolify compose pack -> `12 passed`
+    - full backend pytest -> `1086 passed`
+  - residual:
+    - production deploy and controlled relation-vector smoke remain the release
+      checkpoint before this slice is production-verified
+
 - 2026-05-13: `PRJ-1191` preserved vector relevance through context selection:
   - task:
     - `.codex/tasks/PRJ-1191-vector-relevance-context-preservation.md`

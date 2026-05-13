@@ -1054,7 +1054,11 @@ Recommended when Telegram webhooks are enabled:
   vector dimensions
 - `EMBEDDING_SOURCE_KINDS` (optional, default
   `episodic,semantic,affective`) to control which memory families persist
-  embedding records (`episodic|semantic|affective|relation`)
+  embedding records (`episodic|semantic|affective|relation`). Coolify
+  production now defaults this to `episodic,semantic,affective,relation` so
+  optional relation vector hits can be reloaded through the existing
+  relation/adaptive runtime path; override to `episodic,semantic,affective`
+  to roll that optional family back without disabling the baseline.
 - `EMBEDDING_REFRESH_MODE` (optional, default `on_write`) to define embedding
   refresh ownership posture (`on_write|manual`)
 - `EMBEDDING_REFRESH_INTERVAL_SECONDS` (optional, default `21600`) to declare

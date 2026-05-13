@@ -352,6 +352,31 @@ class RuntimeOrchestrator:
             preferences.setdefault(f"relation_{relation_type}_confidence", confidence)
         return preferences
 
+    def _merge_relation_records(self, primary: list[dict], additional: list[dict]) -> list[dict]:
+        merged: list[dict] = []
+        seen: set[tuple[str, str, str, str]] = set()
+
+        def relation_key(item: dict) -> tuple[str, str, str, str]:
+            raw_id = str(item.get("id") or "").strip()
+            if raw_id:
+                return ("id", raw_id, "", "")
+            return (
+                "shape",
+                str(item.get("relation_type") or "").strip().lower(),
+                str(item.get("scope_type") or "global").strip().lower(),
+                str(item.get("scope_key") or "global").strip().lower(),
+            )
+
+        for item in [*primary, *additional]:
+            if not isinstance(item, dict):
+                continue
+            key = relation_key(item)
+            if key in seen:
+                continue
+            seen.add(key)
+            merged.append(item)
+        return merged
+
     def _identity_conclusion_preferences(self, user_preferences: dict) -> dict:
         identity_preferences: dict[str, str] = {}
         response_style = str(user_preferences.get("response_style", "")).strip().lower()
@@ -719,6 +744,12 @@ class RuntimeOrchestrator:
                 memory = list(hybrid_bundle.get("episodic", []))
                 semantic_conclusions = list(hybrid_bundle.get("semantic", []))
                 affective_conclusions = list(hybrid_bundle.get("affective", []))
+                relations = self._merge_relation_records(
+                    relations,
+                    list(hybrid_bundle.get("relations", [])),
+                )
+                for key, value in self._relation_preferences(relations).items():
+                    runtime_user_preferences.setdefault(key, value)
                 user_conclusions = [*semantic_conclusions, *affective_conclusions]
                 diagnostics = hybrid_bundle.get("diagnostics", {})
                 if isinstance(diagnostics, dict):

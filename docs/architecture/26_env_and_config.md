@@ -300,6 +300,13 @@ Allowed kinds:
 
 Default: `episodic,semantic,affective`.
 
+Coolify production defaults this value to
+`episodic,semantic,affective,relation` after the foreground
+semantic/affective baseline is complete. `relation` is an optional follow-on
+family: enabling it lets vector-matched relation records enter the existing
+relation/adaptive context path, but it does not change the steady-state
+retrieval completion baseline.
+
 `EMBEDDING_REFRESH_MODE`
 
 Controls embedding refresh cadence ownership posture.

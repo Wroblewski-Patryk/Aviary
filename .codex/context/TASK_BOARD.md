@@ -4,6 +4,29 @@ Last updated: 2026-05-13
 
 ## Project Status Dashboard (2026-05-13)
 
+- `PRJ-1192` is REVIEW:
+  - `.codex/tasks/PRJ-1192-relation-vector-memory-runtime-closure.md`
+- result:
+  - optional `relation` vector hits now resolve back to revalidated
+    `aion_relation` records and are returned from hybrid retrieval
+  - runtime merges vector-matched relations into relation state, adaptive
+    preferences, and `system_debug.memory_bundle.relations`
+  - Coolify production compose now defaults `EMBEDDING_SOURCE_KINDS` to
+    `episodic,semantic,affective,relation` without promoting relation into the
+    mandatory steady-state baseline
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py -k "relation and (vector or hybrid or revalidates or refreshes or resets)"; ...`
+    -> `4 passed, 68 deselected`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py -k "vector_matched_relations or system_debug_surface"; ...`
+    -> `2 passed, 111 deselected`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_coolify_compose.py; ...`
+    -> `12 passed`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; ...`
+    -> `1086 passed`
+- residual risk:
+  - production deploy and controlled relation-vector smoke are still pending
+    for production verification
+
 - `PRJ-1191` is DONE:
   - `.codex/tasks/PRJ-1191-vector-relevance-context-preservation.md`
 - result:

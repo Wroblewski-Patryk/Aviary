@@ -1143,6 +1143,63 @@ async def test_memory_repository_keeps_relation_embeddings_out_of_default_foregr
     await engine.dispose()
 
 
+async def test_memory_repository_includes_vector_matched_relation_when_relation_source_enabled(
+    tmp_path,
+) -> None:
+    database_path = tmp_path / "memory-hybrid-relation-enabled.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(
+        session_factory=session_factory,
+        embedding_source_kinds=("episodic", "semantic", "affective", "relation"),
+    )
+    await repository.create_tables(engine)
+
+    async with session_factory() as session:
+        relation = AionRelation(
+            user_id="u-1",
+            relation_type="collaboration_dynamic",
+            relation_value="guided",
+            confidence=0.82,
+            source="background_reflection",
+        )
+        session.add(relation)
+        await session.flush()
+        session.add(
+            AionSemanticEmbedding(
+                user_id="u-1",
+                source_kind="relation",
+                source_id=f"relation:{relation.id}",
+                source_event_id="evt-rel-vector-1",
+                scope_type="global",
+                scope_key="global",
+                content="collaboration_dynamic guided",
+                embedding=[0.95, 0.05, 0.0],
+                embedding_model="test-v1",
+                embedding_dimensions=3,
+                metadata_json={"relation_type": "collaboration_dynamic"},
+            )
+        )
+        await session.commit()
+
+    bundle = await repository.get_hybrid_memory_bundle(
+        user_id="u-1",
+        query_text="guided collaboration please",
+        query_embedding=[0.95, 0.05, 0.0],
+        episodic_limit=4,
+        conclusion_limit=4,
+    )
+
+    assert bundle["relations"]
+    assert bundle["relations"][0]["relation_type"] == "collaboration_dynamic"
+    assert bundle["relations"][0]["relation_value"] == "guided"
+    assert bundle["relations"][0]["retrieval_source"] == "vector"
+    assert bundle["relations"][0]["retrieval_similarity"] > 0.99
+    assert bundle["diagnostics"]["vector_relation_hits"] == 1
+
+    await engine.dispose()
+
+
 async def test_memory_repository_upserts_and_reads_scoped_relations(tmp_path) -> None:
     database_path = tmp_path / "memory-relations.db"
     engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")

@@ -737,6 +737,38 @@ class MemoryRepository:
         )
         return sorted_rows[:limit]
 
+    async def get_relations_by_ids_for_user(self, *, user_id: str, ids: list[int]) -> list[dict]:
+        normalized_ids: list[int] = []
+        for value in ids:
+            try:
+                normalized = int(value)
+            except (TypeError, ValueError):
+                continue
+            if normalized > 0 and normalized not in normalized_ids:
+                normalized_ids.append(normalized)
+        if not normalized_ids:
+            return []
+
+        async with self.session_factory() as session:
+            statement = (
+                select(AionRelation)
+                .where(
+                    AionRelation.user_id == user_id,
+                    AionRelation.id.in_(normalized_ids),
+                )
+            )
+            result = await session.execute(statement)
+            rows = result.scalars().all()
+
+        now = datetime.now(timezone.utc)
+        by_id: dict[int, dict] = {}
+        for row in rows:
+            revalidated = self._serialize_relation_with_revalidation(row=row, now=now)
+            if revalidated is None:
+                continue
+            by_id[int(row.id)] = revalidated
+        return [by_id[row_id] for row_id in normalized_ids if row_id in by_id]
+
     async def backfill_communication_boundary_relations(
         self,
         *,
@@ -1188,19 +1220,31 @@ class MemoryRepository:
             for hit in vector_hits
         }
         vector_episodic_ids: list[int] = []
+        vector_relation_ids: list[int] = []
         for hit in vector_hits:
-            if str(hit.get("source_kind", "")).strip().lower() != "episodic":
+            source_kind = str(hit.get("source_kind", "")).strip().lower()
+            if source_kind not in {"episodic", "relation"}:
                 continue
             raw_source_id = str(hit.get("source_id", "") or "").strip().lower()
-            if raw_source_id.startswith("memory:"):
+            if source_kind == "episodic" and raw_source_id.startswith("memory:"):
+                raw_source_id = raw_source_id.split(":", 1)[1]
+            if source_kind == "relation" and raw_source_id.startswith("relation:"):
                 raw_source_id = raw_source_id.split(":", 1)[1]
             try:
-                vector_episodic_ids.append(int(raw_source_id))
+                parsed_id = int(raw_source_id)
             except ValueError:
                 continue
+            if source_kind == "episodic":
+                vector_episodic_ids.append(parsed_id)
+            else:
+                vector_relation_ids.append(parsed_id)
         vector_episodic = await self.get_episodes_by_ids_for_user(
             user_id=user_id,
             ids=vector_episodic_ids,
+        )
+        vector_relations = await self.get_relations_by_ids_for_user(
+            user_id=user_id,
+            ids=vector_relation_ids,
         )
         vector_episodic_by_id = {
             int(item["id"]): {
@@ -1214,6 +1258,28 @@ class MemoryRepository:
             for item in vector_episodic
             if item.get("id") is not None
         }
+        vector_relations_by_id = {
+            int(item["id"]): {
+                **item,
+                "retrieval_source": "vector",
+                "retrieval_similarity": vector_by_kind_source_id.get(
+                    ("relation", str(item["id"])),
+                    vector_by_kind_source_id.get(("relation", f"relation:{item['id']}"), 0.0),
+                ),
+            }
+            for item in vector_relations
+            if item.get("id") is not None
+        }
+        relation: list[dict] = []
+        merged_relation_ids: set[int] = set()
+        for row_id in vector_relation_ids:
+            if row_id in merged_relation_ids:
+                continue
+            item = vector_relations_by_id.get(row_id)
+            if item is None:
+                continue
+            relation.append(item)
+            merged_relation_ids.add(row_id)
         merged_episodic: list[dict] = []
         merged_ids: set[int] = set()
         for row_id in vector_episodic_ids:
@@ -1280,6 +1346,7 @@ class MemoryRepository:
             "episodic": episodic,
             "semantic": semantic,
             "affective": affective,
+            "relations": relation,
             "diagnostics": {
                 "query_tokens": len(query_tokens),
                 "episodic_candidates": len(episodic_candidates),
@@ -1288,6 +1355,7 @@ class MemoryRepository:
                 "episodic_lexical_hits": lexical_hit_count,
                 "vector_hits": len(vector_hits),
                 "vector_episodic_hits": len(vector_episodic),
+                "vector_relation_hits": len(relation),
                 "semantic_selected": len(semantic),
                 "affective_selected": len(affective),
             },
