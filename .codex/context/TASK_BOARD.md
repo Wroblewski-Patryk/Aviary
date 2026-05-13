@@ -4,6 +4,37 @@ Last updated: 2026-05-13
 
 ## Project Status Dashboard (2026-05-13)
 
+- `PRJ-1188` is DONE:
+  - `.codex/tasks/PRJ-1188-production-db-collation-maintenance.md`
+- result:
+  - repaired Aviary production PostgreSQL collation mismatch for database
+    `aion`; post-fix state is `datcollversion=2.36`, actual `2.36`
+  - removed corrupted/non-critical test episodic/vector rows by truncating
+    `aion_memory` and `aion_semantic_embedding`
+  - repaired duplicate non-critical cadence evidence by truncating
+    `aion_scheduler_cadence_evidence`; cadence services regenerated rows after
+    deploy
+  - ran `REINDEX DATABASE aion` and
+    `ALTER DATABASE aion REFRESH COLLATION VERSION`
+  - production recovered through normal Coolify deploy at
+    `61b7042d57e520afe1ebad8c30c9a8c3bd289ed4`
+- backup evidence:
+  - partial pre-cleanup backup:
+    `/home/codex/aion-pre-collation-partial-no-aion-memory-data-20260513T175552Z.dump`
+  - full pre-collation-fix backup after toast cleanup:
+    `/home/codex/aion-after-toast-cleanup-before-collation-fix-20260513T175816Z.dump`
+  - post-fix full backup:
+    `/home/codex/aion-after-collation-fix-20260513T175849Z.dump`
+- production validation:
+  - `/health` reports runtime revision
+    `61b7042d57e520afe1ebad8c30c9a8c3bd289ed4`, OpenAI embeddings at `1536`,
+    and retrieval depth `6/5`
+  - post-maintenance memory smoke answered `Roki`
+  - DB rows for smoke user: `aion_memory=2`, `aion_semantic_embedding=2`,
+    dimensions `1536..1536`, model `text-embedding-3-small`
+  - `memory_flow` logged `memory_write_status=stored`,
+    `retrieved_recent_count=1`, `retrieved_memory_ids=['1']`
+
 - `PRJ-1187` is DONE:
   - `.codex/tasks/PRJ-1187-production-openai-vector-dimension-alignment.md`
 - result:

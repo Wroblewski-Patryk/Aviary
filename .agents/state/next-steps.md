@@ -4,20 +4,19 @@ Last updated: 2026-05-13
 
 ## NOW
 
-1. Plan a narrow production DB maintenance task for the PostgreSQL collation
-   version mismatch observed during PRJ-1187 production verification:
+1. Continue from the repaired production DB baseline:
    - latest memory task:
-     `.codex/tasks/PRJ-1187-production-openai-vector-dimension-alignment.md`
+     `.codex/tasks/PRJ-1188-production-db-collation-maintenance.md`
    - current verified baseline:
      Coolify production runs runtime memory with `RECENT_MEMORY_LIMIT=6`,
      `SEMANTIC_MEMORY_TOP_K=5`, OpenAI `text-embedding-3-small`, and pgvector
      dimensions `1536`
    - production proof:
-     the final two-turn memory scenario answered `Roki`, persisted two
+     post-maintenance two-turn memory scenario answered `Roki`, persisted two
      episodes, and wrote two 1536-dimensional semantic embeddings
    - next smallest slice:
-     handle the DB collation warning as maintenance without changing runtime
-     memory behavior
+     build a provider-backed semantic similarity proof that is not relying on
+     temporal recency, now that pgvector/OpenAI production writes are healthy
 
 2. Capture native device proof for the deployed `v1.5` mobile UI:
    - branch: `codex/v15-mobile-ui-deploy-commits`
