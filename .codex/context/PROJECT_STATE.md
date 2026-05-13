@@ -25,9 +25,21 @@ the same project.
     - runtime relation debug pack -> `2 passed, 111 deselected`
     - Coolify compose pack -> `12 passed`
     - full backend pytest -> `1086 passed`
+    - production Coolify revision matched
+      `f36955646c0271ee1d5bfa30be81c024f260e6e9`
+    - production `/health.memory_retrieval` reported
+      `semantic_embedding_source_kinds=episodic,semantic,affective,relation`
+      and `retrieval_lifecycle_relation_source_state=optional_family_enabled`
+    - controlled production repository proof returned `RELATION_COUNT 1`,
+      `VECTOR_RELATION_HITS 1`, relation
+      `support_intensity_preference high_support`, `retrieval_source=vector`,
+      `retrieval_similarity=1.0`, then cleaned synthetic rows with
+      `CLEANUP 1 1`
+    - release audit returned `GO_FOR_SELECTED_SHA`; release smoke returned
+      `release_ready=true`
   - residual:
-    - production deploy and controlled relation-vector smoke remain the release
-      checkpoint before this slice is production-verified
+    - ANN/index migration remains future scale hardening; richer
+      consolidation and summarization remain future memory-quality work
 
 - 2026-05-13: `PRJ-1191` preserved vector relevance through context selection:
   - task:

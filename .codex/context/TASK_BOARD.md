@@ -4,7 +4,7 @@ Last updated: 2026-05-13
 
 ## Project Status Dashboard (2026-05-13)
 
-- `PRJ-1192` is REVIEW:
+- `PRJ-1192` is DONE:
   - `.codex/tasks/PRJ-1192-relation-vector-memory-runtime-closure.md`
 - result:
   - optional `relation` vector hits now resolve back to revalidated
@@ -23,9 +23,23 @@ Last updated: 2026-05-13
     -> `12 passed`
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; ...`
     -> `1086 passed`
+  - production proof:
+    - `/health.deployment.runtime_build_revision` matched
+      `f36955646c0271ee1d5bfa30be81c024f260e6e9`
+    - `/health.memory_retrieval.semantic_embedding_source_kinds` reported
+      `episodic,semantic,affective,relation`
+    - `/health.memory_retrieval.retrieval_lifecycle_relation_source_state`
+      reported `optional_family_enabled`
+    - controlled repository proof in the app container returned
+      `RELATION_COUNT 1`, `VECTOR_RELATION_HITS 1`, relation
+      `support_intensity_preference high_support`, `retrieval_source=vector`,
+      `retrieval_similarity=1.0`; synthetic proof rows were cleaned up with
+      `CLEANUP 1 1`
+    - release audit returned `GO_FOR_SELECTED_SHA`
+    - release smoke returned `release_ready=true`
 - residual risk:
-  - production deploy and controlled relation-vector smoke are still pending
-    for production verification
+  - ANN/index scale hardening and richer consolidation/summarization remain
+    future memory-quality work
 
 - `PRJ-1191` is DONE:
   - `.codex/tasks/PRJ-1191-vector-relevance-context-preservation.md`

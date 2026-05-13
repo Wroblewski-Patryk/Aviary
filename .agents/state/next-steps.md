@@ -23,12 +23,14 @@ Last updated: 2026-05-13
      post-maintenance two-turn memory scenario answered `Roki`, persisted two
      episodes, and wrote two 1536-dimensional semantic embeddings; PRJ-1189
      non-temporal semantic proof on commit `d4d2911` answered `Roki` after
-     15 filler episodes and retrieved original episode `id=4`
+     15 filler episodes and retrieved original episode `id=4`; PRJ-1192
+     production commit `f369556` enabled optional `relation` vector source,
+     returned `VECTOR_RELATION_HITS 1` in a controlled repository proof, and
+     passed release smoke with `release_ready=true`
    - next smallest slice:
-     deploy PRJ-1192 and run production health plus controlled relation-vector
-     proof, then continue memory quality work at consolidation and
-     summarization policies; plan an ANN/index migration only if retrieval
-     volume makes query latency require it
+     continue memory quality work at consolidation and summarization policies;
+     plan an ANN/index migration only if retrieval volume makes query latency
+     require it
 
 2. Capture native device proof for the deployed `v1.5` mobile UI:
    - branch: `codex/v15-mobile-ui-deploy-commits`

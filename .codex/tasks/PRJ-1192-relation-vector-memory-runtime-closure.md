@@ -4,8 +4,8 @@
 - ID: PRJ-1192
 - Title: Relation vector memory runtime closure
 - Task Type: feature
-- Current Stage: verification
-- Status: REVIEW
+- Current Stage: release
+- Status: DONE
 - Owner: Backend Builder
 - Depends on: PRJ-1191
 - Priority: P1
@@ -78,9 +78,9 @@ Implement and verify the relation vector retrieval closure.
 - [x] docs/context/ledger are updated with evidence
 
 ## Stage Exit Criteria
-- [ ] The output matches the declared `Current Stage`.
-- [ ] Work from later stages was not mixed in without explicit approval.
-- [ ] Risks and assumptions for this stage are stated clearly.
+- [x] The output matches the declared `Current Stage`.
+- [x] Work from later stages was not mixed in without explicit approval.
+- [x] Risks and assumptions for this stage are stated clearly.
 
 ## Forbidden
 - new systems without approval
@@ -95,7 +95,11 @@ Implement and verify the relation vector retrieval closure.
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py -k "vector_matched_relations or system_debug_surface"; ...` -> `2 passed, 111 deselected`
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_coolify_compose.py; ...` -> `12 passed`
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; ...` -> `1086 passed`
-- Manual checks: `git diff` self-review confirmed existing relation/source policy was reused and no new subsystem was introduced.
+- Manual checks:
+  - `git diff` self-review confirmed existing relation/source policy was reused and no new subsystem was introduced.
+  - production `/health` matched `f36955646c0271ee1d5bfa30be81c024f260e6e9` with `semantic_embedding_source_kinds=episodic,semantic,affective,relation` and `retrieval_lifecycle_relation_source_state=optional_family_enabled`
+  - controlled production repository proof returned `RELATION_COUNT 1`, `VECTOR_RELATION_HITS 1`, `FIRST_RELATION ... support_intensity_preference high_support vector 1.0 0.87`, then `CLEANUP 1 1`
+  - release audit returned `GO_FOR_SELECTED_SHA`; release smoke returned `release_ready=true`
 - Screenshots/logs: not applicable
 - High-risk checks: full backend regression gate passed
 - Coverage ledger updated: not applicable
@@ -122,7 +126,7 @@ Implement and verify the relation vector retrieval closure.
 - Deploy impact: low
 - Env or secret changes: `EMBEDDING_SOURCE_KINDS` Coolify default includes optional `relation`
 - Health-check impact: `/health.memory_retrieval.semantic_embedding_relation_source_enabled=true`
-- Smoke steps updated: docs record production health and rollback expectations; production smoke pending deploy
+- Smoke steps updated: docs record production health and rollback expectations; production smoke passed
 - Rollback note: override `EMBEDDING_SOURCE_KINDS=episodic,semantic,affective`
 - Observability or alerting impact: relation vector-hit count in hybrid diagnostics
 - Staged rollout or feature flag: existing `EMBEDDING_SOURCE_KINDS`
@@ -141,7 +145,7 @@ Implement and verify the relation vector retrieval closure.
 - [x] Definition of Done evidence is attached.
 - [x] Relevant validations were run.
 - [x] Docs or context were updated if repository truth changed.
-- [ ] Learning journal was updated if a recurring pitfall was confirmed.
+- [x] Learning journal was updated if a recurring pitfall was confirmed.
 
 ## Notes
 Safe assumption: enabling optional relation vector source in production is
@@ -187,9 +191,9 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
 
 - Task summary: relation vector hits now materialize back into revalidated `aion_relation` records and runtime relation state when the optional `relation` source family is enabled.
 - Files changed: `backend/app/memory/repository.py`, `backend/app/core/runtime.py`, `docker-compose.coolify.yml`, focused tests, and memory/deployment docs.
-- How tested: targeted memory/runtime/compose packs plus full backend pytest (`1086 passed`).
-- What is incomplete: production deploy and smoke still pending in release stage.
-- Next steps: update source-of-truth files, commit/push/deploy, verify production `/health` and a controlled relation-vector proof.
+- How tested: targeted memory/runtime/compose packs plus full backend pytest (`1086 passed`), production deploy parity, controlled relation-vector repository proof, and release smoke.
+- What is incomplete: ANN/index scale hardening and richer summarization/consolidation remain future memory-quality work.
+- Next steps: continue with memory consolidation/summarization quality after this verified relation-vector closure.
 - Decisions made: keep `relation` optional and enabled in Coolify by default after baseline source rollout, with rollback through `EMBEDDING_SOURCE_KINDS=episodic,semantic,affective`.
 
 ## Autonomous Loop Evidence
@@ -204,7 +208,7 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
 - Bootstrap needed: no
 - Missing or template-like files: none
 - Sources scanned: project memory index, mission control, runtime flow, agent contracts, task board, module confidence ledger, repository/runtime/tests.
-- Rows created or corrected: pending
+- Rows created or corrected: AVIARY-MEMORY-001 evidence updated
 - Assumptions recorded: optional relation source may be enabled without redefining baseline.
 - Blocking unknowns: none
 - Why it was safe to continue: architecture already defines relation as optional source family.
@@ -223,8 +227,8 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
 - Implementation notes: added `get_relations_by_ids_for_user`, relation vector-hit parsing/deduplication, hybrid bundle `relations`, runtime merge, and Coolify source-family default.
 
 ### 5. Verify and Test
-- Validation performed: targeted relation memory/runtime/compose tests and full backend pytest.
-- Result: PASS; full backend `1086 passed`.
+- Validation performed: targeted relation memory/runtime/compose tests, full backend pytest, production health/deploy parity, controlled production relation-vector proof, and release smoke.
+- Result: PASS; full backend `1086 passed`; production `release_ready=true`.
 
 ### 6. Self-Review
 - Simpler option considered: only enabling `relation` in environment, rejected because hits would remain diagnostics-only.
