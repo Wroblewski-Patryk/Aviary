@@ -188,6 +188,51 @@ async def test_memory_repository_exposes_memory_layer_vocabulary_and_conclusion_
     assert repository.conclusion_memory_layer("custom_semantic_fact") == "semantic"
 
 
+async def test_memory_repository_keeps_topic_scoped_memory_summaries_visible_with_goal_scope(tmp_path) -> None:
+    database_path = tmp_path / "memory-topic-scope.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    await repository.upsert_conclusion(
+        user_id="u-1",
+        kind="memory_topic_summary",
+        content="Topic: dog. Evidence: Roki likes walks.",
+        confidence=0.85,
+        source="background_reflection",
+        supporting_event_id="evt-topic-dog",
+        scope_type="topic",
+        scope_key="topic:dog",
+    )
+    await repository.upsert_conclusion(
+        user_id="u-1",
+        kind="goal_execution_state",
+        content="advancing",
+        confidence=0.8,
+        source="background_reflection",
+        supporting_event_id="evt-goal",
+        scope_type="goal",
+        scope_key="42",
+    )
+
+    rows = await repository.get_user_conclusions(
+        user_id="u-1",
+        limit=10,
+        scope_type="goal",
+        scope_key="42",
+        include_global=True,
+    )
+
+    assert {
+        (row["kind"], row["scope_type"], row["scope_key"])
+        for row in rows
+    } == {
+        ("memory_topic_summary", "topic", "topic:dog"),
+        ("goal_execution_state", "goal", "42"),
+    }
+
+
 async def test_memory_repository_persists_attention_turn_contract_store_and_cleans_up_answered_rows(tmp_path) -> None:
     database_path = tmp_path / "memory-attention-turn-store.db"
     engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")

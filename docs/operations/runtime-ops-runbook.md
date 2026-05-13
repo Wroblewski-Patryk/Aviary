@@ -437,8 +437,10 @@ semantic conclusion path:
 
 - reflection should write `memory_topic_summary` only after repeated
   non-generic recent memory topics
-- `aion_conclusion.kind=memory_topic_summary` remains user-scoped and semantic
-  by repository layer defaults
+- `aion_conclusion.kind=memory_topic_summary` remains stable, user-scoped, and
+  semantic by repository layer defaults
+- multiple durable buckets use `scope_type=topic` and
+  `scope_key=topic:<slug>` rather than dynamic conclusion kinds
 - if semantic source embeddings are enabled, the conclusion can materialize a
   `source_kind=semantic` embedding through the existing conclusion write path
 - later runtime context should expose it as `Long-term memory summary`, not

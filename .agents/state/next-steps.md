@@ -6,7 +6,7 @@ Last updated: 2026-05-13
 
 1. Continue from the repaired production DB baseline:
    - latest memory task:
-     `.codex/tasks/PRJ-1193-memory-topic-summary-consolidation.md`
+     `.codex/tasks/PRJ-1194-topic-scoped-memory-summary-buckets.md`
    - current verified baseline:
      Coolify production runs runtime memory with `RECENT_MEMORY_LIMIT=6`,
      `SEMANTIC_MEMORY_TOP_K=5`, OpenAI `text-embedding-3-small`, and pgvector
@@ -20,8 +20,8 @@ Last updated: 2026-05-13
      optional `relation` vector hits can rehydrate to revalidated relation
      records and merge into runtime relation state when `relation` is enabled;
      repeated recent memory topics now consolidate into semantic
-     `memory_topic_summary` conclusions that are injected into context as
-     long-term memory summaries
+     topic-scoped `memory_topic_summary` conclusions that are injected into
+     context as long-term memory summaries
    - production proof:
      post-maintenance two-turn memory scenario answered `Roki`, persisted two
      episodes, and wrote two 1536-dimensional semantic embeddings; PRJ-1189
@@ -31,9 +31,9 @@ Last updated: 2026-05-13
      returned `VECTOR_RELATION_HITS 1` in a controlled repository proof, and
      passed release smoke with `release_ready=true`
    - next smallest slice:
-     add topic-scoped multiple summary buckets only if product usage shows the
-     single rolling summary is too narrow; plan an ANN/index migration only if
-     retrieval volume makes query latency require it
+     memory quality is verified for the current release path; plan an
+     ANN/vector-index migration only if retrieval volume makes query latency
+     require it
 
 2. Capture native device proof for the deployed `v1.5` mobile UI:
    - branch: `codex/v15-mobile-ui-deploy-commits`

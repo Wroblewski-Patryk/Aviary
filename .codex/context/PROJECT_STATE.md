@@ -68,6 +68,25 @@ the same project.
     - topic-scoped multiple summary buckets and ANN/index scale hardening remain
       future memory-quality work
 
+- 2026-05-13: `PRJ-1194` added topic-scoped memory summary buckets:
+  - task:
+    - `.codex/tasks/PRJ-1194-topic-scoped-memory-summary-buckets.md`
+  - result:
+    - `memory_topic_summary` now uses the existing scoped conclusion mechanism
+      with `scope_type=topic` and `scope_key=topic:<slug>`
+    - reflection can persist multiple durable topic buckets without dynamic
+      conclusion kinds or a new table
+    - scoped foreground reads include topic summaries alongside goal/global
+      context, so long-term topic memory remains visible during goal-scoped
+      turns
+  - validation:
+    - focused topic-scope pack -> `4 passed`
+    - broader reflection/context/repository/runtime pack -> `293 passed`
+    - full backend pytest -> `1091 passed`
+  - residual:
+    - ANN/vector index work remains scale-triggered only; current production
+      pgvector ranking has no evidence of latency pressure
+
 - 2026-05-13: `PRJ-1191` preserved vector relevance through context selection:
   - task:
     - `.codex/tasks/PRJ-1191-vector-relevance-context-preservation.md`

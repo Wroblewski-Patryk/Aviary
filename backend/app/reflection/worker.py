@@ -29,7 +29,7 @@ from app.reflection.goal_conclusions import (
     derive_goal_progress_score,
     derive_goal_progress_trend,
 )
-from app.reflection.memory_topic_signals import derive_memory_topic_summary
+from app.reflection.memory_topic_signals import derive_memory_topic_summaries
 from app.reflection.relation_signals import derive_relation_updates
 from app.reflection.proposals import derive_subconscious_proposals
 from app.utils.goal_task_selection import priority_rank as shared_priority_rank
@@ -137,7 +137,11 @@ class ReflectionWorker:
             return False
 
         for conclusion in conclusions:
-            scope_type, scope_key = self._conclusion_scope(kind=str(conclusion["kind"]), primary_goal=primary_goal)
+            if str(conclusion.get("scope_type", "")).strip() and str(conclusion.get("scope_key", "")).strip():
+                scope_type = str(conclusion["scope_type"])
+                scope_key = str(conclusion["scope_key"])
+            else:
+                scope_type, scope_key = self._conclusion_scope(kind=str(conclusion["kind"]), primary_goal=primary_goal)
             await self.memory_repository.upsert_conclusion(
                 user_id=user_id,
                 kind=conclusion["kind"],
@@ -557,12 +561,12 @@ class ReflectionWorker:
         if affective_conclusions:
             conclusions.extend(affective_conclusions)
 
-        memory_topic_summary = derive_memory_topic_summary(
+        memory_topic_summaries = derive_memory_topic_summaries(
             recent_memory,
             extract_memory_fields=self._extract_memory_fields,
         )
-        if memory_topic_summary is not None:
-            conclusions.append(memory_topic_summary)
+        if memory_topic_summaries:
+            conclusions.extend(memory_topic_summaries)
 
         goal_execution_state = derive_goal_execution_state(
             recent_memory=recent_memory,

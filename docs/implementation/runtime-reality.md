@@ -231,22 +231,22 @@ Current transition note:
 
 ### Memory topic summaries
 
-Reflection now derives a compact semantic `memory_topic_summary` conclusion
-when repeated recent episodic records share non-generic memory topics. This
-uses the existing `aion_conclusion` and semantic-embedding path rather than a
-new memory table:
+Reflection now derives compact semantic `memory_topic_summary` conclusions
+when repeated recent episodic records share non-generic memory topics. Each
+summary is scoped by topic, using the existing `aion_conclusion` and
+semantic-embedding path rather than a new memory table:
 
 - input: recent user-scoped episodic records loaded by `ReflectionWorker`
 - derivation owner: `app/reflection/memory_topic_signals.py`
 - persistence: `MemoryRepository.upsert_conclusion(...)`
+- scope: `scope_type=topic`, `scope_key=topic:<slug>`
 - memory layer: semantic by default through `conclusion_memory_layer(...)`
 - runtime consumption: `ContextAgent` injects high-confidence
   `memory_topic_summary` rows as `Long-term memory summary`
 
-The current implementation intentionally keeps a single rolling global summary
-instead of dynamic per-topic conclusion kinds. Topic-scoped long-term summaries
-remain a future architecture decision if the product needs multiple durable
-topic buckets.
+The implementation intentionally keeps a single stable conclusion kind instead
+of dynamic per-topic kinds. This allows several durable topic buckets while
+preserving the existing conclusion, embedding, and retrieval contracts.
 
 ### Tool-grounded learning capture
 

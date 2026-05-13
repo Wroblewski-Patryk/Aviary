@@ -1996,6 +1996,56 @@ async def test_runtime_pipeline_accepts_goal_scoped_conclusions_in_runtime_conte
     assert result.reflection_triggered is True
 
 
+async def test_runtime_pipeline_includes_topic_scoped_memory_summaries_with_goal_context() -> None:
+    memory = FakeMemoryRepository(recent_memory=[])
+    memory.active_goals = [
+        {
+            "id": 11,
+            "user_id": "u-1",
+            "name": "ship the MVP this week",
+            "description": "User-declared goal: ship the MVP this week",
+            "priority": "high",
+            "status": "active",
+            "goal_type": "operational",
+        }
+    ]
+    memory.scoped_user_conclusions = [
+        {
+            "kind": "memory_topic_summary",
+            "content": "Topic: dog. Evidence: Roki likes evening walks.",
+            "confidence": 0.85,
+            "source": "background_reflection",
+            "scope_type": "topic",
+            "scope_key": "topic:dog",
+        }
+    ]
+    runtime = RuntimeOrchestrator(
+        perception_agent=PerceptionAgent(),
+        context_agent=ContextAgent(),
+        motivation_engine=MotivationEngine(),
+        role_agent=RoleAgent(),
+        planning_agent=PlanningAgent(),
+        expression_agent=ExpressionAgent(openai_client=FakeOpenAIClient()),
+        action_executor=ActionExecutor(memory_repository=memory, telegram_client=FakeTelegramClient()),
+        memory_repository=memory,
+        reflection_worker=FakeReflectionWorker(),
+    )
+
+    event = Event(
+        event_id="evt-topic-scoped-summary",
+        source="api",
+        subsource="event_endpoint",
+        timestamp=datetime.now(timezone.utc),
+        payload={"text": "What do you remember about Roki?"},
+        meta=EventMeta(user_id="u-1", trace_id="t-topic-scoped-summary"),
+    )
+
+    result = await runtime.run(event)
+
+    assert "Long-term memory summary: Topic: dog." in result.context.summary
+    assert "Roki likes evening walks" in result.context.summary
+
+
 async def test_runtime_pipeline_uses_primary_goal_scoped_state_without_cross_goal_leakage() -> None:
     memory = FakeMemoryRepository(recent_memory=[])
     memory.active_goals = [

@@ -273,8 +273,68 @@ async def test_reflection_worker_consolidates_repeated_memory_topics_into_semant
     assert summary_update["confidence"] >= 0.7
     assert len(summary_update["content"]) <= 128
     assert "dog" in summary_update["content"]
-    assert "roki" in summary_update["content"]
     assert "Roki" in summary_update["content"]
+    raw_summaries = [
+        item for item in repository.raw_conclusion_updates if item["kind"] == "memory_topic_summary"
+    ]
+    assert {item["scope_key"] for item in raw_summaries} >= {"topic:dog", "topic:roki"}
+    assert all(item["scope_type"] == "topic" for item in raw_summaries)
+
+
+async def test_reflection_worker_keeps_unrelated_memory_topic_summaries_in_separate_buckets() -> None:
+    repository = FakeMemoryRepository(
+        recent_memory=[
+            {
+                "payload": {
+                    "event": "Remember that my dog is named Roki.",
+                    "memory_kind": "semantic",
+                    "memory_topics": ["dog", "roki"],
+                    "action": "success",
+                    "expression": "Noted.",
+                }
+            },
+            {
+                "payload": {
+                    "event": "Roki likes evening walks.",
+                    "memory_kind": "semantic",
+                    "memory_topics": ["dog", "roki"],
+                    "action": "success",
+                    "expression": "Noted.",
+                }
+            },
+            {
+                "payload": {
+                    "event": "Production deploy needs a smoke test.",
+                    "memory_kind": "semantic",
+                    "memory_topics": ["deployment", "smoke"],
+                    "action": "success",
+                    "expression": "I will verify it.",
+                }
+            },
+            {
+                "payload": {
+                    "event": "The deployment proof should include release smoke.",
+                    "memory_kind": "semantic",
+                    "memory_topics": ["deployment", "proof"],
+                    "action": "success",
+                    "expression": "Understood.",
+                }
+            },
+        ]
+    )
+    worker = ReflectionWorker(memory_repository=repository)
+
+    result = await worker.reflect_user(user_id="u-1", event_id="evt-memory-topic-buckets")
+
+    assert result is True
+    topic_updates = [
+        item
+        for item in repository.raw_conclusion_updates
+        if item["kind"] == "memory_topic_summary"
+    ]
+    assert {item["scope_key"] for item in topic_updates} >= {"topic:dog", "topic:deployment"}
+    assert all(item["scope_type"] == "topic" for item in topic_updates)
+    assert all(len(item["content"]) <= 128 for item in topic_updates)
 
 
 async def test_reflection_worker_derives_read_only_subconscious_proposals_from_recent_memory() -> None:

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 
-ReflectionScopeType = Literal["global", "goal", "task"]
+ReflectionScopeType = Literal["global", "goal", "task", "topic"]
 
 REFLECTION_SCOPE_POLICY_OWNER = "reflection_scope_policy"
 GLOBAL_SCOPE_TYPE: ReflectionScopeType = "global"
@@ -27,6 +27,7 @@ GOAL_SCOPED_CONCLUSION_KINDS = frozenset(
     }
 )
 TASK_SCOPED_CONCLUSION_KINDS = frozenset()
+TOPIC_SCOPED_CONCLUSION_KINDS = frozenset({"memory_topic_summary"})
 GOAL_SCOPED_RELATION_TYPES = frozenset({"goal_execution_trust", "goal_collaboration_flow"})
 TASK_SCOPED_RELATION_TYPES = frozenset()
 
@@ -34,7 +35,7 @@ TASK_SCOPED_RELATION_TYPES = frozenset()
 def normalize_scope(scope_type: str | None, scope_key: str | None) -> tuple[ReflectionScopeType, str]:
     normalized_scope_type = str(scope_type or GLOBAL_SCOPE_TYPE).strip().lower()
     normalized_scope_key = str(scope_key or "").strip()
-    if normalized_scope_type not in {"global", "goal", "task"}:
+    if normalized_scope_type not in {"global", "goal", "task", "topic"}:
         return GLOBAL_SCOPE_TYPE, GLOBAL_SCOPE_KEY
     if normalized_scope_type == GLOBAL_SCOPE_TYPE:
         return GLOBAL_SCOPE_TYPE, GLOBAL_SCOPE_KEY
@@ -49,6 +50,8 @@ def conclusion_scope_type(kind: str) -> ReflectionScopeType:
         return "goal"
     if normalized_kind in TASK_SCOPED_CONCLUSION_KINDS:
         return "task"
+    if normalized_kind in TOPIC_SCOPED_CONCLUSION_KINDS:
+        return "topic"
     return "global"
 
 
@@ -66,12 +69,15 @@ def resolve_conclusion_scope(
     kind: str,
     goal_id: int | str | None = None,
     task_id: int | str | None = None,
+    topic_key: str | None = None,
 ) -> tuple[ReflectionScopeType, str]:
     expected_scope_type = conclusion_scope_type(kind)
     if expected_scope_type == "goal" and goal_id is not None:
         return "goal", str(goal_id)
     if expected_scope_type == "task" and task_id is not None:
         return "task", str(task_id)
+    if expected_scope_type == "topic" and topic_key:
+        return "topic", str(topic_key)
     return GLOBAL_SCOPE_TYPE, GLOBAL_SCOPE_KEY
 
 
@@ -144,8 +150,12 @@ def conclusion_matches_scope_request(
         scope_key=requested_scope_key,
     )
     if normalized_requested_scope_type == GLOBAL_SCOPE_TYPE:
-        return normalized_row_scope_type == GLOBAL_SCOPE_TYPE
+        return normalized_row_scope_type in {GLOBAL_SCOPE_TYPE, "topic"} and (
+            normalized_row_scope_type != "topic" or include_global
+        )
     if normalized_row_scope_type == normalized_requested_scope_type and normalized_row_scope_key == normalized_requested_scope_key:
+        return True
+    if include_global and expected_scope_type == "topic" and normalized_row_scope_type == "topic":
         return True
     if include_global and normalized_row_scope_type == GLOBAL_SCOPE_TYPE:
         return True
@@ -192,6 +202,7 @@ def reflection_scope_policy_snapshot() -> dict[str, object]:
         "global_scope_key": GLOBAL_SCOPE_KEY,
         "goal_scoped_conclusion_kinds": sorted(GOAL_SCOPED_CONCLUSION_KINDS),
         "task_scoped_conclusion_kinds": sorted(TASK_SCOPED_CONCLUSION_KINDS),
+        "topic_scoped_conclusion_kinds": sorted(TOPIC_SCOPED_CONCLUSION_KINDS),
         "goal_scoped_relation_types": sorted(GOAL_SCOPED_RELATION_TYPES),
         "task_scoped_relation_types": sorted(TASK_SCOPED_RELATION_TYPES),
     }

@@ -2637,6 +2637,7 @@ class MemoryRepository:
                             AionConclusion.scope_type == self.GLOBAL_SCOPE_TYPE,
                             AionConclusion.scope_key == self.GLOBAL_SCOPE_KEY,
                         ),
+                        AionConclusion.scope_type == "topic",
                     )
                 )
             else:
@@ -2889,6 +2890,7 @@ class MemoryRepository:
                             AionConclusion.scope_type == self.GLOBAL_SCOPE_TYPE,
                             AionConclusion.scope_key == self.GLOBAL_SCOPE_KEY,
                         ),
+                        AionConclusion.scope_type == "topic",
                     )
                 )
             else:
@@ -3651,7 +3653,7 @@ class MemoryRepository:
     ) -> tuple[str, str]:
         normalized_scope_type = str(scope_type or self.GLOBAL_SCOPE_TYPE).strip().lower()
         normalized_scope_key = str(scope_key or "").strip()
-        if normalized_scope_type not in {"global", "goal", "task"}:
+        if normalized_scope_type not in {"global", "goal", "task", "topic"}:
             return self.GLOBAL_SCOPE_TYPE, self.GLOBAL_SCOPE_KEY
         if normalized_scope_type == self.GLOBAL_SCOPE_TYPE:
             return self.GLOBAL_SCOPE_TYPE, self.GLOBAL_SCOPE_KEY

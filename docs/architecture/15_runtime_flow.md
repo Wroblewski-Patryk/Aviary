@@ -125,8 +125,8 @@ This can include:
 - identity
 - auth-owned human-facing identity facts such as linked display name
 - recent memory
-- semantic conclusions, including reflection-derived long-term memory topic
-  summaries
+- semantic conclusions, including reflection-derived topic-scoped long-term
+  memory summaries
 - theta
 - active goals
 - active tasks
@@ -512,7 +512,7 @@ Background:
 ### Background runtime owns
 
 - consolidation
-- repeated-topic semantic memory summarization
+- topic-scoped semantic memory summarization
 - adaptation
 - pattern detection
 - slower behavioral refinement

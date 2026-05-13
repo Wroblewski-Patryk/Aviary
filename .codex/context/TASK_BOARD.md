@@ -4,6 +4,23 @@ Last updated: 2026-05-13
 
 ## Project Status Dashboard (2026-05-13)
 
+- `PRJ-1194` is DONE locally:
+  - `.codex/tasks/PRJ-1194-topic-scoped-memory-summary-buckets.md`
+- result:
+  - `memory_topic_summary` now persists as topic-scoped semantic conclusions
+    with `scope_type=topic` and `scope_key=topic:<slug>`
+  - reflection can keep unrelated repeated themes, such as dog memory and
+    deployment memory, in separate durable buckets
+  - scoped runtime reads include topic summaries when building foreground
+    context, so topic summaries still reach `ContextAgent`
+- validation:
+  - focused topic-scope pack -> `4 passed`
+  - broader reflection/context/repository/runtime pack -> `293 passed`
+  - full backend pytest -> `1091 passed`
+- residual risk:
+  - ANN/vector index migration remains a future scale task only if retrieval
+    volume or latency evidence requires it
+
 - `PRJ-1193` is DONE locally:
   - `.codex/tasks/PRJ-1193-memory-topic-summary-consolidation.md`
 - result:
