@@ -56,6 +56,14 @@ the same project.
     - targeted reflection/context/repository pack -> `3 passed`
     - broader reflection/context/repository pack -> `177 passed`
     - full backend pytest -> `1088 passed`
+    - production Coolify revision matched
+      `8d0e36e0bcd59d91bf6f0ed0d976875f979c8b3b`
+    - production release smoke returned `release_ready=true`
+    - controlled production app-container proof returned
+      `REFLECTED True`, `SUMMARY_KIND memory_topic_summary`,
+      `SUMMARY_LENGTH 95`, `SEMANTIC_EMBEDDINGS 1`,
+      `CONTEXT_HAS_LONG_TERM True`, `CONTEXT_HAS_ROKI True`, then cleaned
+      synthetic rows with `CLEANUP_REMAINING 0 0 0`
   - residual:
     - topic-scoped multiple summary buckets and ANN/index scale hardening remain
       future memory-quality work

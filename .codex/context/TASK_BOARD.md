@@ -17,6 +17,13 @@ Last updated: 2026-05-13
   - targeted reflection/context/repository pack -> `3 passed`
   - broader reflection/context/repository pack -> `177 passed`
   - full backend pytest -> `1088 passed`
+  - production Coolify revision matched
+    `8d0e36e0bcd59d91bf6f0ed0d976875f979c8b3b`
+  - production release smoke returned `release_ready=true`
+  - controlled production proof returned `REFLECTED True`,
+    `SUMMARY_KIND memory_topic_summary`, `SUMMARY_LENGTH 95`,
+    `SEMANTIC_EMBEDDINGS 1`, `CONTEXT_HAS_LONG_TERM True`,
+    `CONTEXT_HAS_ROKI True`, and cleanup `CLEANUP_REMAINING 0 0 0`
 - residual risk:
   - a single rolling global topic summary is the minimal safe slice; multiple
     durable per-topic buckets remain a future architecture decision

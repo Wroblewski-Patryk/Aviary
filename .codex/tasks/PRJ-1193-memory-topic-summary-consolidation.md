@@ -5,7 +5,7 @@
 - Title: Add memory topic summary consolidation into runtime context
 - Task Type: feature
 - Current Stage: release
-- Status: REVIEW
+- Status: DONE
 - Owner: Backend Builder
 - Depends on: PRJ-1192
 - Priority: P1
@@ -107,7 +107,8 @@ Implement and verify the smallest safe memory topic-summary slice.
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_context_agent.py tests/test_memory_repository.py -k "repeated_memory_topics or long_term_memory_topic_summary or memory_layer_vocabulary"; ...` -> `3 passed`
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_reflection_worker.py tests/test_context_agent.py tests/test_memory_repository.py; ...` -> `177 passed`
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; ...` -> `1088 passed`
-- Manual checks: code and docs inspection
+- Manual checks: code and docs inspection; production Coolify revision
+  `8d0e36e0bcd59d91bf6f0ed0d976875f979c8b3b` matched deployed app image
 - Screenshots/logs: not applicable
 - High-risk checks: no schema change; user-scoped conclusion path preserved; no dynamic per-topic conclusion kinds introduced; production PostgreSQL varchar proof initially failed on `aion_conclusion.content`, then the helper was fixed to clip `memory_topic_summary` content to the model's 128-character limit and the limit was pinned in tests
 - Coverage ledger updated: not applicable
@@ -203,6 +204,12 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
 - Health/readiness check: release smoke if deployed
 - Logs, dashboard, or alert route: existing reflection and memory-flow logs
 - Smoke command or manual smoke: local reflection/context/repository and full backend test gates passed
+- Production smoke:
+  - `run_release_smoke.ps1 -BaseUrl https://aviary.luckysparrow.ch -WaitForDeployParity ...` -> `release_ready=true`
+  - controlled app-container proof -> `SUMMARY_KIND memory_topic_summary`,
+    `SUMMARY_LENGTH 95`, `SEMANTIC_EMBEDDINGS 1`,
+    `CONTEXT_HAS_LONG_TERM True`, `CONTEXT_HAS_ROKI True`,
+    `CLEANUP_REMAINING 0 0 0`
 - Rollback or disable path: revert commit
 
 - `INTEGRATION_CHECKLIST.md` reviewed: not applicable
@@ -241,7 +248,7 @@ Runtime tasks must be delivered as a vertical slice: UI -> logic -> API -> DB ->
 - Files changed: `backend/app/reflection/memory_topic_signals.py`, `backend/app/reflection/worker.py`, `backend/app/agents/context.py`, focused tests, architecture/ops/state docs.
 - How tested: targeted `3 passed`, broader reflection/context/repository `177 passed`, full backend `1088 passed`.
 - What is incomplete: multiple durable topic buckets and ANN/index scale hardening remain future work.
-- Next steps: deploy and run production proof if promoting this runtime slice.
+- Next steps: add topic-scoped multiple summary buckets only if product usage proves the single rolling summary too narrow.
 - Decisions made: use one rolling global semantic summary to avoid unapproved topic-scoped conclusion-kind proliferation.
 
 ## Autonomous Loop Evidence
