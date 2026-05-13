@@ -19,6 +19,12 @@ the same project.
     - memory repository ranking pack -> `3 passed`
     - runtime memory/hybrid pack -> `17 passed`
     - full backend pytest -> `1082 passed`
+    - production Coolify revision matched
+      `27324e6b8746d13d80c92e83f8c423887dc558db`
+    - production runtime event smoke wrote/recalled `Roki`
+    - controlled production pgvector proof inserted one old relevant vector
+      plus 250 newer noise vectors; SQL `<=>` and repository code both ranked
+      `old-relevant|1.0` first; synthetic rows were deleted afterward
   - residual:
     - ANN/index migration remains future scale hardening
 

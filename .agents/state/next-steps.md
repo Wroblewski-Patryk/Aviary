@@ -22,8 +22,9 @@ Last updated: 2026-05-13
      non-temporal semantic proof on commit `d4d2911` answered `Roki` after
      15 filler episodes and retrieved original episode `id=4`
    - next smallest slice:
-     deploy PRJ-1190 and production-smoke native pgvector ranking, then plan an
-     ANN/index migration only if retrieval volume requires it
+     plan an ANN/index migration only if retrieval volume makes query latency
+     require it; otherwise continue memory quality work at consolidation,
+     summarization, and forgetting/decay policies
 
 2. Capture native device proof for the deployed `v1.5` mobile UI:
    - branch: `codex/v15-mobile-ui-deploy-commits`

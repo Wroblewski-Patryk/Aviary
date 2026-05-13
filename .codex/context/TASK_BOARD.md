@@ -13,6 +13,8 @@ Last updated: 2026-05-13
     candidate pool, preventing older relevant memories from being missed behind
     a small latest-first window
   - vector literal handling rejects non-finite values before SQL execution
+  - deployed commit `27324e6b8746d13d80c92e83f8c423887dc558db` to Coolify
+    and verified runtime plus controlled pgvector repository proof
 - validation:
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py -k "semantic_embeddings or expanded_candidates or postgres_vector_literal or vector_matched_episodic"; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
     -> `3 passed, 68 deselected`
@@ -20,6 +22,16 @@ Last updated: 2026-05-13
     -> `17 passed, 95 deselected`
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
     -> `1082 passed`
+  - production proof:
+    - `/health.deployment.runtime_build_revision` matched
+      `27324e6b8746d13d80c92e83f8c423887dc558db`
+    - runtime event smoke wrote/recalled `Roki`
+    - controlled pgvector proof inserted one old relevant vector plus 250
+      newer noise vectors; SQL `<=>` and
+      `MemoryRepository.query_semantic_similarity()` both returned
+      `old-relevant|1.0` first
+    - synthetic controlled vectors were cleaned up afterward:
+      `DELETE 251`, remaining `0`
 - residual risk:
   - ANN/index migration remains future hardening when vector volume requires it
 

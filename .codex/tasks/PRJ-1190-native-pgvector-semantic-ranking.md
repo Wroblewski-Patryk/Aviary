@@ -78,7 +78,11 @@ Use native PostgreSQL pgvector distance ranking for semantic similarity queries 
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py -k "semantic_embeddings or expanded_candidates or postgres_vector_literal or vector_matched_episodic"; ...` -> `3 passed, 68 deselected`
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py -k "memory or hybrid or semantic or preference or pet or recent"; ...` -> `17 passed, 95 deselected`
   - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; ...` -> `1082 passed`
-- Manual checks: repository SQL and fallback paths reviewed.
+- Manual checks:
+  - repository SQL and fallback paths reviewed
+  - production runtime event smoke on commit `27324e6b8746d13d80c92e83f8c423887dc558db` wrote and recalled `Roki`
+  - production controlled pgvector proof inserted one old relevant vector plus 250 newer noise vectors; SQL `<=>` and `MemoryRepository.query_semantic_similarity()` both returned `old-relevant` first
+  - controlled synthetic vectors were cleaned up afterward (`DELETE 251`, remaining `0`)
 - High-risk checks: vector literal rejects non-finite values before SQL execution.
 - Module confidence ledger updated: yes
 - Module confidence rows closed or changed: AVIARY-MEMORY-001
@@ -101,10 +105,15 @@ Use native PostgreSQL pgvector distance ranking for semantic similarity queries 
 - Deploy impact: low
 - Env or secret changes: none
 - Health-check impact: none
-- Smoke steps updated: production smoke should confirm semantic recall and `/health.memory_retrieval` OpenAI/pgvector posture.
+- Smoke steps updated: production smoke confirmed semantic recall and `/health.memory_retrieval` OpenAI/pgvector posture.
 - Rollback note: revert PRJ-1190 if production pgvector SQL fails; PRJ-1189 behavior remains the previous working retrieval path.
 - Observability or alerting impact: existing runtime `memory_flow` remains the behavioral proof surface.
 - Staged rollout or feature flag: existing `SEMANTIC_VECTOR_ENABLED`.
+- Production proof:
+  - `/health.deployment.runtime_build_revision` matched `27324e6b8746d13d80c92e83f8c423887dc558db`
+  - runtime event smoke replied `Your dog's name is Roki.`
+  - controlled DB/code proof returned `old-relevant|1.0` before 250 newer noise vectors
+  - synthetic controlled rows were deleted after proof
 
 ## Review Checklist
 - [x] Process self-audit completed before implementation.
@@ -125,9 +134,9 @@ Use native PostgreSQL pgvector distance ranking for semantic similarity queries 
 ## Result Report
 - Task summary: PostgreSQL semantic similarity now ranks with native pgvector distance; local fallback is widened and regression-tested.
 - Files changed: memory repository, memory repository tests, runtime memory docs, project ledgers.
-- How tested: targeted repository/runtime tests and full backend pytest.
+- How tested: targeted repository/runtime tests, full backend pytest, production runtime event smoke, and controlled production pgvector repository proof.
 - What is incomplete: index migration for ANN acceleration remains future hardening when memory volume requires it.
-- Next steps: deploy and production-smoke the native pgvector ranking path.
+- Next steps: plan an ANN/index migration only when vector volume makes query latency require it.
 
 ## Autonomous Loop Evidence
 
@@ -140,7 +149,7 @@ Use native PostgreSQL pgvector distance ranking for semantic similarity queries 
 - Bootstrap needed: no
 - Sources scanned: repository, tests, architecture docs, task board, ledgers.
 - Rows created or corrected: PRJ-1190 task and memory evidence updates.
-- Blocking unknowns: production SQL syntax must be verified after deploy.
+- Blocking unknowns: none after production proof.
 - Why it was safe to continue: the change preserves fallback behavior and only switches PostgreSQL ranking to the database-native vector operator.
 
 ### 2. Select One Priority Mission Objective
@@ -158,7 +167,7 @@ Use native PostgreSQL pgvector distance ranking for semantic similarity queries 
 
 ### 5. Verify and Test
 - Validation performed: targeted memory tests, runtime tests, full backend.
-- Result: all local checks passed.
+- Result: all local checks passed; production SQL and repository proof passed.
 
 ### 6. Self-Review
 - Simpler option considered: only widen local candidate pool.
