@@ -4,8 +4,8 @@
 - ID: PRJ-1194
 - Title: Add topic-scoped memory summary buckets
 - Task Type: feature
-- Current Stage: release
-- Status: REVIEW
+- Current Stage: post-release
+- Status: DONE
 - Owner: Backend Builder
 - Depends on: PRJ-1193
 - Priority: P1
@@ -17,7 +17,7 @@
 - Iteration: 1194
 - Operation Mode: ARCHITECT
 - Mission ID: memory-quality-finalization
-- Mission Status: VERIFIED
+- Mission Status: DONE
 
 ## Process Self-Audit
 - [x] All seven autonomous loop steps are planned.
@@ -87,7 +87,7 @@ Implement and verify topic-scoped memory summary buckets.
 ## Definition of Done
 - [x] focused tests pass
 - [x] full backend pytest passes
-- [ ] production proof or documented deployment blocker
+- [x] production proof or documented deployment blocker
 - [x] docs/state updated
 
 ## Stage Exit Criteria
@@ -107,7 +107,7 @@ Implement and verify topic-scoped memory summary buckets.
   - focused topic-scope pack -> `4 passed`
   - broader reflection/context/repository/runtime pack -> `293 passed`
   - full backend pytest -> `1091 passed`
-- Manual checks: code and docs inspection
+- Manual checks: code and docs inspection; Coolify production controlled proof returned `REFLECTED True`, `SUMMARY_BUCKETS topic:deployment topic:dog`, `TOPIC_SUMMARY_COUNT 2`, `SEMANTIC_EMBEDDINGS 3`, `CONTEXT_HAS_LONG_TERM True`, `CONTEXT_HAS_ROKI True`, `CONTEXT_HAS_DEPLOYMENT True`, and `CLEANUP_REMAINING 0 0 0 0`
 - Screenshots/logs: not applicable
 - High-risk checks: no schema migration; `topic` uses existing `scope_type`/`scope_key` columns within current size limits
 - Coverage ledger updated: not applicable
@@ -120,7 +120,7 @@ Implement and verify topic-scoped memory summary buckets.
 - Quality scenario rows closed or changed: QA-AI-001
 - Risk register updated: yes
 - Risk rows closed or changed: RISK-AI-001
-- Reality status: verified locally
+- Reality status: verified in production
 
 ## Architecture Evidence (required for architecture-impacting tasks)
 - Architecture source reviewed: `docs/architecture/15_runtime_flow.md`, `docs/implementation/runtime-reality.md`
@@ -138,6 +138,7 @@ Implement and verify topic-scoped memory summary buckets.
 - Rollback note: revert PRJ-1194 commits; no schema migration.
 - Observability or alerting impact: existing reflection logs include scoped conclusion writes.
 - Staged rollout or feature flag: existing reflection/runtime path only.
+- Production evidence: Coolify revision `c11377c00a935d5e49ab13a7364c0d87405436c0`; release smoke returned `release_ready=true`; controlled app-container proof showed two topic-scoped summary buckets entering context and synthetic cleanup to zero.
 
 ## Review Checklist (mandatory)
 - [x] Process self-audit completed before implementation.
@@ -159,9 +160,9 @@ Implement and verify topic-scoped memory summary buckets.
 
 - Task summary: Added topic-scoped memory summary buckets using existing scoped conclusions.
 - Files changed: scope policy, memory repository scoped reads, reflection topic signals, worker, tests, docs/state.
-- How tested: focused `4 passed`, broader `293 passed`, full backend `1091 passed`.
-- What is incomplete: production proof pending; ANN/index remains scale-triggered only.
-- Next steps: deploy and run controlled production proof.
+- How tested: focused `4 passed`, broader `293 passed`, full backend `1091 passed`, release smoke `release_ready=true`, controlled production proof with `topic:dog` and `topic:deployment`.
+- What is incomplete: ANN/index remains scale-triggered only.
+- Next steps: move to non-memory work unless production retrieval volume or latency evidence requires ANN/index migration.
 - Decisions made: add `topic` scope for `memory_topic_summary` instead of dynamic conclusion kinds.
 
 ## Autonomous Loop Evidence

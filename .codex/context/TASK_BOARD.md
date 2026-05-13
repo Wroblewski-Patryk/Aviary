@@ -4,7 +4,7 @@ Last updated: 2026-05-13
 
 ## Project Status Dashboard (2026-05-13)
 
-- `PRJ-1194` is DONE locally:
+- `PRJ-1194` is DONE:
   - `.codex/tasks/PRJ-1194-topic-scoped-memory-summary-buckets.md`
 - result:
   - `memory_topic_summary` now persists as topic-scoped semantic conclusions
@@ -17,6 +17,15 @@ Last updated: 2026-05-13
   - focused topic-scope pack -> `4 passed`
   - broader reflection/context/repository/runtime pack -> `293 passed`
   - full backend pytest -> `1091 passed`
+  - production Coolify revision matched
+    `c11377c00a935d5e49ab13a7364c0d87405436c0`
+  - production release smoke returned `release_ready=true`
+  - controlled production proof returned `REFLECTED True`,
+    `SUMMARY_BUCKETS topic:deployment topic:dog`,
+    `TOPIC_SUMMARY_COUNT 2`, `SEMANTIC_EMBEDDINGS 3`,
+    `CONTEXT_HAS_LONG_TERM True`, `CONTEXT_HAS_ROKI True`,
+    `CONTEXT_HAS_DEPLOYMENT True`, then cleaned synthetic rows with
+    `CLEANUP_REMAINING 0 0 0 0`
 - residual risk:
   - ANN/vector index migration remains a future scale task only if retrieval
     volume or latency evidence requires it

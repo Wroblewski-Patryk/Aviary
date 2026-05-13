@@ -29,7 +29,10 @@ Last updated: 2026-05-13
      15 filler episodes and retrieved original episode `id=4`; PRJ-1192
      production commit `f369556` enabled optional `relation` vector source,
      returned `VECTOR_RELATION_HITS 1` in a controlled repository proof, and
-     passed release smoke with `release_ready=true`
+     passed release smoke with `release_ready=true`; PRJ-1194 production
+     commit `c11377c` created separate `topic:dog` and `topic:deployment`
+     long-term memory buckets, injected both into context, and cleaned
+     synthetic rows to zero
    - next smallest slice:
      memory quality is verified for the current release path; plan an
      ANN/vector-index migration only if retrieval volume makes query latency

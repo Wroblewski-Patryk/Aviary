@@ -83,6 +83,15 @@ the same project.
     - focused topic-scope pack -> `4 passed`
     - broader reflection/context/repository/runtime pack -> `293 passed`
     - full backend pytest -> `1091 passed`
+    - production Coolify revision matched
+      `c11377c00a935d5e49ab13a7364c0d87405436c0`
+    - production release smoke returned `release_ready=true`
+    - controlled production app-container proof returned
+      `REFLECTED True`, `SUMMARY_BUCKETS topic:deployment topic:dog`,
+      `TOPIC_SUMMARY_COUNT 2`, `SEMANTIC_EMBEDDINGS 3`,
+      `CONTEXT_HAS_LONG_TERM True`, `CONTEXT_HAS_ROKI True`,
+      `CONTEXT_HAS_DEPLOYMENT True`, then cleaned synthetic rows with
+      `CLEANUP_REMAINING 0 0 0 0`
   - residual:
     - ANN/vector index work remains scale-triggered only; current production
       pgvector ranking has no evidence of latency pressure
