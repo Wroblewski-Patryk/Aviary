@@ -327,6 +327,9 @@ Hybrid retrieval surfaces are now also explicit:
 - foreground vector retrieval includes `episodic`, `semantic`, and `affective`
   source families, so semantically matched episodes can be loaded even when
   they are outside the recent temporal window
+- on PostgreSQL, semantic vector hits are ranked by native pgvector distance
+  ordering in SQL; local SQLite/JSON fallback keeps Python cosine scoring over
+  an expanded candidate pool
 - runtime logs and memory diagnostics now expose hybrid retrieval signals
   (lexical/vector hit counts) for observability
 - episodic, semantic-conclusion, affective-conclusion, and relation embedding

@@ -1,8 +1,9 @@
+import math
 import re
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from sqlalchemy import and_, delete, or_, select, update
+from sqlalchemy import and_, bindparam, delete, or_, select, text, update
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from app.communication.boundary import (
@@ -937,6 +938,19 @@ class MemoryRepository:
     ) -> list[dict]:
         if not query_embedding:
             return []
+        normalized_limit = max(1, int(limit))
+        async with self.session_factory() as session:
+            dialect_name = session.get_bind().dialect.name
+        if dialect_name == "postgresql":
+            return await self._query_semantic_similarity_postgres(
+                user_id=user_id,
+                query_embedding=query_embedding,
+                source_kinds=source_kinds,
+                scope_type=scope_type,
+                scope_key=scope_key,
+                include_global=include_global,
+                limit=normalized_limit,
+            )
 
         candidates = await self.get_semantic_embeddings(
             user_id=user_id,
@@ -944,7 +958,7 @@ class MemoryRepository:
             scope_type=scope_type,
             scope_key=scope_key,
             include_global=include_global,
-            limit=max(limit * 4, limit),
+            limit=max(normalized_limit * 40, 200),
         )
         scored: list[tuple[dict, float]] = []
         for item in candidates:
@@ -967,8 +981,121 @@ class MemoryRepository:
                 **item,
                 "similarity": round(float(score), 6),
             }
-            for item, score in ranked[:limit]
+            for item, score in ranked[:normalized_limit]
         ]
+
+    async def _query_semantic_similarity_postgres(
+        self,
+        *,
+        user_id: str,
+        query_embedding: list[float],
+        source_kinds: list[str] | None,
+        scope_type: str | None,
+        scope_key: str | None,
+        include_global: bool,
+        limit: int,
+    ) -> list[dict]:
+        query_vector = self._postgres_vector_literal(query_embedding)
+        if not query_vector:
+            return []
+        where_clauses = [
+            "user_id = :user_id",
+            "embedding IS NOT NULL",
+        ]
+        params: dict[str, Any] = {
+            "user_id": str(user_id),
+            "query_embedding": query_vector,
+            "limit": max(1, int(limit)),
+        }
+        bindparams = []
+        normalized_source_kinds = [
+            str(kind).strip().lower()
+            for kind in (source_kinds or [])
+            if str(kind).strip().lower() in self.SEMANTIC_SOURCE_KINDS
+        ]
+        if normalized_source_kinds:
+            where_clauses.append("source_kind IN :source_kinds")
+            params["source_kinds"] = normalized_source_kinds
+            bindparams.append(bindparam("source_kinds", expanding=True))
+
+        if scope_type is not None or scope_key is not None:
+            normalized_scope_type, normalized_scope_key = self._normalize_conclusion_scope(
+                scope_type=scope_type,
+                scope_key=scope_key,
+            )
+            params["scope_type"] = normalized_scope_type
+            params["scope_key"] = normalized_scope_key
+            scoped_clause = "scope_type = :scope_type AND scope_key = :scope_key"
+            if include_global and (
+                normalized_scope_type != self.GLOBAL_SCOPE_TYPE
+                or normalized_scope_key != self.GLOBAL_SCOPE_KEY
+            ):
+                where_clauses.append(
+                    f"(({scoped_clause}) OR (scope_type = :global_scope_type AND scope_key = :global_scope_key))"
+                )
+                params["global_scope_type"] = self.GLOBAL_SCOPE_TYPE
+                params["global_scope_key"] = self.GLOBAL_SCOPE_KEY
+            else:
+                where_clauses.append(f"({scoped_clause})")
+
+        statement = text(
+            f"""
+            SELECT
+                id,
+                user_id,
+                source_kind,
+                source_id,
+                source_event_id,
+                scope_type,
+                scope_key,
+                content,
+                embedding_model,
+                embedding_dimensions,
+                metadata_json,
+                updated_at,
+                created_at,
+                1 - (embedding <=> CAST(:query_embedding AS vector)) AS similarity
+            FROM aion_semantic_embedding
+            WHERE {" AND ".join(where_clauses)}
+            ORDER BY embedding <=> CAST(:query_embedding AS vector), updated_at DESC, id DESC
+            LIMIT :limit
+            """
+        )
+        if bindparams:
+            statement = statement.bindparams(*bindparams)
+        async with self.session_factory() as session:
+            result = await session.execute(statement, params)
+            rows = result.mappings().all()
+        return [
+            {
+                "id": row["id"],
+                "user_id": row["user_id"],
+                "source_kind": row["source_kind"],
+                "source_id": row["source_id"],
+                "source_event_id": row["source_event_id"],
+                "scope_type": row["scope_type"],
+                "scope_key": row["scope_key"],
+                "content": row["content"],
+                "embedding": None,
+                "embedding_model": row["embedding_model"],
+                "embedding_dimensions": row["embedding_dimensions"],
+                "metadata": row["metadata_json"] or {},
+                "updated_at": row["updated_at"],
+                "created_at": row["created_at"],
+                "similarity": round(float(row["similarity"] or 0.0), 6),
+            }
+            for row in rows
+        ]
+
+    @staticmethod
+    def _postgres_vector_literal(values: list[float]) -> str:
+        normalized: list[str] = []
+        for value in values:
+            number = float(value)
+            if not math.isfinite(number):
+                return ""
+            normalized.append(format(number, ".12g"))
+        return f"[{','.join(normalized)}]" if normalized else ""
 
     async def build_query_embedding(self, query_text: str) -> list[float]:
         normalized = " ".join(str(query_text or "").split())

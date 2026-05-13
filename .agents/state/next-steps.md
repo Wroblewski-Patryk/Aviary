@@ -6,7 +6,7 @@ Last updated: 2026-05-13
 
 1. Continue from the repaired production DB baseline:
    - latest memory task:
-     `.codex/tasks/PRJ-1189-memory-source-read-write-audit.md`
+     `.codex/tasks/PRJ-1190-native-pgvector-semantic-ranking.md`
    - current verified baseline:
      Coolify production runs runtime memory with `RECENT_MEMORY_LIMIT=6`,
      `SEMANTIC_MEMORY_TOP_K=5`, OpenAI `text-embedding-3-small`, and pgvector
@@ -14,15 +14,16 @@ Last updated: 2026-05-13
    - local code baseline:
      runtime query embeddings use the configured provider path, foreground
      vector retrieval includes `episodic`, and vector-matched episodes outside
-     the recent temporal window enter the context bundle
+     the recent temporal window enter the context bundle; PostgreSQL semantic
+     vector ranking uses native pgvector distance ordering
    - production proof:
      post-maintenance two-turn memory scenario answered `Roki`, persisted two
      episodes, and wrote two 1536-dimensional semantic embeddings; PRJ-1189
      non-temporal semantic proof on commit `d4d2911` answered `Roki` after
      15 filler episodes and retrieved original episode `id=4`
    - next smallest slice:
-     add native pgvector ANN/operator ranking proof when memory volume makes
-     scale hardening necessary
+     deploy PRJ-1190 and production-smoke native pgvector ranking, then plan an
+     ANN/index migration only if retrieval volume requires it
 
 2. Capture native device proof for the deployed `v1.5` mobile UI:
    - branch: `codex/v15-mobile-ui-deploy-commits`

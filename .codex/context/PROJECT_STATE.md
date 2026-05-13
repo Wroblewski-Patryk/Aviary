@@ -6,6 +6,22 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-13: `PRJ-1190` added native pgvector semantic ranking:
+  - task:
+    - `.codex/tasks/PRJ-1190-native-pgvector-semantic-ranking.md`
+  - result:
+    - PostgreSQL semantic similarity queries now order by native pgvector
+      distance with `embedding <=> CAST(:query_embedding AS vector)`
+    - local SQLite/JSON fallback still works and now scores an expanded
+      candidate pool so older relevant memories are not dropped by a small
+      latest-first prefilter
+  - validation:
+    - memory repository ranking pack -> `3 passed`
+    - runtime memory/hybrid pack -> `17 passed`
+    - full backend pytest -> `1082 passed`
+  - residual:
+    - ANN/index migration remains future scale hardening
+
 - 2026-05-13: `PRJ-1189` closed the memory source read/write audit gap:
   - task:
     - `.codex/tasks/PRJ-1189-memory-source-read-write-audit.md`

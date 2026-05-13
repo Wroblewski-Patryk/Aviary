@@ -550,6 +550,60 @@ async def test_memory_repository_upserts_and_queries_semantic_embeddings(tmp_pat
     await engine.dispose()
 
 
+async def test_memory_repository_similarity_fallback_scores_beyond_small_recent_candidate_window(tmp_path) -> None:
+    database_path = tmp_path / "memory-semantic-expanded-candidates.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
+    repository = MemoryRepository(session_factory=session_factory)
+    await repository.create_tables(engine)
+
+    await repository.upsert_semantic_embedding(
+        user_id="u-1",
+        source_kind="episodic",
+        source_id="old-relevant",
+        source_event_id="evt-old",
+        scope_type="global",
+        scope_key="global",
+        content="old relevant memory about Roki dog name",
+        embedding=[1.0, 0.0, 0.0],
+        embedding_model="test-v1",
+        embedding_dimensions=3,
+        metadata={"memory_kind": "semantic"},
+    )
+    for index in range(30):
+        await repository.upsert_semantic_embedding(
+            user_id="u-1",
+            source_kind="episodic",
+            source_id=f"new-noise-{index}",
+            source_event_id=f"evt-noise-{index}",
+            scope_type="global",
+            scope_key="global",
+            content=f"new unrelated memory {index}",
+            embedding=[0.0, 1.0, 0.0],
+            embedding_model="test-v1",
+            embedding_dimensions=3,
+            metadata={"memory_kind": "semantic"},
+        )
+
+    hits = await repository.query_semantic_similarity(
+        user_id="u-1",
+        query_embedding=[0.99, 0.01, 0.0],
+        source_kinds=["episodic"],
+        limit=5,
+    )
+
+    assert hits[0]["source_id"] == "old-relevant"
+    assert hits[0]["similarity"] > hits[1]["similarity"]
+
+    await engine.dispose()
+
+
+def test_memory_repository_formats_postgres_vector_literal_for_native_ranking() -> None:
+    assert MemoryRepository._postgres_vector_literal([1, 0.25, -3.5]) == "[1,0.25,-3.5]"
+    assert MemoryRepository._postgres_vector_literal([]) == ""
+    assert MemoryRepository._postgres_vector_literal([float("nan")]) == ""
+
+
 async def test_memory_repository_upsert_conclusion_materializes_affective_embedding_on_write(tmp_path) -> None:
     database_path = tmp_path / "memory-conclusion-embedding-shell.db"
     engine = create_async_engine(f"sqlite+aiosqlite:///{database_path}")

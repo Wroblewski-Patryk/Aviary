@@ -4,6 +4,25 @@ Last updated: 2026-05-13
 
 ## Project Status Dashboard (2026-05-13)
 
+- `PRJ-1190` is DONE:
+  - `.codex/tasks/PRJ-1190-native-pgvector-semantic-ranking.md`
+- result:
+  - PostgreSQL semantic similarity now ranks with native pgvector distance
+    ordering using `embedding <=> CAST(:query_embedding AS vector)`
+  - local SQLite/JSON fallback keeps Python cosine scoring but uses an expanded
+    candidate pool, preventing older relevant memories from being missed behind
+    a small latest-first window
+  - vector literal handling rejects non-finite values before SQL execution
+- validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_memory_repository.py -k "semantic_embeddings or expanded_candidates or postgres_vector_literal or vector_matched_episodic"; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+    -> `3 passed, 68 deselected`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_runtime_pipeline.py -k "memory or hybrid or semantic or preference or pet or recent"; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+    -> `17 passed, 95 deselected`
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+    -> `1082 passed`
+- residual risk:
+  - ANN/index migration remains future hardening when vector volume requires it
+
 - `PRJ-1189` is DONE:
   - `.codex/tasks/PRJ-1189-memory-source-read-write-audit.md`
 - result:
