@@ -4,6 +4,18 @@ Last updated: 2026-05-14
 
 ## Active Focus
 
+The latest completed UI slice is `PRJ-1217`: Chat tablet transcript clearance
+is verified. Tablet-only CSS now tightens the transcript, numbered response
+cards, input tray, and scroll clearance so the long assistant route-smoke
+answer no longer looks cut off by the composer in the first viewport. Desktop
+and mobile Chat screenshots remained stable. No backend, API, chat data,
+transcript logic, response budget, route contract, runtime, or deployment
+behavior changed. Validation passed with `npm run build`, `npm run
+audit:ui-responsive` (`route_count=14`, `viewport_count=3`,
+`screenshot_count=18`, `failed_count=0`), and `npm run audit:ui-navigation`
+(`status=ok`, `step_count=4`, `failed_count=0`). Cleanup found no
+validation-owned browser/server leftovers.
+
 The latest completed UI slice is `PRJ-1216`: Chat cognitive belt readability
 is verified. The Motivation card now renders dense motivation metrics as
 structured compact lines rather than one slash-separated string, removing the

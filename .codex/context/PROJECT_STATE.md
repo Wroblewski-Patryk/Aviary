@@ -6,6 +6,25 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-14: `PRJ-1217` polished Chat tablet transcript clearance:
+  - task:
+    - `.codex/tasks/PRJ-1217-chat-tablet-transcript-clearance.md`
+  - result:
+    - tablet Chat now uses tighter transcript/list-card/input spacing so the
+      long assistant route-smoke answer clears the composer more cleanly in the
+      first viewport
+    - desktop and mobile Chat layout models were preserved
+    - no backend, API, chat data, transcript logic, response budget, route
+      contract, runtime, or deployment behavior changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - `npm run audit:ui-responsive` -> `route_count=14`,
+      `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+    - `npm run audit:ui-navigation` -> `status=ok`, `step_count=4`,
+      `failed_count=0`
+    - refreshed desktop/tablet/mobile Chat screenshots reviewed
+    - cleanup found no validation-owned browser/server leftovers
+
 - 2026-05-14: `PRJ-1216` polished Chat cognitive belt readability:
   - task:
     - `.codex/tasks/PRJ-1216-chat-cognitive-belt-readability.md`

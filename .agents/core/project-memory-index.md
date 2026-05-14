@@ -48,6 +48,11 @@ Every inferred row must name its source and use a cautious status.
 
 ## Current High-Signal Entries
 
+- `PRJ-1217` verified Chat tablet transcript clearance: tablet-only CSS now
+  tightens transcript/list-card/input spacing so the long assistant route-smoke
+  answer clears the composer in the first viewport. Web build, responsive
+  audit, navigation audit, desktop/tablet/mobile Chat screenshot review, and
+  validation cleanup passed.
 - `PRJ-1216` verified Chat cognitive belt readability: the Motivation card now
   renders dense motivation metrics as structured compact lines rather than one
   slash-separated string, removing desktop first-viewport truncation while

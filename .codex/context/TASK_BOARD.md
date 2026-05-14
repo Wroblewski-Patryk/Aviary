@@ -4,6 +4,28 @@ Last updated: 2026-05-14
 
 ## Project Status Dashboard (2026-05-14)
 
+- `PRJ-1217` is DONE:
+  - `.codex/tasks/PRJ-1217-chat-tablet-transcript-clearance.md`
+- result:
+  - tightened tablet Chat transcript density so the long route-smoke answer no
+    longer looks trapped under the composer in the first viewport
+  - added tablet-only spacing, list-card, input, and scroll-padding tuning
+    while preserving desktop and mobile layout models
+  - no backend, API, chat data, transcript logic, response budget, route
+    contract, runtime behavior, or deployment behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - `npm run audit:ui-responsive` -> `route_count=14`,
+    `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+  - `npm run audit:ui-navigation` -> `status=ok`, `step_count=4`,
+    `failed_count=0`
+  - refreshed desktop, tablet, and mobile Chat screenshots reviewed
+  - cleanup check -> no active `chrome-headless-shell`, no validation Node
+    processes, and no listener on `5173`
+- residual risk:
+  - future richer composer states still need route-local screenshot coverage
+    when pending confirmations or multi-action states are active
+
 - `PRJ-1216` is DONE:
   - `.codex/tasks/PRJ-1216-chat-cognitive-belt-readability.md`
 - result:

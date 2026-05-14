@@ -140,6 +140,11 @@
   Keep the main chat input, send control, and low-priority support actions
   inside one shared tray so the conversation footer reads like one premium
   surface instead of stacked unrelated controls.
+- Chat transcript/composer clearance:
+  On tablet-sized authenticated Chat, keep the transcript dense enough that a
+  complete visible response card clears the composer. Prefer breakpoint-local
+  spacing and list-card density before changing runtime fixtures or moving the
+  composer out of the conversation column.
 - Native segmented mode control:
   In the Expo mobile shell, use one shared pill-based segmented control for
   simple mode selectors such as Ask, Plan, Reflect, and Execute. Keep it

@@ -8760,6 +8760,66 @@ body {
     max-width: none;
   }
 
+  .aion-chat-thread-column {
+    gap: 0.46rem;
+    padding: 0.64rem;
+  }
+
+  .aion-chat-transcript {
+    gap: 0.52rem;
+    padding: 0.08rem 0.04rem 0.72rem;
+    scroll-padding-bottom: 8.5rem;
+  }
+
+  .aion-chat-message {
+    padding: 0.68rem 0.76rem 0.72rem;
+  }
+
+  .aion-chat-message-meta {
+    margin-bottom: 0.38rem;
+  }
+
+  .aion-chat-message-copy {
+    font-size: 0.88rem;
+    line-height: 1.54;
+  }
+
+  .aion-chat-message-copy p + ol,
+  .aion-chat-message-copy p + ul {
+    margin-top: 0.54rem;
+  }
+
+  .aion-chat-message-assistant .aion-chat-message-copy ol {
+    gap: 0.24rem;
+  }
+
+  .aion-chat-message-assistant .aion-chat-message-copy ol li {
+    min-height: auto;
+    padding: 0.52rem 0.64rem 0.56rem 2.08rem;
+    border-radius: 0.82rem;
+  }
+
+  .aion-chat-message-assistant .aion-chat-message-copy ol li::before {
+    left: 0.62rem;
+    top: 0.58rem;
+    width: 1.04rem;
+    height: 1.04rem;
+    font-size: 0.58rem;
+  }
+
+  .aion-chat-composer {
+    padding: 0.38rem;
+  }
+
+  .aion-chat-input {
+    min-height: 3rem;
+    padding: 0.68rem 0.76rem;
+  }
+
+  .aion-chat-composer-note {
+    font-size: 0.62rem;
+  }
+
   .aion-chat-cognitive-belt {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }

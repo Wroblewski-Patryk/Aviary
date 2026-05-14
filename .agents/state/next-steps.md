@@ -4,6 +4,26 @@ Last updated: 2026-05-14
 
 ## NOW
 
+1. Continue from the Chat tablet transcript-clearance checkpoint:
+   - task:
+     `.codex/tasks/PRJ-1217-chat-tablet-transcript-clearance.md`
+   - result:
+     tablet Chat now has tighter transcript/card/input spacing so the long
+     assistant response clears the composer in the first viewport
+   - proof:
+     `npm run build` PASS; `npm run audit:ui-responsive` PASS with
+     `route_count=14`, `viewport_count=3`, `screenshot_count=18`,
+     `failed_count=0`; `npm run audit:ui-navigation` PASS with `status=ok`,
+     `step_count=4`, `failed_count=0`; refreshed desktop/tablet/mobile Chat
+     screenshots reviewed; cleanup confirmed no validation leftovers
+   - residual:
+     richer Chat composer states, especially pending confirmations and
+     multi-action states, still need route-local screenshot coverage when
+     selected as a concrete UI gap
+   - next smallest slice:
+     choose the next polish slice only from concrete screenshot evidence;
+     avoid opening a new surface until Chat has no visible first-read defects
+
 1. Continue from the Chat cognitive-belt readability checkpoint:
    - task:
      `.codex/tasks/PRJ-1216-chat-cognitive-belt-readability.md`
