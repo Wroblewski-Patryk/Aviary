@@ -8841,6 +8841,18 @@ body {
 }
 
 @media (max-width: 640px) {
+  .aion-chat-message-row.justify-start {
+    width: 100%;
+  }
+
+  .aion-chat-avatar {
+    display: none;
+  }
+
+  .aion-chat-message-assistant {
+    max-width: 100%;
+  }
+
   .aion-dashboard-canvas {
     gap: 0.82rem !important;
   }

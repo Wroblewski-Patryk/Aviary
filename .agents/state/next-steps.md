@@ -4,6 +4,28 @@ Last updated: 2026-05-14
 
 ## NOW
 
+1. Continue from the mobile Chat assistant-width checkpoint:
+   - task:
+     `.codex/tasks/PRJ-1220-chat-mobile-assistant-width.md`
+   - result:
+     mobile Chat assistant responses now use the full transcript width by
+     hiding the decorative avatar column on narrow screens while preserving
+     speaker metadata
+   - proof:
+     `npm run build` PASS; `npm run audit:ui-responsive` PASS with
+     `route_count=14`, `viewport_count=3`, `screenshot_count=18`,
+     `failed_count=0`; focused `/chat` route-smoke to
+     `C:\tmp\prj1220-ui-responsive` PASS with `screenshot_count=3`,
+     `failed_count=0`; `npm run audit:ui-navigation` PASS; refreshed
+     desktop/tablet/mobile Chat screenshots reviewed; cleanup confirmed no
+     validation leftovers
+   - residual:
+     richer live Chat composer states still need route-local screenshot
+     coverage when selected as a concrete UX slice
+   - next smallest slice:
+     choose the next polish slice only from concrete screenshot evidence across
+     Chat, Dashboard, Tools, or another flagship route
+
 1. Continue from the Tools summary numeric-readability checkpoint:
    - task:
      `.codex/tasks/PRJ-1219-tools-summary-numeric-readability.md`

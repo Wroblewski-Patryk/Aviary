@@ -15,6 +15,11 @@
   lines or compact UI rows instead of slash-separated prose. Preserve normal
   paragraph bodies for narrative cards, but split metric copy before it reaches
   awkward ellipses in desktop/tablet first viewports.
+- Mobile chat transcript width:
+  On narrow screens, prioritize assistant answer width over decorative speaker
+  avatar chrome. Keep speaker identity in message metadata and let the
+  transcript bubble occupy the available rail so numbered cards and longer
+  answers do not collapse into cramped lines.
 - Compact dashboard metadata:
   In narrow Dashboard rails, timestamp and activity metadata should use calmer
   sentence-case UI typography with modest tracking. Avoid uppercase plus wide

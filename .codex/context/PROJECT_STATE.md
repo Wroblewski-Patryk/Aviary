@@ -6,6 +6,26 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-14: `PRJ-1220` polished mobile Chat assistant response width:
+  - task:
+    - `.codex/tasks/PRJ-1220-chat-mobile-assistant-width.md`
+  - result:
+    - mobile Chat assistant responses now use the full transcript width by
+      hiding the decorative avatar column on narrow screens
+    - message metadata still carries speaker identity, while tablet and desktop
+      Chat composition remained stable
+    - no backend, API, chat payload, Markdown rendering, response budget, route
+      contract, runtime, or deployment behavior changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - `npm run audit:ui-responsive` -> `route_count=14`,
+      `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+    - focused `/chat` route-smoke to `C:\tmp\prj1220-ui-responsive` ->
+      `screenshot_count=3`, `failed_count=0`
+    - `npm run audit:ui-navigation` -> PASS
+    - refreshed desktop/tablet/mobile Chat screenshots reviewed
+    - cleanup found no validation-owned browser/server leftovers
+
 - 2026-05-14: `PRJ-1219` polished Tools summary numeric readability:
   - task:
     - `.codex/tasks/PRJ-1219-tools-summary-numeric-readability.md`

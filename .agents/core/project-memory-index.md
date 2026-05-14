@@ -48,6 +48,11 @@ Every inferred row must name its source and use a cautious status.
 
 ## Current High-Signal Entries
 
+- `PRJ-1220` verified mobile Chat assistant response width: mobile assistant
+  answers now use the full transcript width by hiding the decorative avatar on
+  narrow screens while preserving speaker metadata. Web build, responsive
+  audit, focused `/chat` desktop/tablet/mobile route-smoke screenshot review,
+  navigation audit, and validation cleanup passed.
 - `PRJ-1219` verified Tools summary numeric readability: summary count values
   now use unambiguous UI typography with tabular numbers, so mobile `1` no
   longer reads like the letter `I`. Web build, responsive audit, navigation

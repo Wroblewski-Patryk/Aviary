@@ -4,6 +4,29 @@ Last updated: 2026-05-14
 
 ## Project Status Dashboard (2026-05-14)
 
+- `PRJ-1220` is DONE:
+  - `.codex/tasks/PRJ-1220-chat-mobile-assistant-width.md`
+- result:
+  - mobile Chat assistant responses now use the full transcript width by
+    removing the decorative avatar column on narrow screens
+  - speaker identity remains visible in message metadata, while tablet and
+    desktop Chat composition stayed stable
+  - no backend, API, chat payload, Markdown rendering, response budget, route
+    contract, runtime behavior, or deployment behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - `npm run audit:ui-responsive` -> `route_count=14`,
+    `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+  - focused `/chat` route-smoke to `C:\tmp\prj1220-ui-responsive` ->
+    `screenshot_count=3`, `failed_count=0`
+  - `npm run audit:ui-navigation` -> PASS
+  - refreshed desktop, tablet, and mobile Chat screenshots reviewed
+  - cleanup check -> no active `chrome-headless-shell`, no validation Node
+    processes, and no listener on `5173`
+- residual risk:
+  - richer live Chat composer states still need route-local screenshot coverage
+    when selected as a concrete UX slice
+
 - `PRJ-1219` is DONE:
   - `.codex/tasks/PRJ-1219-tools-summary-numeric-readability.md`
 - result:
