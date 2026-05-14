@@ -4,6 +4,31 @@ Last updated: 2026-05-14
 
 ## Project Status Dashboard (2026-05-14)
 
+- `PRJ-1229` is DONE:
+  - `.codex/tasks/PRJ-1229-authenticated-desktop-utility-bar-parity.md`
+- result:
+  - desktop authenticated routes now show the shared utility/search/action and
+    account band above route content
+  - existing `ShellUtilityBar` and `aion-utility-*` styles were reused instead
+    of adding route-local chrome or fake browser controls
+  - mobile/tablet route headers, route definitions, auth, API, backend,
+    runtime, and deployment behavior stayed unchanged
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - `npm run audit:ui-responsive` -> `route_count=14`,
+    `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+  - `npm run audit:ui-navigation` -> `step_count=4`, `failed_count=0`
+  - `node scripts/route-smoke.mjs --account-proof --report .codex/artifacts/prj1225-account-proof/report.json`
+    -> `account_proof.status=ok`, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - refreshed desktop Dashboard, desktop Chat, tablet Dashboard, and mobile
+    Dashboard screenshots reviewed
+  - cleanup check -> no active `chrome-headless-shell`, no AION validation Node
+    processes, and no listener on `5173`
+- residual risk:
+  - 1:1 parity still needs Dashboard lower-card proportions, exact route
+    density/copy comparison, and subsequent route-local flagship polish
+
 - `PRJ-1228` is DONE:
   - `.codex/tasks/PRJ-1228-dashboard-desktop-hero-overlay-parity.md`
 - result:

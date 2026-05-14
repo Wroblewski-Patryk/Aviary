@@ -48,6 +48,14 @@ Every inferred row must name its source and use a cautious status.
 
 ## Current High-Signal Entries
 
+- `PRJ-1229` verified authenticated desktop utility bar parity: desktop
+  authenticated routes now show the shared utility/search/action/account band
+  above route content, reusing the existing `ShellUtilityBar` and
+  `aion-utility-*` styles without adding fake browser controls or changing
+  mobile/tablet headers. Web build, responsive audit, navigation audit,
+  account proof, desktop Dashboard/Chat screenshot review, tablet/mobile
+  guardrail review, and validation cleanup passed.
+
 - `PRJ-1228` verified Dashboard desktop hero overlay parity: desktop
   Dashboard signal card columns now overlay the scenic figure stage instead of
   sitting as detached side columns, and desktop-only figure-note callouts are

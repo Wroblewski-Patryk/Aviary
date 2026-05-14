@@ -4,6 +4,30 @@ Last updated: 2026-05-14
 
 ## NOW
 
+1. Continue from the authenticated desktop utility bar checkpoint:
+   - task:
+     `.codex/tasks/PRJ-1229-authenticated-desktop-utility-bar-parity.md`
+   - result:
+     desktop authenticated routes now show the shared utility/search/action
+     and account band above route content; the implementation reuses existing
+     shell components and does not introduce fake browser chrome
+   - proof:
+     `npm run build` PASS; `npm run audit:ui-responsive` PASS with
+     `route_count=14`, `viewport_count=3`, `screenshot_count=18`,
+     `failed_count=0`; `npm run audit:ui-navigation` PASS with
+     `step_count=4`, `failed_count=0`;
+     `node scripts/route-smoke.mjs --account-proof --report .codex/artifacts/prj1225-account-proof/report.json`
+     PASS with `account_proof.status=ok`, `step_count=1`, `failed_count=0`,
+     `panel_visible=true`; refreshed desktop Dashboard, desktop Chat, tablet
+     Dashboard, and mobile Dashboard screenshots reviewed; cleanup confirmed
+     no AION validation leftovers
+   - residual:
+     1:1 parity still needs Dashboard lower-card proportions, exact route
+     density/copy comparison, and subsequent route-local flagship polish
+   - next smallest slice:
+     continue Dashboard parity from lower-card proportions and first-viewport
+     density, then return to Chat/personality route-specific gaps
+
 1. Continue from the Dashboard desktop hero overlay checkpoint:
    - task:
      `.codex/tasks/PRJ-1228-dashboard-desktop-hero-overlay-parity.md`

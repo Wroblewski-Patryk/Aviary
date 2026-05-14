@@ -6,6 +6,28 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-14: `PRJ-1229` restored authenticated desktop utility bar parity:
+  - task:
+    - `.codex/tasks/PRJ-1229-authenticated-desktop-utility-bar-parity.md`
+  - result:
+    - desktop authenticated routes now show the shared utility/search/action
+      and account band above route content
+    - the implementation reuses existing `ShellUtilityBar` and `aion-utility-*`
+      styles instead of adding route-local chrome or fake browser controls
+    - mobile/tablet route headers, route definitions, auth, API, backend,
+      runtime, and deployment behavior stayed unchanged
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - `npm run audit:ui-responsive` -> `route_count=14`,
+      `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+    - `npm run audit:ui-navigation` -> `step_count=4`, `failed_count=0`
+    - `node scripts/route-smoke.mjs --account-proof --report .codex/artifacts/prj1225-account-proof/report.json`
+      -> `account_proof.status=ok`, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - refreshed desktop Dashboard, desktop Chat, tablet Dashboard, and mobile
+      Dashboard screenshots reviewed
+    - cleanup found no AION validation-owned browser/server leftovers
+
 - 2026-05-14: `PRJ-1228` polished Dashboard desktop hero overlay parity:
   - task:
     - `.codex/tasks/PRJ-1228-dashboard-desktop-hero-overlay-parity.md`

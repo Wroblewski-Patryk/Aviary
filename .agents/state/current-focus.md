@@ -4,6 +4,20 @@ Last updated: 2026-05-14
 
 ## Active Focus
 
+The latest completed UI slice is `PRJ-1229`: authenticated desktop utility bar
+parity is verified. Desktop authenticated routes now show the shared
+utility/search/action/account band above route content by reusing the existing
+`ShellUtilityBar` and `aion-utility-*` styling. Mobile/tablet route headers,
+route definitions, auth, API, backend, runtime, and deployment behavior stayed
+unchanged. Validation passed with `npm run build`, `npm run
+audit:ui-responsive` (`route_count=14`, `viewport_count=3`,
+`screenshot_count=18`, `failed_count=0`), `npm run audit:ui-navigation`
+(`step_count=4`, `failed_count=0`), and `--account-proof`
+(`account_proof.status=ok`, `step_count=1`, `failed_count=0`,
+`panel_visible=true`). Refreshed desktop Dashboard, desktop Chat, tablet
+Dashboard, and mobile Dashboard screenshots were reviewed. Cleanup found no
+AION validation-owned browser/server leftovers.
+
 The latest completed UI slice is `PRJ-1228`: Dashboard desktop hero overlay
 parity is verified. Desktop Dashboard signal card columns now overlay the
 scenic figure stage instead of sitting as detached side columns, and

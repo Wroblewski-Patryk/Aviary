@@ -96,6 +96,9 @@
   Use one calm top utility band with search, compact actions, and account
   posture to give authenticated routes dashboard-grade framing without
   inventing route-local chrome.
+  The bar is desktop-only in the authenticated shell; tablet and mobile keep
+  the route header and horizontal route rail pattern. Treat browser controls in
+  canonical screenshots as presentation context, not app chrome.
 - Flagship overview stage:
   Use one central embodied stage with flanking signal cards, a guidance column,
   and a cognitive-flow band so `dashboard` feels like the conductor of the

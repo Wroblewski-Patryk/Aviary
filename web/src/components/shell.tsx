@@ -398,14 +398,14 @@ export function ShellUtilityBar({
         </div>
       </div>
       <label className="aion-utility-search" aria-label="Workspace continuity frame">
-        <span className="aion-utility-search-icon">âŚ•</span>
+        <span className="aion-utility-search-icon" aria-hidden="true" />
         <input
           readOnly
           type="text"
           value=""
-          placeholder="One calm shell for memory, planning, and the next meaningful action."
+          placeholder="Search Aviary or ask anything..."
         />
-        <span className="aion-utility-search-shortcut">âŚK</span>
+        <span className="aion-utility-search-shortcut" aria-hidden="true" />
       </label>
       <div className="aion-utility-actions">
         <button className="aion-utility-pill" type="button">
@@ -413,7 +413,6 @@ export function ShellUtilityBar({
           Focus mode
         </button>
         <button className="aion-utility-pill" type="button">
-          âś§
           Quick capture
         </button>
         <button className="aion-utility-icon-pill" type="button" aria-label="Notifications">
