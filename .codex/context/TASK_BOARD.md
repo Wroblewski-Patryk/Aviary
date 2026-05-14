@@ -4,6 +4,30 @@ Last updated: 2026-05-14
 
 ## Project Status Dashboard (2026-05-14)
 
+- `PRJ-1214` is DONE:
+  - `.codex/tasks/PRJ-1214-personality-embodied-map-polish.md`
+- result:
+  - improved Personality hero callout readability by rendering count-heavy
+    values with UI typography instead of display typography
+  - restored compact visible context for the mobile Mind Layers timeline so it
+    no longer reads as raw rows under the figure
+  - added a small `6 layers` timeline count pill and tuned mobile header layout
+    after screenshot review caught a vertical label wrap
+  - no backend, API, personality payload, route contract, image asset, or
+    runtime behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - `npm run audit:ui-responsive` -> `route_count=14`,
+    `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+  - `npm run audit:ui-navigation` -> `status=ok`, `step_count=4`,
+    `failed_count=0`
+  - refreshed desktop, tablet, and mobile Personality screenshots reviewed
+  - cleanup check -> no active `chrome_headless_shell`, no validation Node
+    processes, and no listener on `5173`
+- residual risk:
+  - broader Chat v5 composition and deeper Personality state coverage remain
+    future route-local polish candidates
+
 - `PRJ-1213` is DONE:
   - `.codex/tasks/PRJ-1213-settings-danger-boundary-polish.md`
 - result:

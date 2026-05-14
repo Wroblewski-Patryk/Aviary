@@ -48,6 +48,11 @@ Every inferred row must name its source and use a cautious status.
 
 ## Current High-Signal Entries
 
+- `PRJ-1214` verified Personality embodied-map polish: count-heavy callout
+  values use UI typography, the Mind Layers timeline carries a compact
+  `6 layers` context pill, and the mobile screenshot keeps a readable timeline
+  heading instead of raw rows. Web build, responsive audit, navigation audit,
+  and refreshed desktop/tablet/mobile Personality screenshot review passed.
 - `PRJ-1213` verified the Settings destructive-action hierarchy: reset
   runtime data details are collapsed behind a native disclosure boundary by
   default, while confirmation and submit controls remain available after
@@ -71,8 +76,8 @@ Every inferred row must name its source and use a cautious status.
   readiness, next action, and user control now precede technical details while
   preserving the same API payload and controls.
 - Route-local visual work should continue from the shared-shell baseline:
-  deeper Chat v5 composition polish and Personality are next candidates, while
-  native app proof remains deferred by current scope.
+  deeper Chat v5 composition polish is the next candidate, while native app
+  proof remains deferred by current scope.
 
 ## Architecture Refresh Protocol
 

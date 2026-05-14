@@ -54,6 +54,11 @@
     composition
   Route-specific adaptation is required unless the user explicitly approves a
   repeated composition.
+- Personality embodied map:
+  Use display typography for identity and role language, but render count-heavy
+  callout values with UI/body typography so numerals stay unambiguous. Keep the
+  Mind Layers timeline labeled on mobile; compact the heading instead of
+  removing context entirely.
 - Flagship utility bar:
   Use one calm top utility band with search, compact actions, and account
   posture to give authenticated routes dashboard-grade framing without

@@ -6,6 +6,26 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-14: `PRJ-1214` polished the Personality embodied map:
+  - task:
+    - `.codex/tasks/PRJ-1214-personality-embodied-map-polish.md`
+  - result:
+    - count-heavy Personality callout values now use clearer UI typography so
+      values like `0 active goals`, `1 patterns`, and `5 catalogued` do not
+      read ambiguously in display type
+    - the mobile Mind Layers timeline keeps a compact visible heading and
+      `6 layers` count pill before the rows
+    - screenshot review caught and fixed an initial mobile vertical label wrap
+    - no backend, API, personality payload, image asset, route contract,
+      runtime, or deployment behavior changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - `npm run audit:ui-responsive` -> `route_count=14`,
+      `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+    - `npm run audit:ui-navigation` -> `status=ok`, `step_count=4`,
+      `failed_count=0`
+    - refreshed desktop/tablet/mobile Personality screenshots reviewed
+
 - 2026-05-14: `PRJ-1213` polished the Settings destructive action boundary:
   - task:
     - `.codex/tasks/PRJ-1213-settings-danger-boundary-polish.md`

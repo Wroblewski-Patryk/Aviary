@@ -4,6 +4,19 @@ Last updated: 2026-05-14
 
 ## Active Focus
 
+The latest completed UI slice is `PRJ-1214`: Personality embodied map polish
+is verified. Count-heavy callout values now use UI typography instead of
+display typography, the Mind Layers timeline has a compact `6 layers` context
+pill, and mobile keeps a readable timeline heading before the layer rows.
+Screenshot review caught an initial vertical mobile label wrap, which was
+fixed before closure. No backend, API, personality payload, image asset, route
+contract, runtime, or deployment behavior changed. Validation passed with
+`npm run build`, `npm run audit:ui-responsive` (`route_count=14`,
+`viewport_count=3`, `screenshot_count=18`, `failed_count=0`), and `npm run
+audit:ui-navigation` (`status=ok`, `step_count=4`, `failed_count=0`).
+Refreshed desktop/tablet/mobile Personality screenshots were reviewed, and
+cleanup found no validation-owned browser/server leftovers.
+
 The latest completed UI slice is `PRJ-1213`: Settings destructive runtime
 reset details now sit behind a native progressive-disclosure boundary. The
 safe account, interface, time, language, proactive follow-up, and save settings

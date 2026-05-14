@@ -4,6 +4,26 @@ Last updated: 2026-05-14
 
 ## NOW
 
+1. Continue from the Personality embodied-map checkpoint:
+   - task:
+     `.codex/tasks/PRJ-1214-personality-embodied-map-polish.md`
+   - result:
+     Personality count-heavy callout values now read as UI data, and the
+     mobile Mind Layers timeline keeps compact visible context before the rows
+   - proof:
+     `npm run build` PASS; `npm run audit:ui-responsive` PASS with
+     `route_count=14`, `viewport_count=3`, `screenshot_count=18`,
+     `failed_count=0`; `npm run audit:ui-navigation` PASS with `status=ok`,
+     `step_count=4`, `failed_count=0`; refreshed desktop/tablet/mobile
+     Personality screenshots reviewed; cleanup confirmed no validation
+     leftovers
+   - residual:
+     broader Chat v5 composition and deeper Personality state coverage remain
+     outside this focused route-local polish
+   - next smallest slice:
+     continue Chat v5 composition polish, or continue Personality state
+     coverage only if screenshot review identifies a concrete gap
+
 1. Continue from the Settings danger-boundary checkpoint:
    - task:
      `.codex/tasks/PRJ-1213-settings-danger-boundary-polish.md`
