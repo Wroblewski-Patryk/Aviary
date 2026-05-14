@@ -48,6 +48,12 @@ Every inferred row must name its source and use a cautious status.
 
 ## Current High-Signal Entries
 
+- `PRJ-1216` verified Chat cognitive belt readability: the Motivation card now
+  renders dense motivation metrics as structured compact lines rather than one
+  slash-separated string, removing desktop first-viewport truncation while
+  preserving the desktop, tablet, and mobile belt layouts. Web build,
+  responsive audit, navigation audit, desktop/tablet/mobile Chat screenshot
+  review, and validation cleanup passed.
 - `PRJ-1215` verified mobile Chat context rail readability: the horizontal
   cognitive belt keeps conversation-first rhythm while using tuned card width,
   body line clamp, scroll padding, and edge masking so the first card reads

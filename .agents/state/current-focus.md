@@ -4,6 +4,19 @@ Last updated: 2026-05-14
 
 ## Active Focus
 
+The latest completed UI slice is `PRJ-1216`: Chat cognitive belt readability
+is verified. The Motivation card now renders dense motivation metrics as
+structured compact lines rather than one slash-separated string, removing the
+desktop first-viewport metric truncation while preserving the existing desktop
+six-card belt, tablet three-column belt, and mobile horizontal rail. No
+backend, API, chat data, transcript logic, response budget, route contract,
+runtime, or deployment behavior changed. Validation passed with `npm run
+build`, `npm run audit:ui-responsive` (`route_count=14`, `viewport_count=3`,
+`screenshot_count=18`, `failed_count=0`), and `npm run audit:ui-navigation`
+(`status=ok`, `step_count=4`, `failed_count=0`). Refreshed
+desktop/tablet/mobile Chat screenshots were reviewed, and cleanup found no
+validation-owned browser/server leftovers.
+
 The latest completed UI slice is `PRJ-1215`: mobile Chat context rail
 readability is verified. The cognitive context belt keeps the horizontal rail
 model, but card width, body line clamp, scroll padding, and edge mask now make

@@ -7,6 +7,7 @@ export type ChatCognitiveBeltItem = {
   eyebrow: string;
   title: string;
   body: string;
+  bodyLines?: string[];
   meta: string;
   tone: "lead" | "soft" | "progress";
 };
@@ -212,7 +213,19 @@ export function ChatCognitiveBelt({
             <span className="aion-chat-belt-meta">{item.meta}</span>
           </div>
           <h3 className="aion-chat-belt-title">{item.title}</h3>
-          <p className="aion-chat-belt-body">{item.body}</p>
+          <p
+            className={`aion-chat-belt-body ${
+              item.bodyLines?.length ? "aion-chat-belt-body-lines" : ""
+            }`}
+          >
+            {item.bodyLines?.length
+              ? item.bodyLines.map((line) => (
+                  <span key={line} className="aion-chat-belt-body-line">
+                    {line}
+                  </span>
+                ))
+              : item.body}
+          </p>
           {item.key === "goal" ? (
             <div className="aion-chat-belt-progress" aria-hidden="true">
               <span style={{ width: goalProgress }} />

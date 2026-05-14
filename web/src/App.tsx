@@ -3100,6 +3100,9 @@ export default function App() {
     action: "Edit",
   };
   const chatPrimarySuggestedAction = chatSuggestedActions[0];
+  const chatMotivationMetricLines = chatMotivationMetrics.map(
+    (metric) => `${metric.label} ${metric.value}`,
+  );
   const chatCognitiveBelt: ChatCognitiveBeltItem[] = [
     {
       key: "intent",
@@ -3113,7 +3116,8 @@ export default function App() {
       key: "motivation",
       eyebrow: "Motivation",
       title: "Aligned",
-      body: chatMotivationMetrics.map((metric) => `${metric.label} ${metric.value}`).join(" / "),
+      body: chatMotivationMetricLines.join(" · "),
+      bodyLines: chatMotivationMetricLines,
       meta: chatIntentCard.emphasis,
       tone: "soft",
     },

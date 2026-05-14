@@ -4,6 +4,32 @@ Last updated: 2026-05-14
 
 ## Project Status Dashboard (2026-05-14)
 
+- `PRJ-1216` is DONE:
+  - `.codex/tasks/PRJ-1216-chat-cognitive-belt-readability.md`
+- result:
+  - improved the Chat cognitive belt Motivation card so dense motivation
+    metrics render as four compact readable lines instead of one
+    slash-separated string
+  - added an optional structured body-line rendering path to the existing
+    `ChatCognitiveBelt` component and reused it only for dense metric copy
+  - preserved the existing desktop six-card belt, tablet three-column belt,
+    and mobile horizontal rail model
+  - no backend, API, chat data, transcript logic, response budget, route
+    contract, runtime behavior, or deployment behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - `npm run audit:ui-responsive` -> `route_count=14`,
+    `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+  - `npm run audit:ui-navigation` -> `status=ok`, `step_count=4`,
+    `failed_count=0`
+  - refreshed desktop, tablet, and mobile Chat screenshots reviewed
+  - cleanup check -> no active `chrome-headless-shell`, no validation Node
+    processes, and no listener on `5173`
+- residual risk:
+  - mobile rail still intentionally peeks the next card, so offscreen text can
+    be partially visible at the rail edge; broader Chat v5 composer/state
+    design remains future route-local polish
+
 - `PRJ-1215` is DONE:
   - `.codex/tasks/PRJ-1215-chat-mobile-context-rail-readability.md`
 - result:

@@ -10,6 +10,11 @@
   is readable and the next card peeks intentionally; do not convert context
   into a tall stack unless the user explicitly chooses context density over
   first-read conversation access.
+- Chat cognitive metric cards:
+  Dense cognitive values inside the Chat top belt should use structured short
+  lines or compact UI rows instead of slash-separated prose. Preserve normal
+  paragraph bodies for narrative cards, but split metric copy before it reaches
+  awkward ellipses in desktop/tablet first viewports.
 - Safe Markdown chat messages:
   Render transcript Markdown as semantic message content inside the existing
   chat bubble pattern, using escaped React-rendered elements for emphasis,

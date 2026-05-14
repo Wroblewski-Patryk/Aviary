@@ -6,6 +6,28 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-14: `PRJ-1216` polished Chat cognitive belt readability:
+  - task:
+    - `.codex/tasks/PRJ-1216-chat-cognitive-belt-readability.md`
+  - result:
+    - Motivation metrics in the Chat cognitive belt now render as structured
+      compact lines instead of a slash-separated text string that truncated in
+      the desktop first viewport
+    - the existing `ChatCognitiveBelt` component now supports optional body
+      lines for dense data while preserving normal body text for other cards
+    - desktop six-card, tablet three-column, and mobile horizontal rail layouts
+      were preserved
+    - no backend, API, chat data, transcript logic, response budget, route
+      contract, runtime, or deployment behavior changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - `npm run audit:ui-responsive` -> `route_count=14`,
+      `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+    - `npm run audit:ui-navigation` -> `status=ok`, `step_count=4`,
+      `failed_count=0`
+    - refreshed desktop/tablet/mobile Chat screenshots reviewed
+    - cleanup found no validation-owned browser/server leftovers
+
 - 2026-05-14: `PRJ-1215` polished mobile Chat context rail readability:
   - task:
     - `.codex/tasks/PRJ-1215-chat-mobile-context-rail-readability.md`

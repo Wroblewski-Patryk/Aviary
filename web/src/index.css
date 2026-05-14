@@ -2328,6 +2328,19 @@ body {
   -webkit-line-clamp: 2;
 }
 
+.aion-chat-belt-body-lines {
+  display: grid;
+  gap: 0.14rem;
+  -webkit-line-clamp: unset;
+}
+
+.aion-chat-belt-body-line {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .aion-chat-belt-progress {
   margin-top: 0.54rem;
   height: 0.28rem;

@@ -4,6 +4,28 @@ Last updated: 2026-05-14
 
 ## NOW
 
+1. Continue from the Chat cognitive-belt readability checkpoint:
+   - task:
+     `.codex/tasks/PRJ-1216-chat-cognitive-belt-readability.md`
+   - result:
+     Chat Motivation metrics now render as four compact readable lines inside
+     the existing cognitive belt instead of a slash-separated string that
+     truncated on desktop
+   - proof:
+     `npm run build` PASS; `npm run audit:ui-responsive` PASS with
+     `route_count=14`, `viewport_count=3`, `screenshot_count=18`,
+     `failed_count=0`; `npm run audit:ui-navigation` PASS with `status=ok`,
+     `step_count=4`, `failed_count=0`; refreshed desktop/tablet/mobile Chat
+     screenshots reviewed; cleanup confirmed no validation leftovers
+   - residual:
+     mobile rail still intentionally peeks the next card, so edge text can be
+     partially visible by design; richer Chat composer/state design remains
+     outside this focused belt-readability slice
+   - next smallest slice:
+     select the next route-local UI fix only from concrete screenshot evidence
+     after this checkpoint, with Chat composer/state polish as a likely
+     candidate if a specific gap is visible
+
 1. Continue from the Chat mobile context-rail checkpoint:
    - task:
      `.codex/tasks/PRJ-1215-chat-mobile-context-rail-readability.md`
