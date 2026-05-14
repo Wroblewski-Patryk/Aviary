@@ -104,6 +104,10 @@
   When the flagship dashboard starts feeling flat, add bespoke raster artwork
   to the intention card and the lower summary band before piling on more CSS
   decoration.
+- Dashboard compact charts:
+  In narrow dashboard cards, keep chart labels in compact centered UI
+  typography with explicit spacing. Short abbreviations are acceptable only
+  when they remain visually separated across desktop, tablet, and mobile.
 - Dashboard cognition field:
   When the central dashboard hero still feels too generic, add one dedicated
   scenic atmosphere asset behind the figure and use light connective ornament

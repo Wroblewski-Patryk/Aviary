@@ -6,6 +6,25 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-14: `PRJ-1223` polished Dashboard Memory Growth labels:
+  - task:
+    - `.codex/tasks/PRJ-1223-dashboard-memory-growth-labels.md`
+  - result:
+    - Dashboard `Memory Growth` chart labels now read as separate compact
+      labels instead of visually merging in the narrow desktop card
+    - desktop, tablet, and mobile Dashboard composition stayed stable
+    - no dashboard metric data, ordering, API, backend, route contract,
+      runtime, or deployment behavior changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - `npm run audit:ui-responsive` -> `route_count=14`,
+      `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+    - focused `/dashboard` route-smoke to `C:\tmp\prj1223-ui-responsive` ->
+      `screenshot_count=3`, `failed_count=0`
+    - `npm run audit:ui-navigation` -> PASS
+    - refreshed desktop/tablet/mobile Dashboard screenshots reviewed
+    - cleanup found no validation-owned browser/server leftovers
+
 - 2026-05-14: `PRJ-1222` polished Tools integral status deduplication:
   - task:
     - `.codex/tasks/PRJ-1222-tools-integral-status-deduplication.md`

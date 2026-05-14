@@ -4,6 +4,27 @@ Last updated: 2026-05-14
 
 ## NOW
 
+1. Continue from the Dashboard Memory Growth label checkpoint:
+   - task:
+     `.codex/tasks/PRJ-1223-dashboard-memory-growth-labels.md`
+   - result:
+     Dashboard `Memory Growth` chart labels now read as separate compact labels
+     instead of visually merging in the narrow desktop card
+   - proof:
+     `npm run build` PASS; `npm run audit:ui-responsive` PASS with
+     `route_count=14`, `viewport_count=3`, `screenshot_count=18`,
+     `failed_count=0`; focused `/dashboard` route-smoke to
+     `C:\tmp\prj1223-ui-responsive` PASS with `screenshot_count=3`,
+     `failed_count=0`; `npm run audit:ui-navigation` PASS; refreshed
+     desktop/tablet/mobile Dashboard screenshots reviewed; cleanup confirmed no
+     validation leftovers
+   - residual:
+     future additional memory metric categories may need a wider chart
+     treatment instead of more abbreviations
+   - next smallest slice:
+     choose the next polish slice only from concrete screenshot evidence across
+     Dashboard, Chat, Tools, Settings, Home, or another flagship route
+
 1. Continue from the Tools integral status deduplication checkpoint:
    - task:
      `.codex/tasks/PRJ-1222-tools-integral-status-deduplication.md`

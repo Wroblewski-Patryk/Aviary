@@ -4,6 +4,28 @@ Last updated: 2026-05-14
 
 ## Project Status Dashboard (2026-05-14)
 
+- `PRJ-1223` is DONE:
+  - `.codex/tasks/PRJ-1223-dashboard-memory-growth-labels.md`
+- result:
+  - Dashboard `Memory Growth` chart labels now read as separate compact labels
+    instead of visually merging in the narrow desktop card
+  - desktop, tablet, and mobile Dashboard composition stayed stable
+  - no dashboard metric data, ordering, API, backend, route contract, runtime
+    behavior, or deployment behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - `npm run audit:ui-responsive` -> `route_count=14`,
+    `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+  - focused `/dashboard` route-smoke to `C:\tmp\prj1223-ui-responsive` ->
+    `screenshot_count=3`, `failed_count=0`
+  - `npm run audit:ui-navigation` -> PASS
+  - refreshed desktop, tablet, and mobile Dashboard screenshots reviewed
+  - cleanup check -> no active `chrome-headless-shell`, no validation Node
+    processes, and no listener on `5173`
+- residual risk:
+  - future additional memory metric categories may need a wider chart treatment
+    instead of more abbreviations
+
 - `PRJ-1222` is DONE:
   - `.codex/tasks/PRJ-1222-tools-integral-status-deduplication.md`
 - result:

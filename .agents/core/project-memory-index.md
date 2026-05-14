@@ -48,6 +48,11 @@ Every inferred row must name its source and use a cautious status.
 
 ## Current High-Signal Entries
 
+- `PRJ-1223` verified Dashboard Memory Growth label readability: compact chart
+  labels now stay visually separated in the narrow desktop card while
+  desktop/tablet/mobile Dashboard composition remains stable. Web build,
+  responsive audit, focused `/dashboard` route-smoke screenshot review,
+  navigation audit, and validation cleanup passed.
 - `PRJ-1222` verified Tools integral status deduplication: Tools item cards now
   suppress supplemental integral pills when they duplicate the primary status
   label, so `Internal chat` shows one clear `Always on` state while capability
