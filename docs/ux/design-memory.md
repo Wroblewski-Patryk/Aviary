@@ -20,6 +20,10 @@
   sentence-case UI typography with modest tracking. Avoid uppercase plus wide
   letter spacing when the metadata needs to remain scanable in tablet/right-rail
   columns.
+- Count-heavy summary values:
+  Numeric metric values in compact summary cards should use unambiguous UI
+  typography with tabular numbers. Avoid display-serif `1` glyphs in operational
+  counts where the value can read as the letter `I`.
 - Safe Markdown chat messages:
   Render transcript Markdown as semantic message content inside the existing
   chat bubble pattern, using escaped React-rendered elements for emphasis,

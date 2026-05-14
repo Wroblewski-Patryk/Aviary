@@ -25,6 +25,30 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-14 - Do not parallelize dependent web build and UI audit
+- Context:
+  - PRJ-1219 ran `npm run build` and `npm run audit:ui-responsive` at the
+    same time after a Tools typography change.
+- Symptom:
+  - the first responsive audit failed with `ENOENT` for `web/dist/index.html`
+    while the production build was still creating `dist`.
+- Root cause:
+  - `audit:ui-responsive` serves the built `web/dist` output, so it depends on
+    a completed build artifact.
+- Guardrail:
+  - run `npm run build` to completion before running `npm run
+    audit:ui-responsive` or `npm run audit:ui-navigation`.
+- Preferred pattern:
+  - parallelize independent reads and cleanup checks, but keep build ->
+    responsive audit -> navigation audit sequential for web UI validation.
+- Avoid:
+  - treating a missing `dist/index.html` from a parallel audit as a product
+    regression.
+- Evidence:
+  - PRJ-1219 reran `npm run audit:ui-responsive` after build completion and
+    the audit passed with `route_count=14`, `viewport_count=3`,
+    `screenshot_count=18`, and `failed_count=0`.
+
 ### 2026-05-14 - Update all fake OpenAI clients when reply signature changes
 - Context:
   - PRJ-1212 added `delivery_channel` to provider-backed reply generation so

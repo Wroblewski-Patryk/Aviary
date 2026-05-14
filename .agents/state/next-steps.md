@@ -4,6 +4,25 @@ Last updated: 2026-05-14
 
 ## NOW
 
+1. Continue from the Tools summary numeric-readability checkpoint:
+   - task:
+     `.codex/tasks/PRJ-1219-tools-summary-numeric-readability.md`
+   - result:
+     Tools summary count values now use unambiguous UI numeric typography with
+     tabular numbers, so mobile `1` no longer reads like the letter `I`
+   - proof:
+     `npm run build` PASS; `npm run audit:ui-responsive` PASS with
+     `route_count=14`, `viewport_count=3`, `screenshot_count=18`,
+     `failed_count=0`; `npm run audit:ui-navigation` PASS with `status=ok`,
+     `step_count=4`, `failed_count=0`; refreshed desktop/tablet/mobile Tools
+     screenshots reviewed; cleanup confirmed no validation leftovers
+   - residual:
+     future compact metric cards should keep count-heavy values in UI numeric
+     typography rather than display-serif glyphs
+   - next smallest slice:
+     choose the next polish slice only from concrete screenshot evidence across
+     Dashboard, Chat, Tools, or another flagship route
+
 1. Continue from the Dashboard recent-activity time-readability checkpoint:
    - task:
      `.codex/tasks/PRJ-1218-dashboard-recent-activity-time-readability.md`

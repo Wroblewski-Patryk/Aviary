@@ -7004,8 +7004,11 @@ body {
 .aion-tools-summary-value {
   margin: 0.3rem 0 0;
   color: var(--aion-ink);
-  font-family: var(--font-display, ui-serif);
-  font-size: 1.74rem;
+  font-family: var(--font-body, "Inter", sans-serif);
+  font-size: 1.32rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  letter-spacing: 0;
   line-height: 1;
 }
 

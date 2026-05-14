@@ -4,6 +4,17 @@ Last updated: 2026-05-14
 
 ## Active Focus
 
+The latest completed UI slice is `PRJ-1219`: Tools summary numeric readability
+is verified. Tools summary count values now use unambiguous UI typography with
+tabular numbers, so mobile `1` no longer reads like the letter `I`. Desktop,
+tablet, and mobile Tools screenshots remained stable. No backend, API, tools
+overview payload, provider, route contract, runtime, or deployment behavior
+changed. Validation passed with `npm run build`, `npm run audit:ui-responsive`
+(`route_count=14`, `viewport_count=3`, `screenshot_count=18`,
+`failed_count=0`), and `npm run audit:ui-navigation` (`status=ok`,
+`step_count=4`, `failed_count=0`). Cleanup found no validation-owned
+browser/server leftovers.
+
 The latest completed UI slice is `PRJ-1218`: Dashboard recent activity time
 readability is verified. Compact Dashboard `Recent Activity` timestamps now use
 calmer metadata typography in the narrow right rail, so tablet timestamps no

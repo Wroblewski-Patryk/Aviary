@@ -6,6 +6,24 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-14: `PRJ-1219` polished Tools summary numeric readability:
+  - task:
+    - `.codex/tasks/PRJ-1219-tools-summary-numeric-readability.md`
+  - result:
+    - Tools summary count values now use unambiguous UI numeric typography with
+      tabular numbers, so mobile `1` no longer reads like the letter `I`
+    - desktop, tablet, and mobile Tools layouts stayed stable
+    - no backend, API, tools overview payload, provider, route contract,
+      runtime, or deployment behavior changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - `npm run audit:ui-responsive` -> `route_count=14`,
+      `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+    - `npm run audit:ui-navigation` -> `status=ok`, `step_count=4`,
+      `failed_count=0`
+    - refreshed desktop/tablet/mobile Tools screenshots reviewed
+    - cleanup found no validation-owned browser/server leftovers
+
 - 2026-05-14: `PRJ-1218` polished Dashboard recent activity time readability:
   - task:
     - `.codex/tasks/PRJ-1218-dashboard-recent-activity-time-readability.md`

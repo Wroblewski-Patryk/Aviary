@@ -4,6 +4,27 @@ Last updated: 2026-05-14
 
 ## Project Status Dashboard (2026-05-14)
 
+- `PRJ-1219` is DONE:
+  - `.codex/tasks/PRJ-1219-tools-summary-numeric-readability.md`
+- result:
+  - Tools summary count values now use unambiguous UI numeric typography with
+    tabular numbers, so mobile `1` no longer reads like the letter `I`
+  - desktop, tablet, and mobile Tools layouts stayed stable
+  - no backend, API, tools overview payload, provider, route contract,
+    runtime behavior, or deployment behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - `npm run audit:ui-responsive` -> `route_count=14`,
+    `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+  - `npm run audit:ui-navigation` -> `status=ok`, `step_count=4`,
+    `failed_count=0`
+  - refreshed desktop, tablet, and mobile Tools screenshots reviewed
+  - cleanup check -> no active `chrome-headless-shell`, no validation Node
+    processes, and no listener on `5173`
+- residual risk:
+  - future compact metric cards should keep count-heavy values in UI numeric
+    typography rather than display-serif glyphs
+
 - `PRJ-1218` is DONE:
   - `.codex/tasks/PRJ-1218-dashboard-recent-activity-time-readability.md`
 - result:

@@ -48,6 +48,11 @@ Every inferred row must name its source and use a cautious status.
 
 ## Current High-Signal Entries
 
+- `PRJ-1219` verified Tools summary numeric readability: summary count values
+  now use unambiguous UI typography with tabular numbers, so mobile `1` no
+  longer reads like the letter `I`. Web build, responsive audit, navigation
+  audit, desktop/tablet/mobile Tools screenshot review, and validation cleanup
+  passed.
 - `PRJ-1218` verified Dashboard recent activity timestamp readability: compact
   `Recent Activity` timestamps now use calmer metadata typography in narrow
   right-rail contexts, removing awkward tablet uppercase fragmentation while
