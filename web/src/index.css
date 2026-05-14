@@ -1313,6 +1313,41 @@ body {
   }
 }
 
+@media (min-width: 900px) and (max-width: 1199px) {
+  .aion-mobile-route-header > div:first-child {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.92rem 1rem 0.84rem !important;
+  }
+
+  .aion-mobile-route-header > div:first-child > div:first-child {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .aion-mobile-route-header .aion-wordmark-mobile-badge {
+    padding: 0.58rem 0.88rem;
+    box-shadow: 0 8px 16px rgba(84, 66, 52, 0.06);
+  }
+
+  .aion-mobile-route-header .mt-3 {
+    margin-top: 0 !important;
+  }
+
+  .aion-mobile-route-header h1 {
+    font-size: 1.72rem !important;
+    line-height: 1.04;
+  }
+
+  .aion-mobile-route-header .text-xs.uppercase.tracking-\[0\.24em\] {
+    font-size: 0.64rem;
+  }
+}
+
 .aion-wordmark-mobile-badge {
   display: inline-flex;
   align-items: center;

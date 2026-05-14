@@ -48,6 +48,14 @@ Every inferred row must name its source and use a cautious status.
 
 ## Current High-Signal Entries
 
+- `PRJ-1226` verified tablet route header rhythm: authenticated tablet
+  headers now align the Aviary wordmark, route identity, and account trigger in
+  one compact row above the shared route rail while phone mobile headers and
+  desktop sidebar remain unchanged. Route-smoke now waits for the route marker
+  after `#root` attaches before saving screenshots, preventing false
+  loading-state captures. Web build, responsive audit, navigation audit,
+  account proof, screenshot review, and validation cleanup passed.
+
 - `PRJ-1225` verified mobile/tablet account trigger polish: authenticated
   route headers now use a dedicated Aviary shell material trigger with
   `aria-expanded` state instead of generic outline button styling, and

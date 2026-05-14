@@ -6,6 +6,31 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-14: `PRJ-1226` polished tablet route header rhythm:
+  - task:
+    - `.codex/tasks/PRJ-1226-tablet-route-header-rhythm.md`
+  - result:
+    - authenticated tablet headers now align the Aviary wordmark, route
+      identity, and account trigger in one compact row above the shared route
+      rail
+    - phone mobile headers, desktop sidebar, route definitions, route labels,
+      account content, auth, API, backend, runtime, and deployment behavior
+      stayed unchanged
+    - route-smoke now waits for each route marker after `#root` attaches before
+      saving responsive screenshots, avoiding false loading-state captures
+  - validation:
+    - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - `npm run audit:ui-responsive` -> `route_count=14`,
+      `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+    - `npm run audit:ui-navigation` -> `step_count=4`, `failed_count=0`
+    - `node scripts/route-smoke.mjs --account-proof --report .codex/artifacts/prj1225-account-proof/report.json`
+      -> `account_proof.status=ok`, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - refreshed tablet Dashboard, tablet Tools, and mobile Dashboard
+      screenshots reviewed
+    - cleanup found no validation-owned browser/server leftovers
+
 - 2026-05-14: `PRJ-1225` polished the mobile/tablet account trigger:
   - task:
     - `.codex/tasks/PRJ-1225-mobile-account-trigger-polish.md`

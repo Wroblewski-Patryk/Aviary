@@ -4,6 +4,31 @@ Last updated: 2026-05-14
 
 ## NOW
 
+1. Continue from the tablet route header rhythm checkpoint:
+   - task:
+     `.codex/tasks/PRJ-1226-tablet-route-header-rhythm.md`
+   - result:
+     authenticated tablet route headers now align the Aviary wordmark, route
+     identity, and account trigger in one compact row above the shared route
+     rail while phone mobile headers and desktop sidebar remain unchanged
+   - proof:
+     `node --check scripts/route-smoke.mjs` PASS; `npm run build` PASS;
+     `npm run audit:ui-responsive` PASS with `route_count=14`,
+     `viewport_count=3`, `screenshot_count=18`, `failed_count=0`; `npm run
+     audit:ui-navigation` PASS with `step_count=4`, `failed_count=0`;
+     `node scripts/route-smoke.mjs --account-proof --report .codex/artifacts/prj1225-account-proof/report.json`
+     PASS with `account_proof.status=ok`, `step_count=1`, `failed_count=0`,
+     `panel_visible=true`; refreshed tablet Dashboard, tablet Tools, and
+     mobile Dashboard screenshots reviewed; cleanup confirmed no validation
+     leftovers
+   - residual:
+     route-local tablet polish remains future work only when a concrete route
+     screenshot shows a remaining density or hierarchy issue
+   - next smallest slice:
+     choose the next polish slice from concrete screenshot evidence across
+     shared shell pieces, Dashboard, Chat, Tools, Settings, Home, or another
+     flagship route
+
 1. Continue from the mobile/tablet account trigger checkpoint:
    - task:
      `.codex/tasks/PRJ-1225-mobile-account-trigger-polish.md`

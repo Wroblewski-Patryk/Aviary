@@ -147,6 +147,12 @@
   soft material language as the route shell and expose account panel state
   through `aria-expanded`; avoid generic outline button styling in repeated
   shell chrome.
+- Tablet route header rhythm:
+  Authenticated tablet headers should align the Aviary wordmark, route
+  identity, and account trigger in one compact row above the shared route rail.
+  Treat tablet as its own breakpoint: avoid simply scaling up the phone stacked
+  header when tablet needs more first-viewport room for browsing and
+  comparison.
 - Tools capability directory hierarchy:
   Tools cards should read as user-facing capability decisions before exposing
   implementation detail. Show readiness, availability, link state, provider

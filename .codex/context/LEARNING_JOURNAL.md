@@ -25,6 +25,32 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-14 - Wait for route markers before UI screenshots
+- Context:
+  - PRJ-1226 polished the authenticated tablet route header and reran the web
+    responsive audit.
+- Symptom:
+  - the first responsive audit captured a tablet Tools screenshot while the app
+    was still showing the loading shell even though `#root` was already
+    attached.
+- Root cause:
+  - `#root` readiness proves React has mounted, but it does not prove the
+    route-specific mock-authenticated data and marker have finished rendering.
+- Guardrail:
+  - route-smoke screenshots should wait for the expected route marker after
+    `#root` attaches.
+- Preferred pattern:
+  - pass each route marker into `gotoRoute`, wait for it before screenshot
+    capture, then keep build -> responsive audit -> navigation audit
+    sequential.
+- Avoid:
+  - treating a loading-state screenshot as layout evidence when the route marker
+    was never present.
+- Evidence:
+  - after route-marker waiting was added, PRJ-1226 `npm run
+    audit:ui-responsive` passed with `route_count=14`, `viewport_count=3`,
+    `screenshot_count=18`, and `failed_count=0`.
+
 ### 2026-05-14 - Do not parallelize dependent web build and UI audit
 - Context:
   - PRJ-1219 ran `npm run build` and `npm run audit:ui-responsive` at the

@@ -4,6 +4,23 @@ Last updated: 2026-05-14
 
 ## Active Focus
 
+The latest completed UI slice is `PRJ-1226`: tablet route header rhythm is
+verified. Authenticated tablet headers now align the Aviary wordmark, route
+identity, and account trigger in one compact row above the shared route rail,
+so tablet gives more first-viewport room back to route content without
+becoming a stretched phone header. Phone mobile headers, desktop sidebar, route
+definitions, route labels, account content, auth, API, backend, runtime, and
+deployment behavior stayed unchanged. Route-smoke now waits for each route
+marker after `#root` attaches before saving responsive screenshots, avoiding
+false loading-state captures. Validation passed with `node --check
+scripts/route-smoke.mjs`, `npm run build`, `npm run audit:ui-responsive`
+(`route_count=14`, `viewport_count=3`, `screenshot_count=18`,
+`failed_count=0`), `npm run audit:ui-navigation` (`step_count=4`,
+`failed_count=0`), and `--account-proof` (`account_proof.status=ok`,
+`step_count=1`, `failed_count=0`, `panel_visible=true`). Refreshed tablet
+Dashboard, tablet Tools, and mobile Dashboard screenshots were reviewed.
+Cleanup found no validation-owned browser/server leftovers.
+
 The latest completed UI slice is `PRJ-1225`: mobile/tablet account trigger
 polish is verified. The repeated authenticated route header now uses a
 dedicated Aviary shell material trigger instead of generic outline button

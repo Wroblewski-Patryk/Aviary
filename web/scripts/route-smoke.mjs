@@ -569,9 +569,16 @@ async function collectRenderedState(page, marker) {
   }, marker);
 }
 
-async function gotoRoute(page, baseUrl, routePath) {
+async function gotoRoute(page, baseUrl, routePath, marker = "") {
   await page.goto(`${baseUrl}${routePath}`, { waitUntil: "domcontentloaded", timeout: 30000 });
   await page.locator("#root").waitFor({ state: "attached", timeout: 10000 });
+  if (marker) {
+    await page.waitForFunction(
+      (expectedMarker) => document.documentElement.outerHTML.includes(expectedMarker),
+      marker,
+      { timeout: 10000 },
+    );
+  }
 }
 
 async function runNavigationProof(page, baseUrl) {
@@ -584,7 +591,7 @@ async function runNavigationProof(page, baseUrl) {
   const steps = [];
 
   await page.setViewportSize(RESPONSIVE_VIEWPORTS.mobile);
-  await gotoRoute(page, baseUrl, "/dashboard");
+  await gotoRoute(page, baseUrl, "/dashboard", "aion-dashboard-canvas");
 
   for (const step of proofSteps) {
     const locator = page.locator(`.aion-mobile-tabbar button[aria-label="${step.label}"]`);
@@ -631,7 +638,7 @@ async function runNavigationProof(page, baseUrl) {
 
 async function runAccountProof(page, baseUrl) {
   await page.setViewportSize(RESPONSIVE_VIEWPORTS.mobile);
-  await gotoRoute(page, baseUrl, "/dashboard");
+  await gotoRoute(page, baseUrl, "/dashboard", "aion-dashboard-canvas");
 
   const trigger = page.locator(".aion-mobile-account-button");
   const triggerCount = await trigger.count();
@@ -691,7 +698,7 @@ try {
     try {
       const page = await browser.newPage({ viewport: { width: 1366, height: 900 } });
       for (const route of ROUTES) {
-        await gotoRoute(page, baseUrl, route.path);
+        await gotoRoute(page, baseUrl, route.path, route.marker);
         const dom = await page.content();
         const state = await collectRenderedState(page, route.marker);
         const passed =
@@ -725,7 +732,7 @@ try {
           }
           await page.setViewportSize(viewport);
           for (const route of screenshotRoutes) {
-            await gotoRoute(page, baseUrl, route.path);
+            await gotoRoute(page, baseUrl, route.path, route.marker);
             const fileName = `${viewportName}-${routeSlug(route.path)}.png`;
             const screenshotPath = join(screenshotDir, fileName);
             const state = await collectRenderedState(page, route.marker);
