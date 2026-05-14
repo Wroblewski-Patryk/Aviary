@@ -142,6 +142,11 @@
   Tablet and mobile horizontal route rails should include subtle edge
   affordance, scroll snapping, and end padding so partial route chips read as
   intentional continuation instead of accidental clipping.
+- Mobile account trigger:
+  The authenticated mobile/tablet header account trigger should use the same
+  soft material language as the route shell and expose account panel state
+  through `aria-expanded`; avoid generic outline button styling in repeated
+  shell chrome.
 - Tools capability directory hierarchy:
   Tools cards should read as user-facing capability decisions before exposing
   implementation detail. Show readiness, availability, link state, provider
@@ -369,5 +374,8 @@
   workspace.
 - Tablet/mobile route rails should show a restrained right-edge continuation
   affordance and snap rhythm when the route set overflows the available width.
+- Mobile/tablet account controls should look like part of the shared shell
+  rather than generic form controls, and their panel toggle should be covered
+  by interaction proof.
 - This checkpoint supersedes the earlier fixed-bottom mobile nav assumption
   from the Personality clearance slice.

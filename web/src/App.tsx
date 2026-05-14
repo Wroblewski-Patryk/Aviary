@@ -4017,7 +4017,8 @@ export default function App() {
                 </div>
 
                 <button
-                  className={`btn btn-sm ${accountPanelOpen ? "btn-primary" : "btn-outline"}`}
+                  aria-expanded={accountPanelOpen}
+                  className={`aion-mobile-account-button ${accountPanelOpen ? "aion-mobile-account-button-active" : ""}`}
                   onClick={() => setAccountPanelOpen((value) => !value)}
                   type="button"
                 >
@@ -4043,7 +4044,7 @@ export default function App() {
             </header>
 
             {accountPanelOpen ? (
-              <section className="aion-panel-soft rounded-[1.8rem] p-4 xl:hidden">
+              <section className="aion-panel-soft aion-mobile-account-panel rounded-[1.8rem] p-4 xl:hidden">
                 <div className="grid gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
                   <div className="aion-panel-soft rounded-[1.4rem] p-4">
                     <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.common.signedInAs}</p>

@@ -4,6 +4,22 @@ Last updated: 2026-05-14
 
 ## Active Focus
 
+The latest completed UI slice is `PRJ-1225`: mobile/tablet account trigger
+polish is verified. The repeated authenticated route header now uses a
+dedicated Aviary shell material trigger instead of generic outline button
+styling, and the trigger exposes `aria-expanded` for account panel state.
+Route-smoke now also has an optional `--account-proof` interaction check that
+clicks the mobile account trigger and verifies the account panel appears. No
+auth, logout, account data, route definitions, backend, runtime, or deployment
+behavior changed. Validation passed with `node --check scripts/route-smoke.mjs`,
+`npm run build`, `npm run audit:ui-responsive` (`route_count=14`,
+`viewport_count=3`, `screenshot_count=18`, `failed_count=0`), `npm run
+audit:ui-navigation` (`step_count=4`, `failed_count=0`), and the new
+`--account-proof` (`account_proof.status=ok`, `step_count=1`,
+`failed_count=0`, `panel_visible=true`). Refreshed mobile Dashboard, mobile
+Settings, and tablet Dashboard screenshots were reviewed. Cleanup found no
+validation-owned browser/server leftovers.
+
 The latest completed UI slice is `PRJ-1224`: shared shell navigation
 affordance is verified. Tablet/mobile route rails now show a subtle
 right-edge continuation affordance with scroll snapping and end padding, so

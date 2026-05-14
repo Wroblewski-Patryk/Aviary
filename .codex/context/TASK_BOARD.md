@@ -4,6 +4,33 @@ Last updated: 2026-05-14
 
 ## Project Status Dashboard (2026-05-14)
 
+- `PRJ-1225` is DONE:
+  - `.codex/tasks/PRJ-1225-mobile-account-trigger-polish.md`
+- result:
+  - mobile/tablet account trigger now uses a dedicated Aviary shell material
+    style instead of generic outline button styling
+  - trigger exposes `aria-expanded` for account panel state
+  - route-smoke now has an optional `--account-proof` interaction check for
+    the mobile account trigger
+  - no auth, logout, account data, route definitions, backend, runtime
+    behavior, or deployment behavior changed
+- validation:
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - `npm run audit:ui-responsive` -> `route_count=14`,
+    `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+  - `npm run audit:ui-navigation` -> `step_count=4`, `failed_count=0`
+  - `node scripts/route-smoke.mjs --account-proof --report .codex/artifacts/prj1225-account-proof/report.json`
+    -> `account_proof.status=ok`, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - refreshed mobile Dashboard, mobile Settings, and tablet Dashboard
+    screenshots reviewed
+  - cleanup check -> no active `chrome-headless-shell`, no validation Node
+    processes, and no listener on `5173`
+- residual risk:
+  - deeper account panel layout/content polish remains a separate future slice
+    if screenshots show it needs more hierarchy work
+
 - `PRJ-1224` is DONE:
   - `.codex/tasks/PRJ-1224-shared-shell-navigation-affordance.md`
 - result:

@@ -4,6 +4,31 @@ Last updated: 2026-05-14
 
 ## NOW
 
+1. Continue from the mobile/tablet account trigger checkpoint:
+   - task:
+     `.codex/tasks/PRJ-1225-mobile-account-trigger-polish.md`
+   - result:
+     repeated authenticated mobile/tablet route headers now use a dedicated
+     Aviary shell material account trigger instead of generic outline button
+     styling, with `aria-expanded` reflecting panel state
+   - proof:
+     `node --check scripts/route-smoke.mjs` PASS; `npm run build` PASS;
+     `npm run audit:ui-responsive` PASS with `route_count=14`,
+     `viewport_count=3`, `screenshot_count=18`, `failed_count=0`; `npm run
+     audit:ui-navigation` PASS with `step_count=4`, `failed_count=0`;
+     `node scripts/route-smoke.mjs --account-proof --report .codex/artifacts/prj1225-account-proof/report.json`
+     PASS with `account_proof.status=ok`, `step_count=1`, `failed_count=0`,
+     `panel_visible=true`; refreshed mobile Dashboard, mobile Settings, and
+     tablet Dashboard screenshots reviewed; cleanup confirmed no validation
+     leftovers
+   - residual:
+     deeper account panel layout/content polish remains a separate future slice
+     if screenshots show it needs more hierarchy work
+   - next smallest slice:
+     choose the next polish slice from concrete screenshot evidence across
+     shared shell pieces, Dashboard, Chat, Tools, Settings, Home, or another
+     flagship route
+
 1. Continue from the shared shell navigation affordance checkpoint:
    - task:
      `.codex/tasks/PRJ-1224-shared-shell-navigation-affordance.md`

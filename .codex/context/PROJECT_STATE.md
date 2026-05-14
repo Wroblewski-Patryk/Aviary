@@ -6,6 +6,30 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-14: `PRJ-1225` polished the mobile/tablet account trigger:
+  - task:
+    - `.codex/tasks/PRJ-1225-mobile-account-trigger-polish.md`
+  - result:
+    - mobile/tablet account trigger now uses a dedicated Aviary shell material
+      style instead of generic outline button styling
+    - trigger exposes `aria-expanded` for account panel state
+    - route-smoke now has an optional `--account-proof` interaction check for
+      the mobile account trigger
+    - no auth, logout, account data, route definitions, backend, runtime, or
+      deployment behavior changed
+  - validation:
+    - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - `npm run audit:ui-responsive` -> `route_count=14`,
+      `viewport_count=3`, `screenshot_count=18`, `failed_count=0`
+    - `npm run audit:ui-navigation` -> `step_count=4`, `failed_count=0`
+    - `node scripts/route-smoke.mjs --account-proof --report .codex/artifacts/prj1225-account-proof/report.json`
+      -> `account_proof.status=ok`, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - refreshed mobile Dashboard, mobile Settings, and tablet Dashboard
+      screenshots reviewed
+    - cleanup found no validation-owned browser/server leftovers
+
 - 2026-05-14: `PRJ-1224` polished shared shell navigation affordance:
   - task:
     - `.codex/tasks/PRJ-1224-shared-shell-navigation-affordance.md`

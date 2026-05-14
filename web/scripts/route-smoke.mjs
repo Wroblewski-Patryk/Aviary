@@ -88,6 +88,7 @@ const screenshotViewportNames =
   requestedViewportNames.length > 0 ? requestedViewportNames : Object.keys(RESPONSIVE_VIEWPORTS);
 const failOnUiFindings = args.includes("--fail-on-ui-findings");
 const navigationProofEnabled = args.includes("--navigation-proof");
+const accountProofEnabled = args.includes("--account-proof");
 
 function jsonResponse(response, status, payload) {
   const body = JSON.stringify(payload);
@@ -628,6 +629,54 @@ async function runNavigationProof(page, baseUrl) {
   };
 }
 
+async function runAccountProof(page, baseUrl) {
+  await page.setViewportSize(RESPONSIVE_VIEWPORTS.mobile);
+  await gotoRoute(page, baseUrl, "/dashboard");
+
+  const trigger = page.locator(".aion-mobile-account-button");
+  const triggerCount = await trigger.count();
+  if (triggerCount !== 1) {
+    return {
+      viewport: "mobile",
+      status: "failed",
+      step_count: 1,
+      failed_count: 1,
+      steps: [
+        {
+          label: "Account trigger",
+          passed: false,
+          reason: `expected one mobile account trigger, found ${triggerCount}`,
+        },
+      ],
+    };
+  }
+
+  await trigger.click({ timeout: 10000 });
+  await page.waitForFunction(
+    () => document.querySelector(".aion-mobile-account-button")?.getAttribute("aria-expanded") === "true",
+    { timeout: 10000 },
+  );
+
+  const panelVisible = await page.locator(".aion-mobile-account-panel").isVisible({ timeout: 10000 });
+  const state = await collectRenderedState(page, "aion-dashboard-canvas");
+  const passed = panelVisible && state.markerFound && !state.frameworkOverlay && !state.horizontalOverflow;
+  return {
+    viewport: "mobile",
+    status: passed ? "ok" : "failed",
+    step_count: 1,
+    failed_count: passed ? 0 : 1,
+    steps: [
+      {
+        label: "Account trigger opens account panel",
+        rendered_path: new URL(page.url()).pathname,
+        passed,
+        panel_visible: panelVisible,
+        state,
+      },
+    ],
+  };
+}
+
 const server = await startServer();
 try {
   const address = server.address();
@@ -636,6 +685,7 @@ try {
   const results = [];
   const uiAuditResults = [];
   let navigationProof = null;
+  let accountProof = null;
   if (playwright?.chromium) {
     const browser = await playwright.chromium.launch({ headless: true });
     try {
@@ -700,6 +750,9 @@ try {
       if (navigationProofEnabled) {
         navigationProof = await runNavigationProof(page, baseUrl);
       }
+      if (accountProofEnabled) {
+        accountProof = await runAccountProof(page, baseUrl);
+      }
     } finally {
       await browser.close();
     }
@@ -709,6 +762,9 @@ try {
     }
     if (navigationProofEnabled) {
       throw new Error("Navigation interaction proof requires Playwright.");
+    }
+    if (accountProofEnabled) {
+      throw new Error("Account interaction proof requires Playwright.");
     }
     const executable = chromePath();
     for (const route of ROUTES) {
@@ -726,12 +782,16 @@ try {
   const failed = results.filter((result) => !result.passed);
   const failedUiAudit = uiAuditResults.filter((result) => !result.passed);
   const navigationProofFailed = Boolean(navigationProof && navigationProof.status !== "ok");
+  const accountProofFailed = Boolean(accountProof && accountProof.status !== "ok");
   const report = {
     kind: "frontend_route_smoke_report",
     schema_version: 2,
     route_count: results.length,
     status:
-      failed.length === 0 && (!failOnUiFindings || failedUiAudit.length === 0) && !navigationProofFailed
+      failed.length === 0 &&
+      (!failOnUiFindings || failedUiAudit.length === 0) &&
+      !navigationProofFailed &&
+      !accountProofFailed
         ? "ok"
         : "failed",
     results,
@@ -747,6 +807,7 @@ try {
         }
         : null,
     navigation_proof: navigationProof,
+    account_proof: accountProof,
   };
   if (reportPath) {
     mkdirSync(dirname(reportPath), { recursive: true });
@@ -754,7 +815,12 @@ try {
   }
   console.log(JSON.stringify(report, null, 2));
   process.exitCode =
-    failed.length === 0 && (!failOnUiFindings || failedUiAudit.length === 0) && !navigationProofFailed ? 0 : 1;
+    failed.length === 0 &&
+    (!failOnUiFindings || failedUiAudit.length === 0) &&
+    !navigationProofFailed &&
+    !accountProofFailed
+      ? 0
+      : 1;
 } finally {
   await new Promise((resolveClose) => server.close(resolveClose));
   process.exit(process.exitCode ?? 0);

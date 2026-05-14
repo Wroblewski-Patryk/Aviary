@@ -48,6 +48,14 @@ Every inferred row must name its source and use a cautious status.
 
 ## Current High-Signal Entries
 
+- `PRJ-1225` verified mobile/tablet account trigger polish: authenticated
+  route headers now use a dedicated Aviary shell material trigger with
+  `aria-expanded` state instead of generic outline button styling, and
+  route-smoke has an optional `--account-proof` that clicks the mobile account
+  trigger and verifies the panel appears. Web build, responsive audit,
+  navigation audit, account proof, screenshot review, and validation cleanup
+  passed.
+
 - `PRJ-1224` verified shared shell navigation affordance: tablet/mobile route
   rails now show a subtle continuation affordance, scroll snapping, and end
   padding while desktop sidebar structure and route behavior remain unchanged.
