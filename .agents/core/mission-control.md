@@ -20,6 +20,18 @@ Every mission must define current project state, target outcome, release
 objective, owned modules/files, included and excluded tasks, validation gates,
 checkpoint cadence, stop conditions, and expected handoff artifact.
 
+The default execution shape is coordinator-first. The active chat is the
+mission coordinator. For broad or multi-layer work, it should hire bounded
+subagents for separable responsibilities, integrate their reports or diffs, run
+the parent validation gate, and keep final `DONE` authority local.
+
+When the user asks to `pracuj dalej`, `rob dalej`, `kontynuuj`, `next`, `go`,
+or similar, the coordinator must translate architecture docs, planning docs,
+state files, UX references, risks, requirements, and known issues into
+`.agents/state/active-mission.md` before broad implementation starts. Decide
+which lanes stay local and which can be delegated. Treat subagent output as
+evidence, not approval.
+
 ## Work Unit Rules
 
 - Use one mission objective, not one random tiny task.
@@ -30,6 +42,9 @@ checkpoint cadence, stop conditions, and expected handoff artifact.
   evidence, or a clear blocked handoff.
 - If the mission uncovers a higher-priority P0 defect, record it in the module
   confidence ledger and either switch with explanation or stop for a decision.
+- If subagents report that work was blocked because no lane owned a necessary
+  responsibility, record the gap in `.agents/state/responsibility-learning.md`
+  and improve the next similar brief.
 
 ## Checkpoint Cadence
 

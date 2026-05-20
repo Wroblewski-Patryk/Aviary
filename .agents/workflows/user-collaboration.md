@@ -18,6 +18,35 @@ truthfulness, and small reversible steps.
 6. Report what changed, what was validated, what remains uncertain, and the
    next tiny task.
 
+## Continue Intent
+
+When the user says `pracuj dalej`, `rob dalej`, `kontynuuj`, `next`, `go`, or
+similar, treat it as permission to continue through the active coordinator
+mission, not as a request for a random tiny slice.
+
+1. Read `.agents/state/active-mission.md`, `.agents/state/next-steps.md`,
+   `.codex/context/TASK_BOARD.md`, and current risk/quality/module-confidence
+   rows.
+2. Choose exactly one mission checkpoint by priority:
+   active blocker > explicit next useful pass > missing proof > known issue >
+   oldest open responsibility-learning gap.
+3. Refresh `.agents/state/active-mission.md` before broad implementation.
+4. If the work has separable lanes, use
+   `.agents/workflows/responsibility-lanes.md` before delegating.
+5. If there is no safe next action, say so plainly and name the smallest
+   missing decision or evidence.
+
+## User Working Style
+
+- Be direct and evidence-first; do not soften real blockers into optimism.
+- Prefer clear hierarchy: coordinator, lanes, owners, proof, done-state.
+- When context is dense, summarize the chosen path and the rejected alternatives
+  briefly.
+- Keep reports concise but high signal, with concrete files, checks, risks, and
+  next checkpoint.
+- Store durable collaboration learnings in project state or agent workflow
+  files when they affect future work.
+
 ## Decision Points
 
 Ask before continuing when:

@@ -42,6 +42,31 @@
 - Checkpoint cadence:
 - Stop conditions:
 - Handoff expectation:
+
+## Responsibility Lanes
+
+| Lane | Owner | Source docs/state | Owned files/surfaces | Expected output | Required proof | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| Coordinator | Active chat | | Integration, task closure, memory updates | Parent decision and final acceptance | Parent validation gate | PLANNED |
+| Product/Requirements | | | | | | PLANNED |
+| Architecture | | | | | | PLANNED |
+| Backend/API | | | | | | PLANNED |
+| Frontend/UX | | | | | | PLANNED |
+| Data/Migrations | | | | | | PLANNED |
+| QA/Test | | | | | | PLANNED |
+| Security/Ops/Docs | | | | | | PLANNED |
+
+### Lane Checks
+
+- [ ] `.agents/state/active-mission.md` was created or refreshed for broad work.
+- [ ] `.agents/workflows/responsibility-lanes.md` was reviewed.
+- [ ] Every important responsibility has an owner or explicit omission.
+- [ ] No delegated write lanes overlap.
+- [ ] Each delegated lane has expected output and proof.
+- [ ] Missing ownership/evidence/context gaps will be recorded in
+      `.agents/state/responsibility-learning.md`.
+- [ ] Process eval will be recorded in `.agents/state/agent-evals.md` if this
+      is broad, repeated, partial, or subagent-heavy work.
 ## Context
 Where this work sits in the current project flow and architecture.
 

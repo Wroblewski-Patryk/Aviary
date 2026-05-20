@@ -288,3 +288,15 @@ handoff:
 - module confidence changes;
 - known broken or unverified journeys;
 - next checkpoint or mission.
+
+## Coordinator Memory
+
+For broad Aviary / Personality work, also update or review:
+
+- `.agents/state/active-mission.md` for the current coordinator mission,
+  source rows, lanes, delegation plan, and parent validation gate;
+- `.agents/workflows/responsibility-lanes.md` for standard lane selection and
+  lane brief/report templates;
+- `.agents/state/responsibility-learning.md` when a missing lane, unclear
+  owner, bad split, missing evidence, or missing context should improve future
+  missions.

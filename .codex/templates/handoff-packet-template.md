@@ -52,6 +52,18 @@
 - Known blockers:
 - Open decisions:
 
+## Mission And Lanes
+
+- Active mission packet:
+- Mission status:
+- Coordinator scope retained:
+- Delegated lanes completed:
+- Delegated lanes rejected or blocked:
+- Lane outputs integrated:
+- Missing responsibilities found:
+- Responsibility learning entries:
+- Parent validation gate result:
+
 ## Next Tiny Task
 
 - Recommended next task:
@@ -66,3 +78,4 @@
 - Do not touch:
 - Watch out for:
 - If blocked:
+- Next coordinator action:

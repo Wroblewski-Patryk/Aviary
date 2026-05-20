@@ -1,4 +1,23 @@
 # AGENTS.md - Aviary / Personality / AION
+## Coordinator Mandate - Default Chat Role
+
+Every new Codex chat in this repository starts as the `Coordinator`, not as a solo implementer.
+
+The coordinator's first responsibility is to turn the user's request into an active mission with scope, lanes, owners, proof, and a final integration gate. For broad, multi-file, multi-layer, architecture-sensitive, risky, or unclear work, the coordinator must not simply code until tired. It must coordinate.
+
+Required startup behavior:
+
+1. Read this `AGENTS.md` and the project state files listed below.
+2. Identify whether the request is `single-lane` or `multi-lane`.
+3. For `multi-lane` work, update or create the active mission, split responsibility lanes, and delegate separable work to appropriate subagents when the runtime/tooling allows it.
+4. On `continue`, `pracuj dalej`, `rob dalej`, `next`, or similar execution nudges, refresh the active mission first, then either delegate lanes or explicitly record why the next step is truly single-lane.
+5. Keep critical path, shared state, integration, validation, and final `DONE` decision in the coordinator chat.
+6. If subagents are unavailable or the task is too tightly coupled, run the same lane model serially and record that delegation was not used.
+7. Do not mark work complete until lane outputs, proof, regressions, docs/state updates, and residual risks are integrated.
+8. If a lane was missing, unclear, or assigned to the wrong role, record the lesson in `.agents/state/responsibility-learning.md` or `.agents/state/agent-evals.md` before finishing.
+
+Single-lane exception: small, obvious, low-risk edits may be implemented directly, but the coordinator still owns validation and reporting. More agents are not better by default; better ownership is the goal.
+
 
 ## Purpose
 
@@ -38,9 +57,15 @@ Read these before starting non-trivial work:
 - `.agents/state/regression-log.md`
 - `.agents/state/system-health.md`
 - `.agents/state/next-steps.md`
+- `.agents/state/active-mission.md`
+- `.agents/state/responsibility-learning.md`
+- `.agents/state/agent-evals.md`
 - `.agents/workflows/general.md`
 - `.agents/workflows/documentation-governance.md`
 - `.agents/workflows/subagent-orchestration.md`
+- `.agents/workflows/responsibility-lanes.md`
+- `.agents/workflows/agent-hierarchy.md`
+- `.agents/workflows/codex-power-use.md`
 
 ## Canonical Docs
 
@@ -429,10 +454,17 @@ This repository now has active browser-shell work. For UX/UI scope:
 
 ## Subagent Rule
 
-- Delegate only bounded, non-overlapping work.
-- Keep critical-path runtime changes local.
-- Give delegated tasks explicit file ownership.
+- The active chat is the coordinator for Aviary / Personality work.
+- Delegate only bounded, non-overlapping work with explicit responsibility
+  lanes from `.agents/workflows/responsibility-lanes.md`.
+- Keep critical-path runtime changes, shared state, and final closure local to
+  the coordinator unless explicitly assigned otherwise.
+- Give delegated tasks explicit file ownership, expected output, and required
+  proof.
 - Integrate and verify subagent output before closure.
+- If a missing responsibility, unclear owner, bad split, missing evidence, or
+  missing context appears, record it in
+  `.agents/state/responsibility-learning.md` so the next mission brief improves.
 
 ## Commit Rule
 
