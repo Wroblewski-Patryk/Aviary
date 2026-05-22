@@ -32,49 +32,49 @@
       "path": "/memory",
       "marker": "aion-memory-canvas",
       "authenticated": true,
-      "screenshot": false,
+      "screenshot": true,
       "canonicalSurface": "module"
     },
     {
       "path": "/reflections",
       "marker": "aion-reflections-canvas",
       "authenticated": true,
-      "screenshot": false,
+      "screenshot": true,
       "canonicalSurface": "module"
     },
     {
       "path": "/plans",
       "marker": "aion-plans-canvas",
       "authenticated": true,
-      "screenshot": false,
+      "screenshot": true,
       "canonicalSurface": "module"
     },
     {
       "path": "/goals",
       "marker": "aion-goals-canvas",
       "authenticated": true,
-      "screenshot": false,
+      "screenshot": true,
       "canonicalSurface": "module"
     },
     {
       "path": "/insights",
       "marker": "aion-insights-canvas",
       "authenticated": true,
-      "screenshot": false,
+      "screenshot": true,
       "canonicalSurface": "module"
     },
     {
       "path": "/automations",
       "marker": "aion-automations-canvas",
       "authenticated": true,
-      "screenshot": false,
+      "screenshot": true,
       "canonicalSurface": "module"
     },
     {
       "path": "/integrations",
       "marker": "aion-integrations-canvas",
       "authenticated": true,
-      "screenshot": false,
+      "screenshot": true,
       "canonicalSurface": "module"
     },
     {

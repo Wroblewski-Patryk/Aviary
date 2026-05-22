@@ -46,6 +46,23 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1233` completes the v1.2 web beauty polish checkpoint for
+  `AVIARY-WEB-RESP-001`: Home, Chat, Personality, Dashboard-adjacent module
+  surfaces, Tools, Automations, and Integrations were refined from read-only
+  UX/flagship/module/QA lane evidence. Mobile Chat now starts conversation
+  sooner by reducing pre-thread cognitive cards; mobile Home removes duplicate
+  hero proof chips; mobile Personality reduces figure-covering callouts;
+  module routes use compact mobile stat rows; Tools mobile density is reduced;
+  Automations/Integrations desktop scenic whitespace is tightened; all module
+  routes are now part of the screenshot manifest contract. Evidence:
+  `node --check scripts/route-smoke.mjs` PASS; `npm run build` PASS; route
+  smoke `route_count=14`, `status=ok`; full responsive screenshot gate
+  `viewport_count=3`, `screenshot_count=42`, `failed_count=0`; navigation
+  proof `status=ok`, `step_count=4`, `failed_count=0`; account proof
+  `status=ok`, `step_count=1`, `failed_count=0`; visual review covered mobile
+  Home, Chat, Personality, Memory, Tools, and desktop Chat/Integrations.
+  Production v1.2 release is not claimed from this local branch proof.
+
 - `PRJ-1232` starts the v1.2 canonical web UI baseline for future mobile app
   transfer. The first verified foundation slice added a shared
   `web/src/route-manifest.json`, derived web route constants from it, updated

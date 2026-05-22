@@ -4,6 +4,43 @@ Last updated: 2026-05-22
 
 ## Project Status Dashboard (2026-05-22)
 
+- `PRJ-1233` is DONE:
+  - `.codex/tasks/PRJ-1233-v12-web-beauty-polish-pass.md`
+- objective:
+  - continue beyond the verified v1.2 foundation until the full web app feels
+    simpler, more beautiful, and closer to the strongest Home/Chat/Personality
+    reference direction across mobile and desktop
+- current result:
+  - UX spec, flagship frontend, module-surface, and QA gate lanes completed
+  - mobile Chat now gets to the conversation sooner by reducing the pre-thread
+    cognitive belt to the highest-value cards
+  - mobile Home removes duplicated hero proof chips while preserving the
+    scenic hero, CTAs, callouts, feature bridge, and trust closure
+  - mobile Personality shows fewer callout cards over the figure, keeping the
+    embodied map as the main visual object
+  - Chat tablet/mobile persona notes are quieter, so the transcript remains
+    the primary surface
+  - module routes now use compact mobile stat rows, revealing each route's
+    unique panel earlier
+  - Tools mobile summary/detail density was reduced, and desktop
+    Automations/Integrations scenic panels were tightened
+  - route manifest now marks all module routes as screenshot surfaces
+- validation:
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - route smoke -> `route_count=14`, `status=ok`
+  - full responsive screenshot gate -> `viewport_count=3`,
+    `screenshot_count=42`, `failed_count=0`
+  - navigation proof -> `step_count=4`, `failed_count=0`
+  - account proof -> `step_count=1`, `failed_count=0`
+  - screenshot review covered mobile Home, Chat, Personality, Memory, Tools,
+    and desktop Chat/Integrations
+- release boundary:
+  - this completes a local v1.2 web polish checkpoint on
+    `codex/v12-web-canonical-ui`
+  - production release still requires a separate release candidate promotion
+    mission
+
 - `PRJ-1232` is DONE:
   - `.codex/tasks/PRJ-1232-v12-web-canonical-ui-system.md`
 - objective:

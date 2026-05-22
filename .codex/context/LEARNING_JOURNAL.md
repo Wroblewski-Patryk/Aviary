@@ -25,6 +25,38 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-22 - Absolute artifact paths prevent stray route-smoke outputs
+- Context:
+  - PRJ-1233 ran focused and full web route-smoke screenshot gates from inside
+    `web/` while writing reports for a broad v1.2 UI polish pass.
+- Symptom:
+  - a focused pass using a relative artifact root created proof outside the
+    repository-local `.codex/artifacts/` tree, and the first cleanup scan found
+    validation-owned Vite preview and `chrome-headless-shell` processes still
+    running.
+- Root cause:
+  - relative report paths are easy to misresolve when the harness changes its
+    working directory or project root assumptions; validation cleanup must be
+    checked even after a green route-smoke exit.
+- Guardrail:
+  - for broad UI gates, pass an absolute repository-local artifact path and
+    always run the narrow process cleanup checks for `route-smoke`, Vite
+    preview, `chrome-headless-shell`, `chromium`, and listeners on `5173` or
+    `4173`.
+- Preferred pattern:
+  - set `$ArtifactRoot` to an absolute path under
+    `C:\Personal\Projekty\Aplikacje\Personality\.codex\artifacts\...`, run the
+    gate, then terminate only validation-owned PIDs discovered by the cleanup
+    scan.
+- Avoid:
+  - relying on a relative artifact path from inside `web/` for final evidence
+    or ending a UI task before checking for browser/dev-server leftovers.
+- Evidence:
+  - PRJ-1233 removed the stray focused artifact directory, stopped the
+    validation-owned Vite preview and four `chrome-headless-shell` processes,
+    reran cleanup checks, and confirmed no validation listener remained on
+    `5173` or `4173`.
+
 ### 2026-05-22 - Fallback route smoke must prove authenticated SPA markers
 - Context:
   - PRJ-1230 refreshed selected-scope v1 readiness and reran the full web

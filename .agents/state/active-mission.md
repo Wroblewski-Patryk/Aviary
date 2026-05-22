@@ -9,6 +9,75 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1233-v12-web-beauty-polish-pass
+- Status: COMPLETED
+- Selected objective: continue past the verified v1.2 web foundation into a
+  full visual polish pass so Home, Chat, Personality, Dashboard, and every
+  authenticated module route feel simple, beautiful, coherent, and ready to
+  inform the future mobile app.
+- Why this mission now: the user explicitly asked the coordinator team to keep
+  working until all web views are wonderful on mobile and desktop, using the
+  strongest reference screens as the quality bar rather than stopping at smoke
+  correctness.
+- Release objective or product milestone advanced: v1.2 web visual readiness
+  and mobile-transfer baseline.
+- First/next checkpoint: v1.2 web beauty polish checkpoint is complete on the
+  working branch. Next mission should either prepare a v1.2 release candidate
+  or run a narrower taste pass only if new screenshots/user notes identify a
+  specific remaining surface.
+- Stop conditions: canonical images conflict with accepted user notes; a view
+  needs product behavior instead of visual polish; responsive smoke reports
+  overflow/clipping; a change would require route architecture or backend
+  contract changes.
+- Parent validation gate: `node --check scripts/route-smoke.mjs`,
+  `npm run build`, route smoke, full screenshot gate for all 14 routes across
+  desktop/tablet/mobile with zero UI failures, navigation proof, account
+  proof, visual screenshot review, and cleanup checks.
+
+## PRJ-1233 Current Evidence
+
+- Branch: `codex/v12-web-canonical-ui`
+- Lane status: UX spec, flagship frontend, module-surface, and QA visual gate
+  lanes completed and integrated into
+  `.codex/tasks/PRJ-1233-v12-web-beauty-polish-pass.md`.
+- Implementation:
+  - mobile Chat now reduces pre-thread cognitive cards so the transcript
+    appears sooner
+  - mobile Home hides duplicated hero micro-proof chips while preserving the
+    scenic hero, CTAs, callouts, feature bridge, and trust closure
+  - mobile Personality reduces figure-covering callouts
+  - tablet/mobile Chat persona notes are quieter
+  - module routes use compact mobile stat rows, bringing unique route content
+    higher in the first scroll
+  - Tools mobile summary/detail density is reduced
+  - Automations/Integrations desktop scenic whitespace is tightened
+  - all module routes are included in the route-manifest screenshot contract
+- Validation:
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - route smoke -> `route_count=14`, `status=ok`
+  - full responsive screenshot gate -> `viewport_count=3`,
+    `screenshot_count=42`, `failed_count=0`
+  - navigation proof -> `step_count=4`, `failed_count=0`
+  - account proof -> `step_count=1`, `failed_count=0`
+  - screenshot review covered mobile Home, Chat, Personality, Memory, Tools,
+    and desktop Chat/Integrations.
+- Artifacts:
+  - `.codex/artifacts/prj1233-web-ui-polish-pass/route-smoke-report.json`
+  - `.codex/artifacts/prj1233-web-ui-polish-pass/screenshot-gate-report.json`
+  - `.codex/artifacts/prj1233-web-ui-polish-pass/navigation-proof-report.json`
+  - `.codex/artifacts/prj1233-web-ui-polish-pass/account-proof-report.json`
+  - `.codex/artifacts/prj1233-web-ui-polish-pass/screenshots/`
+
+## PRJ-1233 Result
+
+- Final verdict: DONE for the local v1.2 web beauty polish checkpoint.
+- Release caveat: this is a verified local web branch checkpoint, not a
+  production v1.2 release. Production release requires a separate candidate
+  promotion mission with deploy parity and production smoke.
+
+## Previous Mission
+
 - Mission ID: PRJ-1232-v12-web-canonical-ui-system
 - Status: COMPLETED
 - Selected objective: build v1.2 web UI toward the canonical documentation

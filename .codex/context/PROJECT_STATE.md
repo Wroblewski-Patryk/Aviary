@@ -6,6 +6,52 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-22: `PRJ-1233` completed the v1.2 web beauty polish pass:
+  - task:
+    - `.codex/tasks/PRJ-1233-v12-web-beauty-polish-pass.md`
+  - result:
+    - coordinated UX spec, flagship frontend, module-surface, and QA gate
+      lanes after the user asked for all web views to become simpler,
+      beautiful, and mobile-transfer ready
+    - preserved the canonical Home, Chat, Personality, Dashboard, and Sidebar
+      references as the visual source of truth
+    - simplified mobile Chat first-read by showing only the highest-value
+      cognitive cards before the transcript
+    - reduced mobile Home proof duplication by hiding hero micro-proof chips
+      while preserving CTA, scenic callouts, feature bridge, and trust closure
+    - simplified mobile Personality by reducing callout clutter so the
+      embodied map remains the hero instead of a label board
+    - tightened tablet/mobile Chat persona notes so supporting context no
+      longer competes with the transcript
+    - compressed mobile module stat rows so `/memory`, `/reflections`,
+      `/plans`, `/goals`, `/insights`, `/automations`, and `/integrations`
+      reveal their unique content earlier
+    - reduced Tools mobile summary/detail density and reduced
+      Automations/Integrations desktop scenic whitespace
+    - updated `web/src/route-manifest.json` so module routes are included in
+      the durable screenshot contract
+  - validation:
+    - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - route smoke -> `route_count=14`, `status=ok`
+    - full responsive screenshot gate ->
+      `viewport_count=3`, `screenshot_count=42`, `failed_count=0`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`
+    - screenshots reviewed for mobile Home, Chat, Personality, Memory, Tools,
+      and desktop Chat/Integrations
+  - artifacts:
+    - `.codex/artifacts/prj1233-web-ui-polish-pass/route-smoke-report.json`
+    - `.codex/artifacts/prj1233-web-ui-polish-pass/screenshot-gate-report.json`
+    - `.codex/artifacts/prj1233-web-ui-polish-pass/navigation-proof-report.json`
+    - `.codex/artifacts/prj1233-web-ui-polish-pass/account-proof-report.json`
+    - `.codex/artifacts/prj1233-web-ui-polish-pass/screenshots/`
+  - release boundary:
+    - this is a verified local web UI polish checkpoint on
+      `codex/v12-web-canonical-ui`
+    - production v1.2 release still requires a separate candidate promotion
+      mission
+
 - 2026-05-22: `PRJ-1232` completed v1.2 canonical web UI checkpoints:
   - task:
     - `.codex/tasks/PRJ-1232-v12-web-canonical-ui-system.md`
