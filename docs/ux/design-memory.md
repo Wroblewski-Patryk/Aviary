@@ -1,5 +1,22 @@
 # Design Memory
 
+## 2026-05-23 - Flagship last-mile polish checkpoint
+
+- Keep desktop utility chrome visually secondary to Dashboard, Chat, and
+  Personality. It may frame the route, but it should not read as a heavy admin
+  workspace above the flagship scene.
+- For mobile Personality, preserve the embodied-map completeness enough that
+  `identity`, `planning`, `learned knowledge`, and `skills` remain locatable;
+  if space is tight, use compact callout chips instead of hiding every
+  non-primary label.
+- For mobile Chat, do not automatically restore all six cognitive cards after
+  PRJ-1233's conversation-first simplification. Treat that as a product taste
+  decision because it trades canonical context completeness against immediate
+  access to the transcript and composer.
+- When accessibility semantics are improved in the shared shell, prefer
+  zero-visual-drift attributes and focus rings that reuse existing Aviary teal
+  rather than adding new control chrome.
+
 ## Approved Reuse Patterns
 
 - Conversation shell:

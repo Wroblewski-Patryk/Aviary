@@ -1,6 +1,6 @@
 # Module Confidence Ledger
 
-Last updated: 2026-05-22
+Last updated: 2026-05-23
 
 ## Project Alias
 
@@ -45,6 +45,23 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 | AVIARY-BLOCKER-001 | External providers | Provider credential activation smoke for connector readiness | P1 | DEFERRED | Medium | `PRJ-933`; `PRJ-1197`; `docs/planning/current-v1-release-boundary.md` keeps organizer activation outside the achieved core/web-supported marker; `/app/tools/overview` now excludes future-only Trello/Nest placeholders and focused tools-overview test passed. | External credentials/input needed before an expanded organizer launch claim; future provider candidates need bounded runtime contracts before appearing in the active tools catalog. | Run provider activation smoke only when credentials exist and organizer scope expands. | Ops/Release + QA/Test | 2026-05-14 |
 
 ## Recent Evidence Notes
+
+- `PRJ-1234` completes the local v1.2 flagship last-mile UX checkpoint for
+  `AVIARY-WEB-RESP-001`: coordinated UX gap, design-system, and QA gate lanes
+  were integrated into a scoped web polish slice. Desktop utility chrome is
+  lighter; Chat stage/portrait support spacing is calmer; Dashboard guidance
+  and wide-screen side-column pacing were tightened; mobile Personality
+  restores `learned knowledge` as a compact embodied-map callout; Personality
+  side-stack hierarchy now emphasizes conscious state while quieting recent
+  activity; route/account/disclosure accessibility semantics were improved.
+  Evidence: `node --check scripts/route-smoke.mjs` PASS; `npm run build`
+  PASS; route smoke `route_count=14`, `status=ok`; full responsive screenshot
+  gate `viewport_count=3`, `screenshot_count=42`, `failed_count=0`;
+  navigation proof `status=ok`, `step_count=4`, `failed_count=0`; account
+  proof `status=ok`, `step_count=1`, `failed_count=0`, `panel_visible=true`;
+  `git diff --check` passed with LF/CRLF warnings only; cleanup found no
+  validation-owned browser/dev-server leftovers. Production v1.2 release is
+  not claimed from this local branch proof.
 
 - `PRJ-1233` completes the v1.2 web beauty polish checkpoint for
   `AVIARY-WEB-RESP-001`: Home, Chat, Personality, Dashboard-adjacent module

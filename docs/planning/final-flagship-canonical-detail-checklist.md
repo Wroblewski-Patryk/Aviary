@@ -1,5 +1,12 @@
 # Final Flagship Canonical Detail Checklist
 
+Status update 2026-05-23: `PRJ-1234` completed the local last-mile web UX
+checkpoint with build, 14-route smoke, 42 responsive screenshots, navigation
+proof, account proof, manual flagship screenshot review, and cleanup checks
+passing. Remaining work is not a blocker for the local checkpoint: mobile Chat
+full six-card context and deeper mobile shell compaction are product taste
+decisions before a future parity slice.
+
 ## Purpose
 
 This checklist translates the remaining visual drift between the current

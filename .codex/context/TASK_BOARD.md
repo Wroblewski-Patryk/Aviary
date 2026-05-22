@@ -1,6 +1,43 @@
 # TASK_BOARD
 
-Last updated: 2026-05-22
+Last updated: 2026-05-23
+
+## Project Status Dashboard (2026-05-23)
+
+- `PRJ-1234` is DONE:
+  - `.codex/tasks/PRJ-1234-v12-flagship-last-mile-polish.md`
+- objective:
+  - close the final flagship canonical-detail pass for Dashboard, Chat,
+    Personality, and shared shell without disturbing backend/runtime scope
+- current result:
+  - UX gap, design-system, and QA gate lanes completed read-only and integrated
+  - desktop utility chrome is lighter and more inset
+  - Chat desktop support/persona panel is calmer and sits closer to the
+    conversation instrument
+  - Dashboard guidance hierarchy is clearer and wide-screen right-column
+    vertical drag is reduced
+  - mobile Personality restores `learned knowledge` as a compact map callout
+  - Personality side stack now gives conscious state stronger anchor weight and
+    makes recent activity quieter
+  - route switchers expose `aria-current`; account triggers expose
+    `aria-expanded`, `aria-haspopup`, and `aria-controls`; disclosure summaries
+    have visible focus rings
+- validation:
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - route smoke -> `route_count=14`, `status=ok`
+  - full responsive screenshot gate -> `viewport_count=3`,
+    `screenshot_count=42`, `failed_count=0`
+  - navigation proof -> `step_count=4`, `failed_count=0`
+  - account proof -> `step_count=1`, `failed_count=0`, `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warnings only
+  - cleanup check -> no validation-owned browser, route-smoke, dev-server, or
+    `5173`/`4173` listener leftovers
+- release boundary:
+  - this completes a local v1.2 flagship last-mile UX checkpoint on
+    `codex/v12-web-canonical-ui`
+  - production v1.2 release still requires a separate release candidate
+    promotion mission
 
 ## Project Status Dashboard (2026-05-22)
 

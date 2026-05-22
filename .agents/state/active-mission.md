@@ -1,6 +1,6 @@
 # Active Mission Packet
 
-Last updated: 2026-05-22
+Last updated: 2026-05-23
 
 Use this file as the first operational router for `pracuj dalej`, `rob dalej`,
 `kontynuuj`, `next`, and similar continuation nudges. Keep it short enough that
@@ -8,6 +8,73 @@ a fresh coordinator can choose the next checkpoint without rereading the whole
 repository history.
 
 ## Current Mission
+
+- Mission ID: PRJ-1234-v12-flagship-last-mile-polish
+- Status: COMPLETED
+- Selected objective: close the final flagship canonical-detail pass for
+  Dashboard, Chat, Personality, and shared shell so the v1.2 web app feels
+  polished enough to be a credible mobile-app foundation and daily personality
+  companion.
+- Why this mission now: PRJ-1233 is green, but the repository still has a
+  dedicated last-mile checklist for structural rhythm, crop/atmosphere, and
+  final proof on the strongest reference-driven surfaces.
+- Release objective or product milestone advanced: local v1.2 web UX
+  release-candidate confidence.
+- First/next checkpoint: local v1.2 flagship last-mile checkpoint is complete.
+  Next mission should either prepare a v1.2 release candidate promotion or run
+  a product-decision pass for mobile Chat/Personality parity choices that were
+  intentionally not forced in this CSS slice.
+- Stop conditions: canonical references conflict with accepted user notes; a
+  view needs product behavior instead of CSS/semantics polish; responsive smoke
+  reports overflow/clipping; a change would require backend, API, database,
+  runtime, or production deployment work.
+- Parent validation gate: `node --check scripts/route-smoke.mjs`,
+  `npm run build`, route smoke for 14 routes, full screenshot gate for all 14
+  routes across desktop/tablet/mobile with zero UI failures, navigation proof,
+  account proof, manual screenshot review of touched flagship routes, and
+  cleanup checks.
+
+## PRJ-1234 Current Evidence
+
+- Branch: `codex/v12-web-canonical-ui`
+- Lane status:
+  - UX gap, design-system, and QA/Test lanes completed read-only.
+  - Coordinator integrated the safe CSS/accessibility slice and final gate.
+- Implementation:
+  - desktop utility chrome is lighter and less admin-like
+  - Chat stage and portrait support panel spacing/elevation are calmer
+  - Dashboard guidance hierarchy and wide-screen side-column pacing are tighter
+  - mobile Personality restores learned-knowledge as a compact map callout
+  - Personality side-stack hierarchy now emphasizes conscious state and quiets
+    recent activity
+  - route/account/disclosure accessibility semantics were improved
+  - `--aion-display` now aliases the existing display font token
+- Validation:
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - route smoke -> `route_count=14`, `status=ok`
+  - full responsive screenshot gate -> `viewport_count=3`,
+    `screenshot_count=42`, `failed_count=0`
+  - navigation proof -> `step_count=4`, `failed_count=0`
+  - account proof -> `step_count=1`, `failed_count=0`, `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warnings only
+  - cleanup checks -> no `chrome-headless-shell`, no route-smoke/dev-server
+    process, and no listeners on `5173` or `4173`
+- Artifacts:
+  - `.codex/artifacts/prj1234-flagship-last-mile-polish/route-smoke-report.json`
+  - `.codex/artifacts/prj1234-flagship-last-mile-polish/screenshot-gate-report.json`
+  - `.codex/artifacts/prj1234-flagship-last-mile-polish/navigation-proof-report.json`
+  - `.codex/artifacts/prj1234-flagship-last-mile-polish/account-proof-report.json`
+  - `.codex/artifacts/prj1234-flagship-last-mile-polish/screenshots/`
+
+## PRJ-1234 Result
+
+- Final verdict: DONE for the local v1.2 flagship last-mile UX checkpoint.
+- Release caveat: this is a verified local web branch checkpoint, not a
+  production v1.2 release. Production release requires a separate candidate
+  promotion mission with deploy parity and production smoke.
+
+## Previous Mission
 
 - Mission ID: PRJ-1233-v12-web-beauty-polish-pass
 - Status: COMPLETED

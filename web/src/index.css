@@ -7,6 +7,7 @@
   color-scheme: light;
   --font-body: "Inter", sans-serif;
   --font-display: "Cormorant Garamond", serif;
+  --aion-display: var(--font-display);
   --aion-brand-gold: #c49359;
   --aion-bg: #f7f1ea;
   --aion-bg-soft: #fcf8f2;
@@ -1549,17 +1550,17 @@ body {
 }
 
 .aion-utility-bar {
-  grid-template-columns: auto minmax(23rem, 1fr) auto;
+  grid-template-columns: auto minmax(22rem, 1fr) auto;
   align-items: center;
-  gap: 0.7rem;
-  min-height: 3.25rem;
-  padding: 0.42rem 0.54rem;
-  border: 1px solid rgba(88, 67, 52, 0.05);
-  border-radius: 1.16rem;
+  gap: 0.58rem;
+  min-height: 3rem;
+  padding: 0.34rem 0.44rem;
+  border: 1px solid rgba(88, 67, 52, 0.045);
+  border-radius: 1.05rem;
   background:
-    linear-gradient(180deg, rgba(255, 252, 247, 0.9), rgba(247, 239, 228, 0.68));
+    linear-gradient(180deg, rgba(255, 252, 247, 0.82), rgba(247, 239, 228, 0.56));
   box-shadow:
-    0 12px 26px rgba(78, 58, 43, 0.042),
+    0 8px 20px rgba(78, 58, 43, 0.032),
     inset 0 1px 0 rgba(255, 255, 255, 0.28);
   backdrop-filter: blur(20px);
 }
@@ -1567,7 +1568,7 @@ body {
 .aion-utility-context {
   display: flex;
   align-items: center;
-  gap: 0.72rem;
+  gap: 0.58rem;
   min-width: 0;
 }
 
@@ -1600,16 +1601,16 @@ body {
 .aion-utility-context-label {
   margin: 0;
   color: rgba(110, 98, 88, 0.82);
-  font-size: 0.68rem;
+  font-size: 0.61rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
 .aion-utility-context-copy {
-  margin: 0.14rem 0 0;
+  margin: 0.08rem 0 0;
   color: var(--aion-ink);
-  font-size: 0.86rem;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
@@ -1617,8 +1618,8 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 2.32rem;
-  padding: 0.44rem 3.55rem 0.44rem 2.22rem;
+  min-height: 2.14rem;
+  padding: 0.34rem 3.35rem 0.34rem 2.06rem;
   border: 1px solid rgba(88, 67, 52, 0.05);
   border-radius: 0.86rem;
   background: rgba(255, 251, 245, 0.64);
@@ -2533,7 +2534,7 @@ body {
 .aion-chat-stage {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-  gap: 0.78rem;
+  gap: 0.68rem;
   min-height: 0;
   position: relative;
   z-index: 1;
@@ -3317,7 +3318,7 @@ body {
   overflow: hidden;
   background:
     linear-gradient(180deg, rgba(248, 241, 230, 0.18), rgba(238, 229, 217, 0.08));
-  box-shadow: 0 14px 32px rgba(78, 58, 43, 0.055);
+  box-shadow: 0 12px 26px rgba(78, 58, 43, 0.045);
 }
 
 .aion-chat-portrait-panel-elevated {
@@ -3912,7 +3913,7 @@ body {
   align-items: start;
   border: 1px solid rgba(88, 67, 52, 0.08);
   border-radius: 1.06rem;
-  padding: 0.48rem 0.54rem;
+  padding: 0.46rem 0.52rem;
   background: rgba(255, 255, 255, 0.74);
   box-shadow:
     0 7px 16px rgba(78, 58, 43, 0.024),
@@ -3922,7 +3923,9 @@ body {
 .aion-dashboard-guidance-row-lead {
   background:
     linear-gradient(180deg, rgba(236, 247, 244, 0.78), rgba(255, 255, 255, 0.86));
-  border-color: rgba(142, 184, 178, 0.22);
+  border-color: rgba(142, 184, 178, 0.28);
+  padding-block: 0.58rem;
+  box-shadow: 0 10px 18px rgba(111, 149, 146, 0.05);
 }
 
 .aion-dashboard-guidance-token {
@@ -4111,6 +4114,7 @@ body {
 
 .aion-dashboard-recent-panel-compact {
   padding: 0.66rem;
+  opacity: 0.94;
   background:
     linear-gradient(180deg, rgba(255, 252, 247, 0.88), rgba(246, 238, 227, 0.76));
   box-shadow:
@@ -4214,7 +4218,7 @@ body {
 }
 
 .aion-dashboard-guidance-intention {
-  min-height: 7.1rem;
+  min-height: 7.6rem;
 }
 
 .aion-dashboard-flow-panel,
@@ -6964,6 +6968,8 @@ body {
 .aion-personality-side-panel-conscious {
   background:
     linear-gradient(180deg, rgba(236, 247, 244, 0.72), rgba(255, 251, 245, 0.86));
+  border-color: rgba(142, 184, 178, 0.2);
+  box-shadow: 0 18px 32px rgba(111, 149, 146, 0.07);
 }
 
 .aion-personality-side-panel-subconscious {
@@ -6979,6 +6985,8 @@ body {
 .aion-personality-side-panel-recent-quiet {
   background:
     linear-gradient(180deg, rgba(255, 252, 247, 0.84), rgba(246, 239, 230, 0.7));
+  opacity: 0.9;
+  box-shadow: 0 10px 20px rgba(78, 58, 43, 0.032);
 }
 
 .aion-personality-side-panel::after {
@@ -7427,6 +7435,12 @@ body {
 
 .aion-tools-details summary {
   padding: 0.58rem 0.72rem !important;
+}
+
+.aion-tools-details summary:focus-visible,
+.aion-settings-danger-summary:focus-visible {
+  outline: 2px solid rgba(95, 143, 147, 0.5);
+  outline-offset: 0.18rem;
 }
 
 .aion-tools-details span {
@@ -8092,7 +8106,11 @@ body {
 
   .aion-dashboard-side-story,
   .aion-dashboard-side-story-lead {
-    min-height: 6.4rem;
+    min-height: 5.65rem;
+  }
+
+  .aion-dashboard-guidance-intention {
+    min-height: 5.65rem;
   }
 
   .aion-dashboard-summary-band-closure {
@@ -8191,7 +8209,7 @@ body {
   }
 
   .aion-dashboard-lower-grid-condensed {
-    gap: 0.78rem;
+    gap: 0.68rem;
   }
 
   .aion-dashboard-flow-shell,
@@ -10014,7 +10032,11 @@ body {
   }
 
   .aion-personality-callout-knowledge {
-    display: none;
+    display: block;
+    top: auto;
+    left: 0.72rem;
+    bottom: 0.82rem;
+    width: min(7.65rem, calc(50% - 0.5rem));
   }
 
   .aion-personality-callout-planning {

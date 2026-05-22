@@ -243,6 +243,7 @@ export function ShellRouteSwitcher<TRoute extends string>({
           <button
             key={entry}
             aria-label={item.label}
+            aria-current={active ? "page" : undefined}
             className={`aion-route-switcher-button ${active ? "aion-route-switcher-button-active" : ""}`}
             onClick={() => onRouteChange(entry)}
             type="button"
@@ -286,6 +287,7 @@ export function ShellMobileTabbar<TRoute extends string>({
           <button
             key={entry}
             aria-label={item.label}
+            aria-current={active ? "page" : undefined}
             ref={(node) => {
               registerRouteRef(entry, node);
             }}
@@ -419,6 +421,9 @@ export function ShellUtilityBar({
           3
         </button>
         <button
+          aria-controls="aion-shell-account-popover"
+          aria-expanded={accountPanelOpen}
+          aria-haspopup="dialog"
           className={`aion-utility-account ${accountPanelOpen ? "aion-utility-account-active" : ""}`}
           onClick={onAccountClick}
           type="button"

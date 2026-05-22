@@ -1,10 +1,55 @@
 # PROJECT_STATE
 
-Last updated: 2026-05-22
+Last updated: 2026-05-23
 
 Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
+
+- 2026-05-23: `PRJ-1234` completed the v1.2 flagship last-mile UX/UI polish
+  pass:
+  - task:
+    - `.codex/tasks/PRJ-1234-v12-flagship-last-mile-polish.md`
+  - result:
+    - coordinated read-only UX gap, design-system, and QA gate lanes before
+      implementation
+    - softened the desktop utility bar so shared shell chrome feels less like
+      an admin workspace and more like an inset flagship frame
+    - tightened Chat desktop stage spacing and portrait-panel elevation so the
+      conversation and persona stage read as one calmer instrument
+    - strengthened Dashboard guidance hierarchy, reduced right-column drag on
+      wide screens, and preserved the full scenic dashboard proof
+    - restored mobile Personality `learned knowledge` as a compact embodied-map
+      callout while keeping the figure primary
+    - gave the Personality side stack clearer hierarchy by making conscious
+      state the anchor and recent activity the quietest support block
+    - added `aria-current` for route switchers, account popover semantics for
+      desktop/mobile triggers, visible focus rings for disclosure summaries,
+      and a `--aion-display` alias for existing typography hooks
+  - validation:
+    - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - route smoke -> `route_count=14`, `status=ok`
+    - full responsive screenshot gate ->
+      `viewport_count=3`, `screenshot_count=42`, `failed_count=0`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`, `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warnings only
+    - cleanup check -> no `chrome-headless-shell`, no route-smoke/dev-server
+      processes, and no listeners on `5173` or `4173`
+    - screenshots reviewed for desktop Dashboard/Chat, tablet Dashboard, and
+      mobile Chat/Personality
+  - artifacts:
+    - `.codex/artifacts/prj1234-flagship-last-mile-polish/route-smoke-report.json`
+    - `.codex/artifacts/prj1234-flagship-last-mile-polish/screenshot-gate-report.json`
+    - `.codex/artifacts/prj1234-flagship-last-mile-polish/navigation-proof-report.json`
+    - `.codex/artifacts/prj1234-flagship-last-mile-polish/account-proof-report.json`
+    - `.codex/artifacts/prj1234-flagship-last-mile-polish/screenshots/`
+  - release boundary:
+    - this is a verified local web UX checkpoint on
+      `codex/v12-web-canonical-ui`
+    - production v1.2 release still requires a separate candidate promotion
+      mission with deploy parity and production smoke
 
 - 2026-05-22: `PRJ-1233` completed the v1.2 web beauty polish pass:
   - task:

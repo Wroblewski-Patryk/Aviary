@@ -1,5 +1,16 @@
 # LEARNING_JOURNAL
 
+## 2026-05-23 - Mobile callout restoration can inherit opposing anchors
+
+- Context: `PRJ-1234` restored the mobile Personality `learned knowledge`
+  callout after it had been hidden in a previous simplification pass.
+- Pitfall: the mobile override initially set `bottom` without clearing the
+  tablet-era `top`, stretching the absolute-positioned callout into a tall card
+  even though the automated screenshot gate still passed.
+- Guardrail: when re-showing hidden absolute-positioned mobile callouts, clear
+  conflicting inherited anchors such as `top: auto` or `bottom: auto`, then
+  visually inspect the refreshed screenshot before closure.
+
 Purpose: keep a compact memory of recurring execution pitfalls and verified
 fixes for this repository.
 

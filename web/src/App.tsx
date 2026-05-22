@@ -3938,6 +3938,9 @@ export default function App() {
               </section>
 
               <button
+                aria-controls="aion-shell-account-popover"
+                aria-expanded={accountPanelOpen}
+                aria-haspopup="dialog"
                 className="aion-panel-soft aion-sidebar-support-card aion-sidebar-identity-card"
                 onClick={() => setAccountPanelOpen((value) => !value)}
                 type="button"
@@ -3974,7 +3977,11 @@ export default function App() {
               />
 
               {accountPanelOpen ? (
-                <section className="aion-panel-soft aion-shell-account-popover rounded-[1.8rem] p-4">
+                <section
+                  aria-label={copy.common.account}
+                  className="aion-panel-soft aion-shell-account-popover rounded-[1.8rem] p-4"
+                  id="aion-shell-account-popover"
+                >
                   <div className="aion-shell-account-card">
                     <div className="aion-shell-account-header">
                       <span className="aion-shell-account-portrait" aria-hidden="true">
@@ -4017,7 +4024,9 @@ export default function App() {
                 </div>
 
                 <button
+                  aria-controls="aion-mobile-account-panel"
                   aria-expanded={accountPanelOpen}
+                  aria-haspopup="dialog"
                   className={`aion-mobile-account-button ${accountPanelOpen ? "aion-mobile-account-button-active" : ""}`}
                   onClick={() => setAccountPanelOpen((value) => !value)}
                   type="button"
@@ -4044,7 +4053,11 @@ export default function App() {
             </header>
 
             {accountPanelOpen ? (
-              <section className="aion-panel-soft aion-mobile-account-panel rounded-[1.8rem] p-4 xl:hidden">
+              <section
+                aria-label={copy.common.account}
+                className="aion-panel-soft aion-mobile-account-panel rounded-[1.8rem] p-4 xl:hidden"
+                id="aion-mobile-account-panel"
+              >
                 <div className="grid gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
                   <div className="aion-panel-soft rounded-[1.4rem] p-4">
                     <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.common.signedInAs}</p>
