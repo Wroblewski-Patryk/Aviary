@@ -1,3 +1,5 @@
+import routeManifest from "./route-manifest.json";
+
 export type RoutePath =
   | "/login"
   | "/dashboard"
@@ -13,20 +15,23 @@ export type RoutePath =
   | "/personality"
   | "/tools";
 
-export const ROUTES: RoutePath[] = [
-  "/dashboard",
-  "/chat",
-  "/personality",
-  "/memory",
-  "/reflections",
-  "/plans",
-  "/goals",
-  "/insights",
-  "/automations",
-  "/integrations",
-  "/tools",
-  "/settings",
-];
+export type RouteManifestEntry = {
+  path: "/" | RoutePath;
+  marker: string;
+  authenticated: boolean;
+  screenshot: boolean;
+  canonicalSurface: string;
+};
+
+export const ROUTE_MANIFEST = routeManifest.routes as RouteManifestEntry[];
+
+export const ROUTES = ROUTE_MANIFEST.filter(
+  (route): route is RouteManifestEntry & { path: RoutePath } => route.authenticated && route.path !== "/",
+).map((route) => route.path);
+
+export const ROUTE_MARKERS = Object.fromEntries(
+  ROUTE_MANIFEST.map((route) => [route.path, route.marker]),
+) as Record<"/" | RoutePath, string>;
 
 export function normalizeRoute(pathname: string): RoutePath {
   if (pathname === "/dashboard") {

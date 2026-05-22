@@ -13,23 +13,24 @@ const INDEX = join(DIST, "index.html");
 const require = createRequire(import.meta.url);
 
 const args = process.argv.slice(2);
+const routeManifest = JSON.parse(readFileSync(join(ROOT, "src", "route-manifest.json"), "utf8"));
 
-const ROUTES = [
-  { path: "/", marker: "aion-public-home", authenticated: false },
-  { path: "/login", marker: "aion-public-home", authenticated: false },
-  { path: "/dashboard", marker: "aion-dashboard-canvas", authenticated: true },
-  { path: "/chat", marker: "aion-chat-workspace", authenticated: true },
-  { path: "/memory", marker: "aion-memory-canvas", authenticated: true },
-  { path: "/reflections", marker: "aion-reflections-canvas", authenticated: true },
-  { path: "/plans", marker: "aion-plans-canvas", authenticated: true },
-  { path: "/goals", marker: "aion-goals-canvas", authenticated: true },
-  { path: "/insights", marker: "aion-insights-canvas", authenticated: true },
-  { path: "/automations", marker: "aion-automations-canvas", authenticated: true },
-  { path: "/integrations", marker: "aion-integrations-canvas", authenticated: true },
-  { path: "/settings", marker: "aion-settings-canvas", authenticated: true },
-  { path: "/tools", marker: "aion-tools-canvas", authenticated: true },
-  { path: "/personality", marker: "aion-personality-canvas", authenticated: true },
-];
+const ROUTES = routeManifest.routes.map((route) => ({
+  path: route.path,
+  marker: route.marker,
+  authenticated: Boolean(route.authenticated),
+  screenshot: Boolean(route.screenshot),
+  canonicalSurface: route.canonicalSurface ?? "",
+}));
+const ROUTES_BY_PATH = new Map(ROUTES.map((route) => [route.path, route]));
+
+function routeByPath(path) {
+  const route = ROUTES_BY_PATH.get(path);
+  if (!route) {
+    throw new Error(`Route manifest is missing '${path}'.`);
+  }
+  return route;
+}
 
 const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
@@ -668,6 +669,16 @@ async function collectRenderedStateCdp(cdp, marker) {
           element.getClientRects().length > 0
         );
       };
+      const isInsideContainedHorizontalScroller = (element) => {
+        const scroller = element.closest(
+          ".aion-mobile-tabbar-scroll, .aion-route-switcher-scroll, .aion-chat-cognitive-belt",
+        );
+        if (!scroller) {
+          return false;
+        }
+        const scrollerRect = scroller.getBoundingClientRect();
+        return scrollerRect.left >= -1 && scrollerRect.right <= viewportWidth + 1;
+      };
       const unnamedInteractive = Array.from(
         document.querySelectorAll("button, a[href], input, select, textarea, [role='button'], [role='link']"),
       ).filter((element) => {
@@ -687,6 +698,9 @@ async function collectRenderedStateCdp(cdp, marker) {
       const overflowingElements = Array.from(document.body?.querySelectorAll("*") ?? [])
         .filter((element) => {
           if (!isVisible(element)) {
+            return false;
+          }
+          if (isInsideContainedHorizontalScroller(element)) {
             return false;
           }
           const rect = element.getBoundingClientRect();
@@ -737,18 +751,13 @@ async function screenshotCdp(cdp, screenshotPath) {
 
 async function runNavigationProofCdp(cdp, baseUrl) {
   const proofSteps = [
-    { label: "Chat", path: "/chat", marker: "aion-chat-workspace", authenticated: true },
-    { label: "Settings", path: "/settings", marker: "aion-settings-canvas", authenticated: true },
-    { label: "Personality", path: "/personality", marker: "aion-personality-canvas", authenticated: true },
-    { label: "Dashboard", path: "/dashboard", marker: "aion-dashboard-canvas", authenticated: true },
+    { label: "Chat", ...routeByPath("/chat") },
+    { label: "Settings", ...routeByPath("/settings") },
+    { label: "Personality", ...routeByPath("/personality") },
+    { label: "Dashboard", ...routeByPath("/dashboard") },
   ];
   const steps = [];
-  await gotoRouteCdp(
-    cdp,
-    baseUrl,
-    { path: "/dashboard", marker: "aion-dashboard-canvas", authenticated: true },
-    RESPONSIVE_VIEWPORTS.mobile,
-  );
+  await gotoRouteCdp(cdp, baseUrl, routeByPath("/dashboard"), RESPONSIVE_VIEWPORTS.mobile);
   for (const step of proofSteps) {
     const clickResult = await evaluateCdp(
       cdp,
@@ -797,12 +806,8 @@ async function runNavigationProofCdp(cdp, baseUrl) {
 }
 
 async function runAccountProofCdp(cdp, baseUrl) {
-  await gotoRouteCdp(
-    cdp,
-    baseUrl,
-    { path: "/dashboard", marker: "aion-dashboard-canvas", authenticated: true },
-    RESPONSIVE_VIEWPORTS.mobile,
-  );
+  const dashboardRoute = routeByPath("/dashboard");
+  await gotoRouteCdp(cdp, baseUrl, dashboardRoute, RESPONSIVE_VIEWPORTS.mobile);
   const clickResult = await evaluateCdp(
     cdp,
     `(() => {
@@ -841,7 +846,7 @@ async function runAccountProofCdp(cdp, baseUrl) {
       return style.display !== "none" && style.visibility !== "hidden" && panel.getClientRects().length > 0;
     })()`,
   );
-  const state = await collectRenderedStateCdp(cdp, "aion-dashboard-canvas");
+  const state = await collectRenderedStateCdp(cdp, dashboardRoute.marker);
   const passed = panelVisible && state.markerFound && !state.frameworkOverlay && !state.horizontalOverflow;
   return {
     viewport: "mobile",
@@ -892,6 +897,16 @@ async function collectRenderedState(page, marker) {
         element.getClientRects().length > 0
       );
     };
+    const isInsideContainedHorizontalScroller = (element) => {
+      const scroller = element.closest(
+        ".aion-mobile-tabbar-scroll, .aion-route-switcher-scroll, .aion-chat-cognitive-belt",
+      );
+      if (!scroller) {
+        return false;
+      }
+      const scrollerRect = scroller.getBoundingClientRect();
+      return scrollerRect.left >= -1 && scrollerRect.right <= viewportWidth + 1;
+    };
     const unnamedInteractive = Array.from(
       document.querySelectorAll("button, a[href], input, select, textarea, [role='button'], [role='link']"),
     ).filter((element) => {
@@ -911,6 +926,9 @@ async function collectRenderedState(page, marker) {
     const overflowingElements = Array.from(document.body?.querySelectorAll("*") ?? [])
       .filter((element) => {
         if (!isVisible(element)) {
+          return false;
+        }
+        if (isInsideContainedHorizontalScroller(element)) {
           return false;
         }
         const rect = element.getBoundingClientRect();
@@ -963,15 +981,15 @@ async function gotoRoute(page, baseUrl, routePath, marker = "") {
 
 async function runNavigationProof(page, baseUrl) {
   const proofSteps = [
-    { label: "Chat", path: "/chat", marker: "aion-chat-workspace" },
-    { label: "Settings", path: "/settings", marker: "aion-settings-canvas" },
-    { label: "Personality", path: "/personality", marker: "aion-personality-canvas" },
-    { label: "Dashboard", path: "/dashboard", marker: "aion-dashboard-canvas" },
+    { label: "Chat", ...routeByPath("/chat") },
+    { label: "Settings", ...routeByPath("/settings") },
+    { label: "Personality", ...routeByPath("/personality") },
+    { label: "Dashboard", ...routeByPath("/dashboard") },
   ];
   const steps = [];
 
   await page.setViewportSize(RESPONSIVE_VIEWPORTS.mobile);
-  await gotoRoute(page, baseUrl, "/dashboard", "aion-dashboard-canvas");
+  await gotoRoute(page, baseUrl, "/dashboard", routeByPath("/dashboard").marker);
 
   for (const step of proofSteps) {
     const locator = page.locator(`.aion-mobile-tabbar button[aria-label="${step.label}"]`);
@@ -1017,8 +1035,9 @@ async function runNavigationProof(page, baseUrl) {
 }
 
 async function runAccountProof(page, baseUrl) {
+  const dashboardRoute = routeByPath("/dashboard");
   await page.setViewportSize(RESPONSIVE_VIEWPORTS.mobile);
-  await gotoRoute(page, baseUrl, "/dashboard", "aion-dashboard-canvas");
+  await gotoRoute(page, baseUrl, dashboardRoute.path, dashboardRoute.marker);
 
   const trigger = page.locator(".aion-mobile-account-button");
   const triggerCount = await trigger.count();
@@ -1045,7 +1064,7 @@ async function runAccountProof(page, baseUrl) {
   );
 
   const panelVisible = await page.locator(".aion-mobile-account-panel").isVisible({ timeout: 10000 });
-  const state = await collectRenderedState(page, "aion-dashboard-canvas");
+  const state = await collectRenderedState(page, dashboardRoute.marker);
   const passed = panelVisible && state.markerFound && !state.frameworkOverlay && !state.horizontalOverflow;
   return {
     viewport: "mobile",

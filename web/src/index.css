@@ -547,7 +547,6 @@ body {
   background-position: 58% 36%;
   background-repeat: no-repeat;
   background-size: cover;
-  transform: scale(1.05);
   filter: saturate(1.03);
 }
 
@@ -9183,6 +9182,25 @@ body {
 }
 
 @media (max-width: 640px) {
+  .aion-chat-cognitive-belt {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-inline: 0;
+    padding: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+    mask-image: none;
+  }
+
+  .aion-chat-belt-card {
+    min-height: auto;
+    scroll-snap-align: none;
+  }
+
+  .aion-chat-belt-body {
+    -webkit-line-clamp: 2;
+  }
+
   .aion-chat-message-row.justify-start {
     width: 100%;
   }

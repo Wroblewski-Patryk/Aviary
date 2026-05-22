@@ -46,6 +46,23 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1232` starts the v1.2 canonical web UI baseline for future mobile app
+  transfer. The first verified foundation slice added a shared
+  `web/src/route-manifest.json`, derived web route constants from it, updated
+  route-smoke navigation/account proof to consume the same markers, and
+  improved mobile Chat by stacking context cards on narrow screens instead of
+  opening with a clipped horizontal belt. Evidence: `node --check
+  scripts/route-smoke.mjs` PASS; `npm run build` PASS; route smoke
+  `route_count=14`, `status=ok`; responsive screenshot gate
+  `screenshot_count=18`, `failed_count=0`; mobile foundation gate for
+  `/chat`, `/settings`, `/dashboard` `screenshot_count=3`, `failed_count=0`,
+  `overflowingElementCount=0`; navigation proof `step_count=4`,
+  `failed_count=0`; account proof `step_count=1`, `failed_count=0`,
+  `panel_visible=true`; public Home/Login gate `screenshot_count=4`,
+  `failed_count=0`, `overflowingElementCount=0` across desktop/mobile `/` and
+  `/login`. Full v1.2 UI parity remains in progress and must not be claimed
+  complete from this foundation slice alone.
+
 - `PRJ-1231` promotes selected-scope v1 to production-backed release marker
   `v1.1.1` for SHA `df677370f63d2688eb792f9a3a846d2cd40a564b`: candidate was
   pushed to `origin/main`; production release smoke with deploy parity passed;

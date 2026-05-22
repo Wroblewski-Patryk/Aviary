@@ -6,6 +6,41 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-22: `PRJ-1232` started v1.2 canonical web UI work:
+  - task:
+    - `.codex/tasks/PRJ-1232-v12-web-canonical-ui-system.md`
+  - result:
+    - created branch `codex/v12-web-canonical-ui`
+    - integrated UX spec, frontend architecture, and QA visual-gate lanes for
+      v1.2 mobile/desktop web polish based on canonical documentation images
+    - added `web/src/route-manifest.json` as the shared route/marker source for
+      web route definitions and route-smoke proof
+    - derived route constants in `web/src/routes.ts` from that manifest and
+      updated `web/scripts/route-smoke.mjs` to use the same source for route,
+      navigation, and account proof
+    - mobile Chat now stacks context cards on narrow screens instead of opening
+      with a clipped horizontal context belt
+    - route-smoke overflow audit now ignores only contained intentional
+      scrollers while preserving document-level horizontal overflow checks
+    - public Home/Login scenic background no longer uses transform scaling that
+      produced decorative out-of-viewport diagnostics
+  - validation:
+    - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - route smoke -> `route_count=14`, `status=ok`
+    - responsive screenshot gate -> `screenshot_count=18`, `failed_count=0`
+    - mobile foundation gate for `/chat`, `/settings`, `/dashboard` ->
+      `screenshot_count=3`, `failed_count=0`, `overflowingElementCount=0`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - public Home/Login gate -> `screenshot_count=4`, `failed_count=0`,
+      `overflowingElementCount=0` across desktop/mobile `/` and `/login`
+  - next:
+    - continue v1.2 in route-local batches: authenticated shell/sidebar,
+      Dashboard, Chat, Personality, then module-route consistency across mobile
+      and desktop
+
 - 2026-05-22: `PRJ-1230` refreshed selected-scope v1 readiness:
   - task:
     - `.codex/tasks/PRJ-1230-v1-selected-scope-final-readiness-refresh.md`

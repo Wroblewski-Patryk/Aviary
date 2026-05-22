@@ -9,6 +9,70 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1232-v12-web-canonical-ui-system
+- Status: IN_PROGRESS
+- Selected objective: build v1.2 web UI toward the canonical documentation
+  references across mobile and desktop, using the web implementation as the
+  foundation for the future mobile app. The work must be functional,
+  polished, and free of unnecessary decorative or explanatory clutter.
+- Why this mission now: v1.1.1 is released; the user explicitly requested v1.2
+  frontend improvement with agent coordination, canonical images from docs,
+  and all web views supervised across mobile and desktop.
+- Release objective or product milestone advanced: v1.2 canonical web UI
+  baseline for future native/mobile app transfer.
+- First/next checkpoint: continue route-local v1.2 UI polish from the verified
+  foundation and public Home batches. Prioritize authenticated shell/sidebar,
+  Dashboard density, Chat final pass, Personality final pass, and shared
+  module-route consistency.
+- Stop conditions: canonical references conflict; a route lacks enough spec to
+  claim parity; validation cannot capture desktop/mobile screenshots; broad
+  refactor risk exceeds the first batch; production v1.1.1 marker would be
+  disturbed.
+- Parent validation gate: per batch `npm run build`,
+  `npm run audit:ui-responsive`, `npm run audit:ui-navigation`,
+  route/account smoke where relevant, visual screenshot comparison against
+  canonical assets, and cleanup checks for browser/dev-server leftovers.
+
+## PRJ-1232 Current Evidence
+
+- Branch: `codex/v12-web-canonical-ui`
+- Lane status: UX spec, frontend architecture, and QA visual-gate explorer
+  lanes completed and integrated into
+  `.codex/tasks/PRJ-1232-v12-web-canonical-ui-system.md`.
+- Foundation implementation:
+  - added `web/src/route-manifest.json` as the shared route/marker source for
+    web route contracts and smoke proof
+  - derived `ROUTES` and route markers from the manifest in `web/src/routes.ts`
+  - updated `web/scripts/route-smoke.mjs` to consume the same manifest and to
+    use manifest markers for navigation/account proof
+  - improved mobile Chat by replacing the narrow-screen clipped context belt
+    with stacked, readable context cards
+  - refined route-smoke overflow detection so contained intentional scrollers
+    do not mask or misreport document-level overflow checks
+  - removed transform scaling from the public landing scenic background so
+    `/` and `/login` no longer report decorative out-of-viewport elements
+- Validation:
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - route smoke -> `route_count=14`, `status=ok`
+  - responsive screenshots -> `screenshot_count=18`, `failed_count=0`
+  - mobile foundation screenshots for `/chat`, `/settings`, `/dashboard` ->
+    `failed_count=0`, `overflowingElementCount=0`
+  - navigation proof -> `step_count=4`, `failed_count=0`
+  - account proof -> `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - public Home/Login gate -> `screenshot_count=4`, `failed_count=0`,
+    `overflowingElementCount=0` across desktop/mobile `/` and `/login`
+- Artifacts:
+  - `.codex/artifacts/prj1232-route-smoke/report.json`
+  - `.codex/artifacts/prj1232-web-responsive-visual-gate/report.json`
+  - `.codex/artifacts/prj1232-mobile-foundation-gate/report.json`
+  - `.codex/artifacts/prj1232-navigation-proof/report.json`
+  - `.codex/artifacts/prj1232-account-proof/report.json`
+  - `.codex/artifacts/prj1232-public-home-gate/report.json`
+
+## Previous Mission
+
 - Mission ID: PRJ-1231-v1-production-candidate-promotion
 - Status: COMPLETED
 - Selected objective: turn locally verified selected-scope v1 into a real

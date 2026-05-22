@@ -4,6 +4,38 @@ Last updated: 2026-05-22
 
 ## Project Status Dashboard (2026-05-22)
 
+- `PRJ-1232` is IN_PROGRESS:
+  - `.codex/tasks/PRJ-1232-v12-web-canonical-ui-system.md`
+- objective:
+  - v1.2 canonical web UI baseline for future mobile app transfer, covering
+    mobile and desktop views without unnecessary decorative or explanatory
+    clutter
+- current result:
+  - UX spec, frontend architecture, and QA visual-gate lanes completed
+  - route manifest added as shared route/marker source for web routes and
+    route-smoke
+  - mobile Chat first-read improved by replacing the clipped context-card rail
+    with stacked narrow-screen cards
+  - route-smoke overflow checks now distinguish contained intentional scrollers
+    from real document-level horizontal overflow
+  - public Home/Login scenic background no longer reports decorative
+    out-of-viewport elements in smoke diagnostics
+- validation:
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - route smoke -> `route_count=14`, `status=ok`
+  - responsive screenshots -> `screenshot_count=18`, `failed_count=0`
+  - mobile foundation screenshots for `/chat`, `/settings`, `/dashboard` ->
+    `screenshot_count=3`, `failed_count=0`, `overflowingElementCount=0`
+  - navigation proof -> `step_count=4`, `failed_count=0`
+  - account proof -> `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - public Home/Login gate -> `screenshot_count=4`, `failed_count=0`,
+    `overflowingElementCount=0` across desktop/mobile `/` and `/login`
+- next:
+  - continue authenticated shell/sidebar, Dashboard, Chat, Personality, and
+    module-route consistency batches
+
 - `PRJ-1231` is DONE:
   - `.codex/tasks/PRJ-1231-v1-production-candidate-promotion.md`
 - result:

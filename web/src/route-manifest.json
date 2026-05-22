@@ -1,0 +1,102 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "marker": "aion-public-home",
+      "authenticated": false,
+      "screenshot": true,
+      "canonicalSurface": "public-home"
+    },
+    {
+      "path": "/login",
+      "marker": "aion-public-home",
+      "authenticated": false,
+      "screenshot": false,
+      "canonicalSurface": "public-home"
+    },
+    {
+      "path": "/dashboard",
+      "marker": "aion-dashboard-canvas",
+      "authenticated": true,
+      "screenshot": true,
+      "canonicalSurface": "dashboard"
+    },
+    {
+      "path": "/chat",
+      "marker": "aion-chat-workspace",
+      "authenticated": true,
+      "screenshot": true,
+      "canonicalSurface": "chat"
+    },
+    {
+      "path": "/memory",
+      "marker": "aion-memory-canvas",
+      "authenticated": true,
+      "screenshot": false,
+      "canonicalSurface": "module"
+    },
+    {
+      "path": "/reflections",
+      "marker": "aion-reflections-canvas",
+      "authenticated": true,
+      "screenshot": false,
+      "canonicalSurface": "module"
+    },
+    {
+      "path": "/plans",
+      "marker": "aion-plans-canvas",
+      "authenticated": true,
+      "screenshot": false,
+      "canonicalSurface": "module"
+    },
+    {
+      "path": "/goals",
+      "marker": "aion-goals-canvas",
+      "authenticated": true,
+      "screenshot": false,
+      "canonicalSurface": "module"
+    },
+    {
+      "path": "/insights",
+      "marker": "aion-insights-canvas",
+      "authenticated": true,
+      "screenshot": false,
+      "canonicalSurface": "module"
+    },
+    {
+      "path": "/automations",
+      "marker": "aion-automations-canvas",
+      "authenticated": true,
+      "screenshot": false,
+      "canonicalSurface": "module"
+    },
+    {
+      "path": "/integrations",
+      "marker": "aion-integrations-canvas",
+      "authenticated": true,
+      "screenshot": false,
+      "canonicalSurface": "module"
+    },
+    {
+      "path": "/settings",
+      "marker": "aion-settings-canvas",
+      "authenticated": true,
+      "screenshot": true,
+      "canonicalSurface": "settings"
+    },
+    {
+      "path": "/tools",
+      "marker": "aion-tools-canvas",
+      "authenticated": true,
+      "screenshot": true,
+      "canonicalSurface": "tools"
+    },
+    {
+      "path": "/personality",
+      "marker": "aion-personality-canvas",
+      "authenticated": true,
+      "screenshot": true,
+      "canonicalSurface": "personality"
+    }
+  ]
+}
