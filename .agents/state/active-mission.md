@@ -10,7 +10,7 @@ repository history.
 ## Current Mission
 
 - Mission ID: PRJ-1231-v1-production-candidate-promotion
-- Status: IN_PROGRESS
+- Status: COMPLETED
 - Selected objective: turn locally verified selected-scope v1 into a real
   production-backed release fact by committing the refreshed candidate,
   publishing it to the deploy source, proving deployed revision parity, running
@@ -21,18 +21,28 @@ repository history.
   release claim.
 - Release objective or product milestone advanced: production-backed v1
   selected-scope marker for the current web-supported candidate.
-- First/next checkpoint: finalize the PRJ-1231 task contract, confirm source
-  branch and release path, then create/push a candidate commit only after
-  local gate evidence remains green.
+- First/next checkpoint: v1 selected-scope is released as `v1.1.1`; next work
+  should either monitor production or explicitly expand deferred extension
+  scope.
 - Stop conditions: git push is unavailable; deploy target/source branch cannot
   be confirmed; Coolify webhook/auto-deploy access is unavailable and
   production remains on an older SHA; release smoke fails; backend/web revision
   parity drifts; tag creation would point at an unproven SHA.
-- Parent validation gate: local PRJ-1230 gate remains the candidate baseline;
-  pre-push `git diff --check`; production
-  `backend/scripts/run_release_smoke.ps1 -BaseUrl
-  https://aviary.luckysparrow.ch -WaitForDeployParity` after deploy; release
-  marker only after smoke returns `GO_FOR_SELECTED_SHA`.
+- Parent validation gate: completed. Local PRJ-1230 gate remained green;
+  pre-push `git diff --check` passed; production release smoke with deploy
+  parity passed; release reality audit returned `GO_FOR_SELECTED_SHA`;
+  selected-tag go/no-go for `v1.1.1` returned `GO`.
+
+## PRJ-1231 Release Result
+
+- Selected SHA: `df677370f63d2688eb792f9a3a846d2cd40a564b`
+- Release tag: `v1.1.1`
+- Deploy source: `origin/main`
+- Production URL: `https://aviary.luckysparrow.ch`
+- Production proof: backend runtime revision and web shell build revision both
+  match selected SHA; `release_ready=true`; no release violations; v1 final
+  acceptance state `core_v1_bundle_ready`.
+- Final verdict: `released`
 
 ## Previous Mission
 

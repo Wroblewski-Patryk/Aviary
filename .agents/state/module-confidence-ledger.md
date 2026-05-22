@@ -46,6 +46,15 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1231` promotes selected-scope v1 to production-backed release marker
+  `v1.1.1` for SHA `df677370f63d2688eb792f9a3a846d2cd40a564b`: candidate was
+  pushed to `origin/main`; production release smoke with deploy parity passed;
+  release reality audit returned `GO_FOR_SELECTED_SHA`; selected SHA go/no-go
+  and selected-tag go/no-go returned `GO`; production backend runtime revision
+  and web shell build revision match the selected SHA; `release_ready=true`,
+  `release_violations=[]`, and v1 final acceptance remains
+  `core_v1_bundle_ready`.
+
 - `PRJ-1230` refreshes selected-scope v1 confidence for
   `AVIARY-STATUS-001`, `AVIARY-WEB-RESP-001`,
   `AVIARY-COGNITIVE-RUNTIME-001`, and `AVIARY-MEMORY-001`: backend full

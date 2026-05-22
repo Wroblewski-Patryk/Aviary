@@ -1,6 +1,6 @@
 # Current V1 Release Boundary
 
-Last updated: 2026-05-04
+Last updated: 2026-05-22
 
 ## Purpose
 
@@ -28,14 +28,30 @@ with release-smoke evidence tied to the deployed revision.
 
 ## Current Marker State
 
-`v1.0.1` is the current selected-SHA release marker for selected SHA
-`3b46ed3878a8560c3adb147fcadf064818ccc322`.
+`v1.1.1` is the current selected-scope v1 release marker for selected SHA
+`df677370f63d2688eb792f9a3a846d2cd40a564b`.
 
-`v1.1.0` is the current v1.1 hardening marker for selected SHA
+`v1.1.0` remains the historical v1.1 hardening marker for selected SHA
 `d6bf35251577ce71848b33eb109c560cbf74778a`.
+
+`v1.0.1` remains the historical selected-SHA release marker for selected SHA
+`3b46ed3878a8560c3adb147fcadf064818ccc322`.
 
 `v1.0.0` remains the historical released core marker for selected SHA
 `5e64f494e2aac8d29cea532d95f7039ed6029213`.
+
+PRJ-1231 released `v1.1.1` after:
+
+- production backend revision:
+  `df677370f63d2688eb792f9a3a846d2cd40a564b`
+- production web meta revision:
+  `df677370f63d2688eb792f9a3a846d2cd40a564b`
+- production health: HTTP `200`
+- selected candidate verdict: `GO_FOR_SELECTED_SHA`
+- release smoke with deploy parity: passed
+- selected-tag go/no-go for `v1.1.1`: `GO`
+- release marker: `v1.1.1`
+- release marker task: `PRJ-1231`
 
 PRJ-1115 refreshed release evidence after frontend closure:
 

@@ -5,7 +5,7 @@
 - Title: V1 Production Candidate Promotion
 - Task Type: release
 - Current Stage: release
-- Status: IN_PROGRESS
+- Status: DONE
 - Owner: Ops/Release
 - Depends on: PRJ-1230
 - Priority: P0
@@ -17,7 +17,7 @@
 - Iteration: 1231
 - Operation Mode: BUILDER
 - Mission ID: PRJ-1231-v1-production-candidate-promotion
-- Mission Status: IN_PROGRESS
+- Mission Status: COMPLETED
 
 ## Context
 PRJ-1230 proved local selected-scope v1 readiness on the current branch, but
@@ -38,13 +38,13 @@ fact, or record the exact external blocker that prevents release.
   intentionally included in the selected release candidate.
 
 ## Definition of Done
-- [ ] Selected SHA and release branch are explicit.
-- [ ] Local gate is green or a blocker is recorded.
-- [ ] Candidate commit is pushed to the deploy source or blocked with evidence.
-- [ ] Production `/health` and web meta revisions match the selected SHA.
-- [ ] Production release smoke with deploy parity passes.
-- [ ] Release marker/tag is created only after production proof is green.
-- [ ] Source-of-truth state records SHA, tag, smoke proof, deferred scope, and residual risks.
+- [x] Selected SHA and release branch are explicit.
+- [x] Local gate is green or a blocker is recorded.
+- [x] Candidate commit is pushed to the deploy source or blocked with evidence.
+- [x] Production `/health` and web meta revisions match the selected SHA.
+- [x] Production release smoke with deploy parity passes.
+- [x] Release marker/tag is created only after production proof is green.
+- [x] Source-of-truth state records SHA, tag, smoke proof, deferred scope, and residual risks.
 
 ## Forbidden
 - new architecture or deployment framework
@@ -57,10 +57,10 @@ fact, or record the exact external blocker that prevents release.
 
 | Lane | Owner | Expected output | Proof | Status |
 | --- | --- | --- | --- | --- |
-| Coordinator | Active chat | Candidate selection, integration, final verdict | Parent gate and state updates | IN_PROGRESS |
+| Coordinator | Active chat | Candidate selection, integration, final verdict | Parent gate and state updates | COMPLETED |
 | QA/Test | QA explorer | Minimal gate checklist and blocker posture | Read-only report integrated | COMPLETED |
-| Ops/Release | Ops explorer, then coordinator | Exact deploy/smoke/tag sequence and required access | Read-only report, then commands | IN_PROGRESS |
-| Documentation/Memory | Coordinator | Release state updates | Source-of-truth diffs | PLANNED |
+| Ops/Release | Ops explorer, then coordinator | Exact deploy/smoke/tag sequence and required access | Read-only report, then commands | COMPLETED |
+| Documentation/Memory | Coordinator | Release state updates | Source-of-truth diffs | COMPLETED |
 
 ## Implementation Plan
 1. Confirm the current branch, dirty worktree, and deploy source.
@@ -81,16 +81,16 @@ fact, or record the exact external blocker that prevents release.
 - If `blocked`, the report names the blocking access, command, or failing gate.
 
 ## Validation Evidence
-- Local gate: inherited from PRJ-1230 pending pre-push sanity.
-- Production gate: pending.
-- Cleanup: pending.
+- Local gate: PRJ-1230 backend full pytest `1105 passed`; web build, responsive audit, navigation proof, account proof, and route smoke PASS; architecture dashboard `11/11`; pre-push `git diff --check` PASS with LF/CRLF warnings only.
+- Production gate: `run_release_smoke.ps1 -BaseUrl https://aviary.luckysparrow.ch -WaitForDeployParity` PASS; `audit_release_reality.py --selected-sha df677370f63d2688eb792f9a3a846d2cd40a564b` -> `GO_FOR_SELECTED_SHA`; `run_release_go_no_go.py --selected-sha ... --enforce-local-head-parity` -> `GO`; selected tag `v1.1.1` go/no-go -> `GO`.
+- Cleanup: no validation-owned browser/server leftovers from PRJ-1230; PRJ-1231 production smoke used no local browser/dev server.
 
 ## Result Report
-- Task summary: pending
-- Selected SHA: pending
-- Selected tag: pending
-- Branch/source: pending
-- How tested: pending
-- Production proof: pending
-- What is incomplete: pending
-- Final verdict: pending
+- Task summary: packaged the PRJ-1230 selected-scope candidate, pushed it to `main`, waited for production deploy parity, ran production release smoke, created annotated tag `v1.1.1`, and verified selected-tag go/no-go.
+- Selected SHA: `df677370f63d2688eb792f9a3a846d2cd40a564b`
+- Selected tag: `v1.1.1`
+- Branch/source: `codex/uxui-polish-batch` and `origin/main` both pushed to `df677370f63d2688eb792f9a3a846d2cd40a564b`; Coolify production reports source automation.
+- How tested: PRJ-1230 local gate; PRJ-1231 `git fetch origin --tags`, `git diff --check`, production release smoke with deploy parity, release reality audit, release go/no-go, selected-tag go/no-go.
+- Production proof: `https://aviary.luckysparrow.ch` health OK; backend runtime revision and web shell build revision both `df677370f63d2688eb792f9a3a846d2cd40a564b`; `release_ready=true`; `release_violations=[]`; v1 final acceptance `core_v1_bundle_ready`.
+- What is incomplete: provider activation, proactive launch expansion, deploy automation hardening, and native mobile proof remain deferred extension rows outside selected-scope v1.
+- Final verdict: released

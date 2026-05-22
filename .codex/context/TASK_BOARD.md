@@ -4,6 +4,27 @@ Last updated: 2026-05-22
 
 ## Project Status Dashboard (2026-05-22)
 
+- `PRJ-1231` is DONE:
+  - `.codex/tasks/PRJ-1231-v1-production-candidate-promotion.md`
+- result:
+  - selected-scope v1 is released as `v1.1.1`
+  - selected SHA:
+    `df677370f63d2688eb792f9a3a846d2cd40a564b`
+  - candidate was pushed to `origin/main`, production reached deploy parity,
+    and the release marker was created only after production proof was green
+- validation:
+  - production release smoke with deploy parity -> PASS
+  - release reality audit -> `GO_FOR_SELECTED_SHA`
+  - selected SHA go/no-go -> `GO`
+  - selected-tag `v1.1.1` go/no-go -> `GO`
+  - production backend runtime revision and web shell build revision both
+    match selected SHA
+  - production `release_ready=true`, `release_violations=[]`,
+    `v1_final_acceptance_state=core_v1_bundle_ready`
+- residual risk:
+  - connector activation, proactive expansion, deploy automation hardening, and
+    native proof remain deferred extension rows, not v1 blockers
+
 - `PRJ-1230` is DONE:
   - `.codex/tasks/PRJ-1230-v1-selected-scope-final-readiness-refresh.md`
 - result:

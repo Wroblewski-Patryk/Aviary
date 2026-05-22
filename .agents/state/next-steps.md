@@ -4,6 +4,21 @@ Last updated: 2026-05-22
 
 ## NOW
 
+1. Selected-scope v1 is released as `v1.1.1`:
+   - task:
+     `.codex/tasks/PRJ-1231-v1-production-candidate-promotion.md`
+   - selected SHA:
+     `df677370f63d2688eb792f9a3a846d2cd40a564b`
+   - proof:
+     production release smoke with deploy parity PASS; release reality audit
+     `GO_FOR_SELECTED_SHA`; selected SHA go/no-go `GO`; selected-tag
+     `v1.1.1` go/no-go `GO`; backend and web production revisions match the
+     selected SHA; `release_ready=true`; `release_violations=[]`
+   - next smallest useful choices:
+     monitor production, prepare a concise user-facing release note, or expand
+     one explicitly deferred extension scope such as provider activation,
+     proactive launch, deploy automation hardening, or native proof
+
 1. Selected-scope v1 is locally verified as of `PRJ-1230`:
    - task:
      `.codex/tasks/PRJ-1230-v1-selected-scope-final-readiness-refresh.md`

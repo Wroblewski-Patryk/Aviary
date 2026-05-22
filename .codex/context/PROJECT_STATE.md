@@ -29,6 +29,30 @@ the same project.
     - provider, proactive, deploy automation, and native rows remain deferred
       extension work outside selected-scope v1
 
+- 2026-05-22: `PRJ-1231` released selected-scope v1 as production-backed tag
+  `v1.1.1`:
+  - selected SHA:
+    - `df677370f63d2688eb792f9a3a846d2cd40a564b`
+  - deploy source:
+    - `origin/main`
+  - result:
+    - candidate commit was pushed to `main`
+    - Coolify production reached deploy parity through source automation
+    - annotated tag `v1.1.1` was created and pushed after production proof
+  - validation:
+    - production release smoke with deploy parity -> PASS
+    - release reality audit -> `GO_FOR_SELECTED_SHA`
+    - release go/no-go for selected SHA -> `GO`
+    - selected-tag go/no-go for `v1.1.1` -> `GO`
+    - production backend runtime revision and web shell build revision both
+      match `df677370f63d2688eb792f9a3a846d2cd40a564b`
+    - production `release_ready=true`, `release_violations=[]`,
+      v1 final acceptance `core_v1_bundle_ready`
+  - release boundary:
+    - provider activation, proactive launch expansion, deploy automation
+      hardening, and native mobile proof remain deferred extension work outside
+      selected-scope v1
+
 - 2026-05-14: `PRJ-1229` restored authenticated desktop utility bar parity:
   - task:
     - `.codex/tasks/PRJ-1229-authenticated-desktop-utility-bar-parity.md`

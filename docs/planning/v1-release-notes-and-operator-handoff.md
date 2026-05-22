@@ -1,13 +1,23 @@
 # V1 Release Notes And Operator Handoff
 
-Date: 2026-05-04
+Date: 2026-05-22
 Task: `PRJ-935` / `PRJ-955`, refreshed by `PRJ-1134`
-Posture: current selected SHA is production-green and marked by `v1.0.1`
+Posture: current selected SHA is production-green and marked by `v1.1.1`
 
 ## Current Decision
 
-Release marker `v1.0.1` has been created for the current selected production
-SHA after selected-tag go/no-go returned `GO`.
+Release marker `v1.1.1` has been created for the current selected production
+SHA after deploy parity, release smoke, release reality audit, and selected-tag
+go/no-go returned `GO`.
+
+Current release truth after PRJ-1231:
+
+- `v1.1.1` is the current selected-scope v1 release marker for selected SHA
+  `df677370f63d2688eb792f9a3a846d2cd40a564b`
+- current selected SHA is deployed, release-smoked, and revision-aligned in
+  production
+- release audit for the current selected SHA returns `GO_FOR_SELECTED_SHA`
+- selected-tag go/no-go for `v1.1.1` returns `GO`
 
 Current release truth after PRJ-1128 and PRJ-1129:
 

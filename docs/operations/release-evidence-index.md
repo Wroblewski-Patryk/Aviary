@@ -1,6 +1,6 @@
 # Release Evidence Index
 
-Last updated: 2026-05-13
+Last updated: 2026-05-22
 
 ## Purpose
 
@@ -17,19 +17,19 @@ deployed.
 | Local selected UI candidate | `43837bb183c8975845b99b65a03cea5ccf4903a0` |
 | Latest committed closure-proof revision | `c427ab110276c98a122d6c1be3f7d9a02eeffa3c` |
 | Local relation to `origin/main` | equal after PRJ-1196 structured-perception deploy |
-| Current release tag | `v1.0.1` |
-| Current release tag object | `b016c4f33051805cfa09664f79bbe57f5b30811b` |
-| Current release tag target commit | `3b46ed3878a8560c3adb147fcadf064818ccc322` |
+| Current release tag | `v1.1.1` |
+| Current release tag object | `92d9ecb77b3f512dbdbc557a1b3a0e35bed7d50d` |
+| Current release tag target commit | `df677370f63d2688eb792f9a3a846d2cd40a564b` |
 | Historical release tag | `v1.0.0` |
 | Historical release tag object | `b5d8379df1898aa5533bd72a7a1631d6044f2125` |
 | Historical release tag target commit | `5e64f494e2aac8d29cea532d95f7039ed6029213` |
-| Production backend revision | live `/health` confirmed `c427ab110276c98a122d6c1be3f7d9a02eeffa3c` after PRJ-1196 proof refresh |
-| Production web meta revision | release smoke confirmed `c427ab110276c98a122d6c1be3f7d9a02eeffa3c` after PRJ-1196 proof refresh |
-| Production health | `ok`; HTTP `200` after PRJ-1196 Coolify redeploy recovery and release smoke |
+| Production backend revision | `df677370f63d2688eb792f9a3a846d2cd40a564b` after PRJ-1231 release smoke |
+| Production web meta revision | `df677370f63d2688eb792f9a3a846d2cd40a564b` after PRJ-1231 release smoke |
+| Production health | `ok`; HTTP `200` after PRJ-1231 deploy parity and release smoke |
 | Production release readiness | `true` |
 | Production v1 final acceptance | `core_v1_bundle_ready` |
 | Production deploy parity | `deploy_parity_surface_ready` |
-| Selected candidate release verdict | `GO_FOR_SELECTED_SHA`; `v1.0.1` go/no-go `GO` in PRJ-1131 |
+| Selected candidate release verdict | `GO_FOR_SELECTED_SHA`; `v1.1.1` selected-tag go/no-go `GO` in PRJ-1231 |
 | Current workspace local validation | `passed`; backend pytest, web typecheck/build/route smoke, mobile typecheck/preview smoke/device doctor |
 | Current packaged UI candidate SHA | `43837bb183c8975845b99b65a03cea5ccf4903a0` |
 | Current packaged closure-proof SHA | `07b3b3e5fe3bd37439dd1cafbdc7fb15c4ef3a7b` |
@@ -42,9 +42,9 @@ deployed.
 
 ## Current Decision
 
-`v1.0.1` remains the current selected-SHA release marker for tag target commit
-`3b46ed3878a8560c3adb147fcadf064818ccc322`; `v1.0.0` remains historical marker
-truth for tag target commit `5e64f494e2aac8d29cea532d95f7039ed6029213`.
+`v1.1.1` is the current selected-scope v1 release marker for tag target commit
+`df677370f63d2688eb792f9a3a846d2cd40a564b`; `v1.1.0`, `v1.0.1`, and
+`v1.0.0` remain historical marker truth for their selected SHAs.
 
 The current post-marker UI deployment evidence is PRJ-1185. PR #1 merged the
 v1.5 mobile/web UI candidate at
@@ -58,9 +58,10 @@ The latest cleanup proof confirmed
 validation-owned local mobile preview process on `8093`.
 
 PRJ-1115 is retained as historical evidence for the `v1.0.0` marker. PRJ-1128
-is the current post-v1 candidate recovery point, PRJ-1131 created and pushed
-annotated tag `v1.0.1`, and PRJ-1185 is the current v1.5 UI production evidence
-point.
+is the post-v1 candidate recovery point, PRJ-1131 created and pushed annotated
+tag `v1.0.1`, and PRJ-1231 created and pushed annotated tag `v1.1.1` after
+production deploy parity, release smoke, release reality audit, and selected
+tag go/no-go passed.
 
 ## Required Proof Chain For A New Candidate
 
