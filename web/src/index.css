@@ -920,6 +920,16 @@ body {
   box-shadow: 0 9px 18px rgba(60, 102, 98, 0.15);
 }
 
+.aion-route-switcher-button:focus-visible,
+.aion-mobile-tabbar-button:focus-visible,
+.aion-nav-button:focus-visible,
+.aion-utility-account:focus-visible,
+.aion-sidebar-identity-card:focus-visible,
+.aion-mobile-account-button:focus-visible {
+  outline: 2px solid rgba(95, 143, 147, 0.5);
+  outline-offset: 0.18rem;
+}
+
 .aion-route-switcher-icon {
   display: inline-flex;
   width: 0.94rem;
@@ -1399,6 +1409,113 @@ body {
   letter-spacing: 0.26em;
 }
 
+@media (max-width: 640px) {
+  .aion-shell-stage {
+    gap: 0.72rem !important;
+  }
+
+  .aion-mobile-route-header {
+    border-radius: 1.22rem !important;
+  }
+
+  .aion-mobile-route-header > div:first-child {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.52rem;
+    padding: 0.54rem 0.62rem 0.48rem !important;
+  }
+
+  .aion-mobile-route-header > div:first-child > div:first-child {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.62rem;
+    min-width: 0;
+  }
+
+  .aion-mobile-route-header .aion-wordmark-mobile-badge {
+    padding: 0.38rem 0.58rem;
+    transform: none;
+    box-shadow: 0 6px 12px rgba(84, 66, 52, 0.045);
+  }
+
+  .aion-mobile-route-header .aion-brand-lockup-compact {
+    gap: 0.42rem;
+  }
+
+  .aion-mobile-route-header .aion-brand-lockup-compact .aion-brand-mark {
+    width: 1.32rem;
+    height: 1.32rem;
+  }
+
+  .aion-mobile-route-header .aion-brand-lockup-compact .aion-brand-word {
+    font-size: 1.04rem;
+    letter-spacing: 0.2em;
+  }
+
+  .aion-mobile-route-header .text-xs.uppercase.tracking-\[0\.24em\],
+  .aion-mobile-route-header .text-xs.uppercase.tracking-\[0\.18em\] {
+    display: none;
+  }
+
+  .aion-mobile-route-header .mt-3 {
+    margin-top: 0 !important;
+  }
+
+  .aion-mobile-route-header h1 {
+    overflow: hidden;
+    font-size: 1.18rem !important;
+    line-height: 1.03;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .aion-mobile-tabbar {
+    margin-top: 0;
+    border-radius: 1rem;
+    padding: 0.28rem;
+    padding-bottom: calc(0.28rem + env(safe-area-inset-bottom));
+    box-shadow:
+      0 8px 16px rgba(78, 58, 43, 0.065),
+      inset 0 1px 0 rgba(255, 255, 255, 0.46);
+  }
+
+  .aion-mobile-tabbar::after {
+    top: 0.28rem;
+    right: 0.28rem;
+    bottom: calc(0.28rem + env(safe-area-inset-bottom));
+    width: 1.75rem;
+  }
+
+  .aion-mobile-tabbar-scroll {
+    gap: 0.2rem;
+    padding-right: 1.35rem;
+  }
+
+  .aion-mobile-tabbar-button {
+    flex-basis: 3.55rem;
+    grid-template-rows: 0.92rem auto;
+    gap: 0.08rem;
+    min-width: 3.55rem;
+    padding: 0.32rem 0.24rem 0.3rem !important;
+    border-radius: 0.72rem !important;
+    font-size: 0.58rem !important;
+  }
+
+  .aion-mobile-tabbar-icon,
+  .aion-mobile-tabbar-icon svg {
+    width: 0.84rem;
+    height: 0.84rem;
+  }
+
+  .aion-mobile-account-button {
+    min-height: 2rem;
+    padding: 0.32rem 0.68rem;
+    font-size: 0.7rem;
+  }
+}
+
 .aion-panel {
   border: 1px solid var(--aion-line);
   background:
@@ -1654,19 +1771,15 @@ body {
   transform: translateY(-50%);
 }
 
-.aion-utility-search input {
+.aion-utility-search-placeholder {
   width: 100%;
-  border: 0;
-  background: transparent;
   color: var(--aion-muted);
   font: inherit;
   font-size: 0.84rem;
   line-height: 1.55;
-  outline: none;
-}
-
-.aion-utility-search input::placeholder {
-  color: rgba(110, 98, 88, 0.84);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .aion-utility-search-icon,
@@ -2020,10 +2133,10 @@ body {
 
 .aion-sidebar-support-card {
   border-radius: 1rem;
-  border: 1px solid rgba(88, 67, 52, 0.075);
+  border: 1px solid rgba(88, 67, 52, 0.055);
   box-shadow:
-    0 12px 26px rgba(78, 58, 43, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.32);
+    0 8px 18px rgba(78, 58, 43, 0.026),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
 }
 
 .aion-sidebar-health-card {
@@ -2033,8 +2146,8 @@ body {
 
 .aion-sidebar-health-title {
   margin: 0;
-  color: rgba(110, 98, 88, 0.82);
-  font-size: 0.66rem;
+  color: rgba(110, 98, 88, 0.7);
+  font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -2043,7 +2156,7 @@ body {
 .aion-sidebar-health-status {
   color: #4d8d86;
   margin: 0.04rem 0 0;
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: 600;
   line-height: 1.2;
 }
@@ -2051,8 +2164,8 @@ body {
 .aion-sidebar-health-body {
   margin: 0.32rem auto 0;
   max-width: 10.6rem;
-  color: rgba(88, 67, 52, 0.8);
-  font-size: 0.72rem;
+  color: rgba(88, 67, 52, 0.66);
+  font-size: 0.69rem;
   line-height: 1.46;
 }
 
@@ -6551,6 +6664,18 @@ body {
   font-size: 2.3rem;
   line-height: 0.95;
   color: var(--aion-ink);
+}
+
+.aion-memory-stat-value,
+.aion-reflections-stat-value,
+.aion-plans-stat-value,
+.aion-goals-stat-value,
+.aion-insights-stat-value,
+.aion-automations-stat-value,
+.aion-integrations-stat-value {
+  font-family: var(--font-body, "Inter", sans-serif);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
 }
 
 .aion-integrations-stat-detail {

@@ -9,6 +9,58 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1235-mobile-shell-first-viewport-polish
+- Status: COMPLETED
+- Selected objective: compact the authenticated mobile shell so every route
+  keeps one header and one navigation while giving more first-viewport space to
+  the actual product surface.
+- Why this mission now: PRJ-1234 is green, and the clearest remaining
+  cross-route improvement visible in screenshots is shared mobile chrome
+  density rather than another route-local decoration pass.
+- Release objective or product milestone advanced: local v1.2 web
+  mobile-transfer confidence.
+- First/next checkpoint: local PRJ-1235 mobile-shell polish is complete. The
+  next checkpoint should either promote a v1.2 release candidate or take the
+  next evidence-backed UX item, such as Settings control naming or auth-modal
+  tab semantics.
+- Stop conditions: completed. Do not reopen unless a new screenshot, keyboard,
+  or route-smoke proof identifies a regression.
+- Parent validation gate: `node --check scripts/route-smoke.mjs`,
+  `npm run build`, route smoke for 14 routes, full screenshot gate for all 14
+  routes across desktop/tablet/mobile with zero UI failures, navigation proof,
+  account proof, manual mobile screenshot review, and cleanup checks.
+
+## PRJ-1235 Current Evidence
+
+- Branch: `codex/v12-web-canonical-ui`
+- Lane status:
+  - UX residual audit lane completed by Meitner.
+  - Code/a11y residual audit lane completed by Euclid.
+  - Coordinator integrated shared-shell, CSS, and script changes.
+- Implementation:
+  - mobile authenticated route header and route rail are more compact
+  - module stat values use UI numeric typography
+  - desktop sidebar support cards are quieter
+  - desktop utility search/action chips no longer expose inert fake buttons
+  - account triggers use disclosure semantics instead of `aria-haspopup="dialog"`
+  - `npm run audit:ui-responsive:full` captures the current 14-route gate
+- Validation:
+  - `node --check scripts/route-smoke.mjs` PASS
+  - `npm run build` PASS
+  - route smoke `route_count=14`, `status=ok`
+  - full responsive screenshot gate `viewport_count=3`,
+    `screenshot_count=42`, `failed_count=0`
+  - navigation proof `step_count=4`, `failed_count=0`
+  - account proof `step_count=1`, `failed_count=0`, `panel_visible=true`
+  - manual review covered mobile Dashboard, Tools, Settings, and desktop
+    Dashboard
+  - cleanup check stopped the validation-owned Vite preview process tree and
+    found no remaining PRJ-1235 browser/dev-server leftovers
+- Artifacts:
+  - `.codex/artifacts/prj1235-mobile-shell-first-viewport-polish/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1234-v12-flagship-last-mile-polish
 - Status: COMPLETED
 - Selected objective: close the final flagship canonical-detail pass for

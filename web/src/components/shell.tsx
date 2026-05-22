@@ -399,31 +399,25 @@ export function ShellUtilityBar({
           <p className="aion-utility-context-copy">{currentSurface}</p>
         </div>
       </div>
-      <label className="aion-utility-search" aria-label="Workspace continuity frame">
+      <div className="aion-utility-search" aria-label="Workspace continuity frame">
         <span className="aion-utility-search-icon" aria-hidden="true" />
-        <input
-          readOnly
-          type="text"
-          value=""
-          placeholder="Search Aviary or ask anything..."
-        />
+        <span className="aion-utility-search-placeholder">Search Aviary or ask anything...</span>
         <span className="aion-utility-search-shortcut" aria-hidden="true" />
-      </label>
+      </div>
       <div className="aion-utility-actions">
-        <button className="aion-utility-pill" type="button">
+        <span className="aion-utility-pill" aria-label="Focus mode status">
           <span className="aion-utility-pill-dot" />
           Focus mode
-        </button>
-        <button className="aion-utility-pill" type="button">
+        </span>
+        <span className="aion-utility-pill" aria-label="Quick capture status">
           Quick capture
-        </button>
-        <button className="aion-utility-icon-pill" type="button" aria-label="Notifications">
+        </span>
+        <span className="aion-utility-icon-pill" aria-label="Notifications">
           3
-        </button>
+        </span>
         <button
           aria-controls="aion-shell-account-popover"
           aria-expanded={accountPanelOpen}
-          aria-haspopup="dialog"
           className={`aion-utility-account ${accountPanelOpen ? "aion-utility-account-active" : ""}`}
           onClick={onAccountClick}
           type="button"

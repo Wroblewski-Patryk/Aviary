@@ -4,6 +4,44 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1235` is DONE:
+  - `.codex/tasks/PRJ-1235-mobile-shell-first-viewport-polish.md`
+- objective:
+  - improve any remaining cross-route v1.2 UX aspects found after PRJ-1234,
+    with emphasis on authenticated mobile first-viewport shell density and
+    shared accessibility polish
+- current result:
+  - coordinated read-only UX residual and code/a11y lanes completed
+  - mobile authenticated route headers are shorter while preserving one header,
+    one account trigger, and one route rail
+  - repeated mobile `WORKSPACE` label is removed from the first viewport
+    hierarchy, so route content starts sooner
+  - module summary count values use unambiguous UI numeric typography
+  - desktop sidebar support cards are visually quieter
+  - desktop utility search/action chips no longer expose inert fake buttons
+  - account triggers now match disclosure-panel semantics instead of claiming
+    `aria-haspopup="dialog"`
+  - `npm run audit:ui-responsive:full` now represents the current 14-route
+    desktop/tablet/mobile screenshot gate with UI findings enabled
+- validation:
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - route smoke -> `route_count=14`, `status=ok`
+  - full responsive screenshot gate -> `viewport_count=3`,
+    `screenshot_count=42`, `failed_count=0`
+  - navigation proof -> `step_count=4`, `failed_count=0`
+  - account proof -> `step_count=1`, `failed_count=0`, `panel_visible=true`
+  - screenshot review covered mobile Dashboard, Tools, Settings, and desktop
+    Dashboard
+  - cleanup check -> stopped validation-owned Vite preview process tree; no
+    remaining PRJ-1235 browser, route-smoke/dev-server, or `5173`/`4173`
+    listener leftovers
+- release boundary:
+  - this is a verified local web UX checkpoint on
+    `codex/v12-web-canonical-ui`
+  - production v1.2 release still requires a separate candidate promotion
+    mission
+
 - `PRJ-1234` is DONE:
   - `.codex/tasks/PRJ-1234-v12-flagship-last-mile-polish.md`
 - objective:

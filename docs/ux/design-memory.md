@@ -1,5 +1,19 @@
 # Design Memory
 
+## 2026-05-23 - Mobile shell first-viewport polish
+
+- On authenticated mobile routes, route identity should live in one compact
+  header row with the Aviary lockup and account trigger. Avoid repeating
+  workspace labels when the title already identifies the route.
+- Keep the mobile route rail visible and scrollable, but tune it like native
+  app chrome: compact icon/label targets, intentional right-edge continuation,
+  and no second navigation surface.
+- Utility chrome that is not wired to behavior should render as status
+  material, not as focusable buttons. Promote it to real controls only when the
+  interaction contract exists.
+- Account panels in the shared shell are disclosure panels unless keyboard and
+  focus behavior make them true dialogs/popovers.
+
 ## 2026-05-23 - Flagship last-mile polish checkpoint
 
 - Keep desktop utility chrome visually secondary to Dashboard, Chat, and

@@ -3940,7 +3940,6 @@ export default function App() {
               <button
                 aria-controls="aion-shell-account-popover"
                 aria-expanded={accountPanelOpen}
-                aria-haspopup="dialog"
                 className="aion-panel-soft aion-sidebar-support-card aion-sidebar-identity-card"
                 onClick={() => setAccountPanelOpen((value) => !value)}
                 type="button"
@@ -4026,7 +4025,6 @@ export default function App() {
                 <button
                   aria-controls="aion-mobile-account-panel"
                   aria-expanded={accountPanelOpen}
-                  aria-haspopup="dialog"
                   className={`aion-mobile-account-button ${accountPanelOpen ? "aion-mobile-account-button-active" : ""}`}
                   onClick={() => setAccountPanelOpen((value) => !value)}
                   type="button"

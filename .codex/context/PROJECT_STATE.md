@@ -6,6 +6,57 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1235` completed a mobile-shell first-viewport and shared
+  accessibility polish pass:
+  - task:
+    - `.codex/tasks/PRJ-1235-mobile-shell-first-viewport-polish.md`
+  - result:
+    - coordinated read-only UX residual and code/a11y lanes after the user
+      asked to continue improving every aspect that could still get better
+    - compacted authenticated mobile route headers and route rail spacing so
+      every route keeps one header and one navigation while showing product
+      content sooner
+    - removed the repeated mobile `WORKSPACE` label from the header first-read
+      and kept route identity as the visible title
+    - moved module summary values to UI numeric typography with tabular
+      numbers
+    - quieted desktop sidebar support card borders/shadows/copy weight
+    - converted inert desktop utility search/action/notification controls into
+      non-button status chips until real behavior exists
+    - aligned account triggers with disclosure semantics by removing inaccurate
+      `aria-haspopup="dialog"`
+    - added a current full-route screenshot audit script:
+      `npm run audit:ui-responsive:full`
+  - validation:
+    - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - route smoke -> `route_count=14`, `status=ok`
+    - full responsive screenshot gate ->
+      `viewport_count=3`, `screenshot_count=42`, `failed_count=0`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - screenshot review covered mobile Dashboard, Tools, Settings, and desktop
+      Dashboard
+    - In-app Browser preview was attempted against plain Vite preview; the
+      authenticated shell cannot be inspected there because route-smoke's auth
+      mock is harness-owned, so authenticated proof remains in route-smoke
+      screenshots.
+    - cleanup check stopped the validation-owned Vite preview process tree and
+      found no remaining PRJ-1235 `chrome-headless-shell`,
+      route-smoke/dev-server processes, or listeners on `5173`/`4173`
+  - artifacts:
+    - `.codex/artifacts/prj1235-mobile-shell-first-viewport-polish/route-smoke-report.json`
+    - `.codex/artifacts/prj1235-mobile-shell-first-viewport-polish/screenshot-gate-report.json`
+    - `.codex/artifacts/prj1235-mobile-shell-first-viewport-polish/navigation-proof-report.json`
+    - `.codex/artifacts/prj1235-mobile-shell-first-viewport-polish/account-proof-report.json`
+    - `.codex/artifacts/prj1235-mobile-shell-first-viewport-polish/screenshots/`
+  - release boundary:
+    - this is a verified local web UX checkpoint on
+      `codex/v12-web-canonical-ui`
+    - production v1.2 release still requires a separate candidate promotion
+      mission with deploy parity and production smoke
+
 - 2026-05-23: `PRJ-1234` completed the v1.2 flagship last-mile UX/UI polish
   pass:
   - task:

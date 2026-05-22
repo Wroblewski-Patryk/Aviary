@@ -46,6 +46,24 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1235` completes a local v1.2 mobile-shell first-viewport polish
+  checkpoint for `AVIARY-WEB-RESP-001`: authenticated mobile route headers and
+  route rails are more compact while preserving one header, one account trigger,
+  and one navigation surface; module summary values use unambiguous UI numeric
+  typography; desktop sidebar support cards are quieter; inert desktop utility
+  buttons became non-button status chips; account triggers now use
+  disclosure-aligned semantics instead of `aria-haspopup="dialog"`; and
+  `npm run audit:ui-responsive:full` captures the current 14-route
+  desktop/tablet/mobile screenshot gate. Evidence: `node --check
+  scripts/route-smoke.mjs` PASS; `npm run build` PASS; route smoke
+  `route_count=14`, `status=ok`; full responsive screenshot gate
+  `viewport_count=3`, `screenshot_count=42`, `failed_count=0`; navigation
+  proof `status=ok`, `step_count=4`, `failed_count=0`; account proof
+  `status=ok`, `step_count=1`, `failed_count=0`, `panel_visible=true`;
+  screenshot review covered mobile Dashboard, Tools, Settings, and desktop
+  Dashboard. Production v1.2 release is not claimed from this local branch
+  proof.
+
 - `PRJ-1234` completes the local v1.2 flagship last-mile UX checkpoint for
   `AVIARY-WEB-RESP-001`: coordinated UX gap, design-system, and QA gate lanes
   were integrated into a scoped web polish slice. Desktop utility chrome is

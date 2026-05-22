@@ -36,6 +36,29 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-23 - Start-Process needs npm.cmd on Windows
+- Context:
+  - PRJ-1235 started a local Vite preview for an in-app Browser check after
+    the authenticated route-smoke screenshot gate passed.
+- Symptom:
+  - `Start-Process -FilePath npm` failed with `%1 is not a valid Win32
+    application` on Windows.
+- Root cause:
+  - PowerShell `Start-Process` needs the executable shim (`npm.cmd`) rather
+    than the shell-resolved `npm` alias when launching a background npm command.
+- Guardrail:
+  - use `Start-Process -FilePath npm.cmd -ArgumentList ... -WindowStyle Hidden`
+    for background npm preview/dev commands on Windows.
+- Preferred pattern:
+  - write stdout/stderr to task artifacts and capture the spawned PID before
+    browser validation.
+- Avoid:
+  - using bare `npm` as the `Start-Process` file path.
+- Evidence:
+  - PRJ-1235 retried with `npm.cmd`, started Vite preview on
+    `http://127.0.0.1:4173/`, completed the Browser attempt, and then cleaned
+    up validation-owned preview processes.
+
 ### 2026-05-22 - Absolute artifact paths prevent stray route-smoke outputs
 - Context:
   - PRJ-1233 ran focused and full web route-smoke screenshot gates from inside
