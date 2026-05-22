@@ -4,8 +4,8 @@
 - ID: PRJ-1232
 - Title: V1.2 Web Canonical UI System
 - Task Type: frontend
-- Current Stage: implementation
-- Status: IN_PROGRESS
+- Current Stage: release
+- Status: DONE
 - Owner: Coordinator
 - Depends on: PRJ-1231
 - Priority: P0
@@ -17,7 +17,7 @@
 - Iteration: 1232
 - Operation Mode: BUILDER
 - Mission ID: PRJ-1232-v12-web-canonical-ui-system
-- Mission Status: IN_PROGRESS
+- Mission Status: COMPLETED
 
 ## Context
 V1.1.1 is production-released. The user requested v1.2 frontend work using the
@@ -40,14 +40,14 @@ web view toward the canonical mobile/desktop product baseline with evidence.
 - Reuse current web route contracts and backend data shapes.
 
 ## Definition of Done
-- [ ] UX spec lane maps canonical references to surfaces.
-- [ ] Frontend architecture lane maps route files, style ownership, and safe
+- [x] UX spec lane maps canonical references to surfaces.
+- [x] Frontend architecture lane maps route files, style ownership, and safe
       first write scope.
-- [ ] QA lane defines screenshot, smoke, overflow, accessibility, and cleanup
+- [x] QA lane defines screenshot, smoke, overflow, accessibility, and cleanup
       gates.
-- [ ] First implementation batch is selected from source-of-truth surface order.
-- [ ] Batch implementation has desktop/mobile proof and green web gates.
-- [ ] Source-of-truth state records v1.2 scope, evidence, and next batch.
+- [x] First implementation batch is selected from source-of-truth surface order.
+- [x] Batch implementation has desktop/mobile proof and green web gates.
+- [x] Source-of-truth state records v1.2 scope, evidence, and next batch.
 
 ## Forbidden
 - replacing canonical imagery with generic gradients or placeholder assets
@@ -60,11 +60,11 @@ web view toward the canonical mobile/desktop product baseline with evidence.
 
 | Lane | Owner | Expected output | Proof | Status |
 | --- | --- | --- | --- | --- |
-| Coordinator | Active chat | Mission, batch choice, integration, implementation gate | Parent validation | IN_PROGRESS |
+| Coordinator | Active chat | Mission, batch choice, integration, implementation gate | Parent validation | COMPLETED |
 | UX Spec Auditor | Explorer | Canonical reference map by surface | Read-only report | COMPLETED |
 | Frontend Architecture Auditor | Explorer | Route/component/CSS ownership and first write scope | Read-only report | COMPLETED |
 | QA/Visual Gate Planner | Explorer | Commands, screenshot proof, cleanup gates | Read-only report | COMPLETED |
-| Implementation | Coordinator or worker after lane integration | First bounded UI batch | Web build/audits/screenshots | IN_PROGRESS |
+| Implementation | Coordinator after lane integration | Bounded v1.2 UI checkpoints | Web build/audits/screenshots | COMPLETED |
 
 ## Implementation Plan
 1. Inventory canonical assets and route targets.
@@ -126,11 +126,47 @@ web view toward the canonical mobile/desktop product baseline with evidence.
     `unnamedInteractiveCount=0`, and `overflowingElementCount=0`
   - scenic landing background no longer uses transform scaling that produced a
     decorative out-of-viewport element in smoke diagnostics.
+- Shell/Dashboard batch:
+  - mobile/tablet Dashboard route label changed from ambiguous `Home/Start` to
+    `Dash`/`Panel`, keeping public Home distinct from authenticated Dashboard.
+  - desktop Dashboard received route-local density tuning for hero signals,
+    cognitive flow, lower cards, and right rail.
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - `.codex/artifacts/prj1232-dashboard-shell-gate/report.json` ->
+    `screenshot_count=3`, `failed_count=0`
+  - navigation proof -> `step_count=4`, `failed_count=0`
+- Chat batch:
+  - desktop cognitive belt is lighter and lower while preserving six visible
+    status cards in one row.
+  - `.codex/artifacts/prj1232-chat-belt-gate/report.json` ->
+    `screenshot_count=3`, `failed_count=0`
+- Personality batch:
+  - desktop hero figure is more flagship-forward.
+  - mobile overview removes redundant explanatory subtitle and keeps status
+    aligned in the compact header before the hero.
+  - `.codex/artifacts/prj1232-personality-hero-gate/report.json` ->
+    `screenshot_count=3`, `failed_count=0`
+- Final cross-route gate:
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - `.codex/artifacts/prj1232-final-route-smoke/report.json` ->
+    `route_count=14`, `status=ok`
+  - `.codex/artifacts/prj1232-final-responsive-gate/report.json` ->
+    `screenshot_count=39`, `failed_count=0`
+  - `.codex/artifacts/prj1232-navigation-proof/report.json` ->
+    `navigation_proof.status=ok`, `step_count=4`, `failed_count=0`
+  - `.codex/artifacts/prj1232-account-proof/report.json` ->
+    `account_proof.status=ok`, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
 
 ## Result Report
-- Task summary: v1.2 mission is active; lanes are integrated; first foundation
-  batch created a shared route manifest, hardened route-smoke, improved mobile
-  Chat first-read behavior, and cleared public Home/Login overflow diagnostics.
+- Task summary: v1.2 web canonical UI checkpoint set is complete. The mission
+  created a shared route manifest, hardened route-smoke, improved mobile Chat,
+  cleared public Home/Login overflow diagnostics, disambiguated Dashboard
+  mobile/tablet nav labels, tightened Dashboard desktop density, lightened the
+  Chat cognitive belt, improved Personality hero rhythm, and proved module
+  route consistency across desktop/tablet/mobile.
 - Files changed:
   - `.agents/state/active-mission.md`
   - `.codex/tasks/PRJ-1232-v12-web-canonical-ui-system.md`
@@ -139,8 +175,7 @@ web view toward the canonical mobile/desktop product baseline with evidence.
   - `web/src/index.css`
   - `web/scripts/route-smoke.mjs`
 - How tested: see Validation Evidence.
-- Remaining surfaces: authenticated shell/sidebar pass, Dashboard density pass,
-  Chat desktop/tablet/mobile final pass, Personality desktop/mobile pass,
-  module-route consistency pass.
-- Final verdict: in progress; first v1.2 foundation slice is verified, but the
-  full v1.2 UI is not yet done.
+- Remaining surfaces: no blocking v1.2 web checkpoint remains. Exact
+  pixel-perfect parity is not claimed; future work can continue from visual
+  taste refinements rather than functional/responsive blockers.
+- Final verdict: DONE for v1.2 web/mobile foundation checkpoints.

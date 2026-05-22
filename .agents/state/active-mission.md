@@ -10,7 +10,7 @@ repository history.
 ## Current Mission
 
 - Mission ID: PRJ-1232-v12-web-canonical-ui-system
-- Status: IN_PROGRESS
+- Status: COMPLETED
 - Selected objective: build v1.2 web UI toward the canonical documentation
   references across mobile and desktop, using the web implementation as the
   foundation for the future mobile app. The work must be functional,
@@ -20,10 +20,9 @@ repository history.
   and all web views supervised across mobile and desktop.
 - Release objective or product milestone advanced: v1.2 canonical web UI
   baseline for future native/mobile app transfer.
-- First/next checkpoint: continue route-local v1.2 UI polish from the verified
-  foundation and public Home batches. Prioritize authenticated shell/sidebar,
-  Dashboard density, Chat final pass, Personality final pass, and shared
-  module-route consistency.
+- First/next checkpoint: v1.2 web canonical UI checkpoints are complete on the
+  working branch. Next mission should either prepare a v1.2 release candidate
+  or perform a narrower visual taste pass from fresh screenshot review.
 - Stop conditions: canonical references conflict; a route lacks enough spec to
   claim parity; validation cannot capture desktop/mobile screenshots; broad
   refactor risk exceeds the first batch; production v1.1.1 marker would be
@@ -63,6 +62,15 @@ repository history.
     `panel_visible=true`
   - public Home/Login gate -> `screenshot_count=4`, `failed_count=0`,
     `overflowingElementCount=0` across desktop/mobile `/` and `/login`
+  - Shell/Dashboard batch disambiguated mobile/tablet Dashboard labels from
+    public Home and tightened desktop Dashboard density; focused gate
+    `screenshot_count=3`, `failed_count=0`.
+  - Chat batch lightened the desktop cognitive belt; focused gate
+    `screenshot_count=3`, `failed_count=0`.
+  - Personality batch improved desktop/mobile hero rhythm and compact mobile
+    overview status; focused gate `screenshot_count=3`, `failed_count=0`.
+  - Final responsive gate covered public, flagship, and module routes:
+    `screenshot_count=39`, `failed_count=0`.
 - Artifacts:
   - `.codex/artifacts/prj1232-route-smoke/report.json`
   - `.codex/artifacts/prj1232-web-responsive-visual-gate/report.json`
@@ -70,6 +78,21 @@ repository history.
   - `.codex/artifacts/prj1232-navigation-proof/report.json`
   - `.codex/artifacts/prj1232-account-proof/report.json`
   - `.codex/artifacts/prj1232-public-home-gate/report.json`
+  - `.codex/artifacts/prj1232-dashboard-shell-gate/report.json`
+  - `.codex/artifacts/prj1232-chat-belt-gate/report.json`
+  - `.codex/artifacts/prj1232-personality-hero-gate/report.json`
+  - `.codex/artifacts/prj1232-final-route-smoke/report.json`
+  - `.codex/artifacts/prj1232-final-responsive-gate/report.json`
+
+## PRJ-1232 Result
+
+- Final verdict: DONE for the v1.2 web/mobile foundation checkpoints.
+- Release caveat: this is a verified web branch checkpoint, not a production
+  v1.2 release. Production release requires a separate candidate promotion
+  mission with deploy parity and release smoke.
+- Residual non-blocking note: exact pixel-perfect parity is not claimed for
+  every canonical reference; future refinements should be taste/precision
+  passes, not blockers for the functional responsive web foundation.
 
 ## Previous Mission
 

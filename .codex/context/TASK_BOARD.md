@@ -4,7 +4,7 @@ Last updated: 2026-05-22
 
 ## Project Status Dashboard (2026-05-22)
 
-- `PRJ-1232` is IN_PROGRESS:
+- `PRJ-1232` is DONE:
   - `.codex/tasks/PRJ-1232-v12-web-canonical-ui-system.md`
 - objective:
   - v1.2 canonical web UI baseline for future mobile app transfer, covering
@@ -20,6 +20,10 @@ Last updated: 2026-05-22
     from real document-level horizontal overflow
   - public Home/Login scenic background no longer reports decorative
     out-of-viewport elements in smoke diagnostics
+  - Dashboard mobile/tablet active route label is no longer ambiguous with the
+    public Home route
+  - Dashboard desktop density, Chat cognitive belt, Personality hero rhythm,
+    and module route consistency were completed as bounded checkpoints
 - validation:
   - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
   - `npm run build` in `web/` -> PASS
@@ -32,9 +36,15 @@ Last updated: 2026-05-22
     `panel_visible=true`
   - public Home/Login gate -> `screenshot_count=4`, `failed_count=0`,
     `overflowingElementCount=0` across desktop/mobile `/` and `/login`
-- next:
-  - continue authenticated shell/sidebar, Dashboard, Chat, Personality, and
-    module-route consistency batches
+  - Dashboard shell gate -> `screenshot_count=3`, `failed_count=0`
+  - Chat belt gate -> `screenshot_count=3`, `failed_count=0`
+  - Personality hero gate -> `screenshot_count=3`, `failed_count=0`
+  - final responsive gate -> `screenshot_count=39`, `failed_count=0`
+- release boundary:
+  - this completes the v1.2 web/mobile foundation checkpoints on
+    `codex/v12-web-canonical-ui`
+  - production release still requires a separate release candidate promotion
+    mission
 
 - `PRJ-1231` is DONE:
   - `.codex/tasks/PRJ-1231-v1-production-candidate-promotion.md`

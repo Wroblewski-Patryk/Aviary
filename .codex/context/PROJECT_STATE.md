@@ -6,7 +6,7 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
-- 2026-05-22: `PRJ-1232` started v1.2 canonical web UI work:
+- 2026-05-22: `PRJ-1232` completed v1.2 canonical web UI checkpoints:
   - task:
     - `.codex/tasks/PRJ-1232-v12-web-canonical-ui-system.md`
   - result:
@@ -24,6 +24,15 @@ the same project.
       scrollers while preserving document-level horizontal overflow checks
     - public Home/Login scenic background no longer uses transform scaling that
       produced decorative out-of-viewport diagnostics
+    - Dashboard mobile/tablet nav no longer labels the authenticated Dashboard
+      as public `Home`/`Start`; active chip now uses `Dash`/`Panel`
+    - desktop Dashboard density was tightened across hero metrics, cognitive
+      flow, lower cards, and right rail
+    - desktop Chat cognitive belt is lighter and lower while keeping six
+      status cards visible in one row
+    - Personality hero rhythm was improved on desktop/mobile and the mobile
+      overview header was compacted
+    - module route consistency was verified across desktop/tablet/mobile
   - validation:
     - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
     - `npm run build` in `web/` -> PASS
@@ -36,10 +45,15 @@ the same project.
       `panel_visible=true`
     - public Home/Login gate -> `screenshot_count=4`, `failed_count=0`,
       `overflowingElementCount=0` across desktop/mobile `/` and `/login`
-  - next:
-    - continue v1.2 in route-local batches: authenticated shell/sidebar,
-      Dashboard, Chat, Personality, then module-route consistency across mobile
-      and desktop
+    - Dashboard shell gate -> `screenshot_count=3`, `failed_count=0`
+    - Chat belt gate -> `screenshot_count=3`, `failed_count=0`
+    - Personality hero gate -> `screenshot_count=3`, `failed_count=0`
+    - final responsive gate -> `screenshot_count=39`, `failed_count=0`
+  - release boundary:
+    - v1.2 web/mobile foundation checkpoints are done on
+      `codex/v12-web-canonical-ui`
+    - production v1.2 release is not claimed until a separate candidate
+      promotion mission proves deploy parity and production smoke
 
 - 2026-05-22: `PRJ-1230` refreshed selected-scope v1 readiness:
   - task:

@@ -1720,7 +1720,7 @@ function routeMobileLabel(route: RoutePath, locale: ResolvedUiLanguageCode) {
   const labels = {
     en: {
       "/login": "Login",
-      "/dashboard": "Home",
+      "/dashboard": "Dash",
       "/chat": "Chat",
       "/memory": "Memory",
       "/reflections": "Reflect",
@@ -1735,7 +1735,7 @@ function routeMobileLabel(route: RoutePath, locale: ResolvedUiLanguageCode) {
     },
     pl: {
       "/login": "Login",
-      "/dashboard": "Start",
+      "/dashboard": "Panel",
       "/chat": "Czat",
       "/memory": "Pamięć",
       "/reflections": "Refleks",
@@ -1750,7 +1750,7 @@ function routeMobileLabel(route: RoutePath, locale: ResolvedUiLanguageCode) {
     },
     de: {
       "/login": "Login",
-      "/dashboard": "Start",
+      "/dashboard": "Dash",
       "/chat": "Chat",
       "/memory": "Memo",
       "/reflections": "Reflex",

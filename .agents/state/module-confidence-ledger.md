@@ -60,8 +60,22 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
   `failed_count=0`; account proof `step_count=1`, `failed_count=0`,
   `panel_visible=true`; public Home/Login gate `screenshot_count=4`,
   `failed_count=0`, `overflowingElementCount=0` across desktop/mobile `/` and
-  `/login`. Full v1.2 UI parity remains in progress and must not be claimed
-  complete from this foundation slice alone.
+  `/login`. Full v1.2 UI parity was not claimed from this foundation slice
+  alone.
+
+- `PRJ-1232` finalizes the v1.2 web/mobile foundation checkpoint set for
+  `AVIARY-WEB-RESP-001`: Dashboard mobile/tablet labels no longer confuse
+  authenticated Dashboard with public Home; desktop Dashboard density, Chat
+  cognitive belt, Personality hero rhythm, and module-route consistency were
+  completed as bounded frontend checkpoints. Evidence: Dashboard shell gate
+  `screenshot_count=3`, `failed_count=0`; Chat belt gate
+  `screenshot_count=3`, `failed_count=0`; Personality hero gate
+  `screenshot_count=3`, `failed_count=0`; final route smoke `route_count=14`,
+  `status=ok`; final responsive gate `screenshot_count=39`,
+  `failed_count=0`; navigation proof `status=ok`, `step_count=4`,
+  `failed_count=0`; account proof `status=ok`, `step_count=1`,
+  `failed_count=0`, `panel_visible=true`. Production v1.2 release is not
+  claimed from this branch proof.
 
 - `PRJ-1231` promotes selected-scope v1 to production-backed release marker
   `v1.1.1` for SHA `df677370f63d2688eb792f9a3a846d2cd40a564b`: candidate was
