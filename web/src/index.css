@@ -688,9 +688,9 @@ body {
   place-items: center;
   padding: 1.35rem;
   background:
-    radial-gradient(circle at 50% 18%, rgba(255, 251, 245, 0.34), transparent 0 28%),
-    rgba(33, 24, 18, 0.2);
-  backdrop-filter: blur(16px);
+    radial-gradient(circle at 50% 18%, rgba(255, 251, 245, 0.28), transparent 0 28%),
+    rgba(33, 24, 18, 0.28);
+  backdrop-filter: blur(18px);
 }
 
 .aion-public-auth-modal-card {
@@ -1310,6 +1310,10 @@ body {
 
   .aion-public-auth-modal-backdrop {
     padding: 0.9rem;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(255, 251, 245, 0.18), transparent 0 26%),
+      rgba(33, 24, 18, 0.38);
+    backdrop-filter: blur(20px);
   }
 
   .aion-public-auth-modal-card {

@@ -59,6 +59,33 @@ fixes for this repository.
     `http://127.0.0.1:4173/`, completed the Browser attempt, and then cleaned
     up validation-owned preview processes.
 
+### 2026-05-23 - Vite preview may silently hop ports when a prior listener remains
+- Context:
+  - PRJ-1236 started a Vite preview for an auth modal browser proof after
+    previous UI validation work had used port `4173`.
+- Symptom:
+  - Vite reported `Port 4173 is in use, trying another one...` and served on
+    `4174`; cleanup later found multiple Personality preview processes.
+- Root cause:
+  - a validation-owned preview process can survive as an orphaned Vite child
+    even when parent npm/cmd processes have already exited or were partially
+    stopped.
+- Guardrail:
+  - before and after local browser proof, scan both command line and listening
+    ports for the repo path and expected preview ports, then stop the whole
+    validation-owned process set.
+- Preferred pattern:
+  - run a narrow `Get-CimInstance Win32_Process` check for `vite preview` or
+    `npm.*preview` plus the repo path or expected ports, and pair it with a
+    `Get-NetTCPConnection` check for `4173` and any fallback port Vite chose.
+- Avoid:
+  - assuming a green route-smoke cleanup means a separately started preview
+    server is gone.
+- Evidence:
+  - PRJ-1236 stopped the validation-owned `npm preview` and Vite process tree,
+    confirmed no PRJ-1236 listeners remained on `4173` or `4174`, and left an
+    unrelated `Obiekty` dev server on `5173` untouched.
+
 ### 2026-05-22 - Absolute artifact paths prevent stray route-smoke outputs
 - Context:
   - PRJ-1233 ran focused and full web route-smoke screenshot gates from inside

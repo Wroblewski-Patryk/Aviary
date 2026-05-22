@@ -166,8 +166,8 @@ const UI_COPY = {
       signedInAs: "Signed in as",
       signOut: "Sign out",
       build: "build",
-      uiLanguage: "UI language",
-      utcOffset: "UTC offset",
+      uiLanguage: "App language",
+      utcOffset: "Local time",
       conversationLanguage: "Conversation language",
       proactive: "Proactive",
       on: "On",
@@ -175,7 +175,7 @@ const UI_COPY = {
       save: "Save settings",
       saving: "Saving...",
       loading: "Loading...",
-      interfaceOnly: "Interface only",
+      interfaceOnly: "Shell only",
       details: "Details",
       inspectPayload: "View details",
       noData: "No data yet.",
@@ -257,15 +257,15 @@ const UI_COPY = {
     },
     settings: {
       eyebrow: "Settings",
-      title: "Personalize the shell",
-      subtitle: "Short, mobile-first settings focused on your profile, interface language, and proactive follow-ups.",
+      title: "Personalize Aviary",
+      subtitle: "Keep your name, app language, local time, and follow-ups aligned with how you use Aviary.",
       profileTitle: "Profile",
       profileBody: "Choose how the shell identifies you.",
-      uiLanguageTitle: "Interface language",
-      uiLanguageBody: "Changes labels, copy, and navigation in the app shell only.",
+      uiLanguageTitle: "App language",
+      uiLanguageBody: "Changes labels, copy, and navigation in Aviary only.",
       uiLanguageHelp: "This does not control the language used inside the conversation itself.",
-      utcOffsetTitle: "Local time offset",
-      utcOffsetBody: "Sets the explicit UTC offset used when the runtime reasons about the current date and time for your profile.",
+      utcOffsetTitle: "Local time",
+      utcOffsetBody: "Keeps today, tomorrow, and follow-up timing aligned with your place.",
       utcOffsetHelp: "Choose the offset that matches your current place, for example Switzerland or Poland in winter is usually UTC+01:00.",
       conversationTitle: "Conversation language",
       conversationBody: "The conversation adapts live from context, history, and the current exchange.",
@@ -687,8 +687,8 @@ const UI_COPY = {
       signedInAs: "Zalogowano jako",
       signOut: "Wyloguj",
       build: "build",
-      uiLanguage: "Język UI",
-      utcOffset: "Offset UTC",
+      uiLanguage: "Język aplikacji",
+      utcOffset: "Lokalny czas",
       conversationLanguage: "Język rozmowy",
       proactive: "Proaktywność",
       on: "Wł.",
@@ -696,7 +696,7 @@ const UI_COPY = {
       save: "Zapisz ustawienia",
       saving: "Zapisywanie...",
       loading: "Ładowanie...",
-      interfaceOnly: "Tylko interfejs",
+      interfaceOnly: "Tylko Aviary",
       details: "Szczegóły",
       inspectPayload: "Pokaż szczegóły",
       noData: "Brak danych.",
@@ -773,15 +773,15 @@ const UI_COPY = {
     },
     settings: {
       eyebrow: "Ustawienia",
-      title: "Dopasuj powłokę",
-      subtitle: "Krótki, mobile-first widok ustawień skupiony na profilu, języku interfejsu i proaktywnych follow-upach.",
+      title: "Dopasuj Aviary",
+      subtitle: "Utrzymaj imię, język aplikacji, lokalny czas i follow-upy w zgodzie z tym, jak korzystasz z Aviary.",
       profileTitle: "Profil",
       profileBody: "Wybierz, jak aplikacja ma Cię opisywać.",
-      uiLanguageTitle: "Język interfejsu",
-      uiLanguageBody: "Zmienia etykiety, copy i nawigację tylko w powłoce aplikacji.",
+      uiLanguageTitle: "Język aplikacji",
+      uiLanguageBody: "Zmienia etykiety, copy i nawigację tylko w Aviary.",
       uiLanguageHelp: "To nie steruje językiem używanym wewnątrz samej rozmowy.",
-      utcOffsetTitle: "Lokalny offset czasu",
-      utcOffsetBody: "Ustawia jawny offset UTC, którego runtime używa przy wnioskowaniu o bieżącej dacie i godzinie dla Twojego profilu.",
+      utcOffsetTitle: "Lokalny czas",
+      utcOffsetBody: "Pomaga utrzymać dziś, jutro i follow-upy w rytmie Twojego miejsca.",
       utcOffsetHelp: "Wybierz offset zgodny z Twoim aktualnym miejscem. Na przykład Polska lub Szwajcaria zimą to zwykle UTC+01:00.",
       conversationTitle: "Język rozmowy",
       conversationBody: "Język rozmowy dopasowuje się live na podstawie kontekstu, historii i bieżącej wymiany.",
@@ -1203,8 +1203,8 @@ const UI_COPY = {
       signedInAs: "Angemeldet als",
       signOut: "Abmelden",
       build: "build",
-      uiLanguage: "UI-Sprache",
-      utcOffset: "UTC-Offset",
+      uiLanguage: "App-Sprache",
+      utcOffset: "Lokale Zeit",
       conversationLanguage: "GesprĂ¤chssprache",
       proactive: "Proaktiv",
       on: "An",
@@ -1212,7 +1212,7 @@ const UI_COPY = {
       save: "Einstellungen speichern",
       saving: "Speichern...",
       loading: "LĂ¤dt...",
-      interfaceOnly: "Nur OberflĂ¤che",
+      interfaceOnly: "Nur Aviary",
       details: "Details",
       inspectPayload: "Details anzeigen",
       noData: "Noch keine Daten.",
@@ -1772,6 +1772,9 @@ export default function App() {
   const [route, setRoute] = useState<RoutePath>(() => normalizeRoute(window.location.pathname));
   const mobileNavScrollRef = useRef<HTMLDivElement | null>(null);
   const mobileNavRefs = useRef<Partial<Record<RoutePath, HTMLButtonElement | null>>>({});
+  const authModalRef = useRef<HTMLElement | null>(null);
+  const authEmailInputRef = useRef<HTMLInputElement | null>(null);
+  const authModalReturnFocusRef = useRef<HTMLElement | null>(null);
   const [authMode, setAuthMode] = useState<AuthMode>("login");
   const [authModalOpen, setAuthModalOpen] = useState(() => window.location.pathname === "/login");
   const [authBusy, setAuthBusy] = useState(false);
@@ -1864,12 +1867,58 @@ export default function App() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeAuthModal();
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const modal = authModalRef.current;
+      if (!modal) {
+        return;
+      }
+
+      const focusableElements = Array.from(
+        modal.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), details summary, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => !element.hasAttribute("disabled") && element.getAttribute("aria-hidden") !== "true");
+
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement as HTMLElement | null;
+
+      if (event.shiftKey && activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+        return;
+      }
+
+      if (!event.shiftKey && activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+        return;
+      }
+
+      if (activeElement && !modal.contains(activeElement)) {
+        event.preventDefault();
+        firstElement.focus();
       }
     };
 
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKeyDown);
+    const frameId = window.requestAnimationFrame(() => {
+      authEmailInputRef.current?.focus();
+    });
     return () => {
+      window.cancelAnimationFrame(frameId);
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
@@ -2487,7 +2536,9 @@ export default function App() {
   const settingsHeroChips = [
     localeOptionDisplay(selectedUiLanguageMetadata, resolvedUiLanguage),
     selectedUtcOffsetMetadata.value,
-    Boolean(me?.settings.proactive_opt_in) ? copy.common.on : copy.common.off,
+    Boolean(me?.settings.proactive_opt_in)
+      ? `${copy.common.proactive} ${copy.common.on}`
+      : `${copy.common.proactive} ${copy.common.off}`,
   ];
   const shellNavItems: Array<ShellNavButtonItem<RoutePath>> = [
     {
@@ -3388,6 +3439,7 @@ export default function App() {
   }
 
   function openAuthModal(mode: AuthMode) {
+    authModalReturnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setAuthMode(mode);
     setError(null);
     setAuthModalOpen(true);
@@ -3400,6 +3452,10 @@ export default function App() {
     if (!me) {
       navigatePublicEntry("/");
     }
+    window.requestAnimationFrame(() => {
+      authModalReturnFocusRef.current?.focus();
+      authModalReturnFocusRef.current = null;
+    });
   }
 
   async function handleAuthSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -3795,6 +3851,7 @@ export default function App() {
                     className="aion-public-auth-modal-card aion-panel-soft"
                     id="aviary-auth"
                     onClick={(event) => event.stopPropagation()}
+                    ref={authModalRef}
                     role="dialog"
                   >
                     <div className="aion-public-auth-modal-header">
@@ -3814,9 +3871,9 @@ export default function App() {
                       </button>
                     </div>
 
-                    <div className="aion-public-auth-tabs" role="tablist" aria-label={copy.auth.sessionEntry}>
+                    <div className="aion-public-auth-tabs" role="group" aria-label={copy.auth.sessionEntry}>
                       <button
-                        aria-selected={authMode === "login"}
+                        aria-pressed={authMode === "login"}
                         className={`aion-public-auth-tab ${authMode === "login" ? "is-active" : ""}`}
                         onClick={() => setAuthMode("login")}
                         type="button"
@@ -3824,7 +3881,7 @@ export default function App() {
                         {copy.auth.tabsLogin}
                       </button>
                       <button
-                        aria-selected={authMode === "register"}
+                        aria-pressed={authMode === "register"}
                         className={`aion-public-auth-tab ${authMode === "register" ? "is-active" : ""}`}
                         onClick={() => setAuthMode("register")}
                         type="button"
@@ -3842,6 +3899,7 @@ export default function App() {
                         </div>
                         <input
                           className="input input-bordered w-full"
+                          ref={authEmailInputRef}
                           type="email"
                           value={authForm.email}
                           onChange={(event) => setAuthForm((form) => ({ ...form, email: event.target.value }))}
@@ -3932,9 +3990,9 @@ export default function App() {
                 </div>
                 <p className="aion-sidebar-health-status">Optimal</p>
                 <p className="aion-sidebar-health-body">All systems aligned and operating well.</p>
-                <button className="aion-sidebar-quiet-button" type="button">
-                  View diagnostics
-                </button>
+                <span className="aion-sidebar-quiet-button" aria-label="Diagnostics status">
+                  Diagnostics steady
+                </span>
               </section>
 
               <button
@@ -4806,6 +4864,7 @@ export default function App() {
                     >
                       <label className="form-control mt-4">
                         <input
+                          aria-label={copy.auth.displayName}
                           className="input input-bordered aion-settings-control"
                           value={settingsDraft.displayName}
                           onChange={(event) =>
@@ -4826,6 +4885,7 @@ export default function App() {
                     >
                       <label className="form-control mt-4">
                         <select
+                          aria-label={copy.common.uiLanguage}
                           className="select select-bordered aion-settings-control"
                           value={settingsDraft.uiLanguage}
                           onChange={(event) =>
@@ -4851,6 +4911,7 @@ export default function App() {
                     >
                       <label className="form-control mt-4">
                         <select
+                          aria-label={copy.common.utcOffset}
                           className="select select-bordered aion-settings-control"
                           value={settingsDraft.utcOffset}
                           onChange={(event) =>
@@ -4892,6 +4953,7 @@ export default function App() {
                   >
                     <label className="aion-settings-toggle-row">
                       <input
+                        aria-label={copy.settings.proactiveTitle}
                         className="toggle toggle-primary"
                         type="checkbox"
                         checked={settingsDraft.proactiveOptIn}
@@ -4921,6 +4983,7 @@ export default function App() {
                     <label className="form-control mt-4">
                       <span className="label-text text-base-900">{copy.settings.resetConfirmationLabel}</span>
                       <input
+                        aria-label={copy.settings.resetConfirmationLabel}
                         className="input input-bordered aion-settings-control aion-settings-danger-input mt-2"
                         value={resetConfirmationText}
                         onChange={(event) => setResetConfirmationText(event.target.value)}

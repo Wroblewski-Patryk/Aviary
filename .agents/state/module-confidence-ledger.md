@@ -46,6 +46,23 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1236` completes a local auth and Settings accessibility polish
+  checkpoint for `AVIARY-WEB-RESP-001`: auth modal mode controls now use
+  segmented button semantics with `aria-pressed` instead of an incomplete
+  tablist; the auth modal focuses the email field, traps Tab/Shift+Tab, closes
+  on Escape, and attempts focus restore; Settings controls have explicit
+  accessible names; Settings copy is less implementation-oriented; desktop
+  diagnostics support text is non-interactive status copy; and mobile auth
+  backdrop focus is stronger. Evidence: `node --check scripts/route-smoke.mjs`
+  PASS; `npm run build` PASS; route smoke `route_count=14`, `status=ok`; full
+  responsive screenshot gate `viewport_count=3`, `screenshot_count=42`,
+  `failed_count=0`; navigation proof `status=ok`, `step_count=4`,
+  `failed_count=0`; account proof `status=ok`, `step_count=1`,
+  `failed_count=0`, `panel_visible=true`; screenshot review covered mobile
+  Login, mobile Settings, desktop Settings, and desktop Dashboard. Browser live
+  proof was blocked by no active Codex browser pane. Production v1.2 release is
+  not claimed from this local branch proof.
+
 - `PRJ-1235` completes a local v1.2 mobile-shell first-viewport polish
   checkpoint for `AVIARY-WEB-RESP-001`: authenticated mobile route headers and
   route rails are more compact while preserving one header, one account trigger,

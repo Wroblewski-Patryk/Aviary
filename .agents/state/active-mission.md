@@ -9,6 +9,63 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1236-settings-auth-accessibility-polish
+- Status: COMPLETED
+- Selected objective: close the next small accessibility/interaction gap after
+  PRJ-1235 by aligning auth modal mode controls and Settings form controls with
+  their real behavior and accessible names.
+- Why this mission now: PRJ-1235 is green, and the strongest remaining
+  evidence-backed gap is not another visual redesign but incomplete auth modal
+  tab semantics and under-named Settings controls.
+- Release objective or product milestone advanced: local v1.2 web
+  release-candidate confidence.
+- First/next checkpoint: local PRJ-1236 auth/Settings accessibility polish is
+  complete. The next checkpoint should tackle the Tools provider-plumbing
+  first-read as a separate route-local slice.
+- Stop conditions: completed. Do not reopen unless a new screenshot, keyboard,
+  or route-smoke proof identifies a regression.
+- Parent validation gate: `node --check scripts/route-smoke.mjs`,
+  `npm run build`, route smoke for 14 routes, full screenshot gate for all 14
+  routes across desktop/tablet/mobile with zero UI failures, navigation proof,
+  account proof, manual Login/Auth and Settings screenshot review, and cleanup
+  checks.
+
+## PRJ-1236 Current Evidence
+
+- Branch: `codex/v12-web-canonical-ui`
+- Lane status:
+  - A11y residual audit lane completed by Planck.
+  - UX residual screenshot audit lane completed by Nietzsche.
+  - Coordinator integrated the safe auth/Settings slice.
+- Implementation:
+  - auth mode controls now use segmented button semantics with `aria-pressed`
+    instead of an incomplete tablist pattern
+  - auth modal focuses the email field on open, traps Tab/Shift+Tab inside the
+    dialog, closes on Escape, and attempts focus restore to the opener
+  - Settings editable controls have explicit accessible names
+  - Settings copy uses calmer product language: `Personalize Aviary`,
+    `App language`, `Local time`, and labelled proactive state chips
+  - desktop diagnostics support text is non-interactive status copy
+  - mobile auth backdrop is slightly stronger so the modal remains primary
+- Validation:
+  - `node --check scripts/route-smoke.mjs` PASS
+  - `npm run build` PASS
+  - route smoke `route_count=14`, `status=ok`
+  - full responsive screenshot gate `viewport_count=3`,
+    `screenshot_count=42`, `failed_count=0`
+  - navigation proof `step_count=4`, `failed_count=0`
+  - account proof `step_count=1`, `failed_count=0`, `panel_visible=true`
+  - manual review covered mobile Login, mobile Settings, desktop Settings, and
+    desktop Dashboard
+  - In-app Browser proof was attempted but blocked by no active Codex browser
+    pane; route-smoke screenshots and static self-review are the current proof
+  - cleanup check stopped validation-owned Vite preview process trees and found
+    no remaining PRJ-1236 browser/dev-server leftovers
+- Artifacts:
+  - `.codex/artifacts/prj1236-settings-auth-accessibility-polish/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1235-mobile-shell-first-viewport-polish
 - Status: COMPLETED
 - Selected objective: compact the authenticated mobile shell so every route

@@ -4,6 +4,43 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1236` is DONE:
+  - `.codex/tasks/PRJ-1236-settings-auth-accessibility-polish.md`
+- objective:
+  - continue v1.2 web polish through the next evidence-backed
+    accessibility/interaction gap after PRJ-1235
+- current result:
+  - coordinated read-only a11y and UX residual lanes completed
+  - auth modal login/register mode controls now use segmented button semantics
+    with `aria-pressed` instead of an incomplete tablist pattern
+  - auth modal focuses the email field on open, traps Tab/Shift+Tab inside the
+    dialog, closes on Escape, and attempts focus restore
+  - Settings editable controls now have explicit accessible names
+  - Settings copy is warmer and less implementation-oriented
+  - desktop diagnostics support text is status copy instead of an inert button
+  - mobile auth backdrop is slightly stronger so the modal remains primary
+- validation:
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - route smoke -> `route_count=14`, `status=ok`
+  - full responsive screenshot gate -> `viewport_count=3`,
+    `screenshot_count=42`, `failed_count=0`
+  - navigation proof -> `step_count=4`, `failed_count=0`
+  - account proof -> `step_count=1`, `failed_count=0`, `panel_visible=true`
+  - screenshot review covered mobile Login, mobile Settings, desktop Settings,
+    and desktop Dashboard
+  - In-app Browser proof was attempted but blocked by no active Codex browser
+    pane; route-smoke screenshots and static self-review remain the proof
+  - cleanup check -> stopped validation-owned Vite preview process trees; no
+    remaining PRJ-1236 browser, route-smoke/dev-server, or `4173`/`4174`
+    listener leftovers; an unrelated `Obiekty` dev server on `5173` was left
+    untouched
+- release boundary:
+  - this is a verified local web UX checkpoint on
+    `codex/v12-web-canonical-ui`
+  - production v1.2 release still requires a separate candidate promotion
+    mission
+
 - `PRJ-1235` is DONE:
   - `.codex/tasks/PRJ-1235-mobile-shell-first-viewport-polish.md`
 - objective:

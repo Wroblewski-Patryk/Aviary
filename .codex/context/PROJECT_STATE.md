@@ -6,6 +6,53 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1236` completed an auth and Settings accessibility polish
+  pass:
+  - task:
+    - `.codex/tasks/PRJ-1236-settings-auth-accessibility-polish.md`
+  - result:
+    - coordinated read-only a11y and UX residual lanes after PRJ-1235
+    - changed auth modal mode controls from an incomplete `tablist` pattern to
+      segmented buttons with `aria-pressed`
+    - added auth modal focus management: focus email on open, trap Tab and
+      Shift+Tab inside the dialog, close with Escape, and attempt focus restore
+      to the opener
+    - added explicit accessible names for Settings editable controls
+    - made Settings copy warmer and less implementation-oriented
+    - changed desktop diagnostics support text from an inert button to status
+      copy
+    - strengthened the mobile auth backdrop slightly so the modal remains the
+      primary focus
+  - validation:
+    - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - route smoke -> `route_count=14`, `status=ok`
+    - full responsive screenshot gate ->
+      `viewport_count=3`, `screenshot_count=42`, `failed_count=0`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - screenshot review covered mobile Login, mobile Settings, desktop
+      Settings, and desktop Dashboard
+    - In-app Browser proof was attempted but blocked by no active Codex browser
+      pane; route-smoke screenshots and static self-review remain the proof for
+      this local checkpoint.
+    - cleanup check stopped validation-owned Vite preview process trees and
+      found no remaining PRJ-1236 `chrome-headless-shell`,
+      route-smoke/dev-server processes, or listeners on `4173`/`4174`; an
+      unrelated `Obiekty` dev server on `5173` was left untouched
+  - artifacts:
+    - `.codex/artifacts/prj1236-settings-auth-accessibility-polish/route-smoke-report.json`
+    - `.codex/artifacts/prj1236-settings-auth-accessibility-polish/screenshot-gate-report.json`
+    - `.codex/artifacts/prj1236-settings-auth-accessibility-polish/navigation-proof-report.json`
+    - `.codex/artifacts/prj1236-settings-auth-accessibility-polish/account-proof-report.json`
+    - `.codex/artifacts/prj1236-settings-auth-accessibility-polish/screenshots/`
+  - release boundary:
+    - this is a verified local web UX checkpoint on
+      `codex/v12-web-canonical-ui`
+    - production v1.2 release still requires a separate candidate promotion
+      mission with deploy parity and production smoke
+
 - 2026-05-23: `PRJ-1235` completed a mobile-shell first-viewport and shared
   accessibility polish pass:
   - task:

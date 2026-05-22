@@ -1,5 +1,18 @@
 # Design Memory
 
+## 2026-05-23 - Auth and Settings clarity checkpoint
+
+- Auth login/register mode switches should be modeled as segmented buttons
+  unless the UI implements a complete tab pattern with tab panels and keyboard
+  behavior.
+- Modal auth flows should keep focus inside the dialog while open and should
+  send the first focus to the field that starts the task.
+- Settings copy should describe user intent and daily control, not internal
+  shell/runtime mechanics. Prefer `Aviary`, `App language`, and `Local time`
+  over implementation terms when the underlying behavior is unchanged.
+- Status support text should not use imperative action copy such as `View...`
+  unless it is a real button or link.
+
 ## 2026-05-23 - Mobile shell first-viewport polish
 
 - On authenticated mobile routes, route identity should live in one compact
