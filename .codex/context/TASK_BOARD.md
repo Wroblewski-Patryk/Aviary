@@ -1,6 +1,34 @@
 # TASK_BOARD
 
-Last updated: 2026-05-14
+Last updated: 2026-05-22
+
+## Project Status Dashboard (2026-05-22)
+
+- `PRJ-1230` is DONE:
+  - `.codex/tasks/PRJ-1230-v1-selected-scope-final-readiness-refresh.md`
+- result:
+  - selected-scope v1 was refreshed against the current branch and remains
+    locally verified
+  - Dashboard desktop lower-card density was tightened from concrete UX lane
+    evidence while tablet/mobile layouts stayed stable
+  - `route-smoke` fallback now uses CDP for authenticated SPA route proof when
+    the Playwright package is unavailable in the local environment
+  - production release status was not claimed; deploy parity and release smoke
+    remain required for a promoted candidate
+- validation:
+  - backend full pytest -> `1105 passed`
+  - web build, responsive audit, navigation proof, account proof, and route
+    smoke -> PASS; `route_count=14`, `viewport_count=3`,
+    `screenshot_count=18`, `failed_count=0`, account panel visible
+  - architecture dashboard refresh -> selected-scope readiness `11/11`
+  - `git diff --check` -> PASS with LF/CRLF warnings only
+  - refreshed desktop/tablet/mobile Dashboard screenshots reviewed
+  - cleanup check -> no `chrome-headless-shell` process and no listener on
+    `5173`
+- residual risk:
+  - `ARCH-CONNECTORS-001`, `ARCH-PROACTIVE-001`,
+    `ARCH-DEPLOY-AUTO-001`, and `ARCH-MOBILE-001` remain explicit deferred
+    extension rows outside selected-scope v1
 
 ## Project Status Dashboard (2026-05-14)
 

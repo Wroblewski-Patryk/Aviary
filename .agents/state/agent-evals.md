@@ -1,13 +1,13 @@
 # Agent Process Evals
 
-Last updated: YYYY-MM-DD
+Last updated: 2026-05-22
 
 Use this ledger to improve how Codex agents work together. It evaluates the
 process, not only the code.
 
 | ID | Date | Mission/task | Coordinator score | Lane split score | Brief clarity score | Proof score | Memory score | Main failure mode | Improvement for next mission | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| AEV-000 | YYYY-MM-DD | Example mission | 0-5 | 0-5 | 0-5 | 0-5 | 0-5 | Replace sample row. | Replace sample row. | open |
+| AEV-001 | 2026-05-22 | PRJ-1230 | 4 | 4 | 4 | 5 | 4 | The first web validation attempt exposed that the fallback browser harness proof was weaker than the Playwright path. | Keep coordinator-owned parent validation local, but require every delegated QA gate to name fallback proof assumptions and auth/async marker coverage. | closed |
 
 ## Scoring
 

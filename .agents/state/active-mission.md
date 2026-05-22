@@ -1,6 +1,6 @@
 # Active Mission Packet
 
-Last updated: YYYY-MM-DD
+Last updated: 2026-05-22
 
 Use this file as the first operational router for `pracuj dalej`, `rob dalej`,
 `kontynuuj`, `next`, and similar continuation nudges. Keep it short enough that
@@ -9,58 +9,123 @@ repository history.
 
 ## Current Mission
 
-- Mission ID:
-- Status: PLANNED | IN_PROGRESS | CHECKPOINTED | VERIFIED | PARTIALLY_VERIFIED | BLOCKED | FAILED | SUPERSEDED
-- Selected objective:
-- Why this mission now:
-- Release objective or product milestone advanced:
-- First/next checkpoint:
-- Stop conditions:
-- Parent validation gate:
+- Mission ID: PRJ-1231-v1-production-candidate-promotion
+- Status: IN_PROGRESS
+- Selected objective: turn locally verified selected-scope v1 into a real
+  production-backed release fact by committing the refreshed candidate,
+  publishing it to the deploy source, proving deployed revision parity, running
+  production release smoke, and recording the final marker posture.
+- Why this mission now: the user asked the coordinator to keep working until
+  v1 is fact, and PRJ-1230 proved only local selected-scope readiness. The
+  release boundary requires deploy parity and production smoke before any new
+  release claim.
+- Release objective or product milestone advanced: production-backed v1
+  selected-scope marker for the current web-supported candidate.
+- First/next checkpoint: finalize the PRJ-1231 task contract, confirm source
+  branch and release path, then create/push a candidate commit only after
+  local gate evidence remains green.
+- Stop conditions: git push is unavailable; deploy target/source branch cannot
+  be confirmed; Coolify webhook/auto-deploy access is unavailable and
+  production remains on an older SHA; release smoke fails; backend/web revision
+  parity drifts; tag creation would point at an unproven SHA.
+- Parent validation gate: local PRJ-1230 gate remains the candidate baseline;
+  pre-push `git diff --check`; production
+  `backend/scripts/run_release_smoke.ps1 -BaseUrl
+  https://aviary.luckysparrow.ch -WaitForDeployParity` after deploy; release
+  marker only after smoke returns `GO_FOR_SELECTED_SHA`.
+
+## Previous Mission
+
+- Mission ID: PRJ-1230-v1-selected-scope-final-readiness-refresh
+- Status: COMPLETED
+- Selected objective: refresh the selected-scope v1 readiness claim against the
+  current workspace, coordinate lane findings, run the parent validation gate,
+  and record whether v1 remains `verified`, `partially verified`, or `blocked`.
+- Why this mission now: the user asked the coordinator to finish v1 using
+  agents; the existing dashboard says selected-scope readiness is `11/11`, but
+  the dated evidence is from 2026-05-14 and must not be silently reused for the
+  current branch.
+- Release objective or product milestone advanced: selected-scope v1 closure
+  / web-supported release confidence.
+- First/next checkpoint: selected-scope v1 local readiness is refreshed; next
+  checkpoint is production candidate promotion only if a deploy target is
+  selected.
+- Stop conditions: a P0/P1 selected-scope blocker appears; architecture and
+  implementation conflict; parent validation fails in a way that requires a
+  product or deployment decision; production release parity is requested but
+  target credentials/environment are unavailable.
+- Parent validation gate: `git diff --check`; full backend pytest; web
+  typecheck/build/responsive audit/navigation audit/route smoke; architecture
+  dashboard refresh. Production release smoke is required only if this mission
+  selects a new deployable release candidate.
 
 ## Source Rows
 
-- Task board:
-- Planning:
-- Delivery map:
-- Requirements:
-- Quality scenarios:
-- Risks:
-- Module confidence:
-- System health:
+- Task board: latest completed UI slice `PRJ-1229`; next residual Dashboard
+  lower-card proportions / first-viewport density.
+- Planning: `docs/planning/current-v1-release-boundary.md`;
+  `docs/planning/next-iteration-plan.md`.
+- Delivery map: selected-scope v1 web-supported closure; native and provider
+  extensions remain deferred unless scope is reactivated.
+- Requirements: `REQ-UX-001`, `REQ-MOB-001`, `REQ-AI-001..003`.
+- Quality scenarios: web route rendering and release readiness gates.
+- Risks: deferred provider activation, proactive target sample, deploy
+  automation convergence, and native mobile proof are nonblocking selected
+  scope rows.
+- Module confidence: `AVIARY-WEB-RESP-001`, `AVIARY-STATUS-001`,
+  `AVIARY-COGNITIVE-RUNTIME-001`, `AVIARY-MEMORY-001`.
+- System health: latest dated evidence from 2026-05-14 needs refresh if this
+  branch becomes the active v1 closure basis.
 - Architecture / UX / security / ops sources:
+  `docs/operations/project-status-dashboard.md`,
+  `docs/operations/v1-selected-scope-handoff-2026-05-11.md`,
+  `docs/ux/screen-quality-checklist.md`, `docs/ux/design-memory.md`,
+  `docs/operations/runtime-ops-runbook.md`.
 
 ## Responsibility Lanes
 
 | Lane | Owner | Source docs/state | Owned files/surfaces | Output | Validation/proof | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| Coordinator | Active chat | AGENTS, state, docs | Integration, task closure, source-of-truth updates | Mission packet, lane briefs, final acceptance | Parent validation gate | PLANNED |
-| Product/Requirements | Product Docs or coordinator | Product docs, requirements matrix | Requirements and acceptance criteria | Confirmed scope and success signal | Requirement rows updated | PLANNED |
-| Architecture | Architect or coordinator | Architecture docs, ADRs | Architecture constraints and contracts | Alignment or mismatch note | Architecture evidence | PLANNED |
-| Implementation | Builder lane(s) | Code, task contract | Assigned files only | Scoped implementation | Build/tests for owned scope | PLANNED |
-| QA/Test | QA/Test | Task, code, risk rows | Validation surfaces | Test and proof report | Commands, smoke, journey proof | PLANNED |
-| Security/Ops/UX | Specialist lane(s) as needed | Security, ops, UX docs | Assigned review surfaces | Findings and gates | Focused proof or explicit N/A | PLANNED |
-| Documentation/Memory | Coordinator or docs lane | State files and docs | Task board, project state, ledgers, learning | Durable memory update | Source-of-truth diff | PLANNED |
+| Coordinator | Active chat | AGENTS, mission control, project memory, state files | Integration, task closure, source-of-truth updates | Mission packet, task contract, final readiness decision | Parent validation gate | COMPLETED |
+| Product/Requirements | Coordinator | Current v1 boundary, requirements matrix | Scope, accepted assumptions, exclusions | Selected-scope definition and deferred extension list | Requirements trace review | COMPLETED |
+| Architecture | Coordinator | Project status dashboard, architecture audit | Architecture readiness posture | Alignment or mismatch note | Dashboard refresh | COMPLETED |
+| Frontend/UX | UX explorer, then coordinator | UX refs, screenshots, web route files | Dashboard lower-row density refresh and route-smoke harness hardening | Web audit/screenshot proof | COMPLETED |
+| Backend/API | Coordinator | Runtime confidence rows, backend tests | No backend code planned | Runtime gate status | Full backend pytest | COMPLETED |
+| QA/Test | QA explorer, then coordinator | Known issues, system health, module confidence | Read-only gate report | Parent validation command set and blocker posture | Integrated into task evidence | COMPLETED |
+| Security/Ops/Docs | Coordinator | Release boundary, ops runbook, security protocol | Release/ops evidence notes and state updates | Candidate versus non-candidate release posture | Smoke/deploy risk note | COMPLETED |
+| Documentation/Memory | Coordinator | Task board, project state, ledgers | Active mission, PRJ-1230 task, state summaries | Durable handoff and next checkpoint | Source-of-truth diff review | COMPLETED |
 
 ## Delegation Plan
 
-- Lanes kept local:
-- Lanes delegated:
-- Lanes intentionally omitted and why:
-- Known overlap risks:
-- Forbidden files or surfaces:
+- Lanes kept local: coordination, final integration, shared state updates,
+  parent validation, final `DONE`/blocked decision.
+- Lanes delegated: QA/Release read-only blocker/gate report; Frontend/UX
+  read-only next-slice report.
+- Lanes intentionally omitted and why: Data/Migrations, Security deep review,
+  and provider Ops smoke are omitted unless validation discovers a selected
+  scope change; no schema, secrets, auth, permissions, or provider execution
+  change is planned.
+- Known overlap risks: avoid editing `.codex/context/PROJECT_STATE.md` over
+  existing user governance additions; keep subagents read-only unless a later
+  lane is explicitly given a disjoint write set.
+- Forbidden files or surfaces: no provider credential activation, no native
+  mobile proof work, no new web shell, no architecture rewrite, no temporary
+  bypasses.
 
 ## Acceptance
 
-- [ ] Every important responsibility from source docs has an owner or explicit omission.
-- [ ] No two write lanes own the same file or shared registry.
-- [ ] Each lane has expected output and validation/proof.
-- [ ] Parent validation will run after accepted lane integration.
-- [ ] Missing or unclear ownership will be recorded in `.agents/state/responsibility-learning.md`.
-- [ ] Process quality will be evaluated in `.agents/state/agent-evals.md` when
+- [x] Every important responsibility from source docs has an owner or explicit omission.
+- [x] No two write lanes own the same file or shared registry.
+- [x] Each lane has expected output and validation/proof.
+- [x] Parent validation will run after accepted lane integration.
+- [x] Missing or unclear ownership will be recorded in `.agents/state/responsibility-learning.md`.
+- [x] Process quality will be evaluated in `.agents/state/agent-evals.md` when
       this mission is broad, repeated, partial, or subagent-heavy.
 
 ## Checkpoint Log
 
 | Date | Checkpoint | Result | Evidence | Next action |
 | --- | --- | --- | --- | --- |
+| 2026-05-22 | Mission opened | Multi-lane coordinator mission created after user asked to finish v1 with agents. | Active mission packet; QA/Release and UX read-only lanes delegated. | Create task contract and run/record parent gate. |
+| 2026-05-22 | Lane integration | QA confirmed no selected-scope blockers and UX identified Dashboard lower-row density as the smallest polish slice. | Subagent lane reports; PRJ-1230 task contract. | Patch the focused web slice and harden route-smoke fallback. |
+| 2026-05-22 | Parent validation | COMPLETED: selected-scope v1 remains locally verified for this branch. | `git diff --check` PASS with LF/CRLF warnings only; backend `1105 passed`; web build/responsive/navigation/account/route smoke PASS; architecture dashboard `11/11`; screenshot review; cleanup no leftovers. | Promote only after explicit production deploy target/parity smoke. |

@@ -1,10 +1,33 @@
 # PROJECT_STATE
 
-Last updated: 2026-05-14
+Last updated: 2026-05-22
 
 Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
+
+- 2026-05-22: `PRJ-1230` refreshed selected-scope v1 readiness:
+  - task:
+    - `.codex/tasks/PRJ-1230-v1-selected-scope-final-readiness-refresh.md`
+  - result:
+    - selected-scope v1 remains locally verified on the current branch
+    - architecture status remains `11/11` selected-scope ready with no active
+      blockers or evidence gaps
+    - Dashboard desktop lower-card proportions were tightened from the UX lane
+      report, preserving tablet/mobile behavior
+    - route-smoke fallback now validates authenticated SPA routes through CDP
+      when local Playwright is unavailable
+  - validation:
+    - backend full pytest -> `1105 passed`
+    - web build/responsive/navigation/account/route smoke -> PASS
+    - architecture dashboard refresh -> selected-scope readiness `11/11`
+    - `git diff --check` -> PASS with LF/CRLF warnings only
+    - refreshed desktop/tablet/mobile Dashboard screenshots reviewed
+    - cleanup found no validation-owned browser/server leftovers
+  - release boundary:
+    - no production deploy was performed in this refresh
+    - provider, proactive, deploy automation, and native rows remain deferred
+      extension work outside selected-scope v1
 
 - 2026-05-14: `PRJ-1229` restored authenticated desktop utility bar parity:
   - task:
@@ -15384,6 +15407,10 @@ the same project.
 - Keep repository artifacts in English.
 - Communicate with users in their language.
 - Delegate with explicit ownership and avoid overlapping subagent write scope.
+- Treat the active chat as coordinator for broad Aviary / Personality work.
+  Refresh `.agents/state/active-mission.md`, select lanes from
+  `.agents/workflows/responsibility-lanes.md`, and record missing ownership or
+  evidence gaps in `.agents/state/responsibility-learning.md`.
 - Use the default loop:
   `analyze -> select one task -> plan -> implement -> verify -> self-review -> sync knowledge`.
 - Treat deployment docs and smoke checks as part of done-state for runtime
@@ -15396,6 +15423,9 @@ the same project.
 - `.codex/context/LEARNING_JOURNAL.md`
 - `.agents/workflows/general.md`
 - `.agents/workflows/subagent-orchestration.md`
+- `.agents/workflows/responsibility-lanes.md`
+- `.agents/state/active-mission.md`
+- `.agents/state/responsibility-learning.md`
 
 ## Canonical Docs
 

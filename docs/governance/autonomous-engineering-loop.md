@@ -39,6 +39,23 @@ Every iteration must complete all seven steps:
 Do not merge steps together in task evidence. Small tasks may have concise
 evidence, but every step must be represented.
 
+## Coordinator Gate
+
+When subagents are used, the active agent is the coordinator. The seven-step
+loop still belongs to the coordinator, not to the subagents. Subagents may
+analyze, implement, test, or document bounded lanes, but only the coordinator
+can close the parent task.
+
+Before moving from verification to `DONE`, the coordinator must confirm:
+
+- required responsibility lanes were integrated, rejected, or tracked
+- subagent reports were checked against parent acceptance criteria
+- parent validation ran after integration or the unrun risk is recorded
+- shared state, task board, and project memory were updated once from the
+  coordinator thread
+- reusable learning from subagents was persisted in
+  `.agents/state/responsibility-learning.md` or the correct project memory
+
 ## Step Requirements
 
 ### 1. Analyze Current State

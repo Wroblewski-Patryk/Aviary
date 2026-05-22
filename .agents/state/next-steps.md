@@ -1,8 +1,25 @@
 # Next Steps
 
-Last updated: 2026-05-14
+Last updated: 2026-05-22
 
 ## NOW
+
+1. Selected-scope v1 is locally verified as of `PRJ-1230`:
+   - task:
+     `.codex/tasks/PRJ-1230-v1-selected-scope-final-readiness-refresh.md`
+   - proof:
+     backend full pytest -> `1105 passed`; web build/responsive/navigation/
+     account/route smoke -> PASS; architecture dashboard refresh ->
+     selected-scope readiness `11/11`; `git diff --check` -> PASS with
+     LF/CRLF warnings only; desktop/tablet/mobile Dashboard screenshots
+     reviewed; cleanup confirmed no validation-owned browser/server leftovers
+   - release boundary:
+     do not call this a new production release candidate until deploy parity
+     and release smoke are run for the chosen target
+   - next smallest useful choices:
+     promote a production candidate with release smoke, or continue optional
+     screenshot-driven route polish without changing the selected-scope v1
+     readiness claim
 
 1. Continue from the authenticated desktop utility bar checkpoint:
    - task:

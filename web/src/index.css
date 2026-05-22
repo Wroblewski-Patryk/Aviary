@@ -7828,6 +7828,91 @@ body {
     grid-template-columns: minmax(14rem, 0.48fr) minmax(16rem, 0.58fr) minmax(0, 1.68fr);
   }
 
+  .aion-dashboard-lower-grid-condensed {
+    gap: 0.54rem;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-card {
+    height: 13.7rem;
+    min-height: 12.1rem;
+    padding: 0.64rem 0.72rem;
+    overflow: hidden;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-card .text-sm.uppercase {
+    font-size: 0.68rem !important;
+    line-height: 1.18 !important;
+    letter-spacing: 0.18em !important;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-card .font-display.text-2xl {
+    font-size: 1.32rem !important;
+    line-height: 1.08 !important;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-card .mt-2 {
+    margin-top: 0.38rem !important;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-card .mt-3 {
+    margin-top: 0.42rem !important;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-card .mt-5,
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-card .mt-6 {
+    margin-top: 0.52rem !important;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-card-primary .mt-5 {
+    gap: 0.46rem !important;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-progress {
+    height: 0.34rem;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-focus-orb {
+    max-width: 5.7rem;
+    margin: 0.38rem auto 0.46rem;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-card-focus .text-sm.leading-7 {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 1.38 !important;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-card-focus .aion-dashboard-action-button {
+    margin-top: 0.52rem !important;
+    min-height: 1.92rem;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-bar-chart {
+    min-height: 4.8rem;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-reflection-list {
+    gap: 0.36rem;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-reflection-row {
+    gap: 0.48rem;
+    padding-bottom: 0.38rem;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-reflection-row p {
+    font-size: 0.78rem;
+    line-height: 1.36;
+  }
+
+  .aion-dashboard-lower-grid-condensed .aion-dashboard-reflection-tag {
+    min-width: 5.15rem;
+    padding: 0.3rem 0.48rem;
+    font-size: 0.58rem;
+  }
+
   .aion-chat-stage {
     grid-template-columns: minmax(0, 1.5fr) minmax(22rem, 1fr);
     height: calc(100dvh - 13.6rem);

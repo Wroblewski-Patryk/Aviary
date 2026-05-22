@@ -25,6 +25,34 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-22 - Fallback route smoke must prove authenticated SPA markers
+- Context:
+  - PRJ-1230 refreshed selected-scope v1 readiness and reran the full web
+    validation gate on a local environment where the Playwright package path
+    was unavailable.
+- Symptom:
+  - the old non-Playwright route-smoke fallback could dump the initial DOM but
+    did not reliably wait for mock-authenticated SPA route markers, so
+    authenticated route proof failed before product assertions.
+- Root cause:
+  - the fallback harness did not own the same auth, navigation, and async
+    marker-wait responsibilities as the Playwright path.
+- Guardrail:
+  - route-smoke fallback validation must use CDP or an equivalent browser
+    control path that sets auth context, navigates routes, waits for the route
+    marker, and captures state/screenshots before reporting PASS.
+- Preferred pattern:
+  - keep the web gate sequential as build -> responsive audit -> navigation
+    audit -> account proof -> route smoke, and require both primary and
+    fallback harnesses to prove authenticated routes.
+- Avoid:
+  - treating a static `--dump-dom` snapshot as sufficient evidence for
+    authenticated SPA routes.
+- Evidence:
+  - after CDP fallback hardening, PRJ-1230 web build, responsive audit,
+    navigation proof, account proof, and route smoke passed with
+    `route_count=14`, `screenshot_count=18`, and `failed_count=0`.
+
 ### 2026-05-14 - Wait for route markers before UI screenshots
 - Context:
   - PRJ-1226 polished the authenticated tablet route header and reran the web

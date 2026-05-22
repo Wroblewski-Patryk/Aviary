@@ -1,6 +1,6 @@
 # Module Confidence Ledger
 
-Last updated: 2026-05-14
+Last updated: 2026-05-22
 
 ## Project Alias
 
@@ -45,6 +45,19 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 | AVIARY-BLOCKER-001 | External providers | Provider credential activation smoke for connector readiness | P1 | DEFERRED | Medium | `PRJ-933`; `PRJ-1197`; `docs/planning/current-v1-release-boundary.md` keeps organizer activation outside the achieved core/web-supported marker; `/app/tools/overview` now excludes future-only Trello/Nest placeholders and focused tools-overview test passed. | External credentials/input needed before an expanded organizer launch claim; future provider candidates need bounded runtime contracts before appearing in the active tools catalog. | Run provider activation smoke only when credentials exist and organizer scope expands. | Ops/Release + QA/Test | 2026-05-14 |
 
 ## Recent Evidence Notes
+
+- `PRJ-1230` refreshes selected-scope v1 confidence for
+  `AVIARY-STATUS-001`, `AVIARY-WEB-RESP-001`,
+  `AVIARY-COGNITIVE-RUNTIME-001`, and `AVIARY-MEMORY-001`: backend full
+  pytest passed with `1105 passed`; web build, responsive audit, navigation
+  proof, account proof, and route smoke passed with `route_count=14`,
+  `viewport_count=3`, `screenshot_count=18`, `failed_count=0`, and
+  `account_proof.status=ok`; architecture dashboard refresh preserved
+  selected-scope readiness at `11/11`; `git diff --check` passed with
+  LF/CRLF warnings only; desktop/tablet/mobile Dashboard screenshots were
+  reviewed; validation cleanup found no `chrome-headless-shell` and no
+  listener on `5173`. Deferred provider, proactive, deploy automation, and
+  native extension rows remain outside selected-scope v1.
 
 - `AVIARY-WEB-RESP-001` also includes `PRJ-1229`: authenticated desktop
   utility bar parity passed `npm run build`, `npm run audit:ui-responsive`

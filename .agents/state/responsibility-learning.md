@@ -1,6 +1,6 @@
 # Responsibility Learning
 
-Last updated: YYYY-MM-DD
+Last updated: 2026-05-22
 
 Use this ledger when coordinator/subagent work exposes a missing lane, unclear
 owner, bad split, missing evidence, or missing context. Gaps here must change
@@ -8,7 +8,7 @@ the next similar mission brief, lane registry, docs, or task plan.
 
 | ID | Date | Mission/task | Gap type | Missing or unclear responsibility | Evidence/source | Next briefing change | Stored follow-up | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| RLG-000 | YYYY-MM-DD | Example mission | missing_lane | Replace this sample row with a real responsibility gap. | Source path or subagent report. | Add the lane before the next similar mission. | Task, doc, or state file path. | open |
+| RLG-001 | 2026-05-22 | PRJ-1230 | missing_evidence | The validation lane assumed route-smoke fallback could prove authenticated SPA routes, but the non-Playwright fallback only dumped initial DOM and could miss async/authenticated route markers. | `web/scripts/route-smoke.mjs`; PRJ-1230 web gate first failed before CDP fallback hardening. | Future web validation briefs must assign explicit ownership for both Playwright and fallback browser harnesses, including auth state and post-navigation marker waits. | `web/scripts/route-smoke.mjs`; `.codex/tasks/PRJ-1230-v1-selected-scope-final-readiness-refresh.md` | closed |
 
 ## Gap Types
 
