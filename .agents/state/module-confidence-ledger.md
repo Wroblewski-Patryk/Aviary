@@ -46,6 +46,20 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1253` completes a verified Chat desktop cognitive-belt hierarchy pass
+  for `AVIARY-WEB-RESP-001`: desktop Chat belt cards are lower, flatter, and
+  visually secondary to the transcript/persona stage while all supported
+  labels, values, progress, source markers, and mobile rail behavior remain
+  intact. Evidence: `npm run build` passed; focused `/chat` screenshot gate
+  returned `screenshot_count=3`, `failed_count=0`, `route_count=14`,
+  `status=ok`; `npm run test:chat-transcript` rerun returned `status=ok`,
+  `appSourceCount=2`, `telegramSourceCount=2`; navigation proof returned
+  `step_count=4`, `failed_count=0`; account proof returned `step_count=1`,
+  `failed_count=0`, `panel_visible=true`; `git diff --check` passed with
+  LF/CRLF warning only; cleanup found no validation-owned node/Vite,
+  5173/4173 listener, or headless browser leftovers and removed six fresh
+  route-smoke temp profiles from this checkpoint.
+
 - `PRJ-1252` completes a verified Personality mobile callout hierarchy pass
   for `AVIARY-WEB-RESP-001`: mobile callouts now read as compact
   embodied-map annotations instead of chunky cards over the figure, `Planning`

@@ -9,6 +9,66 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1253-chat-desktop-cognitive-belt-quieting
+- Status: VERIFIED
+- Selected objective: make desktop Chat's cognitive belt flatter and visually
+  secondary to the transcript/persona stage.
+- Why this mission now: after `PRJ-1251` and `PRJ-1252`, Dashboard and
+  Personality had fresh mobile hierarchy passes. The UX parity lane identified
+  Chat's desktop cognitive belt as the next concrete flagship mismatch left by
+  `PRJ-1250`.
+- Release objective or product milestone advanced: v1.2 web Chat canonical
+  desktop first-read quality.
+- First/next checkpoint: completed a CSS-only Chat belt pass. The six context
+  items are lower, flatter, less card-heavy, and still preserve all supported
+  labels, values, progress, transcript source markers, and mobile rail
+  behavior.
+- Stop conditions: next work should pick one exact route/screenshot mismatch
+  or make a content/data decision before changing canonical copy, icon glyphs,
+  route-smoke fixture content, or backend-backed labels.
+- Parent validation gate: web build, focused `/chat` desktop/tablet/mobile
+  screenshot gate, `test:chat-transcript`, navigation proof, account proof,
+  `git diff --check`, screenshot review, and cleanup check.
+
+## PRJ-1253 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Halley and completed read-only
+  - QA lane delegated to Fermat and completed read-only
+  - coordinator implemented the route-local CSS patch and final proof
+- Implementation:
+  - desktop Chat cognitive belt cards now use lower height, lighter material,
+    smaller UI typography, quieter meta chips, and a tiny accent marker
+  - all belt items, labels, values, progress, transcript source markers, and
+    mobile rail behavior remain supported
+- Validation:
+  - `npm run build` PASS
+  - focused `/chat` screenshot gate across desktop/tablet/mobile PASS:
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - `npm run test:chat-transcript` first hit a CDP `Page.navigate` timeout;
+    immediate rerun PASS: `status=ok`, `appSourceCount=2`,
+    `telegramSourceCount=2`
+  - navigation proof PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+  - cleanup found no validation-owned node/Vite, 5173/4173 listener, or
+    headless browser leftovers; six fresh route-smoke temp profiles from this
+    checkpoint were removed
+- Residual:
+  - This is a verified hierarchy/density pass, not a full 95% pixel parity
+    claim. Exact canonical icon metaphors and fixture-copy parity remain
+    separate content/data decisions.
+- Artifacts:
+  - `.codex/tasks/PRJ-1253-chat-desktop-cognitive-belt-quieting.md`
+  - `.codex/artifacts/prj1253-chat-desktop-cognitive-belt/report.json`
+  - `.codex/artifacts/prj1253-chat-desktop-cognitive-belt/navigation-proof.json`
+  - `.codex/artifacts/prj1253-chat-desktop-cognitive-belt/account-proof.json`
+  - `.codex/artifacts/prj1253-chat-desktop-cognitive-belt/screenshots/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1252-personality-mobile-callout-map-quieting
 - Status: VERIFIED
 - Selected objective: make mobile Personality hero callouts feel like compact

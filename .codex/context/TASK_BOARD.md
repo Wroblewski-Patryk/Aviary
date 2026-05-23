@@ -4,6 +4,38 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1253` is DONE:
+  - `.codex/tasks/PRJ-1253-chat-desktop-cognitive-belt-quieting.md`
+- objective:
+  - make desktop Chat's cognitive belt flatter and visually secondary to the
+    transcript/persona stage
+- current result:
+  - desktop Chat belt cards are lower, lighter, and less text-card-like
+  - all supported belt items, labels, values, progress, transcript source
+    markers, and mobile rail behavior remain visible/functionally unchanged
+  - no backend data, fixture values, source mapping, copy, route behavior,
+    shared shell, Dashboard, or Personality behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - focused `/chat` screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - `npm run test:chat-transcript` -> first run hit a CDP `Page.navigate`
+    timeout; immediate rerun PASS with `status=ok`, `appSourceCount=2`,
+    `telegramSourceCount=2`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - cleanup check -> no validation-owned node/Vite, 5173/4173 listener, or
+    headless browser leftovers; six fresh route-smoke temp profiles from this
+    checkpoint were removed
+- residual:
+  - this is a verified Chat belt hierarchy pass, not a full Chat 95% parity
+    claim
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1252` is DONE:
   - `.codex/tasks/PRJ-1252-personality-mobile-callout-map-quieting.md`
 - objective:

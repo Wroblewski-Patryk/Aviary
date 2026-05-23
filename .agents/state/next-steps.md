@@ -4,6 +4,27 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue Chat canonical usability from `PRJ-1253`:
+   - task:
+     `.codex/tasks/PRJ-1253-chat-desktop-cognitive-belt-quieting.md`
+   - result:
+     desktop Chat cognitive belt is flatter, lower, and visually secondary to
+     the transcript/persona stage while all supported labels, values,
+     progress, source markers, and mobile rail behavior remain intact
+   - proof:
+     `npm run build` PASS; Chat screenshot gate across desktop/tablet/mobile
+     PASS with `screenshot_count=3`, `failed_count=0`, `route_count=14`,
+     `status=ok`; `npm run test:chat-transcript` rerun PASS with `status=ok`,
+     `appSourceCount=2`, `telegramSourceCount=2`; navigation proof
+     `step_count=4`, `failed_count=0`; account proof `step_count=1`,
+     `failed_count=0`, `panel_visible=true`; cleanup found no
+     validation-owned process leftovers and removed six fresh route-smoke temp
+     profiles
+   - next smallest useful choice:
+     pick one exact remaining screenshot mismatch on one route only, or make a
+     content/data decision before changing canonical copy, icon glyphs, source
+     labels, or route-smoke fixture content
+
 1. Continue Personality mobile canonical usability from `PRJ-1252`:
    - task:
      `.codex/tasks/PRJ-1252-personality-mobile-callout-map-quieting.md`

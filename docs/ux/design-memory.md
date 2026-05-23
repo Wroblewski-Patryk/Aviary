@@ -631,3 +631,16 @@
   first viewport, especially `Planning` values such as `0 active goals`.
 - Do not restore the hidden mobile role card or add new route-local callout
   groups without a product/content decision and fresh screenshot proof.
+
+## 2026-05-23 - Chat desktop cognitive belt hierarchy
+
+- On desktop Chat, the cognitive belt should read as support metadata above
+  the transcript/persona stage, not as six primary cards competing with the
+  conversation.
+- Preserve all supported belt items, labels, values, progress, source markers,
+  and transcript behavior when quieting visual weight.
+- Prefer route-local CSS density, material, type, and progress adjustments
+  before changing Chat copy, fixture content, icon metaphors, or component
+  structure.
+- Keep mobile Chat's context rail behavior intact unless a separate mobile
+  screenshot task proves a change is needed.

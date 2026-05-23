@@ -6,6 +6,35 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1253` completed a Chat desktop cognitive-belt quieting pass:
+  - task:
+    - `.codex/tasks/PRJ-1253-chat-desktop-cognitive-belt-quieting.md`
+  - result:
+    - made desktop Chat's cognitive belt flatter, lower, and visually
+      secondary to the transcript/persona stage
+    - preserved all supported belt items, labels, values, progress, transcript
+      source markers, mobile rail behavior, and route behavior
+    - changed only route-local CSS in `web/src/index.css`; no backend data,
+      fixture values, source mapping, copy, shared shell, Dashboard, or
+      Personality behavior changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - focused `/chat` screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+    - `npm run test:chat-transcript` -> first run hit a CDP `Page.navigate`
+      timeout; immediate rerun PASS with `status=ok`, `appSourceCount=2`,
+      `telegramSourceCount=2`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - cleanup check -> no validation-owned node/Vite, 5173/4173 listener, or
+      headless browser leftovers; six fresh route-smoke temp profiles from
+      this checkpoint were removed
+  - residual:
+    - full Chat 95% pixel parity, exact canonical icon metaphors, and fixture
+      copy/content density remain separate content/data decisions
+
 - 2026-05-23: `PRJ-1252` completed a Personality mobile callout map quieting pass:
   - task:
     - `.codex/tasks/PRJ-1252-personality-mobile-callout-map-quieting.md`

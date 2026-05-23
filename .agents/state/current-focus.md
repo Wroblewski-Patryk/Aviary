@@ -4,6 +4,18 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed Chat UI slice is `PRJ-1253`: desktop cognitive-belt
+quieting. It keeps every supported belt item, value, progress signal,
+transcript source marker, and mobile rail behavior intact, while making the
+desktop belt flatter and visually secondary to the transcript/persona stage.
+Validation passed with `npm run build`, focused `/chat` desktop/tablet/mobile
+screenshot gate (`screenshot_count=3`, `failed_count=0`, `route_count=14`,
+`status=ok`), `npm run test:chat-transcript` rerun (`status=ok`,
+`appSourceCount=2`, `telegramSourceCount=2`), navigation proof
+(`step_count=4`, `failed_count=0`), account proof (`step_count=1`,
+`failed_count=0`, `panel_visible=true`), `git diff --check`, screenshot
+review, and cleanup checks.
+
 The latest completed Personality UI slice is `PRJ-1252`: mobile callout map
 quieting. It keeps all supported callouts and backend-backed values visible,
 but makes the mobile annotations smaller, lighter, and less card-like so the
