@@ -4,6 +4,30 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed runtime/web communication slice is `PRJ-1249`: channel
+routing truth and Chat source markers. It keeps the existing action-only
+side-effect boundary, adds no new provider or second chat store, and fixes the
+specific conversation drift where Aviary could deny search/browser capability
+despite foreground tool hints. App-native `/app/chat/message` remains an
+API/App reply path with no Telegram client call, Telegram-delivered assistant
+transcript rows now project as `telegram`, and Chat metadata shows `App` or
+`Telegram` per message. Validation passed with focused backend pytest
+(`6 passed`), `npm run build`, `npm run test:chat-transcript`
+(`appSourceCount=2`, `telegramSourceCount=2`), focused `/chat`
+desktop/tablet/mobile screenshot gate (`screenshot_count=3`,
+`failed_count=0`), `git diff --check`, and cleanup checks.
+
+The latest completed flagship UI slice is `PRJ-1248`: mobile Dashboard
+cognitive-flow rail compression. It keeps Aviary branding, adds no fake data
+or new components, and makes mobile Dashboard less report-like by converting
+the six-step cognitive-flow stack into a compact horizontal rail while keeping
+Current Phase visible. Validation passed with `npm run build`, Dashboard
+screenshot gate across desktop/tablet/mobile (`screenshot_count=3`,
+`failed_count=0`), route smoke (`route_count=14`, `status=ok`), navigation
+proof (`step_count=4`, `failed_count=0`), account proof (`step_count=1`,
+`failed_count=0`, `panel_visible=true`), `git diff --check`, and cleanup
+checks.
+
 The latest completed flagship UI slice is `PRJ-1246`: mobile Chat first-read
 compression. It keeps Aviary branding, adds no fake data or new components,
 and makes mobile Chat more conversation-first by converting the cognitive belt

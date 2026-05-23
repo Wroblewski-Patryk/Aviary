@@ -9,41 +9,104 @@ repository history.
 
 ## Current Mission
 
-- Mission ID: PRJ-1246-chat-mobile-first-read
+- Mission ID: PRJ-1249-channel-routing-tool-truth-and-source-marker
 - Status: VERIFIED
-- Selected objective: compress mobile Chat's cognitive belt into a compact
-  horizontal context rail so the conversation and composer appear sooner.
-- Why this mission now: after PRJ-1245, mobile Chat still stacked two large
-  context cards before the transcript, which made the first read feel like
-  route status instead of conversation.
-- Release objective or product milestone advanced: v1.2 web mobile Chat
-  canonical usability.
-- First/next checkpoint: completed a CSS-only mobile Chat belt pass. Supported
-  context cards remain available through horizontal scroll instead of hidden
-  behind `nth-child` suppression.
-- Stop conditions: next checkpoint should stay screenshot-specific and avoid
-  changing route-smoke fixture copy, backend-backed data, icon glyphs, or route
-  behavior without a separate content/data decision.
-- Parent validation gate: web build, Chat desktop/tablet/mobile screenshot
-  gate, full route smoke, navigation proof, account proof, visual screenshot
-  review, and cleanup check.
+- Selected objective: make Aviary truthful about action-owned web knowledge
+  tools and visibly distinguish App/API versus Telegram transcript messages in
+  first-party Chat.
+- Why this mission now: the user showed a real conversation where Aviary
+  denied search/browser capability despite connected action-layer tools, and
+  asked that the canonical native/web communicator show whether messages are
+  app-native or Telegram-backed without duplicating notifications.
+- Release objective or product milestone advanced: v1.2 web/runtime
+  communication continuity confidence.
+- First/next checkpoint: completed a narrow runtime + web Chat slice. The
+  expression guardrail now corrects false search/page-read capability denial
+  when foreground awareness has tool hints, transcript projection marks
+  Telegram-delivered assistant outreach as `telegram`, and the Chat transcript
+  metadata row displays `App` or `Telegram`.
+- Stop conditions: live Telegram credential smoke remains out of scope unless
+  credentials and a live delivery target are explicitly provided. Do not
+  introduce a second chat store, notification fan-out path, or connector
+  provider.
+- Parent validation gate: focused backend pytest, web build, chat transcript
+  characterization, focused `/chat` desktop/tablet/mobile screenshot gate,
+  `git diff --check`, and cleanup check.
 
-## PRJ-1246 Current Evidence
+## PRJ-1249 Current Evidence
 
 - Branch: `main`.
 - Lane status:
-  - UX parity lane delegated to Gibbs and completed read-only
-  - QA/responsive lane delegated to Chandrasekhar and completed read-only
-  - coordinator implemented the mobile Chat CSS patch and final proof
+  - Backend/architecture explorer completed read-only and identified channel
+    selection, tool-awareness, Telegram router, and focused test owners
+  - Frontend/UX explorer completed read-only and identified the existing
+    transcript metadata row as the minimal source-marker surface
+  - coordinator implemented and validated the integrated slice
 - Implementation:
-  - mobile Chat cognitive belt now uses a horizontal context rail
-  - supported context cards remain available instead of hiding cards from the
-    third onward
-  - belt card body, title, meta, padding, and scroll snap are compacted only
-    inside the mobile breakpoint
+  - `ExpressionAgent` now distinguishes false tool-capability denial from
+    memory/time denial and returns a correction message instead of repeating an
+    untrue "no search/browser" claim when `available_tool_hints` are loaded
+  - app chat endpoint proof pins app-native messages to `reply.channel == api`
+    with no Telegram client call
+  - transcript projection now marks assistant rows as `telegram` when the
+    delivered action included `send_telegram_message`, including scheduler
+    outreach that was actually delivered through Telegram
+  - Chat message metadata renders a compact text source marker: `App` or
+    `Telegram`
+- Validation:
+  - focused backend pytest PASS: `6 passed`
+  - `npm run build` in `web/` PASS
+  - `npm run test:chat-transcript` PASS:
+    `status=ok`, `appSourceCount=2`, `telegramSourceCount=2`
+  - focused `/chat` screenshot gate PASS: `screenshot_count=3`,
+    `failed_count=0`, `status=ok`
+  - `git diff --check` PASS with LF/CRLF warnings only
+  - cleanup check stopped validation-owned `chrome-headless-shell` leftovers
+- Residual:
+  - live Telegram credential smoke was not run because this task did not
+    activate credentials or a real Telegram target
+  - separate Dashboard mobile-flow work exists as PRJ-1248 in the worktree and
+    was intentionally not folded into this mission
+- Artifacts:
+  - `.codex/tasks/PRJ-1249-channel-routing-tool-truth-and-source-marker.md`
+  - `.codex/artifacts/prj1247-channel-source-marker/chat-route-report.json`
+  - `.codex/artifacts/prj1247-channel-source-marker/screenshots/`
+
+## Previous Mission
+
+- Mission ID: PRJ-1248-dashboard-mobile-flow-rail
+- Status: VERIFIED
+- Selected objective: compress mobile Dashboard's cognitive-flow stack into a
+  compact horizontal rail so lower dashboard data appears sooner.
+- Why this mission now: after PRJ-1246, mobile Dashboard still stacked six flow
+  steps vertically, making the route feel like a long report before Active
+  Goals and the lower panels.
+- Release objective or product milestone advanced: v1.2 web mobile Dashboard
+  canonical usability.
+- First/next checkpoint: completed a CSS-only mobile Dashboard flow pass. All
+  flow steps remain available through horizontal scroll with a visible
+  next-step peek, and Current Phase remains visible below the rail.
+- Stop conditions: next checkpoint should stay screenshot-specific and avoid
+  changing route-smoke fixture copy, backend-backed data, icon glyphs, or route
+  behavior without a separate content/data decision.
+- Parent validation gate: web build, Dashboard desktop/tablet/mobile
+  screenshot gate, full route smoke, navigation proof, account proof, visual
+  screenshot review, and cleanup check.
+
+## PRJ-1248 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Erdos and completed read-only
+  - QA/responsive lane delegated to James and completed read-only
+  - coordinator implemented the mobile Dashboard CSS patch and final proof
+- Implementation:
+  - mobile Dashboard cognitive-flow steps now use a horizontal rail
+  - supported flow steps remain available instead of being hidden
+  - Current Phase is retained and compacted below the rail
 - Validation:
   - `npm run build` PASS
-  - Chat screenshot gate across desktop/tablet/mobile PASS:
+  - Dashboard screenshot gate across desktop/tablet/mobile PASS:
     `screenshot_count=3`, `failed_count=0`
   - full route smoke PASS: `route_count=14`, `status=ok`
   - navigation proof PASS: `step_count=4`, `failed_count=0`
@@ -53,17 +116,27 @@ repository history.
   - cleanup check found no validation-owned route-smoke, headless browser, or
     5173/4173 listener leftovers
 - Residual:
-  - This is a verified mobile first-read pass, not full pixel-perfect parity.
+  - This is a verified mobile flow-density pass, not full pixel-perfect parity.
     Exact canonical icon/content/copy parity is outside this CSS-only slice.
 - Artifacts:
-  - `.codex/tasks/PRJ-1246-chat-mobile-first-read.md`
-  - `.codex/artifacts/prj1246-chat-mobile-first-read/chat-responsive-report.json`
-  - `.codex/artifacts/prj1246-chat-mobile-first-read/route-smoke-report.json`
-  - `.codex/artifacts/prj1246-chat-mobile-first-read/navigation-proof.json`
-  - `.codex/artifacts/prj1246-chat-mobile-first-read/account-proof.json`
-  - `.codex/artifacts/prj1246-chat-mobile-first-read/screenshots/`
+  - `.codex/tasks/PRJ-1248-dashboard-mobile-flow-rail.md`
+  - `.codex/artifacts/prj1248-dashboard-mobile-flow-rail/report.json`
+  - `.codex/artifacts/prj1248-dashboard-mobile-flow-rail/route-smoke-report.json`
+  - `.codex/artifacts/prj1248-dashboard-mobile-flow-rail/navigation-proof.json`
+  - `.codex/artifacts/prj1248-dashboard-mobile-flow-rail/account-proof.json`
+  - `.codex/artifacts/prj1248-dashboard-mobile-flow-rail/screenshots/`
 
 ## Previous Mission
+
+## PRJ-1246 Current Evidence
+
+- Branch: `main`.
+- Summary: mobile Chat first-read compression is verified. The cognitive belt
+  is a compact horizontal context rail, supported cards remain available by
+  scroll, and transcript/composer content appears sooner.
+- Validation: build, Chat desktop/tablet/mobile screenshot gate, full route
+  smoke, navigation proof, account proof, cleanup, and `git diff --check`
+  passed.
 
 ## PRJ-1245 Current Evidence
 

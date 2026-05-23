@@ -6,6 +6,68 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1249` completed a channel-routing truth and Chat source marker pass:
+  - task:
+    - `.codex/tasks/PRJ-1249-channel-routing-tool-truth-and-source-marker.md`
+  - result:
+    - fixed a runtime truthfulness gap where expression could repeat a false
+      "no search/browser" denial even when foreground awareness had
+      action-owned `search_web` and `read_page` tool hints
+    - kept tool execution in the action layer; expression now corrects the
+      capability statement instead of executing tools
+    - pinned app-native `/app/chat/message` to `reply.channel == api` with no
+      Telegram client call
+    - projected Telegram-delivered assistant transcript rows as `telegram`
+      when action actually delivered through Telegram
+    - added compact `App` / `Telegram` source markers to the existing Chat
+      message metadata row
+  - validation:
+    - focused backend pytest -> PASS, `6 passed`
+    - `npm run build` in `web/` -> PASS
+    - `npm run test:chat-transcript` -> PASS, `status=ok`,
+      `appSourceCount=2`, `telegramSourceCount=2`
+    - focused `/chat` screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`, `status=ok`
+    - `git diff --check` -> PASS with LF/CRLF warnings only
+    - cleanup check -> validation-owned `chrome-headless-shell` processes
+      stopped
+  - residual:
+    - live Telegram credential smoke was not run because this slice did not
+      activate credentials or a real Telegram target
+
+- 2026-05-23: `PRJ-1248` completed a mobile Dashboard cognitive-flow rail compression pass:
+  - task:
+    - `.codex/tasks/PRJ-1248-dashboard-mobile-flow-rail.md`
+  - result:
+    - tuned mobile Dashboard only, with no desktop/tablet behavior change, no
+      new components, fake data, backend behavior, route behavior, or shared
+      shell change
+    - converted the mobile cognitive-flow step stack into a compact horizontal
+      rail with a visible next-step peek
+    - kept all supported flow steps available through horizontal scroll and
+      retained the Current Phase card below the rail
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - Dashboard screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`
+    - route smoke -> `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> PASS, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - cleanup check -> no validation-owned route-smoke, headless browser, or
+      5173/4173 listener leftovers
+  - artifacts:
+    - `.codex/artifacts/prj1248-dashboard-mobile-flow-rail/report.json`
+    - `.codex/artifacts/prj1248-dashboard-mobile-flow-rail/route-smoke-report.json`
+    - `.codex/artifacts/prj1248-dashboard-mobile-flow-rail/navigation-proof.json`
+    - `.codex/artifacts/prj1248-dashboard-mobile-flow-rail/account-proof.json`
+    - `.codex/artifacts/prj1248-dashboard-mobile-flow-rail/screenshots/`
+  - residual:
+    - this is a verified mobile flow-density pass, not a full pixel-perfect
+      parity claim; exact icon/content/copy parity remains a separate content
+      decision.
+
 - 2026-05-23: `PRJ-1246` completed a mobile Chat first-read compression pass:
   - task:
     - `.codex/tasks/PRJ-1246-chat-mobile-first-read.md`

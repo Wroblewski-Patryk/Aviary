@@ -4,6 +4,68 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1249` is DONE:
+  - `.codex/tasks/PRJ-1249-channel-routing-tool-truth-and-source-marker.md`
+- objective:
+  - make Aviary truthful about action-owned web knowledge tools and make the
+    first-party Chat transcript show whether each message is App/API or
+    Telegram backed
+- current result:
+  - expression corrects false search/page-read capability denial when
+    foreground awareness carries `available_tool_hints`
+  - tool execution remains action-owned; no expression-side provider call was
+    introduced
+  - app-native `/app/chat/message` remains `reply.channel == api` and does not
+    call Telegram
+  - Telegram-delivered assistant transcript rows project as `telegram`
+  - Chat message metadata now displays compact `App` / `Telegram` markers
+- validation:
+  - focused backend pytest -> PASS, `6 passed`
+  - `npm run build` in `web/` -> PASS
+  - `npm run test:chat-transcript` -> PASS, `status=ok`,
+    `appSourceCount=2`, `telegramSourceCount=2`
+  - focused `/chat` screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`, `status=ok`
+  - `git diff --check` -> PASS with LF/CRLF warnings only
+  - cleanup check -> validation-owned `chrome-headless-shell` processes
+    stopped
+- residual:
+  - live Telegram credential smoke was out of scope; no new connector provider,
+    notification fan-out path, or second chat store was introduced
+- release boundary:
+  - this is a verified local runtime/web communication checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
+- `PRJ-1248` is DONE:
+  - `.codex/tasks/PRJ-1248-dashboard-mobile-flow-rail.md`
+- objective:
+  - make mobile Dashboard's cognitive-flow band read as a compact bridge
+    instead of a tall stack of flow cards
+- current result:
+  - mobile Dashboard flow steps now sit in a horizontal rail with a visible
+    next-step peek
+  - all supported flow steps remain available through horizontal scroll
+  - Current Phase remains visible below the rail, while Active Goals begins
+    meaningfully sooner
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - Dashboard screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`
+  - route smoke -> `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - cleanup check -> no validation-owned route-smoke, headless browser, or
+    5173/4173 listener leftovers
+- residual:
+  - this is a verified mobile flow-density pass, not full pixel-perfect parity;
+    exact canonical icon/content/copy parity remains a separate content/data
+    decision
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1246` is DONE:
   - `.codex/tasks/PRJ-1246-chat-mobile-first-read.md`
 - objective:

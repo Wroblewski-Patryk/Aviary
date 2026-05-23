@@ -46,6 +46,32 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1249` completes a verified channel-routing/tool-truth slice for
+  `AVIARY-COGNITIVE-RUNTIME-001` and `AVIARY-WEB-RESP-001`: expression now
+  corrects false denial of action-owned search/page-read capability when
+  foreground awareness has `available_tool_hints`, app-native chat remains
+  `reply.channel == api` with no Telegram client call, Telegram-delivered
+  assistant transcript rows project as `telegram`, and Chat message metadata
+  displays `App` or `Telegram`. Evidence: focused backend pytest returned
+  `6 passed`; `npm run build` passed; `npm run test:chat-transcript` returned
+  `status=ok`, `appSourceCount=2`, `telegramSourceCount=2`; focused `/chat`
+  screenshot gate returned `screenshot_count=3`, `failed_count=0`,
+  `status=ok`; `git diff --check` passed with LF/CRLF warnings only; cleanup
+  stopped validation-owned `chrome-headless-shell` leftovers. Live Telegram
+  credential smoke remains outside this slice.
+
+- `PRJ-1248` completes a verified mobile Dashboard flow-density pass for
+  `AVIARY-WEB-RESP-001`: the cognitive-flow steps now read as a compact
+  horizontal rail with a visible next-step peek, all supported steps remain
+  available through horizontal scroll, and lower dashboard data appears sooner.
+  Evidence: `npm run build` PASS; Dashboard screenshot gate across
+  desktop/tablet/mobile returned `screenshot_count=3`, `failed_count=0`; full
+  route smoke returned `route_count=14`, `status=ok`; navigation proof
+  returned `step_count=4`, `failed_count=0`; account proof returned
+  `step_count=1`, `failed_count=0`, `panel_visible=true`; `git diff --check`
+  passed with LF/CRLF warning only; cleanup found no validation-owned
+  route-smoke, headless browser, or 5173/4173 listener leftovers.
+
 - `PRJ-1246` completes a verified mobile Chat first-read pass for
   `AVIARY-WEB-RESP-001`: the cognitive belt now reads as a compact horizontal
   context rail on mobile, the transcript and composer appear sooner, and all

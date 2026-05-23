@@ -1,5 +1,16 @@
 # Design Memory
 
+## 2026-05-23 - Dashboard mobile flow rail
+
+- On mobile Dashboard, the cognitive-flow band should stay a compact
+  horizontal bridge, not a vertical stack of six flow cards before Active
+  Goals.
+- Preserve every flow step through intentional horizontal scroll with a visible
+  next-step peek. Do not hide Observe/Understand/Connect/Reflect/Plan/Act just
+  to reduce height.
+- Keep Current Phase visible below the rail, but compact enough that lower
+  dashboard data appears sooner in the scroll.
+
 ## 2026-05-23 - Chat mobile first-read rail
 
 - On mobile Chat, the cognitive belt should stay as a compact horizontal
