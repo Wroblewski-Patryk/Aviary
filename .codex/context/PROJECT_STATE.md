@@ -6,6 +6,37 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1245` completed a flagship secondary chrome coherence tightening:
+  - task:
+    - `.codex/tasks/PRJ-1245-flagship-coherence-tightening.md`
+  - result:
+    - tuned Chat and Personality only, with no Dashboard edits, no new
+      components, fake data, backend behavior, shared-shell change, or branding
+      rename
+    - flattened Chat cognitive belt cards, meta pills, and progress tracks so
+      the top context reads less like six mini-cards
+    - flattened Personality overview status, side panels, and signal/activity
+      rows while keeping values visible
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - Dashboard/Chat/Personality screenshot gate across desktop/tablet/mobile
+      -> `screenshot_count=9`, `failed_count=0`
+    - route smoke -> `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> PASS, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+  - artifacts:
+    - `.codex/artifacts/prj1245-flagship-coherence-tightening/report.json`
+    - `.codex/artifacts/prj1245-flagship-coherence-tightening/route-smoke-report.json`
+    - `.codex/artifacts/prj1245-flagship-coherence-tightening/navigation-proof.json`
+    - `.codex/artifacts/prj1245-flagship-coherence-tightening/account-proof.json`
+    - `.codex/artifacts/prj1245-flagship-coherence-tightening/screenshots/`
+  - residual:
+    - this is a verified structural coherence pass, not a full pixel-perfect
+      parity claim; exact icon/content/copy parity remains a separate content
+      decision.
+
 - 2026-05-23: `PRJ-1244` completed a Personality canonical fidelity calm pass:
   - task:
     - `.codex/tasks/PRJ-1244-personality-canonical-fidelity.md`

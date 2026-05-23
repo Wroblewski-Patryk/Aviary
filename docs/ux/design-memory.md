@@ -1,5 +1,17 @@
 # Design Memory
 
+## 2026-05-23 - Flagship secondary chrome coherence
+
+- After a route has its primary scene locked, secondary context surfaces should
+  support the scene with low material weight. Avoid turning every status,
+  progress, or support row into a separate card.
+- Chat's cognitive belt should read as a quiet context strip, not six equal
+  dashboard cards before the transcript.
+- Personality's status, side panels, and signal rows should stay useful but
+  flatter than the embodied figure and timeline.
+- Do not flatten Dashboard's hero metric cards globally; its current canonical
+  proof depends on those cards reading as connected side satellites.
+
 ## 2026-05-23 - Personality canonical fidelity
 
 - Personality should read as an embodied overview first, not a stack of

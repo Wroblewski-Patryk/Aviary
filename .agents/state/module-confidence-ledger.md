@@ -46,6 +46,16 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1245` completes a verified flagship secondary chrome coherence pass for
+  `AVIARY-WEB-RESP-001`: Chat's cognitive belt cards/meta/progress now read
+  flatter, and Personality's overview status, side panels, and rows are quieter
+  while Dashboard is intentionally unchanged. Evidence: `npm run build` PASS;
+  Dashboard/Chat/Personality screenshot gate across desktop/tablet/mobile
+  returned `screenshot_count=9`, `failed_count=0`; full route smoke returned
+  `route_count=14`, `status=ok`; navigation proof returned `step_count=4`,
+  `failed_count=0`; account proof returned `step_count=1`, `failed_count=0`,
+  `panel_visible=true`; `git diff --check` passed with LF/CRLF warning only.
+
 - `PRJ-1244` completes a verified Personality canonical fidelity pass for
   `AVIARY-WEB-RESP-001`: Personality now has lighter hero/callout material,
   flatter side panels, tighter timeline rows, a calmer tablet side-support

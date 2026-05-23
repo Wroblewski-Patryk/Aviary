@@ -9,46 +9,42 @@ repository history.
 
 ## Current Mission
 
-- Mission ID: PRJ-1244-personality-canonical-fidelity
+- Mission ID: PRJ-1245-flagship-coherence-tightening
 - Status: VERIFIED
-- Selected objective: move Personality closer to the canonical embodied
-  overview by reducing card/panel weight, calming callouts, tightening the
-  timeline, and improving tablet/mobile rhythm without changing backend data,
-  route behavior, or shared shell navigation.
-- Why this mission now: Dashboard and Chat now have verified canonical
-  fidelity slices; Personality is the remaining flagship surface with obvious
-  card-heavy drift from its canonical reference.
+- Selected objective: tighten flagship coherence by flattening secondary
+  route-local micro-surfaces on Chat and Personality while leaving Dashboard's
+  verified hero composition untouched.
+- Why this mission now: Dashboard, Chat, and Personality now each have verified
+  canonical fidelity slices; the remaining shared drift is heavier secondary
+  chrome on Chat and Personality, not missing route behavior.
 - Release objective or product milestone advanced: v1.2 web UI canonical
-- First/next checkpoint: completed a Personality-only CSS calm pass. Side
-  panels, hero/callouts, timeline rows, tablet side-stack layout, and mobile
-  first-read rhythm are lighter while all backend-backed values remain visible.
+  fidelity across flagship screens.
+- First/next checkpoint: completed a CSS-only secondary chrome pass. Chat's
+  cognitive belt is less card-like, and Personality's overview status, side
+  panels, and signal/activity rows are flatter while all values remain visible.
 - Stop conditions: next checkpoint should remain single-surface and
   screenshot-specific; do not replace backend-backed content, icon glyphs, or
-  Personality copy without a separate content/data decision.
-- Parent validation gate: web build, Personality desktop/tablet/mobile screenshot
-  gate, full route smoke, navigation proof, account proof, visual screenshot
-  review, and cleanup check.
+  route copy without a separate content/data decision.
+- Parent validation gate: web build, Dashboard/Chat/Personality
+  desktop/tablet/mobile screenshot gate, full route smoke, navigation proof,
+  account proof, visual screenshot review, and cleanup check.
 
-## PRJ-1244 Current Evidence
+## PRJ-1245 Current Evidence
 
 - Branch: `main`.
 - Lane status:
-  - UX parity lane delegated to Hubble and completed read-only
-  - QA/responsive lane delegated to Linnaeus and completed read-only
-  - coordinator implemented the route-local Personality CSS patch and final
-    proof
+  - UX parity lane delegated to Raman and completed read-only
+  - QA/responsive lane delegated to Dalton and completed read-only
+  - coordinator implemented the route-local CSS patch and final proof
 - Implementation:
-  - Personality hero and callout surfaces use lighter padding, radius, and
-    shadows
-  - timeline rows and wrapper are more compact without hiding layer values
-  - side panels are flatter and less card-heavy across breakpoints
-  - tablet side panels use a calmer two-column rhythm with recent activity
-    full-width
-  - mobile callouts and side-panel rows are lighter and less visually dominant
+  - Chat cognitive belt cards, meta pills, and progress tracks are flatter
+  - Personality overview status, side panels, and signal/activity rows are
+    quieter
+  - Dashboard was intentionally not edited in this slice
 - Validation:
   - `npm run build` PASS
-  - Personality screenshot gate across desktop/tablet/mobile PASS:
-    `screenshot_count=3`, `failed_count=0`
+  - Dashboard/Chat/Personality screenshot gate across desktop/tablet/mobile
+    PASS: `screenshot_count=9`, `failed_count=0`
   - full route smoke PASS: `route_count=14`, `status=ok`
   - navigation proof PASS: `step_count=4`, `failed_count=0`
   - account proof PASS: `step_count=1`, `failed_count=0`,
@@ -58,14 +54,23 @@ repository history.
   - This is a verified structural fidelity pass, not full pixel-perfect parity.
     Exact canonical icon/content/copy parity is outside this CSS-only slice.
 - Artifacts:
-  - `.codex/tasks/PRJ-1244-personality-canonical-fidelity.md`
-  - `.codex/artifacts/prj1244-personality-canonical-fidelity/report.json`
-  - `.codex/artifacts/prj1244-personality-canonical-fidelity/route-smoke-report.json`
-  - `.codex/artifacts/prj1244-personality-canonical-fidelity/navigation-proof.json`
-  - `.codex/artifacts/prj1244-personality-canonical-fidelity/account-proof.json`
-  - `.codex/artifacts/prj1244-personality-canonical-fidelity/screenshots/`
+  - `.codex/tasks/PRJ-1245-flagship-coherence-tightening.md`
+  - `.codex/artifacts/prj1245-flagship-coherence-tightening/report.json`
+  - `.codex/artifacts/prj1245-flagship-coherence-tightening/route-smoke-report.json`
+  - `.codex/artifacts/prj1245-flagship-coherence-tightening/navigation-proof.json`
+  - `.codex/artifacts/prj1245-flagship-coherence-tightening/account-proof.json`
+  - `.codex/artifacts/prj1245-flagship-coherence-tightening/screenshots/`
 
 ## Previous Mission
+
+## PRJ-1244 Current Evidence
+
+- Branch: `main`.
+- Summary: Personality canonical fidelity is verified. Personality has lighter
+  hero/callout material, flatter side panels, tighter timeline rows, calmer
+  tablet support rhythm, and less visually dominant mobile callouts/rows.
+- Validation: build, Personality desktop/tablet/mobile screenshot gate, full
+  route smoke, navigation proof, account proof, and `git diff --check` passed.
 
 ## PRJ-1243 Current Evidence
 

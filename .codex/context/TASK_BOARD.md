@@ -4,6 +4,33 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1245` is DONE:
+  - `.codex/tasks/PRJ-1245-flagship-coherence-tightening.md`
+- objective:
+  - tighten flagship coherence by flattening secondary route-local micro
+    surfaces on Chat and Personality while leaving Dashboard untouched
+- current result:
+  - Chat cognitive belt cards, meta pills, and progress tracks are quieter
+  - Personality overview status, side panels, and signal/activity rows are
+    flatter
+  - Dashboard hero/metric composition was intentionally not edited
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - Dashboard/Chat/Personality screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=9`, `failed_count=0`
+  - route smoke -> `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+- residual:
+  - this is a verified structural coherence pass, not full pixel-perfect parity;
+    exact canonical icon/content/copy parity remains a separate content/data
+    decision
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1244` is DONE:
   - `.codex/tasks/PRJ-1244-personality-canonical-fidelity.md`
 - objective:

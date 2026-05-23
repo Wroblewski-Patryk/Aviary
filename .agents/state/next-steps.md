@@ -4,6 +4,23 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue flagship canonical coherence from `PRJ-1245`:
+   - task:
+     `.codex/tasks/PRJ-1245-flagship-coherence-tightening.md`
+   - result:
+     Chat's cognitive belt and Personality's overview/side-panel micro-surfaces
+     now read flatter and less card-heavy, while Dashboard was intentionally
+     left untouched
+   - proof:
+     `npm run build` PASS; Dashboard/Chat/Personality screenshot gate across
+     desktop/tablet/mobile PASS with `screenshot_count=9`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; navigation proof
+     `step_count=4`, `failed_count=0`; account proof `step_count=1`,
+     `failed_count=0`, `panel_visible=true`
+   - next smallest useful choice:
+     make a content/data decision for exact canonical copy/icon parity, or pick
+     one exact remaining screenshot mismatch on one route only
+
 1. Continue flagship canonical parity from `PRJ-1244`:
    - task:
      `.codex/tasks/PRJ-1244-personality-canonical-fidelity.md`

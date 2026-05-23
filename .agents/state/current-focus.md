@@ -4,6 +4,17 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed flagship UI slice is `PRJ-1245`: secondary chrome
+coherence tightening. It keeps Aviary branding, adds no fake data or new
+components, leaves Dashboard untouched, and makes Chat/Personality secondary
+micro-surfaces flatter: Chat's cognitive belt is less card-like, while
+Personality's overview status, side panels, and rows are quieter. Validation
+passed with `npm run build`, Dashboard/Chat/Personality screenshot gate across
+desktop/tablet/mobile (`screenshot_count=9`, `failed_count=0`), route smoke
+(`route_count=14`, `status=ok`), navigation proof (`step_count=4`,
+`failed_count=0`), account proof (`step_count=1`, `failed_count=0`,
+`panel_visible=true`), and `git diff --check`.
+
 The latest completed flagship UI slice is `PRJ-1244`: Personality canonical
 fidelity. It keeps Aviary branding, adds no fake data or new components, and
 makes Personality closer to the canonical embodied overview by reducing
