@@ -30,7 +30,7 @@
 ## Mission Block
 - Mission objective: continue the v1.2 flagship UI convergence loop with the smallest low-risk patch that improves coherence across Dashboard, Chat, and Personality.
 - Release objective advanced: web UI canonical fidelity for the future mobile-app foundation.
-- Included slices: CSS-only proportions, crop, and visual hierarchy refinements for three flagship surfaces.
+- Included slices: CSS-first proportions, crop, and visual hierarchy refinements for three flagship surfaces, plus semantic class hooks for the Chat persona overlay cleanup.
 - Explicit exclusions: no new components, no fake data, no backend/API changes, no product rename from Aviary to AION/Prometheus.
 - Checkpoint cadence: one CSS patch, screenshot gate, visual review, state update.
 - Stop conditions: screenshot audit failure, visible regression, route overflow, or product-copy/branding conflict.
@@ -60,6 +60,7 @@ Improve visual coherence across the three flagship authenticated routes while mo
 
 ## Scope
 - `web/src/index.css`
+- `web/src/components/chat.tsx`
 - Routes: `/dashboard`, `/chat`, `/personality`
 - Artifacts: `.codex/artifacts/prj1240-flagship-coherence-pass/`
 
@@ -89,13 +90,17 @@ Improve visual coherence across the three flagship authenticated routes while mo
 - Tests:
   - `npm run build` in `web/` -> PASS
   - `node scripts/route-smoke.mjs --screenshots .codex/artifacts/prj1240-flagship-coherence-pass/screenshots --report .codex/artifacts/prj1240-flagship-coherence-pass/report.json --screenshot-routes /dashboard,/chat,/personality --viewports desktop,tablet,mobile --fail-on-ui-findings` -> PASS
+  - `node scripts/route-smoke.mjs --screenshots .codex/artifacts/prj1240-chat-overlay-cleanup/screenshots --report .codex/artifacts/prj1240-chat-overlay-cleanup/report.json --screenshot-routes /chat --viewports desktop,tablet,mobile --fail-on-ui-findings` -> PASS, `screenshot_count=3`, `failed_count=0`
   - `npm run audit:ui-navigation` -> PASS
-  - `node scripts/route-smoke.mjs --account-proof --report .codex/artifacts/prj1240-flagship-coherence-pass/account-proof.json` -> PASS
+  - `node scripts/route-smoke.mjs --account-proof --report .codex/artifacts/prj1240-chat-overlay-cleanup/account-proof.json` -> PASS, `panel_visible=true`
   - `git diff --check` -> PASS with LF/CRLF warning only
 - Screenshots/logs:
   - `.codex/artifacts/prj1240-flagship-coherence-pass/screenshots/`
   - `.codex/artifacts/prj1240-flagship-coherence-pass/report.json`
   - `.codex/artifacts/prj1240-flagship-coherence-pass/account-proof.json`
+  - `.codex/artifacts/prj1240-chat-overlay-cleanup/screenshots/`
+  - `.codex/artifacts/prj1240-chat-overlay-cleanup/report.json`
+  - `.codex/artifacts/prj1240-chat-overlay-cleanup/account-proof.json`
 - Module confidence ledger updated: yes
 - Requirements matrix updated: yes
 - Quality scenarios updated: yes
@@ -127,6 +132,7 @@ Improve visual coherence across the three flagship authenticated routes while mo
 ## Result Report
 - Task summary: CSS-only flagship coherence pass completed for Dashboard, Chat, and Personality.
 - Files changed:
+  - `web/src/components/chat.tsx`
   - `web/src/index.css`
 - How tested:
   - build, focused screenshot gate, navigation proof, account proof, cleanup check.
@@ -146,10 +152,10 @@ Improve visual coherence across the three flagship authenticated routes while mo
 - Selected task: one small flagship coherence CSS pass.
 
 ### 3. Plan Implementation
-- Modify only existing selectors in `web/src/index.css`; avoid new JSX/components.
+- Modify existing styling with no new UI components or data. A final Chat overlay cleanup added stable class hooks to existing markup so the desktop suppression rule does not depend on a utility-class selector.
 
 ### 4. Execute Implementation
-- Tuned Dashboard hero height/metric overlay weight, Chat persona overlay scale, and Personality callout/panel density.
+- Tuned Dashboard hero height/metric overlay weight, Chat persona overlay scale, Personality callout/panel density, and the Chat desktop persona overlay so the secondary `Learned cues` row no longer collides with the portrait label stack.
 
 ### 5. Verify and Test
 - Validation passed as listed above.

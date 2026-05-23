@@ -8182,6 +8182,10 @@ body {
   .aion-personality-activity-row {
     padding: 0.5rem 0.62rem;
   }
+
+  .aion-chat-portrait-overlay-fact-secondary {
+    display: none;
+  }
 }
 
 @media (max-width: 899px) {

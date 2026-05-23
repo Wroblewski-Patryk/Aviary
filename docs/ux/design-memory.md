@@ -9,6 +9,9 @@
   with metric cards treated as overlays, not peer panels.
 - Chat persona-stage overlays should stay useful but small; the conversation
   column and composer remain the primary instrument.
+- On desktop Chat, if the portrait overlay approaches the embodied-cognition
+  label stack, keep the overlay to the primary current-focus row and move
+  secondary memory counts elsewhere instead of stacking more mini rows.
 - Personality callouts should explain the embodied map without becoming the
   loudest objects on the screen. If a crop change makes the figure read as a
   narrow poster instead of a stage, revert the crop before closure.

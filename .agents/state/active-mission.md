@@ -42,7 +42,9 @@ repository history.
   - Dashboard hero stage is taller on desktop and metric overlays are narrower,
     lighter, and less competitive with the central figure scene
   - Chat persona panel keeps the v5 stage but reduces overlay/card dominance
-    and slightly favors the right persona column without adding a third panel
+    and slightly favors the right persona column without adding a third panel;
+    the desktop persona overlay now keeps only the primary focus row visible
+    to avoid collision with the portrait label stack
   - Personality callouts and side-panel rows are lighter while preserving the
     embodied-map structure and Aviary branding
 - Validation:
@@ -50,6 +52,8 @@ repository history.
   - focused route screenshot gate for `/dashboard`, `/chat`, `/personality`
     across desktop/tablet/mobile PASS: `screenshot_count=9`,
     `failed_count=0`
+  - focused Chat overlay cleanup screenshot gate across desktop/tablet/mobile
+    PASS: `screenshot_count=3`, `failed_count=0`
   - route smoke PASS: `route_count=14`, `status=ok`
   - `npm run audit:ui-navigation` PASS: `step_count=4`, `failed_count=0`
   - account proof PASS: `step_count=1`, `failed_count=0`,
@@ -66,6 +70,9 @@ repository history.
   - `.codex/artifacts/prj1240-flagship-coherence-pass/report.json`
   - `.codex/artifacts/prj1240-flagship-coherence-pass/account-proof.json`
   - `.codex/artifacts/prj1240-flagship-coherence-pass/screenshots/`
+  - `.codex/artifacts/prj1240-chat-overlay-cleanup/report.json`
+  - `.codex/artifacts/prj1240-chat-overlay-cleanup/account-proof.json`
+  - `.codex/artifacts/prj1240-chat-overlay-cleanup/screenshots/`
 
 ## Previous Mission
 

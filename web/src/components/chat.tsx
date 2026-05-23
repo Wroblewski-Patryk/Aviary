@@ -272,12 +272,12 @@ export function ChatPortraitPanel({
       <div className="aion-chat-portrait-overlay">
         <p className="text-[11px] uppercase tracking-[0.22em] text-[#5f8f93]">Planning</p>
         <p className="mt-2 font-display text-[1.62rem] leading-[1.08] text-base-900">{currentFocus}</p>
-        <div className="mt-3 text-[0.8rem] text-base-800">
-          <div className="flex items-center justify-between gap-3">
+        <div className="aion-chat-portrait-overlay-facts mt-3 text-[0.8rem] text-base-800">
+          <div className="aion-chat-portrait-overlay-fact flex items-center justify-between gap-3">
             <span>Current focus</span>
             <span className="font-semibold text-base-900">{emphasis}</span>
           </div>
-          <div className="flex items-center justify-between gap-3">
+          <div className="aion-chat-portrait-overlay-fact aion-chat-portrait-overlay-fact-secondary flex items-center justify-between gap-3">
             <span>Learned cues</span>
             <span className="font-semibold text-[#5f8f93]">
               {learnedCueCount}
