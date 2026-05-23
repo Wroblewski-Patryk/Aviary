@@ -4390,6 +4390,10 @@ export default function App() {
                                 ? copy.chat.failed
                                 : null
                         }
+                        getSourceLabel={(message) => {
+                          const channel = stringValue(message.channel, "").trim().toLowerCase();
+                          return channel === "telegram" ? "Telegram" : "App";
+                        }}
                         getTimestampLabel={(message) => formatTimestamp(message.timestamp, resolvedUiLanguage)}
                         renderMessage={(message) => renderChatMarkdown(message.text)}
                         registerMessageRef={(messageId, node) => {

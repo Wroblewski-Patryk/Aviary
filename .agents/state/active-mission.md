@@ -54,7 +54,7 @@ repository history.
   - Chat message metadata renders a compact text source marker: `App` or
     `Telegram`
 - Validation:
-  - focused backend pytest PASS: `6 passed`
+  - focused backend pytest PASS: `7 passed`
   - `npm run build` in `web/` PASS
   - `npm run test:chat-transcript` PASS:
     `status=ok`, `appSourceCount=2`, `telegramSourceCount=2`
@@ -69,8 +69,8 @@ repository history.
     was intentionally not folded into this mission
 - Artifacts:
   - `.codex/tasks/PRJ-1249-channel-routing-tool-truth-and-source-marker.md`
-  - `.codex/artifacts/prj1247-channel-source-marker/chat-route-report.json`
-  - `.codex/artifacts/prj1247-channel-source-marker/screenshots/`
+  - `.codex/artifacts/prj1249-channel-source-marker/chat-route-report.json`
+  - `.codex/artifacts/prj1249-channel-source-marker/screenshots/`
 
 ## Previous Mission
 

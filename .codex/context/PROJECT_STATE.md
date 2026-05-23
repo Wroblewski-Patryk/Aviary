@@ -22,7 +22,7 @@ the same project.
     - added compact `App` / `Telegram` source markers to the existing Chat
       message metadata row
   - validation:
-    - focused backend pytest -> PASS, `6 passed`
+    - focused backend pytest -> PASS, `7 passed`
     - `npm run build` in `web/` -> PASS
     - `npm run test:chat-transcript` -> PASS, `status=ok`,
       `appSourceCount=2`, `telegramSourceCount=2`

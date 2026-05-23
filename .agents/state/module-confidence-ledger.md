@@ -53,7 +53,7 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
   `reply.channel == api` with no Telegram client call, Telegram-delivered
   assistant transcript rows project as `telegram`, and Chat message metadata
   displays `App` or `Telegram`. Evidence: focused backend pytest returned
-  `6 passed`; `npm run build` passed; `npm run test:chat-transcript` returned
+  `7 passed`; `npm run build` passed; `npm run test:chat-transcript` returned
   `status=ok`, `appSourceCount=2`, `telegramSourceCount=2`; focused `/chat`
   screenshot gate returned `screenshot_count=3`, `failed_count=0`,
   `status=ok`; `git diff --check` passed with LF/CRLF warnings only; cleanup

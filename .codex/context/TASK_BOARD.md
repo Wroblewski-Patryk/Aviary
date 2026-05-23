@@ -20,7 +20,7 @@ Last updated: 2026-05-23
   - Telegram-delivered assistant transcript rows project as `telegram`
   - Chat message metadata now displays compact `App` / `Telegram` markers
 - validation:
-  - focused backend pytest -> PASS, `6 passed`
+  - focused backend pytest -> PASS, `7 passed`
   - `npm run build` in `web/` -> PASS
   - `npm run test:chat-transcript` -> PASS, `status=ok`,
     `appSourceCount=2`, `telegramSourceCount=2`

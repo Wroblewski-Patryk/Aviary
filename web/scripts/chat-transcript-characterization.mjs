@@ -69,6 +69,24 @@ function durableFullHistory() {
       timestamp: "2026-05-03T12:00:02.000Z",
       metadata: { language: "en" },
     },
+    {
+      message_id: "chat-characterization-telegram:user",
+      event_id: "chat-characterization-telegram",
+      role: "user",
+      text: "This came from Telegram.",
+      channel: "telegram",
+      timestamp: "2026-05-03T12:01:00.000Z",
+      metadata: null,
+    },
+    {
+      message_id: "chat-characterization-telegram:assistant",
+      event_id: "chat-characterization-telegram",
+      role: "assistant",
+      text: "Telegram response is visible here.",
+      channel: "telegram",
+      timestamp: "2026-05-03T12:01:02.000Z",
+      metadata: { language: "en" },
+    },
   ];
 }
 
@@ -488,14 +506,18 @@ async function characterizeChat(cdp, baseUrl) {
       return {
         rowCount: document.querySelectorAll(".aion-chat-message-row").length,
         deliveredCount: document.querySelectorAll(".aion-chat-delivery-status-delivered").length,
+        appSourceCount: [...document.querySelectorAll(".aion-chat-source-marker")].filter((node) => node.textContent.trim() === "App").length,
+        telegramSourceCount: [...document.querySelectorAll(".aion-chat-source-marker")].filter((node) => node.textContent.trim() === "Telegram").length,
         strongCount: document.querySelectorAll(".aion-chat-message-copy strong").length,
         listItemCount: document.querySelectorAll(".aion-chat-message-copy li").length,
       };
     })()`,
     "durable chat transcript",
   );
-  assert(fullState.rowCount === 2, "Expected two durable transcript rows.");
+  assert(fullState.rowCount === 4, "Expected four durable transcript rows.");
   assert(fullState.deliveredCount === 1, "Expected one delivered user indicator.");
+  assert(fullState.appSourceCount === 2, "Expected app source marker on app transcript rows.");
+  assert(fullState.telegramSourceCount === 2, "Expected Telegram source marker on Telegram transcript rows.");
   assert(fullState.strongCount >= 1, "Expected markdown strong element in assistant row.");
   assert(fullState.listItemCount === 2, "Expected markdown list items in assistant row.");
   results.push({ case: "full", status: "ok", ...fullState });

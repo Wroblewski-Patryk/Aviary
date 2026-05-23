@@ -122,15 +122,21 @@ class ExpressionAgent:
                     collaboration_preference=collaboration_preference,
                     relation_support_intensity=relation_support_intensity,
                 )
-                if self._looks_like_false_capability_denial(message, context=context):
+                if self._looks_like_false_tool_capability_denial(message, context=context):
+                    message = self._build_tool_capability_correction_message(
+                        context=context,
+                        language=perception.language,
+                        response_style=response_style,
+                    )
+                elif self._looks_like_false_memory_or_time_denial(message, context=context):
                     message = self._build_fallback_message(
                         perception=perception,
                         context=context,
                         plan=plan,
-                role=role,
-                motivation=motivation,
-                affective=perception.affective,
-                response_style=response_style,
+                        role=role,
+                        motivation=motivation,
+                        affective=perception.affective,
+                        response_style=response_style,
                         theta=theta,
                         collaboration_preference=collaboration_preference,
                         relation_support_intensity=relation_support_intensity,
@@ -606,7 +612,49 @@ class ExpressionAgent:
             return f"W czasie tego turnu jest {exact}."
         return f"For this turn, the current time is {exact}."
 
-    def _looks_like_false_capability_denial(self, message: str, *, context: ContextOutput) -> bool:
+    def _build_tool_capability_correction_message(
+        self,
+        *,
+        context: ContextOutput,
+        language: str,
+        response_style: str | None,
+    ) -> str:
+        tool_labels = {
+            "search_web": "search",
+            "read_page": "page read",
+        }
+        available = [
+            tool_labels.get(item, item)
+            for item in context.available_tool_hints
+            if str(item or "").strip()
+        ]
+        if language == "pl":
+            if available:
+                tools = ", ".join(available)
+                return apply_response_style(
+                    "Moge uzyc podpietych narzedzi w warstwie akcji: "
+                    f"{tools}. Jesli prosisz o sprawdzenie aktualnych informacji, "
+                    "powinienem uruchomic ten tor zamiast odmawiac dostepu.",
+                    response_style,
+                )
+            return apply_response_style(
+                "Moge pracowac tylko na narzedziach, ktore runtime oznacza jako dostepne w tym turnie.",
+                response_style,
+            )
+        if available:
+            tools = ", ".join(available)
+            return apply_response_style(
+                "I can use the connected action-layer tools for this turn: "
+                f"{tools}. When you ask me to check current information, I should use that path "
+                "instead of denying access.",
+                response_style,
+            )
+        return apply_response_style(
+            "I can use only the tools that runtime marks as available for this turn.",
+            response_style,
+        )
+
+    def _looks_like_false_memory_or_time_denial(self, message: str, *, context: ContextOutput) -> bool:
         normalized = normalize_for_matching(message)
         denial_markers = (
             "i cannot remember",
@@ -620,6 +668,36 @@ class ExpressionAgent:
         if not any(marker in normalized for marker in denial_markers):
             return False
         return context.memory_continuity_available or bool(context.known_user_name)
+
+    def _looks_like_false_tool_capability_denial(self, message: str, *, context: ContextOutput) -> bool:
+        if not context.available_tool_hints:
+            return False
+        normalized = normalize_for_matching(message)
+        denial_markers = (
+            "i cannot search",
+            "i cant search",
+            "i cannot browse",
+            "i cant browse",
+            "i do not have browsing",
+            "i don't have browsing",
+            "i do not have access to the internet",
+            "i don't have access to the internet",
+            "i cannot directly conduct a search",
+            "i cannot directly perform a search",
+            "i cannot directly browse",
+            "i cannot access websites",
+            "nie moge bezposrednio przeprowadzic wyszukiwania",
+            "nie moge przeprowadzic wyszukiwania",
+            "nie moge wyszukiwac",
+            "nie moge uzyc wyszukiwarki",
+            "nie mam dostepu do wyszukiwarki",
+            "nie mam dostepu do internetu",
+            "nie moge przegladac",
+            "nie moge uzyc przegladarki",
+            "nie mam dostepu do przegladarki",
+            "nie moge otwierac stron",
+        )
+        return any(marker in normalized for marker in denial_markers)
 
     def _relation_value(self, *, relations: list[dict], relation_type: str, min_confidence: float) -> str | None:
         for relation in relations:

@@ -73,6 +73,7 @@ export const ChatTranscriptMessageRow = forwardRef<
     preview: boolean;
     speakerLabel: string;
     timestampLabel: string;
+    sourceLabel: string;
     deliveryState: ChatDeliveryState | null;
     deliveryLabel: string | null;
     children: ReactNode;
@@ -83,6 +84,7 @@ export const ChatTranscriptMessageRow = forwardRef<
     preview,
     speakerLabel,
     timestampLabel,
+    sourceLabel,
     deliveryState,
     deliveryLabel,
     children,
@@ -100,6 +102,7 @@ export const ChatTranscriptMessageRow = forwardRef<
           <span className="aion-chat-message-speaker">{speakerLabel}</span>
           <span className="aion-chat-meta-separator" aria-hidden="true" />
           <span>{timestampLabel}</span>
+          <span className="aion-chat-source-marker">{sourceLabel}</span>
           {deliveryState && deliveryLabel ? (
             <span
               aria-label={deliveryLabel}
@@ -152,6 +155,7 @@ export function ChatTranscriptMessageList({
   assistantSpeakerLabel,
   getDeliveryState,
   getDeliveryLabel,
+  getSourceLabel,
   getTimestampLabel,
   renderMessage,
   registerMessageRef,
@@ -162,6 +166,7 @@ export function ChatTranscriptMessageList({
   assistantSpeakerLabel: string;
   getDeliveryState: (message: AppChatHistoryEntry) => ChatDeliveryState | null;
   getDeliveryLabel: (deliveryState: ChatDeliveryState | null) => string | null;
+  getSourceLabel: (message: AppChatHistoryEntry) => string;
   getTimestampLabel: (message: AppChatHistoryEntry) => string;
   renderMessage: (message: AppChatHistoryEntry) => ReactNode;
   registerMessageRef: (messageId: string, node: HTMLDivElement | null) => void;
@@ -183,6 +188,7 @@ export function ChatTranscriptMessageList({
             preview={preview}
             speakerLabel={isUser ? userSpeakerLabel : assistantSpeakerLabel}
             timestampLabel={getTimestampLabel(message)}
+            sourceLabel={getSourceLabel(message)}
             deliveryState={deliveryState}
             deliveryLabel={deliveryLabel}
           >

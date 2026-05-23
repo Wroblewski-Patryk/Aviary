@@ -3756,7 +3756,6 @@ class MemoryRepository:
 
         event_id = str(memory_item.get("event_id", "") or "").strip()
         timestamp = self._coerce_datetime(memory_item.get("event_timestamp") or memory_item.get("timestamp"))
-        channel = self._normalize_transcript_channel(memory_item.get("source"))
         source = str(memory_item.get("source", "") or "").strip().lower()
         event_text = str(payload.get("event", "") or "").strip()
         expression_text = str(payload.get("expression", "") or "").strip()
@@ -3770,7 +3769,7 @@ class MemoryRepository:
                     "event_id": event_id,
                     "role": "user",
                     "text": event_text,
-                    "channel": channel,
+                    "channel": self._transcript_channel_for_user(source=source),
                     "timestamp": timestamp,
                 }
             )
@@ -3785,7 +3784,7 @@ class MemoryRepository:
                     "event_id": event_id,
                     "role": "assistant",
                     "text": expression_text,
-                    "channel": channel,
+                    "channel": self._transcript_channel_for_assistant(payload=payload, source=source),
                     "timestamp": timestamp,
                     "metadata": metadata,
                 }
@@ -3797,6 +3796,17 @@ class MemoryRepository:
     def _normalize_transcript_channel(source: Any) -> str:
         normalized = str(source or "").strip().lower()
         if normalized == "telegram":
+            return "telegram"
+        return "api"
+
+    @staticmethod
+    def _transcript_channel_for_user(*, source: str) -> str:
+        return MemoryRepository._normalize_transcript_channel(source)
+
+    @staticmethod
+    def _transcript_channel_for_assistant(*, payload: dict[str, Any], source: str) -> str:
+        actions = payload.get("action_actions")
+        if source == "telegram" or (isinstance(actions, list) and "send_telegram_message" in actions):
             return "telegram"
         return "api"
 

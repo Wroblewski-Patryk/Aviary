@@ -108,6 +108,18 @@ class BoundaryUnsafeOpenAI(ReplyOpenAI):
         return self.reply
 
 
+class ToolDenialOpenAI(ReplyOpenAI):
+    async def generate_reply(self, *args, **kwargs) -> str | None:
+        await super().generate_reply(*args, **kwargs)
+        return "Nie moge bezposrednio przeprowadzic wyszukiwania ani przegladac stron."
+
+
+class EnglishToolDenialOpenAI(ReplyOpenAI):
+    async def generate_reply(self, *args, **kwargs) -> str | None:
+        await super().generate_reply(*args, **kwargs)
+        return "I cannot search the web or browse pages directly."
+
+
 def _event(text: str = "hello") -> Event:
     return Event(
         event_id="evt-1",
@@ -126,6 +138,23 @@ def _context() -> ContextOutput:
         related_tags=["general"],
         risk_level=0.1,
         foreground_awareness_summary="Current turn timestamp: 2026-04-25T21:22:00+00:00.",
+    )
+
+
+def _context_with_tool_hints() -> ContextOutput:
+    return ContextOutput(
+        summary=(
+            "ctx Foreground awareness: Current turn timestamp: 2026-04-25T21:22:00+00:00. "
+            "Bounded tools available now: search_web, read_page."
+        ),
+        related_goals=[],
+        related_tags=["general"],
+        risk_level=0.1,
+        foreground_awareness_summary=(
+            "Current turn timestamp: 2026-04-25T21:22:00+00:00. "
+            "Bounded tools available now: search_web, read_page."
+        ),
+        available_tool_hints=["search_web", "read_page"],
     )
 
 
@@ -190,6 +219,40 @@ async def test_expression_uses_runtime_language_for_fallback() -> None:
     assert result.message.startswith("Jasne, lecimy z tym.")
     assert result.language == "pl"
     assert result.tone == "action-oriented"
+
+
+async def test_expression_rewrites_false_web_tool_capability_denial() -> None:
+    agent = ExpressionAgent(openai_client=ToolDenialOpenAI())
+    result = await agent.run(
+        _event("Sprawdz prosze aktualne informacje przez wyszukiwarke."),
+        _perception(language="pl"),
+        _context_with_tool_hints(),
+        _plan(),
+        _role(selected="analyst"),
+        _motivation(mode="analyze"),
+    )
+
+    assert "Moge uzyc" in result.message
+    assert "search" in result.message
+    assert "page read" in result.message
+    assert "nie moge" not in result.message.lower()
+
+
+async def test_expression_rewrites_english_false_web_tool_capability_denial() -> None:
+    agent = ExpressionAgent(openai_client=EnglishToolDenialOpenAI())
+    result = await agent.run(
+        _event("Please check the latest information with search."),
+        _perception(language="en"),
+        _context_with_tool_hints(),
+        _plan(),
+        _role(selected="analyst"),
+        _motivation(mode="analyze"),
+    )
+
+    assert "I can use" in result.message
+    assert "search" in result.message
+    assert "page read" in result.message
+    assert "cannot search" not in result.message.lower()
 
 
 async def test_expression_applies_concise_preference_to_fallback() -> None:

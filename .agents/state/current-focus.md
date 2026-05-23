@@ -12,7 +12,7 @@ despite foreground tool hints. App-native `/app/chat/message` remains an
 API/App reply path with no Telegram client call, Telegram-delivered assistant
 transcript rows now project as `telegram`, and Chat metadata shows `App` or
 `Telegram` per message. Validation passed with focused backend pytest
-(`6 passed`), `npm run build`, `npm run test:chat-transcript`
+(`7 passed`), `npm run build`, `npm run test:chat-transcript`
 (`appSourceCount=2`, `telegramSourceCount=2`), focused `/chat`
 desktop/tablet/mobile screenshot gate (`screenshot_count=3`,
 `failed_count=0`), `git diff --check`, and cleanup checks.

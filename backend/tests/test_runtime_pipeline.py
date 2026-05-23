@@ -86,7 +86,14 @@ class FakeMemoryRepository:
             event_id = str(memory_item.get("event_id", "") or "").strip()
             timestamp = memory_item.get("event_timestamp") or memory_item.get("timestamp")
             source = str(memory_item.get("source", "")).strip().lower()
-            channel = "telegram" if source == "telegram" else "api"
+            user_channel = "telegram" if source == "telegram" else "api"
+            action_actions = payload.get("action_actions")
+            assistant_channel = (
+                "telegram"
+                if source == "telegram"
+                or (isinstance(action_actions, list) and "send_telegram_message" in action_actions)
+                else "api"
+            )
             event_text = str(payload.get("event", "") or "").strip()
             expression_text = str(payload.get("expression", "") or "").strip()
             response_language = str(payload.get("response_language", "") or payload.get("language", "") or "").strip()
@@ -103,7 +110,7 @@ class FakeMemoryRepository:
                         "event_id": event_id,
                         "role": "user",
                         "text": event_text,
-                        "channel": channel,
+                        "channel": user_channel,
                         "timestamp": timestamp,
                     }
                 )
@@ -113,7 +120,7 @@ class FakeMemoryRepository:
                     "event_id": event_id,
                     "role": "assistant",
                     "text": expression_text,
-                    "channel": channel,
+                    "channel": assistant_channel,
                     "timestamp": timestamp,
                 }
                 if response_language:
@@ -6650,6 +6657,7 @@ async def test_runtime_pipeline_keeps_scheduler_prompt_out_of_shared_transcript_
         f"{proactive_result.event.event_id}:assistant",
     ]
     assert transcript[0]["role"] == "assistant"
+    assert transcript[0]["channel"] == "telegram"
 
 
 async def test_runtime_behavior_failure_scenarios_cover_contradiction_missing_data_and_noise() -> None:

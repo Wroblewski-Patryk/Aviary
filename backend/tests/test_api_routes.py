@@ -5789,7 +5789,7 @@ def test_app_routes_follow_active_session_cookie_when_switching_users() -> None:
 
 
 def test_app_chat_message_runs_runtime_under_authenticated_user() -> None:
-    client, runtime, _ = _client()
+    client, runtime, telegram = _client()
     register_response = client.post(
         "/app/auth/register",
         json={
@@ -5807,7 +5807,10 @@ def test_app_chat_message_runs_runtime_under_authenticated_user() -> None:
     assert response.status_code == 200
     assert runtime.last_event is not None
     assert runtime.last_event.meta.user_id == user_id
+    assert runtime.last_event.source == "api"
     assert response.json()["reply"]["message"] == "Test reply"
+    assert response.json()["reply"]["channel"] == "api"
+    assert telegram.calls == []
 
 
 def test_app_chat_message_localizes_runtime_timestamp_from_profile_utc_offset() -> None:

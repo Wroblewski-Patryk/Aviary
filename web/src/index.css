@@ -2568,6 +2568,14 @@ body {
   font-weight: 700;
 }
 
+.aion-chat-source-marker {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1rem;
+  color: rgba(74, 112, 116, 0.92);
+  font-weight: 700;
+}
+
 .aion-chat-delivery-status {
   position: relative;
   display: inline-flex;

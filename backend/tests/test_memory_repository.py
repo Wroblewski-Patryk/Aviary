@@ -3244,7 +3244,7 @@ async def test_memory_repository_hides_scheduler_internal_prompt_but_keeps_deliv
         "evt-scheduler-1:assistant",
     ]
     assert [item["text"] for item in items] == ["hej", "cześć", "Jak się dziś trzymasz?"]
-    assert [item["channel"] for item in items] == ["api", "api", "api"]
+    assert [item["channel"] for item in items] == ["api", "api", "telegram"]
 
     await engine.dispose()
 
