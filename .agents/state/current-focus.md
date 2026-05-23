@@ -1,8 +1,16 @@
 # Current Focus
 
-Last updated: 2026-05-14
+Last updated: 2026-05-23
 
 ## Active Focus
+
+The latest completed UI planning slice is `PRJ-1237`: canonical UI
+simplification index. Future v1.2 web/native UI work should start from
+`docs/ux/canonical-ui-layout-index.md`, which defines one shared shell, backend
+data authority, route group IDs, first-read hierarchy, component budgets, noise
+taxonomy, pass order, and acceptance gates. The next focus is not more
+decorative polish; it is `PASS-NOISE-AUDIT` followed by `PASS-SHELL`, then
+route-local simplification.
 
 The latest completed UI slice is `PRJ-1229`: authenticated desktop utility bar
 parity is verified. Desktop authenticated routes now show the shared

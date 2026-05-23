@@ -4,6 +4,36 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1237` is DONE:
+  - `.codex/tasks/PRJ-1237-canonical-ui-layout-index.md`
+- objective:
+  - stop broad v1.2 UI polish from drifting into more controls/cards/badges
+    and establish one canonical simplification index for future web and native
+    UI generation
+- current result:
+  - coordinated a UX/reference read-only lane and integrated its taxonomy
+  - recorded the architecture/data lane timeout instead of pretending the lane
+    completed
+  - added `docs/ux/canonical-ui-layout-index.md`
+  - defined backend/client data authority IDs for `me`, chat, personality,
+    tools, Telegram link, health, and reset flows
+  - defined one shared shell model with desktop sidebar, mobile header, route
+    rail, utility band, and optional footer roles
+  - defined route group IDs, first-read hierarchy, component budgets, noise
+    taxonomy, simplification pass order, and acceptance gates
+- validation:
+  - planning/source inspection artifact only; no production UI rewrite was
+    started in this slice
+  - checked canonical UX docs, design memory, route/API contract inventory, and
+    recent PRJ-1234/1235/1236 screenshot proof paths
+  - UX/reference lane report integrated; architecture/data lane timed out and
+    was closed
+- release boundary:
+  - this is a verified planning/source-of-truth checkpoint on
+    `codex/v12-web-canonical-ui`
+  - production v1.2 release and visual route rewrites require later
+    route-local implementation missions
+
 - `PRJ-1236` is DONE:
   - `.codex/tasks/PRJ-1236-settings-auth-accessibility-polish.md`
 - objective:

@@ -9,6 +9,49 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1237-canonical-ui-layout-index
+- Status: COMPLETED
+- Selected objective: turn the user's simplification direction into a
+  canonical UI layout index that maps visible groups to backend-supported
+  functions and removes permission for unnecessary cards, badges, chips, and
+  inert controls.
+- Why this mission now: PRJ-1236 is green, but the user correctly identified
+  that the web UI now needs a deeper simplification pass rather than more
+  single-control polish.
+- Release objective or product milestone advanced: v1.2 web UI simplification
+  and future native UI generation readiness.
+- First/next checkpoint: completed. The next mission should run
+  `PASS-NOISE-AUDIT` or `PASS-SHELL` from
+  `docs/ux/canonical-ui-layout-index.md`.
+- Stop conditions: completed for the planning slice. Future implementation
+  must stop if a route requires backend data not currently available or if a
+  visual element cannot map to the canonical index.
+- Parent validation gate: source inspection of architecture docs, canonical UX
+  docs, route manifest, API contracts, and state docs completed for the
+  planning artifact; route-local implementation gates remain for later tasks.
+
+## PRJ-1237 Current Evidence
+
+- Branch: `codex/v12-web-canonical-ui`
+- Lane status:
+  - Architecture/data mapping lane delegated to James, timed out, then closed.
+  - UX/reference simplification lane delegated to Newton and integrated.
+  - Coordinator completed the canonical UI layout index.
+- Implementation:
+  - `docs/ux/canonical-ui-layout-index.md` added with data authority, shell
+    zones, component budget, route group IDs, first-read hierarchy, noise
+    taxonomy, allowed group types, simplification order, implementation
+    ownership map, and future acceptance gate.
+- Validation:
+  - canonical UX source set and recent proof paths reviewed
+  - UX/reference lane report integrated
+  - no production code rewrite started before the planning artifact
+  - no backend contract invented beyond known app API data sources
+- Artifacts:
+  - `docs/ux/canonical-ui-layout-index.md`
+
+## Previous Mission
+
 - Mission ID: PRJ-1236-settings-auth-accessibility-polish
 - Status: COMPLETED
 - Selected objective: close the next small accessibility/interaction gap after

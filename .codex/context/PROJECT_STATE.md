@@ -6,6 +6,36 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1237` completed the canonical UI simplification index for
+  v1.2:
+  - task:
+    - `.codex/tasks/PRJ-1237-canonical-ui-layout-index.md`
+  - result:
+    - created `docs/ux/canonical-ui-layout-index.md` as the source-of-truth
+      map for reducing cards, badges, chips, fake chrome, inert controls, and
+      route-local clutter
+    - defined global shell zones, backend/client data authority IDs, route
+      group IDs, first-read hierarchy, component budgets, noise taxonomy,
+      allowed group types, simplification pass order, and implementation
+      ownership map
+    - integrated the UX/reference lane report, which identified fake browser
+      chrome, duplicate badges, card-in-card layouts, technical first-viewport
+      labels, route-local sidebars, and mobile grid density as removable noise
+    - recorded the architecture/data subagent timeout and constrained the
+      artifact to known app API contracts instead of inventing new backend
+      behavior
+  - validation:
+    - planning/source inspection artifact only
+    - canonical UX source set, design memory, current route/API contract
+      inventory, and recent PRJ-1234/1235/1236 proof paths reviewed
+    - no production implementation rewrite was started before the planning
+      artifact stabilized
+  - release boundary:
+    - this is a verified planning/source-of-truth checkpoint on
+      `codex/v12-web-canonical-ui`
+    - route-local implementation, browser screenshots, and release promotion
+      remain separate future missions
+
 - 2026-05-23: `PRJ-1236` completed an auth and Settings accessibility polish
   pass:
   - task:

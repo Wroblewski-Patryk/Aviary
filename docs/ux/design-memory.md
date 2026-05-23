@@ -1,5 +1,19 @@
 # Design Memory
 
+## 2026-05-23 - Canonical UI simplification index
+
+- Every visible UI element should map to one of four jobs: what Aviary can do,
+  what Aviary knows from backend data, what the user can safely do next, or
+  what state/risk/blocker the user must understand.
+- Treat fake chrome, duplicate badges, decorative chips, route-local sidebars,
+  card-in-card layouts, and button-looking inert controls as removable noise
+  unless a route-local task proves real backend-backed value.
+- First viewports should pick one primary route stage or task surface and at
+  most two primary panels. More backend data belongs below the fold or behind a
+  disclosure boundary.
+- Use `docs/ux/canonical-ui-layout-index.md` before adding or keeping route
+  groups in future web/native UI work.
+
 ## 2026-05-23 - Auth and Settings clarity checkpoint
 
 - Auth login/register mode switches should be modeled as segmented buttons

@@ -1,8 +1,22 @@
 # Next Steps
 
-Last updated: 2026-05-22
+Last updated: 2026-05-23
 
 ## NOW
+
+1. Continue v1.2 UI simplification from the canonical index:
+   - task:
+     `.codex/tasks/PRJ-1237-canonical-ui-layout-index.md`
+   - source of truth:
+     `docs/ux/canonical-ui-layout-index.md`
+   - result:
+     global shell zones, backend/client data authority IDs, route group IDs,
+     first-read hierarchy, component budgets, noise taxonomy, allowed group
+     types, implementation ownership map, and acceptance gates are defined
+   - next smallest useful choices:
+     run `PASS-NOISE-AUDIT` from current screenshots, then `PASS-SHELL` to
+     remove duplicate global chrome and inert controls before route-specific
+     simplification
 
 1. Selected-scope v1 is released as `v1.1.1`:
    - task:

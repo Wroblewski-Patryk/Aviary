@@ -242,6 +242,16 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
   desktop/tablet/mobile Dashboard screenshot review, and validation cleanup with no
   browser/server leftovers.
 
+- `AVIARY-WEB-RESP-001` also includes `PRJ-1237`: canonical UI layout index
+  planning proof verified `docs/ux/canonical-ui-layout-index.md` as the
+  source-of-truth for simplifying future web/native UI passes. The artifact
+  maps backend/client data authority, one shared shell, route group IDs,
+  first-read hierarchy, component budgets, noise taxonomy, allowed group types,
+  pass order, ownership map, and acceptance gates. This is planning evidence,
+  not a rendered-route implementation proof; the next smallest action is
+  `PASS-NOISE-AUDIT` followed by `PASS-SHELL` with screenshots and route-smoke
+  proof.
+
 ## Maintenance Rules
 
 - Update this file when a feature ships, a bug is fixed, a regression appears,
