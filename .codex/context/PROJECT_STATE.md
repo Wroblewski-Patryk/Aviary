@@ -36,6 +36,39 @@ the same project.
     - this is a verified geometry pass, not a full pixel-perfect parity claim;
       richer icon/content parity requires a separate content/data decision.
 
+- 2026-05-23: `PRJ-1243` completed a Chat canonical fidelity pass:
+  - task:
+    - `.codex/tasks/PRJ-1243-chat-canonical-fidelity.md`
+  - result:
+    - tuned Chat only, with no new components, fake data, backend behavior,
+      shared-shell change, or branding rename
+    - hid nonessential Chat route-status pills across breakpoints
+    - moved desktop Chat closer to the canonical conversation/persona balance
+    - reduced transcript/composer visual weight so the workspace feels calmer
+    - converted assistant ordered-list replies into one calmer plan surface
+      instead of stacked heavy cards
+    - suppressed the solo quick-action chip and the desktop embodied-cognition
+      portrait copy that competed with the canonical persona stage
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - Chat screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`
+    - route smoke -> `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> PASS, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+  - artifacts:
+    - `.codex/artifacts/prj1243-chat-canonical-fidelity/report.json`
+    - `.codex/artifacts/prj1243-chat-canonical-fidelity/route-smoke-report.json`
+    - `.codex/artifacts/prj1243-chat-canonical-fidelity/navigation-proof.json`
+    - `.codex/artifacts/prj1243-chat-canonical-fidelity/account-proof.json`
+    - `.codex/artifacts/prj1243-chat-canonical-fidelity/screenshots/`
+  - residual:
+    - this is a verified structural fidelity pass, not a full pixel-perfect
+      parity claim; exact icon/content parity remains a separate content
+      decision.
+
 - 2026-05-23: `PRJ-1241` completed a Dashboard first-viewport lock:
   - task:
     - `.codex/tasks/PRJ-1241-dashboard-first-viewport-lock.md`

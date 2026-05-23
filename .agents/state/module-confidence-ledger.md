@@ -46,6 +46,19 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1243` completes a verified Chat canonical fidelity pass for
+  `AVIARY-WEB-RESP-001`: Chat now hides nonessential route-status pills, uses a
+  more balanced desktop conversation/persona split, calms transcript/composer
+  density, renders assistant ordered lists as one calm plan surface, suppresses
+  the solo quick-action chip, and removes the desktop portrait copy that
+  competed with persona-stage overlays.
+  Evidence: `npm run build` PASS; Chat screenshot gate across
+  desktop/tablet/mobile returned `screenshot_count=3`, `failed_count=0`; full
+  route smoke returned `route_count=14`, `status=ok`; navigation proof returned
+  `step_count=4`, `failed_count=0`; account proof returned `step_count=1`,
+  `failed_count=0`, `panel_visible=true`; `git diff --check` passed with
+  LF/CRLF warning only.
+
 - `PRJ-1242` completes a verified Dashboard hero geometry pass for
   `AVIARY-WEB-RESP-001`: desktop Dashboard metrics now sit as side satellites
   around the central hero with visible connector lines, while existing

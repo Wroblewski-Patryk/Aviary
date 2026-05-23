@@ -1,11 +1,12 @@
 # System Health
 
-Last updated: 2026-05-22
+Last updated: 2026-05-23
 
 ## Latest Runtime Validation
 
 | Area | Check | Result | Evidence |
 | --- | --- | --- | --- |
+| Chat canonical fidelity | Chat v5 structural fidelity, desktop/tablet/mobile screenshot gate, full route smoke, navigation proof, account proof, and screenshot review | PASS | `PRJ-1243`; `npm run build`; Chat screenshot gate -> `screenshot_count=3`, `failed_count=0`; route smoke -> `route_count=14`, `status=ok`; navigation proof -> `step_count=4`, `failed_count=0`; account proof -> `step_count=1`, `failed_count=0`, `panel_visible=true`; `git diff --check` -> PASS with LF/CRLF warning only; desktop/tablet/mobile Chat screenshots reviewed |
 | V1 production candidate promotion | Candidate pushed to `origin/main`, production deploy parity, release smoke, release reality audit, go/no-go, selected tag | PASS | `PRJ-1231`; selected SHA `df677370f63d2688eb792f9a3a846d2cd40a564b`; tag `v1.1.1`; production release smoke with deploy parity -> PASS; release reality audit -> `GO_FOR_SELECTED_SHA`; selected SHA go/no-go -> `GO`; selected-tag go/no-go -> `GO`; backend/web revisions match selected SHA; `release_ready=true`; `release_violations=[]`; v1 final acceptance `core_v1_bundle_ready` |
 | V1 selected-scope readiness refresh | Multi-lane coordinator refresh, Dashboard focused desktop density slice, route-smoke fallback hardening, full backend regression, web route/a11y/responsive/navigation/account proof, architecture dashboard refresh, screenshot review, and validation cleanup | PASS | `PRJ-1230`; backend full pytest -> `1105 passed`; web build/responsive/navigation/account/route smoke -> PASS with `route_count=14`, `viewport_count=3`, `screenshot_count=18`, `failed_count=0`, `account_proof.status=ok`; architecture dashboard refresh -> selected-scope readiness `11/11`; `git diff --check` -> PASS with LF/CRLF warnings only; refreshed desktop/tablet/mobile Dashboard screenshots reviewed; cleanup -> no `chrome-headless-shell` and no listener on `5173` |
 | Authenticated desktop utility bar | Shared desktop shell utility/search/action/account band, responsive route audit, navigation proof, account proof, and screenshot review | PASS | `PRJ-1229`; `npm run build`; `npm run audit:ui-responsive` -> `route_count=14`, `viewport_count=3`, `screenshot_count=18`, `failed_count=0`; `npm run audit:ui-navigation` -> `step_count=4`, `failed_count=0`; `node scripts/route-smoke.mjs --account-proof --report .codex/artifacts/prj1225-account-proof/report.json` -> `account_proof.status=ok`, `step_count=1`, `failed_count=0`, `panel_visible=true`; refreshed desktop Dashboard, desktop Chat, tablet Dashboard, and mobile Dashboard screenshots reviewed; cleanup -> no AION validation leftovers |

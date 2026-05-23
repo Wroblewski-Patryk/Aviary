@@ -9,24 +9,67 @@ repository history.
 
 ## Current Mission
 
-- Mission ID: PRJ-1242-dashboard-hero-geometry
+- Mission ID: PRJ-1243-chat-canonical-fidelity
 - Status: VERIFIED
-- Selected objective: tune Dashboard desktop hero metric geometry so metrics
-  read as side satellites connected to the central figure, without changing
-  data, route behavior, or responsive mobile/tablet simplification.
-- Why this mission now: PRJ-1241 named exact hero connector/metric geometry as
-  the remaining Dashboard residual.
+- Selected objective: move Chat closer to the canonical v5 conversation/persona
+  screen by reducing nonessential status/control noise and calming transcript
+  plan treatment, without changing backend data, route behavior, or shared
+  shell navigation.
+- Why this mission now: PRJ-1240 named Chat transcript/persona fidelity as a
+  remaining flagship residual, and PRJ-1241/1242 closed the immediate Dashboard
+  priority.
 - Release objective or product milestone advanced: v1.2 web UI canonical
-  fidelity for Dashboard.
-- First/next checkpoint: completed a CSS-only desktop hero geometry pass.
-  Dashboard metric tiles now sit beside the central hero with visible connector
-  lines instead of reading as corner overlays inside the image.
-- Stop conditions: next checkpoint should remain screenshot-specific; do not
-  replace backend-backed metric content or iconography without a separate
-  content/data decision, and do not reopen Chat/Personality in the same slice.
-- Parent validation gate: web build, Dashboard desktop/tablet/mobile screenshot
+  fidelity for Chat.
+- First/next checkpoint: completed a Chat-only CSS fidelity pass. Chat
+  route-status pills and the solo quick-action chip are hidden, desktop split
+  is closer to the canonical conversation/persona balance, transcript/composer
+  rhythm is calmer, ordered-list replies render as one calmer plan surface, and
+  the desktop portrait copy no longer competes with persona-stage overlays.
+- Stop conditions: next checkpoint should remain single-surface and
+  screenshot-specific; do not replace backend-backed content, icon glyphs, or
+  Chat transcript fixture content without a separate content/data decision.
+- Parent validation gate: web build, Chat desktop/tablet/mobile screenshot
   gate, full route smoke, navigation proof, account proof, visual screenshot
   review, and cleanup check.
+
+## PRJ-1243 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane was provided as a read-only user/subagent brief and
+    integrated by the coordinator
+  - coordinator implemented the route-local Chat CSS patch and final proof
+- Implementation:
+  - nonessential Chat route-status pills are hidden across breakpoints
+  - desktop Chat uses a more balanced conversation/persona split
+  - transcript and composer rhythm is calmer and less visually chunky
+  - assistant ordered-list replies render as one calm plan surface instead of
+    separate heavy cards
+  - solo quick-action chip is suppressed when only one suggestion exists
+  - desktop portrait copy/chip is hidden so the persona-stage notes and
+    planning overlay own the right panel
+- Validation:
+  - `npm run build` PASS
+  - Chat screenshot gate across desktop/tablet/mobile PASS:
+    `screenshot_count=3`, `failed_count=0`
+  - full route smoke PASS: `route_count=14`, `status=ok`
+  - navigation proof PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+- Residual:
+  - This is a verified structural fidelity pass, not full pixel-perfect parity.
+    Exact canonical icon/content parity and route-smoke fixture copy are outside
+    this CSS-only slice.
+- Artifacts:
+  - `.codex/tasks/PRJ-1243-chat-canonical-fidelity.md`
+  - `.codex/artifacts/prj1243-chat-canonical-fidelity/report.json`
+  - `.codex/artifacts/prj1243-chat-canonical-fidelity/route-smoke-report.json`
+  - `.codex/artifacts/prj1243-chat-canonical-fidelity/navigation-proof.json`
+  - `.codex/artifacts/prj1243-chat-canonical-fidelity/account-proof.json`
+  - `.codex/artifacts/prj1243-chat-canonical-fidelity/screenshots/`
+
+## Previous Mission
 
 ## PRJ-1242 Current Evidence
 

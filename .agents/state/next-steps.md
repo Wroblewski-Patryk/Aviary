@@ -4,6 +4,25 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue Chat canonical parity from `PRJ-1243`:
+   - task:
+     `.codex/tasks/PRJ-1243-chat-canonical-fidelity.md`
+   - result:
+     Chat now hides nonessential route-status pills, uses a more balanced
+     desktop conversation/persona split, calms transcript/composer density,
+     renders assistant ordered lists as one calm plan surface, and suppresses
+     the solo quick-action chip plus competing desktop portrait copy
+   - proof:
+     `npm run build` PASS; Chat screenshot gate across desktop/tablet/mobile
+     PASS with `screenshot_count=3`, `failed_count=0`; route smoke
+     `route_count=14`, `status=ok`; navigation proof `step_count=4`,
+     `failed_count=0`; account proof `step_count=1`, `failed_count=0`,
+     `panel_visible=true`
+   - next smallest useful choice:
+     move to a separate Personality canonical fidelity checkpoint, or make a
+     content/data decision before changing Chat icon glyphs, canonical card
+     copy, or route-smoke transcript fixture content
+
 1. Continue Dashboard canonical parity from `PRJ-1242`:
    - task:
      `.codex/tasks/PRJ-1242-dashboard-hero-geometry.md`

@@ -4,6 +4,19 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed flagship UI slice is `PRJ-1243`: Chat canonical fidelity.
+It keeps Aviary branding, adds no fake data or new components, and makes Chat
+closer to the canonical v5 conversation/persona screen by hiding nonessential
+route-status pills, balancing the desktop conversation/persona split, rendering
+the transcript/composer as a calmer work surface, rendering assistant ordered
+lists as one calm plan surface, and suppressing the solo quick-action chip plus
+competing desktop portrait copy. Validation passed with
+`npm run build`, Chat screenshot gate across desktop/tablet/mobile
+(`screenshot_count=3`, `failed_count=0`), route smoke (`route_count=14`,
+`status=ok`), navigation proof (`step_count=4`, `failed_count=0`), account
+proof (`step_count=1`, `failed_count=0`, `panel_visible=true`), and
+`git diff --check`.
+
 The latest completed flagship UI slice is `PRJ-1242`: Dashboard hero connector
 geometry. It keeps Aviary branding, adds no fake data or new components, and
 makes desktop Dashboard metrics read as side satellites connected to the hero

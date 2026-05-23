@@ -4,6 +4,37 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1243` is DONE:
+  - `.codex/tasks/PRJ-1243-chat-canonical-fidelity.md`
+- objective:
+  - make Chat structurally closer to the canonical v5 conversation/persona
+    screen by removing nonessential status/control noise and calming the
+    transcript plan treatment
+- current result:
+  - Chat route-status pills are hidden across breakpoints
+  - desktop Chat split is closer to the canonical conversation/persona balance
+  - transcript and composer density is calmer
+  - assistant ordered-list replies render as one calm plan surface instead of
+    stacked heavy cards
+  - the solo quick-action chip and desktop embodied-cognition portrait copy no
+    longer compete with the canonical first viewport
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - Chat screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`
+  - route smoke -> `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+- residual:
+  - this is a verified structural fidelity pass, not full pixel-perfect parity;
+    exact canonical icon/content parity remains a separate content/data
+    decision
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1242` is DONE:
   - `.codex/tasks/PRJ-1242-dashboard-hero-geometry.md`
 - objective:

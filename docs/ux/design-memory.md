@@ -1,5 +1,23 @@
 # Design Memory
 
+## 2026-05-23 - Chat canonical fidelity
+
+- Chat v5 should privilege the conversation/persona composition over status
+  chrome. Route posture/status pills that duplicate shell context should stay
+  hidden unless they become a real user decision surface.
+- A single quick-action chip above the composer reads as extra clutter. Keep
+  the composer mode rail and input as the primary action surface unless a
+  future task designs a richer suggested-action pattern.
+- Assistant ordered lists in Chat should read as one calm plan surface, not a
+  stack of separate heavy cards. This preserves readability for long replies
+  while staying closer to the canonical "today's plan" treatment.
+- Transcript and composer density should stay quiet on desktop: the transcript
+  is the work surface, while the mode rail and input are the only primary
+  action controls.
+- On desktop Chat, the persona stage should avoid an extra bottom-left
+  explanatory label stack. Keep the pinned notes and planning overlay useful,
+  but do not let an embodied-cognition chip compete with the portrait.
+
 ## 2026-05-23 - Dashboard hero connector geometry
 
 - On desktop Dashboard, metric tiles should behave like side satellites around
