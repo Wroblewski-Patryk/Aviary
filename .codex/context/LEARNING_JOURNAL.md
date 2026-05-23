@@ -63,6 +63,10 @@ fixes for this repository.
     removed only the locked `aion-chat-transcript-*` temp profile directory,
     and recorded the remaining `chrome-headless-shell` handles as stale
     Windows process entries rather than active validation work.
+  - PRJ-1260 route-smoke screenshot proof left four active
+    `chrome-headless-shell` processes after the report completed; targeted
+    PID cleanup stopped them, then the final cleanup check showed no
+    validation-owned headless browser leftovers.
 
 ### 2026-05-23 - Route-smoke artifact paths should be absolute from nested workdirs
 - Context: PRJ-1238 shared-shell noise reduction.

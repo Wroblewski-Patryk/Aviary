@@ -4,6 +4,29 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue from verified `PRJ-1260`:
+   - task:
+     `.codex/tasks/PRJ-1260-chat-cognitive-belt-quieting.md`
+   - result:
+     Chat top cognitive belt now reads as a calmer conversation context strip
+     with lighter material, CSS-only circular icon accents, and quieter inline
+     status metadata
+   - proof:
+     `node --check scripts/route-smoke.mjs` PASS; `npm run build` PASS;
+     `npm run test:chat-transcript` PASS with `status=ok`,
+     `appSourceCount=2`, `telegramSourceCount=2`; combined Chat
+     screenshot/navigation/account gate PASS with `screenshot_count=3`,
+     `failed_count=0`, `route_count=14`, `status=ok`, navigation
+     `step_count=4`, account `panel_visible=true`; `git diff --check` PASS
+     with LF/CRLF warning only; desktop/tablet/mobile screenshots reviewed;
+     cleanup removed one fresh route-smoke temp profile,
+     stopped four validation-owned headless browser processes, and final check
+     found no validation-owned leftovers
+   - next smallest useful choice:
+     pick one exact remaining screenshot mismatch on one route only, or make a
+     content/data decision before changing canonical copy, icon glyphs, source
+     labels, route-smoke fixture content, or richer Chat plan data
+
 1. Continue from verified `PRJ-1259`:
    - task:
      `.codex/tasks/PRJ-1259-dashboard-current-focus-focal.md`

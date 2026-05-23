@@ -4,6 +4,19 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed Chat UI slice is `PRJ-1260`: cognitive belt quieting. It
+keeps all six top context modules and their supported values visible, but makes
+the belt read as a calmer conversation context strip through lighter material,
+CSS-only circular icon accents, and quieter inline status metadata. Validation
+passed with `node --check scripts/route-smoke.mjs`, `npm run build`, `npm run
+test:chat-transcript` (`status=ok`, `appSourceCount=2`,
+`telegramSourceCount=2`), focused `/chat` desktop/tablet/mobile
+screenshot/navigation/account gate (`screenshot_count=3`, `failed_count=0`,
+`route_count=14`, `status=ok`, navigation `step_count=4`, account
+`panel_visible=true`), screenshot review, and cleanup checks that removed one
+fresh route-smoke temp profile and stopped four validation-owned headless
+browser processes.
+
 The latest completed Dashboard UI slice is `PRJ-1259`: Current Focus focal
 polish. It keeps the current focus copy and `Enter focus` CTA unchanged, but
 replaces the generic teal orb with a compact scenic circular focal treatment

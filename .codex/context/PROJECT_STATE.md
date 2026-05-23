@@ -6,6 +6,35 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1260` completed a Chat cognitive belt quieting pass:
+  - task:
+    - `.codex/tasks/PRJ-1260-chat-cognitive-belt-quieting.md`
+  - result:
+    - made the top Chat cognitive belt read as a calmer conversation context
+      strip with lighter material, CSS-only circular icon accents, and quieter
+      inline status metadata
+    - preserved all six context modules, transcript behavior, source markers,
+      composer, mode rail, portrait stage, Dashboard, Personality, shared
+      shell, backend data, and fixture copy
+    - changed only route-local CSS in `web/src/index.css`
+  - validation:
+    - `node --check scripts/route-smoke.mjs` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - `npm run test:chat-transcript` -> PASS with `status=ok`,
+      `appSourceCount=2`, `telegramSourceCount=2`
+    - combined focused `/chat` screenshot/navigation/account gate ->
+      `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`,
+      navigation `step_count=4`, account `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - desktop/tablet/mobile Chat screenshots reviewed
+    - cleanup -> one fresh route-smoke temp profile removed; four
+      validation-owned `chrome-headless-shell` processes stopped; final check
+      found no validation-owned node/Vite, 5173/4173 listener, Chromium, or
+      headless browser leftovers
+  - residual:
+    - full Chat 95% pixel parity, exact canonical icon metaphors, and richer
+      fixture/content alignment remain separate decisions
+
 - 2026-05-23: `PRJ-1259` completed a Dashboard Current Focus focal polish
   pass:
   - task:

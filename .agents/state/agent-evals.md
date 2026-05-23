@@ -27,6 +27,7 @@ process, not only the code.
 | AEV-018 | 2026-05-23 | PRJ-1257 | 5 | 5 | 5 | 5 | 5 | UX and coordinator independently converged on Dashboard desktop satellite material while QA supplied the generic single-route proof gate. | Keep using one UX parity lane plus one QA lane; when both confirm an already-started target, proceed with route-local CSS and screenshot proof. | open |
 | AEV-019 | 2026-05-23 | PRJ-1258 | 5 | 5 | 5 | 5 | 5 | The coordinator initially considered Chat, but the UX lane correctly found a smaller fresh Dashboard summary-band mismatch tied to the latest verified surface. | Let parity lanes redirect even when the coordinator has a plausible visual hunch; favor the freshest screenshot-backed route continuation when it avoids broader scope. | open |
 | AEV-020 | 2026-05-23 | PRJ-1259 | 5 | 5 | 5 | 5 | 5 | UX identified a small Dashboard lower-grid placeholder feel while QA strengthened the standard gate into a combined screenshot/navigation/account command. | Keep using fresh-route continuation for tiny polish slices, and prefer combined route-smoke gates when they reduce command drift without broadening scope. | open |
+| AEV-021 | 2026-05-23 | PRJ-1260 | 5 | 5 | 5 | 5 | 5 | UX and coordinator converged on the Chat top-belt badge-noise mismatch, while QA supplied the exact route-specific transcript and screenshot gate before final integration. | Keep pairing a parity lane with a QA lane for one-route polish; for Chat, always include transcript characterization when touching context or transcript-adjacent surfaces. | open |
 
 ## Scoring
 

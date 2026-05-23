@@ -4,6 +4,40 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1260` is DONE:
+  - `.codex/tasks/PRJ-1260-chat-cognitive-belt-quieting.md`
+- objective:
+  - make Chat's top cognitive belt read as a quiet context strip instead of a
+    badge-heavy control row
+- current result:
+  - cognitive-belt cards are lighter, use CSS-only circular icon accents, and
+    show status values as quiet inline metadata
+  - all six context modules, transcript behavior, source markers, composer,
+    mode rail, portrait stage, Dashboard, Personality, shared shell, backend
+    data, and fixture copy remain unchanged
+- validation:
+  - `node --check scripts/route-smoke.mjs` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - `npm run test:chat-transcript` -> PASS with `status=ok`,
+    `appSourceCount=2`, `telegramSourceCount=2`
+  - combined focused `/chat` screenshot/navigation/account gate ->
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - desktop/tablet/mobile Chat screenshots reviewed
+  - cleanup -> one fresh route-smoke temp profile removed; four
+    validation-owned `chrome-headless-shell` processes stopped; final check
+    found no validation-owned node/Vite, 5173/4173 listener, Chromium, or
+    headless browser leftovers
+- residual:
+  - this is a verified Chat cognitive-belt quieting pass, not a full Chat 95%
+    parity claim
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1259` is DONE:
   - `.codex/tasks/PRJ-1259-dashboard-current-focus-focal.md`
 - objective:

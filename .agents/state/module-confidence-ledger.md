@@ -46,6 +46,23 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1260` completes a verified Chat cognitive-belt quieting pass for
+  `AVIARY-WEB-RESP-001`: the top Chat context strip now uses lighter material,
+  CSS-only circular icon accents, and quieter inline status values while all
+  six context modules, transcript behavior, source markers, composer, mode
+  rail, portrait stage, Dashboard, Personality, shared shell, backend data, and
+  fixture copy remain unchanged. Evidence: `node --check
+  scripts/route-smoke.mjs` passed; `npm run build` passed; `npm run
+  test:chat-transcript` passed with `status=ok`, `appSourceCount=2`,
+  `telegramSourceCount=2`; combined focused `/chat` screenshot/navigation/account
+  gate returned `screenshot_count=3`, `failed_count=0`, `route_count=14`,
+  `status=ok`, navigation `step_count=4`, account `panel_visible=true`;
+  `git diff --check` passed with LF/CRLF warning only; desktop/tablet/mobile
+  screenshots were reviewed; cleanup removed one fresh
+  route-smoke temp profile, stopped four validation-owned
+  `chrome-headless-shell` processes, and final check found no validation-owned
+  node/Vite, 5173/4173 listener, Chromium, or headless browser leftovers.
+
 - `PRJ-1259` completes a verified Dashboard Current Focus focal polish pass for
   `AVIARY-WEB-RESP-001`: the lower-grid `Current Focus` card now uses a compact
   scenic circular focal treatment instead of a generic orb while current focus

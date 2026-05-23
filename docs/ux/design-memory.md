@@ -1,5 +1,17 @@
 # Design Memory
 
+## 2026-05-23 - Chat cognitive belt quieting
+
+- Chat's top cognitive belt is conversation context, not a dashboard control
+  panel. Keep all supported context items visible, but avoid heavy badge/card
+  material that competes with transcript and persona stage.
+- Status values such as Ready, Steady, Recent, Next, and Edit should remain
+  readable as supported metadata while feeling like quiet inline context, not
+  separate primary controls.
+- Prefer CSS-only material, icon-accent, spacing, and type tuning before
+  changing Chat fixture content, source labels, transcript behavior, composer
+  actions, or exact canonical icon metaphors.
+
 ## 2026-05-23 - Dashboard Current Focus focal card
 
 - Dashboard `Current Focus` should feel like a polished lower-grid module, not

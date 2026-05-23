@@ -2363,44 +2363,51 @@ body {
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 0.42rem;
+  gap: 0.5rem;
 }
 
 .aion-chat-belt-card {
   position: relative;
   min-width: 0;
-  min-height: 4.72rem;
-  padding: 0.48rem 0.56rem 0.5rem 1.42rem;
-  border: 1px solid rgba(88, 67, 52, 0.046);
-  border-radius: 0.82rem;
-  background: rgba(255, 252, 247, 0.38);
+  min-height: 4.55rem;
+  padding: 0.56rem 0.62rem 0.56rem 2.42rem;
+  border: 1px solid rgba(88, 67, 52, 0.052);
+  border-radius: 0.9rem;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 247, 0.5), rgba(250, 244, 235, 0.34));
   box-shadow:
-    0 5px 11px rgba(78, 58, 43, 0.014),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 6px 14px rgba(78, 58, 43, 0.016),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .aion-chat-belt-card::before {
   content: "";
   position: absolute;
-  left: 0.58rem;
+  left: 0.68rem;
   top: 0.72rem;
-  width: 0.46rem;
-  height: 0.46rem;
+  width: 1.1rem;
+  height: 1.1rem;
   border-radius: 999px;
-  border: 1px solid rgba(197, 145, 78, 0.28);
+  border: 1px solid rgba(197, 145, 78, 0.24);
   background:
-    radial-gradient(circle at 50% 50%, rgba(197, 145, 78, 0.66) 0 0.08rem, transparent 0.09rem),
+    linear-gradient(90deg, transparent 46%, rgba(197, 145, 78, 0.42) 47% 53%, transparent 54%),
+    linear-gradient(0deg, transparent 46%, rgba(197, 145, 78, 0.42) 47% 53%, transparent 54%),
+    radial-gradient(circle at 50% 50%, rgba(197, 145, 78, 0.74) 0 0.1rem, transparent 0.11rem),
     radial-gradient(circle, rgba(255, 251, 245, 0.94), rgba(248, 239, 225, 0.78));
-  box-shadow: 0 3px 7px rgba(197, 145, 78, 0.07);
+  box-shadow:
+    0 5px 10px rgba(197, 145, 78, 0.08),
+    inset 0 0 0 0.22rem rgba(255, 255, 255, 0.4);
 }
 
 .aion-chat-belt-card-lead {
-  border-color: rgba(116, 162, 155, 0.1);
-  background: rgba(241, 249, 246, 0.36);
+  border-color: rgba(116, 162, 155, 0.09);
+  background:
+    linear-gradient(180deg, rgba(246, 252, 249, 0.54), rgba(240, 248, 244, 0.34));
 }
 
 .aion-chat-belt-card-progress {
-  background: rgba(255, 248, 238, 0.36);
+  background:
+    linear-gradient(180deg, rgba(255, 249, 240, 0.54), rgba(251, 242, 229, 0.34));
 }
 
 .aion-chat-belt-card-head {
@@ -2417,10 +2424,10 @@ body {
 }
 
 .aion-chat-belt-eyebrow {
-  color: rgba(110, 98, 88, 0.78);
-  font-size: 0.52rem;
-  font-weight: 760;
-  letter-spacing: 0.11em;
+  color: rgba(110, 98, 88, 0.66);
+  font-size: 0.5rem;
+  font-weight: 720;
+  letter-spacing: 0.08em;
   line-height: 1.15;
   text-transform: uppercase;
 }
@@ -2430,29 +2437,29 @@ body {
   align-items: center;
   flex: 0 0 auto;
   min-height: 1rem;
-  padding: 0.06rem 0.3rem;
+  padding: 0;
   border-radius: 999px;
-  background: rgba(126, 167, 159, 0.06);
-  color: #4f7e82;
-  font-size: 0.48rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  background: transparent;
+  color: #5e908d;
+  font-size: 0.5rem;
+  font-weight: 720;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 
 .aion-chat-belt-title {
-  margin-top: 0.28rem;
+  margin-top: 0.34rem;
   color: var(--aion-ink);
-  font-size: 0.78rem;
-  font-weight: 680;
-  line-height: 1.18;
+  font-size: 0.8rem;
+  font-weight: 650;
+  line-height: 1.16;
 }
 
 .aion-chat-belt-body {
   display: -webkit-box;
-  margin-top: 0.18rem;
+  margin-top: 0.2rem;
   color: rgba(88, 67, 52, 0.7);
-  font-size: 0.58rem;
+  font-size: 0.59rem;
   line-height: 1.3;
   overflow: hidden;
   -webkit-box-orient: vertical;
@@ -2473,10 +2480,10 @@ body {
 }
 
 .aion-chat-belt-progress {
-  margin-top: 0.28rem;
+  margin-top: 0.32rem;
   height: 0.18rem;
   border-radius: 999px;
-  background: rgba(111, 149, 146, 0.11);
+  background: rgba(111, 149, 146, 0.09);
   overflow: hidden;
 }
 
@@ -8360,32 +8367,32 @@ body {
   }
 
   .aion-chat-cognitive-belt {
-    gap: 0.46rem;
+    gap: 0.5rem;
   }
 
   .aion-chat-belt-card {
-    min-height: 5.08rem;
-    padding: 0.46rem 0.52rem 0.5rem;
+    min-height: 5.02rem;
+    padding: 0.5rem 0.56rem 0.52rem 2.34rem;
     border-radius: 0.9rem;
     box-shadow:
-      0 5px 12px rgba(78, 58, 43, 0.018),
-      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+      0 6px 14px rgba(78, 58, 43, 0.016),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28);
   }
 
   .aion-chat-belt-eyebrow {
-    font-size: 0.52rem;
-    letter-spacing: 0.12em;
+    font-size: 0.5rem;
+    letter-spacing: 0.08em;
   }
 
   .aion-chat-belt-meta {
-    min-height: 1.08rem;
-    padding: 0.08rem 0.34rem;
+    min-height: 1rem;
+    padding: 0;
     font-size: 0.5rem;
   }
 
   .aion-chat-belt-title {
     margin-top: 0.34rem;
-    font-size: 0.88rem;
+    font-size: 0.84rem;
   }
 
   .aion-chat-belt-body {
@@ -9682,9 +9689,16 @@ body {
 
   .aion-chat-belt-card {
     flex: 0 0 min(13.2rem, 68vw);
-    padding: 0.46rem 0.52rem;
+    padding: 0.46rem 0.52rem 0.5rem 2.18rem;
     min-height: auto;
     scroll-snap-align: start;
+  }
+
+  .aion-chat-belt-card::before {
+    left: 0.6rem;
+    top: 0.56rem;
+    width: 1rem;
+    height: 1rem;
   }
 
   .aion-chat-belt-body {

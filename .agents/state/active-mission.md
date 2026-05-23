@@ -9,6 +9,68 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1260-chat-cognitive-belt-quieting
+- Status: VERIFIED
+- Selected objective: make Chat's top cognitive belt read as a quiet context
+  strip instead of a badge-heavy control row.
+- Why this mission now: after `PRJ-1259`, Pasteur identified the Chat top belt
+  as the smallest canonical-backed mismatch that directly matches the user's
+  request to reduce cards, badges, and control clutter.
+- Release objective or product milestone advanced: v1.2 web Chat canonical
+  desktop composition.
+- First/next checkpoint: completed a CSS-only Chat cognitive-belt pass. The
+  six context modules remain visible but use quieter material, icon-like
+  accents, and less badge-heavy status treatment.
+- Stop conditions: next work should pick one exact route/screenshot mismatch
+  or make a content/data decision before changing canonical copy, icon glyphs,
+  route-smoke fixture content, or backend-backed labels.
+- Parent validation gate: web build, focused `/chat`
+  desktop/tablet/mobile screenshot gate, navigation proof, account proof,
+  `test:chat-transcript`, screenshot review, cleanup check, and
+  `git diff --check`.
+
+## PRJ-1260 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Pasteur and completed read-only
+  - QA lane delegated to Ramanujan and completed read-only
+  - coordinator implemented the route-local CSS patch and final proof
+- Implementation:
+  - Chat cognitive-belt cards are lighter, use CSS-only circular icon accents,
+    and show status values as quiet inline metadata instead of heavy badges
+  - transcript, source markers, composer, mode rail, portrait stage, Dashboard,
+    Personality, shared shell, backend data, and fixture copy were not changed
+- Validation:
+  - `node --check scripts/route-smoke.mjs` PASS
+  - `npm run build` PASS
+  - `npm run test:chat-transcript` PASS with `status=ok`,
+    `appSourceCount=2`, `telegramSourceCount=2`
+  - combined focused `/chat` screenshot/navigation/account gate PASS:
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+  - cleanup removed one fresh route-smoke temp profile and stopped four
+    validation-owned `chrome-headless-shell` processes; final check found no
+    validation-owned node/Vite, 5173/4173 listener, Chromium, or headless
+    browser leftovers
+- Residual:
+  - This is a verified Chat cognitive-belt quieting pass, not a full 95%
+    pixel parity claim. Exact canonical icon metaphors and richer fixture or
+    content alignment remain separate content/data decisions.
+- Next recommended checkpoint:
+  - Pick one exact remaining screenshot mismatch on one route, or make a
+    content/data decision before changing canonical copy, icon glyphs,
+    route-smoke fixture content, or backend-backed labels.
+- Artifacts:
+  - `.codex/tasks/PRJ-1260-chat-cognitive-belt-quieting.md`
+  - `.codex/artifacts/prj1260-chat-cognitive-belt-quieting/report.json`
+  - `.codex/artifacts/prj1260-chat-cognitive-belt-quieting/screenshots/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1259-dashboard-current-focus-focal
 - Status: VERIFIED
 - Selected objective: make Dashboard `Current Focus` read as a polished focal
@@ -28,7 +90,7 @@ repository history.
   desktop/tablet/mobile screenshot gate, navigation proof, account proof,
   screenshot review, cleanup check, and `git diff --check`.
 
-## PRJ-1259 Current Evidence
+## PRJ-1259 Previous Evidence
 
 - Branch: `main`.
 - Lane status:
@@ -65,65 +127,6 @@ repository history.
   - `.codex/tasks/PRJ-1259-dashboard-current-focus-focal.md`
   - `.codex/artifacts/prj1259-dashboard-current-focus-focal/report.json`
   - `.codex/artifacts/prj1259-dashboard-current-focus-focal/screenshots/`
-
-## Previous Mission
-
-- Mission ID: PRJ-1258-dashboard-summary-band-balance
-- Status: VERIFIED
-- Selected objective: make the lower Dashboard summary band read as a calmer
-  canonical closure surface instead of a cramped card cluster.
-- Why this mission now: after `PRJ-1257`, Kant identified the lower Dashboard
-  summary band as the smallest fresh screenshot-backed mismatch that could be
-  improved without content, icon, backend, or hero changes.
-- Release objective or product milestone advanced: v1.2 web Dashboard
-  canonical desktop closure-band composition.
-- First/next checkpoint: completed a CSS-only Dashboard summary-band pass.
-  System Harmony is wider and calmer, Balance across layers remains readable,
-  and Weekly summary stays scenic while preserving all data and route behavior.
-- Stop conditions: next work should pick one exact route/screenshot mismatch
-  or make a content/data decision before changing canonical copy, icon glyphs,
-  route-smoke fixture content, or backend-backed labels.
-- Parent validation gate: web build, focused `/dashboard`
-  desktop/tablet/mobile screenshot gate, navigation proof, account proof,
-  screenshot review, cleanup check, and `git diff --check`.
-
-## PRJ-1258 Previous Evidence
-
-- Branch: `main`.
-- Lane status:
-  - UX parity lane delegated to Kant and completed read-only
-  - QA lane delegated to Meitner and completed read-only
-  - coordinator implemented the route-local CSS patch and final proof
-- Implementation:
-  - lower Dashboard summary closure grid now gives System Harmony more
-    breathing room and keeps Balance and Weekly summary in a calmer rhythm
-  - all Dashboard data/copy, hero signals, mobile/tablet structure, cognitive
-    flow, Chat, Personality, and shared shell were not changed
-- Validation:
-  - `npm run build` PASS
-  - focused `/dashboard` screenshot gate across desktop/tablet/mobile PASS:
-    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
-  - navigation proof PASS: `step_count=4`, `failed_count=0`
-  - account proof PASS: `step_count=1`, `failed_count=0`,
-    `panel_visible=true`
-  - `git diff --check` PASS with LF/CRLF warning only
-  - cleanup found no validation-owned node/Vite, 5173/4173 listener,
-    Chromium, or headless browser leftovers; four fresh route-smoke temp
-    profiles from this checkpoint were removed
-- Residual:
-  - This is a verified Dashboard summary-band balance pass, not a full 95%
-    pixel parity claim. Exact canonical icon glyphs and richer summary content
-    remain separate content/data decisions.
-- Next recommended checkpoint:
-  - Pick one exact remaining screenshot mismatch on one route, or make a
-    content/data decision before changing canonical copy, icon glyphs,
-    route-smoke fixture content, or backend-backed labels.
-- Artifacts:
-  - `.codex/tasks/PRJ-1258-dashboard-summary-band-balance.md`
-  - `.codex/artifacts/prj1258-dashboard-summary-band-balance/report.json`
-  - `.codex/artifacts/prj1258-dashboard-summary-band-balance/navigation-proof.json`
-  - `.codex/artifacts/prj1258-dashboard-summary-band-balance/account-proof.json`
-  - `.codex/artifacts/prj1258-dashboard-summary-band-balance/screenshots/`
 
 ## Previous Mission
 
