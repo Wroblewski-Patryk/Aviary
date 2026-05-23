@@ -42,7 +42,9 @@ fixes for this repository.
     characterization.
 - Symptom:
   - The test passed but emitted `Chrome profile cleanup is still locked:
-    EBUSY` for a temporary `aion-chat-transcript-*` profile file.
+    EBUSY` for a temporary `aion-chat-transcript-*` profile file. A later
+    cleanup check also showed stale `chrome-headless-shell` handles with empty
+    command lines, and `taskkill` reported no running task instance.
 - Root cause:
   - Chromium profile handles can remain locked briefly after the proof process
     exits on Windows, even when no browser process remains.
@@ -57,8 +59,10 @@ fixes for this repository.
 - Avoid:
   - broad process kills or deleting unrelated temp/browser profile directories.
 - Evidence:
-  - PRJ-1250 found no validation-owned browser/server/listener leftovers and
-    removed only the locked `aion-chat-transcript-*` temp profile directory.
+  - PRJ-1250 found no route-smoke, Vite, or 5173/4173 listener leftovers,
+    removed only the locked `aion-chat-transcript-*` temp profile directory,
+    and recorded the remaining `chrome-headless-shell` handles as stale
+    Windows process entries rather than active validation work.
 
 ### 2026-05-23 - Route-smoke artifact paths should be absolute from nested workdirs
 - Context: PRJ-1238 shared-shell noise reduction.

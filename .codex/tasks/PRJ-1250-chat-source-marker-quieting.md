@@ -94,7 +94,11 @@ Keep the source marker visible and truthful while reducing its visual weight so 
   - `.codex/artifacts/prj1250-chat-source-marker-polish/account-proof.json`
 - Cleanup:
   - `npm run test:chat-transcript` emitted a transient Chrome profile `EBUSY` cleanup warning after successful proof.
-  - Follow-up checks found no validation-owned `chrome-headless-shell`, route-smoke, Vite, or 5173/4173 listener leftovers.
+  - Follow-up checks found no route-smoke, Vite, or 5173/4173 listener leftovers.
+  - A later final cleanup check reported two stale `chrome-headless-shell`
+    handles with empty command lines; `taskkill` reported `no running instance
+    of the task`, so they were recorded as stale Windows handles rather than
+    active validation work.
   - The locked temp profile directory was removed with targeted cleanup after confirming no owning process remained.
 - Module confidence ledger updated: yes
 - Requirements matrix updated: yes

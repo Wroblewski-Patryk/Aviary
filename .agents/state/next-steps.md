@@ -17,8 +17,10 @@ Last updated: 2026-05-23
      desktop/tablet/mobile PASS with `screenshot_count=3`, `failed_count=0`;
      route smoke `route_count=14`, `status=ok`; navigation proof
      `step_count=4`, `failed_count=0`; account proof `step_count=1`,
-     `failed_count=0`, `panel_visible=true`; cleanup found no
-     validation-owned leftovers after targeted temp-profile cleanup
+     `failed_count=0`, `panel_visible=true`; cleanup found no route-smoke,
+     Vite, or 5173/4173 listener leftovers after targeted temp-profile cleanup;
+     final Windows cleanup reported two stale `chrome-headless-shell` handles
+     with no running task instance
    - next smallest useful choice:
      pick one exact remaining screenshot mismatch on one route only, or make a
      content/data decision before changing canonical copy, icon glyphs, source

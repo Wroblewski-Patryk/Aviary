@@ -56,8 +56,10 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
   `route_count=14`, `status=ok`; navigation proof returned `step_count=4`,
   `failed_count=0`; account proof returned `step_count=1`, `failed_count=0`,
   `panel_visible=true`; `git diff --check` passed with LF/CRLF warning only;
-  cleanup found no validation-owned browser/server/listener leftovers after
-  targeted temp-profile cleanup.
+  cleanup found no route-smoke, Vite, or 5173/4173 listener leftovers after
+  targeted temp-profile cleanup; final Windows cleanup reported two stale
+  `chrome-headless-shell` handles with empty command lines and no running task
+  instance.
 
 - `PRJ-1249` completes a verified channel-routing/tool-truth slice for
   `AVIARY-COGNITIVE-RUNTIME-001` and `AVIARY-WEB-RESP-001`: expression now

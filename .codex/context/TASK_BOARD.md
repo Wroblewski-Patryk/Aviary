@@ -26,8 +26,10 @@ Last updated: 2026-05-23
   - account proof -> PASS, `step_count=1`, `failed_count=0`,
     `panel_visible=true`
   - `git diff --check` -> PASS with LF/CRLF warning only
-  - cleanup check -> no validation-owned headless browser, route-smoke, Vite,
-    or 5173/4173 listener leftovers after targeted temp-profile cleanup
+  - cleanup check -> no route-smoke, Vite, or 5173/4173 listener leftovers
+    after targeted temp-profile cleanup; final Windows cleanup reported two
+    stale `chrome-headless-shell` handles with empty command lines and
+    `taskkill` reported no running task instance
 - residual:
   - this is a verified visual quieting slice, not a full canonical content or
     Telegram live-credential proof

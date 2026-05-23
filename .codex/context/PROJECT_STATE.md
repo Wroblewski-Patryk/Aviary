@@ -28,9 +28,11 @@ the same project.
     - account proof -> `step_count=1`, `failed_count=0`,
       `panel_visible=true`
     - `git diff --check` -> PASS with LF/CRLF warning only
-    - cleanup check -> no validation-owned headless browser, route-smoke,
-      Vite, or 5173/4173 listener leftovers; transient chat-transcript temp
-      profile lock was cleaned by targeted temp-directory removal
+    - cleanup check -> no route-smoke, Vite, or 5173/4173 listener leftovers;
+      transient chat-transcript temp profile lock was cleaned by targeted
+      temp-directory removal; final Windows cleanup reported two stale
+      `chrome-headless-shell` handles with empty command lines and `taskkill`
+      reported no running task instance
   - residual:
     - exact canonical copy/icon/content parity remains a separate content/data
       decision; this slice only quieted the already-approved source marker

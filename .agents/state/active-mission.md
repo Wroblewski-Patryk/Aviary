@@ -55,9 +55,11 @@ repository history.
   - account proof PASS: `step_count=1`, `failed_count=0`,
     `panel_visible=true`
   - `git diff --check` PASS with LF/CRLF warning only
-  - cleanup check found no validation-owned headless browser, route-smoke,
-    Vite, or 5173/4173 listener leftovers; a transient chat-transcript temp
-    profile lock warning was cleaned with targeted temp-directory removal
+  - cleanup check found no route-smoke, Vite, or 5173/4173 listener leftovers;
+    a transient chat-transcript temp profile lock warning was cleaned with
+    targeted temp-directory removal; final Windows cleanup reported two stale
+    `chrome-headless-shell` handles with empty command lines and `taskkill`
+    reported no running task instance
 - Residual:
   - This is a verified visual quieting slice, not a new channel-routing proof
     or a full canonical content/icon parity claim.
