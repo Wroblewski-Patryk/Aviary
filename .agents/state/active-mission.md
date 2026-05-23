@@ -9,6 +9,66 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1240-flagship-coherence-pass
+- Status: VERIFIED
+- Selected objective: continue the v1.2 flagship convergence loop with the
+  smallest low-risk CSS patch that improves visual coherence across Dashboard,
+  Chat, and Personality after PRJ-1239.
+- Why this mission now: the user asked the coordinator team to keep working
+  until the UX/UI is beautiful and coherent, and PRJ-1239 evidence still left
+  card-proportion and persona-overlay drift.
+- Release objective or product milestone advanced: v1.2 web UI canonical
+  fidelity for Dashboard, Chat, and Personality as the mobile-app foundation.
+- First/next checkpoint: completed a CSS-only coherence pass. Dashboard now
+  gives the scenic hero stronger first-read authority with quieter metric
+  overlays; Chat reduces persona-stage overlay weight while keeping the
+  canonical conversation/persona split; Personality keeps the embodied map
+  but with calmer callouts and side-panel density.
+- Stop conditions: next checkpoint should remain screenshot-specific; do not
+  rename Aviary to AION/Prometheus without product decision, and do not add
+  new data/components merely to mimic static reference content.
+- Parent validation gate: web build, focused three-route desktop/tablet/mobile
+  screenshot gate, navigation proof, account proof, visual screenshot review,
+  Browser/IAB attempt and closure, and cleanup check.
+
+## PRJ-1240 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - requested read-only implementation lane was run serially because no
+    spawn-agent tool was available in the current runtime
+  - coordinator integrated the CSS-only patch and final proof
+- Implementation:
+  - Dashboard hero stage is taller on desktop and metric overlays are narrower,
+    lighter, and less competitive with the central figure scene
+  - Chat persona panel keeps the v5 stage but reduces overlay/card dominance
+    and slightly favors the right persona column without adding a third panel
+  - Personality callouts and side-panel rows are lighter while preserving the
+    embodied-map structure and Aviary branding
+- Validation:
+  - `npm run build` PASS
+  - focused route screenshot gate for `/dashboard`, `/chat`, `/personality`
+    across desktop/tablet/mobile PASS: `screenshot_count=9`,
+    `failed_count=0`
+  - route smoke PASS: `route_count=14`, `status=ok`
+  - `npm run audit:ui-navigation` PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+  - cleanup check found no route-smoke/Vite node leftovers and no
+    `chrome-headless-shell` leftovers
+- Residual:
+  - This is a verified coherence checkpoint, not a 95% pixel-parity claim.
+    Next work should tune exact screenshot mismatches by route, starting with
+    Dashboard density or Chat transcript/persona asset fidelity.
+- Artifacts:
+  - `.codex/tasks/PRJ-1240-flagship-coherence-pass.md`
+  - `.codex/artifacts/prj1240-flagship-coherence-pass/report.json`
+  - `.codex/artifacts/prj1240-flagship-coherence-pass/account-proof.json`
+  - `.codex/artifacts/prj1240-flagship-coherence-pass/screenshots/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1239-flagship-canonical-fidelity
 - Status: VERIFIED_CHECKPOINT
 - Selected objective: answer the user's canonical screenshot feedback by

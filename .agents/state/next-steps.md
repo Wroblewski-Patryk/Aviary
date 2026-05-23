@@ -4,6 +4,23 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue flagship canonical parity from `PRJ-1240`:
+   - task:
+     `.codex/tasks/PRJ-1240-flagship-coherence-pass.md`
+   - result:
+     Dashboard, Chat, and Personality received a CSS-only coherence pass with
+     stronger Dashboard scene authority, quieter Chat persona overlays, and
+     calmer Personality callout/side-panel density
+   - proof:
+     `npm run build` PASS; focused route screenshot gate for `/dashboard`,
+     `/chat`, `/personality` across desktop/tablet/mobile PASS with
+     `screenshot_count=9`, `failed_count=0`; route smoke `route_count=14`,
+     `status=ok`; navigation proof `step_count=4`, `failed_count=0`;
+     account proof `step_count=1`, `failed_count=0`, `panel_visible=true`
+   - next smallest useful choice:
+     take one exact screenshot mismatch at a time: Dashboard card/copy-density
+     parity first, or Chat transcript/persona asset fidelity second
+
 1. Continue Dashboard canonical parity from `PRJ-1239`:
    - task:
      `.codex/tasks/PRJ-1239-flagship-canonical-fidelity.md`

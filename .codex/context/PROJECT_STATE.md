@@ -6,6 +6,38 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1240` completed a flagship coherence pass:
+  - task:
+    - `.codex/tasks/PRJ-1240-flagship-coherence-pass.md`
+  - result:
+    - applied a CSS-only visual coherence patch across Dashboard, Chat, and
+      Personality without adding components, fake data, backend behavior, or a
+      branding rename
+    - Dashboard gives the scenic hero stronger first-read authority and quiets
+      desktop metric overlays
+    - Chat keeps the canonical v5 two-column body while making persona-stage
+      overlays less dominant
+    - Personality keeps the embodied map but uses calmer callout and side
+      panel density
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - focused route screenshot gate for `/dashboard`, `/chat`,
+      `/personality` across desktop/tablet/mobile -> `screenshot_count=9`,
+      `failed_count=0`
+    - route smoke -> `route_count=14`, `status=ok`
+    - `npm run audit:ui-navigation` -> PASS, `step_count=4`,
+      `failed_count=0`
+    - account proof -> PASS, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+  - artifacts:
+    - `.codex/artifacts/prj1240-flagship-coherence-pass/report.json`
+    - `.codex/artifacts/prj1240-flagship-coherence-pass/account-proof.json`
+    - `.codex/artifacts/prj1240-flagship-coherence-pass/screenshots/`
+  - residual:
+    - this is a verified coherence checkpoint, not a 95% pixel-parity claim;
+      future work should continue with screenshot-specific route refinements.
+
 - 2026-05-23: `PRJ-1239` completed the first flagship canonical-fidelity
   checkpoint:
   - task:

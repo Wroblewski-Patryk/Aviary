@@ -4,6 +4,18 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed flagship UI slice is `PRJ-1240`: CSS-only coherence pass
+for Dashboard, Chat, and Personality. It keeps Aviary branding, adds no fake
+data or new components, and improves Dashboard scene authority, Chat persona
+overlay weight, and Personality callout/side-panel density. Validation passed
+with `npm run build`, focused screenshot gate for `/dashboard`, `/chat`, and
+`/personality` across desktop/tablet/mobile (`screenshot_count=9`,
+`failed_count=0`), route smoke (`route_count=14`, `status=ok`), navigation
+proof (`step_count=4`, `failed_count=0`), account proof (`step_count=1`,
+`failed_count=0`, `panel_visible=true`), and cleanup checks. Next work should
+target one exact screenshot mismatch at a time; do not claim 95% pixel parity
+from this coherence pass.
+
 The latest completed implementation slice is `PRJ-1238`: shared-shell noise
 reduction. Desktop utility chrome now keeps route context and account access
 only; fake search, Focus mode, Quick capture, notification chrome, duplicate

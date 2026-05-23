@@ -4,6 +4,42 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1240` is DONE:
+  - `.codex/tasks/PRJ-1240-flagship-coherence-pass.md`
+- objective:
+  - continue the coordinator-led v1.2 flagship convergence loop with the
+    smallest low-risk CSS-only patch that makes Dashboard, Chat, and
+    Personality read as one calmer, more coherent product system
+- current result:
+  - Dashboard hero scene has stronger first-read authority on desktop and its
+    metric overlays are narrower, lighter, and less competitive with the
+    figure
+  - Chat keeps the canonical v5 60/40 conversation/persona structure while
+    reducing persona-stage overlay dominance and preserving a two-column body
+  - Personality keeps the embodied map structure but with calmer callout and
+    side-panel density
+  - no new components, fake data, backend contracts, or branding rename were
+    introduced
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - focused route screenshot gate for `/dashboard`, `/chat`, `/personality`
+    across desktop/tablet/mobile -> `screenshot_count=9`, `failed_count=0`
+  - route smoke -> `route_count=14`, `status=ok`
+  - `npm run audit:ui-navigation` -> PASS, `step_count=4`,
+    `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - cleanup check found no route-smoke/Vite node leftovers and no
+    `chrome-headless-shell` leftovers
+- residual:
+  - this checkpoint improves coherence and structure, but does not claim 95%
+    pixel parity; continue with screenshot-specific Dashboard density or Chat
+    transcript/persona fidelity
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1239` is VERIFIED_CHECKPOINT:
   - `.codex/tasks/PRJ-1239-flagship-canonical-fidelity.md`
 - objective:

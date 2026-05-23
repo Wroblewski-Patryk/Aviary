@@ -1,5 +1,18 @@
 # Design Memory
 
+## 2026-05-23 - Flagship coherence pass
+
+- When Dashboard, Chat, and Personality are tuned together, prefer a CSS-only
+  proportion pass before adding structure. The shared route language should be
+  calmer scene authority, lighter overlays, and fewer competing card weights.
+- Dashboard canonical convergence benefits from a taller central scenic hero
+  with metric cards treated as overlays, not peer panels.
+- Chat persona-stage overlays should stay useful but small; the conversation
+  column and composer remain the primary instrument.
+- Personality callouts should explain the embodied map without becoming the
+  loudest objects on the screen. If a crop change makes the figure read as a
+  narrow poster instead of a stage, revert the crop before closure.
+
 ## 2026-05-23 - Flagship canonical frame correction
 
 - Dashboard, Chat, and Personality should start from their route-owned

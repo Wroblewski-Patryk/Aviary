@@ -46,6 +46,21 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1240` completes a verified coherence checkpoint for
+  `AVIARY-WEB-RESP-001`: Dashboard, Chat, and Personality received a CSS-only
+  proportion/material pass with no new components, fake data, backend
+  contracts, or branding rename. Dashboard gives the scenic hero stronger
+  first-read authority and quieter metric overlays; Chat reduces persona-stage
+  overlay dominance while preserving the canonical two-column body;
+  Personality keeps the embodied map with calmer callouts and side-panel
+  density. Evidence: `npm run build` PASS; focused screenshot gate for
+  `/dashboard`, `/chat`, `/personality` across desktop/tablet/mobile returned
+  `screenshot_count=9`, `failed_count=0`; route smoke returned
+  `route_count=14`, `status=ok`; navigation proof returned `step_count=4`,
+  `failed_count=0`; account proof returned `step_count=1`, `failed_count=0`,
+  `panel_visible=true`; `git diff --check` passed with LF/CRLF warning only.
+  This is not a 95% pixel-parity claim.
+
 - `PRJ-1239` completes the first flagship canonical-fidelity checkpoint for
   `AVIARY-WEB-RESP-001`: Dashboard, Chat, and Personality no longer render the
   extra desktop utility header above the route-owned flagship scene; Chat is
