@@ -4674,11 +4674,11 @@ body {
 
 .aion-personality-hero {
   display: grid;
-  gap: 0.58rem;
-  padding: 0.5rem;
+  gap: 0.46rem;
+  padding: 0.42rem;
   border-color: rgba(88, 67, 52, 0.045);
-  background: rgba(255, 251, 245, 0.42);
-  box-shadow: 0 18px 42px rgba(78, 58, 43, 0.045);
+  background: rgba(255, 251, 245, 0.34);
+  box-shadow: 0 12px 28px rgba(78, 58, 43, 0.032);
 }
 
 .aion-personality-canvas,
@@ -4713,11 +4713,11 @@ body {
   display: inline-flex;
   flex-direction: column;
   gap: 0.12rem;
-  min-width: 5.8rem;
-  padding: 0.34rem 0.56rem;
+  min-width: 5.35rem;
+  padding: 0.28rem 0.5rem;
   border: 1px solid rgba(88, 67, 52, 0.08);
-  border-radius: 1.05rem;
-  background: rgba(255, 252, 247, 0.72);
+  border-radius: 0.9rem;
+  background: rgba(255, 252, 247, 0.58);
   color: var(--aion-muted);
   font-size: 0.68rem;
   text-align: right;
@@ -6731,11 +6731,11 @@ body {
   position: absolute;
   z-index: 1;
   width: min(10.15rem, calc(100% - 1.4rem));
-  padding: 0.48rem 0.58rem;
+  padding: 0.42rem 0.52rem;
   border: 1px solid rgba(88, 67, 52, 0.08);
-  border-radius: 1rem;
-  background: rgba(255, 251, 245, 0.86);
-  box-shadow: 0 16px 30px rgba(78, 58, 43, 0.07);
+  border-radius: 0.88rem;
+  background: rgba(255, 251, 245, 0.78);
+  box-shadow: 0 10px 20px rgba(78, 58, 43, 0.042);
   backdrop-filter: blur(12px);
 }
 
@@ -6863,8 +6863,8 @@ body {
 
 .aion-personality-timeline-panel {
   border: 1px solid rgba(88, 67, 52, 0.08);
-  border-radius: 1.42rem;
-  padding: 0.64rem 0.78rem;
+  border-radius: 1.18rem;
+  padding: 0.54rem 0.68rem;
   background: rgba(255, 251, 245, 0.78);
 }
 
@@ -6913,8 +6913,8 @@ body {
 
 .aion-personality-side-panel {
   background:
-    linear-gradient(180deg, rgba(255, 251, 245, 0.86), rgba(244, 235, 223, 0.7));
-  box-shadow: 0 16px 30px rgba(78, 58, 43, 0.05);
+    linear-gradient(180deg, rgba(255, 251, 245, 0.8), rgba(246, 239, 230, 0.62));
+  box-shadow: 0 10px 22px rgba(78, 58, 43, 0.032);
   border-color: rgba(88, 67, 52, 0.08);
   position: relative;
   overflow: hidden;
@@ -6922,14 +6922,14 @@ body {
 
 .aion-personality-side-stack {
   display: grid;
-  gap: 0.72rem;
+  gap: 0.58rem;
 }
 
 .aion-personality-side-panel-conscious {
   background:
-    linear-gradient(180deg, rgba(236, 247, 244, 0.72), rgba(255, 251, 245, 0.86));
-  border-color: rgba(142, 184, 178, 0.2);
-  box-shadow: 0 18px 32px rgba(111, 149, 146, 0.07);
+    linear-gradient(180deg, rgba(238, 247, 244, 0.58), rgba(255, 251, 245, 0.76));
+  border-color: rgba(142, 184, 178, 0.16);
+  box-shadow: 0 12px 24px rgba(111, 149, 146, 0.044);
 }
 
 .aion-personality-side-panel-subconscious {
@@ -6944,9 +6944,9 @@ body {
 
 .aion-personality-side-panel-recent-quiet {
   background:
-    linear-gradient(180deg, rgba(255, 252, 247, 0.84), rgba(246, 239, 230, 0.7));
-  opacity: 0.9;
-  box-shadow: 0 10px 20px rgba(78, 58, 43, 0.032);
+    linear-gradient(180deg, rgba(255, 252, 247, 0.76), rgba(246, 239, 230, 0.58));
+  opacity: 0.86;
+  box-shadow: 0 8px 16px rgba(78, 58, 43, 0.026);
 }
 
 .aion-personality-side-panel::after {
@@ -6965,7 +6965,7 @@ body {
   grid-template-columns: auto minmax(0, 1fr) minmax(7rem, 0.8fr) auto;
   gap: 0.62rem;
   align-items: center;
-  padding: 0.16rem 0;
+  padding: 0.12rem 0;
 }
 
 .aion-personality-timeline-token {
@@ -7035,10 +7035,10 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 0.78rem;
-  padding: 0.56rem 0.72rem;
+  padding: 0.46rem 0.62rem;
   border: 1px solid rgba(88, 67, 52, 0.07);
-  border-radius: 1rem;
-  background: rgba(255, 252, 247, 0.72);
+  border-radius: 0.82rem;
+  background: rgba(255, 252, 247, 0.6);
 }
 
 .aion-personality-signal-label {
@@ -7071,7 +7071,7 @@ body {
 }
 
 .aion-personality-side-panel {
-  padding: 1.02rem !important;
+  padding: 0.86rem !important;
 }
 
 .aion-personality-side-panel h3 {
@@ -7085,7 +7085,7 @@ body {
 }
 
 .aion-personality-side-panel .grid {
-  gap: 0.58rem;
+  gap: 0.44rem;
 }
 
 .aion-tools-canvas {
@@ -8353,6 +8353,17 @@ body {
   }
 }
 
+@media (min-width: 900px) and (max-width: 1199px) {
+  .aion-personality-side-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.68rem;
+  }
+
+  .aion-personality-side-panel-recent {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 899px) {
   .aion-dashboard-stage,
   .aion-dashboard-flow-panel,
@@ -8884,34 +8895,36 @@ body {
     grid-column: 1 / -1;
     width: 100%;
     text-align: left;
-    padding: 0.42rem 0.58rem;
+    padding: 0.34rem 0.5rem;
   }
 
   .aion-personality-hero {
-    gap: 0.72rem;
-    padding: 0.72rem;
+    gap: 0.5rem;
+    padding: 0.52rem;
   }
 
   .aion-personality-side-stack {
-    gap: 0.85rem;
+    gap: 0.62rem;
   }
 
   .aion-personality-callout,
   .aion-personality-role-card {
-    width: min(8.95rem, calc(100% - 1.2rem));
-    padding: 0.48rem 0.54rem;
-    border-radius: 1rem;
+    width: min(8.5rem, calc(100% - 1.2rem));
+    padding: 0.4rem 0.48rem;
+    border-radius: 0.84rem;
+    background: rgba(255, 251, 245, 0.78);
+    box-shadow: 0 8px 16px rgba(78, 58, 43, 0.038);
   }
 
   .aion-personality-callout .font-display,
   .aion-personality-role-card .font-display {
-    font-size: 1.02rem !important;
+    font-size: 0.96rem !important;
     line-height: 1.12;
   }
 
   .aion-personality-callout .text-sm,
   .aion-personality-role-card .text-sm {
-    font-size: 0.78rem !important;
+    font-size: 0.72rem !important;
   }
 
   .aion-personality-callout p,
@@ -8937,7 +8950,7 @@ body {
   .aion-personality-callout-planning {
     top: 0.78rem;
     right: 0.62rem;
-    width: 8.55rem;
+    width: 8.2rem;
   }
 
   .aion-personality-callout-skills {
@@ -8947,7 +8960,7 @@ body {
 
   .aion-personality-role-card {
     bottom: 1.1rem;
-    width: 8.9rem;
+    width: 8.35rem;
   }
 
   .aion-personality-callout-skills .text-sm,
@@ -8957,11 +8970,34 @@ body {
 
   .aion-personality-timeline-row {
     grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.42rem 0.56rem;
+    padding: 0.1rem 0;
   }
 
   .aion-personality-timeline-track,
   .aion-personality-timeline-value {
     grid-column: 2;
+  }
+
+  .aion-personality-timeline-panel {
+    padding: 0.52rem 0.58rem;
+    border-radius: 1.05rem;
+  }
+
+  .aion-personality-timeline-panel .grid {
+    gap: 0.14rem;
+  }
+
+  .aion-personality-side-panel {
+    padding: 0.78rem !important;
+    border-radius: 1.22rem !important;
+    box-shadow: 0 8px 18px rgba(78, 58, 43, 0.03);
+  }
+
+  .aion-personality-signal-row,
+  .aion-personality-activity-row {
+    padding: 0.42rem 0.54rem;
+    border-radius: 0.78rem;
   }
 
   .aion-memory-overview-bar {

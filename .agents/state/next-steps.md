@@ -4,6 +4,24 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue flagship canonical parity from `PRJ-1244`:
+   - task:
+     `.codex/tasks/PRJ-1244-personality-canonical-fidelity.md`
+   - result:
+     Personality now has lighter hero/callout material, flatter side panels,
+     tighter timeline rows, a calmer tablet side-support rhythm, and less
+     visually dominant mobile callouts/rows
+   - proof:
+     `npm run build` PASS; Personality screenshot gate across
+     desktop/tablet/mobile PASS with `screenshot_count=3`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; navigation proof
+     `step_count=4`, `failed_count=0`; account proof `step_count=1`,
+     `failed_count=0`, `panel_visible=true`
+   - next smallest useful choice:
+     choose one remaining exact screenshot mismatch across Dashboard, Chat, or
+     Personality, or make a content/data decision before changing canonical
+     icon glyphs, route-smoke fixture copy, or backend-backed labels
+
 1. Continue Chat canonical parity from `PRJ-1243`:
    - task:
      `.codex/tasks/PRJ-1243-chat-canonical-fidelity.md`

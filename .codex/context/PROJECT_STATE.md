@@ -6,6 +6,37 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1244` completed a Personality canonical fidelity calm pass:
+  - task:
+    - `.codex/tasks/PRJ-1244-personality-canonical-fidelity.md`
+  - result:
+    - tuned Personality only, with no new components, fake data, backend
+      behavior, shared-shell change, or branding rename
+    - reduced hero wrapper, callout, side-panel, signal-row, and timeline
+      visual weight
+    - made tablet side panels read as a calmer two-column support band with
+      recent activity full-width
+    - kept mobile callouts and timeline readable while reducing card heaviness
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - Personality screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`
+    - route smoke -> `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> PASS, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+  - artifacts:
+    - `.codex/artifacts/prj1244-personality-canonical-fidelity/report.json`
+    - `.codex/artifacts/prj1244-personality-canonical-fidelity/route-smoke-report.json`
+    - `.codex/artifacts/prj1244-personality-canonical-fidelity/navigation-proof.json`
+    - `.codex/artifacts/prj1244-personality-canonical-fidelity/account-proof.json`
+    - `.codex/artifacts/prj1244-personality-canonical-fidelity/screenshots/`
+  - residual:
+    - this is a verified structural fidelity pass, not a full pixel-perfect
+      parity claim; exact icon/content/copy parity remains a separate content
+      decision.
+
 - 2026-05-23: `PRJ-1242` completed a Dashboard hero connector geometry pass:
   - task:
     - `.codex/tasks/PRJ-1242-dashboard-hero-geometry.md`

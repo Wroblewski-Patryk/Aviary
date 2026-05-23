@@ -9,48 +9,45 @@ repository history.
 
 ## Current Mission
 
-- Mission ID: PRJ-1243-chat-canonical-fidelity
+- Mission ID: PRJ-1244-personality-canonical-fidelity
 - Status: VERIFIED
-- Selected objective: move Chat closer to the canonical v5 conversation/persona
-  screen by reducing nonessential status/control noise and calming transcript
-  plan treatment, without changing backend data, route behavior, or shared
-  shell navigation.
-- Why this mission now: PRJ-1240 named Chat transcript/persona fidelity as a
-  remaining flagship residual, and PRJ-1241/1242 closed the immediate Dashboard
-  priority.
+- Selected objective: move Personality closer to the canonical embodied
+  overview by reducing card/panel weight, calming callouts, tightening the
+  timeline, and improving tablet/mobile rhythm without changing backend data,
+  route behavior, or shared shell navigation.
+- Why this mission now: Dashboard and Chat now have verified canonical
+  fidelity slices; Personality is the remaining flagship surface with obvious
+  card-heavy drift from its canonical reference.
 - Release objective or product milestone advanced: v1.2 web UI canonical
-  fidelity for Chat.
-- First/next checkpoint: completed a Chat-only CSS fidelity pass. Chat
-  route-status pills and the solo quick-action chip are hidden, desktop split
-  is closer to the canonical conversation/persona balance, transcript/composer
-  rhythm is calmer, ordered-list replies render as one calmer plan surface, and
-  the desktop portrait copy no longer competes with persona-stage overlays.
+- First/next checkpoint: completed a Personality-only CSS calm pass. Side
+  panels, hero/callouts, timeline rows, tablet side-stack layout, and mobile
+  first-read rhythm are lighter while all backend-backed values remain visible.
 - Stop conditions: next checkpoint should remain single-surface and
   screenshot-specific; do not replace backend-backed content, icon glyphs, or
-  Chat transcript fixture content without a separate content/data decision.
-- Parent validation gate: web build, Chat desktop/tablet/mobile screenshot
+  Personality copy without a separate content/data decision.
+- Parent validation gate: web build, Personality desktop/tablet/mobile screenshot
   gate, full route smoke, navigation proof, account proof, visual screenshot
   review, and cleanup check.
 
-## PRJ-1243 Current Evidence
+## PRJ-1244 Current Evidence
 
 - Branch: `main`.
 - Lane status:
-  - UX parity lane was provided as a read-only user/subagent brief and
-    integrated by the coordinator
-  - coordinator implemented the route-local Chat CSS patch and final proof
+  - UX parity lane delegated to Hubble and completed read-only
+  - QA/responsive lane delegated to Linnaeus and completed read-only
+  - coordinator implemented the route-local Personality CSS patch and final
+    proof
 - Implementation:
-  - nonessential Chat route-status pills are hidden across breakpoints
-  - desktop Chat uses a more balanced conversation/persona split
-  - transcript and composer rhythm is calmer and less visually chunky
-  - assistant ordered-list replies render as one calm plan surface instead of
-    separate heavy cards
-  - solo quick-action chip is suppressed when only one suggestion exists
-  - desktop portrait copy/chip is hidden so the persona-stage notes and
-    planning overlay own the right panel
+  - Personality hero and callout surfaces use lighter padding, radius, and
+    shadows
+  - timeline rows and wrapper are more compact without hiding layer values
+  - side panels are flatter and less card-heavy across breakpoints
+  - tablet side panels use a calmer two-column rhythm with recent activity
+    full-width
+  - mobile callouts and side-panel rows are lighter and less visually dominant
 - Validation:
   - `npm run build` PASS
-  - Chat screenshot gate across desktop/tablet/mobile PASS:
+  - Personality screenshot gate across desktop/tablet/mobile PASS:
     `screenshot_count=3`, `failed_count=0`
   - full route smoke PASS: `route_count=14`, `status=ok`
   - navigation proof PASS: `step_count=4`, `failed_count=0`
@@ -59,17 +56,26 @@ repository history.
   - `git diff --check` PASS with LF/CRLF warning only
 - Residual:
   - This is a verified structural fidelity pass, not full pixel-perfect parity.
-    Exact canonical icon/content parity and route-smoke fixture copy are outside
-    this CSS-only slice.
+    Exact canonical icon/content/copy parity is outside this CSS-only slice.
 - Artifacts:
-  - `.codex/tasks/PRJ-1243-chat-canonical-fidelity.md`
-  - `.codex/artifacts/prj1243-chat-canonical-fidelity/report.json`
-  - `.codex/artifacts/prj1243-chat-canonical-fidelity/route-smoke-report.json`
-  - `.codex/artifacts/prj1243-chat-canonical-fidelity/navigation-proof.json`
-  - `.codex/artifacts/prj1243-chat-canonical-fidelity/account-proof.json`
-  - `.codex/artifacts/prj1243-chat-canonical-fidelity/screenshots/`
+  - `.codex/tasks/PRJ-1244-personality-canonical-fidelity.md`
+  - `.codex/artifacts/prj1244-personality-canonical-fidelity/report.json`
+  - `.codex/artifacts/prj1244-personality-canonical-fidelity/route-smoke-report.json`
+  - `.codex/artifacts/prj1244-personality-canonical-fidelity/navigation-proof.json`
+  - `.codex/artifacts/prj1244-personality-canonical-fidelity/account-proof.json`
+  - `.codex/artifacts/prj1244-personality-canonical-fidelity/screenshots/`
 
 ## Previous Mission
+
+## PRJ-1243 Current Evidence
+
+- Branch: `main`.
+- Summary: Chat canonical fidelity is verified. Chat hides nonessential
+  route-status pills, uses a calmer conversation/persona split, reduces
+  transcript/composer weight, renders assistant ordered lists as one calm plan
+  surface, and suppresses solo quick-action/portrait-copy chrome.
+- Validation: build, Chat desktop/tablet/mobile screenshot gate, full route
+  smoke, navigation proof, account proof, and `git diff --check` passed.
 
 ## PRJ-1242 Current Evidence
 

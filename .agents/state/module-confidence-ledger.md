@@ -46,6 +46,17 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1244` completes a verified Personality canonical fidelity pass for
+  `AVIARY-WEB-RESP-001`: Personality now has lighter hero/callout material,
+  flatter side panels, tighter timeline rows, a calmer tablet side-support
+  rhythm, and less visually dominant mobile callouts/rows while preserving
+  backend-backed values. Evidence: `npm run build` PASS; Personality screenshot
+  gate across desktop/tablet/mobile returned `screenshot_count=3`,
+  `failed_count=0`; full route smoke returned `route_count=14`, `status=ok`;
+  navigation proof returned `step_count=4`, `failed_count=0`; account proof
+  returned `step_count=1`, `failed_count=0`, `panel_visible=true`; `git diff
+  --check` passed with LF/CRLF warning only.
+
 - `PRJ-1243` completes a verified Chat canonical fidelity pass for
   `AVIARY-WEB-RESP-001`: Chat now hides nonessential route-status pills, uses a
   more balanced desktop conversation/persona split, calms transcript/composer

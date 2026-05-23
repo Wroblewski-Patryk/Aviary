@@ -13,6 +13,7 @@ process, not only the code.
 | AEV-004 | 2026-05-23 | PRJ-1239 | 5 | 5 | 5 | 4 | 5 | The first validation attempt ran build and route-smoke in parallel, causing route-smoke to hit a transient missing `dist/index.html` while Vite rebuilt output. | Do not parallelize destructive/build output producers with consumers of the same `dist` directory; run build before route-smoke screenshot gates. | open |
 | AEV-005 | 2026-05-23 | PRJ-1240 | 5 | 3 | 4 | 5 | 5 | The user asked for agent coordination, but this runtime did not expose a spawn-agent tool; the coordinator had to run the lane model serially. | Discover multi-agent tooling before promising delegation; if unavailable, record the serial-lane fallback in the task and responsibility-learning ledger. | open |
 | AEV-006 | 2026-05-23 | PRJ-1243 | 5 | 4 | 5 | 5 | 5 | The lane input arrived as a user-supplied read-only UX parity brief rather than a separate callable subagent result, so the coordinator had to integrate it directly and keep implementation ownership local. | Keep future screenshot-fidelity briefs narrow and implementation selectors explicit; one route surface plus one validation pack worked well for this checkpoint. | open |
+| AEV-007 | 2026-05-23 | PRJ-1244 | 5 | 5 | 5 | 5 | 5 | Delegated UX and QA lanes returned bounded, actionable outputs while the coordinator kept CSS implementation and final validation local. | Keep this split for future flagship UI passes: one parity lane, one QA lane, one route-local implementation slice, then screenshot proof before state updates. | open |
 
 ## Scoring
 

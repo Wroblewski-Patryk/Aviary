@@ -4,6 +4,16 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed flagship UI slice is `PRJ-1244`: Personality canonical
+fidelity. It keeps Aviary branding, adds no fake data or new components, and
+makes Personality closer to the canonical embodied overview by reducing
+hero/callout, timeline, and side-panel weight while improving tablet/mobile
+rhythm. Validation passed with `npm run build`, Personality screenshot gate
+across desktop/tablet/mobile (`screenshot_count=3`, `failed_count=0`), route
+smoke (`route_count=14`, `status=ok`), navigation proof (`step_count=4`,
+`failed_count=0`), account proof (`step_count=1`, `failed_count=0`,
+`panel_visible=true`), and `git diff --check`.
+
 The latest completed flagship UI slice is `PRJ-1243`: Chat canonical fidelity.
 It keeps Aviary branding, adds no fake data or new components, and makes Chat
 closer to the canonical v5 conversation/persona screen by hiding nonessential

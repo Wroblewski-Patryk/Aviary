@@ -1,5 +1,19 @@
 # Design Memory
 
+## 2026-05-23 - Personality canonical fidelity
+
+- Personality should read as an embodied overview first, not a stack of
+  dashboard cards. Keep side panels useful but flatter and quieter than the
+  figure stage.
+- Mobile callouts should be compact labels with essential values; body copy in
+  the hero must not dominate the portrait or make the first viewport feel like
+  a dense report.
+- Tablet Personality benefits from a support-band rhythm: conscious and
+  subconscious panels can sit side by side, with recent activity full-width
+  below, when route proof shows no overflow.
+- Timeline rows should preserve layer values but stay compact enough that the
+  figure and layer overview feel like one surface.
+
 ## 2026-05-23 - Chat canonical fidelity
 
 - Chat v5 should privilege the conversation/persona composition over status

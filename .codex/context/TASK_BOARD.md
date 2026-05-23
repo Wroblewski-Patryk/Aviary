@@ -4,6 +4,36 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1244` is DONE:
+  - `.codex/tasks/PRJ-1244-personality-canonical-fidelity.md`
+- objective:
+  - make Personality structurally closer to the canonical embodied overview by
+    reducing card/panel weight and calming callouts, timeline, tablet, and
+    mobile rhythm
+- current result:
+  - Personality hero/callout surfaces are lighter
+  - timeline rows and wrapper are more compact without hiding values
+  - side panels are flatter and less dashboard-card-like
+  - tablet uses a calmer two-column support band for conscious/subconscious
+    panels, with recent activity full-width
+  - mobile callouts and rows are less visually dominant
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - Personality screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`
+  - route smoke -> `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+- residual:
+  - this is a verified structural fidelity pass, not full pixel-perfect parity;
+    exact canonical icon/content/copy parity remains a separate content/data
+    decision
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1243` is DONE:
   - `.codex/tasks/PRJ-1243-chat-canonical-fidelity.md`
 - objective:
