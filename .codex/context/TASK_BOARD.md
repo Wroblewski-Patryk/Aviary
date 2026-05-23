@@ -4,6 +4,35 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1257` is DONE:
+  - `.codex/tasks/PRJ-1257-dashboard-desktop-hero-satellite-quieting.md`
+- objective:
+  - make desktop Dashboard hero signals read as quieter connected satellites
+    instead of dense rectangular metric cards
+- current result:
+  - desktop Dashboard signal cards are lighter, tighter, and connected with
+    softer lines around the central figure
+  - all six supported signals, values, labels, mobile/tablet Dashboard
+    structure, cognitive flow, Chat, Personality, shared shell, route
+    behavior, and backend data remain unchanged
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - focused `/dashboard` screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - cleanup check -> no validation-owned node/Vite, 5173/4173 listener,
+    Chromium, or headless browser leftovers; three fresh route-smoke temp
+    profiles from this checkpoint were removed
+- residual:
+  - this is a verified Dashboard desktop satellite material pass, not a full
+    Dashboard 95% parity claim
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1256` is DONE:
   - `.codex/tasks/PRJ-1256-personality-mobile-callout-connectors.md`
 - objective:

@@ -1,5 +1,19 @@
 # Design Memory
 
+## 2026-05-23 - Dashboard desktop hero signal satellites
+
+- Dashboard desktop hero signals should read like lightweight connected
+  satellites around the central figure, not dense rectangular metric cards.
+  Prefer material, spacing, connector, and typography tuning before changing
+  supported signal data.
+- Preserve all six supported signal cards and values during visual quieting.
+  Exact icon glyphs, richer content, and reference-copy parity are separate
+  product/data decisions.
+- Keep desktop satellite tuning scoped to the large-desktop hero. Tablet and
+  mobile Dashboard rhythms should stay governed by their existing first-read
+  rail and compact signal rules unless a separate screenshot-backed task says
+  otherwise.
+
 ## 2026-05-23 - Dashboard mobile hero signal cards
 
 - Dashboard hero signal cards are support metadata around the scenic figure,

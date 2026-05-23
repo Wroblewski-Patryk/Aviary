@@ -6,6 +6,32 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1257` completed a Dashboard desktop hero signal satellite
+  quieting pass:
+  - task:
+    - `.codex/tasks/PRJ-1257-dashboard-desktop-hero-satellite-quieting.md`
+  - result:
+    - made desktop Dashboard hero signals lighter, tighter, and more
+      satellite-like around the central figure
+    - preserved all six supported signals, values, labels, route behavior,
+      mobile/tablet Dashboard structure, cognitive flow, Chat, Personality,
+      shared shell, and backend data
+    - changed only route-local large-desktop CSS in `web/src/index.css`
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - focused `/dashboard` screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - cleanup check -> no validation-owned node/Vite, 5173/4173 listener,
+      Chromium, or headless browser leftovers; three fresh route-smoke temp
+      profiles from this checkpoint were removed
+  - residual:
+    - full Dashboard 95% pixel parity, exact canonical icon glyphs, and richer
+      content/data values remain separate decisions
+
 - 2026-05-23: `PRJ-1256` completed a Personality mobile callout connector
   visibility pass:
   - task:
