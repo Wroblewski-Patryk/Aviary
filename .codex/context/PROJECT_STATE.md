@@ -6,6 +6,39 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1246` completed a mobile Chat first-read compression pass:
+  - task:
+    - `.codex/tasks/PRJ-1246-chat-mobile-first-read.md`
+  - result:
+    - tuned mobile Chat only, with no desktop/tablet behavior change, no new
+      components, fake data, backend behavior, route behavior, or composer
+      change
+    - converted the mobile cognitive belt from stacked context cards into a
+      compact horizontal context rail
+    - kept supported context cards available through horizontal scroll instead
+      of hiding cards from the third onward
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - Chat screenshot gate across desktop/tablet/mobile -> `screenshot_count=3`,
+      `failed_count=0`
+    - route smoke -> `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> PASS, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - cleanup check -> no validation-owned route-smoke, headless browser, or
+      5173/4173 listener leftovers
+  - artifacts:
+    - `.codex/artifacts/prj1246-chat-mobile-first-read/chat-responsive-report.json`
+    - `.codex/artifacts/prj1246-chat-mobile-first-read/route-smoke-report.json`
+    - `.codex/artifacts/prj1246-chat-mobile-first-read/navigation-proof.json`
+    - `.codex/artifacts/prj1246-chat-mobile-first-read/account-proof.json`
+    - `.codex/artifacts/prj1246-chat-mobile-first-read/screenshots/`
+  - residual:
+    - this is a verified mobile first-read pass, not a full pixel-perfect
+      parity claim; exact icon/content/copy parity remains a separate content
+      decision.
+
 - 2026-05-23: `PRJ-1245` completed a flagship secondary chrome coherence tightening:
   - task:
     - `.codex/tasks/PRJ-1245-flagship-coherence-tightening.md`

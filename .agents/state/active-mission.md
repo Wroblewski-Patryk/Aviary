@@ -9,59 +9,71 @@ repository history.
 
 ## Current Mission
 
-- Mission ID: PRJ-1245-flagship-coherence-tightening
+- Mission ID: PRJ-1246-chat-mobile-first-read
 - Status: VERIFIED
-- Selected objective: tighten flagship coherence by flattening secondary
-  route-local micro-surfaces on Chat and Personality while leaving Dashboard's
-  verified hero composition untouched.
-- Why this mission now: Dashboard, Chat, and Personality now each have verified
-  canonical fidelity slices; the remaining shared drift is heavier secondary
-  chrome on Chat and Personality, not missing route behavior.
-- Release objective or product milestone advanced: v1.2 web UI canonical
-  fidelity across flagship screens.
-- First/next checkpoint: completed a CSS-only secondary chrome pass. Chat's
-  cognitive belt is less card-like, and Personality's overview status, side
-  panels, and signal/activity rows are flatter while all values remain visible.
-- Stop conditions: next checkpoint should remain single-surface and
-  screenshot-specific; do not replace backend-backed content, icon glyphs, or
-  route copy without a separate content/data decision.
-- Parent validation gate: web build, Dashboard/Chat/Personality
-  desktop/tablet/mobile screenshot gate, full route smoke, navigation proof,
-  account proof, visual screenshot review, and cleanup check.
+- Selected objective: compress mobile Chat's cognitive belt into a compact
+  horizontal context rail so the conversation and composer appear sooner.
+- Why this mission now: after PRJ-1245, mobile Chat still stacked two large
+  context cards before the transcript, which made the first read feel like
+  route status instead of conversation.
+- Release objective or product milestone advanced: v1.2 web mobile Chat
+  canonical usability.
+- First/next checkpoint: completed a CSS-only mobile Chat belt pass. Supported
+  context cards remain available through horizontal scroll instead of hidden
+  behind `nth-child` suppression.
+- Stop conditions: next checkpoint should stay screenshot-specific and avoid
+  changing route-smoke fixture copy, backend-backed data, icon glyphs, or route
+  behavior without a separate content/data decision.
+- Parent validation gate: web build, Chat desktop/tablet/mobile screenshot
+  gate, full route smoke, navigation proof, account proof, visual screenshot
+  review, and cleanup check.
 
-## PRJ-1245 Current Evidence
+## PRJ-1246 Current Evidence
 
 - Branch: `main`.
 - Lane status:
-  - UX parity lane delegated to Raman and completed read-only
-  - QA/responsive lane delegated to Dalton and completed read-only
-  - coordinator implemented the route-local CSS patch and final proof
+  - UX parity lane delegated to Gibbs and completed read-only
+  - QA/responsive lane delegated to Chandrasekhar and completed read-only
+  - coordinator implemented the mobile Chat CSS patch and final proof
 - Implementation:
-  - Chat cognitive belt cards, meta pills, and progress tracks are flatter
-  - Personality overview status, side panels, and signal/activity rows are
-    quieter
-  - Dashboard was intentionally not edited in this slice
+  - mobile Chat cognitive belt now uses a horizontal context rail
+  - supported context cards remain available instead of hiding cards from the
+    third onward
+  - belt card body, title, meta, padding, and scroll snap are compacted only
+    inside the mobile breakpoint
 - Validation:
   - `npm run build` PASS
-  - Dashboard/Chat/Personality screenshot gate across desktop/tablet/mobile
-    PASS: `screenshot_count=9`, `failed_count=0`
+  - Chat screenshot gate across desktop/tablet/mobile PASS:
+    `screenshot_count=3`, `failed_count=0`
   - full route smoke PASS: `route_count=14`, `status=ok`
   - navigation proof PASS: `step_count=4`, `failed_count=0`
   - account proof PASS: `step_count=1`, `failed_count=0`,
     `panel_visible=true`
   - `git diff --check` PASS with LF/CRLF warning only
+  - cleanup check found no validation-owned route-smoke, headless browser, or
+    5173/4173 listener leftovers
 - Residual:
-  - This is a verified structural fidelity pass, not full pixel-perfect parity.
+  - This is a verified mobile first-read pass, not full pixel-perfect parity.
     Exact canonical icon/content/copy parity is outside this CSS-only slice.
 - Artifacts:
-  - `.codex/tasks/PRJ-1245-flagship-coherence-tightening.md`
-  - `.codex/artifacts/prj1245-flagship-coherence-tightening/report.json`
-  - `.codex/artifacts/prj1245-flagship-coherence-tightening/route-smoke-report.json`
-  - `.codex/artifacts/prj1245-flagship-coherence-tightening/navigation-proof.json`
-  - `.codex/artifacts/prj1245-flagship-coherence-tightening/account-proof.json`
-  - `.codex/artifacts/prj1245-flagship-coherence-tightening/screenshots/`
+  - `.codex/tasks/PRJ-1246-chat-mobile-first-read.md`
+  - `.codex/artifacts/prj1246-chat-mobile-first-read/chat-responsive-report.json`
+  - `.codex/artifacts/prj1246-chat-mobile-first-read/route-smoke-report.json`
+  - `.codex/artifacts/prj1246-chat-mobile-first-read/navigation-proof.json`
+  - `.codex/artifacts/prj1246-chat-mobile-first-read/account-proof.json`
+  - `.codex/artifacts/prj1246-chat-mobile-first-read/screenshots/`
 
 ## Previous Mission
+
+## PRJ-1245 Current Evidence
+
+- Branch: `main`.
+- Summary: flagship secondary chrome coherence is verified. Chat's cognitive
+  belt cards/meta/progress are flatter, Personality's overview status, side
+  panels, and rows are quieter, and Dashboard was intentionally not edited.
+- Validation: build, Dashboard/Chat/Personality desktop/tablet/mobile
+  screenshot gate, full route smoke, navigation proof, account proof, and
+  `git diff --check` passed.
 
 ## PRJ-1244 Current Evidence
 

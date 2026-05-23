@@ -1,5 +1,17 @@
 # Design Memory
 
+## 2026-05-23 - Chat mobile first-read rail
+
+- On mobile Chat, the cognitive belt should stay as a compact horizontal
+  context rail, not stacked dashboard cards before the transcript.
+- Supported context cards should remain available through intentional
+  horizontal scroll with a visible next-card peek. Do not hide later cards only
+  to reduce visual noise unless a separate product decision removes that
+  context.
+- The rail should be quieter than the transcript and composer. Keep titles,
+  meta, padding, and body copy compact so the first viewport reaches the
+  conversation quickly.
+
 ## 2026-05-23 - Flagship secondary chrome coherence
 
 - After a route has its primary scene locked, secondary context surfaces should

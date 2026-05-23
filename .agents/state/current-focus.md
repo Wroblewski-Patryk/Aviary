@@ -4,6 +4,17 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed flagship UI slice is `PRJ-1246`: mobile Chat first-read
+compression. It keeps Aviary branding, adds no fake data or new components,
+and makes mobile Chat more conversation-first by converting the cognitive belt
+from stacked context cards into a compact horizontal rail with all supported
+cards still available by scroll. Validation passed with `npm run build`, Chat
+screenshot gate across desktop/tablet/mobile (`screenshot_count=3`,
+`failed_count=0`), route smoke (`route_count=14`, `status=ok`), navigation
+proof (`step_count=4`, `failed_count=0`), account proof (`step_count=1`,
+`failed_count=0`, `panel_visible=true`), `git diff --check`, and cleanup
+checks.
+
 The latest completed flagship UI slice is `PRJ-1245`: secondary chrome
 coherence tightening. It keeps Aviary branding, adds no fake data or new
 components, leaves Dashboard untouched, and makes Chat/Personality secondary

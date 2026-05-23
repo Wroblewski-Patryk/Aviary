@@ -15,6 +15,7 @@ process, not only the code.
 | AEV-006 | 2026-05-23 | PRJ-1243 | 5 | 4 | 5 | 5 | 5 | The lane input arrived as a user-supplied read-only UX parity brief rather than a separate callable subagent result, so the coordinator had to integrate it directly and keep implementation ownership local. | Keep future screenshot-fidelity briefs narrow and implementation selectors explicit; one route surface plus one validation pack worked well for this checkpoint. | open |
 | AEV-007 | 2026-05-23 | PRJ-1244 | 5 | 5 | 5 | 5 | 5 | Delegated UX and QA lanes returned bounded, actionable outputs while the coordinator kept CSS implementation and final validation local. | Keep this split for future flagship UI passes: one parity lane, one QA lane, one route-local implementation slice, then screenshot proof before state updates. | open |
 | AEV-008 | 2026-05-23 | PRJ-1245 | 5 | 5 | 5 | 5 | 5 | The UX lane correctly recommended not touching Dashboard, preventing a broad coherence pass from weakening the already-verified hero composition. | For future multi-surface polish, require the parity lane to identify what should remain untouched as explicitly as what should change. | open |
+| AEV-009 | 2026-05-23 | PRJ-1246 | 5 | 5 | 5 | 5 | 5 | The UX and QA lanes converged on the same minimal Chat mobile checkpoint, allowing the coordinator to keep implementation narrow and validation sequential. | Keep this pattern for remaining canonical work: one screenshot mismatch, one read-only parity lane, one read-only QA lane, then coordinator-owned CSS and proof. | open |
 
 ## Scoring
 

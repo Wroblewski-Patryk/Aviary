@@ -4,6 +4,35 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1246` is DONE:
+  - `.codex/tasks/PRJ-1246-chat-mobile-first-read.md`
+- objective:
+  - make mobile Chat reach the conversation faster by compressing the cognitive
+    belt into a horizontal context rail
+- current result:
+  - mobile Chat no longer stacks two large context cards before the transcript
+  - supported cognitive-belt cards remain available through horizontal scroll
+    instead of being hidden from the third card onward
+  - desktop/tablet Chat stayed within the verified route proof
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - Chat screenshot gate across desktop/tablet/mobile -> `screenshot_count=3`,
+    `failed_count=0`
+  - route smoke -> `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - cleanup check -> no validation-owned route-smoke, headless browser, or
+    5173/4173 listener leftovers
+- residual:
+  - this is a verified mobile first-read pass, not full pixel-perfect parity;
+    exact canonical icon/content/copy parity remains a separate content/data
+    decision
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1245` is DONE:
   - `.codex/tasks/PRJ-1245-flagship-coherence-tightening.md`
 - objective:

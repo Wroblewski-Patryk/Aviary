@@ -4,6 +4,24 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue mobile Chat canonical usability from `PRJ-1246`:
+   - task:
+     `.codex/tasks/PRJ-1246-chat-mobile-first-read.md`
+   - result:
+     mobile Chat's cognitive belt now reads as a compact horizontal context
+     rail, so the transcript and composer appear sooner while supported cards
+     remain available through scroll
+   - proof:
+     `npm run build` PASS; Chat screenshot gate across desktop/tablet/mobile
+     PASS with `screenshot_count=3`, `failed_count=0`; route smoke
+     `route_count=14`, `status=ok`; navigation proof `step_count=4`,
+     `failed_count=0`; account proof `step_count=1`, `failed_count=0`,
+     `panel_visible=true`; cleanup found no validation-owned leftovers
+   - next smallest useful choice:
+     pick one exact remaining screenshot mismatch on one route only, or make a
+     content/data decision before changing canonical copy, icon glyphs, or
+     route-smoke fixture content
+
 1. Continue flagship canonical coherence from `PRJ-1245`:
    - task:
      `.codex/tasks/PRJ-1245-flagship-coherence-tightening.md`

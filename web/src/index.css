@@ -9589,28 +9589,38 @@ body {
   }
 
   .aion-chat-cognitive-belt {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.44rem;
-    margin-inline: 0;
-    padding: 0;
-    overflow: visible;
-    scroll-snap-type: none;
-    mask-image: none;
-  }
-
-  .aion-chat-cognitive-belt .aion-chat-belt-card:nth-child(n + 3) {
-    display: none;
+    display: flex;
+    grid-template-columns: none;
+    gap: 0.46rem;
+    margin-inline: -0.08rem;
+    padding: 0 0.08rem 0.34rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 0.08rem;
+    scrollbar-width: none;
+    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 0.7rem), transparent 100%);
   }
 
   .aion-chat-belt-card {
-    padding: 0.58rem 0.64rem;
+    flex: 0 0 min(13.2rem, 68vw);
+    padding: 0.46rem 0.52rem;
     min-height: auto;
-    scroll-snap-align: none;
+    scroll-snap-align: start;
   }
 
   .aion-chat-belt-body {
-    -webkit-line-clamp: 2;
+    margin-top: 0.2rem;
+    -webkit-line-clamp: 1;
+  }
+
+  .aion-chat-belt-title {
+    margin-top: 0.28rem;
+    font-size: 0.88rem;
+  }
+
+  .aion-chat-belt-meta {
+    min-height: 1rem;
+    padding: 0.06rem 0.3rem;
   }
 
   .aion-memory-stat-row,

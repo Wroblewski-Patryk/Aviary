@@ -46,6 +46,18 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1246` completes a verified mobile Chat first-read pass for
+  `AVIARY-WEB-RESP-001`: the cognitive belt now reads as a compact horizontal
+  context rail on mobile, the transcript and composer appear sooner, and all
+  supported context cards remain available through horizontal scroll. Evidence:
+  `npm run build` PASS; Chat screenshot gate across desktop/tablet/mobile
+  returned `screenshot_count=3`, `failed_count=0`; full route smoke returned
+  `route_count=14`, `status=ok`; navigation proof returned `step_count=4`,
+  `failed_count=0`; account proof returned `step_count=1`, `failed_count=0`,
+  `panel_visible=true`; `git diff --check` passed with LF/CRLF warning only;
+  cleanup found no validation-owned route-smoke, headless browser, or 5173/4173
+  listener leftovers.
+
 - `PRJ-1245` completes a verified flagship secondary chrome coherence pass for
   `AVIARY-WEB-RESP-001`: Chat's cognitive belt cards/meta/progress now read
   flatter, and Personality's overview status, side panels, and rows are quieter
