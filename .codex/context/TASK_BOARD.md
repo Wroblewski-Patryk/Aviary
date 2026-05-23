@@ -4,6 +4,37 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1250` is DONE:
+  - `.codex/tasks/PRJ-1250-chat-source-marker-quieting.md`
+- objective:
+  - keep the truthful Chat `App` / `Telegram` source marker visible while
+    making it visually subordinate to speaker, time, delivery, and message
+    content
+- current result:
+  - the source marker now renders as a small quiet metadata chip
+  - no source mapping, backend, fixture data, component structure, route
+    behavior, or shared shell behavior changed
+  - the Chat transcript still shows both App and Telegram source truth
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - `npm run test:chat-transcript` -> PASS, `status=ok`,
+    `appSourceCount=2`, `telegramSourceCount=2`
+  - focused `/chat` screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`, `status=ok`
+  - route smoke -> `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - cleanup check -> no validation-owned headless browser, route-smoke, Vite,
+    or 5173/4173 listener leftovers after targeted temp-profile cleanup
+- residual:
+  - this is a verified visual quieting slice, not a full canonical content or
+    Telegram live-credential proof
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1249` is DONE:
   - `.codex/tasks/PRJ-1249-channel-routing-tool-truth-and-source-marker.md`
 - objective:

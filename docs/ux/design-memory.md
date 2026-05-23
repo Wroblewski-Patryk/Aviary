@@ -1,5 +1,16 @@
 # Design Memory
 
+## 2026-05-23 - Chat source marker hierarchy
+
+- Chat source markers are truth indicators, not route badges. Keep `App` and
+  `Telegram` visible inside message metadata, but visually subordinate to the
+  speaker, timestamp, delivery status, and message content.
+- Use quiet metadata material for source truth: small type, low-contrast teal,
+  and a light chip background are acceptable when they do not create awkward
+  mobile wrapping.
+- Do not change source labels, channel mapping, transcript data, or fixture
+  copy as part of visual quieting. Those are content/data decisions.
+
 ## 2026-05-23 - Dashboard mobile flow rail
 
 - On mobile Dashboard, the cognitive-flow band should stay a compact

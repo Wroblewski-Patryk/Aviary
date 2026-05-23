@@ -4,6 +4,18 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed Chat UI slice is `PRJ-1250`: source marker visual
+quieting. It keeps the truthful `App` / `Telegram` metadata from `PRJ-1249`,
+but reduces its weight so it reads as a small quiet chip instead of a
+competing accent in the transcript. Validation passed with `npm run build`,
+`npm run test:chat-transcript` (`appSourceCount=2`,
+`telegramSourceCount=2`), focused `/chat` desktop/tablet/mobile screenshot
+gate (`screenshot_count=3`, `failed_count=0`), full route smoke
+(`route_count=14`, `status=ok`), navigation proof (`step_count=4`,
+`failed_count=0`), account proof (`step_count=1`, `failed_count=0`,
+`panel_visible=true`), `git diff --check`, manual mobile screenshot review,
+and cleanup checks.
+
 The latest completed runtime/web communication slice is `PRJ-1249`: channel
 routing truth and Chat source markers. It keeps the existing action-only
 side-effect boundary, adds no new provider or second chat store, and fixes the

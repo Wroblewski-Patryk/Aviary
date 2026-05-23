@@ -6,6 +6,35 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1250` completed a Chat source marker visual quieting pass:
+  - task:
+    - `.codex/tasks/PRJ-1250-chat-source-marker-quieting.md`
+  - result:
+    - kept the truthful Chat `App` / `Telegram` source marker introduced in
+      `PRJ-1249`
+    - reduced the marker's visual weight with a small quiet chip treatment so
+      it reads as metadata instead of a second primary accent
+    - changed only `web/src/index.css`; no source mapping, backend,
+      transcript data, route fixture, component structure, or shared shell
+      behavior changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - `npm run test:chat-transcript` -> PASS, `status=ok`,
+      `appSourceCount=2`, `telegramSourceCount=2`
+    - focused `/chat` screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`, `status=ok`
+    - full route smoke -> `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - cleanup check -> no validation-owned headless browser, route-smoke,
+      Vite, or 5173/4173 listener leftovers; transient chat-transcript temp
+      profile lock was cleaned by targeted temp-directory removal
+  - residual:
+    - exact canonical copy/icon/content parity remains a separate content/data
+      decision; this slice only quieted the already-approved source marker
+
 - 2026-05-23: `PRJ-1249` completed a channel-routing truth and Chat source marker pass:
   - task:
     - `.codex/tasks/PRJ-1249-channel-routing-tool-truth-and-source-marker.md`

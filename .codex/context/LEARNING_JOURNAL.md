@@ -36,6 +36,30 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-23 - Chat transcript temp profiles can remain locked briefly
+- Context:
+  - PRJ-1250 ran `npm run test:chat-transcript` as part of Chat source-marker
+    characterization.
+- Symptom:
+  - The test passed but emitted `Chrome profile cleanup is still locked:
+    EBUSY` for a temporary `aion-chat-transcript-*` profile file.
+- Root cause:
+  - Chromium profile handles can remain locked briefly after the proof process
+    exits on Windows, even when no browser process remains.
+- Guardrail:
+  - after browser-driven characterization warnings, check narrowly for
+    validation-owned `chrome-headless-shell`, route-smoke/dev-server
+    processes, temp profile directories, and relevant listeners before
+    closure.
+- Preferred pattern:
+  - remove only the targeted temp profile directory after confirming no owning
+    validation process remains.
+- Avoid:
+  - broad process kills or deleting unrelated temp/browser profile directories.
+- Evidence:
+  - PRJ-1250 found no validation-owned browser/server/listener leftovers and
+    removed only the locked `aion-chat-transcript-*` temp profile directory.
+
 ### 2026-05-23 - Route-smoke artifact paths should be absolute from nested workdirs
 - Context: PRJ-1238 shared-shell noise reduction.
 - Symptom: a screenshot gate launched from `web/` with a relative

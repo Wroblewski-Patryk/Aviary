@@ -2572,8 +2572,13 @@ body {
   display: inline-flex;
   align-items: center;
   min-height: 1rem;
-  color: rgba(74, 112, 116, 0.92);
-  font-weight: 700;
+  padding: 0 0.28rem;
+  border-radius: 999px;
+  background: rgba(117, 149, 145, 0.075);
+  color: rgba(74, 112, 116, 0.76);
+  font-size: 0.6rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
 }
 
 .aion-chat-delivery-status {

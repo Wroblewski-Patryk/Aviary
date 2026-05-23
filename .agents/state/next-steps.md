@@ -4,6 +4,26 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue Chat visual fidelity from `PRJ-1250`:
+   - task:
+     `.codex/tasks/PRJ-1250-chat-source-marker-quieting.md`
+   - result:
+     Chat keeps the truthful `App` / `Telegram` transcript marker while
+     rendering it as quieter metadata, so the source truth no longer competes
+     with speaker, time, delivery status, or message content
+   - proof:
+     `npm run build` PASS; `npm run test:chat-transcript` PASS with
+     `appSourceCount=2`, `telegramSourceCount=2`; Chat screenshot gate across
+     desktop/tablet/mobile PASS with `screenshot_count=3`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; navigation proof
+     `step_count=4`, `failed_count=0`; account proof `step_count=1`,
+     `failed_count=0`, `panel_visible=true`; cleanup found no
+     validation-owned leftovers after targeted temp-profile cleanup
+   - next smallest useful choice:
+     pick one exact remaining screenshot mismatch on one route only, or make a
+     content/data decision before changing canonical copy, icon glyphs, source
+     labels, or route-smoke fixture content
+
 1. Continue mobile Dashboard canonical usability from `PRJ-1248`:
    - task:
      `.codex/tasks/PRJ-1248-dashboard-mobile-flow-rail.md`

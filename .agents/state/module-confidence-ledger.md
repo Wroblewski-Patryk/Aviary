@@ -46,6 +46,19 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1250` completes a verified Chat source-marker visual quieting slice for
+  `AVIARY-WEB-RESP-001`: the already-approved `App` / `Telegram` source truth
+  remains visible but now reads as a small quiet metadata chip instead of a
+  competing accent. Evidence: `npm run build` passed; `npm run
+  test:chat-transcript` returned `status=ok`, `appSourceCount=2`,
+  `telegramSourceCount=2`; focused `/chat` screenshot gate returned
+  `screenshot_count=3`, `failed_count=0`; full route smoke returned
+  `route_count=14`, `status=ok`; navigation proof returned `step_count=4`,
+  `failed_count=0`; account proof returned `step_count=1`, `failed_count=0`,
+  `panel_visible=true`; `git diff --check` passed with LF/CRLF warning only;
+  cleanup found no validation-owned browser/server/listener leftovers after
+  targeted temp-profile cleanup.
+
 - `PRJ-1249` completes a verified channel-routing/tool-truth slice for
   `AVIARY-COGNITIVE-RUNTIME-001` and `AVIARY-WEB-RESP-001`: expression now
   corrects false denial of action-owned search/page-read capability when

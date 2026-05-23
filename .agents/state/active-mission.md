@@ -9,6 +9,68 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1250-chat-source-marker-quieting
+- Status: VERIFIED
+- Selected objective: keep Chat's `App` / `Telegram` transcript source marker
+  visible while reducing its visual weight so it reads as quiet metadata, not a
+  competing primary accent.
+- Why this mission now: PRJ-1249 added the truthful marker, and fresh Chat
+  screenshots showed the teal text was useful but a little too loud in the
+  dense transcript.
+- Release objective or product milestone advanced: v1.2 web Chat
+  communication clarity and canonical visual calm.
+- First/next checkpoint: completed a CSS-only Chat metadata polish. The source
+  marker now renders as a small low-contrast chip inside the existing metadata
+  row, with no source mapping, backend, fixture, component-structure, or shared
+  shell change.
+- Stop conditions: next work should pick one exact route/screenshot mismatch
+  or make a content/data decision before changing canonical copy, icon glyphs,
+  or backend-backed labels. Live Telegram credential smoke remains outside this
+  visual slice.
+- Parent validation gate: web build, chat transcript characterization, focused
+  `/chat` desktop/tablet/mobile screenshot gate, full route smoke, navigation
+  proof, account proof, `git diff --check`, manual screenshot review, and
+  validation cleanup.
+
+## PRJ-1250 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Sagan and completed read-only
+  - QA lane delegated to Copernicus and completed read-only
+  - coordinator implemented the route-local CSS patch and final proof
+- Implementation:
+  - `.aion-chat-source-marker` now uses a quieter chip treatment with lower
+    contrast, smaller type, and light material so the source truth remains
+    available without competing with speaker, time, delivery, or message
+    content
+- Validation:
+  - `npm run build` PASS
+  - `npm run test:chat-transcript` PASS: `status=ok`,
+    `appSourceCount=2`, `telegramSourceCount=2`, `deliveredCount=1`
+  - focused `/chat` screenshot gate across desktop/tablet/mobile PASS:
+    `screenshot_count=3`, `failed_count=0`
+  - full route smoke PASS: `route_count=14`, `status=ok`
+  - navigation proof PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+  - cleanup check found no validation-owned headless browser, route-smoke,
+    Vite, or 5173/4173 listener leftovers; a transient chat-transcript temp
+    profile lock warning was cleaned with targeted temp-directory removal
+- Residual:
+  - This is a verified visual quieting slice, not a new channel-routing proof
+    or a full canonical content/icon parity claim.
+- Artifacts:
+  - `.codex/tasks/PRJ-1250-chat-source-marker-quieting.md`
+  - `.codex/artifacts/prj1250-chat-source-marker-polish/report.json`
+  - `.codex/artifacts/prj1250-chat-source-marker-polish/route-smoke-report.json`
+  - `.codex/artifacts/prj1250-chat-source-marker-polish/navigation-proof.json`
+  - `.codex/artifacts/prj1250-chat-source-marker-polish/account-proof.json`
+  - `.codex/artifacts/prj1250-chat-source-marker-polish/screenshots/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1249-channel-routing-tool-truth-and-source-marker
 - Status: VERIFIED
 - Selected objective: make Aviary truthful about action-owned web knowledge
