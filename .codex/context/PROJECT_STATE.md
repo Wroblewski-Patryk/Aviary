@@ -6,6 +6,35 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1251` completed a Dashboard mobile hero signal quieting pass:
+  - task:
+    - `.codex/tasks/PRJ-1251-dashboard-mobile-hero-signal-quieting.md`
+  - result:
+    - changed Dashboard signal values to UI tabular numerals so `1` and
+      `0 / 0` read as numbers instead of display-serif glyphs
+    - made mobile Dashboard hero signal cards quieter and shorter while
+      preserving all six supported signal cards
+    - removed mobile-only decorative wave and third-line note noise from the
+      first-read signal cards
+    - changed only `web/src/index.css`; no backend data, fixture values,
+      route behavior, copy, labels, components, Chat, Personality, or shared
+      shell behavior changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - focused `/dashboard` screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - cleanup check -> no Personality route-smoke, Vite/dev-server,
+      5173/4173 listener, temp route-smoke/chat-transcript profile, or
+      headless browser leftovers; unrelated Vite processes from `Obiekty`
+      were intentionally not stopped
+  - residual:
+    - full Dashboard pixel parity, exact canonical iconography, and content
+      density remain separate content/data decisions
+
 - 2026-05-23: `PRJ-1250` completed a Chat source marker visual quieting pass:
   - task:
     - `.codex/tasks/PRJ-1250-chat-source-marker-quieting.md`

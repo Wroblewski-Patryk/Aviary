@@ -4,6 +4,17 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed Dashboard UI slice is `PRJ-1251`: mobile hero signal
+density and numeral clarity. It keeps all six supported Dashboard hero signals
+visible, changes signal values to UI tabular numerals, and removes mobile-only
+decorative wave/third-line note noise so the first viewport reads less like an
+analytics grid. Validation passed with `npm run build`, focused `/dashboard`
+desktop/tablet/mobile screenshot gate (`screenshot_count=3`,
+`failed_count=0`), full route smoke (`route_count=14`, `status=ok`),
+navigation proof (`step_count=4`, `failed_count=0`), account proof
+(`step_count=1`, `failed_count=0`, `panel_visible=true`), `git diff --check`,
+screenshot review, and cleanup checks.
+
 The latest completed Chat UI slice is `PRJ-1250`: source marker visual
 quieting. It keeps the truthful `App` / `Telegram` metadata from `PRJ-1249`,
 but reduces its weight so it reads as a small quiet chip instead of a

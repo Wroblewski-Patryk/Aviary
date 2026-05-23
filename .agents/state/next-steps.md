@@ -4,6 +4,24 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue Dashboard mobile canonical usability from `PRJ-1251`:
+   - task:
+     `.codex/tasks/PRJ-1251-dashboard-mobile-hero-signal-quieting.md`
+   - result:
+     mobile Dashboard hero signal cards are quieter and count values now read
+     as clear UI numerals while every supported signal remains visible
+   - proof:
+     `npm run build` PASS; Dashboard screenshot gate across
+     desktop/tablet/mobile PASS with `screenshot_count=3`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; navigation proof
+     `step_count=4`, `failed_count=0`; account proof `step_count=1`,
+     `failed_count=0`, `panel_visible=true`; cleanup found no Personality
+     validation-owned leftovers
+   - next smallest useful choice:
+     pick one exact remaining screenshot mismatch on one route only, or make a
+     content/data decision before changing canonical copy, icon glyphs, source
+     labels, or route-smoke fixture content
+
 1. Continue Chat visual fidelity from `PRJ-1250`:
    - task:
      `.codex/tasks/PRJ-1250-chat-source-marker-quieting.md`

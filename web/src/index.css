@@ -3623,9 +3623,12 @@ body {
 .aion-dashboard-signal-value {
   margin: 0.24rem 0 0;
   color: var(--aion-ink);
-  font-family: var(--font-display, ui-serif);
-  font-size: 1.22rem;
-  line-height: 1;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.08rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 750;
+  letter-spacing: 0;
+  line-height: 1.08;
 }
 
 .aion-dashboard-signal-detail,
@@ -9760,22 +9763,55 @@ body {
   }
 
   .aion-dashboard-signal-card {
-    border-radius: 0.95rem;
-    padding: 0.42rem 0.48rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 0.42rem;
+    align-content: start;
+    border-color: rgba(88, 67, 52, 0.055);
+    border-radius: 0.9rem;
+    padding: 0.42rem 0.48rem 0.44rem;
+    background:
+      linear-gradient(180deg, rgba(255, 252, 247, 0.72), rgba(248, 241, 232, 0.5));
+    box-shadow:
+      0 5px 10px rgba(78, 58, 43, 0.018),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  .aion-dashboard-signal-eyebrow {
+    grid-column: 1;
+    overflow: hidden;
+    font-size: 0.5rem;
+    letter-spacing: 0.18em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .aion-dashboard-signal-value {
-    font-size: 1.06rem;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    margin-top: 0;
+    font-size: 0.9rem;
+    text-align: right;
   }
 
   .aion-dashboard-signal-detail,
   .aion-dashboard-signal-note {
-    font-size: 0.58rem;
-    line-height: 1.25;
+    grid-column: 1 / -1;
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 0.55rem;
+    line-height: 1.22;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .aion-dashboard-signal-note {
+    display: none;
   }
 
   .aion-dashboard-signal-wave {
-    margin-top: 0.25rem;
+    display: none;
   }
 
   .aion-dashboard-figure-note {

@@ -46,6 +46,18 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1251` completes a verified Dashboard mobile hero signal hierarchy pass
+  for `AVIARY-WEB-RESP-001`: Dashboard signal values now use UI tabular
+  numerals, mobile hero signal cards are quieter and shorter, and all six
+  supported signal cards remain visible. Evidence: `npm run build` passed;
+  focused `/dashboard` screenshot gate returned `screenshot_count=3`,
+  `failed_count=0`, `route_count=14`, `status=ok`; navigation proof returned
+  `step_count=4`, `failed_count=0`; account proof returned `step_count=1`,
+  `failed_count=0`, `panel_visible=true`; `git diff --check` passed with
+  LF/CRLF warning only; cleanup found no Personality route-smoke, Vite/dev
+  server, 5173/4173 listener, temp route-smoke/chat-transcript profile, or
+  headless browser leftovers.
+
 - `PRJ-1250` completes a verified Chat source-marker visual quieting slice for
   `AVIARY-WEB-RESP-001`: the already-approved `App` / `Telegram` source truth
   remains visible but now reads as a small quiet metadata chip instead of a

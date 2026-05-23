@@ -1,5 +1,18 @@
 # Design Memory
 
+## 2026-05-23 - Dashboard mobile hero signal cards
+
+- Dashboard hero signal cards are support metadata around the scenic figure,
+  not a dense analytics grid. On mobile, keep every supported signal visible,
+  but prefer label, value, and one useful detail over decorative waves and
+  extra note copy in the first-read cards.
+- Dashboard signal values should use UI tabular numerals, not display serif
+  typography. Values such as `1`, `0 / 0`, and percentages must scan as data,
+  not as ornamental glyphs.
+- Preserve the PRJ-1248 cognitive-flow rail and Current Phase rhythm below the
+  hero. Do not hide signal cards or change backend-backed values as a visual
+  shortcut.
+
 ## 2026-05-23 - Chat source marker hierarchy
 
 - Chat source markers are truth indicators, not route badges. Keep `App` and

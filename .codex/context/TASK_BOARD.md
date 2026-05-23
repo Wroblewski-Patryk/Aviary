@@ -4,6 +4,36 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1251` is DONE:
+  - `.codex/tasks/PRJ-1251-dashboard-mobile-hero-signal-quieting.md`
+- objective:
+  - make mobile Dashboard hero signal cards quieter and make count-heavy
+    values read as numerals while preserving every supported signal
+- current result:
+  - Dashboard signal values use UI tabular numerals instead of display serif
+  - mobile Dashboard hero signal cards keep label, value, and detail, while
+    decorative wave/noise and third-line note copy are removed from the
+    first-read treatment
+  - no backend data, fixture values, copy, route behavior, component
+    structure, Chat, Personality, navigation, or shared shell behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - focused `/dashboard` screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - cleanup check -> no Personality route-smoke, Vite/dev-server,
+    5173/4173 listener, temp route-smoke/chat-transcript profile, or headless
+    browser leftovers; unrelated `Obiekty` Vite processes were left alone
+- residual:
+  - this is a verified mobile first-read hierarchy pass, not a full Dashboard
+    95% parity claim
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1250` is DONE:
   - `.codex/tasks/PRJ-1250-chat-source-marker-quieting.md`
 - objective:

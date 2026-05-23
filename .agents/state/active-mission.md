@@ -9,6 +9,63 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1251-dashboard-mobile-hero-signal-quieting
+- Status: VERIFIED
+- Selected objective: make mobile Dashboard hero signal cards quieter and make
+  count values read as numerals while preserving all supported signals and the
+  PRJ-1248 flow rail.
+- Why this mission now: after PRJ-1250, Chat metadata was quiet and verified.
+  Fresh screenshots plus UX/QA lanes identified mobile Dashboard hero signal
+  density and numeral ambiguity as the smallest high-impact UI checkpoint.
+- Release objective or product milestone advanced: v1.2 web Dashboard
+  canonical mobile first-read quality.
+- First/next checkpoint: completed a CSS-only Dashboard signal pass. Dashboard
+  signal values now use UI tabular numerals, and mobile hero signal cards keep
+  label/value/detail while dropping decorative wave and third-line note noise
+  from the first-read card treatment.
+- Stop conditions: next work should pick one exact route/screenshot mismatch
+  or make a content/data decision before changing canonical copy, icon glyphs,
+  fixture content, or backend-backed labels.
+- Parent validation gate: web build, focused `/dashboard`
+  desktop/tablet/mobile screenshot gate, full route smoke, navigation proof,
+  account proof, `git diff --check`, screenshot review, and cleanup check.
+
+## PRJ-1251 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Locke and completed read-only
+  - QA lane delegated to Turing and completed read-only
+  - coordinator implemented the route-local CSS patch and final proof
+- Implementation:
+  - Dashboard signal values now use UI tabular numerals instead of display
+    serif styling, so `1` and `0 / 0` read as clear numbers
+  - mobile Dashboard signal cards are lighter, shorter, and less decorative;
+    all six supported signal cards remain visible
+- Validation:
+  - `npm run build` PASS
+  - focused `/dashboard` screenshot gate across desktop/tablet/mobile PASS:
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+  - cleanup found no Personality route-smoke, Vite/dev-server, 5173/4173
+    listener, temp route-smoke/chat-transcript profile, or headless browser
+    leftovers; unrelated Vite processes from `Obiekty` were left untouched
+- Residual:
+  - This is a verified mobile first-read hierarchy pass, not a full
+    pixel-perfect Dashboard parity claim. Exact icon/content/copy parity
+    remains a separate content/data decision.
+- Artifacts:
+  - `.codex/tasks/PRJ-1251-dashboard-mobile-hero-signal-quieting.md`
+  - `.codex/artifacts/prj1251-dashboard-mobile-hero-signal-quieting/report.json`
+  - `.codex/artifacts/prj1251-dashboard-mobile-hero-signal-quieting/navigation-proof.json`
+  - `.codex/artifacts/prj1251-dashboard-mobile-hero-signal-quieting/account-proof.json`
+  - `.codex/artifacts/prj1251-dashboard-mobile-hero-signal-quieting/screenshots/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1250-chat-source-marker-quieting
 - Status: VERIFIED
 - Selected objective: keep Chat's `App` / `Telegram` transcript source marker
