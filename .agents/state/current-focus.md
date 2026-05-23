@@ -4,6 +4,16 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed flagship UI slice is `PRJ-1241`: Dashboard first-viewport
+lock. It keeps Aviary branding, adds no fake data or new components, and makes
+Dashboard read more like one embodied cockpit: stronger central hero, quieter
+metric overlays/right guidance/cognitive flow, and no clipped Reflection row in
+the desktop first viewport. Validation passed with `npm run build`, Dashboard
+screenshot gate across desktop/tablet/mobile (`screenshot_count=3`,
+`failed_count=0`), route smoke (`route_count=14`, `status=ok`), navigation
+proof (`step_count=4`, `failed_count=0`), account proof (`step_count=1`,
+`failed_count=0`, `panel_visible=true`), and `git diff --check`.
+
 The latest completed flagship UI slice is `PRJ-1240`: CSS-only coherence pass
 for Dashboard, Chat, and Personality. It keeps Aviary branding, adds no fake
 data or new components, and improves Dashboard scene authority, Chat persona

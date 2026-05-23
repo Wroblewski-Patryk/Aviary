@@ -6,6 +6,37 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1241` completed a Dashboard first-viewport lock:
+  - task:
+    - `.codex/tasks/PRJ-1241-dashboard-first-viewport-lock.md`
+  - result:
+    - tuned Dashboard only, with no new components, fake data, backend
+      behavior, shared-shell change, or branding rename
+    - strengthened the central scenic hero as the first-read anchor
+    - quieted metric overlays, the guidance rail, and cognitive-flow material
+      so they support the hero instead of competing with it
+    - removed a clipped lower Reflection row from the first viewport by showing
+      a clean visible subset
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - Dashboard screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`
+    - route smoke -> `route_count=14`, `status=ok`
+    - `npm run audit:ui-navigation` -> PASS, `step_count=4`,
+      `failed_count=0`
+    - account proof -> PASS, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+  - artifacts:
+    - `.codex/artifacts/prj1241-dashboard-first-viewport/report.json`
+    - `.codex/artifacts/prj1241-dashboard-first-viewport/route-smoke-report.json`
+    - `.codex/artifacts/prj1241-dashboard-first-viewport/account-proof.json`
+    - `.codex/artifacts/prj1241-dashboard-first-viewport/screenshots/`
+  - residual:
+    - this is a verified Dashboard first-viewport lock, not full pixel-perfect
+      parity; remaining Dashboard work should target exact hero connector and
+      metric geometry.
+
 - 2026-05-23: `PRJ-1240` completed a flagship coherence pass:
   - task:
     - `.codex/tasks/PRJ-1240-flagship-coherence-pass.md`

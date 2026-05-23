@@ -4,6 +4,23 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue Dashboard canonical parity from `PRJ-1241`:
+   - task:
+     `.codex/tasks/PRJ-1241-dashboard-first-viewport-lock.md`
+   - result:
+     Dashboard first viewport now has a stronger scenic hero, quieter metric
+     overlays/right guidance/cognitive flow, and no clipped lower Reflection
+     row
+   - proof:
+     `npm run build` PASS; Dashboard screenshot gate across
+     desktop/tablet/mobile PASS with `screenshot_count=3`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; navigation proof
+     `step_count=4`, `failed_count=0`; account proof `step_count=1`,
+     `failed_count=0`, `panel_visible=true`
+   - next smallest useful choice:
+     tune exact Dashboard hero connector/metric geometry, or switch to one
+     separate single-surface checkpoint for Chat or Personality
+
 1. Continue flagship canonical parity from `PRJ-1240`:
    - task:
      `.codex/tasks/PRJ-1240-flagship-coherence-pass.md`

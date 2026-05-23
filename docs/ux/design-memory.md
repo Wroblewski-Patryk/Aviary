@@ -1,5 +1,18 @@
 # Design Memory
 
+## 2026-05-23 - Dashboard first viewport lock
+
+- Dashboard canonical convergence should make the hero read as the one primary
+  cockpit scene. Metric overlays and the right guidance rail should support it
+  with lighter material, not compete as equal card systems.
+- The cognitive-flow band works best as a diagrammatic bridge between hero and
+  data, with soft capsules and a compact current-phase panel instead of a
+  heavy product-control strip.
+- If a first-viewport data card cannot show every row without clipping, prefer
+  a clean visible subset over a half-visible fourth row. Preserve the complete
+  data path for a later/detail surface instead of making the first viewport
+  noisier.
+
 ## 2026-05-23 - Flagship coherence pass
 
 - When Dashboard, Chat, and Personality are tuned together, prefer a CSS-only

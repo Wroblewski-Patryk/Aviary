@@ -4,6 +4,35 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1241` is DONE:
+  - `.codex/tasks/PRJ-1241-dashboard-first-viewport-lock.md`
+- objective:
+  - lock the Dashboard first viewport closer to the canonical embodied cockpit
+    without adding controls, fake data, new cards, or shell changes
+- current result:
+  - Dashboard central hero has stronger first-read authority
+  - metric overlays, right guidance, and cognitive flow are quieter and less
+    control-heavy
+  - the lower Reflection card no longer shows a clipped fourth row in the
+    desktop first viewport
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - Dashboard screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`
+  - route smoke -> `route_count=14`, `status=ok`
+  - `npm run audit:ui-navigation` -> PASS, `step_count=4`,
+    `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+- residual:
+  - this is a verified first-viewport lock, not a full pixel-perfect parity
+    claim; exact hero connector/metric geometry remains the next Dashboard
+    micro-slice
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1240` is DONE:
   - `.codex/tasks/PRJ-1240-flagship-coherence-pass.md`
 - objective:

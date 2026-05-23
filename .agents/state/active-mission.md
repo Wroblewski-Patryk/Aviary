@@ -9,27 +9,63 @@ repository history.
 
 ## Current Mission
 
-- Mission ID: PRJ-1240-flagship-coherence-pass
+- Mission ID: PRJ-1241-dashboard-first-viewport-lock
 - Status: VERIFIED
-- Selected objective: continue the v1.2 flagship convergence loop with the
-  smallest low-risk CSS patch that improves visual coherence across Dashboard,
-  Chat, and Personality after PRJ-1239.
-- Why this mission now: the user asked the coordinator team to keep working
-  until the UX/UI is beautiful and coherent, and PRJ-1239 evidence still left
-  card-proportion and persona-overlay drift.
+- Selected objective: lock the Dashboard first viewport closer to the
+  canonical embodied cockpit without adding controls, fake data, new cards, or
+  shared-shell changes.
+- Why this mission now: the user asked the coordinator team to keep pushing
+  UX/UI coherence, and PRJ-1240 evidence left Dashboard as the clearest
+  remaining first-viewport mismatch.
 - Release objective or product milestone advanced: v1.2 web UI canonical
-  fidelity for Dashboard, Chat, and Personality as the mobile-app foundation.
-- First/next checkpoint: completed a CSS-only coherence pass. Dashboard now
-  gives the scenic hero stronger first-read authority with quieter metric
-  overlays; Chat reduces persona-stage overlay weight while keeping the
-  canonical conversation/persona split; Personality keeps the embodied map
-  but with calmer callouts and side-panel density.
+  fidelity for Dashboard as the mobile-app foundation.
+- First/next checkpoint: completed a Dashboard CSS pass. The central hero now
+  has stronger first-read authority, metric overlays and right guidance are
+  quieter, cognitive flow reads as a lighter bridge, and the lower Reflection
+  card no longer shows a clipped row.
 - Stop conditions: next checkpoint should remain screenshot-specific; do not
-  rename Aviary to AION/Prometheus without product decision, and do not add
-  new data/components merely to mimic static reference content.
-- Parent validation gate: web build, focused three-route desktop/tablet/mobile
-  screenshot gate, navigation proof, account proof, visual screenshot review,
-  Browser/IAB attempt and closure, and cleanup check.
+  rename Aviary to AION/Prometheus without product decision, do not add new
+  data/components merely to mimic static reference content, and do not reopen
+  Chat/Personality in the same slice.
+- Parent validation gate: web build, Dashboard desktop/tablet/mobile screenshot
+  gate, full route smoke, navigation proof, account proof, visual screenshot
+  review, and cleanup check.
+
+## PRJ-1241 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Parfit and completed read-only
+  - QA/responsive lane delegated to Aristotle and completed read-only
+  - coordinator implemented the route-local Dashboard CSS patch and final proof
+- Implementation:
+  - Dashboard desktop first viewport gives the scenic hero more room and
+    reduces overlay/card weight
+  - guidance rail rows are lighter and less competitive with the hero
+  - cognitive flow is more diagrammatic and less like a heavy control strip
+  - lower Reflection card shows a clean visible subset instead of a clipped
+    fourth row
+- Validation:
+  - `npm run build` PASS
+  - Dashboard screenshot gate across desktop/tablet/mobile PASS:
+    `screenshot_count=3`, `failed_count=0`
+  - full route smoke PASS: `route_count=14`, `status=ok`
+  - `npm run audit:ui-navigation` PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+- Residual:
+  - This is a verified first-viewport lock, not full pixel-perfect parity.
+    Remaining Dashboard work should focus on exact hero connector/metric
+    geometry.
+- Artifacts:
+  - `.codex/tasks/PRJ-1241-dashboard-first-viewport-lock.md`
+  - `.codex/artifacts/prj1241-dashboard-first-viewport/report.json`
+  - `.codex/artifacts/prj1241-dashboard-first-viewport/route-smoke-report.json`
+  - `.codex/artifacts/prj1241-dashboard-first-viewport/account-proof.json`
+  - `.codex/artifacts/prj1241-dashboard-first-viewport/screenshots/`
+
+## Previous Mission
 
 ## PRJ-1240 Current Evidence
 

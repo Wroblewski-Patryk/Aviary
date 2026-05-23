@@ -46,6 +46,19 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1241` completes a verified Dashboard first-viewport lock for
+  `AVIARY-WEB-RESP-001`: the desktop Dashboard hero now has stronger first-read
+  authority, metric overlays and right guidance are quieter, cognitive flow
+  reads more like a light bridge, and the lower Reflection card no longer shows
+  a clipped row. No new components, fake data, backend contracts, shell changes,
+  or branding rename were introduced. Evidence: `npm run build` PASS;
+  Dashboard screenshot gate across desktop/tablet/mobile returned
+  `screenshot_count=3`, `failed_count=0`; full route smoke returned
+  `route_count=14`, `status=ok`; navigation proof returned `step_count=4`,
+  `failed_count=0`; account proof returned `step_count=1`, `failed_count=0`,
+  `panel_visible=true`; `git diff --check` passed with LF/CRLF warning only.
+  This is a verified first-viewport lock, not full pixel-perfect parity.
+
 - `PRJ-1240` completes a verified coherence checkpoint for
   `AVIARY-WEB-RESP-001`: Dashboard, Chat, and Personality received a CSS-only
   proportion/material pass with no new components, fake data, backend
