@@ -4,6 +4,24 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue Dashboard canonical parity from `PRJ-1239`:
+   - task:
+     `.codex/tasks/PRJ-1239-flagship-canonical-fidelity.md`
+   - result:
+     Dashboard, Chat, and Personality no longer render the extra desktop
+     utility header above the flagship scene; Chat is tighter against the v5
+     60/40 canonical target; Personality's overview header is quieter and the
+     embodied map dominates the first viewport
+   - proof:
+     `npm run build` PASS; focused route screenshot gate for `/dashboard`,
+     `/chat`, `/personality` across desktop/tablet/mobile PASS with
+     `screenshot_count=9`, `failed_count=0`; route smoke `route_count=14`,
+     `status=ok`; navigation proof `failed_count=0`; account proof
+     `panel_visible=true`
+   - next smallest useful choice:
+     tune exact Dashboard card proportions/copy density and then rerun the
+     same three-route canonical comparison gate
+
 1. Continue v1.2 UI simplification from `PRJ-1238`:
    - task:
      `.codex/tasks/PRJ-1238-shared-shell-noise-reduction.md`

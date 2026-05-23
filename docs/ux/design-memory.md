@@ -1,5 +1,25 @@
 # Design Memory
 
+## 2026-05-23 - Flagship canonical frame correction
+
+- Dashboard, Chat, and Personality should start from their route-owned
+  canonical scene on desktop. Do not place a second shared utility header above
+  these three flagship surfaces unless it has real behavior and the screenshot
+  target calls for it.
+- Chat v5 convergence depends more on the frame and proportions than on extra
+  ornament: keep the six-card cognitive belt compact, maintain the 60/40
+  transcript/persona body, and treat persona-stage overlays as pinned context,
+  not large product cards.
+- Personality should let the embodied map and right layer panels dominate.
+  Route overview copy belongs in a quiet header, not a separate heavy card that
+  competes with the figure.
+- Dashboard should not fill first-viewport balance problems by adding another
+  card. If a secondary panel creates a large void against the right rail,
+  demote or move that secondary panel before introducing new visible groups.
+- Canonical images that show `AION`, `Prometheus`, or browser-presentation
+  controls are visual references only. Keep the product brand as `Aviary`
+  until a product decision approves a rename.
+
 ## 2026-05-23 - Shared shell noise reduction
 
 - Desktop utility chrome should not expose fake search, quick-capture,

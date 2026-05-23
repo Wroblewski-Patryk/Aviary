@@ -2505,3 +2505,21 @@ fixes for this repository.
 - Evidence:
   - `.codex/tasks/PRJ-1211-chat-response-readability-and-height.md`
   - `web/scripts/route-smoke.mjs`
+
+### 2026-05-23 - Build and route-smoke must not run against the same dist in parallel
+
+- Context: PRJ-1239 flagship canonical-fidelity validation.
+- Symptom: `npm run build` passed, but a simultaneously started route-smoke
+  run failed with `ENOENT ... web\dist\index.html`.
+- Root cause: Vite rebuilds the `dist` directory while route-smoke serves from
+  it, so the consumer can observe a transient missing `index.html`.
+- Guardrail: run `npm run build` to completion before any route-smoke command
+  that serves `web/dist`.
+- Preferred pattern:
+  - `npm run build`
+  - then `node scripts/route-smoke.mjs ...`
+- Avoid:
+  - parallelizing build output producers with screenshot/navigation/account
+    proof consumers that read the same `dist` tree
+- Evidence:
+  - `.codex/tasks/PRJ-1239-flagship-canonical-fidelity.md`

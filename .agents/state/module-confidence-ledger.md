@@ -46,6 +46,22 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1239` completes the first flagship canonical-fidelity checkpoint for
+  `AVIARY-WEB-RESP-001`: Dashboard, Chat, and Personality no longer render the
+  extra desktop utility header above the route-owned flagship scene; Chat is
+  tighter against the v5 canonical target with compact belt cards, taller
+  workspace, closer 60/40 transcript/persona split, and smaller persona
+  overlays; Personality's overview card is demoted into a quiet header so the
+  embodied map and side layer panels dominate; Dashboard's secondary desktop
+  recent-activity panel is hidden from the first viewport to remove the large
+  mid-page void before the summary band. Evidence: `npm run build` PASS;
+  focused screenshot gate for `/dashboard`, `/chat`, `/personality` across
+  desktop/tablet/mobile returned `screenshot_count=9`, `failed_count=0`; route
+  smoke returned `route_count=14`, `status=ok`; navigation proof returned
+  `step_count=4`, `failed_count=0`; account proof returned `step_count=1`,
+  `failed_count=0`, `panel_visible=true`. Dashboard, Chat, and Personality
+  still need exact card-proportion/copy-density parity before claiming 95%.
+
 - `PRJ-1236` completes a local auth and Settings accessibility polish
   checkpoint for `AVIARY-WEB-RESP-001`: auth modal mode controls now use
   segmented button semantics with `aria-pressed` instead of an incomplete

@@ -9,6 +9,71 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1239-flagship-canonical-fidelity
+- Status: VERIFIED_CHECKPOINT
+- Selected objective: answer the user's canonical screenshot feedback by
+  moving Dashboard, Chat, and Personality from style-inspired variants toward
+  the approved canonical references.
+- Why this mission now: the user correctly identified that the PRJ-1238
+  screens still looked like different views with similar motifs, not convergent
+  canonical screens.
+- Release objective or product milestone advanced: v1.2 web UI canonical
+  fidelity for the three flagship authenticated surfaces.
+- First/next checkpoint: completed first fidelity checkpoint. Chat now starts
+  directly from the canonical conversation scene, Dashboard/Personality no
+  longer render the extra desktop utility header above the route scene, and
+  Personality's overview header is lighter so the embodied map dominates.
+- Stop conditions: next checkpoint should focus Dashboard primary-column
+  height/right-rail balance before claiming 95% parity; do not rename Aviary to
+  AION/Prometheus without product decision.
+- Parent validation gate: web build, 3-route desktop/tablet/mobile screenshot
+  gate, navigation proof, account proof, screenshot review, and cleanup check.
+
+## PRJ-1239 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - visual parity audit lane delegated to Confucius and completed
+  - implementation mapping lane delegated to Aquinas and completed
+  - coordinator integrated the first canonical frame/proportion slice
+- Implementation:
+  - desktop Dashboard, Chat, and Personality no longer render the extra
+    `ShellUtilityBar` above the route scene
+  - route-stage spacing is collapsed for the three flagship routes so the
+    canonical surface starts immediately after the sidebar shell
+  - Chat workspace is taller and tighter, with compact cognitive belt cards,
+    a closer 60/40 body split, tighter transcript/composer spacing, and smaller
+    persona-stage overlays
+  - Personality overview bar is demoted from a large card to a quieter header,
+    giving the embodied map and side layers stronger first-viewport priority
+  - Dashboard desktop first viewport hides the secondary recent-activity panel
+    so the hero, flow, lower cards, and right guidance rail no longer create a
+    large mid-page void
+- Validation:
+  - `npm run build` PASS
+  - focused route screenshot gate for `/dashboard`, `/chat`, `/personality`
+    across desktop/tablet/mobile PASS: `screenshot_count=9`, `failed_count=0`
+  - route smoke PASS: `route_count=14`, `status=ok`
+  - `npm run audit:ui-navigation` PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - Browser plugin rendered inspection was unavailable through tool discovery;
+    route-smoke screenshots are the rendered proof for this checkpoint
+- Residual:
+  - Dashboard is improved but still needs finer canonical tuning for exact
+    card proportions and reference-copy density before a strong 95% parity
+    claim.
+  - Product branding remains `Aviary`; canonical screenshots containing
+    `AION` or `Prometheus` are treated as visual references, not rename
+    approvals.
+- Artifacts:
+  - `.codex/tasks/PRJ-1239-flagship-canonical-fidelity.md`
+  - `.codex/artifacts/prj1239-flagship-canonical-fidelity/report.json`
+  - `.codex/artifacts/prj1239-flagship-canonical-fidelity/account-proof.json`
+  - `.codex/artifacts/prj1239-flagship-canonical-fidelity/screenshots/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1238-shared-shell-noise-reduction
 - Status: COMPLETED
 - Selected objective: execute the first implementation slice from the

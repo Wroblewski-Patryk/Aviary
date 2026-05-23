@@ -6,6 +6,46 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1239` completed the first flagship canonical-fidelity
+  checkpoint:
+  - task:
+    - `.codex/tasks/PRJ-1239-flagship-canonical-fidelity.md`
+  - result:
+    - removed the extra desktop utility header above Dashboard, Chat, and
+      Personality so flagship route content starts directly from the canonical
+      scene instead of a second shell header
+    - tightened Chat toward the canonical v5 screen with a taller workspace,
+      compact cognitive belt, closer 60/40 transcript/persona split, tighter
+      transcript/composer rhythm, and smaller persona-stage overlays
+    - demoted Personality's overview card into a calmer header so the embodied
+      figure map and side-layer panels carry the first viewport
+    - hid the secondary desktop Dashboard recent-activity panel from the first
+      viewport to remove the large mid-page gap before the summary band without
+      adding another card
+    - preserved `Aviary` as the product brand; `AION`/`Prometheus` text in
+      references remains visual context until a product rename is approved
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - focused route screenshot gate for `/dashboard`, `/chat`, `/personality`
+      across desktop/tablet/mobile -> `screenshot_count=9`,
+      `failed_count=0`
+    - route smoke -> `route_count=14`, `status=ok`
+    - `npm run audit:ui-navigation` -> PASS, `step_count=4`,
+      `failed_count=0`
+    - account proof -> PASS, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+  - artifacts:
+    - `.codex/artifacts/prj1239-flagship-canonical-fidelity/report.json`
+    - `.codex/artifacts/prj1239-flagship-canonical-fidelity/account-proof.json`
+    - `.codex/artifacts/prj1239-flagship-canonical-fidelity/screenshots/`
+  - residual:
+    - Dashboard is much closer after the header/frame correction and
+      first-viewport balance slice, but exact card proportions and copy density
+      still need a later screenshot parity pass before claiming 95%.
+  - release boundary:
+    - this is a verified local web canonical-fidelity checkpoint on `main`
+    - production deployment still requires deploy parity proof
+
 - 2026-05-23: `PRJ-1238` completed the shared-shell noise reduction pass:
   - task:
     - `.codex/tasks/PRJ-1238-shared-shell-noise-reduction.md`

@@ -10,6 +10,7 @@ process, not only the code.
 | AEV-001 | 2026-05-22 | PRJ-1230 | 4 | 4 | 4 | 5 | 4 | The first web validation attempt exposed that the fallback browser harness proof was weaker than the Playwright path. | Keep coordinator-owned parent validation local, but require every delegated QA gate to name fallback proof assumptions and auth/async marker coverage. | closed |
 | AEV-002 | 2026-05-23 | PRJ-1237 | 4 | 3 | 4 | 3 | 4 | The UX/reference lane returned useful taxonomy, but the architecture/data lane was too broad and timed out before producing an independent route-to-API report. | For future planning missions, split read-only lanes into smaller first deliverables with a hard minimum output, especially route-to-API tables before broader commentary. | open |
 | AEV-003 | 2026-05-23 | PRJ-1238 | 5 | 5 | 5 | 4 | 4 | Browser/IAB bootstrap failed after the shell patch, so rendered proof relied on the existing Playwright route-smoke screenshot gate instead of in-app Browser inspection. | Keep Browser as the first rendered-inspection attempt, but record bootstrap failures and proceed with route-smoke screenshots when the Browser runtime is unavailable. | open |
+| AEV-004 | 2026-05-23 | PRJ-1239 | 5 | 5 | 5 | 4 | 5 | The first validation attempt ran build and route-smoke in parallel, causing route-smoke to hit a transient missing `dist/index.html` while Vite rebuilt output. | Do not parallelize destructive/build output producers with consumers of the same `dist` directory; run build before route-smoke screenshot gates. | open |
 
 ## Scoring
 

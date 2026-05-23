@@ -4,6 +4,44 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1239` is VERIFIED_CHECKPOINT:
+  - `.codex/tasks/PRJ-1239-flagship-canonical-fidelity.md`
+- objective:
+  - respond to canonical screenshot feedback by making Dashboard, Chat, and
+    Personality structurally closer to their approved references rather than
+    merely sharing a similar visual style
+- current result:
+  - coordinated read-only visual parity and implementation-mapping lanes
+  - removed the extra desktop utility header above Dashboard, Chat, and
+    Personality so each flagship route starts from its own canonical scene
+  - tightened Chat toward the v5 target with compact cognitive belt cards,
+    a taller workspace, closer 60/40 transcript/persona split, tighter
+    transcript/composer spacing, and smaller persona-stage overlays
+  - demoted Personality's overview card into a quiet header so the embodied
+    map and side-layer panels dominate the first viewport
+  - hid the secondary desktop Dashboard recent-activity panel from the first
+    viewport to remove the large blank gap before the summary band without
+    adding another card
+  - kept product branding as `Aviary`; canonical `AION`/`Prometheus` labels
+    are not treated as rename approval
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - focused route screenshot gate for `/dashboard`, `/chat`, `/personality`
+    across desktop/tablet/mobile -> `screenshot_count=9`, `failed_count=0`
+  - route smoke -> `route_count=14`, `status=ok`
+  - `npm run audit:ui-navigation` -> PASS, `step_count=4`,
+    `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - Browser plugin rendered inspection was unavailable through tool discovery;
+    route-smoke screenshots remain the rendered proof
+- residual:
+  - Dashboard still needs exact card-proportion/copy-density tuning before a
+    strong 95% screenshot parity claim
+- release boundary:
+  - this is a verified local web canonical-fidelity checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1238` is DONE:
   - `.codex/tasks/PRJ-1238-shared-shell-noise-reduction.md`
 - objective:
