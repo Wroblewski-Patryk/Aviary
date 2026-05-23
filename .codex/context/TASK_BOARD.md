@@ -4,6 +4,38 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1255` is DONE:
+  - `.codex/tasks/PRJ-1255-chat-desktop-persona-overlay-placement.md`
+- objective:
+  - make desktop Chat's Planning overlay read as a persona-stage annotation
+    instead of a transcript-facing lower-left label
+- current result:
+  - desktop/tablet Chat now place the Planning overlay at the lower-right of
+    the portrait stage, below the channel annotation
+  - mobile Chat keeps its previous overlay placement through an explicit
+    responsive reset
+  - no transcript, composer, source marker, cognitive belt, backend data,
+    Dashboard, or Personality behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - focused `/chat` screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - `npm run test:chat-transcript` -> `status=ok`, `appSourceCount=2`,
+    `telegramSourceCount=2`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - cleanup check -> no validation-owned node/Vite, 5173/4173 listener,
+    Chromium, or headless browser leftovers; three fresh route-smoke temp
+    profiles from this checkpoint were removed
+- residual:
+  - this is a verified Chat overlay placement pass, not a full Chat 95% parity
+    claim
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1254` is DONE:
   - `.codex/tasks/PRJ-1254-personality-mobile-timeline-rail.md`
 - objective:

@@ -6,6 +6,34 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1255` completed a Chat desktop persona-stage overlay
+  placement pass:
+  - task:
+    - `.codex/tasks/PRJ-1255-chat-desktop-persona-overlay-placement.md`
+  - result:
+    - moved Chat's `Planning / Conversation continuity` overlay from the
+      transcript-facing lower-left edge to the lower-right persona-stage
+      annotation zone
+    - preserved transcript, composer, source markers, cognitive belt, mobile
+      rail, backend data, Dashboard, and Personality behavior
+    - changed only route-local CSS in `web/src/index.css`
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - focused `/chat` screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+    - `npm run test:chat-transcript` -> `status=ok`, `appSourceCount=2`,
+      `telegramSourceCount=2`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - cleanup check -> no validation-owned node/Vite, 5173/4173 listener,
+      Chromium, or headless browser leftovers; three fresh route-smoke temp
+      profiles from this checkpoint were removed
+  - residual:
+    - full Chat 95% pixel parity, exact canonical icon metaphors, fixture
+      copy, and richer content/data alignment remain separate decisions
+
 - 2026-05-23: `PRJ-1254` completed a Personality mobile timeline rail pass:
   - task:
     - `.codex/tasks/PRJ-1254-personality-mobile-timeline-rail.md`

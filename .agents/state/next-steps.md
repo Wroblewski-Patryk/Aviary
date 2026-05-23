@@ -4,23 +4,26 @@ Last updated: 2026-05-23
 
 ## NOW
 
-1. Continue Chat persona-stage canonical placement from Faraday's `PRJ-1254`
-   UX lane:
-   - candidate task:
-     `PRJ-1255-chat-desktop-persona-overlay-placement`
-   - source:
-     Faraday read-only UX parity lane after `PRJ-1254`
-   - objective:
-     move the desktop Chat `Planning / Conversation continuity` persona-stage
-     overlay away from the transcript-facing lower-left edge and closer to the
-     canonical right/bottom-side annotation composition
-   - constraints:
-     no cognitive belt density changes, transcript layout, composer behavior,
-     source markers, fixture copy, backend data, mobile Chat rail, Dashboard,
-     or Personality changes
+1. Continue from verified `PRJ-1255`:
+   - task:
+     `.codex/tasks/PRJ-1255-chat-desktop-persona-overlay-placement.md`
+   - result:
+     desktop/tablet Chat now place the `Planning / Conversation continuity`
+     overlay as a lower-right persona-stage annotation instead of a
+     transcript-facing lower-left label
    - proof:
-     `npm run build`; focused `/chat` screenshot gate across
-     desktop/tablet/mobile; `npm run test:chat-transcript`; cleanup checks
+     `npm run build` PASS; Chat screenshot gate across desktop/tablet/mobile
+     PASS with `screenshot_count=3`, `failed_count=0`, `route_count=14`,
+     `status=ok`; `npm run test:chat-transcript` PASS with `status=ok`,
+     `appSourceCount=2`, `telegramSourceCount=2`; navigation proof
+     `step_count=4`, `failed_count=0`; account proof `step_count=1`,
+     `failed_count=0`, `panel_visible=true`; `git diff --check` PASS with
+     LF/CRLF warning only; cleanup found no validation-owned leftovers and
+     removed three fresh route-smoke temp profiles
+   - next smallest useful choice:
+     pick one exact remaining screenshot mismatch on one route only, or make a
+     content/data decision before changing canonical copy, icon glyphs, source
+     labels, or route-smoke fixture content
 
 1. Continue Personality mobile canonical usability from `PRJ-1254`:
    - task:

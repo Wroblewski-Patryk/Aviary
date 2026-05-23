@@ -9,6 +9,69 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1255-chat-desktop-persona-overlay-placement
+- Status: VERIFIED
+- Selected objective: place desktop Chat's Planning overlay as a lower-right
+  persona-stage annotation instead of a transcript-facing lower-left label.
+- Why this mission now: `PRJ-1254` left Chat overlay placement as the next
+  concrete screenshot-backed mismatch from the UX parity lane, and Pascal
+  confirmed it should stay a CSS-only placement slice.
+- Release objective or product milestone advanced: v1.2 web Chat canonical
+  desktop/tablet persona-stage composition.
+- First/next checkpoint: completed a CSS-only Chat portrait overlay placement
+  pass. The overlay now sits on the right/bottom side of the persona stage,
+  below the channel annotation, while mobile keeps its existing placement.
+- Stop conditions: next work should pick one exact route/screenshot mismatch
+  or make a content/data decision before changing canonical copy, icon glyphs,
+  route-smoke fixture content, or backend-backed labels.
+- Parent validation gate: web build, focused `/chat` desktop/tablet/mobile
+  screenshot gate, `test:chat-transcript`, navigation proof, account proof,
+  screenshot review, cleanup check, and `git diff --check`.
+
+## PRJ-1255 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Pascal and completed read-only
+  - QA lane delegated to Parfit and completed read-only
+  - coordinator implemented the route-local CSS patch and final proof
+- Implementation:
+  - Chat Planning overlay now uses lower-right portrait-stage placement on
+    desktop/tablet instead of the transcript-facing lower-left edge
+  - mobile Chat keeps its previous overlay placement through an explicit
+    `right: auto` override
+  - transcript, composer, source markers, cognitive belt, backend data,
+    Dashboard, and Personality were not changed
+- Validation:
+  - `npm run build` PASS
+  - focused `/chat` screenshot gate across desktop/tablet/mobile PASS:
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - `npm run test:chat-transcript` PASS: `status=ok`,
+    `appSourceCount=2`, `telegramSourceCount=2`
+  - navigation proof PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+  - cleanup found no validation-owned node/Vite, 5173/4173 listener,
+    Chromium, or headless browser leftovers; three fresh route-smoke temp
+    profiles from this checkpoint were removed
+- Residual:
+  - This is a verified Chat overlay placement pass, not a full 95% pixel
+    parity claim. Exact canonical icon metaphors, fixture copy, and richer
+    data values remain separate content/data decisions.
+- Next recommended checkpoint:
+  - Pick one exact remaining screenshot mismatch on one route, or make a
+    content/data decision before changing canonical copy, icon glyphs,
+    route-smoke fixture content, or backend-backed labels.
+- Artifacts:
+  - `.codex/tasks/PRJ-1255-chat-desktop-persona-overlay-placement.md`
+  - `.codex/artifacts/prj1255-chat-desktop-persona-overlay/report.json`
+  - `.codex/artifacts/prj1255-chat-desktop-persona-overlay/navigation-proof.json`
+  - `.codex/artifacts/prj1255-chat-desktop-persona-overlay/account-proof.json`
+  - `.codex/artifacts/prj1255-chat-desktop-persona-overlay/screenshots/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1254-personality-mobile-timeline-rail
 - Status: VERIFIED
 - Selected objective: make mobile Personality's Mind Layers Timeline read like
@@ -55,13 +118,6 @@ repository history.
   - This is a verified mobile timeline hierarchy pass, not a full 95% pixel
     parity claim. Exact canonical icon glyphs and richer data values remain
     separate content/data decisions.
-- Next recommended checkpoint:
-  - Faraday UX lane recommends Chat desktop persona-stage overlay placement:
-    move the `Planning / Conversation continuity` overlay away from the
-    transcript-facing lower-left edge and closer to canonical right/bottom-side
-    annotation composition without changing transcript, composer, source
-    markers, cognitive belt, mobile rail, backend data, Dashboard, or
-    Personality.
 - Artifacts:
   - `.codex/tasks/PRJ-1254-personality-mobile-timeline-rail.md`
   - `.codex/artifacts/prj1254-personality-mobile-timeline-rail/report.json`

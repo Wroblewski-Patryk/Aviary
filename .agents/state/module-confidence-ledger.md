@@ -46,6 +46,21 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1255` completes a verified Chat desktop/tablet persona-stage overlay
+  placement pass for `AVIARY-WEB-RESP-001`: the Planning overlay now reads as
+  a lower-right portrait-stage annotation instead of a transcript-facing
+  lower-left label, while mobile placement, transcript, composer, source
+  markers, cognitive belt, and backend data remain unchanged. Evidence:
+  `npm run build` passed; focused `/chat` screenshot gate returned
+  `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`;
+  `npm run test:chat-transcript` returned `status=ok`, `appSourceCount=2`,
+  `telegramSourceCount=2`; navigation proof returned `step_count=4`,
+  `failed_count=0`; account proof returned `step_count=1`, `failed_count=0`,
+  `panel_visible=true`; `git diff --check` passed with LF/CRLF warning only;
+  cleanup found no validation-owned node/Vite, 5173/4173 listener, Chromium,
+  or headless browser leftovers and removed three fresh route-smoke temp
+  profiles from this checkpoint.
+
 - `PRJ-1254` completes a verified Personality mobile timeline rail pass for
   `AVIARY-WEB-RESP-001`: mobile Mind Layers Timeline now uses compact token,
   signal-track, and value-chip rows instead of a tall text list while all six

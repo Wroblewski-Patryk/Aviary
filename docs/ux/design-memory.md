@@ -655,3 +655,18 @@
   canonical target requires a compact first-scroll rhythm.
 - Keep desktop and tablet timeline behavior separate unless fresh screenshots
   show the same rail compression is needed there.
+
+## 2026-05-23 - Chat desktop persona-stage overlay placement
+
+- Chat persona-stage overlays should sit inside the portrait composition,
+  preferably on the right/bottom annotation side, rather than on the
+  transcript-facing edge.
+- Preserve the existing portrait annotation set and backend-backed values when
+  correcting placement; do not add or remove callouts for a placement-only
+  mismatch.
+- When changing desktop absolute positioning, explicitly verify tablet and
+  mobile overrides so the desktop `right`/`bottom` relationship does not leak
+  into the mobile portrait rail.
+- Keep transcript, composer, source markers, and cognitive-belt hierarchy out
+  of overlay placement slices unless fresh screenshot evidence shows a direct
+  collision.

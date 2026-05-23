@@ -4,6 +4,19 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed Chat UI slice is `PRJ-1255`: desktop persona-stage
+overlay placement. It keeps ChatPortraitPanel data and markup intact, but moves
+the `Planning / Conversation continuity` overlay from the transcript-facing
+lower-left edge to the lower-right portrait-stage annotation zone on
+desktop/tablet, while mobile keeps its previous placement. Validation passed
+with `npm run build`, focused `/chat` desktop/tablet/mobile screenshot gate
+(`screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`),
+`npm run test:chat-transcript` (`status=ok`, `appSourceCount=2`,
+`telegramSourceCount=2`), navigation proof (`step_count=4`,
+`failed_count=0`), account proof (`step_count=1`, `failed_count=0`,
+`panel_visible=true`), `git diff --check`, screenshot review, and cleanup
+checks.
+
 The latest completed Personality UI slice is `PRJ-1254`: mobile Mind Layers
 Timeline rail. It keeps all six supported layers and backend-backed values
 visible, but converts the mobile section from a tall text list into a compact
