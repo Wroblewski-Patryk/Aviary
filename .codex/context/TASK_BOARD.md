@@ -4,6 +4,35 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1252` is DONE:
+  - `.codex/tasks/PRJ-1252-personality-mobile-callout-map-quieting.md`
+- objective:
+  - make mobile Personality hero callouts feel like compact embodied-map
+    annotations instead of heavy metric cards over the figure
+- current result:
+  - mobile Personality callouts are smaller, lighter, and less card-like
+  - `Planning` no longer wraps awkwardly on mobile
+  - all supported callouts and backend-backed values remain visible
+  - no backend data, fixture values, copy, route behavior, component
+    structure, shared shell, Dashboard, or Chat behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - focused `/personality` screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - cleanup check -> no Personality route-smoke, Vite/dev-server,
+    5173/4173 listener, or headless browser leftovers; four fresh
+    route-smoke temp profiles from this checkpoint were removed
+- residual:
+  - this is a verified mobile callout hierarchy pass, not a full Personality
+    95% parity claim
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1251` is DONE:
   - `.codex/tasks/PRJ-1251-dashboard-mobile-hero-signal-quieting.md`
 - objective:

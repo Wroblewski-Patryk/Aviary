@@ -46,6 +46,19 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1252` completes a verified Personality mobile callout hierarchy pass
+  for `AVIARY-WEB-RESP-001`: mobile callouts now read as compact
+  embodied-map annotations instead of chunky cards over the figure, `Planning`
+  stays on one line, and all supported backend-backed values remain visible.
+  Evidence: `npm run build` passed; focused `/personality` screenshot gate
+  returned `screenshot_count=3`, `failed_count=0`, `route_count=14`,
+  `status=ok`; navigation proof returned `step_count=4`, `failed_count=0`;
+  account proof returned `step_count=1`, `failed_count=0`,
+  `panel_visible=true`; `git diff --check` passed with LF/CRLF warning only;
+  cleanup found no Personality route-smoke, Vite/dev-server, 5173/4173
+  listener, or headless browser leftovers and removed four fresh route-smoke
+  temp profiles from this checkpoint.
+
 - `PRJ-1251` completes a verified Dashboard mobile hero signal hierarchy pass
   for `AVIARY-WEB-RESP-001`: Dashboard signal values now use UI tabular
   numerals, mobile hero signal cards are quieter and shorter, and all six

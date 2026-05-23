@@ -9,6 +9,64 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1252-personality-mobile-callout-map-quieting
+- Status: VERIFIED
+- Selected objective: make mobile Personality hero callouts feel like compact
+  embodied-map annotations instead of chunky cards over the figure.
+- Why this mission now: after PRJ-1251, Dashboard mobile signals were quieted.
+  Fresh Personality screenshots plus the UX parity lane identified mobile
+  callout card weight and portrait occlusion as the next smallest high-impact
+  canonical mismatch.
+- Release objective or product milestone advanced: v1.2 web Personality
+  canonical mobile first-read quality.
+- First/next checkpoint: completed a CSS-only Personality mobile callout pass.
+  Mobile callouts are smaller, lighter, and placed with more portrait
+  breathing room; `Planning` no longer wraps; all supported callouts remain
+  visible.
+- Stop conditions: next work should pick one exact route/screenshot mismatch
+  or make a content/data decision before changing canonical copy, icon glyphs,
+  route-smoke fixture content, or backend-backed labels.
+- Parent validation gate: web build, focused `/personality`
+  desktop/tablet/mobile screenshot gate, navigation proof, account proof,
+  `git diff --check`, screenshot review, and cleanup check.
+
+## PRJ-1252 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Bacon and completed read-only
+  - QA lane delegated to Nash and completed read-only
+  - coordinator implemented the route-local CSS patch and final proof
+- Implementation:
+  - mobile Personality callouts now use smaller width, padding, type, radius,
+    material, and shadow so they read as annotations rather than cards
+  - lower callouts sit with more figure clearance; `Planning` keeps
+    `0 active goals` on one line
+  - all supported callouts and backend-backed values remain visible
+- Validation:
+  - `npm run build` PASS
+  - focused `/personality` screenshot gate across desktop/tablet/mobile PASS:
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+  - cleanup found no Personality route-smoke, Vite/dev-server, 5173/4173
+    listener, or headless browser leftovers; four fresh route-smoke temp
+    profiles from this checkpoint were removed
+- Residual:
+  - This is a verified mobile callout hierarchy pass, not a full 95% pixel
+    parity claim. Exact icon/content/copy parity remains a separate
+    content/data decision.
+- Artifacts:
+  - `.codex/tasks/PRJ-1252-personality-mobile-callout-map-quieting.md`
+  - `.codex/artifacts/prj1252-personality-mobile-callout-map/report.json`
+  - `.codex/artifacts/prj1252-personality-mobile-callout-map/navigation-proof.json`
+  - `.codex/artifacts/prj1252-personality-mobile-callout-map/account-proof.json`
+  - `.codex/artifacts/prj1252-personality-mobile-callout-map/screenshots/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1251-dashboard-mobile-hero-signal-quieting
 - Status: VERIFIED
 - Selected objective: make mobile Dashboard hero signal cards quieter and make

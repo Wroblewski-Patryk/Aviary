@@ -4,6 +4,16 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed Personality UI slice is `PRJ-1252`: mobile callout map
+quieting. It keeps all supported callouts and backend-backed values visible,
+but makes the mobile annotations smaller, lighter, and less card-like so the
+embodied portrait remains the first-read focus. Validation passed with
+`npm run build`, focused `/personality` desktop/tablet/mobile screenshot gate
+(`screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`),
+navigation proof (`step_count=4`, `failed_count=0`), account proof
+(`step_count=1`, `failed_count=0`, `panel_visible=true`), `git diff --check`,
+screenshot review, and cleanup checks.
+
 The latest completed Dashboard UI slice is `PRJ-1251`: mobile hero signal
 density and numeral clarity. It keeps all six supported Dashboard hero signals
 visible, changes signal values to UI tabular numerals, and removes mobile-only

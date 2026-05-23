@@ -10285,14 +10285,26 @@ body {
 
   .aion-personality-callout,
   .aion-personality-role-card {
-    width: min(7.65rem, calc(50% - 0.5rem));
-    padding: 0.42rem 0.5rem;
+    width: min(6.95rem, calc(50% - 0.46rem));
+    padding: 0.34rem 0.42rem;
+    border-radius: 0.72rem;
+    background: rgba(255, 251, 245, 0.68);
+    box-shadow:
+      0 5px 10px rgba(78, 58, 43, 0.022),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  }
+
+  .aion-personality-callout .font-display,
+  .aion-personality-role-card .font-display {
+    margin-top: 0.24rem !important;
+    font-size: 0.88rem !important;
+    line-height: 1.08;
   }
 
   .aion-personality-callout .text-sm,
   .aion-personality-role-card .text-sm {
-    font-size: 0.68rem !important;
-    letter-spacing: 0.16em;
+    font-size: 0.58rem !important;
+    letter-spacing: 0.18em;
   }
 
   .aion-personality-callout p:nth-of-type(3),
@@ -10302,7 +10314,7 @@ body {
 
   .aion-personality-callout::before,
   .aion-personality-role-card::before {
-    opacity: 0.5;
+    opacity: 0.38;
   }
 
   .aion-personality-callout-identity {
@@ -10314,19 +10326,19 @@ body {
     display: block;
     top: auto;
     left: 0.72rem;
-    bottom: 0.82rem;
-    width: min(7.65rem, calc(50% - 0.5rem));
+    bottom: 1.12rem;
+    width: min(6.95rem, calc(50% - 0.46rem));
   }
 
   .aion-personality-callout-planning {
     top: 0.72rem;
     right: 0.72rem;
-    width: min(7.9rem, calc(50% - 0.5rem));
+    width: min(7.55rem, calc(53% - 0.4rem));
   }
 
   .aion-personality-callout-skills {
-    right: 0.72rem;
-    bottom: 0.82rem;
+    right: 0.68rem;
+    bottom: 1.12rem;
   }
 
   .aion-personality-role-card {

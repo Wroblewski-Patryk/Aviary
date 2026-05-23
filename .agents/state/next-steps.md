@@ -4,6 +4,25 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue Personality mobile canonical usability from `PRJ-1252`:
+   - task:
+     `.codex/tasks/PRJ-1252-personality-mobile-callout-map-quieting.md`
+   - result:
+     mobile Personality callouts now read as compact embodied-map annotations
+     rather than chunky metric cards, `Planning` stays on one line, and all
+     supported backend-backed values remain visible
+   - proof:
+     `npm run build` PASS; Personality screenshot gate across
+     desktop/tablet/mobile PASS with `screenshot_count=3`, `failed_count=0`,
+     `route_count=14`, `status=ok`; navigation proof `step_count=4`,
+     `failed_count=0`; account proof `step_count=1`, `failed_count=0`,
+     `panel_visible=true`; cleanup found no Personality validation-owned
+     process leftovers and removed four fresh route-smoke temp profiles
+   - next smallest useful choice:
+     pick one exact remaining screenshot mismatch on one route only, or make a
+     content/data decision before changing canonical copy, icon glyphs, source
+     labels, or route-smoke fixture content
+
 1. Continue Dashboard mobile canonical usability from `PRJ-1251`:
    - task:
      `.codex/tasks/PRJ-1251-dashboard-mobile-hero-signal-quieting.md`

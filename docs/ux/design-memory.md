@@ -619,3 +619,15 @@
   by interaction proof.
 - This checkpoint supersedes the earlier fixed-bottom mobile nav assumption
   from the Personality clearance slice.
+
+## 2026-05-23 - Personality mobile embodied-map callouts
+
+- On mobile Personality, callouts should read as compact annotations attached
+  to the embodied map, not as a second grid of cards over the portrait.
+- Keep every supported backend-backed callout visible unless a product decision
+  changes the data set; quieting should use width, padding, typography,
+  material, shadow, and placement before removal.
+- Count/value lines should stay readable and preferably single-line in the
+  first viewport, especially `Planning` values such as `0 active goals`.
+- Do not restore the hidden mobile role card or add new route-local callout
+  groups without a product/content decision and fresh screenshot proof.

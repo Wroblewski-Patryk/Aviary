@@ -6,6 +6,32 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1252` completed a Personality mobile callout map quieting pass:
+  - task:
+    - `.codex/tasks/PRJ-1252-personality-mobile-callout-map-quieting.md`
+  - result:
+    - made mobile Personality callouts smaller, lighter, and more
+      annotation-like so the embodied portrait remains the first-read focus
+    - kept `Planning` value text on one line after screenshot review
+    - preserved every supported callout and backend-backed value
+    - changed only route-local CSS in `web/src/index.css`; no backend data,
+      fixture values, route behavior, copy, labels, shared shell, Dashboard,
+      or Chat behavior changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - focused `/personality` screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - cleanup check -> no Personality route-smoke, Vite/dev-server,
+      5173/4173 listener, or headless browser leftovers; four fresh
+      route-smoke temp profiles from this checkpoint were removed
+  - residual:
+    - full Personality 95% pixel parity, exact canonical iconography, and
+      content/copy density remain separate content/data decisions
+
 - 2026-05-23: `PRJ-1251` completed a Dashboard mobile hero signal quieting pass:
   - task:
     - `.codex/tasks/PRJ-1251-dashboard-mobile-hero-signal-quieting.md`
