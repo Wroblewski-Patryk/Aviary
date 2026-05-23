@@ -4,6 +4,25 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue from verified `PRJ-1261`:
+   - task:
+     `.codex/tasks/PRJ-1261-personality-mobile-timeline-map.md`
+   - result:
+     mobile Personality Mind Layers Timeline now reads as a calmer layer map
+     with flatter rows, stronger tokens, inline values, and quieter tracks
+   - proof:
+     `node --check scripts/route-smoke.mjs` PASS; `npm run build` PASS;
+     combined Personality screenshot/navigation/account gate PASS with
+     `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`,
+     navigation `step_count=4`, account `panel_visible=true`; `git diff
+     --check` PASS with LF/CRLF warning only; mobile and desktop screenshots
+     reviewed; cleanup found no validation-owned leftovers and removed two
+     fresh route-smoke temp profiles
+   - next smallest useful choice:
+     pick one exact remaining screenshot mismatch on one route only, or make a
+     content/data decision before changing canonical copy, icon glyphs, source
+     labels, route-smoke fixture content, or richer Personality layer data
+
 1. Continue from verified `PRJ-1260`:
    - task:
      `.codex/tasks/PRJ-1260-chat-cognitive-belt-quieting.md`

@@ -1,5 +1,16 @@
 # Design Memory
 
+## 2026-05-23 - Personality mobile timeline layer map
+
+- Mobile Personality Mind Layers Timeline should read as a compact layer map,
+  not a vertical stack of form-like control rows. Keep all six supported layers
+  and values visible while reducing row card/pill material.
+- Layer values can be inline metadata beside the layer name; avoid separate
+  pill surfaces unless the value is interactive, which these are not.
+- Preserve PRJ-1256 hero callouts/connectors and the side panels during
+  timeline polish. Exact canonical icon glyphs and richer layer values are
+  separate content/data decisions.
+
 ## 2026-05-23 - Chat cognitive belt quieting
 
 - Chat's top cognitive belt is conversation context, not a dashboard control

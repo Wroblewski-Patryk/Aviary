@@ -4,6 +4,17 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed Personality UI slice is `PRJ-1261`: mobile timeline layer
+map. It keeps all six Mind Layers Timeline rows and values visible, but makes
+the mobile timeline feel less like a form/list of controls by flattening row
+material, strengthening the layer tokens, moving values to inline metadata, and
+keeping tracks as calm layer-map lines. Validation passed with `node --check
+scripts/route-smoke.mjs`, `npm run build`, focused `/personality`
+desktop/tablet/mobile screenshot/navigation/account gate (`screenshot_count=3`,
+`failed_count=0`, `route_count=14`, `status=ok`, navigation `step_count=4`,
+account `panel_visible=true`), `git diff --check`, screenshot review, and
+cleanup checks.
+
 The latest completed Chat UI slice is `PRJ-1260`: cognitive belt quieting. It
 keeps all six top context modules and their supported values visible, but makes
 the belt read as a calmer conversation context strip through lighter material,

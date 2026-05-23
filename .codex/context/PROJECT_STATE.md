@@ -6,6 +6,32 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1261` completed a Personality mobile timeline layer-map
+  pass:
+  - task:
+    - `.codex/tasks/PRJ-1261-personality-mobile-timeline-map.md`
+  - result:
+    - made mobile Mind Layers Timeline read as a calmer layer map with flatter
+      rows, stronger tokens, inline values, and quieter tracks
+    - preserved all six layer rows and values, hero figure, callouts,
+      connector lines, side panels, shared shell, Dashboard, Chat, backend
+      data, route labels, and layer order
+    - changed only route-local mobile CSS in `web/src/index.css`
+  - validation:
+    - `node --check scripts/route-smoke.mjs` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - combined focused `/personality` screenshot/navigation/account gate ->
+      `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`,
+      navigation `step_count=4`, account `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - mobile and desktop Personality screenshots reviewed
+    - cleanup -> no validation-owned node/Vite, 5173/4173 listener, Chromium,
+      or headless browser leftovers; two fresh route-smoke temp profiles
+      removed
+  - residual:
+    - full Personality 95% pixel parity, exact canonical icon glyphs, and
+      richer layer data remain separate decisions
+
 - 2026-05-23: `PRJ-1260` completed a Chat cognitive belt quieting pass:
   - task:
     - `.codex/tasks/PRJ-1260-chat-cognitive-belt-quieting.md`

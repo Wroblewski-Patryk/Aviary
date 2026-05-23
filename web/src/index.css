@@ -10442,7 +10442,10 @@ body {
   }
 
   .aion-personality-timeline-panel {
-    padding: 0.58rem;
+    padding: 0.58rem 0.62rem 0.64rem;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(126, 167, 159, 0.08), transparent 0 28%),
+      linear-gradient(180deg, rgba(255, 252, 247, 0.78), rgba(249, 241, 229, 0.58));
   }
 
   .aion-personality-timeline-panel .mb-4 {
@@ -10473,16 +10476,21 @@ body {
   }
 
   .aion-personality-timeline-panel .grid {
-    gap: 0.18rem;
+    gap: 0.08rem;
   }
 
   .aion-personality-timeline-row {
-    grid-template-columns: auto minmax(4.4rem, 0.74fr) minmax(4.6rem, 1fr) auto;
-    gap: 0.34rem;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.18rem 0.46rem;
     align-items: center;
-    padding: 0.3rem 0.32rem;
-    border-radius: 0.76rem;
-    background: rgba(255, 252, 247, 0.44);
+    padding: 0.28rem 0.2rem;
+    border-radius: 0;
+    background: transparent;
+    border-bottom: 1px solid rgba(88, 67, 52, 0.045);
+  }
+
+  .aion-personality-timeline-row:last-child {
+    border-bottom: 0;
   }
 
   .aion-personality-timeline-row .min-w-0 p:last-child {
@@ -10490,10 +10498,15 @@ body {
   }
 
   .aion-personality-timeline-token {
-    width: 1.52rem;
-    height: 1.52rem;
-    font-size: 0.68rem;
-    background: rgba(255, 251, 245, 0.84);
+    width: 1.64rem;
+    height: 1.64rem;
+    border: 1px solid rgba(111, 149, 146, 0.22);
+    background:
+      radial-gradient(circle at 50% 50%, rgba(255, 251, 245, 0.92) 0 0.34rem, transparent 0.36rem),
+      linear-gradient(135deg, rgba(111, 149, 146, 0.72), rgba(232, 194, 134, 0.58));
+    color: rgba(88, 67, 52, 0.78);
+    font-size: 0.66rem;
+    box-shadow: 0 5px 10px rgba(78, 58, 43, 0.035);
   }
 
   .aion-personality-timeline-row .min-w-0 p:first-child {
@@ -10503,7 +10516,9 @@ body {
 
   .aion-personality-timeline-track {
     display: block;
-    height: 1rem;
+    grid-column: 2 / 4;
+    grid-row: 2;
+    height: 0.82rem;
     min-width: 0;
   }
 
@@ -10523,26 +10538,27 @@ body {
 
   .aion-personality-timeline-track span {
     right: 18%;
-    top: calc(50% - 0.25rem);
-    width: 0.5rem;
-    height: 0.5rem;
-    box-shadow: 0 0 0 0.13rem rgba(232, 194, 134, 0.13);
+    top: calc(50% - 0.22rem);
+    width: 0.44rem;
+    height: 0.44rem;
+    box-shadow: 0 0 0 0.12rem rgba(232, 194, 134, 0.13);
   }
 
   .aion-personality-timeline-value {
-    grid-column: auto;
+    grid-column: 3;
+    grid-row: 1;
     align-self: center;
     justify-content: center;
-    min-height: 1.36rem;
-    max-width: 5.2rem;
-    padding: 0.08rem 0.34rem;
+    min-height: auto;
+    max-width: 5.8rem;
+    padding: 0;
     border-radius: 999px;
-    background: rgba(255, 251, 245, 0.64);
-    border: 1px solid rgba(88, 67, 52, 0.055);
-    color: rgba(88, 67, 52, 0.74);
-    font-size: 0.62rem;
-    font-weight: 700;
-    text-align: center;
+    background: transparent;
+    border: 0;
+    color: rgba(88, 67, 52, 0.7);
+    font-size: 0.64rem;
+    font-weight: 720;
+    text-align: right;
     white-space: normal;
   }
 

@@ -46,6 +46,20 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1261` completes a verified Personality mobile timeline map pass for
+  `AVIARY-WEB-RESP-001`: mobile Mind Layers Timeline now uses flatter rows,
+  stronger layer tokens, inline values, and calmer tracks while preserving all
+  six layers and values, hero figure, callouts, connector lines, side panels,
+  shared shell, Dashboard, Chat, backend data, route labels, and layer order.
+  Evidence: `node --check scripts/route-smoke.mjs` passed; `npm run build`
+  passed; combined focused `/personality` screenshot/navigation/account gate
+  returned `screenshot_count=3`, `failed_count=0`, `route_count=14`,
+  `status=ok`, navigation `step_count=4`, account `panel_visible=true`;
+  `git diff --check` passed with LF/CRLF warning only; mobile and desktop
+  screenshots were reviewed; cleanup found no validation-owned node/Vite,
+  5173/4173 listener, Chromium, or headless browser leftovers and removed two
+  fresh route-smoke temp profiles.
+
 - `PRJ-1260` completes a verified Chat cognitive-belt quieting pass for
   `AVIARY-WEB-RESP-001`: the top Chat context strip now uses lighter material,
   CSS-only circular icon accents, and quieter inline status values while all

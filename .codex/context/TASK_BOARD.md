@@ -4,6 +4,36 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1261` is DONE:
+  - `.codex/tasks/PRJ-1261-personality-mobile-timeline-map.md`
+- objective:
+  - make mobile Personality Mind Layers Timeline read as a compact layer map
+    instead of a list of card/pill controls
+- current result:
+  - timeline rows are flatter, tokens are stronger, values are inline metadata,
+    and tracks read as calmer layer-map lines
+  - all six layers and values, hero figure, callouts, connector lines, side
+    panels, Dashboard, Chat, shared shell, backend data, route labels, and
+    layer order remain unchanged
+- validation:
+  - `node --check scripts/route-smoke.mjs` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - combined focused `/personality` screenshot/navigation/account gate ->
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - mobile and desktop Personality screenshots reviewed
+  - cleanup -> no validation-owned node/Vite, 5173/4173 listener, Chromium, or
+    headless browser leftovers; two fresh route-smoke temp profiles removed
+- residual:
+  - this is a verified Personality mobile timeline layer-map pass, not a full
+    Personality 95% parity claim
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1260` is DONE:
   - `.codex/tasks/PRJ-1260-chat-cognitive-belt-quieting.md`
 - objective:
