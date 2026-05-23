@@ -6,6 +6,31 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1259` completed a Dashboard Current Focus focal polish
+  pass:
+  - task:
+    - `.codex/tasks/PRJ-1259-dashboard-current-focus-focal.md`
+  - result:
+    - replaced the generic teal `Current Focus` orb with a compact scenic
+      circular focal treatment using existing Dashboard visual language
+    - preserved current focus copy, `Enter focus` CTA, Dashboard hero,
+      PRJ-1258 summary band, mobile/tablet behavior, Chat, Personality, shared
+      shell, and backend data
+    - changed only route-local CSS in `web/src/index.css`
+  - validation:
+    - `node --check scripts/route-smoke.mjs` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - combined focused `/dashboard` screenshot/navigation/account gate ->
+      `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`,
+      navigation `step_count=4`, account `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - desktop/tablet/mobile Dashboard screenshots reviewed
+    - cleanup -> no validation-owned node/Vite, 5173/4173 listener, Chromium,
+      or headless browser leftovers; one fresh route-smoke temp profile removed
+  - residual:
+    - full Dashboard 95% pixel parity, exact canonical icon glyphs, and richer
+      Current Focus content/data remain separate decisions
+
 - 2026-05-23: `PRJ-1258` completed a Dashboard summary closure-band balance
   pass:
   - task:

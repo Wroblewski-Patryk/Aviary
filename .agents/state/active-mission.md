@@ -9,6 +9,65 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1259-dashboard-current-focus-focal
+- Status: VERIFIED
+- Selected objective: make Dashboard `Current Focus` read as a polished focal
+  module instead of a placeholder orb card.
+- Why this mission now: after `PRJ-1258`, Epicurus identified `Current Focus`
+  as the smallest fresh screenshot-backed Dashboard mismatch that could be
+  improved without content, icon, backend, hero, or summary-band changes.
+- Release objective or product milestone advanced: v1.2 web Dashboard
+  canonical lower-grid composition.
+- First/next checkpoint: completed a CSS-only Dashboard Current Focus focal
+  pass. The generic orb is now a compact scenic focal treatment while all data,
+  copy, CTA behavior, and surrounding Dashboard surfaces remain unchanged.
+- Stop conditions: next work should pick one exact route/screenshot mismatch
+  or make a content/data decision before changing canonical copy, icon glyphs,
+  route-smoke fixture content, or backend-backed labels.
+- Parent validation gate: web build, focused `/dashboard`
+  desktop/tablet/mobile screenshot gate, navigation proof, account proof,
+  screenshot review, cleanup check, and `git diff --check`.
+
+## PRJ-1259 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Epicurus and completed read-only
+  - QA lane delegated to Goodall and completed read-only
+  - coordinator implemented the route-local CSS patch and final proof
+- Implementation:
+  - Current Focus now uses a compact scenic circular focal treatment instead
+    of the prior generic teal orb
+  - all Dashboard data/copy/CTA, hero signals, PRJ-1258 summary band,
+    mobile/tablet structure, cognitive flow, Chat, Personality, and shared
+    shell were not changed
+- Validation:
+  - `node --check scripts/route-smoke.mjs` PASS
+  - `npm run build` PASS
+  - combined focused `/dashboard` screenshot/navigation/account gate PASS:
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+  - cleanup found no validation-owned node/Vite, 5173/4173 listener,
+    Chromium, or headless browser leftovers; one fresh route-smoke temp
+    profile from this checkpoint was removed
+- Residual:
+  - This is a verified Dashboard Current Focus focal pass, not a full 95%
+    pixel parity claim. Exact canonical icon glyphs and richer focus content
+    remain separate content/data decisions.
+- Next recommended checkpoint:
+  - Pick one exact remaining screenshot mismatch on one route, or make a
+    content/data decision before changing canonical copy, icon glyphs,
+    route-smoke fixture content, or backend-backed labels.
+- Artifacts:
+  - `.codex/tasks/PRJ-1259-dashboard-current-focus-focal.md`
+  - `.codex/artifacts/prj1259-dashboard-current-focus-focal/report.json`
+  - `.codex/artifacts/prj1259-dashboard-current-focus-focal/screenshots/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1258-dashboard-summary-band-balance
 - Status: VERIFIED
 - Selected objective: make the lower Dashboard summary band read as a calmer
@@ -28,7 +87,7 @@ repository history.
   desktop/tablet/mobile screenshot gate, navigation proof, account proof,
   screenshot review, cleanup check, and `git diff --check`.
 
-## PRJ-1258 Current Evidence
+## PRJ-1258 Previous Evidence
 
 - Branch: `main`.
 - Lane status:
@@ -65,65 +124,6 @@ repository history.
   - `.codex/artifacts/prj1258-dashboard-summary-band-balance/navigation-proof.json`
   - `.codex/artifacts/prj1258-dashboard-summary-band-balance/account-proof.json`
   - `.codex/artifacts/prj1258-dashboard-summary-band-balance/screenshots/`
-
-## Previous Mission
-
-- Mission ID: PRJ-1257-dashboard-desktop-hero-satellite-quieting
-- Status: VERIFIED
-- Selected objective: make desktop Dashboard hero signal cards read more like
-  quiet canonical satellites connected to the central figure.
-- Why this mission now: after `PRJ-1256`, Copernicus confirmed the coordinator
-  read that Dashboard desktop satellite material was the smallest safe
-  screenshot-backed flagship mismatch left.
-- Release objective or product milestone advanced: v1.2 web Dashboard
-  canonical desktop first-viewport composition.
-- First/next checkpoint: completed a CSS-only large-desktop Dashboard hero
-  signal pass. Signal cards are lighter, slightly tighter, and connected with
-  softer lines while preserving all six signals and responsive behavior.
-- Stop conditions: next work should pick one exact route/screenshot mismatch
-  or make a content/data decision before changing canonical copy, icon glyphs,
-  route-smoke fixture content, or backend-backed labels.
-- Parent validation gate: web build, focused `/dashboard`
-  desktop/tablet/mobile screenshot gate, navigation proof, account proof,
-  screenshot review, cleanup check, and `git diff --check`.
-
-## PRJ-1257 Previous Evidence
-
-- Branch: `main`.
-- Lane status:
-  - UX parity lane delegated to Copernicus and completed read-only
-  - QA lane delegated to Carver and completed read-only
-  - coordinator implemented the route-local CSS patch and final proof
-- Implementation:
-  - desktop Dashboard hero signal columns are slightly narrower, card material
-    is lighter, typography is tighter, and connector lines are longer/softer
-  - all six hero signals, values, Dashboard data, mobile/tablet structure,
-    cognitive flow, Chat, Personality, and shared shell were not changed
-- Validation:
-  - `npm run build` PASS
-  - focused `/dashboard` screenshot gate across desktop/tablet/mobile PASS:
-    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
-  - navigation proof PASS: `step_count=4`, `failed_count=0`
-  - account proof PASS: `step_count=1`, `failed_count=0`,
-    `panel_visible=true`
-  - `git diff --check` PASS with LF/CRLF warning only
-  - cleanup found no validation-owned node/Vite, 5173/4173 listener,
-    Chromium, or headless browser leftovers; three fresh route-smoke temp
-    profiles from this checkpoint were removed
-- Residual:
-  - This is a verified Dashboard desktop satellite material pass, not a full
-    95% pixel parity claim. Exact canonical icon glyphs and richer data values
-    remain separate content/data decisions.
-- Next recommended checkpoint:
-  - Pick one exact remaining screenshot mismatch on one route, or make a
-    content/data decision before changing canonical copy, icon glyphs,
-    route-smoke fixture content, or backend-backed labels.
-- Artifacts:
-  - `.codex/tasks/PRJ-1257-dashboard-desktop-hero-satellite-quieting.md`
-  - `.codex/artifacts/prj1257-dashboard-desktop-hero-satellite-quieting/report.json`
-  - `.codex/artifacts/prj1257-dashboard-desktop-hero-satellite-quieting/navigation-proof.json`
-  - `.codex/artifacts/prj1257-dashboard-desktop-hero-satellite-quieting/account-proof.json`
-  - `.codex/artifacts/prj1257-dashboard-desktop-hero-satellite-quieting/screenshots/`
 
 ## Previous Mission
 

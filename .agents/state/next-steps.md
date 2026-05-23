@@ -4,6 +4,26 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue from verified `PRJ-1259`:
+   - task:
+     `.codex/tasks/PRJ-1259-dashboard-current-focus-focal.md`
+   - result:
+     Dashboard `Current Focus` now uses a compact scenic circular focal
+     treatment instead of a generic teal orb placeholder
+   - proof:
+     `node --check scripts/route-smoke.mjs` PASS; `npm run build` PASS;
+     combined Dashboard screenshot/navigation/account gate PASS with
+     `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`,
+     navigation `step_count=4`, `failed_count=0`, account `step_count=1`,
+     `failed_count=0`, `panel_visible=true`; `git diff --check` PASS with
+     LF/CRLF warning only; desktop/tablet/mobile screenshots reviewed;
+     cleanup found no validation-owned leftovers and removed one fresh
+     route-smoke temp profile
+   - next smallest useful choice:
+     pick one exact remaining screenshot mismatch on one route only, or make a
+     content/data decision before changing canonical copy, icon glyphs, source
+     labels, route-smoke fixture content, or richer Dashboard focus data
+
 1. Continue from verified `PRJ-1258`:
    - task:
      `.codex/tasks/PRJ-1258-dashboard-summary-band-balance.md`

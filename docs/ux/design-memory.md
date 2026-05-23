@@ -1,5 +1,17 @@
 # Design Memory
 
+## 2026-05-23 - Dashboard Current Focus focal card
+
+- Dashboard `Current Focus` should feel like a polished lower-grid module, not
+  a placeholder orb. Use a compact scenic focal treatment that supports the
+  focus text without taking over the card.
+- Preserve current focus copy and CTA behavior during focal polish. Richer
+  focus content, exact icon metaphors, and data changes are separate product
+  decisions.
+- Keep the focal treatment smaller than hero imagery and summary-band scenery;
+  it should lift the card to the same polish level as Active Goals, Memory
+  Growth, and Reflection Highlights.
+
 ## 2026-05-23 - Dashboard summary closure band
 
 - Dashboard's lower summary band should feel like a calm closure surface, not

@@ -4,6 +4,35 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1259` is DONE:
+  - `.codex/tasks/PRJ-1259-dashboard-current-focus-focal.md`
+- objective:
+  - make Dashboard `Current Focus` read as a polished focal module instead of
+    a placeholder orb card
+- current result:
+  - `Current Focus` now uses a compact scenic circular focal treatment
+  - current focus copy, `Enter focus` CTA, Dashboard hero, PRJ-1258 summary
+    band, mobile/tablet behavior, Chat, Personality, shared shell, and backend
+    data remain unchanged
+- validation:
+  - `node --check scripts/route-smoke.mjs` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - combined focused `/dashboard` screenshot/navigation/account gate ->
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - desktop/tablet/mobile Dashboard screenshots reviewed
+  - cleanup -> no validation-owned node/Vite, 5173/4173 listener, Chromium, or
+    headless browser leftovers; one fresh route-smoke temp profile removed
+- residual:
+  - this is a verified Dashboard Current Focus focal pass, not a full
+    Dashboard 95% parity claim
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1258` is DONE:
   - `.codex/tasks/PRJ-1258-dashboard-summary-band-balance.md`
 - objective:

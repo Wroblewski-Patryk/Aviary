@@ -4,6 +4,16 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed Dashboard UI slice is `PRJ-1259`: Current Focus focal
+polish. It keeps the current focus copy and `Enter focus` CTA unchanged, but
+replaces the generic teal orb with a compact scenic circular focal treatment
+that feels closer to the surrounding lower-grid cards. Validation passed with
+`node --check scripts/route-smoke.mjs`, `npm run build`, combined focused
+`/dashboard` desktop/tablet/mobile screenshot/navigation/account gate
+(`screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`,
+navigation `step_count=4`, account `panel_visible=true`), `git diff --check`,
+and screenshot review.
+
 The latest completed Dashboard UI slice is `PRJ-1258`: lower summary closure
 band balance. It keeps Dashboard data and copy intact, but makes the bottom
 summary band calmer by widening the System Harmony rhythm, reducing its

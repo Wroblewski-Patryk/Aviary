@@ -46,6 +46,20 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1259` completes a verified Dashboard Current Focus focal polish pass for
+  `AVIARY-WEB-RESP-001`: the lower-grid `Current Focus` card now uses a compact
+  scenic circular focal treatment instead of a generic orb while current focus
+  copy, CTA behavior, Dashboard hero, PRJ-1258 summary band, mobile/tablet
+  behavior, Chat, Personality, shared shell, and backend data remain unchanged.
+  Evidence: `node --check scripts/route-smoke.mjs` passed; `npm run build`
+  passed; combined focused `/dashboard` screenshot/navigation/account gate
+  returned `screenshot_count=3`, `failed_count=0`, `route_count=14`,
+  `status=ok`, navigation `step_count=4`, account `panel_visible=true`;
+  `git diff --check` passed with LF/CRLF warning only; desktop/tablet/mobile
+  screenshots were reviewed; cleanup found no validation-owned node/Vite,
+  5173/4173 listener, Chromium, or headless browser leftovers and removed one
+  fresh route-smoke temp profile.
+
 - `PRJ-1258` completes a verified Dashboard summary closure-band balance pass
   for `AVIARY-WEB-RESP-001`: the lower Dashboard summary band now has a calmer
   System Harmony rhythm, balanced layer rows, and a wide scenic weekly summary
