@@ -1,5 +1,15 @@
 # Design Memory
 
+## 2026-05-23 - Dashboard hero connector geometry
+
+- On desktop Dashboard, metric tiles should behave like side satellites around
+  the central hero, with visible connector lines. Avoid placing all metrics as
+  corner overlays inside the image because that reads as cards glued onto a
+  background instead of a system map.
+- Keep connector geometry desktop-first. Tablet and mobile should preserve
+  simpler figure-first stacking unless a separate responsive design slice proves
+  a compact connector treatment.
+
 ## 2026-05-23 - Dashboard first viewport lock
 
 - Dashboard canonical convergence should make the hero read as the one primary

@@ -4,6 +4,32 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1242` is DONE:
+  - `.codex/tasks/PRJ-1242-dashboard-hero-geometry.md`
+- objective:
+  - make Dashboard desktop hero metric geometry read more like the canonical
+    system map without changing data, controls, or route behavior
+- current result:
+  - metric cards now sit as side satellites around the central hero on desktop
+  - connector lines are visible again
+  - tablet/mobile structure remains stable and simplified
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - Dashboard screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`
+  - route smoke -> `route_count=14`, `status=ok`
+  - `npm run audit:ui-navigation` -> PASS, `step_count=4`,
+    `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+- residual:
+  - this is a verified geometry pass, not full pixel-perfect parity; static
+    reference icon/content differences remain out of scope
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1241` is DONE:
   - `.codex/tasks/PRJ-1241-dashboard-first-viewport-lock.md`
 - objective:

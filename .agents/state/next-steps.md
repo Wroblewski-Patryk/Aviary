@@ -4,6 +4,23 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue Dashboard canonical parity from `PRJ-1242`:
+   - task:
+     `.codex/tasks/PRJ-1242-dashboard-hero-geometry.md`
+   - result:
+     desktop Dashboard metrics now sit as side satellites with visible
+     connector lines around the central hero
+   - proof:
+     `npm run build` PASS; Dashboard screenshot gate across
+     desktop/tablet/mobile PASS with `screenshot_count=3`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; navigation proof
+     `step_count=4`, `failed_count=0`; account proof `step_count=1`,
+     `failed_count=0`, `panel_visible=true`
+   - next smallest useful choice:
+     make a separate content/data decision before changing metric labels,
+     values, or icon glyphs; otherwise move to one single-surface Chat or
+     Personality checkpoint
+
 1. Continue Dashboard canonical parity from `PRJ-1241`:
    - task:
      `.codex/tasks/PRJ-1241-dashboard-first-viewport-lock.md`

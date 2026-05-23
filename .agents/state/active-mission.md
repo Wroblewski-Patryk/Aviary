@@ -9,27 +9,55 @@ repository history.
 
 ## Current Mission
 
-- Mission ID: PRJ-1241-dashboard-first-viewport-lock
+- Mission ID: PRJ-1242-dashboard-hero-geometry
 - Status: VERIFIED
-- Selected objective: lock the Dashboard first viewport closer to the
-  canonical embodied cockpit without adding controls, fake data, new cards, or
-  shared-shell changes.
-- Why this mission now: the user asked the coordinator team to keep pushing
-  UX/UI coherence, and PRJ-1240 evidence left Dashboard as the clearest
-  remaining first-viewport mismatch.
+- Selected objective: tune Dashboard desktop hero metric geometry so metrics
+  read as side satellites connected to the central figure, without changing
+  data, route behavior, or responsive mobile/tablet simplification.
+- Why this mission now: PRJ-1241 named exact hero connector/metric geometry as
+  the remaining Dashboard residual.
 - Release objective or product milestone advanced: v1.2 web UI canonical
-  fidelity for Dashboard as the mobile-app foundation.
-- First/next checkpoint: completed a Dashboard CSS pass. The central hero now
-  has stronger first-read authority, metric overlays and right guidance are
-  quieter, cognitive flow reads as a lighter bridge, and the lower Reflection
-  card no longer shows a clipped row.
+  fidelity for Dashboard.
+- First/next checkpoint: completed a CSS-only desktop hero geometry pass.
+  Dashboard metric tiles now sit beside the central hero with visible connector
+  lines instead of reading as corner overlays inside the image.
 - Stop conditions: next checkpoint should remain screenshot-specific; do not
-  rename Aviary to AION/Prometheus without product decision, do not add new
-  data/components merely to mimic static reference content, and do not reopen
-  Chat/Personality in the same slice.
+  replace backend-backed metric content or iconography without a separate
+  content/data decision, and do not reopen Chat/Personality in the same slice.
 - Parent validation gate: web build, Dashboard desktop/tablet/mobile screenshot
   gate, full route smoke, navigation proof, account proof, visual screenshot
   review, and cleanup check.
+
+## PRJ-1242 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Pasteur and completed read-only
+  - QA/responsive lane delegated to McClintock and completed read-only
+  - coordinator implemented the route-local Dashboard CSS patch and final proof
+- Implementation:
+  - desktop Dashboard hero uses a three-part metric/figure/metric composition
+  - metric cards have visible connector lines toward the central scene
+  - portrait crop was adjusted for the narrower central stage
+  - tablet/mobile layout remains structurally unchanged
+- Validation:
+  - `npm run build` PASS
+  - Dashboard screenshot gate across desktop/tablet/mobile PASS:
+    `screenshot_count=3`, `failed_count=0`
+  - full route smoke PASS: `route_count=14`, `status=ok`
+  - `npm run audit:ui-navigation` PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+- Residual:
+  - This is a verified geometry pass, not full pixel-perfect parity. Static
+    reference icon glyphs and metric content are outside this CSS-only slice.
+- Artifacts:
+  - `.codex/tasks/PRJ-1242-dashboard-hero-geometry.md`
+  - `.codex/artifacts/prj1242-dashboard-hero-geometry/report.json`
+  - `.codex/artifacts/prj1242-dashboard-hero-geometry/route-smoke-report.json`
+  - `.codex/artifacts/prj1242-dashboard-hero-geometry/account-proof.json`
+  - `.codex/artifacts/prj1242-dashboard-hero-geometry/screenshots/`
 
 ## PRJ-1241 Current Evidence
 

@@ -46,6 +46,17 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1242` completes a verified Dashboard hero geometry pass for
+  `AVIARY-WEB-RESP-001`: desktop Dashboard metrics now sit as side satellites
+  around the central hero with visible connector lines, while existing
+  backend-backed metric values and tablet/mobile simplification are preserved.
+  Evidence: `npm run build` PASS; Dashboard screenshot gate across
+  desktop/tablet/mobile returned `screenshot_count=3`, `failed_count=0`; full
+  route smoke returned `route_count=14`, `status=ok`; navigation proof returned
+  `step_count=4`, `failed_count=0`; account proof returned `step_count=1`,
+  `failed_count=0`, `panel_visible=true`; `git diff --check` passed with
+  LF/CRLF warning only.
+
 - `PRJ-1241` completes a verified Dashboard first-viewport lock for
   `AVIARY-WEB-RESP-001`: the desktop Dashboard hero now has stronger first-read
   authority, metric overlays and right guidance are quieter, cognitive flow

@@ -6,6 +6,36 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1242` completed a Dashboard hero connector geometry pass:
+  - task:
+    - `.codex/tasks/PRJ-1242-dashboard-hero-geometry.md`
+  - result:
+    - tuned Dashboard desktop hero only, with no new components, fake data,
+      backend behavior, shared-shell change, or branding rename
+    - moved desktop metric tiles into side-satellite geometry around the
+      central hero
+    - restored visible connector lines from metrics toward the scene
+    - preserved tablet/mobile simplification and existing backend-backed metric
+      values
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - Dashboard screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`
+    - route smoke -> `route_count=14`, `status=ok`
+    - `npm run audit:ui-navigation` -> PASS, `step_count=4`,
+      `failed_count=0`
+    - account proof -> PASS, `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+  - artifacts:
+    - `.codex/artifacts/prj1242-dashboard-hero-geometry/report.json`
+    - `.codex/artifacts/prj1242-dashboard-hero-geometry/route-smoke-report.json`
+    - `.codex/artifacts/prj1242-dashboard-hero-geometry/account-proof.json`
+    - `.codex/artifacts/prj1242-dashboard-hero-geometry/screenshots/`
+  - residual:
+    - this is a verified geometry pass, not a full pixel-perfect parity claim;
+      richer icon/content parity requires a separate content/data decision.
+
 - 2026-05-23: `PRJ-1241` completed a Dashboard first-viewport lock:
   - task:
     - `.codex/tasks/PRJ-1241-dashboard-first-viewport-lock.md`
