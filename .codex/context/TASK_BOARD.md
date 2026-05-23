@@ -4,6 +4,37 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1258` is DONE:
+  - `.codex/tasks/PRJ-1258-dashboard-summary-band-balance.md`
+- objective:
+  - make desktop Dashboard lower summary band read as a calmer canonical
+    closure band instead of a cramped card cluster
+- current result:
+  - `System Harmony` has more horizontal breathing room, quieter material, and
+    more readable copy rhythm
+  - `Balance across layers` remains readable and the scenic `Weekly summary`
+    remains wide
+  - Dashboard hero satellites, data/copy, mobile/tablet behavior, Chat,
+    Personality, shared shell, and backend data remain unchanged
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - focused `/dashboard` screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - desktop/tablet/mobile Dashboard screenshots reviewed
+  - cleanup check -> no validation-owned node/Vite, 5173/4173 listener,
+    Chromium, or headless browser leftovers; four fresh route-smoke temp
+    profiles from this checkpoint were removed
+- residual:
+  - this is a verified Dashboard summary-band balance pass, not a full
+    Dashboard 95% parity claim
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1257` is DONE:
   - `.codex/tasks/PRJ-1257-dashboard-desktop-hero-satellite-quieting.md`
 - objective:

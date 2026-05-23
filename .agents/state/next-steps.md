@@ -4,6 +4,27 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue from verified `PRJ-1258`:
+   - task:
+     `.codex/tasks/PRJ-1258-dashboard-summary-band-balance.md`
+   - result:
+     the lower Dashboard summary band now reads as a calmer closure band with
+     more readable System Harmony rhythm, balanced layer rows, and a wide
+     scenic weekly summary
+   - proof:
+     `npm run build` PASS; Dashboard screenshot gate across
+     desktop/tablet/mobile PASS with `screenshot_count=3`, `failed_count=0`,
+     `route_count=14`, `status=ok`; navigation proof `step_count=4`,
+     `failed_count=0`; account proof `step_count=1`, `failed_count=0`,
+     `panel_visible=true`; `git diff --check` PASS with LF/CRLF warning only;
+     desktop/tablet/mobile screenshots reviewed; cleanup found no
+     validation-owned leftovers and removed four fresh route-smoke temp
+     profiles
+   - next smallest useful choice:
+     pick one exact remaining screenshot mismatch on one route only, or make a
+     content/data decision before changing canonical copy, icon glyphs, source
+     labels, route-smoke fixture content, or richer Dashboard summary data
+
 1. Continue from verified `PRJ-1257`:
    - task:
      `.codex/tasks/PRJ-1257-dashboard-desktop-hero-satellite-quieting.md`

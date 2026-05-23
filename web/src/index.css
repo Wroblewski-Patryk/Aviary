@@ -4370,7 +4370,7 @@ body {
 }
 
 .aion-dashboard-summary-layout-closure {
-  gap: 0.5rem;
+  gap: 0.58rem;
 }
 
 .aion-dashboard-flow-panel-bridge .aion-dashboard-flow-header h3 {
@@ -4406,7 +4406,7 @@ body {
 }
 
 .aion-dashboard-summary-band-closure {
-  padding: 0.72rem;
+  padding: 0.68rem;
 }
 
 .aion-dashboard-progress {
@@ -4564,23 +4564,34 @@ body {
 .aion-dashboard-summary-balance {
   border: 1px solid rgba(88, 67, 52, 0.08);
   border-radius: 1.55rem;
-  background: rgba(255, 251, 245, 0.78);
-  padding: 0.8rem;
+  background: rgba(255, 251, 245, 0.7);
+  padding: 0.74rem;
 }
 
 .aion-dashboard-summary-harmony {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 1rem;
+  grid-template-columns: 4.48rem minmax(0, 1fr);
+  gap: 0.78rem;
   align-items: center;
+}
+
+.aion-dashboard-summary-harmony-copy .uppercase {
+  font-size: 0.68rem !important;
+  letter-spacing: 0.16em !important;
+  line-height: 1.18 !important;
+}
+
+.aion-dashboard-summary-harmony-copy .leading-7 {
+  font-size: 0.84rem !important;
+  line-height: 1.56 !important;
 }
 
 .aion-dashboard-summary-harmony-ring {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 5rem;
-  height: 5rem;
+  width: 4.48rem;
+  height: 4.48rem;
   border-radius: 999px;
   background:
     conic-gradient(from 220deg, rgba(111, 149, 146, 0.82), rgba(217, 180, 118, 0.78), rgba(111, 149, 146, 0.82));
@@ -4600,20 +4611,20 @@ body {
 .aion-dashboard-summary-harmony-core strong {
   color: var(--aion-ink);
   font-family: var(--font-display);
-  font-size: 1.54rem;
+  font-size: 1.42rem;
   line-height: 1;
 }
 
 .aion-dashboard-summary-harmony-core span {
   color: rgba(110, 98, 88, 0.82);
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
+  font-size: 0.64rem;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
 }
 
 .aion-dashboard-summary-balance {
   display: grid;
-  gap: 0.95rem;
+  gap: 0.78rem;
 }
 
 .aion-dashboard-summary-balance-grid {
@@ -4675,7 +4686,7 @@ body {
 
 .aion-dashboard-summary-balance-row strong {
   color: rgba(110, 98, 88, 0.88);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 700;
 }
 
@@ -7827,7 +7838,7 @@ body {
   }
 
   .aion-dashboard-summary-layout-closure {
-    grid-template-columns: minmax(14rem, 0.48fr) minmax(16rem, 0.58fr) minmax(0, 1.68fr);
+    grid-template-columns: minmax(16.9rem, 0.6fr) minmax(15.9rem, 0.55fr) minmax(0, 1.72fr);
   }
 
   .aion-dashboard-lower-grid-condensed {

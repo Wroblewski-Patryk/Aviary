@@ -1,5 +1,16 @@
 # Design Memory
 
+## 2026-05-23 - Dashboard summary closure band
+
+- Dashboard's lower summary band should feel like a calm closure surface, not
+  three cramped cards. Keep System Harmony compact, readable, and subordinate
+  to the scenic weekly summary.
+- Prefer column proportion, ring scale, material, and copy-rhythm tuning before
+  changing supported summary data or copy. Exact richer summary content and
+  icon metaphors are separate product/data decisions.
+- Preserve the verified Dashboard hero satellites while tuning the summary
+  band; do not let lower-band polish reopen the first-viewport hero layout.
+
 ## 2026-05-23 - Dashboard desktop hero signal satellites
 
 - Dashboard desktop hero signals should read like lightweight connected

@@ -6,6 +6,34 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1258` completed a Dashboard summary closure-band balance
+  pass:
+  - task:
+    - `.codex/tasks/PRJ-1258-dashboard-summary-band-balance.md`
+  - result:
+    - made the lower Dashboard summary band calmer and closer to the canonical
+      closure-band rhythm
+    - widened and softened `System Harmony`, reduced ring/copy crowding,
+      balanced layer rows, and preserved the scenic weekly summary
+    - preserved Dashboard hero satellites, all data/copy, mobile/tablet
+      behavior, Chat, Personality, shared shell, and backend data
+    - changed only route-local CSS in `web/src/index.css`
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - focused `/dashboard` screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - desktop/tablet/mobile Dashboard screenshots reviewed
+    - cleanup check -> no validation-owned node/Vite, 5173/4173 listener,
+      Chromium, or headless browser leftovers; four fresh route-smoke temp
+      profiles from this checkpoint were removed
+  - residual:
+    - full Dashboard 95% pixel parity, exact canonical icon glyphs, and richer
+      summary content/data remain separate decisions
+
 - 2026-05-23: `PRJ-1257` completed a Dashboard desktop hero signal satellite
   quieting pass:
   - task:

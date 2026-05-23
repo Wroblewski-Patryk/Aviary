@@ -46,6 +46,20 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1258` completes a verified Dashboard summary closure-band balance pass
+  for `AVIARY-WEB-RESP-001`: the lower Dashboard summary band now has a calmer
+  System Harmony rhythm, balanced layer rows, and a wide scenic weekly summary
+  while Dashboard hero satellites, data/copy, mobile/tablet behavior, Chat,
+  Personality, shared shell, and backend data remain unchanged. Evidence:
+  `npm run build` passed; focused `/dashboard` screenshot gate returned
+  `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`;
+  navigation proof returned `step_count=4`, `failed_count=0`; account proof
+  returned `step_count=1`, `failed_count=0`, `panel_visible=true`;
+  `git diff --check` passed with LF/CRLF warning only; desktop/tablet/mobile
+  screenshots were reviewed; cleanup found no validation-owned node/Vite,
+  5173/4173 listener, Chromium, or headless browser leftovers and removed four
+  fresh route-smoke temp profiles.
+
 - `PRJ-1257` completes a verified Dashboard desktop hero signal satellite pass
   for `AVIARY-WEB-RESP-001`: desktop Dashboard hero signals are lighter,
   tighter, and more connected to the central figure while all six supported
