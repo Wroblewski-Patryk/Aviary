@@ -4,6 +4,42 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue Chat persona-stage canonical placement from Faraday's `PRJ-1254`
+   UX lane:
+   - candidate task:
+     `PRJ-1255-chat-desktop-persona-overlay-placement`
+   - source:
+     Faraday read-only UX parity lane after `PRJ-1254`
+   - objective:
+     move the desktop Chat `Planning / Conversation continuity` persona-stage
+     overlay away from the transcript-facing lower-left edge and closer to the
+     canonical right/bottom-side annotation composition
+   - constraints:
+     no cognitive belt density changes, transcript layout, composer behavior,
+     source markers, fixture copy, backend data, mobile Chat rail, Dashboard,
+     or Personality changes
+   - proof:
+     `npm run build`; focused `/chat` screenshot gate across
+     desktop/tablet/mobile; `npm run test:chat-transcript`; cleanup checks
+
+1. Continue Personality mobile canonical usability from `PRJ-1254`:
+   - task:
+     `.codex/tasks/PRJ-1254-personality-mobile-timeline-rail.md`
+   - result:
+     mobile Personality Mind Layers Timeline now reads as a compact token,
+     signal-track, and value-chip rail while all six layers remain visible
+   - proof:
+     `npm run build` PASS; Personality screenshot gate across
+     desktop/tablet/mobile PASS with `screenshot_count=3`, `failed_count=0`,
+     `route_count=14`, `status=ok`; navigation proof `step_count=4`,
+     `failed_count=0`; account proof `step_count=1`, `failed_count=0`,
+     `panel_visible=true`; cleanup found no validation-owned leftovers and
+     removed three fresh route-smoke temp profiles
+   - next smallest useful choice:
+     pick one exact remaining screenshot mismatch on one route only, or make a
+     content/data decision before changing canonical copy, icon glyphs, source
+     labels, or route-smoke fixture content
+
 1. Continue Chat canonical usability from `PRJ-1253`:
    - task:
      `.codex/tasks/PRJ-1253-chat-desktop-cognitive-belt-quieting.md`

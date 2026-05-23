@@ -4,6 +4,18 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed Personality UI slice is `PRJ-1254`: mobile Mind Layers
+Timeline rail. It keeps all six supported layers and backend-backed values
+visible, but converts the mobile section from a tall text list into a compact
+token + signal track + value rail closer to the canonical mobile reference.
+Validation passed with `npm run build`, focused `/personality`
+desktop/tablet/mobile screenshot gate (`screenshot_count=3`,
+`failed_count=0`, `route_count=14`, `status=ok`), navigation proof
+(`step_count=4`, `failed_count=0`), account proof (`step_count=1`,
+`failed_count=0`, `panel_visible=true`), screenshot review, and cleanup
+checks. Faraday's UX lane recommends Chat desktop persona-stage overlay
+placement as the next route-local checkpoint.
+
 The latest completed Chat UI slice is `PRJ-1253`: desktop cognitive-belt
 quieting. It keeps every supported belt item, value, progress signal,
 transcript source marker, and mobile rail behavior intact, while making the

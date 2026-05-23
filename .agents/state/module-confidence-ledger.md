@@ -46,6 +46,17 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1254` completes a verified Personality mobile timeline rail pass for
+  `AVIARY-WEB-RESP-001`: mobile Mind Layers Timeline now uses compact token,
+  signal-track, and value-chip rows instead of a tall text list while all six
+  layers and values remain visible. Evidence: `npm run build` passed; focused
+  `/personality` screenshot gate returned `screenshot_count=3`,
+  `failed_count=0`, `route_count=14`, `status=ok`; navigation proof returned
+  `step_count=4`, `failed_count=0`; account proof returned `step_count=1`,
+  `failed_count=0`, `panel_visible=true`; cleanup found no validation-owned
+  node/Vite, 5173/4173 listener, Chromium, or headless browser leftovers and
+  removed three fresh route-smoke temp profiles from this checkpoint.
+
 - `PRJ-1253` completes a verified Chat desktop cognitive-belt hierarchy pass
   for `AVIARY-WEB-RESP-001`: desktop Chat belt cards are lower, flatter, and
   visually secondary to the transcript/persona stage while all supported

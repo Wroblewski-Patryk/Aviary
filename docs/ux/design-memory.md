@@ -644,3 +644,14 @@
   structure.
 - Keep mobile Chat's context rail behavior intact unless a separate mobile
   screenshot task proves a change is needed.
+
+## 2026-05-23 - Personality mobile timeline rail
+
+- On mobile Personality, Mind Layers Timeline should behave like a compact
+  layer rail after the hero, not a tall explanatory text list.
+- Preserve all six supported layers and backend-backed values; use token,
+  signal track, and bounded value chip treatment before changing data or copy.
+- Hiding secondary detail copy is acceptable only in the mobile rail when the
+  canonical target requires a compact first-scroll rhythm.
+- Keep desktop and tablet timeline behavior separate unless fresh screenshots
+  show the same rail compression is needed there.

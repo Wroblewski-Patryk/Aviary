@@ -4,6 +4,36 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1254` is DONE:
+  - `.codex/tasks/PRJ-1254-personality-mobile-timeline-rail.md`
+- objective:
+  - make mobile Personality's Mind Layers Timeline read like a compact
+    canonical layer rail instead of a tall text list
+- current result:
+  - mobile Personality timeline rows now show token, signal track, and value
+    chip
+  - all six supported layers and backend-backed values remain visible
+  - no backend data, route behavior, shared shell, Dashboard, Chat, or hero
+    callout behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - focused `/personality` screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - cleanup check -> no validation-owned node/Vite, 5173/4173 listener,
+    Chromium, or headless browser leftovers; three fresh route-smoke temp
+    profiles from this checkpoint were removed
+- residual:
+  - this is a verified Personality mobile timeline hierarchy pass, not a full
+    Personality 95% parity claim
+- next recommended checkpoint:
+  - Chat desktop persona-stage overlay placement from Faraday's UX lane
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1253` is DONE:
   - `.codex/tasks/PRJ-1253-chat-desktop-cognitive-belt-quieting.md`
 - objective:

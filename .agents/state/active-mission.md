@@ -9,6 +9,68 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1254-personality-mobile-timeline-rail
+- Status: VERIFIED
+- Selected objective: make mobile Personality's Mind Layers Timeline read like
+  the canonical compact layer rail instead of a tall text list.
+- Why this mission now: after Chat desktop belt quieting in `PRJ-1253`, the
+  next concrete implemented-screenshot mismatch was mobile Personality's
+  hidden timeline track and tall text-list rhythm.
+- Release objective or product milestone advanced: v1.2 web Personality
+  canonical mobile first-scroll quality.
+- First/next checkpoint: completed a CSS-only mobile Personality timeline pass.
+  Timeline rows now show token, signal track, and value chip while preserving
+  all six layers and backend-backed values.
+- Stop conditions: next work should pick one exact route/screenshot mismatch
+  or make a content/data decision before changing canonical copy, icon glyphs,
+  route-smoke fixture content, or backend-backed labels.
+- Parent validation gate: web build, focused `/personality`
+  desktop/tablet/mobile screenshot gate, navigation proof, account proof,
+  screenshot review, cleanup check, and `git diff --check`.
+
+## PRJ-1254 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Faraday and completed read-only
+  - QA lane delegated to Poincare and completed read-only
+  - coordinator implemented the route-local CSS patch and final proof
+- Implementation:
+  - mobile Personality timeline rows now use compact rail columns, visible
+    signal tracks, smaller tokens, and value chips
+  - secondary detail copy is hidden only in the mobile rail to reduce first
+    scroll height
+  - all six layers and values remain visible; desktop/tablet remain stable
+- Validation:
+  - `npm run build` PASS
+  - focused `/personality` screenshot gate across desktop/tablet/mobile PASS:
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - cleanup found no validation-owned node/Vite, 5173/4173 listener,
+    Chromium, or headless browser leftovers; three fresh route-smoke temp
+    profiles from this checkpoint were removed
+- Residual:
+  - This is a verified mobile timeline hierarchy pass, not a full 95% pixel
+    parity claim. Exact canonical icon glyphs and richer data values remain
+    separate content/data decisions.
+- Next recommended checkpoint:
+  - Faraday UX lane recommends Chat desktop persona-stage overlay placement:
+    move the `Planning / Conversation continuity` overlay away from the
+    transcript-facing lower-left edge and closer to canonical right/bottom-side
+    annotation composition without changing transcript, composer, source
+    markers, cognitive belt, mobile rail, backend data, Dashboard, or
+    Personality.
+- Artifacts:
+  - `.codex/tasks/PRJ-1254-personality-mobile-timeline-rail.md`
+  - `.codex/artifacts/prj1254-personality-mobile-timeline-rail/report.json`
+  - `.codex/artifacts/prj1254-personality-mobile-timeline-rail/navigation-proof.json`
+  - `.codex/artifacts/prj1254-personality-mobile-timeline-rail/account-proof.json`
+  - `.codex/artifacts/prj1254-personality-mobile-timeline-rail/screenshots/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1253-chat-desktop-cognitive-belt-quieting
 - Status: VERIFIED
 - Selected objective: make desktop Chat's cognitive belt flatter and visually

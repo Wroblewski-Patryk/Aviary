@@ -6,6 +6,32 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1254` completed a Personality mobile timeline rail pass:
+  - task:
+    - `.codex/tasks/PRJ-1254-personality-mobile-timeline-rail.md`
+  - result:
+    - converted mobile Personality Mind Layers Timeline from a tall text list
+      into a compact layer rail with token, signal track, and value chip
+    - preserved all six supported layers and backend-backed values
+    - changed only route-local CSS in `web/src/index.css`; no backend data,
+      route behavior, shared shell, Dashboard, Chat, or hero callout behavior
+      changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - focused `/personality` screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - cleanup check -> no validation-owned node/Vite, 5173/4173 listener,
+      Chromium, or headless browser leftovers; three fresh route-smoke temp
+      profiles from this checkpoint were removed
+  - residual:
+    - full Personality 95% pixel parity, exact canonical icon glyphs, and
+      richer content/data values remain separate content/data decisions
+  - next recommended checkpoint:
+    - Chat desktop persona-stage overlay placement from Faraday's UX lane
+
 - 2026-05-23: `PRJ-1253` completed a Chat desktop cognitive-belt quieting pass:
   - task:
     - `.codex/tasks/PRJ-1253-chat-desktop-cognitive-belt-quieting.md`
