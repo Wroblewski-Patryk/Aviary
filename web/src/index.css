@@ -10329,9 +10329,23 @@ body {
     display: none;
   }
 
-  .aion-personality-callout::before,
-  .aion-personality-role-card::before {
-    opacity: 0.38;
+  .aion-personality-callout::before {
+    display: block;
+    height: 0;
+    border-top: 1.5px solid rgba(88, 67, 52, 0.66);
+    background: none;
+    box-shadow: 0 1px 0 rgba(255, 251, 245, 0.5);
+    opacity: 1;
+  }
+
+  .aion-personality-callout::after {
+    width: 0.46rem;
+    height: 0.46rem;
+    background: rgba(88, 67, 52, 0.8);
+    box-shadow:
+      0 0 0 0.13rem rgba(255, 251, 245, 0.84),
+      0 0 0 0.24rem rgba(232, 194, 134, 0.1);
+    opacity: 0.96;
   }
 
   .aion-personality-callout-identity {

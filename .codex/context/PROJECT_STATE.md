@@ -6,6 +6,34 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1256` completed a Personality mobile callout connector
+  visibility pass:
+  - task:
+    - `.codex/tasks/PRJ-1256-personality-mobile-callout-connectors.md`
+  - result:
+    - restored visible mobile connector lines between Personality callouts and
+      the embodied figure by overriding the broader mobile `display: none`
+      guardrail for callout `::before`
+    - strengthened endpoint dots while preserving all supported callouts,
+      backend-backed values, artwork, role-card visibility, and the compact
+      PRJ-1254 timeline rail
+    - changed only route-local CSS in `web/src/index.css`; no Dashboard, Chat,
+      shared shell, route behavior, or backend data changed
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - focused `/personality` screenshot gate across desktop/tablet/mobile ->
+      `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+    - navigation proof -> `step_count=4`, `failed_count=0`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - cleanup check -> no validation-owned node/Vite, 5173/4173 listener,
+      Chromium, or headless browser leftovers; eight fresh route-smoke temp
+      profiles from iterative screenshot tuning were removed
+  - residual:
+    - full Personality 95% pixel parity, exact canonical icon glyphs, and
+      richer content/data values remain separate decisions
+
 - 2026-05-23: `PRJ-1255` completed a Chat desktop persona-stage overlay
   placement pass:
   - task:

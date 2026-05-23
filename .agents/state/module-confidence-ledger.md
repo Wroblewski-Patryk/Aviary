@@ -46,6 +46,19 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 
 ## Recent Evidence Notes
 
+- `PRJ-1256` completes a verified Personality mobile callout connector pass
+  for `AVIARY-WEB-RESP-001`: mobile callouts now have visible connector lines
+  and stronger endpoint dots tying them to the embodied figure, while all
+  callouts, values, artwork, role-card visibility, and the compact timeline
+  rail remain unchanged. Evidence: `npm run build` passed; focused
+  `/personality` screenshot gate returned `screenshot_count=3`,
+  `failed_count=0`, `route_count=14`, `status=ok`; navigation proof returned
+  `step_count=4`, `failed_count=0`; account proof returned `step_count=1`,
+  `failed_count=0`, `panel_visible=true`; `git diff --check` passed with
+  LF/CRLF warning only; cleanup found no validation-owned node/Vite,
+  5173/4173 listener, Chromium, or headless browser leftovers and removed
+  eight fresh route-smoke temp profiles from iterative screenshot tuning.
+
 - `PRJ-1255` completes a verified Chat desktop/tablet persona-stage overlay
   placement pass for `AVIARY-WEB-RESP-001`: the Planning overlay now reads as
   a lower-right portrait-stage annotation instead of a transcript-facing

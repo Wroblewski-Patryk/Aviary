@@ -9,6 +9,67 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1256-personality-mobile-callout-connectors
+- Status: VERIFIED
+- Selected objective: make mobile Personality callout connectors visible enough
+  that callouts read as attached to the embodied figure.
+- Why this mission now: after `PRJ-1255`, Lagrange's UX parity lane identified
+  mobile Personality connector visibility as the smallest remaining
+  screenshot-backed mismatch.
+- Release objective or product milestone advanced: v1.2 web Personality
+  canonical mobile embodied-map clarity.
+- First/next checkpoint: completed a CSS-only mobile connector pass. Connector
+  lines now render again on mobile and endpoint dots are clearer, while all
+  callouts, data, artwork, and the PRJ-1254 timeline rail remain unchanged.
+- Stop conditions: next work should pick one exact route/screenshot mismatch
+  or make a content/data decision before changing canonical copy, icon glyphs,
+  route-smoke fixture content, or backend-backed labels.
+- Parent validation gate: web build, focused `/personality`
+  desktop/tablet/mobile screenshot gate, navigation proof, account proof,
+  screenshot review, cleanup check, and `git diff --check`.
+
+## PRJ-1256 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX parity lane delegated to Lagrange and completed read-only
+  - QA lane delegated to Darwin and completed read-only
+  - coordinator implemented the route-local CSS patch and final proof
+- Implementation:
+  - mobile Personality callout connector lines now explicitly restore
+    `display: block` after the broader `max-width: 899px` rule hid them
+  - connector line and endpoint dot contrast were strengthened inside the
+    mobile breakpoint
+  - copy, labels, metric values, backend data, artwork, role card visibility,
+    PRJ-1254 timeline rail, Dashboard, Chat, and shared shell were not changed
+- Validation:
+  - `npm run build` PASS
+  - focused `/personality` screenshot gate across desktop/tablet/mobile PASS:
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof PASS: `step_count=4`, `failed_count=0`
+  - account proof PASS: `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` PASS with LF/CRLF warning only
+  - cleanup found no validation-owned node/Vite, 5173/4173 listener,
+    Chromium, or headless browser leftovers; eight fresh route-smoke temp
+    profiles from iterative screenshot tuning were removed
+- Residual:
+  - This is a verified Personality mobile connector clarity pass, not a full
+    95% pixel parity claim. Exact canonical icon glyphs and richer data values
+    remain separate content/data decisions.
+- Next recommended checkpoint:
+  - Pick one exact remaining screenshot mismatch on one route, or make a
+    content/data decision before changing canonical copy, icon glyphs,
+    route-smoke fixture content, or backend-backed labels.
+- Artifacts:
+  - `.codex/tasks/PRJ-1256-personality-mobile-callout-connectors.md`
+  - `.codex/artifacts/prj1256-personality-mobile-callout-connectors/report.json`
+  - `.codex/artifacts/prj1256-personality-mobile-callout-connectors/navigation-proof.json`
+  - `.codex/artifacts/prj1256-personality-mobile-callout-connectors/account-proof.json`
+  - `.codex/artifacts/prj1256-personality-mobile-callout-connectors/screenshots/`
+
+## Previous Mission
+
 - Mission ID: PRJ-1255-chat-desktop-persona-overlay-placement
 - Status: VERIFIED
 - Selected objective: place desktop Chat's Planning overlay as a lower-right

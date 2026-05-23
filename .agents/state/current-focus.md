@@ -4,6 +4,17 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed Personality UI slice is `PRJ-1256`: mobile callout
+connector visibility. It restores visible connector lines for mobile
+Personality callouts by overriding the broader mobile `display: none` guardrail
+for callout `::before`, and strengthens endpoint dots so the callouts read as
+attached to the embodied figure. Validation passed with `npm run build`,
+focused `/personality` desktop/tablet/mobile screenshot gate
+(`screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`),
+navigation proof (`step_count=4`, `failed_count=0`), account proof
+(`step_count=1`, `failed_count=0`, `panel_visible=true`), `git diff --check`,
+screenshot review, and cleanup checks.
+
 The latest completed Chat UI slice is `PRJ-1255`: desktop persona-stage
 overlay placement. It keeps ChatPortraitPanel data and markup intact, but moves
 the `Planning / Conversation continuity` overlay from the transcript-facing

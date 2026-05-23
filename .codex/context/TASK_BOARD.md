@@ -4,6 +4,35 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1256` is DONE:
+  - `.codex/tasks/PRJ-1256-personality-mobile-callout-connectors.md`
+- objective:
+  - make mobile Personality callout connector lines visible enough that the
+    callouts read as attached to the embodied figure
+- current result:
+  - mobile callout connector lines now render again after overriding the
+    broader mobile `display: none` guardrail
+  - endpoint dots are clearer, and all supported callouts/values remain visible
+  - no copy, backend data, artwork, role-card visibility, timeline rail,
+    Dashboard, Chat, shared shell, or route behavior changed
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - focused `/personality` screenshot gate across desktop/tablet/mobile ->
+    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+  - navigation proof -> PASS, `step_count=4`, `failed_count=0`
+  - account proof -> PASS, `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - cleanup check -> no validation-owned node/Vite, 5173/4173 listener,
+    Chromium, or headless browser leftovers; eight fresh route-smoke temp
+    profiles from iterative screenshot tuning were removed
+- residual:
+  - this is a verified Personality mobile connector clarity pass, not a full
+    Personality 95% parity claim
+- release boundary:
+  - this is a verified local web UI checkpoint on `main`
+  - production deployment still requires deploy parity proof
+
 - `PRJ-1255` is DONE:
   - `.codex/tasks/PRJ-1255-chat-desktop-persona-overlay-placement.md`
 - objective:

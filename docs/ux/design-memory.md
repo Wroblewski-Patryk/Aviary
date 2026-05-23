@@ -670,3 +670,16 @@
 - Keep transcript, composer, source markers, and cognitive-belt hierarchy out
   of overlay placement slices unless fresh screenshot evidence shows a direct
   collision.
+
+## 2026-05-23 - Personality mobile callout connectors
+
+- Mobile Personality callouts should not float as detached cards; connector
+  lines and endpoint dots need to remain visible enough to bind them to the
+  embodied figure.
+- A broader mobile/tablet guardrail may hide connector `::before` lines; if
+  the mobile embodied map needs connectors, restore display explicitly inside
+  the narrower mobile breakpoint.
+- Keep connector tuning separate from callout copy, backend-backed values,
+  portrait crop, role-card visibility, and the Mind Layers timeline rail.
+- Screenshot review must confirm the connectors improve map structure without
+  making the compact mobile hero feel busy.
