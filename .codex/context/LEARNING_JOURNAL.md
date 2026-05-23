@@ -36,6 +36,28 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-23 - Route-smoke artifact paths should be absolute from nested workdirs
+- Context: PRJ-1238 shared-shell noise reduction.
+- Symptom: a screenshot gate launched from `web/` with a relative
+  `../.codex/...` artifact path wrote a temporary artifact directory one level
+  outside the repository before the proof was rerun with absolute repo paths.
+- Root cause: nested working directories plus route-smoke path handling can
+  make relative artifact paths ambiguous during validation.
+- Guardrail: for PRJ-scoped UI screenshot proof, pass absolute artifact paths
+  under `C:/Personal/Projekty/Aplikacje/Personality/.codex/artifacts/...` or
+  run from the repository root with paths verified before closure.
+- Preferred pattern:
+  - use absolute `--screenshots` and `--report` paths for route-smoke when
+    running from `web/`
+  - verify the report path exists under the repository before closure
+- Avoid:
+  - assuming `../.codex` from nested workdirs resolves to the intended repo
+    artifact directory
+- Evidence:
+  - PRJ-1238 reran route smoke, account proof, and screenshot gate with
+    absolute repo artifact paths.
+  - The accidental parent artifact directory was removed.
+
 ### 2026-05-23 - Start-Process needs npm.cmd on Windows
 - Context:
   - PRJ-1235 started a local Vite preview for an in-app Browser check after

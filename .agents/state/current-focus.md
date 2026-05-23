@@ -4,6 +4,12 @@ Last updated: 2026-05-23
 
 ## Active Focus
 
+The latest completed implementation slice is `PRJ-1238`: shared-shell noise
+reduction. Desktop utility chrome now keeps route context and account access
+only; fake search, Focus mode, Quick capture, notification chrome, duplicate
+sidebar diagnostics, and visible mobile `Workspace` labels are removed. The
+next focused slice should be `PASS-SETTINGS-TOOLS`.
+
 The latest completed UI planning slice is `PRJ-1237`: canonical UI
 simplification index. Future v1.2 web/native UI work should start from
 `docs/ux/canonical-ui-layout-index.md`, which defines one shared shell, backend

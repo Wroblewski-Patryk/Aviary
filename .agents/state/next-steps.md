@@ -4,6 +4,22 @@ Last updated: 2026-05-23
 
 ## NOW
 
+1. Continue v1.2 UI simplification from `PRJ-1238`:
+   - task:
+     `.codex/tasks/PRJ-1238-shared-shell-noise-reduction.md`
+   - result:
+     shared shell fake utility controls and duplicate labels are removed;
+     `PASS-NOISE-AUDIT` queue is recorded in
+     `docs/ux/canonical-ui-layout-index.md`
+   - proof:
+     `npm run build` PASS; route smoke `route_count=14`, `status=ok`;
+     navigation proof `failed_count=0`; account proof `panel_visible=true`;
+     screenshot gate `viewport_count=3`, `screenshot_count=42`,
+     `failed_count=0`
+   - next smallest useful choices:
+     run `PASS-SETTINGS-TOOLS`, starting with Settings hero chips/card grid
+     and Tools summary/provider-plumbing noise
+
 1. Continue v1.2 UI simplification from the canonical index:
    - task:
      `.codex/tasks/PRJ-1237-canonical-ui-layout-index.md`

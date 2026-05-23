@@ -4,6 +4,41 @@ Last updated: 2026-05-23
 
 ## Project Status Dashboard (2026-05-23)
 
+- `PRJ-1238` is DONE:
+  - `.codex/tasks/PRJ-1238-shared-shell-noise-reduction.md`
+- objective:
+  - execute the first v1.2 simplification implementation slice from the
+    canonical UI layout index by reducing global shell noise before deeper
+    route-local work
+- current result:
+  - coordinated UX/noise-audit and shell-review lanes
+  - desktop utility bar now shows only current surface context and account
+    access
+  - removed fake search, Focus mode, Quick capture, and notification chrome
+    from the shared desktop utility bar
+  - removed the duplicate `Diagnostics steady` pill from the desktop sidebar
+    health card
+  - removed the visible mobile `Workspace` label above route titles
+  - recorded the `PASS-NOISE-AUDIT` queue in
+    `docs/ux/canonical-ui-layout-index.md`
+- validation:
+  - `npm run build` in `web/` -> PASS
+  - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+  - `npm run audit:ui-navigation` -> PASS, `step_count=4`,
+    `failed_count=0`
+  - route smoke -> `route_count=14`, `status=ok`
+  - account proof -> `step_count=1`, `failed_count=0`,
+    `panel_visible=true`
+  - screenshot gate -> `viewport_count=3`, `screenshot_count=42`,
+    `failed_count=0`
+  - Browser/IAB proof was attempted but blocked by runtime bootstrap exit;
+    route-smoke screenshots remain the rendered proof
+  - cleanup stopped validation-owned `chrome-headless-shell` processes; the
+    unrelated `Obiekty` Vite listener was left untouched
+- release boundary:
+  - this is a verified local web shell simplification checkpoint on `main`
+  - production deployment still requires source automation/deploy parity proof
+
 - `PRJ-1237` is DONE:
   - `.codex/tasks/PRJ-1237-canonical-ui-layout-index.md`
 - objective:

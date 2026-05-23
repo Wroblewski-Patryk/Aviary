@@ -252,6 +252,17 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
   `PASS-NOISE-AUDIT` followed by `PASS-SHELL` with screenshots and route-smoke
   proof.
 
+- `AVIARY-WEB-RESP-001` also includes `PRJ-1238`: shared-shell noise reduction
+  removed fake utility search, Focus mode, Quick capture, notification chrome,
+  duplicate sidebar diagnostics, and visible mobile `Workspace` labels while
+  preserving route context, account access, one desktop sidebar, one mobile
+  header, and one route rail. Evidence: `npm run build` PASS, `node --check
+  scripts/route-smoke.mjs` PASS, `npm run audit:ui-navigation` PASS
+  (`step_count=4`, `failed_count=0`), route smoke `route_count=14`,
+  `status=ok`, account proof `step_count=1`, `failed_count=0`,
+  `panel_visible=true`, screenshot gate `viewport_count=3`,
+  `screenshot_count=42`, `failed_count=0`.
+
 ## Maintenance Rules
 
 - Update this file when a feature ships, a bug is fixed, a regression appears,

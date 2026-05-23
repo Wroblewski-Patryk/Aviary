@@ -6,6 +6,42 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-23: `PRJ-1238` completed the shared-shell noise reduction pass:
+  - task:
+    - `.codex/tasks/PRJ-1238-shared-shell-noise-reduction.md`
+  - result:
+    - removed fake desktop utility search, Focus mode, Quick capture, and
+      notification chrome from the shared shell
+    - kept the desktop utility bar focused on current route context and account
+      access
+    - removed the duplicate `Diagnostics steady` pill from the desktop sidebar
+      health card
+    - removed the visible mobile `Workspace` label above route titles
+    - recorded the route-noise audit queue in
+      `docs/ux/canonical-ui-layout-index.md`
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+    - `npm run audit:ui-navigation` -> PASS, `step_count=4`,
+      `failed_count=0`
+    - route smoke -> `route_count=14`, `status=ok`
+    - account proof -> `step_count=1`, `failed_count=0`,
+      `panel_visible=true`
+    - screenshot gate -> `viewport_count=3`, `screenshot_count=42`,
+      `failed_count=0`
+    - Browser/IAB proof was attempted but blocked by runtime bootstrap exit;
+      route-smoke screenshots are the rendered proof for this checkpoint
+    - validation cleanup stopped route-smoke-owned `chrome-headless-shell`
+      processes and left the unrelated `Obiekty` Vite listener untouched
+  - artifacts:
+    - `.codex/artifacts/prj1238-shared-shell-noise-reduction/route-smoke-report.json`
+    - `.codex/artifacts/prj1238-shared-shell-noise-reduction/account-proof-report.json`
+    - `.codex/artifacts/prj1238-shared-shell-noise-reduction/screenshot-gate-report.json`
+    - `.codex/artifacts/prj1238-shared-shell-noise-reduction/screenshots/`
+  - release boundary:
+    - this is a verified local web shell simplification checkpoint on `main`
+    - production deployment still requires deploy parity proof
+
 - 2026-05-23: `PRJ-1237` completed the canonical UI simplification index for
   v1.2:
   - task:

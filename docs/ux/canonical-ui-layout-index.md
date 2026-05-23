@@ -344,6 +344,19 @@ Remove or demote:
 | PASS-CHAT | Chat route components/styles | transcript/composer visibility, send path, pending confirmation state, mobile first-read proof |
 | PASS-PERSONALITY | Personality route components/styles | embodied-map readability and reduced callout density proof |
 
+## PASS-NOISE-AUDIT Queue
+
+Last updated: 2026-05-23.
+
+| Surface | Noise ID | Current owner/selectors | Decision | Required proof |
+| --- | --- | --- | --- | --- |
+| Desktop shell utility | NOISE-FAKE-CHROME | `ShellUtilityBar`, `.aion-utility-search`, `.aion-utility-pill`, `.aion-utility-icon-pill` | remove fake search, focus, capture, and notification chrome; keep route context plus account only | desktop screenshots, navigation proof, account proof |
+| Desktop sidebar support | NOISE-DUP-BADGE | `aion-sidebar-health-card`, `aion-sidebar-quiet-button` | remove duplicate diagnostics pill; keep one quiet health state until DATA-HEALTH is richer | desktop shell screenshots |
+| Mobile shell header | NOISE-DUP-BADGE | `aion-mobile-route-header`, visible `Workspace` label | merge route identity into the route title; keep brand and account trigger | mobile core-route screenshots |
+| Settings first viewport | NOISE-DUP-BADGE, NOISE-CARD-IN-CARD | `SettingsStatusPillList`, `SettingsCard` grid | remove hero chips and consolidate settings fields into a simpler form panel in a later route slice | settings desktop/mobile screenshots and save proof |
+| Tools first viewport | NOISE-DUP-BADGE, NOISE-TECH-FIRST | `ToolsSummaryCardList`, directory count chip, provider/source pills | merge availability summary and demote provider plumbing behind details in a later route slice | tools screenshots and details expand proof |
+| Module routes | NOISE-MOBILE-GRID, NOISE-DUP-BADGE | `ModuleStatRow`, per-module route chips, side stacks | demote repeated stats/chips and keep one primary data body per module in a later route slice | module route screenshots across desktop/mobile |
+
 ## Acceptance Gate For Future UI Work
 
 A route is not accepted as simplified unless:

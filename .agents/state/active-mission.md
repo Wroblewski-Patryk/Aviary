@@ -9,6 +9,60 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1238-shared-shell-noise-reduction
+- Status: COMPLETED
+- Selected objective: execute the first implementation slice from the
+  canonical UI simplification index by reducing shared-shell noise and
+  recording route-noise decisions.
+- Why this mission now: `PRJ-1237` established the UI index, and the user's
+  current priority is less chaos across all views. The shared shell is the
+  highest-leverage first slice because every authenticated route inherits it.
+- Release objective or product milestone advanced: v1.2 web UI simplification
+  on `main`.
+- First/next checkpoint: completed. The next mission should run
+  `PASS-SETTINGS-TOOLS`, starting with Settings hero chips/card grid or Tools
+  summary/provider-plumbing noise.
+- Stop conditions: completed for the shell slice. Future route slices must stop
+  if a visible element cannot map to the canonical index, validation finds
+  route/navigation/account regressions, or deploy/source branch drift makes
+  release claims unsafe.
+- Parent validation gate: web build, route-smoke syntax/route proof,
+  navigation/account proof, representative responsive screenshots, and cleanup
+  checks.
+
+## PRJ-1238 Current Evidence
+
+- Branch: `main`.
+- Lane status:
+  - UX/noise-audit lane delegated to Faraday.
+  - Shell review lane delegated to Dirac.
+  - Coordinator opened the PRJ-1238 task and started the shared-shell slice.
+- Implementation:
+  - desktop utility bar now keeps only current route context and account
+    disclosure
+  - fake search, Focus mode, Quick capture, and notification chrome removed
+  - desktop sidebar health card no longer shows the duplicate diagnostics pill
+  - mobile route header no longer repeats visible `Workspace` above the route
+    title
+  - `PASS-NOISE-AUDIT` queue recorded in
+    `docs/ux/canonical-ui-layout-index.md`
+- Validation:
+  - `npm run build` PASS
+  - `node --check scripts/route-smoke.mjs` PASS
+  - `npm run audit:ui-navigation` PASS, `step_count=4`, `failed_count=0`
+  - route smoke `route_count=14`, `status=ok`
+  - account proof `step_count=1`, `failed_count=0`, `panel_visible=true`
+  - screenshot gate `viewport_count=3`, `screenshot_count=42`,
+    `failed_count=0`
+  - Browser/IAB proof attempted but runtime bootstrap exited unexpectedly;
+    route-smoke screenshots are the rendered proof for this checkpoint
+  - validation cleanup stopped route-smoke-owned `chrome-headless-shell`
+    processes
+- Artifacts:
+  - `.codex/tasks/PRJ-1238-shared-shell-noise-reduction.md`
+
+## Previous Mission
+
 - Mission ID: PRJ-1237-canonical-ui-layout-index
 - Status: COMPLETED
 - Selected objective: turn the user's simplification direction into a

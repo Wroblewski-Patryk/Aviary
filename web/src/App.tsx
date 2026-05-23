@@ -3990,9 +3990,6 @@ export default function App() {
                 </div>
                 <p className="aion-sidebar-health-status">Optimal</p>
                 <p className="aion-sidebar-health-body">All systems aligned and operating well.</p>
-                <span className="aion-sidebar-quiet-button" aria-label="Diagnostics status">
-                  Diagnostics steady
-                </span>
               </section>
 
               <button
@@ -4075,7 +4072,6 @@ export default function App() {
                     </div>
                   </div>
                   <div className="mt-3">
-                    <p className="text-xs uppercase tracking-[0.24em] text-base-800">{copy.common.workspace}</p>
                     <h1 className="font-display text-2xl text-base-900 sm:text-3xl">{routeLabel(route, resolvedUiLanguage)}</h1>
                   </div>
                 </div>

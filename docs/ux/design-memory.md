@@ -1,5 +1,18 @@
 # Design Memory
 
+## 2026-05-23 - Shared shell noise reduction
+
+- Desktop utility chrome should not expose fake search, quick-capture,
+  notification, or mode controls until those behaviors exist. The authenticated
+  desktop utility bar should prefer current surface context plus account
+  access.
+- Sidebar health can remain visible as quiet status material, but duplicate
+  diagnostic pills make the sidebar feel like a control stack and should stay
+  out of first-read shell chrome.
+- Mobile route headers should use the route title as the visible location
+  signal. Avoid repeating `Workspace` above every route when the route rail and
+  title already orient the user.
+
 ## 2026-05-23 - Canonical UI simplification index
 
 - Every visible UI element should map to one of four jobs: what Aviary can do,

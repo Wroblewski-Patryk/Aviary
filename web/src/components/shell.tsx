@@ -395,26 +395,11 @@ export function ShellUtilityBar({
           <span className="aion-utility-context-emblem-core" />
         </span>
         <div className="min-w-0">
-          <p className="aion-utility-context-label">Aviary workspace</p>
+          <p className="aion-utility-context-label">Current surface</p>
           <p className="aion-utility-context-copy">{currentSurface}</p>
         </div>
       </div>
-      <div className="aion-utility-search" aria-label="Workspace continuity frame">
-        <span className="aion-utility-search-icon" aria-hidden="true" />
-        <span className="aion-utility-search-placeholder">Search Aviary or ask anything...</span>
-        <span className="aion-utility-search-shortcut" aria-hidden="true" />
-      </div>
       <div className="aion-utility-actions">
-        <span className="aion-utility-pill" aria-label="Focus mode status">
-          <span className="aion-utility-pill-dot" />
-          Focus mode
-        </span>
-        <span className="aion-utility-pill" aria-label="Quick capture status">
-          Quick capture
-        </span>
-        <span className="aion-utility-icon-pill" aria-label="Notifications">
-          3
-        </span>
         <button
           aria-controls="aion-shell-account-popover"
           aria-expanded={accountPanelOpen}
