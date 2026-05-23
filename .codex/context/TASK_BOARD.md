@@ -1,8 +1,37 @@
 # TASK_BOARD
 
-Last updated: 2026-05-23
+Last updated: 2026-05-24
 
-## Project Status Dashboard (2026-05-23)
+## Project Status Dashboard (2026-05-24)
+
+- `PRJ-1262` is DONE:
+  - `.codex/tasks/PRJ-1262-personality-full-surface-pass.md`
+- objective:
+  - close one full `/personality` surface pass end-to-end instead of micro
+    cosmetic iterations
+- current result:
+  - personality overview bar, hero stage material, callout/role-card weight,
+    timeline panel, row rhythm, and side panel surfaces are calmer and more
+    coherent across desktop/mobile
+  - route structure, data bindings, controls, shared shell, and backend
+    contracts remain unchanged
+- validation:
+  - `node --check web/scripts/route-smoke.mjs` -> PASS
+  - `npm run build` in `web/` -> PASS
+  - focused `/personality` screenshot/navigation/account gate -> `status=ok`,
+    `route_count=14`, `ui_audit.screenshot_count=2`,
+    `ui_audit.failed_count=0`, `navigation_proof.failed_count=0`,
+    `account_proof.failed_count=0`
+  - `git diff --check` -> PASS with LF/CRLF warning only
+  - screenshot artifacts:
+    `artifacts/route-smoke/prj-1262/desktop-personality.png`,
+    `artifacts/route-smoke/prj-1262/mobile-personality.png`
+- residual:
+  - this is a verified single-view full-surface pass for Personality, not a
+    global all-routes parity closure
+- release boundary:
+  - verified local web UI checkpoint on `main`; production still needs deploy
+    parity proof
 
 - `PRJ-1261` is DONE:
   - `.codex/tasks/PRJ-1261-personality-mobile-timeline-map.md`

@@ -1,6 +1,6 @@
 # Module Confidence Ledger
 
-Last updated: 2026-05-23
+Last updated: 2026-05-24
 
 ## Project Alias
 
@@ -45,6 +45,20 @@ unknown. Keep it honest. Do not turn uncertainty into optimism.
 | AVIARY-BLOCKER-001 | External providers | Provider credential activation smoke for connector readiness | P1 | DEFERRED | Medium | `PRJ-933`; `PRJ-1197`; `docs/planning/current-v1-release-boundary.md` keeps organizer activation outside the achieved core/web-supported marker; `/app/tools/overview` now excludes future-only Trello/Nest placeholders and focused tools-overview test passed. | External credentials/input needed before an expanded organizer launch claim; future provider candidates need bounded runtime contracts before appearing in the active tools catalog. | Run provider activation smoke only when credentials exist and organizer scope expands. | Ops/Release + QA/Test | 2026-05-14 |
 
 ## Recent Evidence Notes
+
+- `PRJ-1262` completes a verified Personality full-surface pass for
+  `AVIARY-WEB-RESP-001`: `/personality` now presents a calmer, more coherent
+  hierarchy across desktop/mobile through overview bar structure tuning, hero
+  material balancing, lighter callout and role-card weight, tighter timeline
+  readability, and quieter side-panel surfaces while route contracts and
+  backend data mapping remain unchanged. Evidence: `node --check
+  web/scripts/route-smoke.mjs` passed; `npm run build` passed; focused
+  `/personality` screenshot/navigation/account gate returned `status=ok`,
+  `route_count=14`, `ui_audit.screenshot_count=2`, `ui_audit.failed_count=0`,
+  `navigation_proof.failed_count=0`, `account_proof.failed_count=0`;
+  `git diff --check` passed with LF/CRLF warning only; screenshot artifacts at
+  `artifacts/route-smoke/prj-1262/desktop-personality.png` and
+  `artifacts/route-smoke/prj-1262/mobile-personality.png`.
 
 - `PRJ-1261` completes a verified Personality mobile timeline map pass for
   `AVIARY-WEB-RESP-001`: mobile Mind Layers Timeline now uses flatter rows,

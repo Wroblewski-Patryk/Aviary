@@ -1,10 +1,38 @@
 # PROJECT_STATE
 
-Last updated: 2026-05-23
+Last updated: 2026-05-24
 
 Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
+
+- 2026-05-24: `PRJ-1262` completed a Personality full-surface pass:
+  - task:
+    - `.codex/tasks/PRJ-1262-personality-full-surface-pass.md`
+  - result:
+    - delivered one cohesive `/personality` desktop/mobile polish pass focused
+      on calmer hierarchy and reduced visual noise
+    - refined overview bar structure, hero stage material, callout/role-card
+      weight, timeline panel readability, row rhythm, and side panel surface
+      balance
+    - preserved route structure, backend payload mapping, controls, and shared
+      shell behavior
+    - changed only route-local CSS in `web/src/index.css`
+  - validation:
+    - `node --check web/scripts/route-smoke.mjs` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - focused `/personality` screenshot/navigation/account gate -> `status=ok`,
+      `route_count=14`, `ui_audit.screenshot_count=2`,
+      `ui_audit.failed_count=0`, `navigation_proof.failed_count=0`,
+      `account_proof.failed_count=0`
+    - `git diff --check` -> PASS with LF/CRLF warning only
+    - screenshot artifacts:
+      `artifacts/route-smoke/prj-1262/desktop-personality.png`,
+      `artifacts/route-smoke/prj-1262/mobile-personality.png`,
+      `artifacts/route-smoke/prj-1262/report.json`
+  - residual:
+    - this closes one flagship view pass; global cross-route parity remains
+      separate scope
 
 - 2026-05-23: `PRJ-1261` completed a Personality mobile timeline layer-map
   pass:

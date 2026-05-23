@@ -1,6 +1,6 @@
 # Active Mission Packet
 
-Last updated: 2026-05-23
+Last updated: 2026-05-24
 
 Use this file as the first operational router for `pracuj dalej`, `rob dalej`,
 `kontynuuj`, `next`, and similar continuation nudges. Keep it short enough that
@@ -9,61 +9,54 @@ repository history.
 
 ## Current Mission
 
-- Mission ID: PRJ-1261-personality-mobile-timeline-map
+- Mission ID: PRJ-1262-personality-full-surface-pass
 - Status: VERIFIED
-- Selected objective: make mobile Personality Mind Layers Timeline read as a
-  compact layer map instead of a list of card/pill controls.
-- Why this mission now: after `PRJ-1260`, Hooke identified mobile Personality
-  timeline weight as the smallest canonical-backed mismatch that directly
-  matches the user's request to reduce cards, badges, and control clutter.
+- Selected objective: close one full `/personality` view pass end-to-end on
+  web mobile/desktop instead of another micro-iteration.
+- Why this mission now: user requested one complete view finished from start to
+  end, with final quality rather than ongoing cosmetic churn.
 - Release objective or product milestone advanced: v1.2 web Personality
-  canonical mobile composition.
-- First/next checkpoint: completed a CSS-only mobile Personality timeline pass.
-  The six layers and values remain visible but use flatter rows, stronger
-  layer tokens, inline values, and calmer tracks.
+  canonical full-surface composition.
+- First/next checkpoint: completed a CSS-only full-surface Personality pass
+  across overview, hero, timeline, and side panels for desktop/mobile.
 - Stop conditions: next work should pick one exact route/screenshot mismatch
   or make a content/data decision before changing canonical copy, icon glyphs,
   route-smoke fixture content, or backend-backed labels.
 - Parent validation gate: web build, focused `/personality`
-  desktop/tablet/mobile screenshot gate, navigation proof, account proof,
+  desktop/mobile screenshot gate, navigation proof, account proof,
   screenshot review, cleanup check, and `git diff --check`.
 
-## PRJ-1261 Current Evidence
+## PRJ-1262 Current Evidence
 
 - Branch: `main`.
 - Lane status:
-  - UX parity lane delegated to Hooke and completed read-only
-  - QA lane delegated to Archimedes and completed read-only
   - coordinator implemented the route-local CSS patch and final proof
 - Implementation:
-  - mobile Personality timeline rows are flatter, values are inline metadata,
-    layer tokens are stronger, and tracks read more like a layer map
-  - hero figure, callouts, connector lines, side panels, Dashboard, Chat,
-    shared shell, backend data, route labels, and layer order were not changed
+  - refined personality overview bar structure, hero-stage material, callout
+    and role-card weight, timeline panel rhythm, and side panel balance
+  - preserved route structure, backend data mapping, controls, shared shell,
+    and cross-route behavior
 - Validation:
-  - `node --check scripts/route-smoke.mjs` PASS
+  - `node --check web/scripts/route-smoke.mjs` PASS
   - `npm run build` PASS
   - combined focused `/personality` screenshot/navigation/account gate PASS:
-    `screenshot_count=3`, `failed_count=0`, `route_count=14`, `status=ok`
+    `screenshot_count=2`, `failed_count=0`, `route_count=14`, `status=ok`
   - navigation proof PASS: `step_count=4`, `failed_count=0`
   - account proof PASS: `step_count=1`, `failed_count=0`,
     `panel_visible=true`
   - `git diff --check` PASS with LF/CRLF warning only
   - cleanup found no validation-owned node/Vite, 5173/4173 listener,
-    Chromium, or headless browser leftovers; two fresh route-smoke temp
-    profiles from this checkpoint were removed
+    Chromium, or headless browser leftovers
 - Residual:
-  - This is a verified Personality mobile timeline map pass, not a full 95%
-    pixel parity claim. Exact canonical icon glyphs and richer layer data
-    remain separate content/data decisions.
+  - This is a verified single-view full-surface pass for Personality, not a
+    global all-routes parity closure.
 - Next recommended checkpoint:
-  - Pick one exact remaining screenshot mismatch on one route, or make a
-    content/data decision before changing canonical copy, icon glyphs,
-    route-smoke fixture content, or backend-backed labels.
+  - Move to next highest-impact route mismatch after explicit user selection.
 - Artifacts:
-  - `.codex/tasks/PRJ-1261-personality-mobile-timeline-map.md`
-  - `.codex/artifacts/prj1261-personality-mobile-timeline-map/report.json`
-  - `.codex/artifacts/prj1261-personality-mobile-timeline-map/screenshots/`
+  - `.codex/tasks/PRJ-1262-personality-full-surface-pass.md`
+  - `artifacts/route-smoke/prj-1262/report.json`
+  - `artifacts/route-smoke/prj-1262/desktop-personality.png`
+  - `artifacts/route-smoke/prj-1262/mobile-personality.png`
 
 ## Previous Mission
 

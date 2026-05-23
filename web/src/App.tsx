@@ -4021,16 +4021,14 @@ export default function App() {
 
           <div className={`aion-shell-stage aion-shell-stage-${route.slice(1)} grid gap-3`}>
             <div className="aion-shell-toolbar aion-shell-toolbar-chat-canonical hidden xl:block">
-              {route === "/dashboard" || route === "/chat" || route === "/personality" ? null : (
-                <ShellUtilityBar
-                  currentSurface={routeLabel(route, resolvedUiLanguage)}
-                  currentUserLabel={currentUserLabel}
-                  currentUserEmail={me.user.email}
-                  accountPanelOpen={accountPanelOpen}
-                  avatarSrc={CANONICAL_PERSONA_FIGURE_SRC}
-                  onAccountClick={() => setAccountPanelOpen((value) => !value)}
-                />
-              )}
+              <ShellUtilityBar
+                currentSurface={routeLabel(route, resolvedUiLanguage)}
+                currentUserLabel={currentUserLabel}
+                currentUserEmail={me.user.email}
+                accountPanelOpen={accountPanelOpen}
+                avatarSrc={CANONICAL_PERSONA_FIGURE_SRC}
+                onAccountClick={() => setAccountPanelOpen((value) => !value)}
+              />
 
               {accountPanelOpen ? (
                 <section
