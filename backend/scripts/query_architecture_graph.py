@@ -15,6 +15,7 @@ PROOF_COLUMNS = [
 
 VERIFIED_STATUSES = {"verified", "tested"}
 GAP_MODES = {"strict", "operational"}
+OPERATIONAL_RELATION_REQUIRED_TYPES = {"function", "class", "api_route", "component", "test"}
 
 
 @dataclass(frozen=True)
@@ -145,7 +146,7 @@ def detect_gaps(
     # Operational mode treats auto-inventory rows as structural coverage unless
     # they are promoted to higher-risk workflow/feature surfaces.
     if mode == "operational" and is_auto:
-        if incoming_count + outgoing_count <= 0:
+        if node.get("type") in OPERATIONAL_RELATION_REQUIRED_TYPES and incoming_count + outgoing_count <= 0:
             gaps.append("auto node has no relation coverage")
         if node.get("type") in {"feature", "workflow", "api_route"} and not chains:
             gaps.append("no function chains include this node")

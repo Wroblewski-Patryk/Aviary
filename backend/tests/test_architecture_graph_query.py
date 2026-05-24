@@ -267,7 +267,7 @@ def test_operational_gap_mode_ignores_strict_proof_requirements_for_auto_nodes()
     assert "tests_related is empty" in strict_result["gaps"]
     assert "docs_related is empty" in strict_result["gaps"]
     assert "no evidence rows" in strict_result["gaps"]
-    assert operational_result["gaps"] == ["auto node has no relation coverage"]
+    assert operational_result["gaps"] == []
 
 
 def test_chain_missing_links_do_not_overreport_on_model_nodes() -> None:

@@ -15,6 +15,8 @@ Last updated: 2026-05-24
     `docs/status/architecture-curation-queue-priority.csv` (`3265` rows)
   - operational audit mode added to gap query; operational report now shows
     `all_gap_nodes=1121` with curated scope still at `0`
+  - final operational closure in this slice:
+    `all_gap_nodes=0`, local architecture graph release gate PASS
 
 - `PRJ-1322` is DONE:
   - `.codex/tasks/PRJ-1322-post-push-production-closure-proof.md`

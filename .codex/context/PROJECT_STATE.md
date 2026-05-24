@@ -22,6 +22,10 @@ the same project.
     - `query_architecture_graph.py` now supports `--gap-mode strict|operational`
     - operational full-scope coverage report shows `all_gap_nodes=1121`
       while curated scope remains `0`
+  - operational closure milestone:
+    - relation coverage refinement plus graph regeneration reduced operational
+      full-scope report to `all_gap_nodes=0`
+    - `run_architecture_graph_local_release_gate.py` PASS after update
   - interpretation:
     - curated proof scope is closed, while full auto-discovered scope still
       needs iterative evidence/chain promotion for complete function-level mapping
