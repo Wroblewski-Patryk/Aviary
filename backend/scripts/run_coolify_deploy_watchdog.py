@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
+from urllib.request import urlopen
 
 import requests
 
@@ -31,6 +32,27 @@ def fetch_health_requests(base_url: str) -> dict[str, Any]:
     response = requests.get(url, timeout=20)
     response.raise_for_status()
     return response.json()
+
+
+def fetch_health_urllib(base_url: str) -> dict[str, Any]:
+    url = f"{base_url.rstrip('/')}/health"
+    with urlopen(url, timeout=20) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def fetch_health_with_fallback(base_url: str) -> tuple[dict[str, Any], str]:
+    request_errors: list[str] = []
+    try:
+        return fetch_health_requests(base_url), "requests"
+    except requests.RequestException as exc:
+        request_errors.append(f"requests:{exc}")
+
+    try:
+        return fetch_health_urllib(base_url), "urllib"
+    except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as exc:
+        request_errors.append(f"urllib:{exc}")
+
+    raise RuntimeError("; ".join(request_errors))
 
 
 def decide_next_action(
@@ -131,6 +153,7 @@ def main() -> int:
         "attempts": [],
         "final_status": "unknown",
         "parity": False,
+        "connectivity_blocked": False,
     }
 
     while True:
@@ -141,9 +164,10 @@ def main() -> int:
             "parity": False,
             "error": "",
             "decision": "",
+            "health_fetch_method": "",
         }
         try:
-            health = fetch_health_requests(args.base_url)
+            health, fetch_method = fetch_health_with_fallback(args.base_url)
             production_status = str(health.get("status") or "")
             deployment = health.get("deployment") or {}
             production_runtime_sha = str(deployment.get("runtime_build_revision") or "")
@@ -151,7 +175,8 @@ def main() -> int:
             attempt["production_status"] = production_status
             attempt["production_runtime_sha"] = production_runtime_sha
             attempt["parity"] = parity
-        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError, requests.RequestException) as exc:
+            attempt["health_fetch_method"] = fetch_method
+        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError, requests.RequestException, RuntimeError) as exc:
             parity = False
             attempt["error"] = str(exc)
 
@@ -188,6 +213,10 @@ def main() -> int:
             break
 
         if time.monotonic() >= deadline:
+            if all(not a["production_status"] and a["error"] for a in report["attempts"]):
+                report["connectivity_blocked"] = True
+                report["final_status"] = "connectivity_blocked"
+                break
             report["final_status"] = "timeout_without_parity"
             break
 
@@ -200,7 +229,7 @@ def main() -> int:
 
     if report["parity"]:
         return 0
-    if report["final_status"] in {"trigger_failed", "needs_manual_coolify_deploy"}:
+    if report["final_status"] in {"trigger_failed", "needs_manual_coolify_deploy", "connectivity_blocked"}:
         return 1
     return 2
 

@@ -50,3 +50,20 @@ def test_decide_next_action_requires_manual_deploy_when_no_webhook() -> None:
         == "needs_manual_coolify_deploy"
     )
 
+
+def test_fetch_health_with_fallback_uses_urllib_when_requests_fails(monkeypatch) -> None:
+    class _ReqErr(Exception):
+        pass
+
+    def _fail_requests(_base_url: str):
+        raise MODULE.requests.RequestException("blocked")
+
+    def _ok_urllib(_base_url: str):
+        return {"status": "ok", "deployment": {"runtime_build_revision": "abc"}}
+
+    monkeypatch.setattr(MODULE, "fetch_health_requests", _fail_requests)
+    monkeypatch.setattr(MODULE, "fetch_health_urllib", _ok_urllib)
+
+    health, method = MODULE.fetch_health_with_fallback("https://example.com")
+    assert method == "urllib"
+    assert health["status"] == "ok"
