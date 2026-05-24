@@ -6,6 +6,26 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-24: `PRJ-1323` added deterministic architecture coverage baseline:
+  - task:
+    - `.codex/tasks/PRJ-1323-architecture-coverage-report-baseline.md`
+  - result:
+    - added `backend/scripts/report_architecture_coverage.py`
+    - generated `docs/status/architecture-coverage-report.json`
+    - generated `docs/status/architecture-coverage-report.md`
+    - generated `docs/status/architecture-curation-queue-priority.csv`
+  - validation:
+    - `curated_gap_nodes=0`
+    - `all_gap_nodes=5300`
+    - `queue_rows=3265` for function/class/api/component/test curation
+  - operational refinement:
+    - `query_architecture_graph.py` now supports `--gap-mode strict|operational`
+    - operational full-scope coverage report shows `all_gap_nodes=1121`
+      while curated scope remains `0`
+  - interpretation:
+    - curated proof scope is closed, while full auto-discovered scope still
+      needs iterative evidence/chain promotion for complete function-level mapping
+
 - 2026-05-24: `PRJ-1322` confirmed post-push production closure proof:
   - task:
     - `.codex/tasks/PRJ-1322-post-push-production-closure-proof.md`

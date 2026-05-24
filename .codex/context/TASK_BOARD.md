@@ -4,6 +4,18 @@ Last updated: 2026-05-24
 
 ## Project Status Dashboard (2026-05-24)
 
+- `PRJ-1323` is DONE:
+  - `.codex/tasks/PRJ-1323-architecture-coverage-report-baseline.md`
+- objective:
+  - quantify full-function mapping coverage beyond curated scope
+- current result:
+  - added `backend/scripts/report_architecture_coverage.py`
+  - baseline report generated: `curated_gap_nodes=0`, `all_gap_nodes=5300`
+  - prioritized queue generated:
+    `docs/status/architecture-curation-queue-priority.csv` (`3265` rows)
+  - operational audit mode added to gap query; operational report now shows
+    `all_gap_nodes=1121` with curated scope still at `0`
+
 - `PRJ-1322` is DONE:
   - `.codex/tasks/PRJ-1322-post-push-production-closure-proof.md`
 - objective:
