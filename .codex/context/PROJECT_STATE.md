@@ -6,6 +6,1024 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-24: `PRJ-1320` synced architecture-graph release-readiness to hosted-optional policy:
+  - task:
+    - `.codex/tasks/PRJ-1320-architecture-graph-release-readiness-hosted-optional-sync.md`
+  - result:
+    - `docs/status/architecture-graph-release-readiness.md` now labels hosted proof optional and non-blocking under `DEC-005`
+
+- 2026-05-24: `PRJ-1321` completed final no-paid-GitHub consistency sweep:
+  - task:
+    - `.codex/tasks/PRJ-1321-final-consistency-sweep-no-paid-github-baseline.md`
+  - result:
+    - removed residual wording in active governance/state/task history that could imply hosted Actions proof is required
+    - normalized wording to optional supplementary hosted evidence under `DEC-005`
+  - validation:
+    - `run_architecture_graph_local_release_gate.py` re-run -> `overall_status=PASSED`
+
+- 2026-05-24: `PRJ-1319` annotated historical mission residuals as non-blocking:
+  - task:
+    - `.codex/tasks/PRJ-1319-mission-history-nonblocking-hosted-proof-annotation.md`
+  - result:
+    - added explicit historical/non-blocking note under `DEC-005` in active mission
+    - added final canonical gate PASS row in system health
+
+- 2026-05-24: `PRJ-1318` completed final canonical gate verification (no paid GitHub path):
+  - task:
+    - `.codex/tasks/PRJ-1318-canonical-no-paid-github-gates-final-verification.md`
+  - validation:
+    - `run_architecture_graph_local_release_gate.py` -> `overall_status=PASSED`
+    - `run_production_release_proof_cycle.ps1` -> `health_status=ok`, `release_ready=true`, `release_violations=[]`
+  - artifacts:
+    - `docs/status/production-release-evidence-summary-20260524T175856Z.json`
+
+- 2026-05-24: `PRJ-1317` normalized release gates for no-billing-blocker operation:
+  - task:
+    - `.codex/tasks/PRJ-1317-no-billing-blocker-release-gate-normalization.md`
+  - result:
+    - hosted Actions proof moved to optional supplementary evidence
+    - required release baseline set to local graph gate + production proof cycle
+  - policy:
+    - durable decision `DEC-005`
+
+- 2026-05-24: `PRJ-1316` completed hosted-proof intake regression tests:
+  - task:
+    - `.codex/tasks/PRJ-1316-hosted-proof-intake-regression-tests.md`
+  - result:
+    - added `backend/tests/test_run_architecture_graph_hosted_proof_intake.py`
+  - validation:
+    - hosted-proof test pack PASS (`6 passed`)
+
+- 2026-05-24: `PRJ-1315` completed hosted-proof intake single-command helper:
+  - task:
+    - `.codex/tasks/PRJ-1315-hosted-proof-intake-single-command.md`
+  - result:
+    - added `backend/scripts/run_architecture_graph_hosted_proof_intake.py`
+    - updated hosted-proof checklist with one-command intake usage
+  - validation:
+    - local fixture run PASS; packet artifacts generated in
+      `docs/status/prj1315-hosted-intake-packet/`
+
+- 2026-05-24: `PRJ-1314` completed one-command production proof cycle:
+  - task:
+    - `.codex/tasks/PRJ-1314-single-command-production-release-proof-cycle.md`
+  - result:
+    - added `backend/scripts/run_production_release_proof_cycle.ps1`
+    - capture + smoke + summary + release-index sync now run in one command
+  - validation:
+    - production cycle PASS; latest summary:
+      `docs/status/production-release-evidence-summary-20260524T173208Z.json`
+
+- 2026-05-24: `PRJ-1313` added release-index auto-sync from latest summary:
+  - task:
+    - `.codex/tasks/PRJ-1313-release-index-auto-sync-script.md`
+  - result:
+    - added `backend/scripts/sync_release_evidence_index_from_latest_summary.py`
+    - synced `docs/operations/release-evidence-index.md` from latest
+      `production-release-evidence-summary-*.json`
+  - validation:
+    - script execution PASS for date `2026-05-24`
+
+- 2026-05-24: `PRJ-1312` synced release-evidence index with latest live proof:
+  - task:
+    - `.codex/tasks/PRJ-1312-release-evidence-index-live-proof-sync.md`
+  - result:
+    - refreshed `docs/operations/release-evidence-index.md` date and
+      embedded latest `PRJ-1311` production evidence summary
+  - source proof:
+    - `docs/status/production-release-evidence-summary-20260524T172730Z.json`
+
+- 2026-05-24: `PRJ-1311` completed single-command production release evidence capture:
+  - task:
+    - `.codex/tasks/PRJ-1311-single-command-production-release-evidence-capture.md`
+  - result:
+    - added `backend/scripts/run_production_release_evidence_capture.ps1`
+    - one command now exports incident bundle, runs smoke with bundle verification,
+      and writes summary JSON
+  - validation:
+    - production run PASS (`health_status=ok`, `release_ready=true`, `release_violations=[]`)
+  - artifacts:
+    - `docs/status/20260524T172730Z_production-release-evidence/...`
+    - `docs/status/release-smoke-20260524T172730Z.json`
+    - `docs/status/production-release-evidence-summary-20260524T172730Z.json`
+
+- 2026-05-24: `PRJ-1310` captured production incident-evidence bundle and release smoke proof:
+  - task:
+    - `.codex/tasks/PRJ-1310-production-incident-evidence-bundle-and-release-smoke-proof.md`
+  - result:
+    - exported incident-evidence bundle to
+      `docs/status/20260524T172450Z_incident-bundle-20260524T172450Z`
+    - saved smoke report to `docs/status/release-smoke-prj1310.json`
+  - validation:
+    - production smoke with bundle verification PASS
+  - residual:
+    - hosted architecture-graph Actions proof remains optional supplementary evidence under `DEC-005`
+
+- 2026-05-24: `PRJ-1309` completed Coolify-first deployment policy and team-context recovery:
+  - task:
+    - `.codex/tasks/PRJ-1309-coolify-first-deployment-policy-and-team-context.md`
+  - result:
+    - recorded durable no-paid-extension deploy decision (`DEC-004`)
+    - updated Coolify deploy guide with explicit team-switch recovery step
+    - updated runtime ops runbook with canonical Coolify control-plane baseline
+      and team-context troubleshooting
+  - validation:
+    - production smoke PASS:
+      `./backend/scripts/run_release_smoke.ps1 -BaseUrl "https://aviary.luckysparrow.ch"`
+      with `release_ready=true` and `release_violations=[]`
+  - residual:
+    - hosted architecture-graph artifact proof still needs push/PR workflow execution
+
+- 2026-05-24: `PRJ-1308` completed local release gate report automation:
+  - task:
+    - `.codex/tasks/PRJ-1308-local-release-gate-report-automation.md`
+  - result:
+    - added `backend/scripts/run_architecture_graph_local_release_gate.py`
+    - generated `docs/status/architecture-graph-local-release-gate.json`
+      with pass/fail step summary
+  - validation:
+    - script execution PASS with `overall_status=PASSED`
+  - residual:
+    - hosted CI artifact proof remains optional supplementary evidence under `DEC-005`
+
+- 2026-05-24: `PRJ-1307` completed hosted-evidence artifact policy regression guard:
+  - task:
+    - `.codex/tasks/PRJ-1307-hosted-evidence-artifact-policy-regression-guard.md`
+  - result:
+    - CI policy tests now assert hosted evidence artifact names remain present
+      in architecture graph workflow
+  - validation:
+    - graph policy+verifier+packet+query/generator suite PASS with
+      `39 passed, 1 deselected`
+    - local `query_architecture_graph.py --gaps --format json --fail-on-gaps`
+      returns empty `items`
+  - residual:
+    - hosted artifact publication proof remains optional supplementary evidence under `DEC-005`
+
+- 2026-05-24: `PRJ-1305` completed hosted gap artifact verifier script:
+  - task:
+    - `.codex/tasks/PRJ-1305-hosted-gap-artifact-verifier-script.md`
+  - result:
+    - added `backend/scripts/verify_architecture_gap_artifact.py`
+    - added pytest coverage in
+      `backend/tests/test_verify_architecture_gap_artifact.py`
+    - linked helper in hosted proof checklist
+  - validation:
+    - graph+policy+verifier suite PASS with `37 passed, 1 deselected`
+    - local `query_architecture_graph.py --gaps --format json --fail-on-gaps`
+      returns empty `items`
+  - residual:
+    - hosted artifact validation remains optional supplementary evidence under `DEC-005`
+
+- 2026-05-24: `PRJ-1304` added hosted proof checklist for architecture graph CI:
+  - result:
+    - added `docs/operations/architecture-graph-hosted-proof-checklist.md`
+      with preconditions, hosted artifact capture steps, and failure handling
+  - residual:
+    - checklist execution remains optional supplementary evidence under `DEC-005`
+
+- 2026-05-24: `PRJ-1303` completed graph CI policy regression testing:
+  - task:
+    - `.codex/tasks/PRJ-1303-graph-ci-policy-regression-test.md`
+  - result:
+    - added workflow policy tests that pin required `--fail-on-gaps` gate
+      and hosted gap-artifact upload steps
+  - validation:
+    - graph suite PASS with `35 passed, 1 deselected`
+    - local `query_architecture_graph.py --gaps --format json --fail-on-gaps`
+      returns empty `items`
+  - residual:
+    - hosted CI artifact evidence remains optional supplementary evidence under `DEC-005`
+
+- 2026-05-24: `PRJ-1302` completed graph CI gap artifact proofing:
+  - task:
+    - `.codex/tasks/PRJ-1302-graph-ci-gap-artifact-proofing.md`
+  - result:
+    - graph CI fast/heavy gap gates now upload JSON audit artifacts
+      (`architecture-gaps-fast`, `architecture-gaps-heavy`)
+    - architecture/testing docs now describe artifact-backed hosted proof flow
+  - validation:
+    - graph query/generator fast pytest PASS:
+      `33 passed, 1 deselected`
+    - local `query_architecture_graph.py --gaps --format json --fail-on-gaps`
+      returns empty `items`
+  - residual:
+    - hosted artifact proof pending next push/PR run
+
+- 2026-05-24: `PRJ-1300` completed curated architecture gap zero-state CI gate:
+  - task:
+    - `.codex/tasks/PRJ-1300-architecture-gap-zero-gate-in-ci.md`
+  - result:
+    - `.github/workflows/architecture-graph.yml` now runs curated gap audit
+      in JSON mode and fails when `items` is non-empty
+    - architecture/testing docs now define zero-gap gate as required CI posture
+  - validation:
+    - local `query_architecture_graph.py --gaps --format json` returns
+      empty `items`
+    - fast graph query/generator pytest PASS:
+      `31 passed, 1 deselected`
+  - residual:
+    - hosted GitHub Actions run evidence pending next push/PR
+
+- 2026-05-24: `PRJ-1299` completed global architecture gap audit zero-state closure:
+  - task:
+    - `.codex/tasks/PRJ-1299-global-gap-audit-zero-state-closure.md`
+  - result:
+    - closed remaining curated UI/workflow chain/evidence gaps
+    - refreshed graph artifacts on latest registry data
+    - curated gap audit now reports `no gaps detected`
+  - validation:
+    - inventory generation PASS with `auto_nodes=5300`,
+      `auto_relations=3980`
+    - graph generation PASS with `nodes=5361`, `relations=4050`,
+      `chains=11`, `evidence=65`, `research_sources=21`,
+      `theory_claims=9`
+    - `query_architecture_graph.py --gaps --limit 20` reports
+      `no gaps detected`
+
+- 2026-05-24: `PRJ-1298` completed Telegram feature proof gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1298-telegram-feature-proof-gap-closure.md`
+  - result:
+    - `FEAT-TELEGRAM` promoted to `verified`
+    - added `CHAIN-TELEGRAM-LINK-DELIVERY`
+    - added `REL-TELEGRAM-001..006`
+    - added `EVID-FEAT-TELEGRAM-PROOF`
+  - validation:
+    - focused Telegram proof pack PASS: `7 passed in 2.20s`
+    - combined proof plus graph tests PASS: `36 passed, 1 deselected in 6.14s`
+    - inventory plus graph generation PASS with `auto_nodes=5297`,
+      `auto_relations=3978`, merged `nodes=5358`, `relations=4048`,
+      `chains=10`, `evidence=54`, `research_sources=21`,
+      `theory_claims=9`
+    - `FEAT-TELEGRAM` query reports `Gaps: none`
+
+- 2026-05-24: `PRJ-1297` completed web shell direct graph proof gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1297-web-app-shell-direct-proof-gap-closure.md`
+  - result:
+    - added evidence row for `COMP-WEB-APP`
+    - pinned no-gap behavior in graph query/generator pytest
+  - validation:
+    - `npm run build` PASS
+    - web route smoke PASS: `route_count=14`, `status=ok`
+    - inventory plus graph generation PASS with `auto_nodes=5295`,
+      `auto_relations=3977`, merged `nodes=5356`, `relations=4041`,
+      `chains=9`, `evidence=53`, `research_sources=21`,
+      `theory_claims=9`
+    - graph/query pytest PASS: `28 passed, 1 deselected in 4.02s`
+    - `COMP-WEB-APP` query reports `Gaps: none`
+
+- 2026-05-24: `PRJ-1296` completed Personality overview direct graph proof gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1296-personality-overview-direct-proof-gap-closure.md`
+  - result:
+    - added evidence rows for `API-PERSONALITY-OVERVIEW` and
+      `PAGE-PERSONALITY`
+    - reused existing `CHAIN-PERSONALITY-OVERVIEW`
+    - pinned Personality API/page no-gap behavior in graph query pytest
+  - validation:
+    - focused personality API/repository proof PASS: `2 passed in 3.04s`
+    - web route smoke PASS: `route_count=14`, `status=ok`
+    - inventory plus graph generation PASS with `auto_nodes=5294`,
+      `auto_relations=3976`, merged `nodes=5355`, `relations=4040`,
+      `chains=9`, `evidence=52`, `research_sources=21`,
+      `theory_claims=9`
+    - targeted node queries for both nodes report `Gaps: none`
+    - personality proof plus graph/query pytest PASS:
+      `29 passed, 1 deselected in 4.05s`
+  - residual:
+    - production account memory smoke and screenshot parity remain separate
+      evidence scopes
+
+- 2026-05-24: `PRJ-1295` completed profile/settings direct graph proof gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1295-profile-settings-direct-proof-gap-closure.md`
+  - result:
+    - added evidence rows for `API-APP-ME`, `MODEL-AION-PROFILE`, and
+      `PAGE-SETTINGS`
+    - reused existing `CHAIN-PROFILE-SETTINGS`
+    - pinned profile/settings no-gap behavior in graph query pytest
+    - restored canonical `docs/` after detecting documentation under
+      duplicate `Aviary - docs/` and excluded that duplicate from auto
+      inventory scanning
+  - validation:
+    - focused profile/settings proof pack PASS: `9 passed in 5.25s`
+    - inventory plus graph generation PASS with `auto_nodes=5292`,
+      `auto_relations=3975`, merged `nodes=5353`, `relations=4039`,
+      `chains=9`, `evidence=50`, `research_sources=21`,
+      `theory_claims=9`
+    - targeted node queries report `Gaps: none`
+    - profile/settings plus graph/query pytest PASS:
+      `35 passed, 1 deselected in 15.02s`
+    - web route smoke PASS: `route_count=14`, `status=ok`
+    - final fast graph pytest after docs restoration PASS:
+      `26 passed, 1 deselected in 3.63s`
+  - residual:
+    - production account data smoke and deeper interactive Settings form proof
+      remain separate scopes; duplicate `Aviary - docs/` remains present but
+      excluded from graph inventory
+
+- 2026-05-24: `PRJ-1294` completed runtime agent-stage graph evidence gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1294-runtime-agent-stage-evidence-gap-closure.md`
+  - result:
+    - added evidence rows for `AGENT-AFFECTIVE-ASSESSMENT`,
+      `AGENT-CONTEXT`, `AGENT-MOTIVATION`, `AGENT-PERCEPTION`,
+      `AGENT-PLANNING`, and `AGENT-ROLE`
+    - pinned runtime agent-stage no-gap behavior in graph query pytest
+  - validation:
+    - focused agent proof pack PASS: `210 passed in 0.44s`
+    - inventory plus graph generation PASS with `auto_nodes=5290`,
+      `auto_relations=3974`, merged `nodes=5351`, `relations=4038`,
+      `chains=9`, `evidence=47`, `research_sources=21`,
+      `theory_claims=9`
+    - sampled targeted node queries report `Gaps: none`
+    - agent proof pack plus graph/query pytest PASS:
+      `235 passed, 1 deselected in 3.82s`
+  - residual:
+    - local stage-contract proof only; live AI provider behavior, production
+      runtime smoke, and full backend regression remain separate scopes
+
+- 2026-05-24: `PRJ-1293` completed curated medium-risk graph proof cleanup:
+  - task:
+    - `.codex/tasks/PRJ-1293-curated-medium-risk-proof-cleanup.md`
+  - result:
+    - added evidence rows for `API-TOOLS-OVERVIEW`,
+      `DOC-PIPELINE-APP-CHAT`, and `TEST-WEB-ROUTE-SMOKE`
+    - updated `TEST-WEB-ROUTE-SMOKE` self-test metadata
+    - clarified `CHAIN-TOOLS-OVERVIEW` so live provider credentials are a
+      residual external proof scope rather than a missing local overview link
+    - pinned the three no-gap nodes in graph query pytest
+  - validation:
+    - focused tools API pytest PASS: `3 passed in 2.23s`
+    - inventory plus graph generation PASS with `auto_nodes=5288`,
+      `auto_relations=3973`, merged `nodes=5349`, `relations=4037`,
+      `chains=9`, `evidence=41`, `research_sources=21`,
+      `theory_claims=9`
+    - targeted node queries for all three nodes report `Gaps: none`
+    - focused tools plus graph/query pytest PASS:
+      `27 passed, 1 deselected in 7.92s`
+    - web route smoke PASS: `route_count=14`, `status=ok`
+  - residual:
+    - live provider credentials, Telegram feature graph proof, runtime
+      agent-stage evidence, and production smoke remain separate scopes
+
+- 2026-05-24: `PRJ-1292` completed Service/Test/Prompt graph evidence gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1292-service-test-prompt-evidence-gap-closure.md`
+  - result:
+    - added evidence rows for `PROMPT-OPENAI-RUNTIME`,
+      `SERVICE-MEMORY-REPOSITORY`, `SERVICE-RUNTIME-ORCHESTRATOR`,
+      `TEST-API-ROUTES`, `TEST-MEMORY-REPOSITORY`,
+      `TEST-RUNTIME-PIPELINE`, and `TEST-SCHEMA-BASELINE`
+    - pinned service/test/prompt no-gap behavior in graph query pytest
+  - validation:
+    - focused proof pack PASS: `13 passed in 2.90s`
+    - inventory plus graph generation PASS with `auto_nodes=5286`,
+      `auto_relations=3972`, merged `nodes=5347`, `relations=4036`,
+      `chains=9`, `evidence=38`, `research_sources=21`,
+      `theory_claims=9`
+    - targeted node queries for the seven service/test/prompt nodes report
+      `Gaps: none`
+    - service/test/prompt plus graph/query pytest PASS:
+      `36 passed, 1 deselected in 6.05s`
+  - residual:
+    - local focused proof only; live OpenAI provider behavior, full backend
+      suite, and production smoke remain separate proof scopes
+
+- 2026-05-24: `PRJ-1291` completed Runtime and Memory doc/feature graph gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1291-runtime-memory-doc-feature-gap-closure.md`
+  - result:
+    - added `EVID-EVENT-INGRESS-FEATURE-PROOF`
+    - added `EVID-DOC-RUNTIME-FLOW`
+    - added `EVID-DOC-MEMORY-SYSTEM`
+    - updated `CHAIN-EVENT-INGRESS` with `FEAT-EVENT-INGRESS`,
+      `FEAT-FOREGROUND-RUNTIME`, and `FEAT-MEMORY-FLOW` anchors
+    - pinned runtime/memory docs and feature no-gap behavior in query pytest
+  - validation:
+    - inventory plus graph generation PASS with `auto_nodes=5284`,
+      `auto_relations=3971`, merged `nodes=5345`, `relations=4035`,
+      `chains=9`, `evidence=31`, `research_sources=21`,
+      `theory_claims=9`
+    - targeted node queries for `DOC-MEMORY-SYSTEM`, `DOC-RUNTIME-FLOW`,
+      `FEAT-EVENT-INGRESS`, `FEAT-FOREGROUND-RUNTIME`, and
+      `FEAT-MEMORY-FLOW` report `Gaps: none`
+    - graph/query pytest PASS: `22 passed, 1 deselected in 4.62s`
+  - residual:
+    - this is graph/doc/feature evidence only; runtime behavior and production
+      smoke were not changed
+
+- 2026-05-24: `PRJ-1290` completed App Chat API and Event graph gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1290-app-chat-event-gap-closure.md`
+  - result:
+    - added evidence rows `EVID-APPCHAT-API-PROOF` and
+      `EVID-APPCHAT-EVENT-PROOF`
+    - clarified `CHAIN-APP-CHAT-MESSAGE` so native binary upload is future
+      backend scope outside the current verified text/serialized-attachment
+      chain, not a missing current link
+    - pinned app-chat API/event no-gap behavior in graph query pytest
+  - validation:
+    - focused app-chat API pytest PASS: `3 passed in 3.29s`
+    - web chat transcript characterization PASS with `status=ok`,
+      `appSourceCount=2`, `telegramSourceCount=2`
+    - inventory plus graph generation PASS with `auto_nodes=5282`,
+      `auto_relations=3970`, merged `nodes=5343`, `relations=4034`,
+      `chains=9`, `evidence=28`, `research_sources=21`,
+      `theory_claims=9`
+    - app-chat plus graph/query pytest PASS:
+      `25 passed, 1 deselected in 5.78s`
+    - node queries for `API-APP-CHAT-MESSAGE` and `EVENT-APP-CHAT-TURN`
+      report `Gaps: none`
+    - top curated gap audit no longer lists those app-chat nodes
+  - residual:
+    - this is local API/runtime/transcript proof; native binary/media upload
+      and production chat smoke remain separate future scopes
+
+- 2026-05-24: `PRJ-1289` completed Event Ingress API graph gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1289-event-ingress-api-gap-closure.md`
+  - result:
+    - added `REL-EVENT-002`
+    - added evidence row `EVID-EVENT-INGRESS-API-PROOF`
+    - pinned event ingress evidence in graph generator/query pytest
+  - validation:
+    - focused event ingress pytest PASS: `4 passed in 28.36s`
+    - inventory plus graph generation PASS with `auto_nodes=5280`,
+      `auto_relations=3969`, merged `nodes=5341`, `relations=4033`,
+      `chains=9`, `evidence=26`, `research_sources=21`,
+      `theory_claims=9`
+    - event ingress plus graph/query pytest PASS:
+      `24 passed, 1 deselected in 6.66s`
+    - `query_architecture_graph.py --node API-EVENT-INGRESS --show-gaps`
+      reports evidence `EVID-EVENT-INGRESS-API-PROOF` and `Gaps: none`
+    - top curated gap audit no longer lists `API-EVENT-INGRESS`
+  - residual:
+    - this is local API/runtime contract proof, not production event ingress
+      smoke or Telegram webhook proof
+
+- 2026-05-24: `PRJ-1288` completed AionMemory model graph gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1288-aion-memory-model-gap-closure.md`
+  - result:
+    - added `REL-MEMORY-001`
+    - added evidence row `EVID-AION-MEMORY-MODEL-PROOF`
+    - refined graph query gap attribution so feature-level missing links do
+      not over-report on model nodes
+    - pinned memory model evidence and model-gap attribution in graph pytest
+  - validation:
+    - focused memory/model pytest PASS: `3 passed in 13.37s`
+    - inventory plus graph generation PASS with `auto_nodes=5278`,
+      `auto_relations=3968`, merged `nodes=5339`, `relations=4031`,
+      `chains=9`, `evidence=25`, `research_sources=21`,
+      `theory_claims=9`
+    - memory/schema plus graph/query pytest PASS:
+      `22 passed, 1 deselected in 20.58s`
+    - `query_architecture_graph.py --node MODEL-AION-MEMORY --show-gaps`
+      reports evidence `EVID-AION-MEMORY-MODEL-PROOF` and `Gaps: none`
+    - top curated gap audit no longer lists `MODEL-AION-MEMORY`
+  - residual:
+    - this is local model/repository/schema proof, not production memory smoke
+
+- 2026-05-24: `PRJ-1287` completed Data Model graph gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1287-data-model-graph-gap-closure.md`
+  - result:
+    - added `REL-DATA-004`
+    - added `CHAIN-DATA-MODEL-SCHEMA`
+    - added evidence row `EVID-DATA-MODEL-SCHEMA-CHAIN`
+    - pinned data model chain/evidence in graph generator pytest
+  - validation:
+    - schema baseline pytest PASS: `6 passed in 14.38s`
+    - inventory plus graph generation PASS with `auto_nodes=5276`,
+      `auto_relations=3967`, merged `nodes=5337`, `relations=4029`,
+      `chains=9`, `evidence=24`, `research_sources=21`,
+      `theory_claims=9`
+    - schema plus graph/query pytest PASS:
+      `24 passed, 1 deselected in 7.00s`
+    - `query_architecture_graph.py --node FEAT-DATA-MODEL --show-gaps`
+      reports chain `CHAIN-DATA-MODEL-SCHEMA`, evidence
+      `EVID-DATA-MODEL-SCHEMA-CHAIN`, and `Gaps: none`
+    - top curated gap audit no longer lists `FEAT-DATA-MODEL`
+  - residual:
+    - this is local schema contract proof, not production database migration
+      smoke
+
+- 2026-05-24: `PRJ-1286` completed Auth API graph gap closure:
+  - task:
+    - `.codex/tasks/PRJ-1286-auth-api-graph-gap-closure.md`
+  - result:
+    - added auth relations `REL-AUTH-001..004`
+    - added `CHAIN-APP-AUTH`
+    - added evidence row `EVID-AUTH-API-CHAIN-REFRESH`
+    - pinned auth chain/evidence in graph generator pytest
+  - validation:
+    - focused auth API pytest PASS:
+      `3 passed in 2.77s`
+    - inventory plus graph generation PASS with `auto_nodes=5275`,
+      `auto_relations=3967`, merged `nodes=5336`, `relations=4028`,
+      `chains=8`, `evidence=23`, `research_sources=21`,
+      `theory_claims=9`
+    - focused auth plus graph/query pytest PASS:
+      `21 passed, 1 deselected in 71.18s`
+    - `query_architecture_graph.py --node API-APP-AUTH --show-gaps`
+      reports chain `CHAIN-APP-AUTH`, evidence
+      `EVID-AUTH-API-CHAIN-REFRESH`, and `Gaps: none`
+    - top curated gap audit no longer lists `API-APP-AUTH`
+  - residual:
+    - this is local API contract evidence, not production auth smoke or a
+      security audit
+
+- 2026-05-24: `PRJ-1285` completed architecture graph gap audit mode:
+  - task:
+    - `.codex/tasks/PRJ-1285-architecture-graph-gap-audit-mode.md`
+  - result:
+    - extended `backend/scripts/query_architecture_graph.py` with `--gaps`
+      and `--include-auto`
+    - added focused gap-audit tests in
+      `backend/tests/test_architecture_graph_query.py`
+    - added evidence row `EVID-ARCH-GRAPH-GAP-AUDIT`
+    - documented the system-level missing-proof queue in
+      `docs/architecture/graph-system.md`
+  - validation:
+    - inventory plus graph generation PASS with `auto_nodes=5274`,
+      `auto_relations=3967`, merged `nodes=5335`, `relations=4024`,
+      `chains=7`, `evidence=22`, `research_sources=21`,
+      `theory_claims=9`
+    - focused query plus fast graph pytest PASS with
+      `18 passed, 1 deselected in 3.39s`
+    - CLI `--gaps --limit 5 --format json` smoke PASS and default output
+      excludes auto-inventory rows
+    - generated evidence map, node page, and graph JSON include
+      `EVID-ARCH-GRAPH-GAP-AUDIT`
+  - residual:
+    - audit output is a prioritization queue; it does not itself fix reported
+      gaps or make every curated node release-complete
+
+- 2026-05-24: `PRJ-1284` completed architecture graph query CLI:
+  - task:
+    - `.codex/tasks/PRJ-1284-architecture-graph-query-cli.md`
+  - result:
+    - added read-only CLI `backend/scripts/query_architecture_graph.py`
+      over generated `architecture-graph.json`
+    - added focused tests in `backend/tests/test_architecture_graph_query.py`
+    - added graph nodes `SCRIPT-QUERY-ARCH-GRAPH` and
+      `TEST-ARCH-GRAPH-QUERY`
+    - added relations `REL-GRAPH-009..012`
+    - added evidence row `EVID-ARCH-GRAPH-QUERY-CLI`
+    - documented the local query workflow in
+      `docs/architecture/graph-system.md`
+  - validation:
+    - inventory plus graph generation PASS with `auto_nodes=5267`,
+      `auto_relations=3961`, merged `nodes=5328`, `relations=4018`,
+      `chains=7`, `evidence=21`, `research_sources=21`,
+      `theory_claims=9`
+    - focused query plus fast graph pytest PASS with
+      `14 passed, 1 deselected in 2.94s`
+    - CLI node smoke PASS for `WORKFLOW-ARCH-GRAPH --show-gaps`
+    - CLI search smoke PASS and prioritizes curated `SCRIPT-QUERY-ARCH-GRAPH`
+      before auto-inventory rows
+    - generated graph JSON, evidence map, and node page include
+      `SCRIPT-QUERY-ARCH-GRAPH`, `TEST-ARCH-GRAPH-QUERY`, and
+      `EVID-ARCH-GRAPH-QUERY-CLI`
+    - `git diff --check` PASS with LF/CRLF warnings only
+  - residual:
+    - CLI is a local read-only query surface, not an interactive graph UI or
+      replacement for runtime/user-journey proof
+
+- 2026-05-24: `PRJ-1283` completed architecture graph PR template checklist:
+  - task:
+    - `.codex/tasks/PRJ-1283-architecture-graph-pr-template-checklist.md`
+  - result:
+    - added `Architecture Graph / Evidence Map` prompts to the existing
+      `.github/pull_request_template.md`
+    - added graph node `DOC-PR-TEMPLATE`
+    - added relations `REL-GRAPH-007..008`
+    - added evidence row `EVID-ARCH-PR-TEMPLATE-CHECKLIST`
+    - updated graph generator pytest to pin the PR template node/evidence
+      rollup
+  - validation:
+    - inventory plus graph generation PASS with `auto_nodes=5238`,
+      `auto_relations=3935`, merged `nodes=5297`, `relations=3988`,
+      `chains=7`, `evidence=20`, `research_sources=21`, `theory_claims=9`
+    - fast graph pytest PASS with `8 passed, 1 deselected in 4.64s`
+    - generated graph JSON, evidence map, and node page include
+      `DOC-PR-TEMPLATE` and `EVID-ARCH-PR-TEMPLATE-CHECKLIST`
+    - PR template scan confirms graph checklist prompts
+    - `git diff --check` PASS with LF/CRLF warnings only
+  - residual:
+    - PR checklist is review guidance and does not replace tests, CI, runtime,
+      screenshot, usability, or production proof
+
+- 2026-05-24: `PRJ-1282` completed architecture graph CI policy:
+  - task:
+    - `.codex/tasks/PRJ-1282-architecture-graph-ci-policy.md`
+  - result:
+    - added `.github/workflows/architecture-graph.yml`
+    - added official graph node `WORKFLOW-ARCH-GRAPH-CI`
+    - added relations `REL-GRAPH-004..006`
+    - added evidence row `EVID-ARCH-GRAPH-CI-POLICY`
+    - documented the automatic fast graph CI gate and manual heavy gate
+    - updated generator pytest to pin the CI policy node and evidence rollup
+  - validation:
+    - inventory plus graph generation PASS with `auto_nodes=5237`,
+      `auto_relations=3935`, merged `nodes=5295`, `relations=3986`,
+      `chains=7`, `evidence=19`, `research_sources=21`, `theory_claims=9`
+    - fast graph pytest PASS with `8 passed, 1 deselected in 2.82s`
+    - py_compile PASS for graph/inventory generators
+    - generated graph JSON, evidence map, and node page include
+      `WORKFLOW-ARCH-GRAPH-CI` and `EVID-ARCH-GRAPH-CI-POLICY`
+    - `git diff --check` PASS with LF/CRLF warnings only
+  - residual:
+    - hosted GitHub Actions first-run result remains pending until the
+      workflow is pushed and runs remotely
+
+- 2026-05-24: `PRJ-1281` completed Personality overview chain refresh:
+  - task:
+    - `.codex/tasks/PRJ-1281-personality-overview-chain-refresh.md`
+  - result:
+    - promoted `CHAIN-PERSONALITY-OVERVIEW` from `partial` to `verified`
+    - added evidence row `EVID-PERSONALITY-OVERVIEW-CHAIN-REFRESH`
+    - updated generator pytest to pin the chain status and evidence rollup
+    - confirmed curated `chains.csv` has no remaining `partial` rows
+  - validation:
+    - backend personality API pytest PASS with
+      `1 passed, 131 deselected in 5.26s`
+    - memory repository focused pytest PASS with
+      `2 passed, 71 deselected in 3.67s`
+    - web build PASS
+    - web route smoke PASS with `route_count=14`, `status=ok`, and
+      `/personality` marker `aion-personality-canvas` passed
+    - graph generation PASS with `auto_nodes=5235`,
+      `auto_relations=3935`, merged `nodes=5292`, `relations=3983`,
+      `chains=7`, `evidence=18`, `research_sources=21`,
+      `theory_claims=9`
+    - fast graph pytest PASS with `8 passed, 1 deselected in 4.85s`
+    - py_compile PASS
+  - residual:
+    - production account memory smoke and screenshot parity remain separate
+      evidence scopes
+
+- 2026-05-24: `PRJ-1280` completed Tools overview chain refresh:
+  - task:
+    - `.codex/tasks/PRJ-1280-tools-overview-chain-refresh.md`
+  - result:
+    - promoted `CHAIN-TOOLS-OVERVIEW` from `partial` to `verified`
+    - added evidence row `EVID-TOOLS-OVERVIEW-CHAIN-REFRESH`
+    - made `web/scripts/tools-directory-characterization.mjs`
+      localization-resilient and aligned its mock payload with the current
+      `skill_tool_bindings` contract
+    - updated generator pytest to pin the chain status and evidence rollup
+  - validation:
+    - backend focused pytest PASS with `12 passed, 126 deselected in 24.09s`
+    - web build PASS
+    - Tools directory characterization PASS for full, toggle,
+      telegram_link_start, loading, empty, and error states
+    - web route smoke PASS
+    - graph generation PASS with `auto_nodes=5234`,
+      `auto_relations=3935`, merged `nodes=5291`, `relations=3983`,
+      `chains=7`, `evidence=17`, `research_sources=21`,
+      `theory_claims=9`
+    - fast graph pytest PASS with `8 passed, 1 deselected in 9.99s`
+    - py_compile PASS
+  - residual:
+    - live provider credential proof remains blocked/deferred and separate
+      from local Tools overview proof
+
+- 2026-05-24: `PRJ-1279` completed profile/settings chain refresh:
+  - task:
+    - `.codex/tasks/PRJ-1279-profile-settings-chain-refresh.md`
+  - result:
+    - promoted `CHAIN-PROFILE-SETTINGS` from `partial` to `verified`
+    - added evidence row `EVID-PROFILE-SETTINGS-CHAIN-REFRESH`
+    - updated generator pytest to pin the chain status and evidence rollup
+  - validation:
+    - backend focused pytest PASS with `10 passed, 127 deselected in 3.32s`
+    - web build PASS
+    - web route smoke PASS with `route_count=14`, `status=ok`, and
+      `/settings` marker `aion-settings-canvas` passed
+    - graph generation PASS with `auto_nodes=5229`,
+      `auto_relations=3931`, merged `nodes=5286`, `relations=3979`,
+      `chains=7`, `evidence=16`, `research_sources=21`,
+      `theory_claims=9`
+    - fast graph pytest PASS with `8 passed, 1 deselected in 3.69s`
+    - py_compile PASS
+  - residual:
+    - deeper interactive Settings form journey and production account data
+      smoke remain future evidence scopes
+
+- 2026-05-24: `PRJ-1278` completed architecture graph workflow closure:
+  - task:
+    - `.codex/tasks/PRJ-1278-architecture-graph-workflow-closure.md`
+  - result:
+    - marked graph workflow, graph system doc, graph generator script, graph
+      generator test, graph relation, and graph workflow chain as verified
+    - added closure evidence `EVID-ARCH-GRAPH-WORKFLOW-CLOSURE`
+    - updated generator pytest to pin the verified workflow closure state
+  - validation:
+    - graph generation PASS with `auto_nodes=5228`,
+      `auto_relations=3931`, merged `nodes=5285`, `relations=3979`,
+      `chains=7`, `evidence=15`, `research_sources=21`,
+      `theory_claims=9`
+    - fast graph pytest PASS with `8 passed, 1 deselected in 4.02s`
+    - heavy graph pytest PASS with `9 passed in 127.74s`
+    - py_compile PASS
+  - residual:
+    - semantic curation of every feature remains iterative; this closes the
+      workflow mechanics, not every possible feature chain
+
+- 2026-05-24: `PRJ-1277` completed the Chat cognitive belt research claim:
+  - task:
+    - `.codex/tasks/PRJ-1277-chat-cognitive-belt-research-claim.md`
+  - result:
+    - added curated graph node `UI-CHAT-COGNITIVE-BELT`
+    - added reviewed sources for working memory, visual working memory, and
+      attentional load
+    - added scoped UX claim
+      `CLAIM-CHAT-COGNITIVE-BELT-LOAD-AWARENESS`
+    - added evidence row `EVID-RESEARCH-UI-CHAT-COGNITIVE-BELT`
+    - updated generator pytest to pin the claim and evidence/research rollups
+  - validation:
+    - graph generation PASS with `auto_nodes=5227`,
+      `auto_relations=3931`, merged `nodes=5284`, `relations=3979`,
+      `chains=7`, `evidence=14`, `research_sources=21`,
+      `theory_claims=9`
+    - fast graph pytest PASS with `8 passed, 1 deselected in 45.36s`
+    - heavy graph pytest PASS with `9 passed in 255.06s`
+    - py_compile PASS
+  - residual:
+    - research support is design rationale only and does not replace
+      usability, accessibility, screenshot, route, or runtime proof
+
+- 2026-05-24: `PRJ-1276` completed fast and heavy graph validation modes:
+  - task:
+    - `.codex/tasks/PRJ-1276-fast-heavy-graph-validation-modes.md`
+  - result:
+    - registered pytest `slow` marker
+    - marked full node-page parity as slow
+    - documented fast and heavy graph validation commands
+    - updated evidence registry summary for validation-mode coverage
+  - validation:
+    - fast graph pytest PASS with `8 passed, 1 deselected`
+    - heavy graph pytest PASS with `9 passed in 99.70s`
+    - py_compile PASS
+    - final fast graph pytest rerun after source-of-truth updates PASS with
+      `8 passed, 1 deselected in 4.18s`
+    - `git diff --check` PASS with CRLF normalization warnings only
+    - inventory plus graph generation PASS with `auto_nodes=5226`,
+      `auto_relations=3931`, merged `nodes=5282`, `relations=3976`,
+      `chains=7`, `evidence=13`, `research_sources=18`, `theory_claims=8`
+  - residual:
+    - CI policy still needs a future decision
+
+- 2026-05-24: `PRJ-1275` completed all node page parity pytest:
+  - task:
+    - `.codex/tasks/PRJ-1275-all-node-page-parity-pytest.md`
+  - result:
+    - extended `backend/tests/test_architecture_graph_generator.py` to compare
+      all generated Obsidian node pages with fresh temp generator output
+    - test now detects missing, orphaned, or stale generated node pages
+    - updated evidence registry summary for full node-page parity coverage
+  - validation:
+    - focused pytest PASS with `9 passed in 108.30s`
+    - inventory plus graph generation PASS with `auto_nodes=5225`,
+      `auto_relations=3931`, merged `nodes=5281`, `relations=3976`,
+      `chains=7`, `evidence=13`, `research_sources=18`, `theory_claims=8`
+  - residual:
+    - this is a strong but heavier gate; decide later whether it belongs in CI
+      or pre-release/manual validation
+
+- 2026-05-24: `PRJ-1274` completed generated artifact parity pytest:
+  - task:
+    - `.codex/tasks/PRJ-1274-generated-artifact-parity-pytest.md`
+  - result:
+    - extended `backend/tests/test_architecture_graph_generator.py` to write
+      generated artifacts to `tmp_path`
+    - compared key generated repository artifacts against fresh generator
+      output
+    - updated evidence registry summary for key-artifact parity coverage
+  - validation:
+    - focused pytest PASS with `8 passed`
+    - inventory plus graph generation PASS with `auto_nodes=5223`,
+      `auto_relations=3930`, merged `nodes=5279`, `relations=3975`,
+      `chains=7`, `evidence=13`, `research_sources=18`, `theory_claims=8`
+  - residual:
+    - all-node generated parity remains optional CI runtime work
+
+- 2026-05-24: `PRJ-1273` completed generated graph freshness pytest:
+  - task:
+    - `.codex/tasks/PRJ-1273-generated-graph-freshness-pytest.md`
+  - result:
+    - extended `backend/tests/test_architecture_graph_generator.py` to compare
+      generated `architecture-graph.json` counts with the live registry
+    - added generated rollup checks for latest critical evidence and research
+      rows
+    - updated evidence registry summary for stale-output guard coverage
+  - validation:
+    - focused pytest PASS with `7 passed`
+    - inventory plus graph generation PASS with `auto_nodes=5221`,
+      `auto_relations=3929`, merged `nodes=5277`, `relations=3974`,
+      `chains=7`, `evidence=13`, `research_sources=18`, `theory_claims=8`
+  - residual:
+    - strict byte-for-byte no-diff generation remains future CI/governance work
+
+- 2026-05-24: `PRJ-1272` completed current registry validation pytest:
+  - task:
+    - `.codex/tasks/PRJ-1272-current-registry-validation-pytest.md`
+  - result:
+    - extended `backend/tests/test_architecture_graph_generator.py` to load
+      and validate the live canonical CSV registry
+    - added temp research rollup generation proof
+    - updated evidence registry summary for the broader pytest coverage
+  - validation:
+    - focused pytest PASS with `5 passed`
+    - inventory plus graph generation PASS with `auto_nodes=5218`,
+      `auto_relations=3927`, merged `nodes=5274`, `relations=3972`,
+      `chains=7`, `evidence=13`, `research_sources=18`, `theory_claims=8`
+  - residual:
+    - stale-generated-output no-diff gate remains future CI/governance work
+
+- 2026-05-24: `PRJ-1271` completed architecture graph generator pytest
+  coverage:
+  - task:
+    - `.codex/tasks/PRJ-1271-architecture-graph-generator-pytest.md`
+  - result:
+    - added `backend/tests/test_architecture_graph_generator.py`
+    - test verifies reviewed theory claims require at least 3 sources
+    - test verifies graph JSON exports research sources and theory claims
+    - evidence registry now links the pytest to `TEST-ARCH-GRAPH-GENERATOR`
+  - validation:
+    - focused pytest PASS with `3 passed`
+    - inventory plus graph generation PASS with `auto_nodes=5215`,
+      `auto_relations=3925`, merged `nodes=5271`, `relations=3970`,
+      `chains=7`, `evidence=13`, `research_sources=18`, `theory_claims=8`
+  - residual:
+    - full fixture-based end-to-end registry pytest can wait until schema
+      changes again
+
+- 2026-05-24: `PRJ-1270` completed affect, motivation, and role research
+  claims:
+  - task:
+    - `.codex/tasks/PRJ-1270-affect-motivation-role-research-claims.md`
+  - result:
+    - added curated graph nodes for affective assessment, motivation, and role
+      selection
+    - added runtime relation rows for those stages
+    - added reviewed affective neuroscience, motivation/reward, and social
+      cognition sources
+    - generated research map now contains 18 sources and 8 theory claims
+  - validation:
+    - inventory plus graph generation PASS with `auto_nodes=5205`,
+      `auto_relations=3917`, merged `nodes=5261`, `relations=3962`,
+      `chains=7`, `evidence=12`, `research_sources=18`, `theory_claims=8`
+  - residual:
+    - UX-specific neuroscience claims remain future source-review work
+
+- 2026-05-24: `PRJ-1269` completed research claim expansion:
+  - task:
+    - `.codex/tasks/PRJ-1269-research-claim-expansion.md`
+  - result:
+    - added reviewed sources for attention/salience, cognitive control, and
+      memory consolidation
+    - added theory claims for `AGENT-PERCEPTION`, `AGENT-PLANNING`, and
+      `FEAT-MEMORY-FLOW`
+    - generated research map now contains 11 sources and 5 theory claims
+  - validation:
+    - inventory plus graph generation PASS with `auto_nodes=5204`,
+      `auto_relations=3917`, merged `nodes=5257`, `relations=3959`,
+      `chains=7`, `evidence=11`, `research_sources=11`, `theory_claims=5`
+  - residual:
+    - motivation, affective, role-selection, and UX theory claims remain
+      future source-review work
+
+- 2026-05-24: `PRJ-1268` completed the research evidence mapping layer:
+  - task:
+    - `.codex/tasks/PRJ-1268-research-evidence-mapping-layer.md`
+  - result:
+    - added `docs/architecture/registry/research_sources.csv`
+    - added `docs/architecture/registry/theory_claims.csv`
+    - updated `backend/scripts/generate_architecture_graph.py` to validate
+      research sources and theory claims
+    - generated `docs/testing/architecture-research-map.md`
+    - seeded 4 reviewed neuroscience/cognitive-science sources and 2 mapped
+      theory claims
+  - validation:
+    - Python compile PASS for graph and inventory generators
+    - inventory plus graph generation PASS with `auto_nodes=5203`,
+      `auto_relations=3917`, merged `nodes=5256`, `relations=3959`,
+      `chains=7`, `evidence=10`, `research_sources=4`, `theory_claims=2`
+  - residual:
+    - research evidence supports theory framing only and must stay separate
+      from implementation/test/behavior proof
+
+- 2026-05-24: `PRJ-1267` completed the whole-repository architecture inventory
+  layer:
+  - task:
+    - `.codex/tasks/PRJ-1267-whole-repository-architecture-inventory.md`
+  - result:
+    - added `backend/scripts/generate_architecture_inventory.py`
+    - generated `docs/architecture/registry/auto_nodes.csv`,
+      `auto_relations.csv`, and `auto_inventory_summary.md`
+    - updated `backend/scripts/generate_architecture_graph.py` to merge
+      curated registry rows with auto-discovered inventory rows
+    - auto inventory covers scanned project files, Python classes/functions,
+      TypeScript/JavaScript symbols, CSS selectors, import relations,
+      contains relations, test heuristics, and doc heuristics
+  - validation:
+    - inventory plus graph generation PASS with `auto_nodes=5197`,
+      `auto_relations=3915`, merged `nodes=5249`, `relations=3954`,
+      `chains=7`, `evidence=9`
+  - residual:
+    - auto-discovered rows are broad map coverage, not release-critical proof;
+      future work should promote critical auto rows into curated chains and
+      evidence rows before claiming feature confidence
+
+- 2026-05-24: `PRJ-1266` completed the architecture graph evidence system
+  foundation:
+  - task:
+    - `.codex/tasks/PRJ-1266-architecture-graph-evidence-system-foundation.md`
+  - result:
+    - added CSV-first Obsidian architecture/evidence map contract in
+      `docs/architecture/graph-system.md`
+    - added canonical registries in `docs/architecture/registry/` for nodes,
+      relations, function chains, and evidence, plus typed CSV views
+    - added `backend/scripts/generate_architecture_graph.py` to validate
+      registry references and generate Obsidian node pages, relation/chain
+      indexes, JSON/Mermaid graph exports, status rollup, and evidence rollup
+    - seeded the first graph with app chat, web shell, runtime, memory,
+      profile/settings, tools, personality overview, event ingress, tests,
+      docs, agents, prompts, and graph workflow nodes
+  - validation:
+    - graph generator PASS with `nodes=52`, `relations=39`, `chains=7`,
+      `evidence=9`
+  - residual:
+    - foundation is not a full exhaustive inventory yet; next graph work should
+      expand coverage module by module and eventually automate typed CSV views
+
+- 2026-05-24: `PRJ-1265` completed a functional chat attachment pass:
+  - task:
+    - `.codex/tasks/PRJ-1265-chat-attachments-functional-pass.md`
+  - result:
+    - added working file picker in chat composer with multi-select
+    - added visible attachment chips with remove action
+    - enforced bounded count and max size per file
+    - serialized attachment data into outbound message text so current backend
+      `/app/chat/message` contract remains unchanged
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - `npm run test:chat-transcript` in `web/` -> PASS
+    - `npm run smoke:routes` in `web/` -> PASS (`route_count=14`, `status=ok`)
+  - residual:
+    - native binary/media attachment API is still a future backend scope item
+
+- 2026-05-24: `PRJ-1264` completed a global module simplification pass:
+  - task:
+    - `.codex/tasks/PRJ-1264-global-module-simplification-pass.md`
+  - result:
+    - simplified secondary module surfaces across memory/reflections/plans/
+      goals/insights/automations/integrations/settings/tools
+    - reduced card/badge visual weight with calmer shared panel/stat/note
+      treatment
+    - preserved route structure, backend data mapping, and navigation contracts
+    - retained chat corrections from this cycle:
+      - right-pointing send icon
+      - simplified cognitive strip markup/styles
+      - removed non-functional add/voice composer controls
+      - mobile/tablet transcript height caps
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - `npm run smoke:routes` in `web/` -> PASS (`route_count=14`, `status=ok`)
+    - `npm run test:chat-transcript` in `web/` -> PASS (`status=ok`)
+  - residual:
+    - this checkpoint improves global coherence and usability but is not final
+      screenshot-perfect 1:1 closure for all canonical flagship screens
+
+- 2026-05-24: `PRJ-1263` completed a Dashboard canonical structure pass:
+  - task:
+    - `.codex/tasks/PRJ-1263-dashboard-canonical-structure-pass.md`
+  - result:
+    - reduced desktop Dashboard over-compression and moved the route closer to
+      canonical flagship proportions
+    - widened and clarified the guidance rail, increased hero/flow readability,
+      and restored desktop recent-activity panel visibility
+    - preserved route behavior, backend data mapping, and interaction contracts
+    - changed only route-local Dashboard CSS in `web/src/index.css`
+  - validation:
+    - `npm run build` in `web/` -> PASS
+    - focused `/dashboard` screenshot/navigation/account gate -> `status=ok`,
+      `route_count=14`, `ui_audit.screenshot_count=2`,
+      `ui_audit.failed_count=0`, `navigation_proof.failed_count=0`,
+      `account_proof.failed_count=0`
+    - screenshot artifacts:
+      `artifacts/route-smoke/prj-1263-dashboard-pass/desktop-dashboard.png`,
+      `artifacts/route-smoke/prj-1263-dashboard-pass/mobile-dashboard.png`,
+      `artifacts/route-smoke/prj-1263-dashboard-pass/report.json`
+  - residual:
+    - this is a verified structure pass; final pixel-perfect 1:1 closure
+      still needs another route-focused parity slice
+
 - 2026-05-24: `PRJ-1262` completed a Personality full-surface pass:
   - task:
     - `.codex/tasks/PRJ-1262-personality-full-surface-pass.md`
@@ -16541,3 +17559,4 @@ the same project.
   - validation after this pass:
     - `Push-Location .\web; npm run build; Pop-Location`
     - result: passed
+

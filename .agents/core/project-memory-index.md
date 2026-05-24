@@ -1,6 +1,6 @@
 # Project Memory Index
 
-Last updated: 2026-05-14
+Last updated: 2026-05-24
 
 ## Project Alias
 
@@ -14,6 +14,133 @@ This file is the mandatory full-picture protocol for agents. It prevents the
 project from drifting into repeated small fixes with no clear release progress.
 Every non-trivial task must connect local code changes to the current product
 state, architecture intent, module confidence, and the next release objective.
+
+## Latest Graph Evidence Additions
+
+- `PRJ-1300` enforced curated architecture graph zero-gap posture in CI:
+  `.github/workflows/architecture-graph.yml` now runs
+  `query_architecture_graph.py --gaps --format json` and fails when any
+  curated gap rows exist. This turns local zero-gap posture into a merge/release gate.
+- `PRJ-1299` closed the curated architecture gap queue to zero:
+  global `query_architecture_graph.py --gaps --limit 20` now reports
+  `no gaps detected` on latest generated graph artifacts.
+- `PRJ-1296` closed Personality overview direct proof gaps:
+  `API-PERSONALITY-OVERVIEW` and `PAGE-PERSONALITY` now have direct evidence
+  rows and query with `Gaps: none`; existing
+  `CHAIN-PERSONALITY-OVERVIEW` remains the execution chain.
+- `PRJ-1295` closed profile/settings direct proof gaps:
+  `API-APP-ME`, `MODEL-AION-PROFILE`, and `PAGE-SETTINGS` now have direct
+  evidence rows and query with `Gaps: none`; existing
+  `CHAIN-PROFILE-SETTINGS` remains the execution chain.
+- `PRJ-1294` closed runtime agent-stage evidence gaps:
+  `AGENT-AFFECTIVE-ASSESSMENT`, `AGENT-CONTEXT`, `AGENT-MOTIVATION`,
+  `AGENT-PERCEPTION`, `AGENT-PLANNING`, and `AGENT-ROLE` now have direct
+  local stage-contract evidence rows and query with `Gaps: none`.
+- `PRJ-1293` closed small curated medium-risk proof gaps:
+  `API-TOOLS-OVERVIEW`, `DOC-PIPELINE-APP-CHAT`, and
+  `TEST-WEB-ROUTE-SMOKE` now have direct evidence rows and query with
+  `Gaps: none`. `CHAIN-TOOLS-OVERVIEW` no longer treats live provider
+  credential activation as a missing local overview link; it remains residual
+  external-provider proof.
+- `PRJ-1292` closed core service/test/prompt evidence gaps:
+  `PROMPT-OPENAI-RUNTIME`, `SERVICE-MEMORY-REPOSITORY`,
+  `SERVICE-RUNTIME-ORCHESTRATOR`, `TEST-API-ROUTES`,
+  `TEST-MEMORY-REPOSITORY`, `TEST-RUNTIME-PIPELINE`, and
+  `TEST-SCHEMA-BASELINE` now query with `Gaps: none` through focused local
+  proof rows.
+- `PRJ-1291` closed runtime/memory documentation and feature-anchor graph
+  gaps: `DOC-RUNTIME-FLOW`, `DOC-MEMORY-SYSTEM`, `FEAT-EVENT-INGRESS`,
+  `FEAT-FOREGROUND-RUNTIME`, and `FEAT-MEMORY-FLOW` now query with
+  `Gaps: none` through new documentation/feature evidence rows and an updated
+  `CHAIN-EVENT-INGRESS`.
+- `PRJ-1290` closed the App Chat API/Event curated audit gaps:
+  `API-APP-CHAT-MESSAGE` now has evidence `EVID-APPCHAT-API-PROOF`,
+  `EVENT-APP-CHAT-TURN` now has evidence `EVID-APPCHAT-EVENT-PROOF`, and
+  `CHAIN-APP-CHAT-MESSAGE` treats native binary upload as future scope outside
+  the verified current text/serialized-attachment chain. Node queries now
+  report `Gaps: none` for both nodes.
+- `PRJ-1289` closed the Event Ingress API curated audit gap:
+  `API-EVENT-INGRESS` now has test relation `REL-EVENT-002` and evidence
+  `EVID-EVENT-INGRESS-API-PROOF` backed by focused event endpoint and runtime
+  API source tests. A node query now reports `Gaps: none`.
+- `PRJ-1288` closed the AionMemory model curated audit gap:
+  `MODEL-AION-MEMORY` now has relation `REL-MEMORY-001`, evidence
+  `EVID-AION-MEMORY-MODEL-PROOF`, and query gap attribution no longer
+  over-reports feature-level future-scope missing links on model nodes. A node
+  query now reports `Gaps: none`.
+- `PRJ-1287` closed the data model curated audit gap:
+  `FEAT-DATA-MODEL` now has docs relation `REL-DATA-004`, verified chain
+  `CHAIN-DATA-MODEL-SCHEMA`, and evidence
+  `EVID-DATA-MODEL-SCHEMA-CHAIN` backed by schema baseline tests. A node
+  query now reports `Gaps: none`.
+- `PRJ-1286` closed the first high-risk curated audit gap:
+  `API-APP-AUTH` now has relations `REL-AUTH-001..004`, verified chain
+  `CHAIN-APP-AUTH`, and evidence `EVID-AUTH-API-CHAIN-REFRESH` backed by
+  focused auth API tests. A node query now reports `Gaps: none`.
+- `PRJ-1285` verified architecture graph gap audit mode:
+  `query_architecture_graph.py --gaps` produces a curated missing-proof queue
+  for nodes with missing evidence, chain, docs/tests, or research-support
+  signals. Auto-inventory rows are excluded by default; `--include-auto` is
+  available for deliberate broad inventory audits. Evidence:
+  `EVID-ARCH-GRAPH-GAP-AUDIT`.
+- `PRJ-1284` verified the architecture graph query CLI:
+  `backend/scripts/query_architecture_graph.py` can inspect a generated graph
+  node's details, incoming/outgoing impact, chains, evidence, theory claims,
+  and proof gaps. It is mapped as `SCRIPT-QUERY-ARCH-GRAPH` with tests
+  `TEST-ARCH-GRAPH-QUERY` and evidence `EVID-ARCH-GRAPH-QUERY-CLI`.
+  The CLI reads generated JSON as a read model; CSV remains canonical.
+- `PRJ-1283` verified the architecture graph PR template checklist:
+  `.github/pull_request_template.md` now asks graph-relevant authors to report
+  registry, chain, evidence, research, generated artifact, and fast graph gate
+  posture. The checklist is mapped as `DOC-PR-TEMPLATE` with evidence
+  `EVID-ARCH-PR-TEMPLATE-CHECKLIST`. This is review guidance and does not
+  replace generator pytest, hosted CI, or runtime/user-journey proof.
+- `PRJ-1282` verified the architecture graph CI policy:
+  `.github/workflows/architecture-graph.yml` now runs inventory regeneration,
+  graph regeneration, committed-artifact diff checks, and the fast graph
+  pytest gate for graph-relevant PR/push changes, with manual
+  `workflow_dispatch` heavy mode. The policy is mapped as
+  `WORKFLOW-ARCH-GRAPH-CI` with evidence
+  `EVID-ARCH-GRAPH-CI-POLICY`. Hosted Actions proof is optional supplementary
+  evidence under `DEC-005`.
+- `PRJ-1281` verified the Personality learned-state overview execution chain:
+  `CHAIN-PERSONALITY-OVERVIEW` now has fresh proof across `/personality` route
+  rendering, `/app/personality/overview`, memory repository learned-state
+  backing, generated graph artifacts, and graph pytest pins. Curated
+  `chains.csv` has no remaining `partial` rows.
+- `PRJ-1280` verified the Tools overview execution chain:
+  `CHAIN-TOOLS-OVERVIEW` now has fresh proof across `/tools` route rendering,
+  `/app/tools/overview`, `/app/tools/preferences`, connector policy tests,
+  localized Tools directory browser characterization, generated graph
+  artifacts, and graph pytest pins. Live provider credentials remain a
+  separate deferred proof scope.
+- `PRJ-1279` verified the profile/settings execution chain:
+  `CHAIN-PROFILE-SETTINGS` now has fresh proof across `/settings` route
+  rendering, `/app/me` backend settings behavior, profile/preference tests,
+  generated graph artifacts, and graph pytest pins.
+- `PRJ-1278` verified the architecture graph workflow mechanics themselves:
+  `WORKFLOW-ARCH-GRAPH`, `SCRIPT-GENERATE-ARCH-GRAPH`,
+  `TEST-ARCH-GRAPH-GENERATOR`, `REL-GRAPH-003`, and
+  `CHAIN-ARCH-GRAPH-WORKFLOW` are now verified with closure evidence. This
+  does not claim full semantic curation for every feature; it closes the map
+  generation workflow.
+- `PRJ-1277` verified the first concrete UX/UI research-backed graph claim:
+  `UI-CHAT-COGNITIVE-BELT` now links to
+  `CLAIM-CHAT-COGNITIVE-BELT-LOAD-AWARENESS` with three reviewed sources for
+  working memory, visual working memory, and attentional load. This is design
+  rationale only; UI behavior and usability still require separate route,
+  screenshot, accessibility, or usability proof.
+- `PRJ-1276` verified fast and heavy graph validation modes: everyday agents
+  can run `tests/test_architecture_graph_generator.py -m "not slow"` while
+  release-level graph confidence can still run full all-node parity.
+- `PRJ-1268` verified the research evidence mapping layer:
+  `docs/architecture/registry/research_sources.csv`,
+  `docs/architecture/registry/theory_claims.csv`,
+  generated `docs/testing/architecture-research-map.md`, and graph generator
+  validation for reviewed/mapped theory claims with at least 3 source IDs.
+- `PRJ-1267` verified the whole-repository architecture inventory layer:
+  generated `auto_nodes.csv` and `auto_relations.csv` are broad map coverage,
+  while curated chains/evidence remain the higher-confidence proof layer.
 
 ## Required Indexes
 
@@ -47,6 +174,93 @@ feedback, code, tests, and planning notes before choosing implementation work.
 Every inferred row must name its source and use a cautious status.
 
 ## Current High-Signal Entries
+
+- `PRJ-1283` added review-time graph governance to the existing PR template:
+  `DOC-PR-TEMPLATE` and `EVID-ARCH-PR-TEMPLATE-CHECKLIST` now appear in
+  generated graph JSON, the evidence map, and Obsidian node pages. Latest
+  inventory plus graph generation passed with `auto_nodes=5238`,
+  `auto_relations=3935`, merged `nodes=5297`, `relations=3988`,
+  `chains=7`, `evidence=20`, `research_sources=21`, and `theory_claims=9`;
+  fast graph pytest passed with `8 passed, 1 deselected in 4.64s`.
+
+- `PRJ-1282` added durable CI policy for graph validation:
+  `WORKFLOW-ARCH-GRAPH-CI` and `EVID-ARCH-GRAPH-CI-POLICY` record the
+  automatic fast gate and manual heavy gate. Latest inventory plus graph
+  generation passed with `auto_nodes=5237`, `auto_relations=3935`,
+  merged `nodes=5295`, `relations=3986`, `chains=7`, `evidence=19`,
+  `research_sources=21`, and `theory_claims=9`; fast graph pytest passed
+  with `8 passed, 1 deselected in 2.82s`; generated graph JSON, evidence
+  map, and node page include the CI policy.
+
+- `PRJ-1281` promoted the remaining curated partial chain into verified
+  evidence: `CHAIN-PERSONALITY-OVERVIEW` and
+  `EVID-PERSONALITY-OVERVIEW-CHAIN-REFRESH` record backend personality API
+  pytest `1 passed, 131 deselected in 5.26s`, memory repository focused pytest
+  `2 passed, 71 deselected in 3.67s`, web build PASS, route smoke
+  `route_count=14`, `status=ok`, `/personality` marker
+  `aion-personality-canvas` passed, graph generation `nodes=5292`,
+  `relations=3983`, `chains=7`, `evidence=18`, `research_sources=21`,
+  `theory_claims=9`, and fast graph pytest
+  `8 passed, 1 deselected in 4.85s`.
+
+- `PRJ-1280` promoted the Tools overview chain into verified evidence:
+  `CHAIN-TOOLS-OVERVIEW` and `EVID-TOOLS-OVERVIEW-CHAIN-REFRESH` record
+  backend focused pytest `12 passed, 126 deselected in 24.09s`, web build
+  PASS, localized Tools directory characterization PASS for full/toggle/
+  telegram_link_start/loading/empty/error states, route smoke PASS, graph
+  generation `nodes=5291`, `relations=3983`, `chains=7`, `evidence=17`,
+  `research_sources=21`, `theory_claims=9`, and fast graph pytest
+  `8 passed, 1 deselected in 9.99s`.
+
+- `PRJ-1279` promoted a stale partial functional chain into verified evidence:
+  `CHAIN-PROFILE-SETTINGS` and
+  `EVID-PROFILE-SETTINGS-CHAIN-REFRESH` record backend focused pytest
+  `10 passed, 127 deselected in 3.32s`, web build PASS, route smoke
+  `route_count=14`, `status=ok`, `/settings` marker
+  `aion-settings-canvas` passed, graph generation `nodes=5286`,
+  `relations=3979`, `chains=7`, `evidence=16`, `research_sources=21`,
+  `theory_claims=9`, and fast graph pytest
+  `8 passed, 1 deselected in 3.69s`.
+
+- `PRJ-1278` verified the graph workflow's own confidence state:
+  `EVID-ARCH-GRAPH-WORKFLOW-CLOSURE` records that the generator, registry,
+  generated artifacts, research mapping, and fast/heavy pytest workflow are
+  operational. Latest graph generation passed with `nodes=5285`,
+  `relations=3979`, `chains=7`, `evidence=15`, `research_sources=21`, and
+  `theory_claims=9`; fast graph pytest passed with
+  `8 passed, 1 deselected in 4.02s`; heavy graph pytest passed with
+  `9 passed in 127.74s`.
+
+- `PRJ-1277` verified scoped UX research mapping for the Chat cognitive belt:
+  `docs/architecture/registry/nodes.csv`, `relations.csv`,
+  `research_sources.csv`, `theory_claims.csv`, and `evidence.csv` now include
+  `UI-CHAT-COGNITIVE-BELT`,
+  `CLAIM-CHAT-COGNITIVE-BELT-LOAD-AWARENESS`, and
+  `EVID-RESEARCH-UI-CHAT-COGNITIVE-BELT`. Latest graph generation passed with
+  `nodes=5284`, `relations=3979`, `evidence=14`,
+  `research_sources=21`, and `theory_claims=9`; fast graph pytest passed with
+  `8 passed, 1 deselected`; heavy graph pytest passed with
+  `9 passed in 255.06s`.
+
+- `PRJ-1267` verified the whole-repository architecture inventory layer:
+  `backend/scripts/generate_architecture_inventory.py` now generates
+  `docs/architecture/registry/auto_nodes.csv`,
+  `docs/architecture/registry/auto_relations.csv`, and
+  `docs/architecture/registry/auto_inventory_summary.md`. The graph generator
+  merges curated and auto rows. Latest full run passed with
+  `auto_nodes=5197`, `auto_relations=3915`, merged `nodes=5249`,
+  `relations=3954`, `chains=7`, and `evidence=9`. Auto rows are broad
+  inventory, not release-critical proof; promote them into curated chains and
+  evidence before using them for confidence claims.
+
+- `PRJ-1266` verified the architecture graph evidence system foundation:
+  `docs/architecture/graph-system.md`, CSV registries under
+  `docs/architecture/registry/`, and
+  `backend/scripts/generate_architecture_graph.py` now provide the first
+  Obsidian-compatible node/relation/chain/evidence graph. The generator passed
+  with `nodes=52`, `relations=39`, `chains=7`, and `evidence=9`. This is a
+  foundation, not exhaustive whole-repo coverage; future feature work must
+  update graph rows before treating behavior as officially mapped.
 
 - `PRJ-1229` verified authenticated desktop utility bar parity: desktop
   authenticated routes now show the shared utility/search/action/account band
