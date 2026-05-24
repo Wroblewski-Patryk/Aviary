@@ -8,12 +8,27 @@ This runbook covers the currently implemented AION MVP service, not the full lon
 
 - canonical first-party production host:
   - `https://aviary.luckysparrow.ch`
+- canonical Coolify control plane for this VPS:
+  - `https://vps.luckysparrow.ch`
 - deploy shape remains same-origin:
   - the same host serves the web shell plus backend routes such as `/app`,
     `/health`, and `/event`
 - no separate API subdomain is part of the approved baseline for this repo
 - Telegram webhook target should therefore remain:
   - `https://aviary.luckysparrow.ch/event`
+- release/deploy operations must not require paid GitHub extensions; prefer
+  Coolify-native deploy and webhook fallback scripts in this repository
+
+## Coolify Operator Access And Team Context
+
+- before diagnosing missing apps/resources in Coolify UI, verify active team
+  context and switch team if needed
+- team context mismatch is a known source of false "resource missing" signals
+- when resource is still missing after team switch:
+  1. confirm repository linkage in the expected Coolify project
+  2. confirm the configured compose path is `docker-compose.coolify.yml`
+  3. use repository manual webhook fallback to trigger deployment and capture
+     evidence with `backend/scripts/trigger_coolify_deploy_webhook.py`
 
 ## Service Responsibilities
 
@@ -112,6 +127,33 @@ Incident-evidence bundle export:
   previous fail-fast behavior
 - verify a generated bundle with:
   - `.\backend\scripts\run_release_smoke.ps1 -BaseUrl "<url>" -IncidentEvidenceBundlePath "<bundle-dir>"`
+
+Single-command production evidence capture:
+
+- one-command wrapper:
+  - `.\backend\scripts\run_production_release_evidence_capture.ps1 -BaseUrl "https://aviary.luckysparrow.ch"`
+- writes timestamped artifacts into `docs/status/`:
+  - `<stamp>_production-release-evidence\...incident-bundle...\{manifest.json,incident_evidence.json,health_snapshot.json}`
+  - `release-smoke-<stamp>.json`
+  - `production-release-evidence-summary-<stamp>.json`
+- sync release index from latest summary:
+  - `python backend/scripts/sync_release_evidence_index_from_latest_summary.py --date <YYYY-MM-DD>`
+
+Single-command production proof cycle (capture + sync):
+
+- one-command orchestrator:
+  - `.\backend\scripts\run_production_release_proof_cycle.ps1 -BaseUrl "https://aviary.luckysparrow.ch"`
+
+Deploy watchdog (queue-stuck and parity drift guardrail):
+
+- parity and deploy watchdog:
+  - `python backend/scripts/run_coolify_deploy_watchdog.py --base-url "https://aviary.luckysparrow.ch" --max-wait-seconds 600 --poll-seconds 15`
+- auto-trigger fallback webhook when drift is detected:
+  - `python backend/scripts/run_coolify_deploy_watchdog.py --base-url "https://aviary.luckysparrow.ch" --trigger-on-drift --webhook-url "<coolify_webhook_url>" --webhook-secret "<coolify_webhook_secret>" --max-wait-seconds 900 --poll-seconds 20`
+- default report output:
+  - `artifacts/deploy/coolify-deploy-watchdog-latest.json`
+- webhook trigger evidence output (when trigger enabled):
+  - `artifacts/deploy/coolify-webhook-watchdog.json`
 
 `GET /health` also includes a `scheduler` object with cadence posture
 (`execution_mode`, cadence owners, dispatch/readiness posture, interval
