@@ -4,6 +4,14 @@ Last updated: 2026-05-24
 
 ## Project Status Dashboard (2026-05-24)
 
+- `PRJ-1322` is DONE:
+  - `.codex/tasks/PRJ-1322-post-push-production-closure-proof.md`
+- objective:
+  - confirm post-push production parity and canonical proof-cycle closure
+- current result:
+  - `ba71de4` deployed in production runtime
+  - production proof cycle PASS with `health_status=ok`, `release_ready=true`, `release_violations=[]`
+
 - `PRJ-1321` is DONE:
   - `.codex/tasks/PRJ-1321-final-consistency-sweep-no-paid-github-baseline.md`
 - objective:

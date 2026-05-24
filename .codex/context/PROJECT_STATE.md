@@ -6,6 +6,18 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-24: `PRJ-1322` confirmed post-push production closure proof:
+  - task:
+    - `.codex/tasks/PRJ-1322-post-push-production-closure-proof.md`
+  - result:
+    - pushed `ba71de4` to `origin/main`
+    - production runtime now reports `ba71de4f9f034018064e30441651fd9f16553d51`
+  - validation:
+    - `run_production_release_proof_cycle.ps1` PASS with
+      `health_status=ok`, `release_ready=true`, `release_violations=[]`
+  - artifacts:
+    - `docs/status/production-release-evidence-summary-20260524T181534Z.json`
+
 - 2026-05-24: `PRJ-1320` synced architecture-graph release-readiness to hosted-optional policy:
   - task:
     - `.codex/tasks/PRJ-1320-architecture-graph-release-readiness-hosted-optional-sync.md`
