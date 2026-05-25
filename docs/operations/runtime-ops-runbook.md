@@ -144,6 +144,15 @@ Single-command production proof cycle (capture + sync):
 - one-command orchestrator:
   - `.\backend\scripts\run_production_release_proof_cycle.ps1 -BaseUrl "https://aviary.luckysparrow.ch"`
 
+Unified release readiness gate (architecture + UI parity + production proof):
+
+- one-command wrapper:
+  - `.\backend\scripts\run_unified_release_readiness_gate.ps1 -BaseUrl "https://aviary.luckysparrow.ch"`
+- local-only mode (skip production proof):
+  - `.\backend\scripts\run_unified_release_readiness_gate.ps1 -SkipProductionProof`
+- output summary artifact:
+  - `docs/status/unified-release-readiness-<timestamp>.json`
+
 Deploy watchdog (queue-stuck and parity drift guardrail):
 
 - parity and deploy watchdog:

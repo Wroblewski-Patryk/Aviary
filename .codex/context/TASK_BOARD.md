@@ -4,6 +4,15 @@ Last updated: 2026-05-25
 
 ## Project Status Dashboard (2026-05-24)
 
+- `PRJ-1329` is DONE:
+  - `.codex/tasks/PRJ-1329-unified-release-readiness-gate-wrapper.md`
+- objective:
+  - add one-command unified readiness gate for architecture + UI parity (+ optional production proof)
+- current result:
+  - added wrapper: `backend/scripts/run_unified_release_readiness_gate.ps1`
+  - runbook updated with usage and output contract
+  - validated run generated: `docs/status/unified-release-readiness-20260525T033415Z.json`
+
 - `PRJ-1328` is DONE:
   - `.codex/tasks/PRJ-1328-mystic-clean-ui-orchestration-wave-5-evidence-gate.md`
 - objective:

@@ -1,0 +1,25 @@
+﻿{
+    "generated_at":  "2026-05-25T01:34:31.1447611Z",
+    "skip_production_proof":  true,
+    "kind":  "unified_release_readiness_gate",
+    "steps":  [
+                  {
+                      "ok":  true,
+                      "step":  "architecture_local_release_gate",
+                      "exit_code":  0
+                  },
+                  {
+                      "ok":  true,
+                      "step":  "ui_parity_smoke_gate",
+                      "exit_code":  0
+                  },
+                  {
+                      "ok":  true,
+                      "step":  "production_release_proof_cycle",
+                      "skipped":  true,
+                      "reason":  "SkipProductionProof switch used"
+                  }
+              ],
+    "status":  "ok",
+    "base_url":  "https://aviary.luckysparrow.ch"
+}

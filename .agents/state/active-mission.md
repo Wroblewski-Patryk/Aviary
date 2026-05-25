@@ -21,6 +21,9 @@ repository history.
   - wave 5 evidence gate generated responsive flagship screenshot packet and proof report:
     `docs/status/ui-parity-wave5-report.json`, `docs/status/ui-parity-wave5/*.png`
   - frontend validation PASS after each wave: `npm run build`, `npm run smoke:routes` (`status=ok`, `route_count=14`)
+  - unified gate wrapper added and validated:
+    `backend/scripts/run_unified_release_readiness_gate.ps1`
+    with summary artifact `docs/status/unified-release-readiness-20260525T033415Z.json`
 - Residual:
   - none blocking for the current mystical-clean UI mission scope
 - Next recommended checkpoint:
