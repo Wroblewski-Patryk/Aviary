@@ -90,6 +90,7 @@ const screenshotViewportNames =
 const failOnUiFindings = args.includes("--fail-on-ui-findings");
 const navigationProofEnabled = args.includes("--navigation-proof");
 const accountProofEnabled = args.includes("--account-proof");
+const emptyChatHistoryEnabled = args.includes("--empty-chat-history");
 let lastDocumentRoutePath = "/";
 let activeFallbackAuthenticatedRoute = false;
 
@@ -100,6 +101,269 @@ function jsonResponse(response, status, payload) {
     "Content-Length": Buffer.byteLength(body),
   });
   response.end(body);
+}
+
+function routeSmokeSkillBinding({ skillId, label, posture, allowedOperations }) {
+  return {
+    skill_id: skillId,
+    label,
+    posture,
+    allowed_operations: allowedOperations,
+    execution_owner: "action",
+    authority: "metadata_only_not_execution_authority",
+  };
+}
+
+function routeSmokeToolsOverview() {
+  const groups = [
+    {
+      id: "communication",
+      title: "Communication",
+      description: "Channels the personality can use to communicate with the user.",
+      item_count: 2,
+      items: [
+        {
+          id: "internal_chat",
+          label: "Internal chat",
+          category: "communication",
+          kind: "channel",
+          description: "Integral first-party communication through the web product shell.",
+          status: "integral_active",
+          status_reason: "backend_owned_first_party_ui_channel",
+          enabled: true,
+          integral: true,
+          provider: { name: "first_party_web", ready: true, configured: true },
+          user_control: { toggle_allowed: false, preference_supported: false, requested_enabled: null },
+          link_required: false,
+          link_state: "not_applicable",
+          capabilities: ["app.chat", "cookie_session", "first_party_auth"],
+          skill_tool_bindings: [],
+          next_actions: [],
+          source_of_truth: ["/app/chat/message", "/app/me"],
+        },
+        {
+          id: "telegram",
+          label: "Telegram",
+          category: "communication",
+          kind: "channel",
+          description: "External messaging channel backed by the existing Telegram bot.",
+          status: "provider_ready_link_required",
+          status_reason: "telegram_user_link_required_before_channel_can_be_used",
+          enabled: false,
+          integral: false,
+          provider: { name: "telegram", ready: true, configured: true },
+          user_control: { toggle_allowed: true, preference_supported: true, requested_enabled: false },
+          link_required: true,
+          link_state: "not_linked",
+          capabilities: ["telegram.delivery", "telegram.ingress"],
+          skill_tool_bindings: [],
+          next_actions: ["generate_link_code_and_confirm_from_telegram_chat"],
+          source_of_truth: ["/health.conversation_channels.telegram"],
+        },
+      ],
+    },
+    {
+      id: "task_management",
+      title: "Task Management",
+      description: "Runtime-backed external task systems that can be inspected or enabled through existing provider contracts.",
+      item_count: 1,
+      items: [
+        {
+          id: "clickup",
+          label: "ClickUp",
+          category: "task_management",
+          kind: "integration",
+          description: "Current production task-system integration for listing and updating external tasks.",
+          status: "provider_configuration_required",
+          status_reason: "Provider credentials are not configured in route smoke.",
+          enabled: false,
+          integral: false,
+          provider: { name: "clickup", ready: false, configured: false },
+          user_control: { toggle_allowed: true, preference_supported: true, requested_enabled: false },
+          link_required: false,
+          link_state: "not_applicable",
+          capabilities: [
+            "task_system.clickup_create_task",
+            "task_system.clickup_list_tasks",
+            "task_system.clickup_update_task",
+          ],
+          skill_tool_bindings: [
+            routeSmokeSkillBinding({
+              skillId: "clickup_task_management",
+              label: "ClickUp task management",
+              posture: "read_only_and_confirmation_gated_mutation",
+              allowedOperations: [
+                "task_system.clickup_list_tasks",
+                "task_system.clickup_create_task",
+                "task_system.clickup_update_task",
+              ],
+            }),
+            routeSmokeSkillBinding({
+              skillId: "work_partner_task_management",
+              label: "Work partner task management",
+              posture: "read_only_and_confirmation_gated_mutation",
+              allowedOperations: [
+                "task_system.clickup_list_tasks",
+                "task_system.clickup_create_task",
+                "task_system.clickup_update_task",
+              ],
+            }),
+          ],
+          next_actions: ["configure_clickup_api_token_and_clickup_list_id"],
+          source_of_truth: [
+            "/health.connectors.execution_baseline.task_system.clickup_list_tasks",
+            "/health.connectors.organizer_tool_stack",
+          ],
+        },
+      ],
+    },
+    {
+      id: "knowledge_and_web",
+      title: "Knowledge and Web",
+      description: "Integral public-web capabilities that remain bounded and backend-owned.",
+      item_count: 2,
+      items: [
+        {
+          id: "web_search",
+          label: "Web search",
+          category: "knowledge_and_web",
+          kind: "tool",
+          description: "Integral public web search capability available to the personality within bounded read-only policy.",
+          status: "integral_active",
+          status_reason: "web_search_ready",
+          enabled: true,
+          integral: true,
+          provider: { name: "duckduckgo_html", ready: true, configured: true },
+          user_control: { toggle_allowed: false, preference_supported: false, requested_enabled: null },
+          link_required: false,
+          link_state: "not_applicable",
+          capabilities: ["knowledge_search.search_web", "knowledge_search.suggest_search"],
+          skill_tool_bindings: [
+            routeSmokeSkillBinding({
+              skillId: "web_research",
+              label: "Web research",
+              posture: "read_only",
+              allowedOperations: ["knowledge_search.search_web"],
+            }),
+            routeSmokeSkillBinding({
+              skillId: "website_review",
+              label: "Website review",
+              posture: "read_only_search_support",
+              allowedOperations: ["knowledge_search.search_web"],
+            }),
+          ],
+          next_actions: [],
+          source_of_truth: [
+            "/health.connectors.execution_baseline.knowledge_search.search_web",
+            "/health.connectors.web_knowledge_tools",
+          ],
+        },
+        {
+          id: "web_browser",
+          label: "Web browser",
+          category: "knowledge_and_web",
+          kind: "tool",
+          description: "Integral single-page reading capability used for bounded website review.",
+          status: "integral_active",
+          status_reason: "web_browser_ready",
+          enabled: true,
+          integral: true,
+          provider: { name: "generic_http", ready: true, configured: true },
+          user_control: { toggle_allowed: false, preference_supported: false, requested_enabled: null },
+          link_required: false,
+          link_state: "not_applicable",
+          capabilities: ["web_browser.read_page", "web_browser.suggest_page_review"],
+          skill_tool_bindings: [
+            routeSmokeSkillBinding({
+              skillId: "website_review",
+              label: "Website review",
+              posture: "read_only",
+              allowedOperations: ["web_browser.read_page", "web_browser.suggest_page_review"],
+            }),
+            routeSmokeSkillBinding({
+              skillId: "web_research",
+              label: "Web research",
+              posture: "optional_read_only_page_review",
+              allowedOperations: ["web_browser.read_page"],
+            }),
+          ],
+          next_actions: [],
+          source_of_truth: [
+            "/health.connectors.execution_baseline.web_browser.read_page",
+            "/health.connectors.web_knowledge_tools",
+          ],
+        },
+      ],
+    },
+    {
+      id: "calendar_and_files",
+      title: "Calendar and Files",
+      description: "Organizer-style connectors for bounded availability and file-space inspection.",
+      item_count: 2,
+      items: [
+        {
+          id: "google_calendar",
+          label: "Google Calendar",
+          category: "calendar_and_files",
+          kind: "integration",
+          description: "Bounded calendar availability inspection provider.",
+          status: "provider_configuration_required",
+          status_reason: "Provider credentials are not configured in route smoke.",
+          enabled: false,
+          integral: false,
+          provider: { name: "google_calendar", ready: false, configured: false },
+          user_control: { toggle_allowed: true, preference_supported: true, requested_enabled: false },
+          link_required: false,
+          link_state: "not_applicable",
+          capabilities: ["calendar.google_calendar_read_availability"],
+          skill_tool_bindings: [],
+          next_actions: ["configure_google_calendar_access_token_calendar_id_and_timezone"],
+          source_of_truth: [
+            "/health.connectors.execution_baseline.calendar.google_calendar_read_availability",
+            "/health.connectors.organizer_tool_stack",
+          ],
+        },
+        {
+          id: "google_drive",
+          label: "Google Drive",
+          category: "calendar_and_files",
+          kind: "integration",
+          description: "Bounded file-space inspection provider for metadata listing.",
+          status: "provider_configuration_required",
+          status_reason: "Provider credentials are not configured in route smoke.",
+          enabled: false,
+          integral: false,
+          provider: { name: "google_drive", ready: false, configured: false },
+          user_control: { toggle_allowed: true, preference_supported: true, requested_enabled: false },
+          link_required: false,
+          link_state: "not_applicable",
+          capabilities: ["cloud_drive.google_drive_list_files"],
+          skill_tool_bindings: [],
+          next_actions: ["configure_google_drive_access_token_and_folder_id"],
+          source_of_truth: [
+            "/health.connectors.execution_baseline.cloud_drive.google_drive_list_files",
+            "/health.connectors.organizer_tool_stack",
+          ],
+        },
+      ],
+    },
+  ];
+  const allItems = groups.flatMap((group) => group.items);
+  return {
+    policy_owner: "app_tools_overview_contract",
+    user_id: "route-smoke-user",
+    group_order: groups.map((group) => group.id),
+    summary: {
+      total_groups: groups.length,
+      total_items: allItems.length,
+      integral_enabled_count: allItems.filter((item) => item.integral && item.enabled).length,
+      provider_ready_count: allItems.filter((item) => item.provider.ready).length,
+      provider_blocked_count: allItems.filter((item) => !item.provider.ready).length,
+      link_required_count: allItems.filter((item) => item.link_required).length,
+      planned_placeholder_count: 0,
+    },
+    groups,
+  };
 }
 
 function mockApi(request, response) {
@@ -147,6 +411,10 @@ function mockApi(request, response) {
   }
 
   if (request.method === "GET" && url.pathname === "/app/chat/history") {
+    if (emptyChatHistoryEnabled) {
+      jsonResponse(response, 200, { items: [] });
+      return true;
+    }
     jsonResponse(response, 200, {
       items: [
         {
@@ -236,85 +504,7 @@ function mockApi(request, response) {
   }
 
   if (request.method === "GET" && url.pathname === "/app/tools/overview") {
-    jsonResponse(response, 200, {
-      policy_owner: "app_tools_overview_contract",
-      user_id: "route-smoke-user",
-      group_order: ["communication", "task_management"],
-      summary: {
-        total_groups: 2,
-        total_items: 2,
-        integral_enabled_count: 1,
-        provider_ready_count: 1,
-        provider_blocked_count: 1,
-        link_required_count: 1,
-        planned_placeholder_count: 0,
-      },
-      groups: [
-        {
-          id: "communication",
-          title: "Communication",
-          description: "Route smoke communication tools.",
-          item_count: 1,
-          items: [
-            {
-              id: "internal_chat",
-              label: "Internal chat",
-              category: "communication",
-              kind: "channel",
-              description: "Built-in chat channel.",
-              status: "integral_active",
-              status_reason: "Available inside the product shell.",
-              enabled: true,
-              integral: true,
-              provider: { name: "internal", ready: true, configured: true },
-              user_control: { toggle_allowed: false, preference_supported: false, requested_enabled: null },
-              link_required: false,
-              link_state: "not_required",
-              capabilities: ["chat"],
-              skill_tool_bindings: [],
-              next_actions: [],
-              source_of_truth: ["app_tools_overview_contract"],
-            },
-          ],
-        },
-        {
-          id: "task_management",
-          title: "Task management",
-          description: "Route smoke task tools.",
-          item_count: 1,
-          items: [
-            {
-              id: "clickup",
-              label: "ClickUp",
-              category: "task_management",
-              kind: "provider",
-              description: "Task provider readiness row.",
-              status: "provider_blocked",
-              status_reason: "Provider credentials are not configured in route smoke.",
-              enabled: false,
-              integral: false,
-              provider: { name: "clickup", ready: false, configured: false },
-              user_control: { toggle_allowed: true, preference_supported: true, requested_enabled: false },
-              link_required: false,
-              link_state: "not_required",
-              capabilities: ["create_task", "list_tasks"],
-              skill_tool_bindings: [
-                {
-                  skill_id: "clickup_task_management",
-                  label: "ClickUp task management",
-                  posture: "confirmation_required_for_mutation",
-                  allowed_operations: ["list_tasks", "create_task", "update_task"],
-                  execution_owner: "action",
-                  authority: "metadata_only",
-                },
-              ],
-              next_actions: ["configure_provider_credentials"],
-              source_of_truth: ["connector_execution_baseline"],
-            },
-          ],
-        },
-      ],
-    });
+    jsonResponse(response, 200, routeSmokeToolsOverview());
     return true;
   }
 
@@ -718,6 +908,11 @@ async function collectRenderedStateCdp(cdp, marker) {
             width: Math.round(rect.width),
           };
         });
+      const integrationProviderTitles = Array.from(
+        document.querySelectorAll(".aion-integrations-provider-title"),
+      ).map((element) => element.textContent?.replace(/\\s+/g, " ").trim()).filter(Boolean);
+      const setupGuideCount = document.querySelectorAll(".aion-tools-setup-guide").length;
+      const leakedCredentialNames = /CLICKUP_API_TOKEN|GOOGLE_CALENDAR_ACCESS_TOKEN|GOOGLE_DRIVE_ACCESS_TOKEN/.test(bodyText);
       return {
         markerFound: document.documentElement.outerHTML.includes(expectedMarker),
         bodyTextLength: bodyText.length,
@@ -733,6 +928,10 @@ async function collectRenderedStateCdp(cdp, marker) {
           const className = typeof element.className === "string" ? element.className : "";
           return \`\${element.tagName.toLowerCase()}\${className ? \`.\${className.split(/\\s+/).slice(0, 3).join(".")}\` : ""}\`;
         }),
+        integrationProviderCount: integrationProviderTitles.length,
+        integrationProviderTitles,
+        setupGuideCount,
+        leakedCredentialNames,
         overflowingElementCount: overflowingElements.length,
         overflowingElementPreview: overflowingElements,
       };
@@ -946,6 +1145,11 @@ async function collectRenderedState(page, marker) {
           width: Math.round(rect.width),
         };
       });
+    const integrationProviderTitles = Array.from(
+      document.querySelectorAll(".aion-integrations-provider-title"),
+    ).map((element) => element.textContent?.replace(/\s+/g, " ").trim()).filter(Boolean);
+    const setupGuideCount = document.querySelectorAll(".aion-tools-setup-guide").length;
+    const leakedCredentialNames = /CLICKUP_API_TOKEN|GOOGLE_CALENDAR_ACCESS_TOKEN|GOOGLE_DRIVE_ACCESS_TOKEN/.test(bodyText);
     return {
       markerFound: document.documentElement.outerHTML.includes(expectedMarker),
       bodyTextLength: bodyText.length,
@@ -961,6 +1165,10 @@ async function collectRenderedState(page, marker) {
         const className = typeof element.className === "string" ? element.className : "";
         return `${element.tagName.toLowerCase()}${className ? `.${className.split(/\s+/).slice(0, 3).join(".")}` : ""}`;
       }),
+      integrationProviderCount: integrationProviderTitles.length,
+      integrationProviderTitles,
+      setupGuideCount,
+      leakedCredentialNames,
       overflowingElementCount: overflowingElements.length,
       overflowingElementPreview: overflowingElements,
     };
@@ -977,6 +1185,27 @@ async function gotoRoute(page, baseUrl, routePath, marker = "") {
       { timeout: 10000 },
     );
   }
+}
+
+function integrationContractPassed(routePath, state) {
+  if (routePath !== "/integrations") {
+    return true;
+  }
+
+  const titles = new Set(state.integrationProviderTitles ?? []);
+  return (
+    state.integrationProviderCount === 4 &&
+    ["Telegram", "ClickUp", "Google Calendar", "Google Drive"].every((title) => titles.has(title)) &&
+    !["Internal chat", "Web search", "Web browser"].some((title) => titles.has(title))
+  );
+}
+
+function toolsSetupGuideContractPassed(routePath, state) {
+  if (routePath !== "/tools") {
+    return true;
+  }
+
+  return state.setupGuideCount >= 4 && state.leakedCredentialNames === false;
 }
 
 async function runNavigationProof(page, baseUrl) {
@@ -1104,7 +1333,9 @@ try {
           state.markerFound &&
           state.bodyTextLength > 0 &&
           !state.frameworkOverlay &&
-          state.unnamedInteractiveCount === 0;
+          state.unnamedInteractiveCount === 0 &&
+          integrationContractPassed(route.path, state) &&
+          toolsSetupGuideContractPassed(route.path, state);
         results.push({
           route: route.path,
           marker: route.marker,
@@ -1141,7 +1372,9 @@ try {
               state.bodyTextLength > 0 &&
               !state.frameworkOverlay &&
               !state.horizontalOverflow &&
-              state.unnamedInteractiveCount === 0;
+              state.unnamedInteractiveCount === 0 &&
+              integrationContractPassed(route.path, state) &&
+              toolsSetupGuideContractPassed(route.path, state);
             uiAuditResults.push({
               route: route.path,
               viewport: viewportName,
@@ -1211,7 +1444,9 @@ try {
           state.markerFound &&
           state.bodyTextLength > 0 &&
           !state.frameworkOverlay &&
-          state.unnamedInteractiveCount === 0;
+          state.unnamedInteractiveCount === 0 &&
+          integrationContractPassed(route.path, state) &&
+          toolsSetupGuideContractPassed(route.path, state);
         results.push({
           route: route.path,
           marker: route.marker,
@@ -1248,7 +1483,9 @@ try {
               state.bodyTextLength > 0 &&
               !state.frameworkOverlay &&
               !state.horizontalOverflow &&
-              state.unnamedInteractiveCount === 0;
+              state.unnamedInteractiveCount === 0 &&
+              integrationContractPassed(route.path, state) &&
+              toolsSetupGuideContractPassed(route.path, state);
             uiAuditResults.push({
               route: route.path,
               viewport: viewportName,

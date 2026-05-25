@@ -1,0 +1,2 @@
+id,name,feature,status,trigger_node_id,chain_node_ids,tests_related,docs_related,evidence,missing_links,risk_level,last_verified_at,notes
+CHAIN-000,Example function chain,example,planned,UI-000,UI-000;API-000;FUNC-000;TEST-000,TEST-000,docs/pipelines/pipeline-template.md,,Replace sample with a real chain.,medium,YYYY-MM-DD,Example only.

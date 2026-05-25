@@ -14,6 +14,32 @@ export type ChatCognitiveBeltItem = {
 
 export type PendingConnectorConfirmationState = "idle" | "submitting" | "success" | "error";
 
+function formatConnectorProvider(value: string | null | undefined) {
+  const normalized = String(value ?? "").trim();
+  const labels: Record<string, string> = {
+    clickup: "ClickUp",
+    google_calendar: "Google Calendar",
+    google_drive: "Google Drive",
+    task_system: "Task system",
+    cloud_drive: "Cloud drive",
+  };
+
+  return labels[normalized.toLowerCase()] ?? normalized.replaceAll("_", " ");
+}
+
+function formatConnectorOperation(value: string | null | undefined) {
+  const normalized = String(value ?? "").trim();
+  const labels: Record<string, string> = {
+    create_event: "Create event",
+    create_task: "Create task",
+    update_task: "Update task",
+    delete_task: "Delete task",
+    link_internal_task: "Link internal task",
+  };
+
+  return labels[normalized.toLowerCase()] ?? normalized.replaceAll("_", " ");
+}
+
 export function ChatFlowStage({
   label,
   title,
@@ -200,6 +226,39 @@ export function ChatTranscriptMessageList({
   );
 }
 
+export function ChatTranscriptEmptyState({
+  eyebrow,
+  title,
+  body,
+  primaryActionLabel,
+  metaItems,
+  onPrimaryAction,
+}: {
+  eyebrow: string;
+  title: string;
+  body: string;
+  primaryActionLabel: string;
+  metaItems: string[];
+  onPrimaryAction: () => void;
+}) {
+  return (
+    <section className="aion-chat-empty-state" aria-label={eyebrow}>
+      <span className="aion-chat-empty-orb" aria-hidden="true" />
+      <p className="aion-chat-empty-eyebrow">{eyebrow}</p>
+      <h3 className="aion-chat-empty-title">{title}</h3>
+      <p className="aion-chat-empty-body">{body}</p>
+      <div className="aion-chat-empty-meta">
+        {metaItems.map((item) => (
+          <span key={item}>{item}</span>
+        ))}
+      </div>
+      <button className="aion-chat-empty-action" type="button" onClick={onPrimaryAction}>
+        {primaryActionLabel}
+      </button>
+    </section>
+  );
+}
+
 export function ChatCognitiveBelt({
   items,
   goalProgress,
@@ -381,12 +440,17 @@ export function ChatComposerShell({
             {pendingConfirmation ? (
               <>
                 <p className="aion-chat-pending-confirmation-title">
-                  {pendingConfirmation.provider_hint ?? pendingConfirmation.connector_kind}
+                  {formatConnectorProvider(
+                    pendingConfirmation.provider_hint ?? pendingConfirmation.connector_kind,
+                  )}
                   {" / "}
-                  {pendingConfirmation.operation}
+                  {formatConnectorOperation(pendingConfirmation.operation)}
                 </p>
                 <p className="aion-chat-pending-confirmation-body">
                   {pendingConfirmation.candidate_summary}
+                </p>
+                <p className="aion-chat-pending-confirmation-reason">
+                  {pendingConfirmation.reason}
                 </p>
               </>
             ) : null}

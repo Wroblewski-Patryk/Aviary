@@ -45,16 +45,30 @@ function readRequestBody(request) {
 
 function toolsOverview({
   clickupEnabled = false,
+  googleCalendarEnabled = false,
+  googleDriveEnabled = false,
   telegramLinked = false,
+  telegramLinkPending = false,
   empty = false,
 } = {}) {
+  const skillBinding = ({ skillId, label, posture, allowedOperations }) => ({
+    skill_id: skillId,
+    label,
+    posture,
+    allowed_operations: allowedOperations,
+    execution_owner: "action",
+    authority: "metadata_only_not_execution_authority",
+  });
+  const clickupReady = clickupEnabled;
+  const googleCalendarReady = googleCalendarEnabled;
+  const googleDriveReady = googleDriveEnabled;
   const groups = empty
     ? []
     : [
         {
           id: "communication",
           title: "Communication",
-          description: "Tools that carry conversations across product channels.",
+          description: "Channels the personality can use to communicate with the user.",
           item_count: 2,
           items: [
             {
@@ -62,35 +76,37 @@ function toolsOverview({
               label: "Internal chat",
               category: "communication",
               kind: "channel",
-              description: "Built-in chat channel.",
+              description: "Integral first-party communication through the web product shell.",
               status: "integral_active",
-              status_reason: "Available inside the product shell.",
+              status_reason: "backend_owned_first_party_ui_channel",
               enabled: true,
               integral: true,
-              provider: { name: "internal", ready: true, configured: true },
+              provider: { name: "first_party_web", ready: true, configured: true },
               user_control: {
                 toggle_allowed: false,
                 preference_supported: false,
                 requested_enabled: null,
               },
               link_required: false,
-              link_state: "not_required",
-              capabilities: ["chat"],
+              link_state: "not_applicable",
+              capabilities: ["app.chat", "cookie_session", "first_party_auth"],
               skill_tool_bindings: [],
               next_actions: [],
-              source_of_truth: ["app_tools_overview_contract"],
+              source_of_truth: ["/app/chat/message", "/app/me"],
             },
             {
               id: "telegram",
               label: "Telegram",
               category: "communication",
               kind: "channel",
-              description: "External Telegram channel linking.",
-              status: telegramLinked ? "provider_ready" : "link_required",
+              description: "External messaging channel backed by the existing Telegram bot.",
+              status: telegramLinked ? "provider_ready" : "provider_ready_link_required",
               status_reason: telegramLinked
-                ? "Telegram is linked for this identity."
-                : "Telegram is ready but still needs a link code.",
-              enabled: true,
+                ? "telegram_channel_linked_to_authenticated_user"
+                : telegramLinkPending
+                  ? "telegram_link_code_generated_waiting_for_chat_confirmation"
+                  : "telegram_user_link_required_before_channel_can_be_used",
+              enabled: telegramLinked,
               integral: false,
               provider: { name: "telegram", ready: true, configured: true },
               user_control: {
@@ -99,44 +115,226 @@ function toolsOverview({
                 requested_enabled: true,
               },
               link_required: !telegramLinked,
-              link_state: telegramLinked ? "linked" : "not_linked",
-              capabilities: ["send_message", "receive_message"],
+              link_state: telegramLinked ? "linked" : telegramLinkPending ? "pending_confirmation" : "not_linked",
+              capabilities: ["telegram.delivery", "telegram.ingress"],
               skill_tool_bindings: [],
-              next_actions: telegramLinked ? [] : ["link_telegram_chat"],
-              source_of_truth: ["telegram_link_contract"],
+              next_actions: telegramLinked ? ["telegram_link_confirmed"] : ["generate_link_code_and_confirm_from_telegram_chat"],
+              source_of_truth: ["/health.conversation_channels.telegram"],
             },
           ],
         },
         {
           id: "task_management",
-          title: "Task management",
-          description: "Provider-backed task tools.",
+          title: "Task Management",
+          description: "Runtime-backed external task systems that can be inspected or enabled through existing provider contracts.",
           item_count: 1,
           items: [
             {
               id: "clickup",
               label: "ClickUp",
               category: "task_management",
-              kind: "provider",
-              description: "Task provider readiness row.",
-              status: clickupEnabled ? "provider_ready" : "provider_blocked",
-              status_reason: clickupEnabled
+              kind: "integration",
+              description: "Current production task-system integration for listing and updating external tasks.",
+              status: clickupReady ? "provider_ready" : "provider_configuration_required",
+              status_reason: clickupReady
                 ? "ClickUp preference is enabled in this characterization."
                 : "Provider credentials are not configured in this characterization.",
-              enabled: clickupEnabled,
+              enabled: clickupReady && clickupEnabled,
               integral: false,
-              provider: { name: "clickup", ready: clickupEnabled, configured: clickupEnabled },
+              provider: { name: "clickup", ready: clickupReady, configured: clickupReady },
               user_control: {
                 toggle_allowed: true,
                 preference_supported: true,
                 requested_enabled: clickupEnabled,
               },
               link_required: false,
-              link_state: "not_required",
-              capabilities: ["create_task", "list_tasks"],
+              link_state: "not_applicable",
+              capabilities: [
+                "task_system.clickup_create_task",
+                "task_system.clickup_list_tasks",
+                "task_system.clickup_update_task",
+              ],
+              skill_tool_bindings: [
+                skillBinding({
+                  skillId: "clickup_task_management",
+                  label: "ClickUp task management",
+                  posture: "read_only_and_confirmation_gated_mutation",
+                  allowedOperations: [
+                    "task_system.clickup_list_tasks",
+                    "task_system.clickup_create_task",
+                    "task_system.clickup_update_task",
+                  ],
+                }),
+                skillBinding({
+                  skillId: "work_partner_task_management",
+                  label: "Work partner task management",
+                  posture: "read_only_and_confirmation_gated_mutation",
+                  allowedOperations: [
+                    "task_system.clickup_list_tasks",
+                    "task_system.clickup_create_task",
+                    "task_system.clickup_update_task",
+                  ],
+                }),
+              ],
+              next_actions: clickupReady ? ["ready_for_clickup_operator_acceptance"] : ["configure_clickup_api_token_and_clickup_list_id"],
+              source_of_truth: [
+                "/health.connectors.execution_baseline.task_system.clickup_list_tasks",
+                "/health.connectors.organizer_tool_stack",
+              ],
+            },
+          ],
+        },
+        {
+          id: "knowledge_and_web",
+          title: "Knowledge and Web",
+          description: "Integral public-web capabilities that remain bounded and backend-owned.",
+          item_count: 2,
+          items: [
+            {
+              id: "web_search",
+              label: "Web search",
+              category: "knowledge_and_web",
+              kind: "tool",
+              description: "Integral public web search capability available to the personality within bounded read-only policy.",
+              status: "integral_active",
+              status_reason: "web_search_ready",
+              enabled: true,
+              integral: true,
+              provider: { name: "duckduckgo_html", ready: true, configured: true },
+              user_control: {
+                toggle_allowed: false,
+                preference_supported: false,
+                requested_enabled: null,
+              },
+              link_required: false,
+              link_state: "not_applicable",
+              capabilities: ["knowledge_search.search_web", "knowledge_search.suggest_search"],
+              skill_tool_bindings: [
+                skillBinding({
+                  skillId: "web_research",
+                  label: "Web research",
+                  posture: "read_only",
+                  allowedOperations: ["knowledge_search.search_web"],
+                }),
+                skillBinding({
+                  skillId: "website_review",
+                  label: "Website review",
+                  posture: "read_only_search_support",
+                  allowedOperations: ["knowledge_search.search_web"],
+                }),
+              ],
+              next_actions: [],
+              source_of_truth: [
+                "/health.connectors.execution_baseline.knowledge_search.search_web",
+                "/health.connectors.web_knowledge_tools",
+              ],
+            },
+            {
+              id: "web_browser",
+              label: "Web browser",
+              category: "knowledge_and_web",
+              kind: "tool",
+              description: "Integral single-page reading capability used for bounded website review.",
+              status: "integral_active",
+              status_reason: "web_browser_ready",
+              enabled: true,
+              integral: true,
+              provider: { name: "generic_http", ready: true, configured: true },
+              user_control: {
+                toggle_allowed: false,
+                preference_supported: false,
+                requested_enabled: null,
+              },
+              link_required: false,
+              link_state: "not_applicable",
+              capabilities: ["web_browser.read_page", "web_browser.suggest_page_review"],
+              skill_tool_bindings: [
+                skillBinding({
+                  skillId: "website_review",
+                  label: "Website review",
+                  posture: "read_only",
+                  allowedOperations: ["web_browser.read_page", "web_browser.suggest_page_review"],
+                }),
+                skillBinding({
+                  skillId: "web_research",
+                  label: "Web research",
+                  posture: "optional_read_only_page_review",
+                  allowedOperations: ["web_browser.read_page"],
+                }),
+              ],
+              next_actions: [],
+              source_of_truth: [
+                "/health.connectors.execution_baseline.web_browser.read_page",
+                "/health.connectors.web_knowledge_tools",
+              ],
+            },
+          ],
+        },
+        {
+          id: "calendar_and_files",
+          title: "Calendar and Files",
+          description: "Organizer-style connectors for bounded availability and file-space inspection.",
+          item_count: 2,
+          items: [
+            {
+              id: "google_calendar",
+              label: "Google Calendar",
+              category: "calendar_and_files",
+              kind: "integration",
+              description: "Bounded calendar availability inspection provider.",
+              status: googleCalendarReady ? "provider_ready" : "provider_configuration_required",
+              status_reason: googleCalendarReady
+                ? "Google Calendar preference is enabled in this characterization."
+                : "Provider credentials are not configured in this characterization.",
+              enabled: googleCalendarReady && googleCalendarEnabled,
+              integral: false,
+              provider: { name: "google_calendar", ready: googleCalendarReady, configured: googleCalendarReady },
+              user_control: {
+                toggle_allowed: true,
+                preference_supported: true,
+                requested_enabled: googleCalendarEnabled,
+              },
+              link_required: false,
+              link_state: "not_applicable",
+              capabilities: ["calendar.google_calendar_read_availability"],
               skill_tool_bindings: [],
-              next_actions: clickupEnabled ? [] : ["configure_provider_credentials"],
-              source_of_truth: ["connector_execution_baseline"],
+              next_actions: googleCalendarReady
+                ? ["ready_for_google_calendar_operator_acceptance"]
+                : ["configure_google_calendar_access_token_calendar_id_and_timezone"],
+              source_of_truth: [
+                "/health.connectors.execution_baseline.calendar.google_calendar_read_availability",
+                "/health.connectors.organizer_tool_stack",
+              ],
+            },
+            {
+              id: "google_drive",
+              label: "Google Drive",
+              category: "calendar_and_files",
+              kind: "integration",
+              description: "Bounded file-space inspection provider for metadata listing.",
+              status: googleDriveReady ? "provider_ready" : "provider_configuration_required",
+              status_reason: googleDriveReady
+                ? "Google Drive preference is enabled in this characterization."
+                : "Provider credentials are not configured in this characterization.",
+              enabled: googleDriveReady && googleDriveEnabled,
+              integral: false,
+              provider: { name: "google_drive", ready: googleDriveReady, configured: googleDriveReady },
+              user_control: {
+                toggle_allowed: true,
+                preference_supported: true,
+                requested_enabled: googleDriveEnabled,
+              },
+              link_required: false,
+              link_state: "not_applicable",
+              capabilities: ["cloud_drive.google_drive_list_files"],
+              skill_tool_bindings: [],
+              next_actions: googleDriveReady
+                ? ["ready_for_google_drive_operator_acceptance"]
+                : ["configure_google_drive_access_token_and_folder_id"],
+              source_of_truth: [
+                "/health.connectors.execution_baseline.cloud_drive.google_drive_list_files",
+                "/health.connectors.organizer_tool_stack",
+              ],
             },
           ],
         },
@@ -149,9 +347,15 @@ function toolsOverview({
     summary: {
       total_groups: groups.length,
       total_items: groups.reduce((sum, group) => sum + group.items.length, 0),
-      integral_enabled_count: empty ? 0 : 1,
-      provider_ready_count: empty ? 0 : clickupEnabled ? 2 : 1,
-      provider_blocked_count: empty ? 0 : clickupEnabled ? 0 : 1,
+      integral_enabled_count: groups
+        .flatMap((group) => group.items)
+        .filter((item) => item.integral && item.enabled).length,
+      provider_ready_count: groups
+        .flatMap((group) => group.items)
+        .filter((item) => item.provider.ready).length,
+      provider_blocked_count: groups
+        .flatMap((group) => group.items)
+        .filter((item) => !item.provider.ready).length,
       link_required_count: empty || telegramLinked ? 0 : 1,
       planned_placeholder_count: 0,
     },
@@ -217,7 +421,14 @@ async function mockApi(request, response) {
     if (activeCase === "slow") {
       await new Promise((resolveDelay) => setTimeout(resolveDelay, 1500));
     }
-    jsonResponse(response, 200, toolsOverview({ empty: activeCase === "empty" }));
+    jsonResponse(
+      response,
+      200,
+      toolsOverview({
+        empty: activeCase === "empty",
+        telegramLinkPending: activeCase === "telegram-pending",
+      }),
+    );
     return true;
   }
 
@@ -509,7 +720,7 @@ async function characterizeTools(cdp, baseUrl) {
     fullState = await waitFor(
       cdp,
       `(() => {
-      const text = document.body.innerText;
+      const text = document.body.textContent ?? "";
       if (!document.querySelector(".aion-tools-directory")) {
         return null;
       }
@@ -524,7 +735,20 @@ async function characterizeTools(cdp, baseUrl) {
         itemCount: itemCards.length,
         toggleCount: document.querySelectorAll(".aion-tools-item-card input[type='checkbox']").length,
         hasTelegramLinkPanel: Boolean(telegramCard?.querySelector("button")),
+        capabilityChipCount: document.querySelectorAll(".aion-tools-capability-chip").length,
+        setupGuideCount: document.querySelectorAll(".aion-tools-setup-guide").length,
+        integralSetupGuideCount: Array.from(itemCards)
+          .filter((candidate) => candidate.innerText.includes("Internal chat") || candidate.innerText.includes("Web search") || candidate.innerText.includes("Web browser"))
+          .filter((candidate) => candidate.querySelector(".aion-tools-setup-guide")).length,
         technicalDetailsCount: document.querySelectorAll(".aion-tools-details").length,
+        hasBindingAuthority: text.includes("metadata_only_not_execution_authority"),
+        hasBindingOperations: text.includes("task_system.clickup_update_task"),
+        hasFullNextAction: text.includes("Start Telegram link confirmation"),
+        hasSetupBoundary: text.includes("Overview only. Secrets and execution stay in the backend action layer."),
+        hasClickUpSetup: text.includes("Add ClickUp token and list ID"),
+        hasCalendarSetup: text.includes("Connect Google Calendar access"),
+        hasDriveSetup: text.includes("Connect Google Drive folder access"),
+        leaksEnvNames: /CLICKUP_API_TOKEN|GOOGLE_CALENDAR_ACCESS_TOKEN|GOOGLE_DRIVE_ACCESS_TOKEN/.test(text),
         textExcerpt: text.replace(/\\s+/g, " ").slice(0, 1000),
       };
     })()`,
@@ -534,22 +758,58 @@ async function characterizeTools(cdp, baseUrl) {
     throw new Error(`${error.message} Requests seen: ${requests.seenPaths.join(" | ")}`);
   }
   assert(
-    fullState.groupCount === 2,
-    `Expected two tools groups in the full state. State: ${JSON.stringify(fullState)}`,
+    fullState.groupCount === 4,
+    `Expected four tools groups in the full state. State: ${JSON.stringify(fullState)}`,
   );
   assert(
-    fullState.itemCount === 3,
-    `Expected three tools item cards in the full state. State: ${JSON.stringify(fullState)}`,
+    fullState.itemCount === 7,
+    `Expected seven tools item cards in the full state. State: ${JSON.stringify(fullState)}`,
   );
   assert(
-    fullState.toggleCount === 2,
-    `Expected two user-control toggles in the full state. State: ${JSON.stringify(fullState)}`,
+    fullState.toggleCount === 4,
+    `Expected four user-control toggles in the full state. State: ${JSON.stringify(fullState)}`,
   );
   assert(
     fullState.hasTelegramLinkPanel,
     `Expected Telegram link panel button in the full state. Text excerpt: ${fullState.textExcerpt}`,
   );
-  assert(fullState.technicalDetailsCount === 3, "Expected technical details disclosures in the full state.");
+  assert(
+    fullState.capabilityChipCount === 21,
+    `Expected three backend capability chips per tool card. State: ${JSON.stringify(fullState)}`,
+  );
+  assert(
+    fullState.setupGuideCount === 4,
+    `Expected setup guidance for four external provider/channel cards. State: ${JSON.stringify(fullState)}`,
+  );
+  assert(
+    fullState.integralSetupGuideCount === 0,
+    `Expected integral tools not to render setup guidance. State: ${JSON.stringify(fullState)}`,
+  );
+  assert(
+    fullState.hasSetupBoundary,
+    `Expected setup guidance to explain frontend/backend execution boundary. State: ${JSON.stringify(fullState)}`,
+  );
+  assert(
+    fullState.hasClickUpSetup && fullState.hasCalendarSetup && fullState.hasDriveSetup,
+    `Expected friendly setup copy for blocked providers. State: ${JSON.stringify(fullState)}`,
+  );
+  assert(
+    fullState.leaksEnvNames === false,
+    `Expected setup guidance not to expose environment variable names. State: ${JSON.stringify(fullState)}`,
+  );
+  assert(fullState.technicalDetailsCount === 7, "Expected technical details disclosures in the full state.");
+  assert(
+    fullState.hasBindingAuthority,
+    `Expected skill binding authority details to be present in disclosures. State: ${JSON.stringify(fullState)}`,
+  );
+  assert(
+    fullState.hasBindingOperations,
+    `Expected skill binding allowed operations to be present in disclosures. State: ${JSON.stringify(fullState)}`,
+  );
+  assert(
+    fullState.hasFullNextAction,
+    `Expected full next actions to be present in disclosures. State: ${JSON.stringify(fullState)}`,
+  );
   results.push({ case: "full", status: "ok", ...fullState });
 
   await evaluate(
@@ -607,6 +867,36 @@ async function characterizeTools(cdp, baseUrl) {
   assert(requests.telegramLinkStarts === 1, "Expected one Telegram link-start request.");
   results.push({ case: "telegram_link_start", status: "ok", ...linkState });
 
+  await navigate(cdp, `${baseUrl}/tools?case=telegram-pending&cacheBust=${Date.now()}`);
+  const pendingTelegramState = await waitFor(
+    cdp,
+    `(() => {
+      const text = document.body.innerText;
+      if (!text.includes("Code generated. Waiting for Telegram chat confirmation.")) {
+        return null;
+      }
+      return {
+        hasPendingCopy: true,
+        hasPendingState: text.includes("Pending confirmation"),
+        hasNoCodeFallback: text.includes("No active link code yet"),
+      };
+    })()`,
+    "pending Telegram link state",
+  );
+  assert(
+    pendingTelegramState.hasPendingCopy,
+    `Expected Telegram pending confirmation copy. State: ${JSON.stringify(pendingTelegramState)}`,
+  );
+  assert(
+    pendingTelegramState.hasNoCodeFallback === false,
+    `Expected pending link state not to show no-code fallback. State: ${JSON.stringify(pendingTelegramState)}`,
+  );
+  assert(
+    pendingTelegramState.hasPendingState,
+    `Expected pending link state value to be formatted as pending confirmation. State: ${JSON.stringify(pendingTelegramState)}`,
+  );
+  results.push({ case: "telegram_link_pending", status: "ok", ...pendingTelegramState });
+
   await navigate(cdp, `${baseUrl}/tools?case=slow&cacheBust=${Date.now()}`);
   const loadingState = await waitFor(
     cdp,
@@ -618,7 +908,7 @@ async function characterizeTools(cdp, baseUrl) {
   results.push({ case: "loading", status: "ok" });
   await waitFor(
     cdp,
-    `document.querySelectorAll(".aion-tools-item-card").length === 3`,
+    `document.querySelectorAll(".aion-tools-item-card").length === 7`,
     "slow tools completion",
   );
 

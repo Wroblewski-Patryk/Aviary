@@ -4,6 +4,161 @@ Last updated: 2026-05-25
 
 ## Project Status Dashboard (2026-05-24)
 
+- `PRJ-1338` is DONE:
+  - `.codex/tasks/PRJ-1338-provider-setup-guidance.md`
+- objective:
+  - make Tools provider cards show backend-derived setup guidance for blocked or link-required providers without exposing secrets or moving execution authority into the frontend
+- current result:
+  - Tools renders setup guides for Telegram, ClickUp, Google Calendar, and Google Drive
+  - integral tools do not render setup guides
+  - each setup guide separates provider state, next safe action, and execution boundary
+  - known backend next-action IDs render as friendly setup copy
+  - Telegram pending confirmation shows a pending state instead of generic no-code fallback
+  - no credential entry, env-name leak, provider execution, or frontend authority was added
+- validation:
+  - `node --check scripts\tools-directory-characterization.mjs` PASS
+  - `node --check scripts\route-smoke.mjs` PASS
+  - `npm run build` PASS
+  - `npm run test:tools-directory` PASS via Edge with `setupGuideCount=4`, `integralSetupGuideCount=0`, `hasSetupBoundary=true`, `leaksEnvNames=false`, and Telegram pending state proof
+  - strict `/tools,/integrations` screenshot gate PASS: `screenshot_count=6`, `failed_count=0`
+  - `/tools` contract proof: setup guides present across desktop/tablet/mobile and no credential-name leaks
+  - account proof PASS: `panel_visible=true`
+- residual:
+  - live provider credential activation remains deferred until credentials and operator acceptance are in scope
+  - connector confirmation history remains current-turn only unless backend durable history is added
+  - module metric derivation and deeper Personality state derivation remain separate slices
+
+- `PRJ-1337` is DONE:
+  - `.codex/tasks/PRJ-1337-connector-confirmation-consent-copy.md`
+- objective:
+  - make connector confirmation and Telegram pending-link UI truthful, human-readable, and aligned with backend consent/link contracts
+- current result:
+  - Chat pending confirmation renders provider/operation as friendly product copy, for example `ClickUp / Update task`
+  - backend confirmation `reason` remains visible in the consent panel
+  - raw `clickup / update_task` style labels are excluded from the rendered confirmation proof
+  - Tools distinguishes Telegram `pending_confirmation` from linked/no-code states with localized waiting copy
+  - no backend execution, credential, or history behavior changed
+- validation:
+  - connector confirmation syntax checks PASS
+  - Tools characterization syntax check PASS
+  - `npm run build` PASS
+  - `npm run test:connector-confirmation-render` PASS
+  - `npm run test:connector-confirmation-browser` PASS
+  - `npm run test:tools-directory` PASS including `telegram_link_pending`
+  - strict `/chat,/tools,/integrations` screenshot gate PASS: `screenshot_count=9`, `failed_count=0`
+  - account proof PASS: `panel_visible=true`
+  - in-app Browser live dev check reached auth gate with no console errors or framework overlay
+- residual:
+  - connector confirmation history remains current-turn only until backend history exposes durable confirmation records
+  - provider setup guidance and module metric derivation remain separate slices
+
+- `PRJ-1336` is DONE:
+  - `.codex/tasks/PRJ-1336-integrations-external-only.md`
+- objective:
+  - make Integrations a true external provider/channel map instead of a duplicate of the full Tools catalog
+- current result:
+  - Integrations includes Telegram, ClickUp, Google Calendar, and Google Drive
+  - Integrations excludes Internal chat, Web search, and Web browser
+  - Integrations summary counts are derived from external rows only
+  - known backend next-action IDs render as calmer product copy
+  - Tools still keeps the full 4-group / 7-tool catalog
+- validation:
+  - `node --check scripts/route-smoke.mjs` PASS
+  - `node --check scripts/tools-directory-characterization.mjs` PASS
+  - `npm run build` PASS
+  - `npm run test:tools-directory` PASS
+  - strict `/integrations,/tools` screenshot gate PASS: `screenshot_count=6`, `failed_count=0`
+  - `/integrations` contract proof: `integrationProviderCount=4`, titles Telegram, ClickUp, Google Calendar, Google Drive
+  - account proof PASS: `panel_visible=true`
+- residual:
+  - provider-specific setup flows and connector confirmation history remain separate backend/UI slices
+
+- `PRJ-1335` is DONE:
+  - `.codex/tasks/PRJ-1335-tools-contract-fixture-refresh.md`
+- objective:
+  - align Tools frontend proof fixtures with the broader backend `/app/tools/overview` contract
+- current result:
+  - Tools characterization now verifies 4 groups, 7 tools, 4 toggles, 21 capability chips, and 7 technical-detail disclosures
+  - route-smoke Tools fixture now uses the same backend-shaped 4-group/7-tool catalog
+  - technical details expose safe binding allowed operations, execution owner, authority, and all next actions
+  - mobile `/tools` overflow from long backend action strings was fixed
+- validation:
+  - `node --check scripts/tools-directory-characterization.mjs` PASS
+  - `node --check scripts/route-smoke.mjs` PASS
+  - `npm run build` PASS
+  - `npm run test:tools-directory` PASS
+  - strict `/tools,/integrations` screenshot gate PASS: `screenshot_count=6`, `failed_count=0`
+  - account proof PASS: `panel_visible=true`
+- residual:
+  - Integrations route should filter to true external surfaces/channels and backend action IDs should get calmer product-copy translations
+
+- `PRJ-1334` is DONE:
+  - `.codex/tasks/PRJ-1334-tools-capability-strip.md`
+- objective:
+  - make Tools cards expose safe backend capability mapping from `/app/tools/overview` without turning the UI into an ops/debug surface
+- current result:
+  - each Tools card now shows visible capability, skill-binding, and source-count chips
+  - Tools characterization verifies `capabilityChipCount=9`
+  - raw provider payloads, env names, and operations/debug internals remain out of primary UI
+- validation:
+  - `npm run build` PASS
+  - `npm run test:tools-directory` PASS with full/toggle/Telegram link/loading/empty/error proof
+  - `/tools,/integrations` screenshot gate PASS: `screenshot_count=6`, `failed_count=0`
+  - account proof PASS: `panel_visible=true`
+- residual:
+  - update Tools fixtures to the broader backend catalog and enrich details with allowed operations, execution owner, authority, and all next actions
+
+- `PRJ-1333` is DONE:
+  - `.codex/tasks/PRJ-1333-chat-empty-transcript-truth.md`
+- objective:
+  - remove fake chat preview transcript rows and map empty `/app/chat/history` to a truthful first-message state
+- current result:
+  - empty backend history renders a designed empty state instead of `preview-*` messages
+  - chat characterization now verifies empty, full, and send states
+  - route-smoke can run `--empty-chat-history` for screenshot proof
+- validation:
+  - `npm run build` PASS
+  - `npm run test:chat-transcript` PASS with empty `rowCount=0`, `emptyStateCount=1`, `previewMetaCount=0`, `previewCopyCount=0`
+  - normal `/chat,/dashboard` screenshot gate PASS: `screenshot_count=6`, `failed_count=0`
+  - empty-history `/chat` screenshot gate PASS: `screenshot_count=3`, `failed_count=0`
+  - account proof PASS: `panel_visible=true`
+- residual:
+  - continue backend capability coverage across Tools/Integrations, connector confirmation history, and module metric derivation
+
+- `PRJ-1332` is DONE:
+  - `.codex/tasks/PRJ-1332-shell-health-backend-map.md`
+- objective:
+  - replace the static desktop shell health card with a safe `/health` backed summary
+- current result:
+  - shell health fetches for authenticated shell routes
+  - sidebar health derives localized loading/ready/attention/unavailable posture from selected `/health` fields
+  - UI shows compact pending/violations/revision metadata without raw ops/debug payloads
+- validation:
+  - `npm run build` PASS
+  - focused route-smoke screenshot gate PASS for `/dashboard`, `/personality`, `/automations`:
+    `viewport_count=3`, `screenshot_count=9`, `failed_count=0`
+  - full route smoke PASS: `route_count=14`, `status=ok`
+  - account proof PASS: `panel_visible=true`
+- residual:
+  - continue backend capability coverage across chat empty/demo state, module metrics, Tools/Integrations, and connector confirmation history
+
+- `PRJ-1331` is DONE:
+  - `.codex/tasks/PRJ-1331-personality-backend-map-first-slice.md`
+- objective:
+  - start the new backend-capability-to-final-personality-UI mission by making `/personality` more truthful to `/app/personality/overview`
+- current result:
+  - Personality route status is no longer a hardcoded `Stable` label
+  - Personality map, timeline, conscious/subconscious panels, and recent activity use localized product copy tied to backend-derived values
+  - Personality now exposes explicit loading, error, empty/learning, and success posture for the overview snapshot
+- validation:
+  - `npm run build` PASS
+  - focused `/personality` route-smoke screenshot gate PASS:
+    `viewport_count=3`, `screenshot_count=3`, `failed_count=0`
+  - full route smoke PASS: `route_count=14`, `status=ok`
+  - account proof PASS: `panel_visible=true`
+- residual:
+  - continue backend capability coverage across shell health, chat empty state, module metrics, Tools/Integrations, and connector confirmation history
+
 - `PRJ-1330` is DONE:
   - `.codex/tasks/PRJ-1330-unified-gate-and-production-parity-reproof.md`
 - objective:

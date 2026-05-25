@@ -62,11 +62,13 @@ function baseProps(overrides) {
     pendingConfirmationCompleteLabel: "Confirmation complete",
     pendingConfirmationState: "idle",
     pendingConfirmationFeedback: null,
-    addIcon: icon("+"),
-    voiceIcon: icon("voice"),
+    attachments: [],
+    attachIcon: icon("+"),
     sendIcon: icon("send"),
     onQuickAction: () => {},
     onConfirmPendingConfirmation: () => {},
+    onAttachFiles: () => {},
+    onRemoveAttachment: () => {},
     onTextChange: () => {},
     onSubmit: () => {},
     ...overrides,
@@ -122,10 +124,12 @@ const cases = [
 
 const pendingHtml = cases.find((entry) => entry.name === "pending").html;
 assertIncludes(pendingHtml, "Confirmation required", "pending eyebrow");
-assertIncludes(pendingHtml, "clickup", "provider hint");
-assertIncludes(pendingHtml, "update_task", "operation");
+assertIncludes(pendingHtml, "ClickUp", "provider hint");
+assertIncludes(pendingHtml, "Update task", "operation");
 assertIncludes(pendingHtml, "Update ClickUp task #123 to Done", "candidate summary");
+assertIncludes(pendingHtml, "Explicit user confirmation is required before updating ClickUp.", "confirmation reason");
 assertIncludes(pendingHtml, "Blocked", "blocked chip");
+assertExcludes(pendingHtml, "clickup / update_task", "raw connector title");
 assertMatches(pendingHtml, />Confirm<\/button>/, "enabled confirm button");
 assertExcludes(pendingHtml, "disabled", "pending disabled button state");
 

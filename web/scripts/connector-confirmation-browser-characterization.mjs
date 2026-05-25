@@ -471,7 +471,12 @@ async function characterizeConfirmation(cdp, baseUrl) {
     `(() => {
       const text = document.body.innerText;
       const normalizedText = text.toLowerCase();
-      if (!normalizedText.includes("confirmation required") || !text.includes("Update ClickUp task #123 to Done")) {
+      if (
+        !normalizedText.includes("confirmation required") ||
+        !text.includes("Update ClickUp task #123 to Done") ||
+        !text.includes("ClickUp / Update task") ||
+        text.includes("clickup / update_task")
+      ) {
         return null;
       }
       return {
@@ -504,7 +509,12 @@ async function characterizeConfirmation(cdp, baseUrl) {
     cdp,
     `(() => {
       const text = document.body.innerText;
-      if (!text.includes("confirmation_stale") || !text.includes("Update ClickUp task #123 to Done")) {
+      if (
+        !text.includes("confirmation_stale") ||
+        !text.includes("Update ClickUp task #123 to Done") ||
+        !text.includes("ClickUp / Update task") ||
+        text.includes("clickup / update_task")
+      ) {
         return null;
       }
       const button = document.querySelector(".aion-chat-pending-confirmation-button");

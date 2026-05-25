@@ -36,6 +36,35 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-25 - Default Chrome CDP characterization can hang on Windows
+- Context:
+  - PRJ-1338 extended Tools directory browser characterization for provider
+    setup guidance and credential-name leak assertions.
+- Symptom:
+  - The first default-Chrome `npm run test:tools-directory` attempt timed out
+    waiting for a `Page.enable` CDP response and emitted a locked Chrome
+    profile cleanup warning for a Crashpad metrics file.
+- Root cause:
+  - On this Windows workstation, the default Chrome profile/process family can
+    briefly hold or block CDP/temp-profile resources even when the UI assertion
+    itself is not failing.
+- Guardrail:
+  - After a CDP/profile-lock warning, check narrowly for validation-owned
+    `chrome-headless-shell`, browser, route-smoke, and relevant port listeners
+    before closure.
+- Preferred pattern:
+  - Rerun local characterization with Edge by setting
+    `CHROME_PATH=C:\Program Files\Microsoft\Edge\Application\msedge.exe`, then
+    keep the successful output in the task proof.
+- Avoid:
+  - Treating a default Chrome CDP timeout as a product/UI failure before
+    rerunning with a clean browser binary and checking for leaked processes.
+- Evidence:
+  - PRJ-1338 reran `npm run test:tools-directory` with Edge and passed with
+    `setupGuideCount=4`, `integralSetupGuideCount=0`, `hasSetupBoundary=true`,
+    provider setup copy present, Telegram pending state present, and
+    `leaksEnvNames=false`.
+
 ### 2026-05-24 - Browser characterization should not depend on localized copy
 - Context:
   - PRJ-1280 refreshed the Tools overview chain and reran

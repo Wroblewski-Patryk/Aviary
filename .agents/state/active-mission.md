@@ -9,6 +9,131 @@ repository history.
 
 ## Current Mission
 
+- Mission ID: PRJ-1331-backend-capability-to-final-personality-ui
+- Status: CHECKPOINTED
+- Selected objective: map backend capabilities into a magical, truthful, final-feeling UI, starting with the Personality route as the user's core identity surface.
+- Why this mission now: user requested coordinated work across layers to make every backend function visible or usable in the UI and make the experience beautiful for their personality.
+- Lanes:
+  - Backend/API Inventory: completed read-only; identified app endpoints, services, missing UI coverage, and first coverage tasks.
+  - Frontend Coverage Audit: completed read-only; identified current route/component coverage, static/mock data, and first safe frontend changes.
+  - UX/Product Direction: completed read-only; recommended Personality as the first surface and defined surface-level acceptance slices.
+  - Shell Health Backend Map: completed read-only backend/API and frontend audit lanes for safe `/health` exposure.
+  - Chat Transcript Truth: completed read-only backend/API and frontend empty-state audit lanes.
+  - Tools/Integrations Capability Map: completed read-only backend/API and frontend coverage lanes for safe `/app/tools/overview` exposure.
+  - Connector Confirmation Consent: completed read-only backend/API and frontend/UX lanes for current-turn connector confirmation and Telegram pending-link copy.
+  - Provider Setup Guidance: completed read-only backend/API and frontend/UX lanes for safe Tools setup guidance from `/app/tools/overview.next_actions`.
+  - Coordinator: integrated lane findings and implemented Personality backend-map, shell health backend-map, Chat empty transcript truth, Tools capability-strip, Integrations external-only, connector consent-copy, and provider setup-guidance slices.
+  - Current checkpoint:
+  - `PRJ-1338` DONE:
+    - Tools now renders setup guides for Telegram, ClickUp, Google Calendar, and Google Drive when provider configuration, link confirmation, or next safe action is needed.
+    - Integral tools do not render setup guides.
+    - Setup guidance separates provider state, next safe action, and backend execution boundary.
+    - Friendly copy covers known backend next-action IDs, including Telegram pending confirmation and Google provider variants.
+    - Characterization and route-smoke prove no env-name or credential-name leaks.
+  - `PRJ-1337` DONE:
+    - Chat connector confirmation titles now render human provider/operation labels such as `ClickUp / Update task` instead of raw backend IDs.
+    - Chat keeps the backend confirmation reason visible in the pending panel.
+    - Tools now distinguishes Telegram `link_state: pending_confirmation` from linked/no-code states with localized waiting-for-Telegram copy.
+    - Characterization proves pending/submitting/success/error connector states and Telegram pending-link state without backend changes.
+  - `PRJ-1336` DONE:
+    - Integrations now filters the shared `/app/tools/overview` payload to external provider/channel rows only.
+    - Provider map includes Telegram, ClickUp, Google Calendar, and Google Drive.
+    - Internal chat, Web search, and Web browser remain in Tools and are excluded from Integrations.
+    - Known backend `next_actions` now render as calmer product copy in Tools/Integrations surfaces.
+  - `PRJ-1335` DONE:
+    - Tools characterization and route-smoke fixtures now exercise the backend-shaped 4-group / 7-tool `/app/tools/overview` catalog.
+    - Tools technical details now expose safe binding metadata: allowed operations, execution owner, authority, and all next actions.
+    - Mobile `/tools` overflow caused by long backend action strings was fixed with route-local wrapping/width constraints.
+  - `PRJ-1334` DONE:
+    - Tools cards now surface backend capability, skill-binding, and source-count signals before the technical details disclosure.
+    - `web/scripts/tools-directory-characterization.mjs` now verifies three visible backend capability chips per rendered tool card.
+    - Backend/API lane confirmed `/app/tools/overview` is the safe primary UI adapter; raw provider payloads, env names, and ops/debug internals stay out of primary UI.
+    - Frontend lane identified the next slice: refresh Tools fixtures to the broader backend catalog and enrich details with allowed operations/execution owner/authority/all next actions.
+  - `PRJ-1333` DONE:
+    - Chat no longer renders fake `preview-*` transcript messages when `/app/chat/history` returns `items: []`.
+    - `web/src/components/chat.tsx` now has `ChatTranscriptEmptyState`.
+    - `web/scripts/chat-transcript-characterization.mjs` verifies empty/full/send states.
+    - `web/scripts/route-smoke.mjs` supports `--empty-chat-history` for screenshot proof.
+  - `PRJ-1332` DONE:
+    - `web/src/lib/api.ts` types selected shell-safe `/health` fields.
+    - `web/src/App.tsx` fetches health for authenticated shell routes and derives localized loading/ready/attention/unavailable posture.
+    - `web/src/index.css` adds scoped health state tones and meta copy styling.
+    - desktop shell health no longer uses static `Optimal` copy.
+  - `PRJ-1331` DONE:
+    - `web/src/App.tsx` now makes the Personality route more backend-aware, localized, and stateful.
+    - `web/src/index.css` styles the new route status detail line.
+    - loading, error, empty/learning, and success posture are now explicit for the Personality overview snapshot.
+    - hardcoded English Personality map/timeline/side-panel labels were replaced with localized product copy tied to existing backend-derived values.
+- Validation summary:
+  - `PRJ-1338`:
+    - `node --check scripts\tools-directory-characterization.mjs` and `node --check scripts\route-smoke.mjs` in `web/` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - `npm run test:tools-directory` via Edge -> PASS with `setupGuideCount=4`, `integralSetupGuideCount=0`, `hasSetupBoundary=true`, provider setup copy present, Telegram pending state present, and `leaksEnvNames=false`
+    - strict route-smoke `/tools,/integrations` screenshot gate -> PASS with `route_count=14`, `status=ok`, `screenshot_count=6`, `failed_count=0`
+    - `/tools` desktop/tablet/mobile proof: `setupGuideCount=4`, `leakedCredentialNames=false`
+    - account proof `status=ok`, `failed_count=0`, `panel_visible=true`
+    - artifacts: `C:\Personal\Projekty\Aplikacje\Personality\.codex\artifacts\prj1338-provider-setup-guidance\report.json`, `C:\Personal\Projekty\Aplikacje\Personality\.codex\artifacts\prj1338-provider-setup-guidance\screenshots\*.png`
+  - `PRJ-1335`:
+    - `node --check scripts/tools-directory-characterization.mjs` and `node --check scripts/route-smoke.mjs` in `web/` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - `npm run test:tools-directory` -> PASS with `groupCount=4`, `itemCount=7`, `toggleCount=4`, `capabilityChipCount=21`, `technicalDetailsCount=7`, binding authority/operations/full-next-action proof
+    - strict route-smoke `/tools,/integrations` screenshot gate -> PASS with `screenshot_count=6`, `failed_count=0`
+    - account proof `status=ok`, `failed_count=0`, `panel_visible=true`
+    - artifacts: `C:\Personal\Projekty\Aplikacje\.codex\artifacts\prj1335-tools-contract-fixture-refresh\report.json`, `C:\Personal\Projekty\Aplikacje\.codex\artifacts\prj1335-tools-contract-fixture-refresh\screenshots\*.png`
+  - `PRJ-1337`:
+    - `node --check scripts\connector-confirmation-render-characterization.mjs`, `node --check scripts\connector-confirmation-browser-characterization.mjs`, and `node --check scripts\tools-directory-characterization.mjs` in `web/` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - `npm run test:connector-confirmation-render` -> PASS
+    - `npm run test:connector-confirmation-browser` -> PASS with `ClickUp / Update task`, backend reason copy, and no raw `clickup / update_task`
+    - `npm run test:tools-directory` -> PASS including `telegram_link_pending`
+    - strict route-smoke `/chat,/tools,/integrations` screenshot gate -> PASS with `route_count=14`, `status=ok`, `screenshot_count=9`, `failed_count=0`
+    - account proof `status=ok`, `failed_count=0`, `panel_visible=true`
+    - Browser live dev check reached the auth gate on `127.0.0.1:5174` with no console errors or framework overlay; contract rendering remains covered by the authenticated harnesses
+    - artifacts: `C:\Personal\Projekty\Aplikacje\.codex\artifacts\prj1337-connector-confirmation-consent-copy\report.json`, `C:\Personal\Projekty\Aplikacje\.codex\artifacts\prj1337-connector-confirmation-consent-copy\screenshots\*.png`
+  - `PRJ-1336`:
+    - `node --check scripts/route-smoke.mjs` and `node --check scripts/tools-directory-characterization.mjs` in `web/` -> PASS
+    - `npm run build` in `web/` -> PASS
+    - `npm run test:tools-directory` -> PASS with full 4-group / 7-tool Tools proof intact
+    - strict route-smoke `/integrations,/tools` screenshot gate -> PASS with `screenshot_count=6`, `failed_count=0`
+    - `/integrations` route-smoke contract proof: `integrationProviderCount=4`, titles Telegram, ClickUp, Google Calendar, Google Drive
+    - account proof `status=ok`, `failed_count=0`, `panel_visible=true`
+    - artifacts: `C:\Personal\Projekty\Aplikacje\.codex\artifacts\prj1336-integrations-external-only\report.json`, `C:\Personal\Projekty\Aplikacje\.codex\artifacts\prj1336-integrations-external-only\screenshots\*.png`
+  - `PRJ-1334`:
+    - `npm run build` in `web/` -> PASS
+    - `npm run test:tools-directory` -> PASS with `capabilityChipCount=9`, full/toggle/Telegram link/loading/empty/error proof
+    - route-smoke `/tools,/integrations` screenshot gate -> PASS with `screenshot_count=6`, `failed_count=0`
+    - account proof `status=ok`, `failed_count=0`, `panel_visible=true`
+    - artifacts: `C:\Personal\Projekty\Aplikacje\.codex\artifacts\prj1334-tools-capability-strip\report.json`, `C:\Personal\Projekty\Aplikacje\.codex\artifacts\prj1334-tools-capability-strip\screenshots\*.png`
+  - `PRJ-1333`:
+    - `npm run build` in `web/` -> PASS
+    - `npm run test:chat-transcript` -> PASS with empty `rowCount=0`, `emptyStateCount=1`, `previewMetaCount=0`, full transcript, and send proof
+    - normal route-smoke `/chat,/dashboard` screenshot gate -> PASS with `screenshot_count=6`, `failed_count=0`
+    - empty-history route-smoke `/chat` screenshot gate -> PASS with `screenshot_count=3`, `failed_count=0`
+    - account proof `status=ok`, `failed_count=0`, `panel_visible=true`
+    - artifacts: `.codex/artifacts/prj1333-chat-empty-truth/report.json`, `.codex/artifacts/prj1333-chat-empty-truth/empty-report.json`, `.codex/artifacts/prj1333-chat-empty-truth/empty-screenshots/*.png`
+  - `PRJ-1332`:
+    - `npm run build` in `web/` -> PASS
+    - route smoke `route_count=14`, `status=ok`
+    - `/dashboard`, `/personality`, `/automations` screenshot gate `viewport_count=3`, `screenshot_count=9`, `failed_count=0`
+    - account proof `status=ok`, `step_count=1`, `failed_count=0`, `panel_visible=true`
+    - artifacts: `.codex/artifacts/prj1332-shell-health-backend-map/report.json`, `.codex/artifacts/prj1332-shell-health-backend-map/screenshots/*.png`
+  - `npm run build` in `web/` -> PASS
+  - focused route-smoke screenshot/account proof -> PASS:
+    - route smoke `route_count=14`, `status=ok`
+    - `/personality` screenshot gate `viewport_count=3`, `screenshot_count=3`, `failed_count=0`
+    - account proof `status=ok`, `step_count=1`, `failed_count=0`, `panel_visible=true`
+    - artifacts: `.codex/artifacts/prj1331-personality-backend-map/report.json`, `.codex/artifacts/prj1331-personality-backend-map/screenshots/*.png`
+- Residual:
+  - full backend capability coverage remains a multi-slice mission
+  - goals/insights/reflections still contain some static or weakly derived UI values
+  - provider credential activation and mutation execution remain outside this UI guidance scope
+  - durable connector confirmation history remains future scope unless the backend exposes history records
+  - module metric derivation remains a future slice
+- Next recommended checkpoint:
+  - continue backend-to-UI mapping with module metric derivation, deeper Personality state derivation, or connector confirmation history only if backend history support is added.
+
+## Previous Mission
+
 - Mission ID: PRJ-1324-mystic-clean-ui-orchestration-wave-1
 - Status: VERIFIED
 - Selected objective: raise authenticated shell visual quality to a mystical, clean, premium baseline without behavior drift.

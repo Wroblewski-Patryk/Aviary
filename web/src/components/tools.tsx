@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { AppTelegramLinkStartResponse, AppToolGroup, AppToolItem } from "../lib/api";
 import {
   formatToolLinkState,
+  formatToolAction,
   formatToolState,
   summarizeToolAction,
   toolStatusClass,
@@ -42,9 +43,18 @@ export type ToolsDirectoryLabels = {
   seconds: string;
   instruction: string;
   noLinkCode: string;
+  pendingLinkCode: string;
+  setupGuide: string;
+  setupProviderStep: string;
+  setupUserStep: string;
+  setupSafetyStep: string;
+  setupSafetyCopy: string;
   technicalDetails: string;
   capabilities: string;
   skillBindings: string;
+  capabilityCountSuffix: string;
+  skillBindingCountSuffix: string;
+  sourceCountSuffix: string;
 };
 
 export type ToolsDirectoryCommonLabels = {
@@ -213,6 +223,12 @@ function ToolsDirectoryItem({
       : labels.readOnly;
   const statusLabel = formatToolState(item.status, labels);
   const showIntegralPill = item.integral && labels.integral.toLocaleLowerCase() !== statusLabel.toLocaleLowerCase();
+  const showSetupGuide = !item.integral && (item.next_actions.length > 0 || !item.provider.ready || item.link_required);
+  const capabilityFacts = [
+    { label: labels.capabilities, value: item.capabilities.length, suffix: labels.capabilityCountSuffix },
+    { label: labels.skillBindings, value: item.skill_tool_bindings.length, suffix: labels.skillBindingCountSuffix },
+    { label: commonLabels.sourceOfTruth, value: item.source_of_truth.length, suffix: labels.sourceCountSuffix },
+  ];
 
   return (
     <section className={`aion-tools-item-card aion-tools-item-card-${toolTone}`}>
@@ -261,6 +277,20 @@ function ToolsDirectoryItem({
         </div>
       </div>
 
+      {showSetupGuide ? (
+        <ToolsSetupGuide item={item} labels={labels} providerState={providerState} />
+      ) : null}
+
+      <div className="aion-tools-capability-strip" aria-label={`${item.label} backend capability map`}>
+        {capabilityFacts.map((fact) => (
+          <div className="aion-tools-capability-chip" key={fact.label}>
+            <p>{fact.label}</p>
+            <strong>{fact.value}</strong>
+            <span>{fact.suffix}</span>
+          </div>
+        ))}
+      </div>
+
       <div className="space-y-3">
         <ToolsDetailCard label={labels.currentStatus}>
           <p className="mt-2 text-sm leading-7 text-base-900">{item.status_reason}</p>
@@ -286,6 +316,8 @@ function ToolsDirectoryItem({
             secondsLabel={labels.seconds}
             instructionLabel={labels.instruction}
             noLinkCodeLabel={labels.noLinkCode}
+            pendingLinkCodeLabel={labels.pendingLinkCode}
+            linkState={item.link_state}
             busy={telegramLinkBusy}
             onStart={onStartTelegramLink}
           />
@@ -303,10 +335,19 @@ function ToolsDirectoryItem({
             />
             <ToolsTechnicalDetailPanel
               label={labels.skillBindings}
-              values={item.skill_tool_bindings.map((binding) =>
+              values={item.skill_tool_bindings.flatMap((binding) => [
                 `${binding.label}: ${binding.posture}`,
-              )}
+                `${binding.label} operations: ${binding.allowed_operations.join(", ")}`,
+                `${binding.label} owner: ${binding.execution_owner}`,
+                `${binding.label} authority: ${binding.authority}`,
+              ])}
               emptyLabel={commonLabels.noData}
+            />
+            <ToolsTechnicalDetailPanel
+              label={labels.nextStep}
+              values={item.next_actions.map(formatToolAction)}
+              emptyLabel={labels.noAction}
+              chipTone="muted"
             />
             <ToolsTechnicalDetailPanel
               label={commonLabels.sourceOfTruth}
@@ -318,6 +359,43 @@ function ToolsDirectoryItem({
         </details>
       </div>
     </section>
+  );
+}
+
+export function ToolsSetupGuide({
+  item,
+  labels,
+  providerState,
+}: {
+  item: AppToolItem;
+  labels: ToolsDirectoryLabels;
+  providerState: string;
+}) {
+  const actionCopy = item.next_actions.length > 0
+    ? item.next_actions.map(formatToolAction).join(" / ")
+    : labels.noAction;
+
+  return (
+    <div className="aion-tools-setup-guide" aria-label={`${item.label} setup guide`}>
+      <p className="aion-tools-setup-title">{labels.setupGuide}</p>
+      <div className="aion-tools-setup-grid">
+        <div className="aion-tools-setup-step">
+          <span>01</span>
+          <p>{labels.setupProviderStep}</p>
+          <strong>{providerState}</strong>
+        </div>
+        <div className="aion-tools-setup-step">
+          <span>02</span>
+          <p>{labels.setupUserStep}</p>
+          <strong>{actionCopy}</strong>
+        </div>
+        <div className="aion-tools-setup-step">
+          <span>03</span>
+          <p>{labels.setupSafetyStep}</p>
+          <strong>{labels.setupSafetyCopy}</strong>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -413,6 +491,8 @@ export function ToolsTelegramLinkPanel({
   secondsLabel,
   instructionLabel,
   noLinkCodeLabel,
+  pendingLinkCodeLabel,
+  linkState,
   busy,
   onStart,
 }: {
@@ -429,9 +509,13 @@ export function ToolsTelegramLinkPanel({
   secondsLabel: string;
   instructionLabel: string;
   noLinkCodeLabel: string;
+  pendingLinkCodeLabel: string;
+  linkState: string;
   busy: boolean;
   onStart: () => void;
 }) {
+  const waitingForTelegramConfirmation = linkState === "pending_confirmation";
+
   return (
     <div className="rounded-2xl border border-base-300 px-4 py-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -468,7 +552,9 @@ export function ToolsTelegramLinkPanel({
           </div>
         </div>
       ) : (
-        <p className="mt-4 text-sm text-base-800">{noLinkCodeLabel}</p>
+        <p className="mt-4 text-sm text-base-800">
+          {waitingForTelegramConfirmation ? pendingLinkCodeLabel : noLinkCodeLabel}
+        </p>
       )}
     </div>
   );

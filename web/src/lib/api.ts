@@ -222,13 +222,31 @@ export type AppHealthTelegramChannel = {
 
 export type AppHealthResponse = {
   status?: string;
+  release_readiness?: {
+    ready?: boolean;
+    violations?: string[];
+  };
+  deployment?: {
+    runtime_build_revision?: string;
+    trigger_mode?: string;
+  };
   conversation_channels?: {
     telegram?: AppHealthTelegramChannel;
+  };
+  scheduler?: {
+    healthy?: boolean;
+    running?: boolean;
+    enabled?: boolean;
+    execution_mode?: string;
   };
   attention?: {
     pending?: number;
     claimed?: number;
     answered?: number;
+  };
+  reflection?: {
+    healthy?: boolean;
+    runtime_mode?: string;
   };
   proactive?: {
     scheduler_tick_summary?: Record<string, unknown>;

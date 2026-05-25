@@ -10,6 +10,7 @@ import {
   type AppResetDataResponse,
   type AppSettings,
   type AppTelegramLinkStartResponse,
+  type AppToolItem,
   type AppToolsOverviewResponse,
 } from "./lib/api";
 import {
@@ -26,6 +27,7 @@ import {
   transcriptMetadataSummary,
 } from "./lib/chat-transcript";
 import { renderChatMarkdown } from "./lib/chat-markdown";
+import { formatToolAction } from "./lib/tool-formatting";
 import {
   UI_LANGUAGE_OPTIONS,
   UTC_OFFSET_OPTIONS,
@@ -44,6 +46,7 @@ import {
   ChatComposerShell,
   ChatFlowStage,
   ChatPortraitPanel,
+  ChatTranscriptEmptyState,
   ChatTopbar,
   ChatTranscriptMessageList,
   ChatTranscriptShell,
@@ -146,6 +149,10 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+function isExternalIntegrationItem(item: AppToolItem) {
+  return !item.integral && (item.kind === "integration" || item.kind === "channel");
+}
+
 const UI_COPY = {
   en: {
     routes: {
@@ -210,6 +217,18 @@ const UI_COPY = {
       stateDetailLabel: "Details",
       view: "View",
       unknownTime: "Unknown time",
+      shellHealthTitle: "System health",
+      shellHealthLoading: "Syncing",
+      shellHealthLoadingBody: "Reading the live health surface.",
+      shellHealthReady: "Aligned",
+      shellHealthReadyBody: "Release, scheduler, and reflection signals are calm.",
+      shellHealthAttention: "Attention",
+      shellHealthAttentionBody: "One runtime signal wants a closer look.",
+      shellHealthUnavailable: "Quiet",
+      shellHealthUnavailableBody: "Health is unavailable, so the shell is staying conservative.",
+      shellHealthPending: "pending",
+      shellHealthViolations: "violations",
+      shellHealthRevision: "rev",
       recentActivity: [
         { title: "Updated project plan", when: "2h ago" },
         { title: "Deep work window refined", when: "3h ago" },
@@ -249,6 +268,11 @@ const UI_COPY = {
       subtitle: "See the latest shared conversation first, whether the recent turns came from the app or a linked channel.",
       emptyThread:
         "Start the conversation here. New turns will appear in this shared thread as soon as they are exchanged.",
+      emptyThreadTitle: "The thread is ready",
+      emptyThreadBody:
+        "No backend conversation turns exist for this account yet. Send the first message and Aviary will begin the shared transcript here.",
+      emptyThreadMeta: "Backend history is empty",
+      emptyThreadAction: "Start with a simple check-in",
       placeholder: "Send a message...",
       composerHint: "Replies land back in this same transcript, so you can stay focused on one conversation.",
       confirmationRequired: "Confirmation required",
@@ -334,8 +358,17 @@ const UI_COPY = {
       linkCode: "Link code",
       instruction: "Instruction",
       noLinkCode: "No active link code yet. Generate one when you are ready to confirm the chat.",
+      pendingLinkCode: "Code generated. Waiting for Telegram chat confirmation.",
+      setupGuide: "Setup guide",
+      setupProviderStep: "Provider state",
+      setupUserStep: "Next safe action",
+      setupSafetyStep: "Execution boundary",
+      setupSafetyCopy: "Overview only. Secrets and execution stay in the backend action layer.",
       capabilities: "Capabilities",
       skillBindings: "Skill bindings",
+      capabilityCountSuffix: "mapped",
+      skillBindingCountSuffix: "bound",
+      sourceCountSuffix: "sources",
       summaryGroupNote: "Clear groups for the tools you can browse here",
       summaryIntegralNote: "Capabilities that stay available as part of the product",
       summaryReadyNote: "Tools that are ready to use today",
@@ -365,6 +398,7 @@ const UI_COPY = {
       linkStateLinkedValue: "Linked",
       linkStateNotLinkedValue: "Not linked",
       linkStateRequiredValue: "Link required",
+      linkStatePendingValue: "Pending confirmation",
       linkStateUnknownValue: "Unknown",
     },
     memory: {
@@ -642,18 +676,18 @@ const UI_COPY = {
       title: "Connection map",
       subtitle: "Provider readiness, link needs, and external channels gathered into one calm surface.",
       ready: "Ready providers",
-      linked: "Linked tools",
+      linked: "Active for you",
       attention: "Needs attention",
       boundary: "Integration boundary",
       readyShort: "ready",
       readyDetail: "Providers reporting ready through the existing tools overview.",
-      linkedDetail: "Enabled tools currently available to the shell.",
+      linkedDetail: "External surfaces currently enabled for this account.",
       attentionDetail: "Providers blocked or waiting for a link step.",
       providerMap: "Provider map",
       providerMapTitle: "External surfaces at the edge",
       overview: "Overview",
-      noProvidersTitle: "No providers visible",
-      noProvidersDetail: "Tools overview has not exposed provider rows yet.",
+      noProvidersTitle: "No external providers visible",
+      noProvidersDetail: "Tools overview has not exposed external provider rows yet.",
       connectionRules: "Connection rules",
       toolsOwnTogglesTitle: "Tools own toggles",
       toolsOwnTogglesBody: "This route shows integration posture; detailed enablement remains in the Tools surface.",
@@ -663,7 +697,7 @@ const UI_COPY = {
       noSilentProviderAccessBody: "Opening the route reads overview data only and does not call external providers.",
       readinessDetails: "Readiness details",
       configured: "Configured",
-      toolsKnown: "tools known",
+      toolsKnown: "external surfaces known",
       linkRequired: "Link required",
       waitingForLinkFlow: "waiting for link flow",
       blocked: "Blocked",
@@ -676,10 +710,86 @@ const UI_COPY = {
     personality: {
       eyebrow: "Personality",
       title: "Personality overview",
-      subtitle: "High-level insight first, with extra detail available only when you want it.",
+      subtitle: "A warm map of what Aviary knows, how it adapts, and what it can safely do with you next.",
       filter: "Filter sections",
       loading: "Loading personality overview.",
       empty: "No matching overview sections for this filter.",
+      statusLabel: "Live map",
+      statusLoading: "Reading",
+      statusLearning: "Learning",
+      statusStable: "Stable",
+      cueSuffix: "cues",
+      overviewLoadingTitle: "Reading your current shape",
+      overviewLoadingBody: "Aviary is refreshing identity, memory, planning, and skill signals from the backend snapshot.",
+      overviewErrorTitle: "This map needs a refresh",
+      overviewErrorBody: "The current personality snapshot could not be loaded, so visible values stay conservative.",
+      overviewEmptyTitle: "The map is ready to learn",
+      overviewEmptyBody: "Start a conversation or save preferences and Aviary will begin filling the identity, memory, planning, and skill layers.",
+      identityEyebrow: "Identity",
+      identityStableTitle: "Recognized",
+      identityLearningTitle: "Still learning",
+      identityKnownBody: "Account identity is present for this session.",
+      identityUnknownBody: "Aviary is waiting for a clearer personal anchor.",
+      knowledgeEyebrow: "Learned knowledge",
+      knowledgePatternsBody: "Reusable concepts and memory summaries are available for future answers.",
+      knowledgeEmptyBody: "The memory layer is ready for first reusable patterns.",
+      planningEyebrow: "Planning",
+      planningActiveBody: "Current focus and next milestones are shaping the present horizon.",
+      planningEmptyBody: "No active goal is visible yet, so the planning layer stays open.",
+      skillsEyebrow: "Skills",
+      skillsReadyTitle: "catalogued",
+      skillsPendingTitle: "Catalog pending",
+      skillsReadyBody: "Runtime capabilities are visible as supported skills.",
+      skillsPendingBody: "The role-skill catalog is waiting for available data.",
+      roleEyebrow: "Role",
+      roleReadyTitle: "Work partner ready",
+      roleAdaptiveTitle: "Adaptive role",
+      rolePreferredBody: "A preferred role signal is already learned.",
+      roleAdaptiveBody: "Role posture stays adaptive until preferences grow.",
+      timelineEyebrow: "Mind layers timeline",
+      timelineTitle: "Embodied personality layers in motion",
+      layerMemoryTitle: "Memory",
+      layerMemoryDetail: "Experiences and stored recall",
+      layerReflectionTitle: "Reflection",
+      layerReflectionDetail: "Insights and slower learning",
+      layerContextTitle: "Context",
+      layerContextDetail: "Environment and active inputs",
+      layerMotivationTitle: "Motivation",
+      layerMotivationDetail: "Drivers, values, and current goals",
+      layerActionTitle: "Action",
+      layerActionDetail: "Tasks and execution posture",
+      layerExpressionTitle: "Expression",
+      layerExpressionDetail: "Communication style and language",
+      notesValue: "notes",
+      insightsValue: "insights",
+      alignedValue: "aligned",
+      activeValue: "active",
+      adaptiveValue: "adaptive",
+      noGoalsValue: "No goals",
+      noSignalsValue: "No signals",
+      noProposalsValue: "No proposals",
+      consciousEyebrow: "Conscious layer",
+      consciousTitle: "Active awareness and current cognition",
+      consciousBody: "The foreground loop stays visible through focus, clarity, active load, and the present task horizon.",
+      subconsciousEyebrow: "Subconscious layer",
+      subconsciousTitle: "Background patterns and latent knowledge",
+      subconsciousBody: "Longer memory, associations, and learned preferences stay active without crowding the live route.",
+      recentEyebrow: "Recent activity",
+      recentTitle: "Latest internal movement",
+      recentBody: "Recent changes stay readable before you open the deeper sections.",
+      focusLabel: "Focus",
+      clarityLabel: "Clarity",
+      energyLabel: "Energy",
+      loadLabel: "Load",
+      patternsLabel: "Patterns",
+      associationsLabel: "Associations",
+      preferencesLabel: "Preferences",
+      intuitionLabel: "Intuition",
+      goalsValue: "goals",
+      signalsValue: "signals",
+      proposalsValue: "proposals",
+      tasksValue: "tasks",
+      blockedValue: "blocked",
     },
   },
   pl: {
@@ -731,6 +841,18 @@ const UI_COPY = {
       stateDetailLabel: "Szczegóły",
       view: "Zobacz",
       unknownTime: "Nieznany czas",
+      shellHealthTitle: "Zdrowie systemu",
+      shellHealthLoading: "Synchronizacja",
+      shellHealthLoadingBody: "Czytam bieżący health z backendu.",
+      shellHealthReady: "Zgrany",
+      shellHealthReadyBody: "Release, scheduler i refleksje są spokojne.",
+      shellHealthAttention: "Uwaga",
+      shellHealthAttentionBody: "Jeden sygnał runtime prosi o bliższe spojrzenie.",
+      shellHealthUnavailable: "Cisza",
+      shellHealthUnavailableBody: "Health jest niedostępny, więc shell pokazuje stan zachowawczo.",
+      shellHealthPending: "oczekuje",
+      shellHealthViolations: "naruszenia",
+      shellHealthRevision: "rev",
       recentActivity: [
         { title: "Zaktualizowano plan projektu", when: "2 godz. temu" },
         { title: "Doprecyzowano blok głębokiej pracy", when: "3 godz. temu" },
@@ -765,6 +887,11 @@ const UI_COPY = {
       subtitle: "Najpierw widzisz wspólną rozmowę, niezależnie od tego, czy ostatnie wiadomości przyszły z aplikacji czy z podpiętego kanału.",
       emptyThread:
         "Zacznij rozmowę tutaj. Nowe wiadomości pojawią się w tym samym wspólnym wątku zaraz po wymianie.",
+      emptyThreadTitle: "Wątek jest gotowy",
+      emptyThreadBody:
+        "Backend nie ma jeszcze zapisanych wiadomości dla tego konta. Wyślij pierwszą wiadomość, a Aviary zacznie wspólny transcript tutaj.",
+      emptyThreadMeta: "Historia backendu jest pusta",
+      emptyThreadAction: "Zacznij od krótkiego sprawdzenia",
       placeholder: "Napisz wiadomość...",
       composerHint: "Odpowiedzi wracają do tego samego transcriptu, żeby cały dialog został w jednym miejscu.",
       confirmationRequired: "Wymagane potwierdzenie",
@@ -850,8 +977,17 @@ const UI_COPY = {
       linkCode: "Kod podpięcia",
       instruction: "Instrukcja",
       noLinkCode: "Brak aktywnego kodu. Wygeneruj go, gdy będziesz gotowy potwierdzić czat.",
+      pendingLinkCode: "Kod wygenerowany. Czekam na potwierdzenie w czacie Telegram.",
+      setupGuide: "Przewodnik konfiguracji",
+      setupProviderStep: "Stan providera",
+      setupUserStep: "Następna bezpieczna akcja",
+      setupSafetyStep: "Granica wykonania",
+      setupSafetyCopy: "Tylko podgląd. Sekrety i wykonanie zostają w backendowej warstwie akcji.",
       capabilities: "Możliwości",
       skillBindings: "Powiązane umiejętności",
+      capabilityCountSuffix: "zmapowane",
+      skillBindingCountSuffix: "powiązane",
+      sourceCountSuffix: "źródła",
       summaryGroupNote: "Czytelne grupy narzędzi, które możesz tutaj przeglądać",
       summaryIntegralNote: "Możliwości dostępne jako stała część produktu",
       summaryReadyNote: "Narzędzia gotowe do użycia dzisiaj",
@@ -881,15 +1017,92 @@ const UI_COPY = {
       linkStateLinkedValue: "Podpięte",
       linkStateNotLinkedValue: "Niepodpięte",
       linkStateRequiredValue: "Wymaga podpięcia",
+      linkStatePendingValue: "Czeka na potwierdzenie",
       linkStateUnknownValue: "Nieznane",
     },
     personality: {
       eyebrow: "Osobowość",
       title: "Przegląd osobowości",
-      subtitle: "Najpierw najważniejsze informacje, a dodatkowe szczegóły tylko wtedy, gdy ich potrzebujesz.",
+      subtitle: "Ciepła mapa tego, co Aviary o Tobie rozumie, jak się dostraja i co może bezpiecznie zrobić dalej.",
       filter: "Filtruj sekcje",
       loading: "Ładowanie przeglądu osobowości.",
       empty: "Brak sekcji pasujących do filtra.",
+      statusLabel: "Żywa mapa",
+      statusLoading: "Czytam",
+      statusLearning: "Uczę się",
+      statusStable: "Stabilna",
+      cueSuffix: "sygnałów",
+      overviewLoadingTitle: "Odczytuję Twój aktualny kształt",
+      overviewLoadingBody: "Aviary odświeża z backendu sygnały tożsamości, pamięci, planowania i umiejętności.",
+      overviewErrorTitle: "Ta mapa wymaga odświeżenia",
+      overviewErrorBody: "Nie udało się wczytać aktualnego snapshotu osobowości, więc widoczne wartości pozostają zachowawcze.",
+      overviewEmptyTitle: "Mapa jest gotowa do nauki",
+      overviewEmptyBody: "Rozpocznij rozmowę albo zapisz preferencje, a Aviary zacznie wypełniać warstwy tożsamości, pamięci, planowania i umiejętności.",
+      identityEyebrow: "Tożsamość",
+      identityStableTitle: "Rozpoznana",
+      identityLearningTitle: "Wciąż się uczy",
+      identityKnownBody: "Tożsamość konta jest obecna dla tej sesji.",
+      identityUnknownBody: "Aviary czeka na wyraźniejszą osobistą kotwicę.",
+      knowledgeEyebrow: "Nauczona wiedza",
+      knowledgePatternsBody: "Wielorazowe pojęcia i podsumowania pamięci są dostępne dla przyszłych odpowiedzi.",
+      knowledgeEmptyBody: "Warstwa pamięci jest gotowa na pierwsze wielorazowe wzorce.",
+      planningEyebrow: "Planowanie",
+      planningActiveBody: "Bieżący fokus i kolejne kamienie milowe kształtują aktualny horyzont.",
+      planningEmptyBody: "Nie widać jeszcze aktywnego celu, więc warstwa planowania pozostaje otwarta.",
+      skillsEyebrow: "Umiejętności",
+      skillsReadyTitle: "skatalogowane",
+      skillsPendingTitle: "Katalog czeka",
+      skillsReadyBody: "Możliwości runtime'u są widoczne jako wspierane umiejętności.",
+      skillsPendingBody: "Katalog roli i umiejętności czeka na dostępne dane.",
+      roleEyebrow: "Rola",
+      roleReadyTitle: "Partner pracy gotowy",
+      roleAdaptiveTitle: "Rola adaptacyjna",
+      rolePreferredBody: "Preferowany sygnał roli jest już nauczony.",
+      roleAdaptiveBody: "Postawa roli pozostaje adaptacyjna, dopóki preferencje nie urosną.",
+      timelineEyebrow: "Oś warstw umysłu",
+      timelineTitle: "Ucieleśnione warstwy osobowości w ruchu",
+      layerMemoryTitle: "Pamięć",
+      layerMemoryDetail: "Doświadczenia i zapisane przypomnienia",
+      layerReflectionTitle: "Refleksja",
+      layerReflectionDetail: "Wnioski i wolniejsze uczenie",
+      layerContextTitle: "Kontekst",
+      layerContextDetail: "Otoczenie i aktywne wejścia",
+      layerMotivationTitle: "Motywacja",
+      layerMotivationDetail: "Napędy, wartości i aktualne cele",
+      layerActionTitle: "Działanie",
+      layerActionDetail: "Zadania i postawa wykonania",
+      layerExpressionTitle: "Ekspresja",
+      layerExpressionDetail: "Styl komunikacji i język",
+      notesValue: "notatek",
+      insightsValue: "wniosków",
+      alignedValue: "wyrównane",
+      activeValue: "aktywne",
+      adaptiveValue: "adaptacyjny",
+      noGoalsValue: "Brak celów",
+      noSignalsValue: "Brak sygnałów",
+      noProposalsValue: "Brak propozycji",
+      consciousEyebrow: "Warstwa świadoma",
+      consciousTitle: "Aktywna uwaga i bieżące poznanie",
+      consciousBody: "Pętla pierwszoplanowa pozostaje widoczna przez fokus, klarowność, aktywne obciążenie i aktualny horyzont zadań.",
+      subconsciousEyebrow: "Warstwa podświadoma",
+      subconsciousTitle: "Tła wzorców i ukrytej wiedzy",
+      subconsciousBody: "Dłuższa pamięć, skojarzenia i nauczone preferencje pozostają aktywne bez zagłuszania bieżącego ekranu.",
+      recentEyebrow: "Ostatnia aktywność",
+      recentTitle: "Najnowszy ruch wewnętrzny",
+      recentBody: "Ostatnie zmiany są czytelne, zanim otworzysz głębsze sekcje.",
+      focusLabel: "Fokus",
+      clarityLabel: "Klarowność",
+      energyLabel: "Energia",
+      loadLabel: "Obciążenie",
+      patternsLabel: "Wzorce",
+      associationsLabel: "Skojarzenia",
+      preferencesLabel: "Preferencje",
+      intuitionLabel: "Intuicja",
+      goalsValue: "cele",
+      signalsValue: "sygnały",
+      proposalsValue: "propozycje",
+      tasksValue: "zadania",
+      blockedValue: "zablokowane",
     },
     memory: {
       eyebrow: "Pamięć",
@@ -1166,18 +1379,18 @@ const UI_COPY = {
       title: "Mapa połączeń",
       subtitle: "Gotowość dostawców, potrzeby linkowania i kanały zewnętrzne w jednym spokojnym widoku.",
       ready: "Gotowi dostawcy",
-      linked: "Połączone narzędzia",
+      linked: "Aktywne dla Ciebie",
       attention: "Wymaga uwagi",
       boundary: "Granica integracji",
       readyShort: "gotowe",
       readyDetail: "Dostawcy zgłaszający gotowość w istniejącym przeglądzie narzędzi.",
-      linkedDetail: "Włączone narzędzia dostępne obecnie w powłoce.",
+      linkedDetail: "Zewnętrzne powierzchnie włączone obecnie dla tego konta.",
       attentionDetail: "Dostawcy zablokowani albo czekający na linkowanie.",
       providerMap: "Mapa dostawców",
       providerMapTitle: "Zewnętrzne powierzchnie na krawędzi",
       overview: "Przegląd",
-      noProvidersTitle: "Brak widocznych dostawców",
-      noProvidersDetail: "Przegląd narzędzi nie udostępnił jeszcze wierszy dostawców.",
+      noProvidersTitle: "Brak widocznych zewnętrznych dostawców",
+      noProvidersDetail: "Przegląd narzędzi nie udostępnił jeszcze zewnętrznych wierszy dostawców.",
       connectionRules: "Zasady połączeń",
       toolsOwnTogglesTitle: "Przełączniki należą do Narzędzi",
       toolsOwnTogglesBody: "Ten widok pokazuje postawę integracji; szczegółowe włączanie pozostaje w widoku Narzędzia.",
@@ -1187,7 +1400,7 @@ const UI_COPY = {
       noSilentProviderAccessBody: "Otwarcie widoku tylko czyta dane przeglądu i nie wywołuje zewnętrznych dostawców.",
       readinessDetails: "Szczegóły gotowości",
       configured: "Skonfigurowane",
-      toolsKnown: "znane narzędzia",
+      toolsKnown: "znane powierzchnie zewnętrzne",
       linkRequired: "Wymaga linkowania",
       waitingForLinkFlow: "czeka na linkowanie",
       blocked: "Zablokowane",
@@ -1247,6 +1460,18 @@ const UI_COPY = {
       stateDetailLabel: "Details",
       view: "Ansehen",
       unknownTime: "Unbekannte Zeit",
+      shellHealthTitle: "Systemzustand",
+      shellHealthLoading: "Abgleich",
+      shellHealthLoadingBody: "Live-Health wird aus dem Backend gelesen.",
+      shellHealthReady: "Stimmig",
+      shellHealthReadyBody: "Release, Scheduler und Reflexion wirken ruhig.",
+      shellHealthAttention: "Aufmerksamkeit",
+      shellHealthAttentionBody: "Ein Runtime-Signal braucht einen genaueren Blick.",
+      shellHealthUnavailable: "Leise",
+      shellHealthUnavailableBody: "Health ist nicht verfügbar, daher bleibt die Shell vorsichtig.",
+      shellHealthPending: "offen",
+      shellHealthViolations: "Verstöße",
+      shellHealthRevision: "rev",
       recentActivity: [
         { title: "Projektplan aktualisiert", when: "vor 2 Std." },
         { title: "Deep-Work-Fenster verfeinert", when: "vor 3 Std." },
@@ -1281,6 +1506,11 @@ const UI_COPY = {
       subtitle: "Du siehst zuerst den gemeinsamen GesprĂ¤chsverlauf, egal ob die letzten Nachrichten aus der App oder aus einem verknĂĽpften Kanal kamen.",
       emptyThread:
         "Starte die Unterhaltung hier. Neue Nachrichten erscheinen direkt in diesem gemeinsamen Thread, sobald sie ausgetauscht wurden.",
+      emptyThreadTitle: "Der Thread ist bereit",
+      emptyThreadBody:
+        "Für dieses Konto gibt es noch keine gespeicherten Backend-Gesprächsrunden. Sende die erste Nachricht, dann beginnt Aviary den gemeinsamen Transcript hier.",
+      emptyThreadMeta: "Backend-Historie ist leer",
+      emptyThreadAction: "Mit einem kurzen Check-in starten",
       placeholder: "Sende eine Nachricht...",
       composerHint: "Antworten landen wieder in diesem selben Transkript, damit die ganze Unterhaltung an einem Ort bleibt.",
       confirmationRequired: "Bestätigung erforderlich",
@@ -1366,8 +1596,17 @@ const UI_COPY = {
       linkCode: "VerknĂĽpfungscode",
       instruction: "Anleitung",
       noLinkCode: "Noch kein aktiver Code. Erzeuge ihn, wenn du den Chat bestĂ¤tigen willst.",
+      pendingLinkCode: "Code erzeugt. Wartet auf Bestätigung im Telegram-Chat.",
+      setupGuide: "Setup-Leitfaden",
+      setupProviderStep: "Provider-Status",
+      setupUserStep: "Nächste sichere Aktion",
+      setupSafetyStep: "Ausführungsgrenze",
+      setupSafetyCopy: "Nur Übersicht. Secrets und Ausführung bleiben in der Backend-Aktionsschicht.",
       capabilities: "FĂ¤higkeiten",
       skillBindings: "Skill-Bindungen",
+      capabilityCountSuffix: "gemappt",
+      skillBindingCountSuffix: "gebunden",
+      sourceCountSuffix: "Quellen",
       summaryGroupNote: "Klare Gruppen für die Tools, die du hier durchsuchen kannst",
       summaryIntegralNote: "Fähigkeiten, die als Teil des Produkts verfügbar bleiben",
       summaryReadyNote: "Tools, die heute einsatzbereit sind",
@@ -1397,15 +1636,92 @@ const UI_COPY = {
       linkStateLinkedValue: "Verknüpft",
       linkStateNotLinkedValue: "Nicht verknüpft",
       linkStateRequiredValue: "Verknüpfung erforderlich",
+      linkStatePendingValue: "Wartet auf Bestätigung",
       linkStateUnknownValue: "Unbekannt",
     },
     personality: {
       eyebrow: "PersĂ¶nlichkeit",
       title: "PersĂ¶nlichkeitsĂĽbersicht",
-      subtitle: "Zuerst die wichtigsten Einblicke, weitere Details nur dann, wenn du sie sehen willst.",
+      subtitle: "Eine warme Karte dessen, was Aviary versteht, wie es sich anpasst und was es sicher als Nächstes tun kann.",
       filter: "Sektionen filtern",
       loading: "PersĂ¶nlichkeitsĂĽbersicht wird geladen.",
       empty: "Keine passenden Sektionen fĂĽr diesen Filter.",
+      statusLabel: "Lebendige Karte",
+      statusLoading: "Liest",
+      statusLearning: "Lernt",
+      statusStable: "Stabil",
+      cueSuffix: "Hinweise",
+      overviewLoadingTitle: "Aviary liest deine aktuelle Form",
+      overviewLoadingBody: "Aviary aktualisiert Identität, Memory, Planung und Skill-Signale aus dem Backend-Snapshot.",
+      overviewErrorTitle: "Diese Karte braucht eine Aktualisierung",
+      overviewErrorBody: "Der aktuelle Persönlichkeitssnapshot konnte nicht geladen werden; sichtbare Werte bleiben konservativ.",
+      overviewEmptyTitle: "Die Karte ist bereit zu lernen",
+      overviewEmptyBody: "Starte ein Gespräch oder speichere Präferenzen, damit Aviary Identität, Memory, Planung und Skills füllen kann.",
+      identityEyebrow: "Identität",
+      identityStableTitle: "Erkannt",
+      identityLearningTitle: "Lernt noch",
+      identityKnownBody: "Die Kontoidentität ist für diese Sitzung vorhanden.",
+      identityUnknownBody: "Aviary wartet auf einen klareren persönlichen Anker.",
+      knowledgeEyebrow: "Gelernte Erkenntnis",
+      knowledgePatternsBody: "Wiederverwendbare Konzepte und Memory-Zusammenfassungen sind für künftige Antworten bereit.",
+      knowledgeEmptyBody: "Die Memory-Schicht ist bereit für erste wiederverwendbare Muster.",
+      planningEyebrow: "Planung",
+      planningActiveBody: "Aktueller Fokus und nächste Meilensteine formen den Horizont.",
+      planningEmptyBody: "Noch kein aktives Ziel sichtbar; die Planungsschicht bleibt offen.",
+      skillsEyebrow: "Skills",
+      skillsReadyTitle: "katalogisiert",
+      skillsPendingTitle: "Katalog wartet",
+      skillsReadyBody: "Runtime-Fähigkeiten sind als unterstützte Skills sichtbar.",
+      skillsPendingBody: "Der Rollen- und Skill-Katalog wartet auf verfügbare Daten.",
+      roleEyebrow: "Rolle",
+      roleReadyTitle: "Arbeitspartner bereit",
+      roleAdaptiveTitle: "Adaptive Rolle",
+      rolePreferredBody: "Ein bevorzugtes Rollensignal ist bereits gelernt.",
+      roleAdaptiveBody: "Die Rolle bleibt adaptiv, bis Präferenzen wachsen.",
+      timelineEyebrow: "Mind-Layer-Zeitlinie",
+      timelineTitle: "Verkörperte Persönlichkeitsschichten in Bewegung",
+      layerMemoryTitle: "Memory",
+      layerMemoryDetail: "Erfahrungen und gespeicherter Rückruf",
+      layerReflectionTitle: "Reflexion",
+      layerReflectionDetail: "Einsichten und langsameres Lernen",
+      layerContextTitle: "Kontext",
+      layerContextDetail: "Umgebung und aktive Eingaben",
+      layerMotivationTitle: "Motivation",
+      layerMotivationDetail: "Antriebe, Werte und aktuelle Ziele",
+      layerActionTitle: "Aktion",
+      layerActionDetail: "Aufgaben und Ausführungshaltung",
+      layerExpressionTitle: "Ausdruck",
+      layerExpressionDetail: "Kommunikationsstil und Sprache",
+      notesValue: "Notizen",
+      insightsValue: "Einsichten",
+      alignedValue: "ausgerichtet",
+      activeValue: "aktiv",
+      adaptiveValue: "adaptiv",
+      noGoalsValue: "Keine Ziele",
+      noSignalsValue: "Keine Signale",
+      noProposalsValue: "Keine Vorschläge",
+      consciousEyebrow: "Bewusste Schicht",
+      consciousTitle: "Aktive Aufmerksamkeit und aktuelle Kognition",
+      consciousBody: "Die Vordergrundschleife bleibt über Fokus, Klarheit, Last und Aufgabenhorizont sichtbar.",
+      subconsciousEyebrow: "Unterbewusste Schicht",
+      subconsciousTitle: "Hintergrundmuster und latentes Wissen",
+      subconsciousBody: "Längeres Memory, Assoziationen und gelernte Präferenzen bleiben aktiv, ohne die Live-Ansicht zu überladen.",
+      recentEyebrow: "Aktuelle Aktivität",
+      recentTitle: "Neueste innere Bewegung",
+      recentBody: "Aktuelle Änderungen bleiben lesbar, bevor du tiefere Bereiche öffnest.",
+      focusLabel: "Fokus",
+      clarityLabel: "Klarheit",
+      energyLabel: "Energie",
+      loadLabel: "Last",
+      patternsLabel: "Muster",
+      associationsLabel: "Assoziationen",
+      preferencesLabel: "Präferenzen",
+      intuitionLabel: "Intuition",
+      goalsValue: "Ziele",
+      signalsValue: "Signale",
+      proposalsValue: "Vorschläge",
+      tasksValue: "Aufgaben",
+      blockedValue: "blockiert",
     },
     memory: {
       eyebrow: "Memory",
@@ -1682,18 +1998,18 @@ const UI_COPY = {
       title: "Verbindungskarte",
       subtitle: "Provider-Bereitschaft, Linkbedarf und externe KanĂ¤le in einer ruhigen FlĂ¤che.",
       ready: "Bereite Provider",
-      linked: "Verbundene Tools",
+      linked: "Für dich aktiv",
       attention: "Braucht Aufmerksamkeit",
       boundary: "Integrationsgrenze",
       readyShort: "bereit",
       readyDetail: "Provider, die in der bestehenden Tools-Übersicht bereit melden.",
-      linkedDetail: "Aktivierte Tools, die der Shell aktuell zur Verfügung stehen.",
+      linkedDetail: "Externe Flächen, die für dieses Konto aktuell aktiviert sind.",
       attentionDetail: "Provider, die blockiert sind oder auf Verknüpfung warten.",
       providerMap: "Provider-Karte",
       providerMapTitle: "Externe Flächen am Rand",
       overview: "Übersicht",
-      noProvidersTitle: "Keine Provider sichtbar",
-      noProvidersDetail: "Die Tools-Übersicht liefert noch keine Provider-Zeilen.",
+      noProvidersTitle: "Keine externen Provider sichtbar",
+      noProvidersDetail: "Die Tools-Übersicht liefert noch keine externen Provider-Zeilen.",
       connectionRules: "Verbindungsregeln",
       toolsOwnTogglesTitle: "Tools besitzen die Schalter",
       toolsOwnTogglesBody: "Diese Route zeigt Integrationshaltung; detaillierte Aktivierung bleibt in Tools.",
@@ -1703,7 +2019,7 @@ const UI_COPY = {
       noSilentProviderAccessBody: "Das Öffnen der Route liest nur Übersichtsdaten und ruft keine externen Provider auf.",
       readinessDetails: "Bereitschaftsdetails",
       configured: "Konfiguriert",
-      toolsKnown: "bekannte Tools",
+      toolsKnown: "bekannte externe Flächen",
       linkRequired: "Link erforderlich",
       waitingForLinkFlow: "warten auf Verknüpfung",
       blocked: "Blockiert",
@@ -1814,7 +2130,8 @@ export default function App() {
   const [connectorConfirmationFeedbackState, setConnectorConfirmationFeedbackState] =
     useState<"idle" | "submitting" | "success" | "error">("idle");
   const [overview, setOverview] = useState<AppPersonalityOverviewResponse | null>(null);
-  const [, setOverviewLoading] = useState(false);
+  const [overviewLoading, setOverviewLoading] = useState(false);
+  const [overviewError, setOverviewError] = useState<string | null>(null);
   const [toolsOverview, setToolsOverview] = useState<AppToolsOverviewResponse | null>(null);
   const [toolsLoading, setToolsLoading] = useState(false);
   const [healthSnapshot, setHealthSnapshot] = useState<AppHealthResponse | null>(null);
@@ -2043,40 +2360,7 @@ export default function App() {
     () => [...history, ...reconcileLocalTranscriptItems(localTranscriptItems, history)],
     [history, localTranscriptItems],
   );
-  const transcriptIsPreview = transcriptItems.length === 0;
-  const visibleTranscriptItems = useMemo<AppChatHistoryEntry[]>(
-    () =>
-      transcriptItems.length > 0
-        ? transcriptItems
-        : [
-            {
-              message_id: "preview-assistant-1",
-              event_id: "preview-assistant-1",
-              role: "assistant",
-              text: "Good morning.\nI reviewed our last conversation and the notes from today.\nHow can I support you right now?",
-              channel: "app",
-              timestamp: "2026-04-26T09:41:00Z",
-            },
-            {
-              message_id: "preview-user-1",
-              event_id: "preview-user-1",
-              role: "user",
-              text: "I'd like to plan my day and focus on the project we discussed yesterday.",
-              channel: "app",
-              timestamp: "2026-04-26T09:42:00Z",
-            },
-            {
-              message_id: "preview-assistant-2",
-              event_id: "preview-assistant-2",
-              role: "assistant",
-              text:
-                "Perfect. I prepared a calm plan based on your goals, energy rhythm, and current priorities.\n\n1. Deep work block      10:00-12:00\n2. Project research     12:30-14:00\n3. Content creation     15:00-17:00\n\nShall we refine the details together?",
-              channel: "app",
-              timestamp: "2026-04-26T09:43:00Z",
-            },
-          ],
-    [transcriptItems],
-  );
+  const transcriptIsEmpty = transcriptItems.length === 0;
 
   useEffect(() => {
     if (route !== "/chat") {
@@ -2132,12 +2416,15 @@ export default function App() {
       .then((payload) => {
         if (!cancelled) {
           setError(null);
+          setOverviewError(null);
           setOverview(payload);
         }
       })
       .catch((caught) => {
         if (!cancelled) {
-          setError(caught instanceof Error ? caught.message : "Failed to load personality overview.");
+          const message = caught instanceof Error ? caught.message : "Failed to load personality overview.";
+          setError(message);
+          setOverviewError(message);
         }
       })
       .finally(() => {
@@ -2183,7 +2470,7 @@ export default function App() {
   }, [me, route, toolsOverview]);
 
   useEffect(() => {
-    if (!me || (route !== "/dashboard" && route !== "/automations")) {
+    if (!me || route === "/login") {
       return;
     }
 
@@ -2295,6 +2582,45 @@ export default function App() {
   const successBody = toast ?? null;
   const errorBody = error ? error.split("\n")[0] : null;
   const errorDetail = error && errorBody !== error ? error : null;
+  const healthViolationCount = Array.isArray(healthSnapshot?.release_readiness?.violations)
+    ? healthSnapshot.release_readiness.violations.length
+    : 0;
+  const healthPendingCount = numberValue(healthSnapshot?.attention?.pending);
+  const healthReleaseReady = healthSnapshot?.release_readiness?.ready !== false;
+  const healthSchedulerHealthy = healthSnapshot?.scheduler?.healthy !== false;
+  const healthReflectionHealthy = healthSnapshot?.reflection?.healthy !== false;
+  const healthShellState = healthLoading || (!healthSnapshot && !healthError)
+    ? "loading"
+    : healthError
+      ? "unavailable"
+      : healthSnapshot?.status === "ok" &&
+          healthReleaseReady &&
+          healthSchedulerHealthy &&
+          healthReflectionHealthy &&
+          healthViolationCount === 0
+        ? "ready"
+        : "attention";
+  const healthShellStatus =
+    healthShellState === "loading"
+      ? copy.common.shellHealthLoading
+      : healthShellState === "unavailable"
+        ? copy.common.shellHealthUnavailable
+        : healthShellState === "ready"
+          ? copy.common.shellHealthReady
+          : copy.common.shellHealthAttention;
+  const healthShellBody =
+    healthShellState === "loading"
+      ? copy.common.shellHealthLoadingBody
+      : healthShellState === "unavailable"
+        ? copy.common.shellHealthUnavailableBody
+        : healthShellState === "ready"
+          ? copy.common.shellHealthReadyBody
+          : copy.common.shellHealthAttentionBody;
+  const healthShellMeta = healthError
+    ? healthError.split("\n")[0]
+    : healthSnapshot
+      ? `${healthPendingCount} ${copy.common.shellHealthPending} · ${healthViolationCount} ${copy.common.shellHealthViolations} · ${copy.common.shellHealthRevision} ${truncateText(healthSnapshot.deployment?.runtime_build_revision ?? BUILD_REVISION, 8)}`
+      : copy.common.shellHealthLoadingBody;
   const latestAssistantMessage =
     [...transcriptItems].reverse().find((entry) => entry.role === "assistant")?.text ?? copy.chat.emptyThread;
   const latestUserMessage = [...transcriptItems].reverse().find((entry) => entry.role === "user")?.text ?? "";
@@ -3100,10 +3426,12 @@ export default function App() {
       body: `${numberValue(healthSnapshot?.attention?.answered)} ${copy.automations.answeredItems}`,
     },
   ];
-  const integrationItems = toolsOverview?.groups.flatMap((group) => group.items) ?? [];
-  const integrationReadyCount = toolsOverview?.summary.provider_ready_count ?? 0;
-  const integrationBlockedCount = toolsOverview?.summary.provider_blocked_count ?? 0;
-  const integrationLinkRequiredCount = toolsOverview?.summary.link_required_count ?? 0;
+  const allToolItems = toolsOverview?.groups.flatMap((group) => group.items) ?? [];
+  const integrationItems = allToolItems.filter(isExternalIntegrationItem);
+  const integrationReadyCount = integrationItems.filter((item) => item.provider.ready).length;
+  const integrationBlockedCount = integrationItems.filter((item) => !item.provider.ready).length;
+  const integrationLinkRequiredCount = integrationItems.filter((item) => item.link_required).length;
+  const integrationEnabledCount = integrationItems.filter((item) => item.enabled).length;
   const integrationStatCards = [
     {
       label: copy.integrations.ready,
@@ -3112,7 +3440,7 @@ export default function App() {
     },
     {
       label: copy.integrations.linked,
-      value: String(integrationItems.filter((item) => item.enabled).length),
+      value: String(integrationEnabledCount),
       detail: copy.integrations.linkedDetail,
     },
     {
@@ -3124,8 +3452,8 @@ export default function App() {
   const integrationProviderRows = integrationItems.slice(0, 5).map((item) => ({
     token: item.label.slice(0, 1).toUpperCase(),
     title: item.label,
-    detail: item.status_reason || item.description,
-    value: item.link_required ? copy.integrations.linkValue : item.provider.ready ? copy.integrations.readyValue : copy.integrations.blockedValue,
+      detail: item.next_actions.length ? formatToolAction(item.next_actions[0]) : item.status_reason || item.description,
+      value: item.link_required ? copy.integrations.linkValue : item.provider.ready ? copy.integrations.readyValue : copy.integrations.blockedValue,
   }));
   const integrationProviderDisplayRows = integrationProviderRows.length
     ? integrationProviderRows
@@ -3152,7 +3480,7 @@ export default function App() {
     },
   ];
   const integrationReadinessRows = [
-    { title: copy.integrations.configured, body: `${toolsOverview?.summary.total_items ?? 0} ${copy.integrations.toolsKnown}` },
+    { title: copy.integrations.configured, body: `${integrationItems.length} ${copy.integrations.toolsKnown}` },
     { title: copy.integrations.linkRequired, body: `${integrationLinkRequiredCount} ${copy.integrations.waitingForLinkFlow}` },
     { title: copy.integrations.blocked, body: `${integrationBlockedCount} ${copy.integrations.providerChecksBlocked}` },
   ];
@@ -3222,94 +3550,110 @@ export default function App() {
     },
   ];
   const chatActiveSummary = "Live";
+  const personalityHasSignals =
+    claritySignalCount + intuitiveSignalCount + skillCatalogCount + activeTaskCount + pendingProposalCount > 0;
+  const personalityStatusValue = overviewLoading
+    ? copy.personality.statusLoading
+    : overviewError
+      ? copy.common.stateErrorTitle
+      : personalityHasSignals
+        ? copy.personality.statusStable
+        : copy.personality.statusLearning;
+  const personalityStatusDetail = overviewLoading
+    ? copy.personality.overviewLoadingBody
+    : overviewError
+      ? copy.personality.overviewErrorBody
+      : personalityHasSignals
+        ? `${learnedPreferenceCount} ${copy.personality.cueSuffix}`
+        : copy.personality.overviewEmptyBody;
   const personalityPreviewCallouts = [
     {
       key: "identity",
       className: "aion-personality-callout aion-personality-callout-identity",
-      eyebrow: "Identity",
-      title: "Stable",
-      body: currentUserLabel,
+      eyebrow: copy.personality.identityEyebrow,
+      title: me?.user.id ? copy.personality.identityStableTitle : copy.personality.identityLearningTitle,
+      body: me?.user.id ? `${copy.personality.identityKnownBody} ${currentUserLabel}` : copy.personality.identityUnknownBody,
     },
     {
       key: "knowledge",
       className: "aion-personality-callout aion-personality-callout-knowledge",
-      eyebrow: "Learned knowledge",
-      title: `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} patterns`,
-      body: "Books, concepts, and reusable insights.",
+      eyebrow: copy.personality.knowledgeEyebrow,
+      title: `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} ${copy.personality.patternsLabel.toLowerCase()}`,
+      body: semanticConclusionCount > 0 ? copy.personality.knowledgePatternsBody : copy.personality.knowledgeEmptyBody,
     },
     {
       key: "planning",
       className: "aion-personality-callout aion-personality-callout-planning",
-      eyebrow: "Planning",
-      title: `${stringValue(planningSummary?.active_goal_count, "0")} active goals`,
-      body: "Current focus and next milestones.",
+      eyebrow: copy.personality.planningEyebrow,
+      title: `${stringValue(planningSummary?.active_goal_count, "0")} ${copy.personality.goalsValue}`,
+      body: activeGoalCount > 0 ? copy.personality.planningActiveBody : copy.personality.planningEmptyBody,
     },
     {
       key: "skills",
       className: "aion-personality-callout aion-personality-callout-skills",
-      eyebrow: "Skills",
-      title: skillCatalogCount > 0 ? `${skillCatalogCount} catalogued` : "Catalog pending",
+      eyebrow: copy.personality.skillsEyebrow,
+      title: skillCatalogCount > 0 ? `${skillCatalogCount} ${copy.personality.skillsReadyTitle}` : copy.personality.skillsPendingTitle,
       body: workPartnerRoleAvailable
-        ? "Visible capabilities from the runtime catalog."
-        : "Runtime catalog is waiting for available role-skill data.",
+        ? copy.personality.skillsReadyBody
+        : copy.personality.skillsPendingBody,
     },
     {
       key: "role",
       className: "aion-personality-role-card",
-      eyebrow: "Role",
-      title: workPartnerRoleAvailable ? "Work partner ready" : "Adaptive role",
-      body: preferredRolePresent ? "Preferred role is learned." : "Role posture stays adaptive until preferences grow.",
+      eyebrow: copy.personality.roleEyebrow,
+      title: workPartnerRoleAvailable ? copy.personality.roleReadyTitle : copy.personality.roleAdaptiveTitle,
+      body: preferredRolePresent ? copy.personality.rolePreferredBody : copy.personality.roleAdaptiveBody,
     },
   ];
   const personalityTimelineRows = [
     {
       token: "M",
-      title: "Memory",
-      detail: "Experiences and stored recall",
-      value: `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} notes`,
+      title: copy.personality.layerMemoryTitle,
+      detail: copy.personality.layerMemoryDetail,
+      value: `${stringValue(knowledgeSummary?.semantic_conclusion_count, "0")} ${copy.personality.notesValue}`,
     },
     {
       token: "R",
-      title: "Reflection",
-      detail: "Insights and slower learning",
-      value: `${stringValue(knowledgeSummary?.affective_conclusion_count, "0")} insights`,
+      title: copy.personality.layerReflectionTitle,
+      detail: copy.personality.layerReflectionDetail,
+      value: `${stringValue(knowledgeSummary?.affective_conclusion_count, "0")} ${copy.personality.insightsValue}`,
     },
     {
       token: "C",
-      title: "Context",
-      detail: "Environment and active inputs",
+      title: copy.personality.layerContextTitle,
+      detail: copy.personality.layerContextDetail,
       value: recentChannelsLabel,
     },
     {
       token: "M",
-      title: "Motivation",
-      detail: "Drivers, values, and current goals",
-      value: `${stringValue(planningSummary?.active_goal_count, "0")} aligned`,
+      title: copy.personality.layerMotivationTitle,
+      detail: copy.personality.layerMotivationDetail,
+      value: `${stringValue(planningSummary?.active_goal_count, "0")} ${copy.personality.alignedValue}`,
     },
     {
       token: "A",
-      title: "Action",
-      detail: "Tasks and execution posture",
-      value: `${stringValue(planningSummary?.active_task_count, "0")} active`,
+      title: copy.personality.layerActionTitle,
+      detail: copy.personality.layerActionDetail,
+      value: `${stringValue(planningSummary?.active_task_count, "0")} ${copy.personality.activeValue}`,
     },
     {
       token: "E",
-      title: "Expression",
-      detail: "Communication style and language",
-      value: stringValue(me?.settings.preferred_language, "adaptive"),
+      title: copy.personality.layerExpressionTitle,
+      detail: copy.personality.layerExpressionDetail,
+      value: stringValue(me?.settings.preferred_language, copy.personality.adaptiveValue),
     },
   ];
   const personalityConsciousSignals = [
-    { label: "Focus", value: activeGoalCount > 0 ? `${activeGoalCount} goals` : "No goals" },
-    { label: "Clarity", value: claritySignalCount > 0 ? `${claritySignalCount} signals` : "No signals" },
-    { label: "Energy", value: pendingProposalCount > 0 ? `${pendingProposalCount} proposals` : "No proposals" },
-    { label: "Load", value: `${activeTaskCount} tasks / ${blockedTaskCount} blocked` },
+    { label: copy.personality.focusLabel, value: activeGoalCount > 0 ? `${activeGoalCount} ${copy.personality.goalsValue}` : copy.personality.noGoalsValue },
+    { label: copy.personality.clarityLabel, value: claritySignalCount > 0 ? `${claritySignalCount} ${copy.personality.signalsValue}` : copy.personality.noSignalsValue },
+    { label: copy.personality.energyLabel, value: pendingProposalCount > 0 ? `${pendingProposalCount} ${copy.personality.proposalsValue}` : copy.personality.noProposalsValue },
+    { label: copy.personality.loadLabel, value: `${activeTaskCount} ${copy.personality.tasksValue} / ${blockedTaskCount} ${copy.personality.blockedValue}` },
   ];
   const personalitySubconsciousSignals = [
-    { label: "Patterns", value: `${semanticConclusionCount}` },
-    { label: "Associations", value: `${affectiveConclusionCount}` },
-    { label: "Preferences", value: `${learnedPreferenceCount}` },
-    { label: "Intuition", value: intuitiveSignalCount > 0 ? `${intuitiveSignalCount} signals` : "No signals" },
+    { label: copy.personality.patternsLabel, value: `${semanticConclusionCount}` },
+    { label: copy.personality.associationsLabel, value: `${affectiveConclusionCount}` },
+    { label: copy.personality.preferencesLabel, value: `${learnedPreferenceCount}` },
+    { label: copy.personality.intuitionLabel, value: intuitiveSignalCount > 0 ? `${intuitiveSignalCount} ${copy.personality.signalsValue}` : copy.personality.noSignalsValue },
   ];
   const personalityRecentActivity = recentActivityRows(
     overview,
@@ -4057,13 +4401,19 @@ export default function App() {
             />
 
             <div className="aion-sidebar-support-stack">
-              <section className="aion-panel-soft aion-rail-health aion-sidebar-support-card aion-sidebar-health-card">
-                <p className="aion-sidebar-health-title">System Health</p>
-                <div className="aion-rail-health-orb" aria-hidden="true">
-                  <span>Optimal</span>
+              <section
+                aria-busy={healthLoading}
+                className="aion-panel-soft aion-rail-health aion-sidebar-support-card aion-sidebar-health-card"
+              >
+                <p className="aion-sidebar-health-title">{copy.common.shellHealthTitle}</p>
+                <div className="aion-rail-health-orb" data-health-state={healthShellState} aria-hidden="true">
+                  <span>{healthShellStatus}</span>
                 </div>
-                <p className="aion-sidebar-health-status">Optimal</p>
-                <p className="aion-sidebar-health-body">All systems aligned and operating well.</p>
+                <p className="aion-sidebar-health-status" data-health-state={healthShellState}>
+                  {healthShellStatus}
+                </p>
+                <p className="aion-sidebar-health-body">{healthShellBody}</p>
+                <p className="aion-sidebar-health-meta">{healthShellMeta}</p>
               </section>
 
               <button
@@ -4425,33 +4775,47 @@ export default function App() {
                       ) : null
                     }
                     transcript={
-                      <ChatTranscriptMessageList
-                        messages={visibleTranscriptItems}
-                        preview={transcriptIsPreview}
-                        userSpeakerLabel={copy.common.user}
-                        assistantSpeakerLabel={copy.chat.assistantLabel}
-                        getDeliveryState={(message) =>
-                          message.role === "user" ? chatDeliveryState(message) : null
-                        }
-                        getDeliveryLabel={(deliveryState) =>
-                          deliveryState === "sending"
-                            ? copy.chat.pending
-                            : deliveryState === "delivered"
-                              ? copy.chat.delivered
-                              : deliveryState === "failed"
-                                ? copy.chat.failed
-                                : null
-                        }
-                        getSourceLabel={(message) => {
-                          const channel = stringValue(message.channel, "").trim().toLowerCase();
-                          return channel === "telegram" ? "Telegram" : "App";
-                        }}
-                        getTimestampLabel={(message) => formatTimestamp(message.timestamp, resolvedUiLanguage)}
-                        renderMessage={(message) => renderChatMarkdown(message.text)}
-                        registerMessageRef={(messageId, node) => {
-                          transcriptMessageRefs.current[messageId] = node;
-                        }}
-                      />
+                      transcriptIsEmpty && !historyLoading ? (
+                        <ChatTranscriptEmptyState
+                          eyebrow={copy.chat.emptyThreadMeta}
+                          title={copy.chat.emptyThreadTitle}
+                          body={copy.chat.emptyThreadBody}
+                          primaryActionLabel={copy.chat.emptyThreadAction}
+                          metaItems={[
+                            chatLinkedChannelsStatus,
+                            stringValue(me?.settings.preferred_language, "adaptive"),
+                          ]}
+                          onPrimaryAction={() => setChatText(chatQuickActions[0] ?? "")}
+                        />
+                      ) : (
+                        <ChatTranscriptMessageList
+                          messages={transcriptItems}
+                          preview={false}
+                          userSpeakerLabel={copy.common.user}
+                          assistantSpeakerLabel={copy.chat.assistantLabel}
+                          getDeliveryState={(message) =>
+                            message.role === "user" ? chatDeliveryState(message) : null
+                          }
+                          getDeliveryLabel={(deliveryState) =>
+                            deliveryState === "sending"
+                              ? copy.chat.pending
+                              : deliveryState === "delivered"
+                                ? copy.chat.delivered
+                                : deliveryState === "failed"
+                                  ? copy.chat.failed
+                                  : null
+                          }
+                          getSourceLabel={(message) => {
+                            const channel = stringValue(message.channel, "").trim().toLowerCase();
+                            return channel === "telegram" ? "Telegram" : "App";
+                          }}
+                          getTimestampLabel={(message) => formatTimestamp(message.timestamp, resolvedUiLanguage)}
+                          renderMessage={(message) => renderChatMarkdown(message.text)}
+                          registerMessageRef={(messageId, node) => {
+                            transcriptMessageRefs.current[messageId] = node;
+                          }}
+                        />
+                      )
                     }
                     composer={
                       <ChatComposerShell
@@ -5137,10 +5501,36 @@ export default function App() {
                   <p className="mt-2 text-sm leading-6 text-base-800">{copy.personality.subtitle}</p>
                 </div>
                 <div className="aion-personality-overview-status" aria-label="Personality status">
-                  <span>Stable</span>
-                  <strong>{stringValue(preferenceSummary?.learned_preference_count, "0")} cues</strong>
+                  <span>{copy.personality.statusLabel}</span>
+                  <strong>{personalityStatusValue}</strong>
+                  <small>{personalityStatusDetail}</small>
                 </div>
               </section>
+
+              {overviewLoading && !overview ? (
+                <StatePanel
+                  tone="neutral"
+                  title={copy.personality.overviewLoadingTitle}
+                  body={copy.personality.overviewLoadingBody}
+                  loading
+                />
+              ) : null}
+
+              {overviewError ? (
+                <StatePanel
+                  tone="error"
+                  title={copy.personality.overviewErrorTitle}
+                  body={copy.personality.overviewErrorBody}
+                />
+              ) : null}
+
+              {!overviewLoading && !overviewError && !personalityHasSignals ? (
+                <StatePanel
+                  tone="neutral"
+                  title={copy.personality.overviewEmptyTitle}
+                  body={copy.personality.overviewEmptyBody}
+                />
+              ) : null}
 
               <div className="aion-personality-main-grid grid gap-4 xl:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.74fr)]">
                 <div className="aion-personality-primary-stack grid gap-6">
@@ -5153,8 +5543,8 @@ export default function App() {
 
                     <div className="aion-personality-timeline-panel aion-personality-timeline-panel-integrated">
                       <div className="mb-4">
-                        <p className="text-sm uppercase tracking-[0.24em] text-base-800">Mind layers timeline</p>
-                        <h3 className="mt-2 font-display text-2xl text-base-900">Embodied personality layers in motion</h3>
+                        <p className="text-sm uppercase tracking-[0.24em] text-base-800">{copy.personality.timelineEyebrow}</p>
+                        <h3 className="mt-2 font-display text-2xl text-base-900">{copy.personality.timelineTitle}</h3>
                       </div>
                       <PersonalityTimelineRowList items={personalityTimelineRows} />
                     </div>
@@ -5164,27 +5554,27 @@ export default function App() {
 
                 <div className="aion-personality-side-stack">
                   <InsightPanel
-                    eyebrow="Conscious layer"
-                    title="Active awareness and current cognition"
-                    body="The foreground loop stays visible through focus, clarity, active load, and the present task horizon."
+                    eyebrow={copy.personality.consciousEyebrow}
+                    title={copy.personality.consciousTitle}
+                    body={copy.personality.consciousBody}
                     className="aion-personality-side-panel aion-personality-side-panel-conscious"
                   >
                     <PersonalitySignalRowList items={personalityConsciousSignals} />
                   </InsightPanel>
 
                   <InsightPanel
-                    eyebrow="Subconscious layer"
-                    title="Background patterns and latent knowledge"
-                    body="Longer memory, associations, and learned preferences stay active without crowding the live route."
+                    eyebrow={copy.personality.subconsciousEyebrow}
+                    title={copy.personality.subconsciousTitle}
+                    body={copy.personality.subconsciousBody}
                     className="aion-personality-side-panel aion-personality-side-panel-subconscious"
                   >
                     <PersonalitySignalRowList items={personalitySubconsciousSignals} />
                   </InsightPanel>
 
                   <InsightPanel
-                    eyebrow="Recent activity"
-                    title="Latest internal movement"
-                    body="Recent changes stay readable before the user opens the deeper sections."
+                    eyebrow={copy.personality.recentEyebrow}
+                    title={copy.personality.recentTitle}
+                    body={copy.personality.recentBody}
                     className="aion-personality-side-panel aion-personality-side-panel-recent aion-personality-side-panel-recent-quiet"
                   >
                     <PersonalityActivityRowList

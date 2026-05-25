@@ -1,8 +1,93 @@
 # Next Steps
 
-Last updated: 2026-05-24
+Last updated: 2026-05-25
 
 ## NOW
+
+1. Continue from `PRJ-1338` provider setup guidance:
+   - latest task:
+     `.codex/tasks/PRJ-1338-provider-setup-guidance.md`
+   - latest result:
+     Tools now renders backend-derived setup guides for Telegram, ClickUp, Google Calendar, and Google Drive, keeps integral tools guide-free, separates provider state from next safe action and backend execution boundary, and avoids credential/env-name leaks
+   - proof:
+     syntax checks PASS; `npm run build` PASS; `npm run test:tools-directory` PASS via Edge with `setupGuideCount=4`, `integralSetupGuideCount=0`, `hasSetupBoundary=true`, `leaksEnvNames=false`, and Telegram pending state proof;
+     strict `/tools,/integrations` screenshot gate PASS with `screenshot_count=6`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; `/tools` desktop/tablet/mobile setup guides and no credential leaks proved; account proof PASS
+   - next smallest useful choice:
+     continue module metric derivation, deeper Personality state derivation, or connector confirmation history only if backend history support is added
+
+1. Continue from `PRJ-1337` connector confirmation consent copy:
+   - latest task:
+     `.codex/tasks/PRJ-1337-connector-confirmation-consent-copy.md`
+   - latest result:
+     Chat confirmation UI now shows friendly connector labels such as `ClickUp / Update task`, keeps the backend reason visible, and Tools shows Telegram pending confirmation as a waiting-for-chat-confirmation state instead of generic no-code copy
+   - proof:
+     connector render/browser characterization PASS; Tools characterization PASS including `telegram_link_pending`;
+     `npm run build` PASS;
+     strict `/chat,/tools,/integrations` screenshot gate PASS with `screenshot_count=9`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; account proof PASS; Browser live-dev auth gate showed no console errors or framework overlay
+   - next smallest useful choice:
+     continue provider setup guidance, module metric derivation, deeper Personality state derivation, or connector confirmation history only if backend history support is added
+
+1. Continue from `PRJ-1336` Integrations external-only provider map:
+   - latest task:
+     `.codex/tasks/PRJ-1336-integrations-external-only.md`
+   - latest result:
+     Integrations now shows only Telegram, ClickUp, Google Calendar, and Google Drive from `/app/tools/overview`, while Tools keeps the full 7-item catalog
+   - proof:
+     syntax checks PASS; `npm run build` PASS; `npm run test:tools-directory` PASS;
+     strict `/integrations,/tools` screenshot gate PASS with `screenshot_count=6`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; `/integrations` contract proof `integrationProviderCount=4`; account proof PASS
+   - next smallest useful choice:
+     continue connector confirmation history, provider setup guidance, module metric derivation, or deeper Personality state derivation
+
+1. Continue from `PRJ-1335` Tools contract fixture refresh:
+   - latest task:
+     `.codex/tasks/PRJ-1335-tools-contract-fixture-refresh.md`
+   - latest result:
+     Tools characterization and route-smoke now prove the backend-shaped 4-group / 7-tool `/app/tools/overview` catalog, and technical details expose safe binding metadata plus all next actions
+   - proof:
+     syntax checks PASS; `npm run build` PASS; `npm run test:tools-directory` PASS with `groupCount=4`, `itemCount=7`, `toggleCount=4`, `capabilityChipCount=21`, `technicalDetailsCount=7`;
+     strict `/tools,/integrations` screenshot gate PASS with `screenshot_count=6`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; account proof PASS; mobile `/tools` overflow was caught and fixed before closure
+   - next smallest useful choice:
+     filter Integrations to true external surfaces/channels and translate backend next-action IDs into calmer product copy where appropriate
+
+1. Continue from `PRJ-1331` backend-capability-to-final-personality-UI mission:
+   - latest task:
+     `.codex/tasks/PRJ-1333-chat-empty-transcript-truth.md`
+   - latest result:
+     empty `/app/chat/history` now renders a truthful designed first-message state instead of fake `preview-*` transcript rows
+   - proof:
+     `npm run build` PASS; `npm run test:chat-transcript` PASS with empty/full/send proof;
+     empty-history `/chat` screenshot gate PASS with `screenshot_count=3`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; account proof PASS
+   - next smallest useful choice:
+     deepen Tools/Integrations capability mapping, connector confirmation history, or module metric derivation
+
+1. Continue from `PRJ-1332` shell health backend map:
+   - latest task:
+     `.codex/tasks/PRJ-1332-shell-health-backend-map.md`
+   - latest result:
+     desktop shell health now maps selected `/health` fields into localized loading/ready/attention/unavailable posture instead of static `Optimal`
+   - proof:
+     `npm run build` PASS; focused `/dashboard,/personality,/automations` screenshot gate PASS with
+     `viewport_count=3`, `screenshot_count=9`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; account proof PASS
+   - next smallest useful choice:
+     clean up chat transcript truth/empty-demo state, or deepen Tools/Integrations capability mapping
+
+1. Continue from `PRJ-1331` Personality backend map first slice:
+   - task:
+     `.codex/tasks/PRJ-1331-personality-backend-map-first-slice.md`
+   - result:
+     `/personality` now uses localized, backend-signal-aware map/status/timeline/side-panel copy and explicit loading/error/empty/success posture for `/app/personality/overview`
+   - proof:
+     `npm run build` PASS; focused `/personality` screenshot gate PASS with
+     `viewport_count=3`, `screenshot_count=3`, `failed_count=0`;
+     route smoke `route_count=14`, `status=ok`; account proof PASS
+   - next smallest useful choice:
+     continue Personality first-viewport/map fidelity after the shell health slice
 
 1. Canonical no-paid-GitHub release baseline:
    - required gate:

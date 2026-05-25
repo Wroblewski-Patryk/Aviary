@@ -6,6 +6,7 @@ export type ToolFormattingCopy = {
   linkStateLinkedValue: string;
   linkStateNotLinkedValue: string;
   linkStateRequiredValue: string;
+  linkStatePendingValue: string;
   linkStateUnknownValue: string;
 };
 
@@ -42,6 +43,9 @@ export function formatToolLinkState(status: string, toolsCopy: ToolFormattingCop
   if (status === "link_required") {
     return toolsCopy.linkStateRequiredValue;
   }
+  if (status === "pending_confirmation") {
+    return toolsCopy.linkStatePendingValue;
+  }
   return toolsCopy.linkStateUnknownValue;
 }
 
@@ -50,5 +54,22 @@ export function summarizeToolAction(nextActions: string[], fallback: string) {
   if (!action) {
     return fallback;
   }
-  return action.replaceAll("_", " ");
+  return formatToolAction(action);
+}
+
+export function formatToolAction(action: string) {
+  const actionCopy: Record<string, string> = {
+    configure_clickup_api_token_and_clickup_list_id: "Add ClickUp token and list ID",
+    configure_google_calendar_access_token_and_calendar_id: "Connect Google Calendar access",
+    configure_google_calendar_access_token_calendar_id_and_timezone: "Connect Google Calendar access",
+    configure_google_drive_access_token_and_folder_id: "Connect Google Drive folder access",
+    generate_link_code_and_confirm_from_telegram_chat: "Start Telegram link confirmation",
+    ready_for_clickup_operator_acceptance: "Ready for ClickUp operator acceptance",
+    ready_for_google_calendar_operator_acceptance: "Ready for Google Calendar operator acceptance",
+    ready_for_google_drive_operator_acceptance: "Ready for Google Drive operator acceptance",
+    send_link_code_to_configured_telegram_bot: "Send link code to Telegram bot",
+    telegram_link_confirmed: "Telegram link confirmed",
+  };
+
+  return actionCopy[action] ?? action.replaceAll("_", " ");
 }

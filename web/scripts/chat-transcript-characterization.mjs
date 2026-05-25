@@ -138,7 +138,7 @@ async function mockApi(request, response) {
 
   if (request.method === "GET" && url.pathname === "/app/chat/history") {
     const activeCase = caseFromRequest(request);
-    if (activeCase === "preview") {
+    if (activeCase === "empty") {
       jsonResponse(response, 200, { items: [] });
       return true;
     }
@@ -473,26 +473,30 @@ async function removeProfileDir(profileDir) {
 async function characterizeChat(cdp, baseUrl) {
   const results = [];
 
-  await navigate(cdp, `${baseUrl}/chat?case=preview`);
-  const previewState = await waitFor(
+  await navigate(cdp, `${baseUrl}/chat?case=empty`);
+  const emptyState = await waitFor(
     cdp,
     `(() => {
-      const text = document.body.innerText;
-      if (!text.includes("Good morning.") || !text.includes("Shall we refine the details together?")) {
+      const empty = document.querySelector(".aion-chat-empty-state");
+      if (!empty || !empty.textContent.includes("The thread is ready") || !empty.textContent.includes("Backend history is empty")) {
         return null;
       }
       return {
         rowCount: document.querySelectorAll(".aion-chat-message-row").length,
+        emptyStateCount: document.querySelectorAll(".aion-chat-empty-state").length,
+        emptyActionCount: document.querySelectorAll(".aion-chat-empty-action").length,
         previewMetaCount: document.querySelectorAll(".aion-chat-message-meta-preview").length,
         previewCopyCount: document.querySelectorAll(".aion-chat-message-copy-preview").length,
       };
     })()`,
-    "chat preview fallback",
+    "chat empty history state",
   );
-  assert(previewState.rowCount === 3, "Expected three preview transcript rows.");
-  assert(previewState.previewMetaCount === 3, "Expected preview metadata class on every preview row.");
-  assert(previewState.previewCopyCount === 3, "Expected preview copy class on every preview row.");
-  results.push({ case: "preview", status: "ok", ...previewState });
+  assert(emptyState.rowCount === 0, "Expected no fake transcript rows for empty backend history.");
+  assert(emptyState.emptyStateCount === 1, "Expected one empty transcript state.");
+  assert(emptyState.emptyActionCount === 1, "Expected one empty state starter action.");
+  assert(emptyState.previewMetaCount === 0, "Expected no preview metadata classes.");
+  assert(emptyState.previewCopyCount === 0, "Expected no preview copy classes.");
+  results.push({ case: "empty", status: "ok", ...emptyState });
 
   await navigate(cdp, "about:blank");
   await navigate(cdp, `${baseUrl}/chat?case=full&cacheBust=${Date.now()}`);
@@ -526,7 +530,7 @@ async function characterizeChat(cdp, baseUrl) {
   sendRequestCount = 0;
   await navigate(cdp, "about:blank");
   await navigate(cdp, `${baseUrl}/chat?case=send&cacheBust=${Date.now()}`);
-  await waitFor(cdp, `document.body.innerText.includes("Good morning.")`, "send preview baseline");
+  await waitFor(cdp, `document.body.innerText.includes("The thread is ready")`, "send empty baseline");
   await evaluate(
     cdp,
     `(() => {
@@ -551,7 +555,7 @@ async function characterizeChat(cdp, baseUrl) {
     })()`,
     "optimistic local send row",
   );
-  assert(sendingState.rowCount === 1, "Expected preview rows to collapse to one optimistic local row.");
+  assert(sendingState.rowCount === 1, "Expected empty state to collapse to one optimistic local row.");
   assert(sendingState.sendingCount === 1, "Expected sending delivery indicator for optimistic user row.");
 
   const deliveredState = await waitFor(
