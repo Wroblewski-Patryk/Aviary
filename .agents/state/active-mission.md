@@ -1,6 +1,6 @@
 # Active Mission Packet
 
-Last updated: 2026-05-24
+Last updated: 2026-05-25
 
 Use this file as the first operational router for `pracuj dalej`, `rob dalej`,
 `kontynuuj`, `next`, and similar continuation nudges. Keep it short enough that
@@ -9,17 +9,17 @@ repository history.
 
 ## Current Mission
 
-- Mission ID: PRJ-1320-architecture-graph-release-readiness-hosted-optional-sync
-- Status: VERIFIED
-- Selected objective: remove final doc-level inconsistency where hosted proof was still labeled required.
-- Why this mission now: release-readiness status doc still had required wording after policy normalization.
+- Mission ID: PRJ-1324-mystic-clean-ui-orchestration-wave-1
+- Status: CHECKPOINTED
+- Selected objective: raise authenticated shell visual quality to a mystical, clean, premium baseline without behavior drift.
+- Why this mission now: user requested coordinated UI improvement as the active product priority.
 - Validation summary:
-  - `docs/status/architecture-graph-release-readiness.md` now marks hosted proof optional
-  - hosted non-blocking policy note references `DEC-005`
+  - shell/chat visual polish landed in `web/src/index.css` (CSS-only)
+  - frontend validation PASS: `npm run build`, `npm run smoke:routes` (`status=ok`, `route_count=14`)
 - Residual:
-  - none for canonical no-paid-GitHub gating/docs
+  - route-level premium polish still pending for Dashboard and Personality micro-composition
 - Next recommended checkpoint:
-  - continue feature/runtime work under the same canonical no-paid-GitHub gate baseline
+  - execute wave 2: dashboard/personality visual hierarchy pass with focused screenshot evidence
 
 Historical note:
 - Residual hosted-Actions entries in older "Previous Mission" sections below are

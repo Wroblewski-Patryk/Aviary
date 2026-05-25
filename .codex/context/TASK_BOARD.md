@@ -1,8 +1,16 @@
 # TASK_BOARD
 
-Last updated: 2026-05-24
+Last updated: 2026-05-25
 
 ## Project Status Dashboard (2026-05-24)
+
+- `PRJ-1324` is DONE:
+  - `.codex/tasks/PRJ-1324-mystic-clean-ui-orchestration-wave-1.md`
+- objective:
+  - coordinate first wave of mystical, clean, premium UI polish for authenticated shell and chat surfaces
+- current result:
+  - wave 1 shell/chat polish landed (`web/src/index.css`)
+  - validation PASS: `npm run build`, `npm run smoke:routes` (`status=ok`, `route_count=14`)
 
 - `PRJ-1323` is DONE:
   - `.codex/tasks/PRJ-1323-architecture-coverage-report-baseline.md`
