@@ -1,10 +1,24 @@
 {
-  "kind": "production_revision_parity",
-  "generated_at": "2026-05-25T01:38:50.975423+00:00",
+  "kind": "coolify_deploy_watchdog_report",
+  "generated_at": "2026-05-25T01:46:09.977658+00:00",
   "base_url": "https://aviary.luckysparrow.ch",
-  "local_head_sha": "f95842bdea77deba0f7f115ab99b1dd56e7671e3",
-  "production_runtime_sha": "092a1347f16caa8f74e8360efbf3278c9a27b48f",
-  "production_status": "ok",
-  "parity": false,
-  "error": ""
+  "local_head_sha": "5bfb81ec47ad15fc9dc1e05e3877d095d9ac14c8",
+  "trigger_on_drift": false,
+  "webhook_ready": false,
+  "trigger_attempted": false,
+  "trigger_result": null,
+  "attempts": [
+    {
+      "at": "2026-05-25T01:46:09.977675+00:00",
+      "production_status": "ok",
+      "production_runtime_sha": "5bfb81ec47ad15fc9dc1e05e3877d095d9ac14c8",
+      "parity": true,
+      "error": "",
+      "decision": "done",
+      "health_fetch_method": "requests"
+    }
+  ],
+  "final_status": "parity_confirmed",
+  "parity": true,
+  "connectivity_blocked": false
 }

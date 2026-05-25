@@ -1,10 +1,24 @@
 # PROJECT_STATE
 
-Last updated: 2026-05-24
+Last updated: 2026-05-25
 
 Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
+
+- 2026-05-25: `PRJ-1330` re-confirmed end-to-end deployment parity and release readiness:
+  - task:
+    - `.codex/tasks/PRJ-1330-unified-gate-and-production-parity-reproof.md`
+  - result:
+    - production parity watchdog PASS (`final_status=parity_confirmed`, `parity=True`)
+    - unified release gate PASS on all stages
+  - validation:
+    - `backend/scripts/run_coolify_deploy_watchdog.py` against `https://aviary.luckysparrow.ch`
+    - `backend/scripts/run_unified_release_readiness_gate.ps1 -BaseUrl "https://aviary.luckysparrow.ch"`
+  - artifacts:
+    - `docs/status/production-revision-parity.json`
+    - `docs/status/unified-release-readiness-20260525T034614Z.json`
+    - `docs/status/production-release-evidence-summary-20260525T014630Z.json`
 
 - 2026-05-24: `PRJ-1323` added deterministic architecture coverage baseline:
   - task:

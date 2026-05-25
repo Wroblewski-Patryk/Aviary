@@ -24,6 +24,10 @@ repository history.
   - unified gate wrapper added and validated:
     `backend/scripts/run_unified_release_readiness_gate.ps1`
     with summary artifact `docs/status/unified-release-readiness-20260525T033415Z.json`
+  - post-push parity/proof checkpoint (`PRJ-1330`) PASS:
+    - parity watchdog: `docs/status/production-revision-parity.json` (`parity_confirmed=true`)
+    - unified gate summary: `docs/status/unified-release-readiness-20260525T034614Z.json`
+    - production summary: `docs/status/production-release-evidence-summary-20260525T014630Z.json`
 - Residual:
   - none blocking for the current mystical-clean UI mission scope
 - Next recommended checkpoint:

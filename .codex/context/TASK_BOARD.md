@@ -4,6 +4,18 @@ Last updated: 2026-05-25
 
 ## Project Status Dashboard (2026-05-24)
 
+- `PRJ-1330` is DONE:
+  - `.codex/tasks/PRJ-1330-unified-gate-and-production-parity-reproof.md`
+- objective:
+  - re-confirm full deployment readiness and production parity on current `main`
+- current result:
+  - Coolify parity watchdog PASS (`parity_confirmed=true`)
+  - unified gate PASS (architecture gate + UI parity smoke + production proof cycle)
+  - new summary artifact:
+    `docs/status/unified-release-readiness-20260525T034614Z.json`
+  - production evidence summary:
+    `docs/status/production-release-evidence-summary-20260525T014630Z.json`
+
 - `PRJ-1329` is DONE:
   - `.codex/tasks/PRJ-1329-unified-release-readiness-gate-wrapper.md`
 - objective:

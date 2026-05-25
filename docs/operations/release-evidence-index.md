@@ -42,13 +42,13 @@ deployed.
 
 Latest production evidence capture summary (auto-synced):
 
-- runtime build revision: `f95842bdea77deba0f7f115ab99b1dd56e7671e3`
-- web shell build revision: `f95842bdea77deba0f7f115ab99b1dd56e7671e3`
+- runtime build revision: `5bfb81ec47ad15fc9dc1e05e3877d095d9ac14c8`
+- web shell build revision: `5bfb81ec47ad15fc9dc1e05e3877d095d9ac14c8`
 - health status: `ok`
 - release readiness: `True`
 - release violations: `[]`
 - summary artifact:
-  - `docs/status/production-release-evidence-summary-20260525T014109Z.json`
+  - `docs/status/production-release-evidence-summary-20260525T014630Z.json`
 
 ## Current Decision
 

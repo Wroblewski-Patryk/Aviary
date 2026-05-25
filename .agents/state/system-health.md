@@ -1,11 +1,12 @@
 # System Health
 
-Last updated: 2026-05-24
+Last updated: 2026-05-25
 
 ## Latest Runtime Validation
 
 | Area | Check | Result | Evidence |
 | --- | --- | --- | --- |
+| Unified readiness + production parity re-proof | Local graph gate, UI parity smoke, and production proof cycle all green with production revision parity confirmed on current `main` | PASS | `PRJ-1330`; `.\.venv\Scripts\python backend/scripts/run_coolify_deploy_watchdog.py --base-url https://aviary.luckysparrow.ch --max-wait-seconds 240 --poll-seconds 20 --out docs/status/production-revision-parity.json` -> `final_status=parity_confirmed`; `.\backend\scripts\run_unified_release_readiness_gate.ps1 -BaseUrl "https://aviary.luckysparrow.ch"` -> summary `docs/status/unified-release-readiness-20260525T034614Z.json`; production summary `docs/status/production-release-evidence-summary-20260525T014630Z.json` |
 | Canonical no-paid-GitHub gate baseline final verification | Required local graph gate and production proof cycle both pass after release-gate normalization | PASS | `PRJ-1318`; `python backend/scripts/run_architecture_graph_local_release_gate.py` -> `overall_status=PASSED`; `./backend/scripts/run_production_release_proof_cycle.ps1 -BaseUrl "https://aviary.luckysparrow.ch"` -> `health_status=ok`, `release_ready=true`, `release_violations=[]`; summary `docs/status/production-release-evidence-summary-20260524T175856Z.json` |
 | One-command production evidence capture | Production incident bundle + smoke + summary can now be captured by one deterministic command | PASS | `PRJ-1311`; `backend/scripts/run_production_release_evidence_capture.ps1`; production execution PASS with `health_status=ok`, `release_ready=true`, `release_violations=[]`; artifacts in `docs/status/20260524T172730Z_production-release-evidence/...` and `docs/status/production-release-evidence-summary-20260524T172730Z.json` |
 | Production incident-evidence bundle capture | Production smoke proof is now persisted with a verified incident-evidence bundle and machine-readable smoke JSON | PASS | `PRJ-1310`; `docs/status/20260524T172450Z_incident-bundle-20260524T172450Z/{manifest.json,incident_evidence.json,health_snapshot.json}`; `docs/status/release-smoke-prj1310.json`; production smoke with bundle verification PASS |
