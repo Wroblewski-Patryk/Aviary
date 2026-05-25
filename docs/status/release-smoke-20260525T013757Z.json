@@ -1,0 +1,383 @@
+﻿{
+    "retrieval_semantic_embedding_model_requested":  "text-embedding-3-small",
+    "scheduler_external_proactive_evidence_state":  "recent_external_run_evidence",
+    "debug_shared_ingress_mode":  "break_glass_only",
+    "scheduler_external_cutover_proof_ready":  true,
+    "incident_evidence_organizer_tool_stack_daily_use_state":  null,
+    "startup_schema_compatibility_sunset_ready":  true,
+    "compatibility_sunset_ready":  true,
+    "retrieval_lifecycle_provider_drift_state":  "aligned_target_provider",
+    "health_status":  "ok",
+    "incident_evidence_duration_ms":  null,
+    "incident_bundle_retrieval_provider_requested":  "openai",
+    "retrieval_semantic_embedding_model_effective":  "text-embedding-3-small",
+    "runtime_topology_attention_selected_mode":  "durable_inbox",
+    "incident_bundle_capability_catalog_tool_grounded_learning_policy_owner":  "tool_grounded_learning_policy",
+    "debug_shared_break_glass_required":  true,
+    "incident_bundle_organizer_tool_stack_daily_use_state":  "daily_use_workflows_blocked_by_provider_activation",
+    "incident_bundle_learned_state_internal_inspection_path":  "/internal/state/inspect",
+    "v1_organizer_daily_use_ready_workflows":  [
+
+                                               ],
+    "deployment_evidence_after_sha":  "",
+    "proactive_observer_due_planned_work_count":  0,
+    "telegram_conversation_bot_token_configured":  true,
+    "incident_evidence_organizer_tool_stack_daily_use_ready_workflow_count":  null,
+    "telegram_conversation_delivery_attempts":  0,
+    "incident_bundle_website_reading_workflow_state":  "ready_for_direct_and_search_first_review",
+    "retrieval_lifecycle_pending_gaps":  [
+
+                                         ],
+    "capability_catalog_tool_grounded_learning_policy_owner":  "tool_grounded_learning_policy",
+    "deployment_evidence_status_code":  null,
+    "runtime_topology_owner":  "runtime_topology_finalization",
+    "scheduler_external_maintenance_evidence_state":  "recent_external_run_evidence",
+    "website_reading_blockers":  [
+
+                                 ],
+    "incident_bundle_attention_coordination_mode":  "durable_inbox",
+    "observability_export_artifact_available":  true,
+    "incident_bundle_learned_state_policy_owner":  "learned_state_inspection_policy",
+    "deployment_fallback_trigger_modes":  [
+                                              "webhook_manual_fallback",
+                                              "ui_manual_fallback"
+                                          ],
+    "incident_bundle_retrieval_baseline_state":  "aligned_openai_provider_owned",
+    "deployment_runtime_trigger_mode":  "source_automation",
+    "organizer_tool_stack_policy_owner":  "production_organizer_tool_stack",
+    "incident_evidence_schema_version":  null,
+    "incident_evidence_learned_state_policy_owner":  null,
+    "incident_evidence_organizer_tool_activation_next_actions":  {
+
+                                                                 },
+    "proactive_production_baseline_state":  "external_scheduler_target_owner",
+    "incident_bundle_deployment_runtime_provenance_state":  "primary_runtime_provenance_declared",
+    "observability_policy_owner":  "incident_evidence_export_policy",
+    "incident_evidence_retrieval_provider_effective":  null,
+    "incident_bundle_path":  "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\20260525T013757Z_production-release-evidence\\20260525T013757Z_incident-bundle-20260525T013757Z",
+    "website_reading_direct_url_review_available":  true,
+    "incident_bundle_capability_catalog_catalog_count":  9,
+    "base_url":  "https://aviary.luckysparrow.ch",
+    "organizer_tool_activation_next_actions":  [
+                                                   "configure_clickup_api_token_and_clickup_list_id",
+                                                   "configure_google_calendar_access_token_and_calendar_id",
+                                                   "configure_google_drive_access_token_and_folder_id"
+                                               ],
+    "reply_message":  "It seems you\u0027re interested in discussing the AION manual smoke test. A manual smoke test is typically a preliminary check to ensure that the basic functionality of the AION system works as intended before more detailed testing occurs.\n\n### Key Focus Areas for AION Manual Smoke Test\n\n1. **Basic Functionality**: Verify that all major features can be accessed and function correctly.\n2. **User Interface**: Ensure that the user interface elements are displayed properly and are responsive.\n3. **Error Handling**: Check that the system appropriately handles error scenarios without crashing or behaving unexpectedly.\n4. **Integration Points**: Confirm that essential integrations with other systems or APIs are operational.\n5. **Performance Check**: Assess that the system responds within acceptable time limits for basic operations.\n\n### Steps to Conduct the Smoke Test\n\n1. **Preparation**: Ensure you have the latest version of AION and that the environment is set up correctly.\n2. **Test Case Creation**: Define a set of straightforward test cases based on the key focus areas.\n3. **Execution**: Run the test cases manually, documenting any failures or issues encountered.\n4. **Reporting**: Summarize the results, highlighting any critical failures that need immediate attention.\n5. **Review**: Discuss the findings with the development team to determine necessary follow-up actions.\n\nIf you need more specific details or examples of test cases, feel free to ask!",
+    "organizer_tool_stack_daily_use_ready_workflows":  [
+
+                                                       ],
+    "incident_bundle_organizer_tool_stack_daily_use_ready_workflow_count":  0,
+    "incident_bundle_retrieval_provider_effective":  "openai",
+    "retrieval_lifecycle_relation_source_posture":  "optional_after_foreground_baseline",
+    "runtime_action":  "success",
+    "debug_admin_policy_owner":  "dedicated_admin_debug_ingress_policy",
+    "debug_included":  false,
+    "incident_evidence_telegram_conversation_delivery_segmentation_state":  null,
+    "debug_shared_ingress_path":  "/event/debug",
+    "reflection_external_driver_baseline_ready":  true,
+    "incident_evidence_proactive_production_baseline_state":  null,
+    "incident_bundle_organizer_tool_stack_credential_gap_operations":  [
+                                                                           "task_system.clickup_create_task",
+                                                                           "task_system.clickup_list_tasks",
+                                                                           "task_system.clickup_update_task",
+                                                                           "calendar.google_calendar_read_availability",
+                                                                           "cloud_drive.google_drive_list_files"
+                                                                       ],
+    "release_violations":  [
+
+                           ],
+    "incident_evidence_telegram_conversation_delivery_formatting_state":  null,
+    "incident_bundle_proactive_observer_policy_owner":  "planned_action_observer_policy",
+    "debug_shared_ingress_retirement_ready":  true,
+    "incident_evidence_organizer_tool_activation_state":  null,
+    "retrieval_lifecycle_relation_source_policy_owner":  "relation_source_retrieval_policy",
+    "reflection_triggered":  true,
+    "debug_shared_ingress_sunset_reason":  "shared_debug_route_disabled_with_debug_payload_off",
+    "incident_bundle_organizer_tool_stack_policy_owner":  "production_organizer_tool_stack",
+    "scheduler_external_cutover_proof_owner":  "external_scheduler_cutover_proof_policy",
+    "incident_bundle_capability_catalog_organizer_stack_state":  "provider_credentials_missing",
+    "incident_evidence_retrieval_policy_owner":  null,
+    "trace_id":  "86b01656-d38f-4c86-8683-9f7f7ee8ef56",
+    "retrieval_lifecycle_policy_owner":  "retrieval_lifecycle_policy",
+    "incident_evidence_telegram_conversation_delivery_adaptation_policy_owner":  null,
+    "incident_bundle_manifest_schema_version":  "1.0.0",
+    "retrieval_semantic_embedding_production_baseline_state":  "aligned_openai_provider_owned",
+    "incident_evidence_attention_contract_store_state":  null,
+    "v1_organizer_daily_use_state":  "daily_use_workflows_blocked_by_provider_activation",
+    "debug_internal_ingress_path":  "/internal/event/debug",
+    "incident_evidence_retrieval_alignment_state":  null,
+    "web_knowledge_policy_owner":  "web_knowledge_tooling_policy",
+    "compatibility_sunset_blockers":  [
+
+                                      ],
+    "reflection_supervision_ready":  true,
+    "incident_bundle_deployment_runtime_build_revision_state":  "runtime_build_revision_declared",
+    "capability_catalog_execution_baseline_owner":  "connector_execution_registry",
+    "deployment_evidence_age_minutes":  null,
+    "runtime_topology_attention_ready":  true,
+    "incident_bundle_capture_mode":  "release_smoke",
+    "incident_bundle_website_reading_allowed_entry_modes":  [
+                                                                "direct_url_review",
+                                                                "search_then_page_review"
+                                                            ],
+    "reflection_supervision_recovery_actions":  [
+
+                                                ],
+    "topology_release_window":  "after_group_50_evidence_green",
+    "incident_bundle_proactive_production_baseline_state":  "external_scheduler_target_owner",
+    "retrieval_lifecycle_relation_source_enabled":  true,
+    "incident_bundle_telegram_delivery_adaptation_policy_owner":  "telegram_delivery_channel_adaptation",
+    "incident_bundle_retrieval_policy_owner":  "retrieval_lifecycle_policy",
+    "incident_evidence_deployment_automation_policy_owner":  null,
+    "reflection_external_driver_policy_owner":  "deferred_reflection_external_worker",
+    "incident_bundle_organizer_tool_activation_state":  "provider_activation_incomplete",
+    "organizer_tool_stack_daily_use_blocked_workflows":  [
+                                                             "clickup_task_review_and_mutation",
+                                                             "google_calendar_availability_inspection",
+                                                             "google_drive_file_space_inspection"
+                                                         ],
+    "retrieval_semantic_embedding_execution_class":  "provider_owned_openai_api",
+    "incident_evidence_policy_owner":  null,
+    "incident_bundle_telegram_delivery_segmentation_state":  "bounded_transport_segmentation",
+    "incident_bundle_event_id":  "incident-bundle-20260525T013757Z-health",
+    "debug_shared_ingress_retirement_blockers":  [
+
+                                                 ],
+    "incident_bundle_learned_state_growth_summary_sections":  [
+                                                                  "preference_summary",
+                                                                  "knowledge_summary",
+                                                                  "reflection_growth_summary",
+                                                                  "planning_continuity_summary"
+                                                              ],
+    "incident_bundle_capability_catalog_skill_execution_boundary":  "metadata_only_capability_hints",
+    "deployment_runtime_trigger_class":  "primary_automation",
+    "reflection_healthy":  true,
+    "debug_admin_posture_state":  "debug_disabled_admin_route_primary_by_default",
+    "website_reading_workflow_policy_owner":  "website_reading_workflow_policy",
+    "incident_bundle_telegram_round_trip_state":  "provider_backed_ready",
+    "incident_bundle_retrieval_alignment_state":  "aligned_with_defined_lifecycle_baseline",
+    "proactive_observer_policy_owner":  "planned_action_observer_policy",
+    "retrieval_semantic_embedding_provider_requested":  "openai",
+    "capability_catalog_catalog_count":  9,
+    "deployment_evidence_trigger_class":  "",
+    "incident_bundle_organizer_tool_stack_readiness_state":  "provider_credentials_missing",
+    "scheduler_external_proactive_entrypoint":  "scripts/run_proactive_tick_once.py",
+    "reflection_supervision_queue_health_state":  "active_backlog_under_supervision",
+    "incident_bundle_telegram_delivery_formatting_state":  "supported_markdown_to_html_with_plain_text_fallback",
+    "incident_evidence_retrieval_execution_class":  null,
+    "organizer_tool_activation_state":  "provider_activation_incomplete",
+    "proactive_production_baseline_ready":  true,
+    "event_id":  "e3692c56-71af-4773-8eeb-eb27fcd8b1be",
+    "incident_bundle_web_knowledge_policy_owner":  "web_knowledge_tooling_policy",
+    "telegram_conversation_delivery_segmentation_state":  "bounded_transport_segmentation",
+    "capability_catalog_organizer_stack_state":  "provider_credentials_missing",
+    "incident_evidence_telegram_conversation_policy_owner":  null,
+    "incident_evidence_v1_organizer_daily_use_state":  null,
+    "capability_catalog_skill_execution_boundary":  "metadata_only_capability_hints",
+    "incident_bundle_website_reading_search_provider_hint":  "duckduckgo_html",
+    "website_reading_search_provider_hint":  "duckduckgo_html",
+    "incident_evidence_proactive_observer_state":  null,
+    "incident_bundle_deployment_runtime_build_revision":  "092a1347f16caa8f74e8360efbf3278c9a27b48f",
+    "incident_evidence_policy_surface_complete":  null,
+    "proactive_observer_state":  "empty_noop",
+    "incident_evidence_attention_coordination_mode":  null,
+    "incident_bundle_capability_catalog_organizer_activation_state":  "provider_activation_incomplete",
+    "incident_bundle_capability_catalog_execution_baseline_owner":  "connector_execution_registry",
+    "debug_shared_ingress_posture":  "shared_route_break_glass_only",
+    "observability_incident_export_ready":  true,
+    "release_ready":  true,
+    "scheduler_external_policy_owner":  "external_scheduler_cadence_policy",
+    "organizer_tool_activation_missing_settings_by_provider":  {
+                                                                   "google_drive":  [
+                                                                                        "GOOGLE_DRIVE_ACCESS_TOKEN",
+                                                                                        "GOOGLE_DRIVE_FOLDER_ID"
+                                                                                    ],
+                                                                   "google_calendar":  [
+                                                                                           "GOOGLE_CALENDAR_ACCESS_TOKEN",
+                                                                                           "GOOGLE_CALENDAR_CALENDAR_ID"
+                                                                                       ],
+                                                                   "clickup":  [
+                                                                                   "CLICKUP_API_TOKEN",
+                                                                                   "CLICKUP_LIST_ID"
+                                                                               ]
+                                                               },
+    "website_reading_search_then_page_review_available":  true,
+    "website_reading_memory_capture_boundary":  "tool_grounded_summary_only_via_action_then_memory",
+    "incident_evidence_organizer_tool_activation_missing_settings_by_provider":  {
+
+                                                                                 },
+    "deployment_manual_fallback_exception_rate_percent":  5,
+    "incident_bundle_proactive_policy_owner":  "proactive_runtime_policy",
+    "incident_bundle_organizer_tool_activation_next_actions":  [
+                                                                   "configure_clickup_api_token_and_clickup_list_id",
+                                                                   "configure_google_calendar_access_token_and_calendar_id",
+                                                                   "configure_google_drive_access_token_and_folder_id"
+                                                               ],
+    "incident_evidence_learned_state_growth_summary_sections":  {
+
+                                                                },
+    "deployment_evidence_checked":  false,
+    "organizer_tool_stack_daily_use_ready_workflow_count":  0,
+    "incident_evidence_learned_state_internal_inspection_path":  null,
+    "deployment_runtime_build_revision_state":  "runtime_build_revision_declared",
+    "reflection_supervision_blocking_signals":  [
+
+                                                ],
+    "attention_contract_store_state":  "repository_backed_contract_store_active",
+    "incident_bundle_deployment_primary_trigger_mode":  "source_automation",
+    "scheduler_external_duplicate_protection_state":  "single_owner_boundary_clear",
+    "web_shell_build_revision":  "092a1347f16caa8f74e8360efbf3278c9a27b48f",
+    "reply_language":  "en",
+    "incident_bundle_website_reading_workflow_policy_owner":  "website_reading_workflow_policy",
+    "deployment_evidence_policy_owner":  "",
+    "organizer_tool_stack_ready_operations":  [
+
+                                              ],
+    "incident_bundle_behavior_report_attached":  false,
+    "incident_evidence_deployment_primary_trigger_mode":  null,
+    "incident_bundle_attention_runtime_topology_selected_mode":  "durable_inbox",
+    "incident_bundle_capability_catalog_approved_tool_families":  [
+                                                                      "calendar",
+                                                                      "cloud_drive",
+                                                                      "knowledge_search",
+                                                                      "task_system",
+                                                                      "web_browser"
+                                                                  ],
+    "reflection_external_driver_entrypoint_path":  "scripts/run_reflection_queue_once.py",
+    "scheduler_external_baseline_ready":  true,
+    "incident_evidence_organizer_tool_stack_policy_owner":  null,
+    "startup_schema_compatibility_posture":  "migration_only",
+    "scheduler_external_baseline_state":  "external_scheduler_baseline_aligned",
+    "incident_bundle_retrieval_execution_class":  "provider_owned_openai_api",
+    "proactive_policy_owner":  "proactive_runtime_policy",
+    "incident_bundle_deployment_runtime_trigger_class":  "primary_automation",
+    "incident_evidence_proactive_observer_policy_owner":  null,
+    "incident_evidence_attention_policy_owner":  null,
+    "v1_organizer_daily_use_ready_workflow_count":  0,
+    "incident_bundle_checked":  true,
+    "capability_catalog_organizer_activation_state":  "provider_activation_incomplete",
+    "incident_bundle_deployment_runtime_trigger_mode":  "source_automation",
+    "telegram_conversation_round_trip_state":  "provider_backed_ready",
+    "reflection_deployment_ready":  true,
+    "incident_bundle_policy_surface_complete":  true,
+    "incident_evidence_website_reading_workflow_state":  null,
+    "v1_organizer_daily_use_blocked_workflows":  [
+                                                     "clickup_task_review_and_mutation",
+                                                     "google_calendar_availability_inspection",
+                                                     "google_drive_file_space_inspection"
+                                                 ],
+    "incident_evidence_attention_runtime_topology_policy_owner":  null,
+    "incident_evidence_attention_runtime_topology_selected_mode":  null,
+    "incident_evidence_retrieval_baseline_state":  null,
+    "attention_contract_store_mode":  "repository_backed",
+    "debug_admin_ingress_target_path":  "/internal/event/debug",
+    "incident_evidence_debug_exception_state":  null,
+    "retrieval_lifecycle_alignment_state":  "aligned_with_defined_lifecycle_baseline",
+    "telegram_conversation_policy_owner":  "telegram_conversation_reliability_telemetry",
+    "incident_bundle_website_reading_page_read_provider_hint":  "generic_http",
+    "incident_evidence_telegram_conversation_round_trip_state":  null,
+    "startup_schema_compatibility_sunset_reason":  "migration_only_baseline_active",
+    "deployment_evidence_canonical_application_id":  "",
+    "incident_evidence_web_knowledge_policy_owner":  null,
+    "capability_catalog_policy_owner":  "backend_capability_catalog_policy",
+    "attention_store_available":  true,
+    "telegram_conversation_delivery_formatting_state":  "supported_markdown_to_html_with_plain_text_fallback",
+    "reflection_supervision_state":  "deferred_supervision_active_backlog",
+    "incident_bundle_trace_id":  "incident-bundle-20260525T013757Z",
+    "incident_evidence_retrieval_provider_drift_state":  null,
+    "proactive_enabled":  true,
+    "organizer_tool_stack_credential_gap_operations":  [
+                                                           "task_system.clickup_create_task",
+                                                           "task_system.clickup_list_tasks",
+                                                           "task_system.clickup_update_task",
+                                                           "calendar.google_calendar_read_availability",
+                                                           "cloud_drive.google_drive_list_files"
+                                                       ],
+    "incident_bundle_capability_catalog_policy_owner":  "backend_capability_catalog_policy",
+    "telegram_conversation_delivery_failures":  0,
+    "incident_evidence_attention_runtime_topology_ready":  null,
+    "incident_bundle_website_reading_search_then_page_review_available":  true,
+    "incident_bundle_debug_exception_state":  "shared_debug_disabled",
+    "scheduler_external_maintenance_entrypoint":  "scripts/run_maintenance_tick_once.py",
+    "debug_shared_ingress_sunset_ready":  true,
+    "website_reading_allowed_entry_modes":  [
+                                                "direct_url_review",
+                                                "search_then_page_review"
+                                            ],
+    "incident_bundle_website_reading_memory_capture_boundary":  "tool_grounded_summary_only_via_action_then_memory",
+    "incident_bundle_proactive_observer_state":  "empty_noop",
+    "deployment_runtime_build_revision":  "092a1347f16caa8f74e8360efbf3278c9a27b48f",
+    "incident_bundle_learned_state_inspection_sections":  [
+                                                              "identity_state",
+                                                              "learned_knowledge",
+                                                              "role_skill_state",
+                                                              "planning_state"
+                                                          ],
+    "website_reading_next_actions":  [
+
+                                     ],
+    "website_reading_page_read_provider_hint":  "generic_http",
+    "deployment_local_repo_head_sha":  "092a1347f16caa8f74e8360efbf3278c9a27b48f",
+    "website_reading_workflow_state":  "ready_for_direct_and_search_first_review",
+    "reflection_supervision_policy_owner":  "deferred_reflection_supervision_policy",
+    "incident_evidence_organizer_tool_stack_readiness_state":  null,
+    "incident_bundle_debug_posture_state":  "dedicated_admin_only",
+    "incident_evidence_proactive_enabled":  null,
+    "incident_evidence_retrieval_provider_requested":  null,
+    "proactive_observer_empty_result_behavior":  "no_foreground_event",
+    "deployment_hosting_baseline":  "coolify_medium_term_standard",
+    "incident_evidence_learned_state_inspection_sections":  {
+
+                                                            },
+    "deployment_evidence_path":  "",
+    "deployment_primary_trigger_mode":  "source_automation",
+    "incident_bundle_attention_contract_store_state":  "repository_backed_contract_store_active",
+    "deployment_canonical_application_id":  "jr1oehwlzl8tcn3h8gh2vvih",
+    "attention_coordination_mode":  "durable_inbox",
+    "reflection_deployment_violations":  [
+
+                                         ],
+    "deployment_evidence_trigger_mode":  "",
+    "incident_bundle_website_reading_direct_url_review_available":  true,
+    "deployment_runtime_provenance_state":  "primary_runtime_provenance_declared",
+    "incident_bundle_health_status":  "ok",
+    "organizer_tool_stack_daily_use_state":  "daily_use_workflows_blocked_by_provider_activation",
+    "retrieval_lifecycle_relation_source_state":  "optional_family_enabled",
+    "incident_bundle_organizer_tool_stack_ready_operations":  [
+
+                                                              ],
+    "runtime_role":  "advisor",
+    "organizer_tool_stack_readiness_state":  "provider_credentials_missing",
+    "incident_evidence_debug_posture_state":  null,
+    "telegram_conversation_delivery_adaptation_policy_owner":  "telegram_delivery_channel_adaptation",
+    "capability_catalog_approved_tool_families":  [
+                                                      "calendar",
+                                                      "cloud_drive",
+                                                      "knowledge_search",
+                                                      "task_system",
+                                                      "web_browser"
+                                                  ],
+    "incident_evidence_proactive_production_baseline_ready":  null,
+    "incident_evidence_stage_count":  null,
+    "incident_evidence_proactive_policy_owner":  null,
+    "retrieval_semantic_embedding_provider_effective":  "openai",
+    "incident_bundle_retrieval_provider_drift_state":  "aligned_target_provider",
+    "deployment_automation_policy_owner":  "coolify_repo_deploy_automation",
+    "incident_bundle_proactive_enabled":  true,
+    "incident_bundle_deployment_automation_policy_owner":  "coolify_repo_deploy_automation",
+    "incident_bundle_organizer_tool_activation_missing_settings_by_provider":  {
+                                                                                   "google_drive":  [
+                                                                                                        "GOOGLE_DRIVE_ACCESS_TOKEN",
+                                                                                                        "GOOGLE_DRIVE_FOLDER_ID"
+                                                                                                    ],
+                                                                                   "google_calendar":  [
+                                                                                                           "GOOGLE_CALENDAR_ACCESS_TOKEN",
+                                                                                                           "GOOGLE_CALENDAR_CALENDAR_ID"
+                                                                                                       ],
+                                                                                   "clickup":  [
+                                                                                                   "CLICKUP_API_TOKEN",
+                                                                                                   "CLICKUP_LIST_ID"
+                                                                                               ]
+                                                                               }
+}

@@ -1,0 +1,20 @@
+﻿{
+    "generated_at":  "2026-05-25T01:35:54.7410504Z",
+    "error":  "Incident evidence export failed with exit code 1.",
+    "skip_production_proof":  false,
+    "kind":  "unified_release_readiness_gate",
+    "steps":  [
+                  {
+                      "ok":  true,
+                      "step":  "architecture_local_release_gate",
+                      "exit_code":  0
+                  },
+                  {
+                      "ok":  true,
+                      "step":  "ui_parity_smoke_gate",
+                      "exit_code":  0
+                  }
+              ],
+    "status":  "failed",
+    "base_url":  "https://aviary.luckysparrow.ch"
+}
