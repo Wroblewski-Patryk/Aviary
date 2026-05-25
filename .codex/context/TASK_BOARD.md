@@ -4,6 +4,14 @@ Last updated: 2026-05-25
 
 ## Project Status Dashboard (2026-05-24)
 
+- `PRJ-1327` is DONE:
+  - `.codex/tasks/PRJ-1327-mystic-clean-ui-orchestration-wave-4.md`
+- objective:
+  - parity-finishing cleanup of remaining heavy dashboard visual accents
+- current result:
+  - CSS-only wave landed with calmer cards/panels/orb/actions
+  - validation PASS: `npm run build`, `npm run smoke:routes` (`status=ok`, `route_count=14`)
+
 - `PRJ-1326` is DONE:
   - `.codex/tasks/PRJ-1326-mystic-clean-ui-orchestration-wave-3.md`
 - objective:

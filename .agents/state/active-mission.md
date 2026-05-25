@@ -17,11 +17,12 @@ repository history.
   - wave 1 shell/chat visual polish landed in `web/src/index.css` (CSS-only)
   - wave 2 dashboard/personality hierarchy polish landed in `web/src/index.css` (CSS-only)
   - wave 3 typography and micro-interaction polish landed in `web/src/index.css` (CSS-only)
+  - wave 4 dashboard parity-finishing polish landed in `web/src/index.css` (CSS-only)
   - frontend validation PASS after each wave: `npm run build`, `npm run smoke:routes` (`status=ok`, `route_count=14`)
 - Residual:
-  - route-level premium polish still pending for screenshot-parity micro-adjustments per flagship surface
+  - route-level premium polish still pending for final screenshot-parity evidence capture and sign-off
 - Next recommended checkpoint:
-  - execute wave 4: screenshot-parity pass (dashboard/chat/personality) with explicit before/after evidence capture
+  - execute wave 5: capture focused dashboard/chat/personality screenshot packet and close parity gate
 
 Historical note:
 - Residual hosted-Actions entries in older "Previous Mission" sections below are
