@@ -1,0 +1,818 @@
+{
+  "kind": "frontend_route_smoke_report",
+  "schema_version": 2,
+  "route_count": 14,
+  "status": "ok",
+  "results": [
+    {
+      "route": "/",
+      "marker": "aion-public-home",
+      "authenticated": false,
+      "passed": true,
+      "rendered_path": "/",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 960,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/login",
+      "marker": "aion-public-home",
+      "authenticated": false,
+      "passed": true,
+      "rendered_path": "/login",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 1130,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/dashboard",
+      "marker": "aion-dashboard-canvas",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/dashboard",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 2064,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/chat",
+      "marker": "aion-chat-workspace",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/chat",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 1410,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/memory",
+      "marker": "aion-memory-canvas",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/memory",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 1426,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/reflections",
+      "marker": "aion-reflections-canvas",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/reflections",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 1339,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/plans",
+      "marker": "aion-plans-canvas",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/plans",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 1447,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/goals",
+      "marker": "aion-goals-canvas",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/goals",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 1516,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/insights",
+      "marker": "aion-insights-canvas",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/insights",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 1738,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/automations",
+      "marker": "aion-automations-canvas",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/automations",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 1534,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/integrations",
+      "marker": "aion-integrations-canvas",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/integrations",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 1333,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/settings",
+      "marker": "aion-settings-canvas",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/settings",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 2616,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/tools",
+      "marker": "aion-tools-canvas",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/tools",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 1324,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    },
+    {
+      "route": "/personality",
+      "marker": "aion-personality-canvas",
+      "authenticated": true,
+      "passed": true,
+      "rendered_path": "/personality",
+      "title": "Aviary",
+      "state": {
+        "markerFound": true,
+        "bodyTextLength": 1740,
+        "frameworkOverlay": false,
+        "horizontalOverflow": false,
+        "viewportWidth": 1351,
+        "documentWidth": 1351,
+        "bodyWidth": 1351,
+        "unnamedInteractiveCount": 0,
+        "unnamedInteractivePreview": [],
+        "overflowingElementCount": 0,
+        "overflowingElementPreview": []
+      },
+      "diagnostic_excerpt": ""
+    }
+  ],
+  "ui_audit": {
+    "artifact_dir": "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\ui-parity-wave5",
+    "viewport_count": 3,
+    "screenshot_count": 9,
+    "status": "ok",
+    "failed_count": 0,
+    "results": [
+      {
+        "route": "/dashboard",
+        "viewport": "desktop",
+        "viewport_size": {
+          "width": 1440,
+          "height": 960
+        },
+        "passed": true,
+        "screenshot": "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\ui-parity-wave5\\desktop-dashboard.png",
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 2064,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 1425,
+          "documentWidth": 1425,
+          "bodyWidth": 1425,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
+        }
+      },
+      {
+        "route": "/chat",
+        "viewport": "desktop",
+        "viewport_size": {
+          "width": 1440,
+          "height": 960
+        },
+        "passed": true,
+        "screenshot": "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\ui-parity-wave5\\desktop-chat.png",
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 1410,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 1425,
+          "documentWidth": 1425,
+          "bodyWidth": 1425,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
+        }
+      },
+      {
+        "route": "/personality",
+        "viewport": "desktop",
+        "viewport_size": {
+          "width": 1440,
+          "height": 960
+        },
+        "passed": true,
+        "screenshot": "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\ui-parity-wave5\\desktop-personality.png",
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 1740,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 1425,
+          "documentWidth": 1425,
+          "bodyWidth": 1425,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
+        }
+      },
+      {
+        "route": "/dashboard",
+        "viewport": "tablet",
+        "viewport_size": {
+          "width": 1024,
+          "height": 900
+        },
+        "passed": true,
+        "screenshot": "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\ui-parity-wave5\\tablet-dashboard.png",
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 2194,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 1009,
+          "documentWidth": 1009,
+          "bodyWidth": 1009,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
+        }
+      },
+      {
+        "route": "/chat",
+        "viewport": "tablet",
+        "viewport_size": {
+          "width": 1024,
+          "height": 900
+        },
+        "passed": true,
+        "screenshot": "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\ui-parity-wave5\\tablet-chat.png",
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 1188,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 1009,
+          "documentWidth": 1009,
+          "bodyWidth": 1009,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
+        }
+      },
+      {
+        "route": "/personality",
+        "viewport": "tablet",
+        "viewport_size": {
+          "width": 1024,
+          "height": 900
+        },
+        "passed": true,
+        "screenshot": "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\ui-parity-wave5\\tablet-personality.png",
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 1503,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 1009,
+          "documentWidth": 1009,
+          "bodyWidth": 1009,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
+        }
+      },
+      {
+        "route": "/dashboard",
+        "viewport": "mobile",
+        "viewport_size": {
+          "width": 390,
+          "height": 844
+        },
+        "passed": true,
+        "screenshot": "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\ui-parity-wave5\\mobile-dashboard.png",
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 1760,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "bodyWidth": 390,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 8,
+          "overflowingElementPreview": [
+            {
+              "tag": "article",
+              "className": "aion-dashboard-flow-step ",
+              "left": 345,
+              "right": 498,
+              "width": 154
+            },
+            {
+              "tag": "p",
+              "className": "mt-3 text-base font-semibold text-base-900",
+              "left": 392,
+              "right": 488,
+              "width": 97
+            },
+            {
+              "tag": "p",
+              "className": "mt-1 text-sm text-base-800",
+              "left": 392,
+              "right": 488,
+              "width": 97
+            },
+            {
+              "tag": "article",
+              "className": "aion-dashboard-flow-step aion-dashboard-flow-step-active",
+              "left": 505,
+              "right": 659,
+              "width": 154
+            },
+            {
+              "tag": "span",
+              "className": "aion-dashboard-flow-icon",
+              "left": 515,
+              "right": 543,
+              "width": 27
+            },
+            {
+              "tag": "p",
+              "className": "mt-3 text-base font-semibold text-base-900",
+              "left": 552,
+              "right": 648,
+              "width": 97
+            },
+            {
+              "tag": "p",
+              "className": "mt-1 text-sm text-base-800",
+              "left": 552,
+              "right": 648,
+              "width": 97
+            },
+            {
+              "tag": "article",
+              "className": "aion-dashboard-flow-step ",
+              "left": 665,
+              "right": 819,
+              "width": 154
+            }
+          ]
+        }
+      },
+      {
+        "route": "/chat",
+        "viewport": "mobile",
+        "viewport_size": {
+          "width": 390,
+          "height": 844
+        },
+        "passed": true,
+        "screenshot": "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\ui-parity-wave5\\mobile-chat.png",
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 1093,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "bodyWidth": 390,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
+        }
+      },
+      {
+        "route": "/personality",
+        "viewport": "mobile",
+        "viewport_size": {
+          "width": 390,
+          "height": 844
+        },
+        "passed": true,
+        "screenshot": "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\ui-parity-wave5\\mobile-personality.png",
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 1025,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "bodyWidth": 390,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
+        }
+      }
+    ]
+  },
+  "navigation_proof": {
+    "viewport": "mobile",
+    "status": "ok",
+    "step_count": 4,
+    "failed_count": 0,
+    "steps": [
+      {
+        "label": "Chat",
+        "expected_path": "/chat",
+        "rendered_path": "/chat",
+        "marker": "aion-chat-workspace",
+        "passed": true,
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 1093,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "bodyWidth": 390,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
+        }
+      },
+      {
+        "label": "Settings",
+        "expected_path": "/settings",
+        "rendered_path": "/settings",
+        "marker": "aion-settings-canvas",
+        "passed": true,
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 2379,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "bodyWidth": 390,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
+        }
+      },
+      {
+        "label": "Personality",
+        "expected_path": "/personality",
+        "rendered_path": "/personality",
+        "marker": "aion-personality-canvas",
+        "passed": true,
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 1016,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "bodyWidth": 390,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
+        }
+      },
+      {
+        "label": "Dashboard",
+        "expected_path": "/dashboard",
+        "rendered_path": "/dashboard",
+        "marker": "aion-dashboard-canvas",
+        "passed": true,
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 1760,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "bodyWidth": 390,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 8,
+          "overflowingElementPreview": [
+            {
+              "tag": "article",
+              "className": "aion-dashboard-flow-step ",
+              "left": 345,
+              "right": 498,
+              "width": 154
+            },
+            {
+              "tag": "p",
+              "className": "mt-3 text-base font-semibold text-base-900",
+              "left": 392,
+              "right": 488,
+              "width": 97
+            },
+            {
+              "tag": "p",
+              "className": "mt-1 text-sm text-base-800",
+              "left": 392,
+              "right": 488,
+              "width": 97
+            },
+            {
+              "tag": "article",
+              "className": "aion-dashboard-flow-step aion-dashboard-flow-step-active",
+              "left": 505,
+              "right": 659,
+              "width": 154
+            },
+            {
+              "tag": "span",
+              "className": "aion-dashboard-flow-icon",
+              "left": 515,
+              "right": 543,
+              "width": 27
+            },
+            {
+              "tag": "p",
+              "className": "mt-3 text-base font-semibold text-base-900",
+              "left": 552,
+              "right": 648,
+              "width": 97
+            },
+            {
+              "tag": "p",
+              "className": "mt-1 text-sm text-base-800",
+              "left": 552,
+              "right": 648,
+              "width": 97
+            },
+            {
+              "tag": "article",
+              "className": "aion-dashboard-flow-step ",
+              "left": 665,
+              "right": 819,
+              "width": 154
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "account_proof": {
+    "viewport": "mobile",
+    "status": "ok",
+    "step_count": 1,
+    "failed_count": 0,
+    "steps": [
+      {
+        "label": "Account trigger opens account panel",
+        "rendered_path": "/dashboard",
+        "passed": true,
+        "panel_visible": true,
+        "state": {
+          "markerFound": true,
+          "bodyTextLength": 1876,
+          "frameworkOverlay": false,
+          "horizontalOverflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "bodyWidth": 390,
+          "unnamedInteractiveCount": 0,
+          "unnamedInteractivePreview": [],
+          "overflowingElementCount": 8,
+          "overflowingElementPreview": [
+            {
+              "tag": "article",
+              "className": "aion-dashboard-flow-step ",
+              "left": 345,
+              "right": 498,
+              "width": 154
+            },
+            {
+              "tag": "p",
+              "className": "mt-3 text-base font-semibold text-base-900",
+              "left": 392,
+              "right": 488,
+              "width": 97
+            },
+            {
+              "tag": "p",
+              "className": "mt-1 text-sm text-base-800",
+              "left": 392,
+              "right": 488,
+              "width": 97
+            },
+            {
+              "tag": "article",
+              "className": "aion-dashboard-flow-step aion-dashboard-flow-step-active",
+              "left": 505,
+              "right": 659,
+              "width": 154
+            },
+            {
+              "tag": "span",
+              "className": "aion-dashboard-flow-icon",
+              "left": 515,
+              "right": 543,
+              "width": 27
+            },
+            {
+              "tag": "p",
+              "className": "mt-3 text-base font-semibold text-base-900",
+              "left": 552,
+              "right": 648,
+              "width": 97
+            },
+            {
+              "tag": "p",
+              "className": "mt-1 text-sm text-base-800",
+              "left": 552,
+              "right": 648,
+              "width": 97
+            },
+            {
+              "tag": "article",
+              "className": "aion-dashboard-flow-step ",
+              "left": 665,
+              "right": 819,
+              "width": 154
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

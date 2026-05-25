@@ -10105,19 +10105,25 @@ body {
   }
 
   .aion-dashboard-flow-track {
-    display: flex;
+    display: grid;
     gap: 0.42rem;
-    margin-inline: -0.08rem;
-    padding: 0 0.08rem 0.32rem;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    scroll-padding-inline: 0.08rem;
-    scrollbar-width: none;
-    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 0.7rem), transparent 100%);
+    margin-inline: 0;
+    padding: 0 0 0.24rem;
+    overflow: visible;
+    scroll-snap-type: none;
+    scroll-padding-inline: 0;
+    scrollbar-width: auto;
+    mask-image: none;
   }
 
   .aion-dashboard-flow-track::before {
     display: none;
+  }
+
+  .aion-dashboard-flow-layout {
+    grid-template-columns: 1fr !important;
+    gap: 0.42rem;
+    margin-top: 0.68rem;
   }
 
   .aion-dashboard-flow-step {
@@ -10125,11 +10131,13 @@ body {
     grid-template-columns: auto minmax(0, 1fr);
     gap: 0.42rem 0.58rem;
     align-items: center;
-    flex: 0 0 min(9.6rem, 47vw);
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 auto;
     min-height: auto;
     padding: 0.46rem 0.58rem;
     border-radius: 0.98rem;
-    scroll-snap-align: start;
+    scroll-snap-align: none;
     text-align: left;
   }
 

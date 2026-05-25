@@ -10,7 +10,7 @@ repository history.
 ## Current Mission
 
 - Mission ID: PRJ-1324-mystic-clean-ui-orchestration-wave-1
-- Status: CHECKPOINTED
+- Status: VERIFIED
 - Selected objective: raise authenticated shell visual quality to a mystical, clean, premium baseline without behavior drift.
 - Why this mission now: user requested coordinated UI improvement as the active product priority.
 - Validation summary:
@@ -18,11 +18,13 @@ repository history.
   - wave 2 dashboard/personality hierarchy polish landed in `web/src/index.css` (CSS-only)
   - wave 3 typography and micro-interaction polish landed in `web/src/index.css` (CSS-only)
   - wave 4 dashboard parity-finishing polish landed in `web/src/index.css` (CSS-only)
+  - wave 5 evidence gate generated responsive flagship screenshot packet and proof report:
+    `docs/status/ui-parity-wave5-report.json`, `docs/status/ui-parity-wave5/*.png`
   - frontend validation PASS after each wave: `npm run build`, `npm run smoke:routes` (`status=ok`, `route_count=14`)
 - Residual:
-  - route-level premium polish still pending for final screenshot-parity evidence capture and sign-off
+  - non-blocking audit residual: mobile dashboard flow-step off-canvas geometry appears in overflow preview despite `horizontalOverflow=false`
 - Next recommended checkpoint:
-  - execute wave 5: capture focused dashboard/chat/personality screenshot packet and close parity gate
+  - optional wave 6: refine mobile dashboard flow-step geometry so overflow preview entries become zero
 
 Historical note:
 - Residual hosted-Actions entries in older "Previous Mission" sections below are
