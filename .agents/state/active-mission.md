@@ -14,12 +14,13 @@ repository history.
 - Selected objective: raise authenticated shell visual quality to a mystical, clean, premium baseline without behavior drift.
 - Why this mission now: user requested coordinated UI improvement as the active product priority.
 - Validation summary:
-  - shell/chat visual polish landed in `web/src/index.css` (CSS-only)
-  - frontend validation PASS: `npm run build`, `npm run smoke:routes` (`status=ok`, `route_count=14`)
+  - wave 1 shell/chat visual polish landed in `web/src/index.css` (CSS-only)
+  - wave 2 dashboard/personality hierarchy polish landed in `web/src/index.css` (CSS-only)
+  - frontend validation PASS after each wave: `npm run build`, `npm run smoke:routes` (`status=ok`, `route_count=14`)
 - Residual:
-  - route-level premium polish still pending for Dashboard and Personality micro-composition
+  - route-level premium polish still pending for typography rhythm and mobile-first finesse in flagship surfaces
 - Next recommended checkpoint:
-  - execute wave 2: dashboard/personality visual hierarchy pass with focused screenshot evidence
+  - execute wave 3: typography and micro-interaction polish pass with focused screenshot evidence
 
 Historical note:
 - Residual hosted-Actions entries in older "Previous Mission" sections below are

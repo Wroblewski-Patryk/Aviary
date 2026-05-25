@@ -3680,10 +3680,10 @@ body {
 
 .aion-dashboard-stage {
   display: grid;
-  gap: 0.46rem;
-  padding: 0.56rem;
+  gap: 0.5rem;
+  padding: 0.62rem;
   background:
-    radial-gradient(circle at top, rgba(255, 246, 232, 0.9), rgba(255, 251, 245, 0.88) 52%, rgba(240, 231, 218, 0.78) 100%);
+    radial-gradient(circle at top, rgba(255, 246, 232, 0.78), rgba(255, 251, 245, 0.9) 52%, rgba(240, 231, 218, 0.74) 100%);
 }
 
 .aion-dashboard-top-composition,
@@ -3744,12 +3744,12 @@ body {
 .aion-dashboard-signal-card {
   position: relative;
   border: 1px solid rgba(88, 67, 52, 0.08);
-  border-radius: 1.08rem;
-  padding: 0.46rem 0.52rem 0.5rem;
+  border-radius: 0.96rem;
+  padding: 0.5rem 0.56rem 0.54rem;
   overflow: hidden;
   background:
     linear-gradient(180deg, rgba(255, 252, 247, 0.84), rgba(248, 241, 232, 0.7));
-  box-shadow: 0 8px 16px rgba(78, 58, 43, 0.032);
+  box-shadow: 0 5px 12px rgba(78, 58, 43, 0.028);
   backdrop-filter: blur(12px);
 }
 
@@ -3768,17 +3768,17 @@ body {
   content: "";
   position: absolute;
   top: 50%;
-  width: 5.4rem;
+  width: 4.2rem;
   height: 1px;
   background: linear-gradient(90deg, rgba(111, 149, 146, 0.28), rgba(232, 194, 134, 0.3));
 }
 
 .aion-dashboard-signal-column:first-child .aion-dashboard-signal-card::after {
-  right: -4.64rem;
+  right: -3.8rem;
 }
 
 .aion-dashboard-signal-column:last-child .aion-dashboard-signal-card::after {
-  left: -4.64rem;
+  left: -3.8rem;
   transform: scaleX(-1);
 }
 
@@ -3822,8 +3822,8 @@ body {
 
 .aion-dashboard-figure-stage {
   position: relative;
-  min-height: 20.2rem;
-  border-radius: 1.6rem;
+  min-height: 20rem;
+  border-radius: 1.42rem;
   overflow: hidden;
   background:
     radial-gradient(circle at 50% 27%, rgba(255, 252, 248, 0.97), rgba(247, 239, 227, 0.76) 46%, rgba(232, 220, 204, 0.66));
@@ -3874,10 +3874,10 @@ body {
   width: min(9.6rem, calc(100% - 1.3rem));
   padding: 0.46rem 0.54rem;
   border: 1px solid rgba(88, 67, 52, 0.08);
-  border-radius: 1rem;
-  background: rgba(255, 251, 245, 0.76);
+  border-radius: 0.9rem;
+  background: rgba(255, 251, 245, 0.8);
   backdrop-filter: blur(12px);
-  box-shadow: 0 8px 16px rgba(78, 58, 43, 0.038);
+  box-shadow: 0 6px 13px rgba(78, 58, 43, 0.034);
 }
 
 .aion-dashboard-figure-note::before {
@@ -4898,13 +4898,13 @@ body {
 
 .aion-personality-hero {
   display: grid;
-  gap: 0.6rem;
-  padding: 0.52rem;
+  gap: 0.64rem;
+  padding: 0.62rem;
   border-color: rgba(88, 67, 52, 0.045);
   background:
     radial-gradient(circle at 78% 14%, rgba(111, 149, 146, 0.08), transparent 0 24%),
     linear-gradient(180deg, rgba(255, 251, 245, 0.44), rgba(247, 240, 230, 0.32));
-  box-shadow: 0 14px 34px rgba(78, 58, 43, 0.036);
+  box-shadow: 0 10px 24px rgba(78, 58, 43, 0.032);
 }
 
 .aion-personality-canvas,
@@ -4919,12 +4919,12 @@ body {
   align-items: center;
   padding: 0.46rem 0.58rem 0.54rem;
   border: 1px solid rgba(88, 67, 52, 0.05);
-  border-radius: 1.2rem;
+  border-radius: 1rem;
   background:
     linear-gradient(135deg, rgba(255, 251, 245, 0.78), rgba(241, 248, 245, 0.56));
   box-shadow:
-    0 10px 22px rgba(78, 58, 43, 0.026),
-    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+    0 7px 16px rgba(78, 58, 43, 0.024),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .aion-personality-overview-copy {
@@ -6917,7 +6917,7 @@ body {
   position: relative;
   min-height: 33.6rem;
   border: 1px solid rgba(88, 67, 52, 0.07);
-  border-radius: 1.5rem;
+  border-radius: 1.28rem;
   overflow: hidden;
   background:
     radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.55), transparent 0 18%),
@@ -6961,9 +6961,9 @@ body {
   width: min(9.85rem, calc(100% - 1.4rem));
   padding: 0.38rem 0.5rem;
   border: 1px solid rgba(88, 67, 52, 0.07);
-  border-radius: 0.88rem;
-  background: rgba(255, 251, 245, 0.74);
-  box-shadow: 0 9px 18px rgba(78, 58, 43, 0.036);
+  border-radius: 0.8rem;
+  background: rgba(255, 251, 245, 0.78);
+  box-shadow: 0 6px 13px rgba(78, 58, 43, 0.03);
   backdrop-filter: blur(8px);
 }
 
@@ -6986,7 +6986,7 @@ body {
 .aion-personality-role-card::before {
   content: "";
   position: absolute;
-  width: 3.7rem;
+  width: 3rem;
   height: 1px;
   background: linear-gradient(90deg, rgba(111, 149, 146, 0.28), rgba(232, 194, 134, 0.12));
   opacity: 0.9;
@@ -7010,12 +7010,12 @@ body {
 }
 
 .aion-personality-callout-identity::before {
-  right: -3.5rem;
+  right: -2.8rem;
   top: 50%;
 }
 
 .aion-personality-callout-identity::after {
-  right: -3.65rem;
+  right: -2.95rem;
   top: calc(50% - 0.22rem);
 }
 
@@ -7025,12 +7025,12 @@ body {
 }
 
 .aion-personality-callout-knowledge::before {
-  right: -3.5rem;
+  right: -2.8rem;
   top: 46%;
 }
 
 .aion-personality-callout-knowledge::after {
-  right: -3.65rem;
+  right: -2.95rem;
   top: calc(46% - 0.22rem);
 }
 
@@ -7043,13 +7043,13 @@ body {
 }
 
 .aion-personality-callout-planning::before {
-  left: -3.5rem;
+  left: -2.8rem;
   top: 50%;
   transform: scaleX(-1);
 }
 
 .aion-personality-callout-planning::after {
-  left: -3.65rem;
+  left: -2.95rem;
   top: calc(50% - 0.22rem);
 }
 
@@ -7059,13 +7059,13 @@ body {
 }
 
 .aion-personality-callout-skills::before {
-  left: -3.5rem;
+  left: -2.8rem;
   top: 50%;
   transform: scaleX(-1);
 }
 
 .aion-personality-callout-skills::after {
-  left: -3.65rem;
+  left: -2.95rem;
   top: calc(50% - 0.22rem);
 }
 
@@ -7102,7 +7102,7 @@ body {
   background:
     linear-gradient(180deg, rgba(255, 251, 245, 0.84), rgba(246, 238, 227, 0.8));
   box-shadow:
-    0 14px 28px rgba(78, 58, 43, 0.04),
+    0 10px 20px rgba(78, 58, 43, 0.035),
     inset 0 1px 0 rgba(255, 255, 255, 0.24);
 }
 
