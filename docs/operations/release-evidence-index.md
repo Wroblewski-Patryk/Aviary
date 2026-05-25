@@ -1,6 +1,6 @@
 # Release Evidence Index
 
-Last updated: 2026-05-24
+Last updated: 2026-05-25
 
 ## Purpose
 
@@ -42,13 +42,13 @@ deployed.
 
 Latest production evidence capture summary (auto-synced):
 
-- runtime build revision: `14b6a15f7c4b72cd5c9023568a15aec855b2a267`
-- web shell build revision: `14b6a15f7c4b72cd5c9023568a15aec855b2a267`
+- runtime build revision: `ae9dc1464dd83a0b37fb1319903bacecadbca44e`
+- web shell build revision: `ae9dc1464dd83a0b37fb1319903bacecadbca44e`
 - health status: `ok`
 - release readiness: `True`
 - release violations: `[]`
 - summary artifact:
-  - `docs/status/production-release-evidence-summary-20260524T181933Z.json`
+  - `docs/status/production-release-evidence-summary-20260525T013043Z.json`
 
 ## Current Decision
 

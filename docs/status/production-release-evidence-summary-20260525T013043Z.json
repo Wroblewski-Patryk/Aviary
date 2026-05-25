@@ -1,0 +1,14 @@
+﻿{
+    "kind":  "production_release_evidence_capture",
+    "generated_at":  "2026-05-25T01:30:58.1546622Z",
+    "base_url":  "https://aviary.luckysparrow.ch",
+    "bundle_directory":  "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\20260525T013043Z_production-release-evidence\\20260525T013043Z_incident-bundle-20260525T013043Z",
+    "release_smoke_report":  "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\status\\release-smoke-20260525T013043Z.json",
+    "health_status":  "ok",
+    "release_ready":  true,
+    "release_violations":  [
+
+                           ],
+    "runtime_build_revision":  "ae9dc1464dd83a0b37fb1319903bacecadbca44e",
+    "web_shell_build_revision":  "ae9dc1464dd83a0b37fb1319903bacecadbca44e"
+}
