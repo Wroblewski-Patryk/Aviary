@@ -22,9 +22,9 @@ repository history.
     `docs/status/ui-parity-wave5-report.json`, `docs/status/ui-parity-wave5/*.png`
   - frontend validation PASS after each wave: `npm run build`, `npm run smoke:routes` (`status=ok`, `route_count=14`)
 - Residual:
-  - non-blocking audit residual: mobile dashboard flow-step off-canvas geometry appears in overflow preview despite `horizontalOverflow=false`
+  - none blocking for the current mystical-clean UI mission scope
 - Next recommended checkpoint:
-  - optional wave 6: refine mobile dashboard flow-step geometry so overflow preview entries become zero
+  - optional future work: route-by-route screenshot parity tuning against evolving canonical references
 
 Historical note:
 - Residual hosted-Actions entries in older "Previous Mission" sections below are

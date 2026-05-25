@@ -11,6 +11,7 @@ Last updated: 2026-05-25
 - current result:
   - evidence pack generated: `docs/status/ui-parity-wave5-report.json`, `docs/status/ui-parity-wave5/*.png`
   - route smoke report `status=ok`; `ui_audit.status=ok`; navigation/account proof `status=ok`
+  - follow-up fix applied for mobile dashboard flow-step geometry; overflow previews now `0` for UI audit + navigation proof + account proof
 
 - `PRJ-1327` is DONE:
   - `.codex/tasks/PRJ-1327-mystic-clean-ui-orchestration-wave-4.md`

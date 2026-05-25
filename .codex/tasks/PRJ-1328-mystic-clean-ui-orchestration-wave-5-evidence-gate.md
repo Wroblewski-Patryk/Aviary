@@ -44,4 +44,4 @@ Produce durable evidence packet proving stable, clean UI behavior across dashboa
 
 ## Result Report
 - Task summary: captured final parity evidence pack for flagship routes with responsive screenshots and route/navigation/account proofs.
-- Residual note: mobile dashboard reports off-canvas flow-step geometry in `overflowingElementPreview`, but `horizontalOverflow=false` and gate status remains `ok`; tracked as non-blocking visual audit residual.
+- Residual note: resolved in Wave 6 follow-up within the same mission cycle; after rebuild and rerun, mobile dashboard overflow previews are `0` in UI audit, navigation proof, and account proof.

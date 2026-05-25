@@ -477,65 +477,8 @@
           "bodyWidth": 390,
           "unnamedInteractiveCount": 0,
           "unnamedInteractivePreview": [],
-          "overflowingElementCount": 8,
-          "overflowingElementPreview": [
-            {
-              "tag": "article",
-              "className": "aion-dashboard-flow-step ",
-              "left": 345,
-              "right": 498,
-              "width": 154
-            },
-            {
-              "tag": "p",
-              "className": "mt-3 text-base font-semibold text-base-900",
-              "left": 392,
-              "right": 488,
-              "width": 97
-            },
-            {
-              "tag": "p",
-              "className": "mt-1 text-sm text-base-800",
-              "left": 392,
-              "right": 488,
-              "width": 97
-            },
-            {
-              "tag": "article",
-              "className": "aion-dashboard-flow-step aion-dashboard-flow-step-active",
-              "left": 505,
-              "right": 659,
-              "width": 154
-            },
-            {
-              "tag": "span",
-              "className": "aion-dashboard-flow-icon",
-              "left": 515,
-              "right": 543,
-              "width": 27
-            },
-            {
-              "tag": "p",
-              "className": "mt-3 text-base font-semibold text-base-900",
-              "left": 552,
-              "right": 648,
-              "width": 97
-            },
-            {
-              "tag": "p",
-              "className": "mt-1 text-sm text-base-800",
-              "left": 552,
-              "right": 648,
-              "width": 97
-            },
-            {
-              "tag": "article",
-              "className": "aion-dashboard-flow-step ",
-              "left": 665,
-              "right": 819,
-              "width": 154
-            }
-          ]
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
         }
       },
       {
@@ -668,65 +611,8 @@
           "bodyWidth": 390,
           "unnamedInteractiveCount": 0,
           "unnamedInteractivePreview": [],
-          "overflowingElementCount": 8,
-          "overflowingElementPreview": [
-            {
-              "tag": "article",
-              "className": "aion-dashboard-flow-step ",
-              "left": 345,
-              "right": 498,
-              "width": 154
-            },
-            {
-              "tag": "p",
-              "className": "mt-3 text-base font-semibold text-base-900",
-              "left": 392,
-              "right": 488,
-              "width": 97
-            },
-            {
-              "tag": "p",
-              "className": "mt-1 text-sm text-base-800",
-              "left": 392,
-              "right": 488,
-              "width": 97
-            },
-            {
-              "tag": "article",
-              "className": "aion-dashboard-flow-step aion-dashboard-flow-step-active",
-              "left": 505,
-              "right": 659,
-              "width": 154
-            },
-            {
-              "tag": "span",
-              "className": "aion-dashboard-flow-icon",
-              "left": 515,
-              "right": 543,
-              "width": 27
-            },
-            {
-              "tag": "p",
-              "className": "mt-3 text-base font-semibold text-base-900",
-              "left": 552,
-              "right": 648,
-              "width": 97
-            },
-            {
-              "tag": "p",
-              "className": "mt-1 text-sm text-base-800",
-              "left": 552,
-              "right": 648,
-              "width": 97
-            },
-            {
-              "tag": "article",
-              "className": "aion-dashboard-flow-step ",
-              "left": 665,
-              "right": 819,
-              "width": 154
-            }
-          ]
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
         }
       }
     ]
@@ -752,65 +638,8 @@
           "bodyWidth": 390,
           "unnamedInteractiveCount": 0,
           "unnamedInteractivePreview": [],
-          "overflowingElementCount": 8,
-          "overflowingElementPreview": [
-            {
-              "tag": "article",
-              "className": "aion-dashboard-flow-step ",
-              "left": 345,
-              "right": 498,
-              "width": 154
-            },
-            {
-              "tag": "p",
-              "className": "mt-3 text-base font-semibold text-base-900",
-              "left": 392,
-              "right": 488,
-              "width": 97
-            },
-            {
-              "tag": "p",
-              "className": "mt-1 text-sm text-base-800",
-              "left": 392,
-              "right": 488,
-              "width": 97
-            },
-            {
-              "tag": "article",
-              "className": "aion-dashboard-flow-step aion-dashboard-flow-step-active",
-              "left": 505,
-              "right": 659,
-              "width": 154
-            },
-            {
-              "tag": "span",
-              "className": "aion-dashboard-flow-icon",
-              "left": 515,
-              "right": 543,
-              "width": 27
-            },
-            {
-              "tag": "p",
-              "className": "mt-3 text-base font-semibold text-base-900",
-              "left": 552,
-              "right": 648,
-              "width": 97
-            },
-            {
-              "tag": "p",
-              "className": "mt-1 text-sm text-base-800",
-              "left": 552,
-              "right": 648,
-              "width": 97
-            },
-            {
-              "tag": "article",
-              "className": "aion-dashboard-flow-step ",
-              "left": 665,
-              "right": 819,
-              "width": 154
-            }
-          ]
+          "overflowingElementCount": 0,
+          "overflowingElementPreview": []
         }
       }
     ]
