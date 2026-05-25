@@ -1006,8 +1006,8 @@ body {
   background: rgba(255, 251, 246, 0.62);
   color: rgba(65, 54, 45, 0.84);
   padding: 0.42rem 0.62rem;
-  font-size: 0.74rem;
-  font-weight: 600;
+  font-size: 0.73rem;
+  font-weight: 580;
   line-height: 1;
   white-space: nowrap;
   scroll-snap-align: center;
@@ -1015,7 +1015,14 @@ body {
     background 180ms ease,
     border-color 180ms ease,
     color 180ms ease,
-    box-shadow 180ms ease;
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.aion-route-switcher-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(88, 67, 52, 0.11);
+  background: rgba(255, 251, 246, 0.74);
 }
 
 .aion-route-switcher-button-active {
@@ -1110,10 +1117,20 @@ body {
   color: rgba(65, 54, 45, 0.86) !important;
   padding: 0.48rem 0.38rem 0.42rem !important;
   border-radius: 0.86rem !important;
-  font-size: 0.67rem !important;
-  line-height: 1.08;
+  font-size: 0.66rem !important;
+  line-height: 1.12;
   white-space: nowrap;
   scroll-snap-align: center;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.aion-mobile-tabbar-button:hover {
+  transform: translateY(-1px);
 }
 
 .aion-mobile-tabbar-button.bg-base-900 {
@@ -2011,10 +2028,12 @@ body {
     border-color 180ms ease,
     background 180ms ease,
     color 180ms ease,
-    box-shadow 180ms ease;
+    box-shadow 180ms ease,
+    transform 180ms ease;
 }
 
 .aion-nav-button:hover {
+  transform: translateY(-1px);
   border-color: rgba(88, 67, 52, 0.08);
   background: rgba(255, 251, 245, 0.56);
 }
@@ -2395,9 +2414,9 @@ body {
 .aion-chat-title {
   margin: 0;
   color: var(--aion-ink);
-  font-size: 1.14rem;
-  font-weight: 620;
-  line-height: 1.2;
+  font-size: 1.12rem;
+  font-weight: 600;
+  line-height: 1.24;
 }
 
 .aion-chat-live-status {
@@ -2405,8 +2424,8 @@ body {
   align-items: center;
   gap: 0.45rem;
   color: #4f7f81;
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 0.74rem;
+  font-weight: 580;
 }
 
 .aion-chat-live-status-dot {
@@ -2761,8 +2780,8 @@ body {
 
 .aion-chat-message-copy {
   margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.68;
+  font-size: 0.9rem;
+  line-height: 1.7;
   color: var(--aion-ink);
   overflow-wrap: anywhere;
 }
@@ -2781,7 +2800,7 @@ body {
 .aion-chat-message-copy ol + p,
 .aion-chat-message-copy pre + p,
 .aion-chat-message-copy p + pre {
-  margin-top: 0.74rem;
+  margin-top: 0.7rem;
 }
 
 .aion-chat-message-copy ul,
@@ -3710,7 +3729,8 @@ body {
 
 .aion-dashboard-stage-title {
   max-width: 17rem;
-  font-size: 1.86rem !important;
+  font-size: 1.82rem !important;
+  line-height: 1.04;
 }
 
 .aion-dashboard-stage-eyebrow {
@@ -4933,8 +4953,8 @@ body {
 }
 
 .aion-personality-overview-copy h2 {
-  font-size: clamp(1.56rem, 2.25vw, 2rem);
-  line-height: 1.04;
+  font-size: clamp(1.52rem, 2.2vw, 1.94rem);
+  line-height: 1.06;
 }
 
 .aion-personality-overview-status {

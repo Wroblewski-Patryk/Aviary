@@ -4,6 +4,14 @@ Last updated: 2026-05-25
 
 ## Project Status Dashboard (2026-05-24)
 
+- `PRJ-1326` is DONE:
+  - `.codex/tasks/PRJ-1326-mystic-clean-ui-orchestration-wave-3.md`
+- objective:
+  - finalize typography rhythm and interaction polish for mystical-clean UI direction
+- current result:
+  - CSS-only wave landed across nav/switcher/mobile/chat/flagship headings
+  - validation PASS: `npm run build`, `npm run smoke:routes` (`status=ok`, `route_count=14`)
+
 - `PRJ-1325` is DONE:
   - `.codex/tasks/PRJ-1325-mystic-clean-ui-orchestration-wave-2.md`
 - objective:
