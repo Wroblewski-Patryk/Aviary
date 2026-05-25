@@ -1,6 +1,6 @@
 # Architecture Evidence Map
 
-Generated: 2026-05-24
+Generated: 2026-05-25
 
 | Evidence | Node | Type | Status | Path | Command | Summary |
 | --- | --- | --- | --- | --- | --- | --- |

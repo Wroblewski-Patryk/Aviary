@@ -1,7 +1,7 @@
 # Architecture Coverage Report
 
-- generated_at: `2026-05-24T18:50:32.001168+00:00`
-- graph_path: `C:\Personal\Projekty\Aplikacje\Personality\docs\architecture\graphs\architecture-graph.json`
+- generated_at: `2026-05-25T01:05:19.244109+00:00`
+- graph_path: `..\docs\architecture\graphs\architecture-graph.json`
 - all_gap_mode: `operational`
 
 ## Node Summary
