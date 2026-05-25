@@ -1,0 +1,29 @@
+{
+  "kind": "incident_evidence_bundle_manifest",
+  "schema_version": "1.0.0",
+  "policy_owner": "incident_evidence_export_policy",
+  "captured_at": "2026-05-24T18:15:34.445499+00:00",
+  "capture_mode": "release_smoke",
+  "base_url": "https://aviary.luckysparrow.ch",
+  "trace_id": "incident-bundle-20260524T181534Z",
+  "event_id": "incident-bundle-20260524T181534Z-health",
+  "source": "health_snapshot",
+  "required_bundle_files": [
+    "manifest.json",
+    "incident_evidence.json",
+    "health_snapshot.json"
+  ],
+  "optional_bundle_files": [
+    "behavior_validation_report.json"
+  ],
+  "files": {
+    "manifest": "manifest.json",
+    "incident_evidence": "incident_evidence.json",
+    "health_snapshot": "health_snapshot.json"
+  },
+  "retention_baseline": {
+    "keep_latest_successful_release_bundle": true,
+    "keep_latest_failed_release_or_incident_bundle": true,
+    "keep_active_incident_bundles_until_closure": true
+  }
+}

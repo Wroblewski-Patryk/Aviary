@@ -42,3 +42,6 @@ include = ["app*"]
 asyncio_mode = "auto"
 addopts = "-p no:cacheprovider"
 testpaths = ["tests"]
+markers = [
+  "slow: tests that are useful as heavy validation gates but are not required in every tight local loop",
+]

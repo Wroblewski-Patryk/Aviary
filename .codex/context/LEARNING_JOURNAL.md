@@ -36,6 +36,37 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-24 - Browser characterization should not depend on localized copy
+- Context:
+  - PRJ-1280 refreshed the Tools overview chain and reran
+    `npm run test:tools-directory` against the current localized web shell.
+- Symptom:
+  - The browser characterization initially waited for English UI strings such
+    as `Tool directory`, `Generate code`, and English success text; it timed
+    out or returned during loading even though the mocked API and route were
+    otherwise available.
+- Root cause:
+  - The UI can resolve to localized copy, while the proof harness was using
+    human-facing text as a structural synchronization contract. The mock
+    payload also drifted behind the current `skill_tool_bindings` item shape.
+- Guardrail:
+  - Prefer stable selectors, DOM structure, and captured request bodies for
+    browser characterization; use visible copy only when copy itself is the
+    behavior under test.
+- Preferred pattern:
+  - Make test fixtures match the current API/UI contract exactly, then wait
+    for rendered item counts, controls, and request capture instead of
+    language-specific labels.
+- Avoid:
+  - Running multiple CDP/browser characterization harnesses in parallel for
+    the same workspace, or treating localized copy drift as feature failure
+    before checking selectors and mock payload shape.
+- Evidence:
+  - PRJ-1280 updated `web/scripts/tools-directory-characterization.mjs` to use
+    `.aion-tools-*` selectors, request capture, and `skill_tool_bindings` in
+    fixtures; `npm run test:tools-directory` then passed full, toggle,
+    telegram_link_start, loading, empty, and error states.
+
 ### 2026-05-23 - Chat transcript temp profiles can remain locked briefly
 - Context:
   - PRJ-1250 ran `npm run test:chat-transcript` as part of Chat source-marker
@@ -2555,3 +2586,20 @@ fixes for this repository.
     proof consumers that read the same `dist` tree
 - Evidence:
   - `.codex/tasks/PRJ-1239-flagship-canonical-fidelity.md`
+
+### 2026-05-24 - Graph tests require canonical `docs/` even when a copied vault exists
+
+- Context: PRJ-1295 profile/settings direct proof closure.
+- Symptom: graph/query tests failed with missing
+  `docs/architecture/graphs/architecture-graph.json` after documentation content
+  was present under `Aviary - docs/` while canonical `docs/` was absent.
+- Root cause: project tooling and AGENTS treat `docs/` as the source of truth;
+  a copied or renamed Obsidian vault path is not a substitute for canonical
+  repository docs.
+- Guardrail: keep `docs/` present for graph generation and pytest; if a
+  duplicate vault such as `Aviary - docs/` exists, exclude it from
+  auto-inventory scanning so graph node counts do not double.
+- Evidence:
+  - `backend/scripts/generate_architecture_inventory.py` excludes
+    `Aviary - docs`
+  - final fast graph pytest passed with `26 passed, 1 deselected in 3.63s`

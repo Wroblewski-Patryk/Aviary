@@ -1,6 +1,6 @@
 # Release Evidence Index
 
-Last updated: 2026-05-22
+Last updated: 2026-05-24
 
 ## Purpose
 
@@ -39,6 +39,16 @@ deployed.
 | Coolify automation reliability | PRJ-1196 initial deploy failed during `docker compose up -d` with a transient `No such container` after old-container removal; a queued Coolify redeploy of the same commit finished and release smoke passed |
 | Coolify fallback readiness | UI fallback executed by explicit operator access; webhook fallback inputs still unavailable locally |
 | Organizer daily-use extension | `daily_use_workflows_blocked_by_provider_activation` |
+
+Latest production evidence capture summary (auto-synced):
+
+- runtime build revision: `14b6a15f7c4b72cd5c9023568a15aec855b2a267`
+- web shell build revision: `14b6a15f7c4b72cd5c9023568a15aec855b2a267`
+- health status: `ok`
+- release readiness: `True`
+- release violations: `[]`
+- summary artifact:
+  - `docs/status/production-release-evidence-summary-20260524T181933Z.json`
 
 ## Current Decision
 

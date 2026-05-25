@@ -38,9 +38,17 @@ export function MicrophoneIcon() {
 export function SendArrowIcon() {
   return (
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-      <path d="M3.8 10 16 4.8l-3.5 5.2L16 15.2 3.8 10Z" fill="currentColor" opacity="0.16" stroke="none" />
-      <path d="M3.8 10 16 4.8l-3.5 5.2L16 15.2 3.8 10Z" strokeLinejoin="round" />
-      <path d="M12.5 10H4.9" strokeLinecap="round" />
+      <path d="M3.2 9.4 16.8 3.8 11.2 17.4l-1.9-5.9-6.1-2.1Z" fill="currentColor" opacity="0.16" stroke="none" />
+      <path d="M3.2 9.4 16.8 3.8 11.2 17.4l-1.9-5.9-6.1-2.1Z" strokeLinejoin="round" />
+      <path d="m16.8 3.8-7.5 7.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function PaperclipIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <path d="M7.2 10.5 12 5.7a3 3 0 1 1 4.2 4.2l-6.1 6.1a4.3 4.3 0 1 1-6.1-6.1l6.4-6.4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

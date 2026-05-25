@@ -1,0 +1,6 @@
+id,source_id,relation_type,target_id,status,description,evidence,notes,tags
+DEP-APPCHAT-001,UI-CHAT-COMPOSER,depends_on,API-APP-CHAT-MESSAGE,verified,Chat composer depends on app chat API,web/src/lib/api.ts,,"#dependency #chat"
+DEP-APPCHAT-002,API-APP-CHAT-MESSAGE,depends_on,SERVICE-RUNTIME-ORCHESTRATOR,verified,Chat API depends on runtime orchestrator,backend/app/api/routes.py,,"#dependency #runtime"
+DEP-RUNTIME-001,SERVICE-RUNTIME-ORCHESTRATOR,depends_on,SERVICE-MEMORY-REPOSITORY,verified,Runtime depends on memory repository for context and writes,backend/app/core/runtime.py,,"#dependency #memory"
+DEP-WEB-001,COMP-WEB-APP,depends_on,API-APP-ME,verified,Authenticated shell depends on current user/settings API,web/src/lib/api.ts,,"#dependency #profile"
+DEP-TOOLS-001,PAGE-TOOLS,depends_on,API-TOOLS-OVERVIEW,verified,Tools route depends on tools API,web/src/lib/api.ts,,"#dependency #tools"

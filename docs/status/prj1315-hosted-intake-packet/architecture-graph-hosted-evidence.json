@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-05-24T17:33:51.438195+00:00",
+  "fast_artifact": {
+    "path": "..\\docs\\status\\prj1315-hosted-intake-fixture\\architecture-gaps-fast.json",
+    "include_auto": false,
+    "gap_count": 0
+  },
+  "heavy_artifact": {
+    "path": "..\\docs\\status\\prj1315-hosted-intake-fixture\\architecture-gaps-heavy.json",
+    "include_auto": true,
+    "gap_count": 0
+  },
+  "status": "PASSED"
+}

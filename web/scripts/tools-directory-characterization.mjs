@@ -21,6 +21,7 @@ const MIME_TYPES = {
 const requests = {
   preferenceBodies: [],
   telegramLinkStarts: 0,
+  seenPaths: [],
 };
 
 function jsonResponse(response, status, payload) {
@@ -75,6 +76,7 @@ function toolsOverview({
               link_required: false,
               link_state: "not_required",
               capabilities: ["chat"],
+              skill_tool_bindings: [],
               next_actions: [],
               source_of_truth: ["app_tools_overview_contract"],
             },
@@ -99,6 +101,7 @@ function toolsOverview({
               link_required: !telegramLinked,
               link_state: telegramLinked ? "linked" : "not_linked",
               capabilities: ["send_message", "receive_message"],
+              skill_tool_bindings: [],
               next_actions: telegramLinked ? [] : ["link_telegram_chat"],
               source_of_truth: ["telegram_link_contract"],
             },
@@ -131,6 +134,7 @@ function toolsOverview({
               link_required: false,
               link_state: "not_required",
               capabilities: ["create_task", "list_tasks"],
+              skill_tool_bindings: [],
               next_actions: clickupEnabled ? [] : ["configure_provider_credentials"],
               source_of_truth: ["connector_execution_baseline"],
             },
@@ -166,6 +170,7 @@ function caseFromRequest(request) {
 
 async function mockApi(request, response) {
   const url = new URL(request.url ?? "/", "http://127.0.0.1");
+  requests.seenPaths.push(`${request.method} ${url.pathname}`);
 
   if (request.method === "GET" && url.pathname === "/app/me") {
     jsonResponse(response, 200, {
@@ -407,6 +412,21 @@ async function waitFor(cdp, expression, label, timeoutMs = 5000) {
   throw new Error(`Timed out waiting for ${label}.`);
 }
 
+async function waitForRequest(predicate, label, timeoutMs = 5000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (predicate()) {
+      return;
+    }
+    await new Promise((resolveDelay) => setTimeout(resolveDelay, 100));
+  }
+  const diagnosticText = await evaluate(
+    cdp,
+    `document.body ? document.body.innerText.replace(/\\s+/g, " ").slice(0, 800) : ""`,
+  ).catch(() => "");
+  throw new Error(`Timed out waiting for ${label}. Body excerpt: ${diagnosticText}`);
+}
+
 function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
@@ -484,32 +504,52 @@ async function characterizeTools(cdp, baseUrl) {
   const results = [];
 
   await navigate(cdp, `${baseUrl}/tools?case=full`);
-  const fullState = await waitFor(
-    cdp,
-    `(() => {
+  let fullState;
+  try {
+    fullState = await waitFor(
+      cdp,
+      `(() => {
       const text = document.body.innerText;
-      if (!text.includes("Tool directory") || !text.includes("Telegram") || !text.includes("ClickUp")) {
+      if (!document.querySelector(".aion-tools-directory")) {
         return null;
       }
+      const itemCards = document.querySelectorAll(".aion-tools-item-card");
+      if (itemCards.length === 0) {
+        return null;
+      }
+      const telegramCard = Array.from(itemCards)
+        .find((candidate) => candidate.innerText.includes("Telegram"));
       return {
         groupCount: document.querySelectorAll(".aion-tools-group").length,
-        itemCount: document.querySelectorAll(".aion-tools-item-card").length,
+        itemCount: itemCards.length,
         toggleCount: document.querySelectorAll(".aion-tools-item-card input[type='checkbox']").length,
-        hasTelegramLinkPanel: text.toLowerCase().includes("telegram linking") && text.includes("Generate code"),
-        hasTechnicalDetails: text.includes("Technical details"),
+        hasTelegramLinkPanel: Boolean(telegramCard?.querySelector("button")),
+        technicalDetailsCount: document.querySelectorAll(".aion-tools-details").length,
         textExcerpt: text.replace(/\\s+/g, " ").slice(0, 1000),
       };
     })()`,
-    "full tools directory",
+      "full tools directory",
+    );
+  } catch (error) {
+    throw new Error(`${error.message} Requests seen: ${requests.seenPaths.join(" | ")}`);
+  }
+  assert(
+    fullState.groupCount === 2,
+    `Expected two tools groups in the full state. State: ${JSON.stringify(fullState)}`,
   );
-  assert(fullState.groupCount === 2, "Expected two tools groups in the full state.");
-  assert(fullState.itemCount === 3, "Expected three tools item cards in the full state.");
-  assert(fullState.toggleCount === 2, "Expected two user-control toggles in the full state.");
+  assert(
+    fullState.itemCount === 3,
+    `Expected three tools item cards in the full state. State: ${JSON.stringify(fullState)}`,
+  );
+  assert(
+    fullState.toggleCount === 2,
+    `Expected two user-control toggles in the full state. State: ${JSON.stringify(fullState)}`,
+  );
   assert(
     fullState.hasTelegramLinkPanel,
-    `Expected Telegram link panel in the full state. Text excerpt: ${fullState.textExcerpt}`,
+    `Expected Telegram link panel button in the full state. Text excerpt: ${fullState.textExcerpt}`,
   );
-  assert(fullState.hasTechnicalDetails, "Expected technical details in the full state.");
+  assert(fullState.technicalDetailsCount === 3, "Expected technical details disclosures in the full state.");
   results.push({ case: "full", status: "ok", ...fullState });
 
   await evaluate(
@@ -524,8 +564,16 @@ async function characterizeTools(cdp, baseUrl) {
   );
   await waitFor(
     cdp,
-    `document.body.innerText.includes("Your tool choices have been saved.")`,
-    "tool preference saved toast",
+    `(() => {
+      const card = Array.from(document.querySelectorAll(".aion-tools-item-card"))
+        .find((candidate) => candidate.innerText.includes("ClickUp"));
+      return Boolean(card?.querySelector("input[type='checkbox']:checked"));
+    })()`,
+    "tool preference toggle checked state",
+  );
+  await waitForRequest(
+    () => requests.preferenceBodies.some((body) => body.clickup_enabled === true),
+    "tool preference request",
   );
   assert(
     requests.preferenceBodies.some((body) => body.clickup_enabled === true),
@@ -537,10 +585,14 @@ async function characterizeTools(cdp, baseUrl) {
     cdp,
     `(() => {
       const button = Array.from(document.querySelectorAll("button"))
-        .find((candidate) => candidate.innerText.includes("Generate code"));
+        .find((candidate) => candidate.closest(".aion-tools-item-card")?.innerText.includes("Telegram"));
       button?.click();
       return Boolean(button);
     })()`,
+  );
+  await waitForRequest(
+    () => requests.telegramLinkStarts > 0,
+    "telegram link start request",
   );
   const linkState = await waitFor(
     cdp,
@@ -558,20 +610,24 @@ async function characterizeTools(cdp, baseUrl) {
   await navigate(cdp, `${baseUrl}/tools?case=slow&cacheBust=${Date.now()}`);
   const loadingState = await waitFor(
     cdp,
-    `document.body.innerText.includes("Loading your tools overview.")`,
+    `Boolean(document.querySelector(".aion-tools-directory")) && document.querySelectorAll(".aion-tools-item-card").length === 0`,
     "tools loading state",
     1000,
   );
   assert(loadingState === true, "Expected tools loading state to render during a delayed overview request.");
   results.push({ case: "loading", status: "ok" });
-  await waitFor(cdp, `document.body.innerText.includes("Tool directory")`, "slow tools completion");
+  await waitFor(
+    cdp,
+    `document.querySelectorAll(".aion-tools-item-card").length === 3`,
+    "slow tools completion",
+  );
 
   await navigate(cdp, `${baseUrl}/tools?case=empty&cacheBust=${Date.now()}`);
   const emptyState = await waitFor(
     cdp,
     `(() => {
       const text = document.body.innerText;
-      if (!text.includes("Tool directory")) {
+      if (!document.querySelector(".aion-tools-directory")) {
         return null;
       }
       return {

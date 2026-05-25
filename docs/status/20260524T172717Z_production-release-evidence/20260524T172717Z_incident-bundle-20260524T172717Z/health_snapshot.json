@@ -1,0 +1,2240 @@
+{
+  "status": "ok",
+  "runtime_policy": {
+    "structured_perception_enabled": true,
+    "structured_perception_source": "environment_default",
+    "structured_perception_classifier_available": true,
+    "structured_perception_posture": "ai_assisted_active",
+    "structured_perception_hint": "ai_classifier_available_for_structured_perception",
+    "structured_perception_owner": "structured_perception_rollout_policy",
+    "affective_assessment_enabled": false,
+    "affective_assessment_source": "environment_default",
+    "affective_classifier_available": true,
+    "affective_assessment_posture": "fallback_only_policy_disabled",
+    "affective_assessment_hint": "policy_disabled_use_deterministic_affective_baseline",
+    "affective_assessment_owner": "affective_assessment_rollout_policy",
+    "startup_schema_mode": "migrate",
+    "startup_schema_compatibility_posture": "migration_only",
+    "startup_schema_compatibility_sunset_ready": true,
+    "startup_schema_compatibility_sunset_reason": "migration_only_baseline_active",
+    "event_debug_enabled": false,
+    "event_debug_token_required": true,
+    "production_debug_token_required": true,
+    "event_debug_query_compat_enabled": false,
+    "event_debug_query_compat_source": "environment_default",
+    "event_debug_ingress_owner": "internal_route_primary_shared_route_break_glass_fallback",
+    "event_debug_admin_policy_owner": "dedicated_admin_debug_ingress_policy",
+    "event_debug_admin_ingress_target_kind": "dedicated_internal_admin_route",
+    "event_debug_admin_ingress_target_path": "/internal/event/debug",
+    "event_debug_admin_operator_default": "use_dedicated_admin_ingress",
+    "event_debug_admin_posture_state": "debug_disabled_admin_route_primary_by_default",
+    "event_debug_internal_ingress_path": "/internal/event/debug",
+    "event_debug_shared_ingress_path": "/event/debug",
+    "event_debug_shared_ingress_mode": "break_glass_only",
+    "event_debug_shared_ingress_mode_source": "explicit",
+    "event_debug_shared_ingress_break_glass_required": true,
+    "event_debug_shared_ingress_posture": "shared_route_break_glass_only",
+    "event_debug_shared_ingress_retirement_target": "break_glass_only_then_remove_from_normal_operator_flows",
+    "event_debug_shared_ingress_retirement_cutover_posture": "dedicated_internal_admin_route_primary_shared_routes_break_glass_then_remove",
+    "event_debug_shared_ingress_retirement_gate_checklist": [
+      "normal_operator_debug_uses_dedicated_internal_admin_route",
+      "shared_event_debug_route_is_break_glass_only_or_disabled",
+      "query_debug_compatibility_route_disabled",
+      "release_smoke_green_for_dedicated_admin_debug_path",
+      "rollback_notes_cover_shared_debug_break_glass_reenablement"
+    ],
+    "event_debug_shared_ingress_retirement_gate_state": "shared_debug_disabled_retirement_gate_satisfied",
+    "event_debug_shared_ingress_retirement_blockers": [],
+    "event_debug_shared_ingress_retirement_ready": true,
+    "event_debug_shared_ingress_sunset_ready": true,
+    "event_debug_shared_ingress_sunset_reason": "shared_debug_route_disabled_with_debug_payload_off",
+    "event_debug_shared_ingress_enforcement_window": "after_group_51_release_evidence_green",
+    "debug_access_posture": "disabled",
+    "debug_token_policy_hint": "not_applicable_debug_disabled",
+    "event_debug_source": "environment_default",
+    "production_policy_enforcement": "strict",
+    "recommended_production_policy_enforcement": "strict",
+    "production_policy_mismatches": [],
+    "production_policy_mismatch_count": 0,
+    "strict_startup_blocked": false,
+    "strict_rollout_ready": true,
+    "strict_rollout_hint": "can_enable_strict",
+    "startup_schema_removal_window": "after_group_51_release_evidence_green",
+    "compatibility_sunset_ready": true,
+    "compatibility_sunset_blockers": [],
+    "event_debug_query_compat_telemetry": {
+      "attempts_total": 0,
+      "allowed_total": 0,
+      "blocked_total": 0,
+      "last_attempt_at": null,
+      "last_allowed_at": null,
+      "last_blocked_at": null,
+      "recent_window_size": 20,
+      "recent_attempts_total": 0,
+      "recent_allowed_total": 0,
+      "recent_blocked_total": 0
+    },
+    "event_debug_query_compat_allow_rate": 0.0,
+    "event_debug_query_compat_block_rate": 0.0,
+    "event_debug_query_compat_recommendation": "compat_disabled",
+    "event_debug_query_compat_sunset_ready": true,
+    "event_debug_query_compat_sunset_reason": "compat_disabled",
+    "event_debug_query_compat_recent_attempts_total": 0,
+    "event_debug_query_compat_recent_allow_rate": 0.0,
+    "event_debug_query_compat_recent_block_rate": 0.0,
+    "event_debug_query_compat_recent_state": "compat_disabled",
+    "event_debug_query_compat_stale_after_seconds": 86400,
+    "event_debug_query_compat_last_attempt_age_seconds": null,
+    "event_debug_query_compat_last_attempt_state": "no_attempts_recorded",
+    "event_debug_query_compat_activity_state": "compat_disabled",
+    "event_debug_query_compat_activity_hint": "compat_disabled_no_action"
+  },
+  "release_readiness": {
+    "ready": true,
+    "violations": []
+  },
+  "v1_readiness": {
+    "policy_owner": "v1_release_readiness_policy",
+    "product_stage": "v1_no_ui_life_assistant",
+    "acceptance_bundle_owner": "health_plus_incident_evidence_plus_behavior_validation",
+    "final_acceptance_bundle_owner": "no_ui_v1_daily_use_acceptance_bundle",
+    "final_acceptance_target": "all_final_gates_green_in_live_production",
+    "conversation_surface": "/health.conversation_channels.telegram",
+    "conversation_round_trip_state": "provider_backed_ready",
+    "conversation_gate_state": "conversation_surface_ready",
+    "learned_state_surface": "/health.learned_state",
+    "learned_state_internal_path": "/internal/state/inspect",
+    "learned_state_gate_state": "inspection_surface_ready",
+    "approved_tool_slices": [
+      "knowledge_search.search_web",
+      "web_browser.read_page",
+      "task_system.clickup_list_tasks",
+      "task_system.clickup_update_task",
+      "calendar.google_calendar_read_availability",
+      "cloud_drive.google_drive_list_files"
+    ],
+    "approved_tooling_state": "core_bounded_tooling_ready",
+    "organizer_daily_use_state": "daily_use_workflows_blocked_by_provider_activation",
+    "organizer_daily_use_classification": "extension_readiness_non_blocking_for_core_v1",
+    "organizer_daily_use_ready_workflow_count": 0,
+    "organizer_daily_use_total_workflow_count": 3,
+    "organizer_daily_use_ready_workflows": [],
+    "organizer_daily_use_blocked_workflows": [
+      "clickup_task_review_and_mutation",
+      "google_calendar_availability_inspection",
+      "google_drive_file_space_inspection"
+    ],
+    "organizer_daily_use_hint": "finish_provider_activation_before_treating_organizer_stack_as_daily_use_ready",
+    "organizer_daily_use_next_actions": [
+      "task_system.clickup_create_task",
+      "task_system.clickup_list_tasks",
+      "task_system.clickup_update_task",
+      "calendar.google_calendar_read_availability",
+      "cloud_drive.google_drive_list_files"
+    ],
+    "website_reading_workflow_state": "ready_for_direct_and_search_first_review",
+    "tool_grounded_learning_state": "tool_grounded_learning_surface_ready",
+    "time_aware_planned_work_policy_owner": "internal_time_aware_planned_work_policy",
+    "time_aware_planned_work_delivery_path": "attention_to_planning_to_expression_to_action",
+    "time_aware_planned_work_recurrence_owner": "scheduler_reevaluation_with_foreground_handoff",
+    "time_aware_planned_work_gate_state": "foreground_due_delivery_and_recurring_reevaluation_ready",
+    "deploy_parity_state": "deploy_parity_surface_ready",
+    "final_acceptance_gate_states": {
+      "conversation_reliability": "conversation_surface_ready",
+      "learned_state_inspection": "inspection_surface_ready",
+      "website_reading": "ready_for_direct_and_search_first_review",
+      "tool_grounded_learning": "tool_grounded_learning_surface_ready",
+      "time_aware_planned_work": "foreground_due_delivery_and_recurring_reevaluation_ready",
+      "deploy_parity": "deploy_parity_surface_ready"
+    },
+    "final_acceptance_state": "core_v1_bundle_ready",
+    "final_acceptance_surfaces": {
+      "conversation_reliability": "/health.conversation_channels.telegram",
+      "learned_state_inspection": "/health.learned_state",
+      "website_reading": "/health.connectors.web_knowledge_tools.website_reading_workflow",
+      "tool_grounded_learning": "/health.learned_state.tool_grounded_learning",
+      "time_aware_planned_work": "/health.v1_readiness",
+      "deploy_parity": "/health.deployment"
+    },
+    "extension_gate_states": {
+      "organizer_daily_use": "daily_use_workflows_blocked_by_provider_activation"
+    },
+    "extension_gate_surfaces": {
+      "organizer_daily_use": "/health.connectors.organizer_tool_stack"
+    },
+    "required_behavior_scenarios": [
+      "T13.1",
+      "T14.1",
+      "T14.2",
+      "T14.3",
+      "T15.1",
+      "T15.2",
+      "T16.1",
+      "T16.2",
+      "T16.3",
+      "T17.1",
+      "T17.2",
+      "T18.1",
+      "T18.2",
+      "T19.1",
+      "T19.2"
+    ],
+    "work_partner_role_state": "available",
+    "work_partner_boundary": "same_personality_role_not_separate_persona"
+  },
+  "api_readiness": {
+    "policy_owner": "v2_backend_api_readiness_policy",
+    "product_stage": "v2_backend_surface_seed",
+    "readiness_state": "stable_backend_surfaces_available",
+    "health_surfaces": {
+      "capability_catalog": "/health.capability_catalog",
+      "learned_state": "/health.learned_state",
+      "role_skill": "/health.role_skill",
+      "connectors": "/health.connectors",
+      "v1_readiness": "/health.v1_readiness"
+    },
+    "internal_inspection_path": "/internal/state/inspect",
+    "internal_inspection_sections": [
+      "capability_catalog",
+      "identity_state",
+      "learned_knowledge",
+      "role_skill_state",
+      "planning_state"
+    ],
+    "capability_catalog_sections": [
+      "role_posture",
+      "skill_catalog_posture",
+      "tool_and_connector_posture",
+      "learned_state_linkage"
+    ],
+    "planning_state_sections": [
+      "active_goals",
+      "active_tasks",
+      "active_goal_milestones",
+      "pending_proposals"
+    ],
+    "current_turn_debug_surface_path": "/internal/event/debug",
+    "current_turn_role_surface": "system_debug.role",
+    "current_turn_selected_skills_surface": "system_debug.adaptive_state.selected_skills",
+    "current_turn_plan_surface": "system_debug.plan",
+    "connector_posture_surface": "/health.connectors"
+  },
+  "capability_catalog": {
+    "policy_owner": "backend_capability_catalog_policy",
+    "catalog_posture": "aggregated_backend_truth_surface",
+    "aggregation_boundary": "composed_from_existing_health_and_internal_inspection_surfaces",
+    "execution_authority": "unchanged_action_boundary",
+    "authorization_authority": "unchanged_connector_permission_gates",
+    "capability_record_truth_model": {
+      "description_boundary": "durable_role_and_skill_metadata_plus_tool_authorization_records",
+      "selection_boundary": "runtime_turn_selection_and_selected_skill_metadata",
+      "authorization_boundary": "connector_permission_gates_plus_provider_readiness"
+    },
+    "future_ui_posture": "consume_catalog_without_reconstructing_backend_truth_client_side",
+    "source_surfaces": {
+      "api_readiness": "/health.api_readiness",
+      "learned_state": "/health.learned_state",
+      "role_skill": "/health.role_skill",
+      "connectors": "/health.connectors",
+      "internal_inspection": "/internal/state/inspect",
+      "current_turn_role": "system_debug.role",
+      "current_turn_selected_skills": "system_debug.adaptive_state.selected_skills",
+      "current_turn_plan": "system_debug.plan"
+    },
+    "role_posture": {
+      "role_selection_owner": "role_selection_policy",
+      "current_role_name": "",
+      "work_partner_role_available": true,
+      "work_partner_role_state": "available",
+      "work_partner_scope": "work_organization_and_decision_support",
+      "work_partner_mutation_boundary": "respect_existing_confirmation_and_opt_in_policies",
+      "described_role_presets": [
+        {
+          "role_name": "friend",
+          "label": "Friend",
+          "prompt_posture": "supportive_relational",
+          "record_kind": "durable_role_preset",
+          "selection_authority": "runtime_turn_selection",
+          "selection_state": "available"
+        },
+        {
+          "role_name": "advisor",
+          "label": "Advisor",
+          "prompt_posture": "risk_aware_guidance",
+          "record_kind": "durable_role_preset",
+          "selection_authority": "runtime_turn_selection",
+          "selection_state": "available"
+        },
+        {
+          "role_name": "analyst",
+          "label": "Analyst",
+          "prompt_posture": "structured_analysis",
+          "record_kind": "durable_role_preset",
+          "selection_authority": "runtime_turn_selection",
+          "selection_state": "available"
+        },
+        {
+          "role_name": "executor",
+          "label": "Executor",
+          "prompt_posture": "bounded_execution",
+          "record_kind": "durable_role_preset",
+          "selection_authority": "runtime_turn_selection",
+          "selection_state": "available"
+        },
+        {
+          "role_name": "mentor",
+          "label": "Mentor",
+          "prompt_posture": "guided_help",
+          "record_kind": "durable_role_preset",
+          "selection_authority": "runtime_turn_selection",
+          "selection_state": "available"
+        },
+        {
+          "role_name": "work_partner",
+          "label": "Work partner",
+          "prompt_posture": "organization_and_decision_support",
+          "record_kind": "durable_role_preset",
+          "selection_authority": "runtime_turn_selection",
+          "selection_state": "available"
+        }
+      ],
+      "described_role_names": [
+        "friend",
+        "advisor",
+        "analyst",
+        "executor",
+        "mentor",
+        "work_partner"
+      ],
+      "selectable_role_names": [
+        "friend",
+        "advisor",
+        "analyst",
+        "executor",
+        "mentor",
+        "work_partner"
+      ],
+      "preferred_role_eligible_names": [
+        "analyst",
+        "executor",
+        "friend",
+        "mentor",
+        "work_partner"
+      ]
+    },
+    "skill_catalog_posture": {
+      "skill_selection_owner": "skill_registry",
+      "skill_execution_boundary": "metadata_only_capability_hints",
+      "action_skill_execution_allowed": false,
+      "selection_visibility_summary": {},
+      "catalog_count": 9,
+      "catalog": [
+        {
+          "skill_id": "emotional_support",
+          "label": "Emotional support",
+          "capability_family": "support",
+          "allowed_tools": [],
+          "limitations": [
+            "does_not_execute_tools"
+          ],
+          "execution_owner": "not_applicable",
+          "authorization_boundary": "not_applicable",
+          "side_effect_posture": "metadata_only",
+          "tool_execution_allowed": false
+        },
+        {
+          "skill_id": "structured_reasoning",
+          "label": "Structured reasoning",
+          "capability_family": "analysis",
+          "allowed_tools": [],
+          "limitations": [
+            "does_not_execute_tools"
+          ],
+          "execution_owner": "not_applicable",
+          "authorization_boundary": "not_applicable",
+          "side_effect_posture": "metadata_only",
+          "tool_execution_allowed": false
+        },
+        {
+          "skill_id": "execution_planning",
+          "label": "Execution planning",
+          "capability_family": "execution",
+          "allowed_tools": [],
+          "limitations": [
+            "does_not_execute_tools"
+          ],
+          "execution_owner": "not_applicable",
+          "authorization_boundary": "not_applicable",
+          "side_effect_posture": "metadata_only",
+          "tool_execution_allowed": false
+        },
+        {
+          "skill_id": "memory_recall",
+          "label": "Memory recall",
+          "capability_family": "memory",
+          "allowed_tools": [],
+          "limitations": [
+            "does_not_execute_tools"
+          ],
+          "execution_owner": "not_applicable",
+          "authorization_boundary": "not_applicable",
+          "side_effect_posture": "metadata_only",
+          "tool_execution_allowed": false
+        },
+        {
+          "skill_id": "connector_boundary_review",
+          "label": "Connector boundary review",
+          "capability_family": "connector_boundary",
+          "allowed_tools": [
+            "task_system",
+            "calendar",
+            "cloud_drive",
+            "knowledge_search",
+            "web_browser"
+          ],
+          "limitations": [
+            "reviews_connector_posture_only",
+            "does_not_execute_tools"
+          ],
+          "execution_owner": "action",
+          "authorization_boundary": "connector_permission_gates",
+          "side_effect_posture": "metadata_only",
+          "tool_execution_allowed": false
+        },
+        {
+          "skill_id": "website_review",
+          "label": "Website review",
+          "capability_family": "analysis",
+          "allowed_tools": [
+            "knowledge_search.search_web",
+            "web_browser.read_page"
+          ],
+          "limitations": [
+            "read_only",
+            "no_javascript_execution",
+            "no_form_submission",
+            "no_login_flow",
+            "bounded_source_summary_only"
+          ],
+          "execution_owner": "action",
+          "authorization_boundary": "connector_permission_gates",
+          "side_effect_posture": "metadata_only",
+          "tool_execution_allowed": false
+        },
+        {
+          "skill_id": "web_research",
+          "label": "Web research",
+          "capability_family": "analysis",
+          "allowed_tools": [
+            "knowledge_search.search_web",
+            "web_browser.read_page"
+          ],
+          "limitations": [
+            "read_only",
+            "source_backed_summary_only",
+            "bounded_page_review_optional"
+          ],
+          "execution_owner": "action",
+          "authorization_boundary": "connector_permission_gates",
+          "side_effect_posture": "metadata_only",
+          "tool_execution_allowed": false
+        },
+        {
+          "skill_id": "clickup_task_management",
+          "label": "ClickUp task management",
+          "capability_family": "connector_boundary",
+          "allowed_tools": [
+            "task_system.clickup_list_tasks",
+            "task_system.clickup_create_task",
+            "task_system.clickup_update_task"
+          ],
+          "limitations": [
+            "list_tasks_read_only_when_enabled_and_configured",
+            "create_update_require_explicit_confirmation",
+            "no_provider_payload_persistence"
+          ],
+          "execution_owner": "action",
+          "authorization_boundary": "connector_permission_gates",
+          "side_effect_posture": "metadata_only",
+          "tool_execution_allowed": false
+        },
+        {
+          "skill_id": "work_partner_task_management",
+          "label": "Work partner task management",
+          "capability_family": "connector_boundary",
+          "allowed_tools": [
+            "task_system.clickup_list_tasks",
+            "task_system.clickup_create_task",
+            "task_system.clickup_update_task"
+          ],
+          "limitations": [
+            "work_partner_strategy_metadata_only",
+            "create_update_require_explicit_confirmation",
+            "no_provider_payload_persistence"
+          ],
+          "execution_owner": "action",
+          "authorization_boundary": "connector_permission_gates",
+          "side_effect_posture": "metadata_only",
+          "tool_execution_allowed": false
+        }
+      ],
+      "described_skill_ids": [
+        "emotional_support",
+        "structured_reasoning",
+        "execution_planning",
+        "memory_recall",
+        "connector_boundary_review",
+        "website_review",
+        "web_research",
+        "clickup_task_management",
+        "work_partner_task_management"
+      ],
+      "runtime_selection_surface": "system_debug.adaptive_state.selected_skills",
+      "learning_posture": "registry_metadata_only",
+      "learning_hint": "selected_skill_metadata_is_inspectable_but_not_self_modifying_code"
+    },
+    "tool_and_connector_posture": {
+      "authorization_record_owner": "connector_execution_policy",
+      "authorization_subject": "global_runtime_policy_posture",
+      "authorization_record_state": "global_policy_and_provider_posture",
+      "approved_tool_families": [
+        "calendar",
+        "cloud_drive",
+        "knowledge_search",
+        "task_system",
+        "web_browser"
+      ],
+      "selectable_tool_families": [
+        "calendar",
+        "cloud_drive",
+        "knowledge_search",
+        "task_system",
+        "web_browser"
+      ],
+      "approved_operations": [
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files"
+      ],
+      "authorized_without_opt_in_operations": [
+        "knowledge_search.search_web",
+        "knowledge_search.suggest_search",
+        "web_browser.read_page",
+        "web_browser.suggest_page_review"
+      ],
+      "authorized_with_opt_in_operations": [
+        "calendar.read_availability",
+        "calendar.suggest_slots",
+        "cloud_drive.list_files",
+        "cloud_drive.read_document",
+        "cloud_drive.search_documents",
+        "cloud_drive.suggest_file_plan",
+        "task_system.link_internal_task",
+        "task_system.list_tasks",
+        "task_system.suggest_sync"
+      ],
+      "authorized_with_confirmation_operations": [
+        "calendar.cancel_event",
+        "calendar.create_event",
+        "calendar.update_event",
+        "cloud_drive.delete_file",
+        "cloud_drive.update_document",
+        "cloud_drive.upload_file",
+        "task_system.create_task",
+        "task_system.update_task"
+      ],
+      "ready_operations": [],
+      "credential_gap_operations": [
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files"
+      ],
+      "organizer_stack_state": "provider_credentials_missing",
+      "organizer_stack_hint": "configure_clickup_google_calendar_and_google_drive_credentials_for_full_stack_readiness",
+      "organizer_activation_state": "provider_activation_incomplete",
+      "organizer_activation_next_actions": [
+        "configure_clickup_api_token_and_clickup_list_id",
+        "configure_google_calendar_access_token_and_calendar_id",
+        "configure_google_drive_access_token_and_folder_id"
+      ],
+      "confirmation_required_operations": [
+        "task_system.clickup_create_task",
+        "task_system.clickup_update_task"
+      ],
+      "user_opt_in_required_operations": [
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files"
+      ],
+      "web_knowledge_tools": {
+        "policy_owner": "web_knowledge_tooling_policy",
+        "tool_boundary": "action_owned_external_capability",
+        "skill_execution_boundary": "metadata_only_capability_hints",
+        "provider_execution_posture": "first_bounded_provider_slices_selected",
+        "fallback_posture": "respond_without_external_tool_execution",
+        "knowledge_search": {
+          "capability_kind": "knowledge_search",
+          "selected_provider_hint": "duckduckgo_html",
+          "authorized_operations": [
+            "search_web",
+            "suggest_search"
+          ],
+          "provider": "duckduckgo_html",
+          "execution_mode": "provider_backed_without_credentials",
+          "ready": true,
+          "state": "provider_backed_ready",
+          "hint": "duckduckgo_html_search_live"
+        },
+        "web_browser": {
+          "capability_kind": "web_browser",
+          "selected_provider_hint": "generic_http",
+          "authorized_operations": [
+            "read_page",
+            "suggest_page_review"
+          ],
+          "provider": "generic_http",
+          "execution_mode": "provider_backed_without_credentials",
+          "ready": true,
+          "state": "provider_backed_ready",
+          "hint": "generic_http_read_page_live"
+        },
+        "website_reading_workflow": {
+          "policy_owner": "website_reading_workflow_policy",
+          "workflow_state": "ready_for_direct_and_search_first_review",
+          "direct_url_review_available": true,
+          "search_then_page_review_available": true,
+          "allowed_entry_modes": [
+            "direct_url_review",
+            "search_then_page_review"
+          ],
+          "selected_provider_path": {
+            "search_provider_hint": "duckduckgo_html",
+            "page_read_provider_hint": "generic_http"
+          },
+          "bounded_input_contract": [
+            "explicit_url",
+            "explicit_site_or_domain_hint",
+            "explicit_answer_focus"
+          ],
+          "bounded_output_contract": [
+            "final_page_url",
+            "page_title_when_available",
+            "bounded_summary",
+            "source_note",
+            "explicit_uncertainty_or_blocker_note"
+          ],
+          "bounded_read_semantics": [
+            "single_page_read_only",
+            "search_optional_before_page_read",
+            "no_multi_page_crawl",
+            "no_login_or_form_submission",
+            "no_paywall_or_hidden_auth_bypass",
+            "no_raw_full_page_dump"
+          ],
+          "memory_capture_boundary": "tool_grounded_summary_only_via_action_then_memory",
+          "blockers": [],
+          "next_actions": []
+        }
+      },
+      "execution_baseline_owner": "connector_execution_registry",
+      "execution_baseline_boundary": "clickup_task_create_list_update_plus_google_calendar_google_drive_duckduckgo_and_generic_http_first_live_paths"
+    },
+    "learned_state_linkage": {
+      "learned_state_policy_owner": "learned_state_inspection_policy",
+      "tool_grounded_learning_policy_owner": "tool_grounded_learning_policy",
+      "skill_learning_posture": "selected_skill_metadata_only",
+      "internal_inspection_path": "/internal/state/inspect"
+    }
+  },
+  "runtime_topology": {
+    "policy_owner": "runtime_topology_finalization",
+    "release_window": "after_group_50_evidence_green",
+    "reflection_switch": {
+      "baseline_mode": "in_process",
+      "target_mode": "deferred",
+      "selected_mode": "deferred",
+      "production_default_change_ready": true,
+      "criteria": [
+        "reflection_deployment_readiness.ready",
+        "external_driver_dispatch_path_verified",
+        "release_smoke_includes_reflection_mode_checks"
+      ],
+      "rollback_posture": "return_to_in_process_until_external_driver_slo_is_stable"
+    },
+    "attention_switch": {
+      "policy_owner": "runtime_topology_finalization",
+      "baseline_mode": "in_process",
+      "target_mode": "durable_inbox",
+      "selected_mode": "durable_inbox",
+      "production_default_change_ready": true,
+      "criteria": [
+        "attention.deployment_readiness.ready",
+        "attention.contract_store_mode_repository_backed",
+        "release_smoke_includes_attention_owner_checks"
+      ],
+      "rollback_posture": "return_to_in_process_until_durable_inbox_cleanup_and_claim_semantics_are_stable"
+    },
+    "graph_boundary": {
+      "pre_graph_owner": "runtime_shell",
+      "graph_stage_owner": "foreground_graph_runner",
+      "post_graph_owner": "runtime_followups",
+      "long_term_baseline": "current_pre_post_graph_split_is_canonical",
+      "future_node_expansion": "bounded_optional_non_stage_nodes_only_when_complexity_decreases"
+    },
+    "proposal_decision_policy": {
+      "decision_set": [
+        "accept",
+        "merge",
+        "defer",
+        "discard"
+      ],
+      "decision_set_state": "fixed_baseline",
+      "expansion_rule": "new_decisions_require_explicit_contract_and_status_mapping"
+    }
+  },
+  "observability": {
+    "policy_owner": "incident_evidence_export_policy",
+    "incident_evidence_contract_version": 1,
+    "incident_evidence_bundle_contract_version": 1,
+    "required_incident_evidence_fields": [
+      "trace_id",
+      "event_id",
+      "duration_ms",
+      "stage_timings_ms"
+    ],
+    "required_policy_posture_surfaces": [
+      "runtime_policy",
+      "memory_retrieval",
+      "learned_state",
+      "v1_readiness",
+      "deployment",
+      "attention",
+      "runtime_topology.attention_switch",
+      "proactive",
+      "scheduler.external_owner_policy",
+      "reflection.supervision",
+      "connectors.execution_baseline",
+      "connectors.organizer_tool_stack",
+      "connectors.web_knowledge_tools",
+      "conversation_channels.telegram"
+    ],
+    "required_bundle_files": [
+      "manifest.json",
+      "incident_evidence.json",
+      "health_snapshot.json"
+    ],
+    "optional_bundle_files": [
+      "behavior_validation_report.json"
+    ],
+    "bundle_entrypoint_path": "scripts/export_incident_evidence_bundle.py",
+    "bundle_helper_available": true,
+    "local_surfaces": [
+      "structured_runtime_logs",
+      "health_policy_surfaces",
+      "system_debug_runtime_payload"
+    ],
+    "export_artifact_available": true,
+    "incident_export_ready": true,
+    "incident_export_state": "machine_readable_export_available",
+    "incident_export_hint": "exportable_incident_evidence_ready",
+    "missing_export_capabilities": []
+  },
+  "identity": {
+    "policy_owner": "identity_policy",
+    "language_strategy": "heuristic_plus_profile_continuity",
+    "profile_owner_fields": [
+      "preferred_language"
+    ],
+    "conclusion_owner_fields": [
+      "response_style",
+      "collaboration_preference",
+      "preferred_role"
+    ],
+    "relation_fallback_identity_write": "disallowed",
+    "supported_language_codes": [
+      "en",
+      "pl"
+    ],
+    "multilingual_posture": "mvp_supported_languages_only",
+    "language_continuity": {
+      "policy_owner": "language_continuity",
+      "profile_owner_field": "preferred_language",
+      "supported_language_codes": [
+        "en",
+        "pl"
+      ],
+      "precedence": [
+        "explicit_request",
+        "diacritic_signal",
+        "strong_keyword_signal",
+        "continuity_resolution",
+        "weak_keyword_signal",
+        "default"
+      ],
+      "continuity_sources": [
+        "explicit_request",
+        "diacritic_signal",
+        "keyword_signal",
+        "recent_memory",
+        "user_profile",
+        "default"
+      ],
+      "multilingual_posture": "mvp_supported_languages_only"
+    },
+    "adaptive_governance": {
+      "policy_owner": "adaptive_identity_governance",
+      "role_selection_horizon": "foreground_policy_with_bounded_history_evidence",
+      "affective_rollout_default": "enabled_non_production_disabled_production_unless_explicit",
+      "preference_authority": "foreground_tie_break_only",
+      "theta_authority": "foreground_tie_break_only",
+      "profile_merge_posture": "profile_and_conclusion_split_retained",
+      "multilingual_expansion_posture": "supported_code_expansion_requires_explicit_contract"
+    }
+  },
+  "affective": {
+    "policy_owner": "perception_affective_input",
+    "input_kind": "heuristic_turn_signal",
+    "input_source_baseline": "deterministic_placeholder",
+    "final_assessment_owner": "affective_assessment_rollout_policy",
+    "fallback_resolution_posture": "reuse_input_when_assessment_unavailable",
+    "assessment_policy": {
+      "affective_assessment_enabled": false,
+      "affective_assessment_source": "environment_default",
+      "affective_classifier_available": true,
+      "affective_assessment_posture": "fallback_only_policy_disabled",
+      "affective_assessment_hint": "policy_disabled_use_deterministic_affective_baseline",
+      "affective_assessment_owner": "affective_assessment_rollout_policy"
+    }
+  },
+  "memory_retrieval": {
+    "retrieval_lifecycle_policy_owner": "retrieval_lifecycle_policy",
+    "retrieval_lifecycle_target_provider_baseline": "openai_api_embeddings",
+    "retrieval_lifecycle_transition_provider_baseline": "local_hybrid",
+    "retrieval_lifecycle_steady_state_refresh_owner": "on_write",
+    "retrieval_lifecycle_source_rollout_baseline": "semantic_and_affective_sources_enabled",
+    "retrieval_lifecycle_relation_source_posture": "optional_after_foreground_baseline",
+    "retrieval_lifecycle_relation_source_policy_owner": "relation_source_retrieval_policy",
+    "retrieval_lifecycle_relation_source_state": "optional_family_enabled",
+    "retrieval_lifecycle_relation_source_hint": "relation_enabled_without_redefining_steady_state_baseline",
+    "retrieval_lifecycle_relation_source_recommendation": "keep_relation_as_optional_follow_on_family",
+    "retrieval_lifecycle_relation_source_enabled": true,
+    "retrieval_lifecycle_fallback_retirement_posture": "compatibility_only_until_provider_baseline_and_lifecycle_evidence_are_green",
+    "retrieval_lifecycle_pending_gaps": [],
+    "retrieval_lifecycle_alignment_state": "aligned_with_defined_lifecycle_baseline",
+    "retrieval_lifecycle_alignment_hint": "provider_refresh_and_source_rollout_match_defined_baseline",
+    "retrieval_lifecycle_provider_drift_state": "aligned_target_provider",
+    "retrieval_lifecycle_provider_drift_hint": "target_provider_baseline_active",
+    "semantic_vector_enabled": true,
+    "semantic_retrieval_mode": "hybrid_vector_lexical",
+    "semantic_embedding_provider_ready": true,
+    "semantic_embedding_posture": "ready",
+    "semantic_embedding_provider_requested": "openai",
+    "semantic_embedding_provider_effective": "openai",
+    "semantic_embedding_provider_hint": "openai_api_embeddings",
+    "semantic_embedding_execution_class": "provider_owned_openai_api",
+    "semantic_embedding_provider_ownership_state": "provider_owned_execution",
+    "semantic_embedding_provider_ownership_hint": "provider_controls_embedding_execution",
+    "semantic_embedding_provider_ownership_enforcement": "warn",
+    "semantic_embedding_provider_ownership_enforcement_state": "not_applicable_no_fallback",
+    "semantic_embedding_provider_ownership_enforcement_hint": "no_provider_ownership_violation",
+    "semantic_embedding_owner_strategy_state": "provider_owned_execution",
+    "semantic_embedding_owner_strategy_hint": "effective_provider_owns_embedding_execution",
+    "semantic_embedding_owner_strategy_recommendation": "provider_owned_strategy_active",
+    "semantic_embedding_model_requested": "text-embedding-3-small",
+    "semantic_embedding_model_effective": "text-embedding-3-small",
+    "semantic_embedding_model_governance_state": "model_contract_aligned",
+    "semantic_embedding_model_governance_hint": "embedding_model_contract_aligned_with_provider",
+    "semantic_embedding_model_governance_enforcement": "warn",
+    "semantic_embedding_model_governance_enforcement_state": "not_applicable_aligned",
+    "semantic_embedding_model_governance_enforcement_hint": "no_model_governance_violation",
+    "semantic_embedding_strict_rollout_violations": [],
+    "semantic_embedding_strict_rollout_violation_count": 0,
+    "semantic_embedding_strict_rollout_ready": true,
+    "semantic_embedding_strict_rollout_state": "ready",
+    "semantic_embedding_strict_rollout_hint": "can_enable_strict_provider_and_model_enforcement",
+    "semantic_embedding_strict_rollout_recommendation": "enable_strict_provider_and_model_enforcement",
+    "semantic_embedding_recommended_provider_ownership_enforcement": "strict",
+    "semantic_embedding_recommended_model_governance_enforcement": "strict",
+    "semantic_embedding_provider_ownership_enforcement_alignment": "below_recommendation",
+    "semantic_embedding_model_governance_enforcement_alignment": "below_recommendation",
+    "semantic_embedding_enforcement_alignment_state": "below_recommendation",
+    "semantic_embedding_enforcement_alignment_hint": "consider_enabling_strict_for_provider_and_model",
+    "semantic_embedding_dimensions": 1536,
+    "semantic_embedding_source_kinds": [
+      "episodic",
+      "semantic",
+      "affective",
+      "relation"
+    ],
+    "semantic_embedding_source_coverage_state": "full_for_current_retrieval_path",
+    "semantic_embedding_source_coverage_hint": "semantic_and_affective_sources_enabled",
+    "semantic_embedding_source_rollout_state": "steady_state_baseline_enabled",
+    "semantic_embedding_source_rollout_hint": "semantic_and_affective_foreground_baseline_enabled",
+    "semantic_embedding_source_rollout_recommendation": "maintain_semantic_and_affective_baseline",
+    "semantic_embedding_source_rollout_order": [
+      "semantic",
+      "affective"
+    ],
+    "semantic_embedding_source_rollout_enabled_sources": [
+      "semantic",
+      "affective"
+    ],
+    "semantic_embedding_source_rollout_missing_sources": [],
+    "semantic_embedding_source_rollout_next_source_kind": "none",
+    "semantic_embedding_source_rollout_completion_state": "steady_state_baseline_complete",
+    "semantic_embedding_source_rollout_phase_index": 2,
+    "semantic_embedding_source_rollout_phase_total": 2,
+    "semantic_embedding_source_rollout_progress_percent": 100,
+    "semantic_embedding_source_rollout_enforcement": "warn",
+    "semantic_embedding_source_rollout_enforcement_state": "not_applicable_rollout_complete",
+    "semantic_embedding_source_rollout_enforcement_hint": "source_rollout_is_complete",
+    "semantic_embedding_recommended_source_rollout_enforcement": "strict",
+    "semantic_embedding_source_rollout_enforcement_alignment": "below_recommendation",
+    "semantic_embedding_source_rollout_enforcement_alignment_state": "below_recommendation",
+    "semantic_embedding_source_rollout_enforcement_alignment_hint": "consider_enabling_source_rollout_strict_when_rollout_is_complete",
+    "semantic_embedding_relation_source_policy_owner": "relation_source_retrieval_policy",
+    "semantic_embedding_relation_source_posture": "optional_follow_on_family",
+    "semantic_embedding_relation_source_enabled": true,
+    "semantic_embedding_relation_source_baseline_ready": true,
+    "semantic_embedding_relation_source_state": "optional_family_enabled",
+    "semantic_embedding_relation_source_hint": "relation_enabled_without_redefining_steady_state_baseline",
+    "semantic_embedding_relation_source_recommendation": "keep_relation_as_optional_follow_on_family",
+    "semantic_embedding_warning_state": "no_warning",
+    "semantic_embedding_warning_hint": "embedding_strategy_ready",
+    "semantic_embedding_production_baseline": "openai_api_embeddings",
+    "semantic_embedding_production_baseline_state": "aligned_openai_provider_owned",
+    "semantic_embedding_production_baseline_hint": "openai_provider_owned_baseline_active",
+    "semantic_embedding_refresh_mode": "on_write",
+    "semantic_embedding_refresh_interval_seconds": 21600,
+    "semantic_embedding_refresh_state": "on_write_refresh_active",
+    "semantic_embedding_refresh_hint": "refresh_on_write_enabled",
+    "semantic_embedding_refresh_cadence_state": "on_write_continuous",
+    "semantic_embedding_refresh_cadence_hint": "on_write_refresh_has_no_manual_gap",
+    "semantic_embedding_recommended_refresh_mode": "on_write",
+    "semantic_embedding_refresh_alignment_state": "aligned",
+    "semantic_embedding_refresh_alignment_hint": "refresh_mode_matches_defined_lifecycle_baseline",
+    "retrieval_depth_policy": {
+      "episodic_limit": 6,
+      "conclusion_limit": 5,
+      "production_default_episodic_limit": 6,
+      "production_default_conclusion_limit": 5,
+      "semantic_vector_enabled": true,
+      "retrieval_mode": "hybrid_vector_lexical",
+      "vector_hits": 0,
+      "episodic_lexical_hits": 0,
+      "semantic_candidates": 0,
+      "affective_candidates": 0,
+      "policy_owner": "runtime_memory_load",
+      "default_depth_alignment": "aligned_with_production_default"
+    }
+  },
+  "planning_governance": {
+    "policy_owner": "planning_governance",
+    "goal_task_creation_posture": "bounded_inferred_growth_from_repeated_execution_blockers_only",
+    "goal_task_creation_authority": "typed_intents_and_conscious_action_boundary",
+    "proposal_decision_set": [
+      "accept",
+      "merge",
+      "defer",
+      "discard"
+    ],
+    "proposal_decision_state": "fixed_baseline",
+    "proposal_expansion_rule": "new_decisions_require_explicit_contract_and_status_mapping"
+  },
+  "learned_state": {
+    "policy_owner": "learned_state_inspection_policy",
+    "internal_inspection_path": "/internal/state/inspect",
+    "inspection_boundary": "internal_admin_debug_access_only",
+    "identity_state_scope": "profile_language_plus_conclusion_preferences",
+    "learned_knowledge_scope": "semantic_affective_tool_grounded_relations_and_reflection_outputs",
+    "skill_learning_posture": "selected_skill_metadata_only",
+    "planning_state_scope": "active_goals_tasks_milestones_and_pending_proposals",
+    "current_turn_selection_surface": "system_debug",
+    "future_ui_posture": "backend_owned_surfaces_before_ui",
+    "inspection_sections": [
+      "identity_state",
+      "learned_knowledge",
+      "role_skill_state",
+      "planning_state"
+    ],
+    "growth_summary_sections": [
+      "preference_summary",
+      "knowledge_summary",
+      "reflection_growth_summary",
+      "planning_continuity_summary"
+    ],
+    "role_skill_metadata_sections": [
+      "role_skill_policy",
+      "skill_registry",
+      "selection_visibility_summary"
+    ],
+    "planning_continuity_sections": [
+      "active_goals",
+      "active_tasks",
+      "active_goal_milestones",
+      "pending_proposals",
+      "continuity_summary"
+    ],
+    "reflection_growth_signal_kinds": [
+      "semantic_conclusions",
+      "affective_conclusions",
+      "tool_grounded_conclusions",
+      "adaptive_outputs",
+      "relations"
+    ],
+    "tool_grounded_learning": {
+      "policy_owner": "tool_grounded_learning_policy",
+      "capture_owner": "action_owned_external_read_summaries_only",
+      "persistence_owner": "memory_conclusion_write_after_action",
+      "allowed_source_families": [
+        "knowledge_search",
+        "web_browser",
+        "task_system",
+        "calendar",
+        "cloud_drive"
+      ],
+      "allowed_read_operations": [
+        "knowledge_search.search_web",
+        "web_browser.read_page",
+        "task_system.list_tasks",
+        "calendar.read_availability",
+        "cloud_drive.list_files"
+      ],
+      "capture_posture": "bounded_read_summary_only",
+      "raw_payload_storage_allowed": false,
+      "memory_layer": "semantic",
+      "execution_bypass_allowed": false,
+      "self_modifying_skill_learning_allowed": false,
+      "reflection_follow_on_allowed": true
+    }
+  },
+  "connectors": {
+    "policy_owner": "connector_execution_policy",
+    "authorization_matrix": {
+      "calendar": [
+        {
+          "operation": "cancel_event",
+          "mode": "mutate_with_confirmation",
+          "requires_opt_in": true,
+          "requires_confirmation": true,
+          "allowed_without_external_access": false,
+          "policy_reason": "external_mutation_requires_confirmation"
+        },
+        {
+          "operation": "create_event",
+          "mode": "mutate_with_confirmation",
+          "requires_opt_in": true,
+          "requires_confirmation": true,
+          "allowed_without_external_access": false,
+          "policy_reason": "external_mutation_requires_confirmation"
+        },
+        {
+          "operation": "read_availability",
+          "mode": "read_only",
+          "requires_opt_in": true,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "read_only_operator_preview"
+        },
+        {
+          "operation": "suggest_slots",
+          "mode": "suggestion_only",
+          "requires_opt_in": true,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "suggestion_only_planning_boundary"
+        },
+        {
+          "operation": "update_event",
+          "mode": "mutate_with_confirmation",
+          "requires_opt_in": true,
+          "requires_confirmation": true,
+          "allowed_without_external_access": false,
+          "policy_reason": "external_mutation_requires_confirmation"
+        }
+      ],
+      "cloud_drive": [
+        {
+          "operation": "delete_file",
+          "mode": "mutate_with_confirmation",
+          "requires_opt_in": true,
+          "requires_confirmation": true,
+          "allowed_without_external_access": false,
+          "policy_reason": "external_mutation_requires_confirmation"
+        },
+        {
+          "operation": "list_files",
+          "mode": "read_only",
+          "requires_opt_in": true,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "read_only_operator_preview"
+        },
+        {
+          "operation": "read_document",
+          "mode": "read_only",
+          "requires_opt_in": true,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "read_only_operator_preview"
+        },
+        {
+          "operation": "search_documents",
+          "mode": "read_only",
+          "requires_opt_in": true,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "read_only_operator_preview"
+        },
+        {
+          "operation": "suggest_file_plan",
+          "mode": "suggestion_only",
+          "requires_opt_in": true,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "suggestion_only_planning_boundary"
+        },
+        {
+          "operation": "update_document",
+          "mode": "mutate_with_confirmation",
+          "requires_opt_in": true,
+          "requires_confirmation": true,
+          "allowed_without_external_access": false,
+          "policy_reason": "external_mutation_requires_confirmation"
+        },
+        {
+          "operation": "upload_file",
+          "mode": "mutate_with_confirmation",
+          "requires_opt_in": true,
+          "requires_confirmation": true,
+          "allowed_without_external_access": false,
+          "policy_reason": "external_mutation_requires_confirmation"
+        }
+      ],
+      "knowledge_search": [
+        {
+          "operation": "search_web",
+          "mode": "read_only",
+          "requires_opt_in": false,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "read_only_public_knowledge_access"
+        },
+        {
+          "operation": "suggest_search",
+          "mode": "suggestion_only",
+          "requires_opt_in": false,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "suggestion_only_public_knowledge_boundary"
+        }
+      ],
+      "task_system": [
+        {
+          "operation": "create_task",
+          "mode": "mutate_with_confirmation",
+          "requires_opt_in": true,
+          "requires_confirmation": true,
+          "allowed_without_external_access": false,
+          "policy_reason": "external_mutation_requires_confirmation"
+        },
+        {
+          "operation": "link_internal_task",
+          "mode": "suggestion_only",
+          "requires_opt_in": true,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "internal_state_stays_primary_until_connector_link_is_confirmed"
+        },
+        {
+          "operation": "list_tasks",
+          "mode": "read_only",
+          "requires_opt_in": true,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "read_only_operator_preview"
+        },
+        {
+          "operation": "suggest_sync",
+          "mode": "suggestion_only",
+          "requires_opt_in": true,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "suggestion_only_planning_boundary"
+        },
+        {
+          "operation": "update_task",
+          "mode": "mutate_with_confirmation",
+          "requires_opt_in": true,
+          "requires_confirmation": true,
+          "allowed_without_external_access": false,
+          "policy_reason": "external_mutation_requires_confirmation"
+        }
+      ],
+      "web_browser": [
+        {
+          "operation": "read_page",
+          "mode": "read_only",
+          "requires_opt_in": false,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "read_only_public_page_access"
+        },
+        {
+          "operation": "suggest_page_review",
+          "mode": "suggestion_only",
+          "requires_opt_in": false,
+          "requires_confirmation": false,
+          "allowed_without_external_access": true,
+          "policy_reason": "suggestion_only_public_page_boundary"
+        }
+      ]
+    },
+    "capability_proposal": {
+      "policy_owner": "connector_capability_proposal_boundary",
+      "proposal_mode": "suggestion_only",
+      "self_authorization_allowed": false,
+      "proposal_trigger": "repeated_unmet_need",
+      "authorization_transition": "explicit_user_opt_in_required_before_external_access"
+    },
+    "execution_baseline": {
+      "execution_owner": "connector_execution_registry",
+      "mvp_boundary": "clickup_task_create_list_update_plus_google_calendar_google_drive_duckduckgo_and_generic_http_first_live_paths",
+      "task_system": {
+        "read_capable_live_paths": [
+          "clickup_list_tasks"
+        ],
+        "mutation_live_paths": [
+          "clickup_create_task",
+          "clickup_update_task"
+        ],
+        "clickup_create_task": {
+          "operation": "create_task",
+          "provider": "clickup",
+          "execution_mode": "provider_backed_when_configured",
+          "ready": false,
+          "state": "credentials_missing",
+          "hint": "configure_clickup_api_token_and_clickup_list_id_for_live_execution"
+        },
+        "clickup_list_tasks": {
+          "operation": "list_tasks",
+          "provider": "clickup",
+          "execution_mode": "provider_backed_when_configured",
+          "ready": false,
+          "state": "credentials_missing",
+          "hint": "configure_clickup_api_token_and_clickup_list_id_for_live_read_execution"
+        },
+        "clickup_update_task": {
+          "operation": "update_task",
+          "provider": "clickup",
+          "execution_mode": "provider_backed_when_configured",
+          "ready": false,
+          "state": "credentials_missing",
+          "hint": "configure_clickup_api_token_and_clickup_list_id_for_live_update_execution"
+        },
+        "other_operations": "policy_only_until_additional_task_system_provider_paths_exist"
+      },
+      "calendar": {
+        "read_capable_live_paths": [
+          "google_calendar_read_availability"
+        ],
+        "mutation_live_paths": [],
+        "google_calendar_read_availability": {
+          "operation": "read_availability",
+          "provider": "google_calendar",
+          "execution_mode": "provider_backed_when_configured",
+          "ready": false,
+          "state": "credentials_missing",
+          "hint": "configure_google_calendar_access_token_and_google_calendar_calendar_id_for_live_read_execution"
+        },
+        "other_operations": "policy_only_until_additional_calendar_read_or_mutation_paths_exist"
+      },
+      "cloud_drive": {
+        "read_capable_live_paths": [
+          "google_drive_list_files"
+        ],
+        "mutation_live_paths": [],
+        "google_drive_list_files": {
+          "operation": "list_files",
+          "provider": "google_drive",
+          "execution_mode": "provider_backed_when_configured",
+          "ready": false,
+          "state": "credentials_missing",
+          "hint": "configure_google_drive_access_token_for_live_metadata_read_execution"
+        },
+        "other_operations": "policy_only_until_additional_drive_read_or_mutation_paths_exist"
+      },
+      "knowledge_search": {
+        "read_capable_live_paths": [
+          "duckduckgo_search_web"
+        ],
+        "mutation_live_paths": [],
+        "search_web": {
+          "operation": "search_web",
+          "provider": "duckduckgo_html",
+          "execution_mode": "provider_backed_without_credentials",
+          "ready": true,
+          "state": "provider_backed_ready",
+          "hint": "duckduckgo_html_search_live"
+        },
+        "suggest_search": {
+          "operation": "suggest_search",
+          "provider": "duckduckgo_html",
+          "execution_mode": "policy_only",
+          "ready": true,
+          "state": "planning_only_allowed",
+          "hint": "search_recommendation_can_be_explained_without_live_provider_execution"
+        },
+        "other_operations": "policy_only_until_additional_search_provider_paths_are_approved"
+      },
+      "web_browser": {
+        "read_capable_live_paths": [
+          "generic_http_read_page"
+        ],
+        "mutation_live_paths": [],
+        "read_page": {
+          "operation": "read_page",
+          "provider": "generic_http",
+          "execution_mode": "provider_backed_without_credentials",
+          "ready": true,
+          "state": "provider_backed_ready",
+          "hint": "generic_http_read_page_live"
+        },
+        "suggest_page_review": {
+          "operation": "suggest_page_review",
+          "provider": "generic_http",
+          "execution_mode": "policy_only",
+          "ready": true,
+          "state": "planning_only_allowed",
+          "hint": "page_review_recommendation_can_be_explained_without_live_provider_execution"
+        },
+        "other_operations": "policy_only_until_additional_browser_provider_paths_are_approved"
+      }
+    },
+    "organizer_tool_stack": {
+      "policy_owner": "production_organizer_tool_stack",
+      "stack_name": "clickup_calendar_drive_first_stack",
+      "product_scope": "no_ui_life_assistant_and_work_partner_organization_support",
+      "approved_connector_kinds": [
+        "task_system",
+        "calendar",
+        "cloud_drive"
+      ],
+      "approved_operations": [
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files"
+      ],
+      "read_only_operations": [
+        "task_system.clickup_list_tasks",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files"
+      ],
+      "confirmation_required_operations": [
+        "task_system.clickup_create_task",
+        "task_system.clickup_update_task"
+      ],
+      "user_opt_in_required_operations": [
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files"
+      ],
+      "mutation_boundary": "clickup_mutations_confirmation_required_calendar_and_drive_mutations_out_of_scope",
+      "read_boundary": "bounded_reads_only_for_calendar_availability_and_drive_metadata",
+      "provider_ready_operation_count": 0,
+      "provider_total_operation_count": 5,
+      "ready_operations": [],
+      "credential_gap_operations": [
+        "task_system.clickup_create_task",
+        "task_system.clickup_list_tasks",
+        "task_system.clickup_update_task",
+        "calendar.google_calendar_read_availability",
+        "cloud_drive.google_drive_list_files"
+      ],
+      "readiness_state": "provider_credentials_missing",
+      "readiness_hint": "configure_clickup_google_calendar_and_google_drive_credentials_for_full_stack_readiness",
+      "daily_use_workflows": {
+        "clickup_task_review_and_mutation": {
+          "provider": "clickup",
+          "workflow_kind": "task_review_and_mutation",
+          "approved_operations": [
+            "task_system.clickup_list_tasks",
+            "task_system.clickup_create_task",
+            "task_system.clickup_update_task"
+          ],
+          "daily_use_ready": false,
+          "daily_use_state": "blocked_missing_provider_credentials",
+          "user_opt_in_required": true,
+          "mutation_confirmation_required": true,
+          "planning_boundary": "internal_tasks_and_goals_remain_primary",
+          "next_action": "configure_clickup_api_token_and_clickup_list_id"
+        },
+        "google_calendar_availability_inspection": {
+          "provider": "google_calendar",
+          "workflow_kind": "availability_inspection",
+          "approved_operations": [
+            "calendar.google_calendar_read_availability"
+          ],
+          "daily_use_ready": false,
+          "daily_use_state": "blocked_missing_provider_credentials",
+          "user_opt_in_required": true,
+          "mutation_confirmation_required": false,
+          "planning_boundary": "availability_evidence_only_no_calendar_management",
+          "next_action": "configure_google_calendar_access_token_and_calendar_id"
+        },
+        "google_drive_file_space_inspection": {
+          "provider": "google_drive",
+          "workflow_kind": "file_space_inspection",
+          "approved_operations": [
+            "cloud_drive.google_drive_list_files"
+          ],
+          "daily_use_ready": false,
+          "daily_use_state": "blocked_missing_provider_credentials",
+          "user_opt_in_required": true,
+          "mutation_confirmation_required": false,
+          "planning_boundary": "metadata_only_file_evidence_no_document_body_ingestion",
+          "next_action": "configure_google_drive_access_token_and_folder_id"
+        }
+      },
+      "daily_use_ready_workflow_count": 0,
+      "daily_use_total_workflow_count": 3,
+      "daily_use_ready_workflows": [],
+      "daily_use_blocked_workflows": [
+        "clickup_task_review_and_mutation",
+        "google_calendar_availability_inspection",
+        "google_drive_file_space_inspection"
+      ],
+      "daily_use_state": "daily_use_workflows_blocked_by_provider_activation",
+      "daily_use_hint": "finish_provider_activation_before_treating_organizer_stack_as_daily_use_ready",
+      "activation_snapshot": {
+        "policy_owner": "production_organizer_tool_activation",
+        "provider_activation_total": 3,
+        "provider_activation_ready": 0,
+        "provider_activation_state": "provider_activation_incomplete",
+        "user_opt_in_required": true,
+        "mutation_confirmation_required": true,
+        "provider_requirements": {
+          "clickup": {
+            "provider": "clickup",
+            "required_settings": [
+              "CLICKUP_API_TOKEN",
+              "CLICKUP_LIST_ID"
+            ],
+            "optional_settings": [],
+            "activation_scope": [
+              "task_system.clickup_create_task",
+              "task_system.clickup_list_tasks",
+              "task_system.clickup_update_task"
+            ],
+            "ready": false,
+            "missing_settings": [
+              "CLICKUP_API_TOKEN",
+              "CLICKUP_LIST_ID"
+            ],
+            "user_opt_in_required": true,
+            "confirmation_required_operations": [
+              "task_system.clickup_create_task",
+              "task_system.clickup_update_task"
+            ],
+            "next_action": "configure_clickup_api_token_and_clickup_list_id"
+          },
+          "google_calendar": {
+            "provider": "google_calendar",
+            "required_settings": [
+              "GOOGLE_CALENDAR_ACCESS_TOKEN",
+              "GOOGLE_CALENDAR_CALENDAR_ID",
+              "GOOGLE_CALENDAR_TIMEZONE"
+            ],
+            "optional_settings": [],
+            "activation_scope": [
+              "calendar.google_calendar_read_availability"
+            ],
+            "ready": false,
+            "missing_settings": [
+              "GOOGLE_CALENDAR_ACCESS_TOKEN",
+              "GOOGLE_CALENDAR_CALENDAR_ID"
+            ],
+            "user_opt_in_required": true,
+            "confirmation_required_operations": [],
+            "next_action": "configure_google_calendar_access_token_and_calendar_id"
+          },
+          "google_drive": {
+            "provider": "google_drive",
+            "required_settings": [
+              "GOOGLE_DRIVE_ACCESS_TOKEN",
+              "GOOGLE_DRIVE_FOLDER_ID"
+            ],
+            "optional_settings": [],
+            "activation_scope": [
+              "cloud_drive.google_drive_list_files"
+            ],
+            "ready": false,
+            "missing_settings": [
+              "GOOGLE_DRIVE_ACCESS_TOKEN",
+              "GOOGLE_DRIVE_FOLDER_ID"
+            ],
+            "user_opt_in_required": true,
+            "confirmation_required_operations": [],
+            "next_action": "configure_google_drive_access_token_and_folder_id"
+          }
+        },
+        "next_actions": [
+          "configure_clickup_api_token_and_clickup_list_id",
+          "configure_google_calendar_access_token_and_calendar_id",
+          "configure_google_drive_access_token_and_folder_id"
+        ]
+      },
+      "provider_readiness": {
+        "task_system.clickup_create_task": {
+          "operation": "create_task",
+          "provider": "clickup",
+          "execution_mode": "provider_backed_when_configured",
+          "ready": false,
+          "state": "credentials_missing",
+          "hint": "configure_clickup_api_token_and_clickup_list_id_for_live_execution"
+        },
+        "task_system.clickup_list_tasks": {
+          "operation": "list_tasks",
+          "provider": "clickup",
+          "execution_mode": "provider_backed_when_configured",
+          "ready": false,
+          "state": "credentials_missing",
+          "hint": "configure_clickup_api_token_and_clickup_list_id_for_live_read_execution"
+        },
+        "task_system.clickup_update_task": {
+          "operation": "update_task",
+          "provider": "clickup",
+          "execution_mode": "provider_backed_when_configured",
+          "ready": false,
+          "state": "credentials_missing",
+          "hint": "configure_clickup_api_token_and_clickup_list_id_for_live_update_execution"
+        },
+        "calendar.google_calendar_read_availability": {
+          "operation": "read_availability",
+          "provider": "google_calendar",
+          "execution_mode": "provider_backed_when_configured",
+          "ready": false,
+          "state": "credentials_missing",
+          "hint": "configure_google_calendar_access_token_and_google_calendar_calendar_id_for_live_read_execution"
+        },
+        "cloud_drive.google_drive_list_files": {
+          "operation": "list_files",
+          "provider": "google_drive",
+          "execution_mode": "provider_backed_when_configured",
+          "ready": false,
+          "state": "credentials_missing",
+          "hint": "configure_google_drive_access_token_for_live_metadata_read_execution"
+        }
+      }
+    },
+    "web_knowledge_tools": {
+      "policy_owner": "web_knowledge_tooling_policy",
+      "tool_boundary": "action_owned_external_capability",
+      "skill_execution_boundary": "metadata_only_capability_hints",
+      "provider_execution_posture": "first_bounded_provider_slices_selected",
+      "fallback_posture": "respond_without_external_tool_execution",
+      "knowledge_search": {
+        "capability_kind": "knowledge_search",
+        "selected_provider_hint": "duckduckgo_html",
+        "authorized_operations": [
+          "search_web",
+          "suggest_search"
+        ],
+        "provider": "duckduckgo_html",
+        "execution_mode": "provider_backed_without_credentials",
+        "ready": true,
+        "state": "provider_backed_ready",
+        "hint": "duckduckgo_html_search_live"
+      },
+      "web_browser": {
+        "capability_kind": "web_browser",
+        "selected_provider_hint": "generic_http",
+        "authorized_operations": [
+          "read_page",
+          "suggest_page_review"
+        ],
+        "provider": "generic_http",
+        "execution_mode": "provider_backed_without_credentials",
+        "ready": true,
+        "state": "provider_backed_ready",
+        "hint": "generic_http_read_page_live"
+      },
+      "website_reading_workflow": {
+        "policy_owner": "website_reading_workflow_policy",
+        "workflow_state": "ready_for_direct_and_search_first_review",
+        "direct_url_review_available": true,
+        "search_then_page_review_available": true,
+        "allowed_entry_modes": [
+          "direct_url_review",
+          "search_then_page_review"
+        ],
+        "selected_provider_path": {
+          "search_provider_hint": "duckduckgo_html",
+          "page_read_provider_hint": "generic_http"
+        },
+        "bounded_input_contract": [
+          "explicit_url",
+          "explicit_site_or_domain_hint",
+          "explicit_answer_focus"
+        ],
+        "bounded_output_contract": [
+          "final_page_url",
+          "page_title_when_available",
+          "bounded_summary",
+          "source_note",
+          "explicit_uncertainty_or_blocker_note"
+        ],
+        "bounded_read_semantics": [
+          "single_page_read_only",
+          "search_optional_before_page_read",
+          "no_multi_page_crawl",
+          "no_login_or_form_submission",
+          "no_paywall_or_hidden_auth_bypass",
+          "no_raw_full_page_dump"
+        ],
+        "memory_capture_boundary": "tool_grounded_summary_only_via_action_then_memory",
+        "blockers": [],
+        "next_actions": []
+      }
+    }
+  },
+  "deployment": {
+    "policy_owner": "deployment_standard_and_release_reliability",
+    "deployment_automation_policy_owner": "coolify_repo_deploy_automation",
+    "hosting_baseline": "coolify_medium_term_standard",
+    "hosting_transition_state": "not_scheduled",
+    "runtime_build_revision": "0d562d9b0ff8c6cc9fd8914d83e71caa7d9f5719",
+    "runtime_build_revision_state": "runtime_build_revision_declared",
+    "runtime_build_revision_hint": "runtime_build_revision_can_be_compared_with_local_repo_head_or_deploy_evidence",
+    "runtime_trigger_mode": "source_automation",
+    "runtime_trigger_class": "primary_automation",
+    "runtime_provenance_state": "primary_runtime_provenance_declared",
+    "repo_to_production_parity_surface": "release_smoke_compares_runtime_build_revision_with_local_repo_head_and_optional_deploy_evidence",
+    "canonical_coolify_app": {
+      "project_id": "icmgqml9uw3slzch9m9ok23z",
+      "environment_id": "qxooi9coxat272krzjx221fv",
+      "application_id": "jr1oehwlzl8tcn3h8gh2vvih"
+    },
+    "deployment_automation_baseline": {
+      "primary_trigger_mode": "source_automation",
+      "fallback_trigger_modes": [
+        "webhook_manual_fallback",
+        "ui_manual_fallback"
+      ],
+      "provenance_evidence_state": "fallback_artifact_supported_primary_history_required",
+      "provenance_evidence_hint": "verify_coolify_history_and_attach_fallback_artifact_when_primary_automation_is_not_used"
+    },
+    "deployment_trigger_slo": {
+      "delivery_success_rate_percent": 99.0,
+      "manual_redeploy_exception_rate_percent": 5.0,
+      "evidence_owner": "coolify_webhook_plus_release_smoke"
+    },
+    "rollback_posture": "release_smoke_failure_blocks_completion_and_keeps_manual_rollback_available"
+  },
+  "conversation_channels": {
+    "telegram": {
+      "policy_owner": "telegram_conversation_reliability_telemetry",
+      "channel": "telegram",
+      "bot_token_configured": true,
+      "webhook_secret_configured": true,
+      "round_trip_ready": true,
+      "round_trip_state": "provider_backed_ready",
+      "round_trip_hint": "telegram_round_trip_ready",
+      "delivery_adaptation_policy_owner": "telegram_delivery_channel_adaptation",
+      "delivery_segmentation_state": "bounded_transport_segmentation",
+      "delivery_formatting_state": "supported_markdown_to_html_with_plain_text_fallback",
+      "delivery_message_limit": 4096,
+      "delivery_segment_target": 3500,
+      "delivery_supported_markdown": [
+        "bold",
+        "italic",
+        "inline_code",
+        "fenced_code",
+        "ordered_lists_plain_text",
+        "unordered_lists_plain_text"
+      ],
+      "ingress_attempts": 0,
+      "ingress_rejections": 0,
+      "ingress_queued": 0,
+      "ingress_processed": 0,
+      "ingress_runtime_failures": 0,
+      "delivery_attempts": 0,
+      "delivery_successes": 0,
+      "delivery_failures": 0,
+      "last_ingress": {},
+      "last_delivery": {}
+    }
+  },
+  "scheduler": {
+    "healthy": true,
+    "execution_mode": "externalized",
+    "configured_enabled": false,
+    "enabled": false,
+    "running": false,
+    "proactive_enabled": true,
+    "maintenance_cadence_owner": "external_scheduler",
+    "proactive_cadence_owner": "external_scheduler",
+    "cadence_execution": {
+      "baseline_execution_mode": "in_process",
+      "selected_execution_mode": "externalized",
+      "ready": true,
+      "blocking_signals": [],
+      "maintenance_cadence_owner": "external_scheduler",
+      "proactive_cadence_owner": "external_scheduler",
+      "maintenance_tick_dispatch": false,
+      "maintenance_tick_reason": "externalized_owner_mode",
+      "proactive_tick_dispatch": false,
+      "proactive_tick_reason": "externalized_owner_mode",
+      "scheduler_enabled": false,
+      "scheduler_running": false,
+      "proactive_enabled": true
+    },
+    "reflection_runtime_mode": "deferred",
+    "reflection_interval_seconds": 900,
+    "maintenance_interval_seconds": 3600,
+    "proactive_interval_seconds": 1800,
+    "reflection_batch_limit": 10,
+    "next_reflection_due_at": null,
+    "next_maintenance_due_at": null,
+    "next_proactive_due_at": null,
+    "last_reflection_tick_at": null,
+    "last_maintenance_tick_at": "2026-05-24T16:28:33.257774Z",
+    "last_proactive_tick_at": "2026-05-24T16:59:21.628885Z",
+    "last_reflection_summary": {},
+    "last_maintenance_summary": {
+      "executed": true,
+      "reason": "external_scheduler_owner",
+      "trigger": "external_scheduler_tick",
+      "entrypoint_owner": "external_scheduler",
+      "idempotency_baseline": "single_tick_summary_per_invocation",
+      "pending": 54,
+      "processing": 0,
+      "retryable_failed": 0,
+      "exhausted_failed": 0,
+      "stuck_processing": 0,
+      "due_planned_work": 0,
+      "proposal_handoffs_created": 0,
+      "foreground_events_emitted": 0,
+      "foreground_delivery_successes": 0,
+      "foreground_delivery_blocked": 0,
+      "foreground_failures": 0,
+      "delivery_delayed": 0,
+      "delivery_skipped": 0,
+      "recurrence_advanced": 0
+    },
+    "last_proactive_summary": {
+      "executed": true,
+      "reason": "external_scheduler_owner",
+      "trigger": "external_scheduler_tick",
+      "observer_state": "empty_noop",
+      "observer_reason": "no_due_or_actionable_work",
+      "due_planned_work": 0,
+      "proposal_handoffs_created": 0,
+      "candidates_considered": 0,
+      "events_emitted": 0,
+      "messages_delivered": 0,
+      "delivery_blocked": 0,
+      "failures": 0,
+      "delivery_delayed": 0,
+      "delivery_skipped": 0,
+      "recurrence_advanced": 0,
+      "passive_active_evidence": [],
+      "passive_active_evidence_count": 0,
+      "planned_action_observer": {
+        "policy_owner": "planned_action_observer_policy",
+        "target_execution_model": "passive_scan_before_conscious_foreground",
+        "selected_scheduler_execution_mode": "externalized",
+        "supported_states": [
+          "empty_noop",
+          "due_planned_work",
+          "actionable_proposal",
+          "blocked_by_policy",
+          "observer_unavailable"
+        ],
+        "last_observer_state": "empty_noop",
+        "last_observer_reason": "no_due_or_actionable_work",
+        "empty_result_behavior": "no_foreground_event",
+        "foreground_trigger_policy": "only_due_planned_work_or_actionable_proposal",
+        "due_planned_work_count": 0,
+        "actionable_proposal_count": 0,
+        "foreground_events_emitted": 0,
+        "noop_supported": true,
+        "raw_payload_exposure": "counts_only"
+      },
+      "entrypoint_owner": "external_scheduler",
+      "idempotency_baseline": "single_tick_observer_admission_per_invocation"
+    },
+    "proactive_policy": {
+      "policy_owner": "proactive_runtime_policy",
+      "enabled": true,
+      "selected_execution_mode": "externalized",
+      "selected_cadence_owner": "external_scheduler",
+      "delivery_channel_baseline": "telegram_direct_message",
+      "delivery_target_baseline": "recent_telegram_chat_or_numeric_user_id_fallback",
+      "candidate_selection_baseline": "observer_admitted_due_planned_work_or_actionable_proposal",
+      "planned_action_observer": {
+        "policy_owner": "planned_action_observer_policy",
+        "target_execution_model": "passive_scan_before_conscious_foreground",
+        "selected_scheduler_execution_mode": "externalized",
+        "supported_states": [
+          "empty_noop",
+          "due_planned_work",
+          "actionable_proposal",
+          "blocked_by_policy",
+          "observer_unavailable"
+        ],
+        "last_observer_state": "observer_unavailable",
+        "last_observer_reason": "no_observer_evidence_recorded",
+        "empty_result_behavior": "no_foreground_event",
+        "foreground_trigger_policy": "only_due_planned_work_or_actionable_proposal",
+        "due_planned_work_count": 0,
+        "actionable_proposal_count": 0,
+        "foreground_events_emitted": 0,
+        "noop_supported": true,
+        "raw_payload_exposure": "counts_only"
+      },
+      "communication_boundary_contract": {
+        "policy_owner": "communication_boundary_relation_policy",
+        "relation_source": "aion_relation",
+        "minimum_confidence": 0.68,
+        "relation_types": {
+          "contact_cadence_preference": [
+            "on_demand",
+            "low_frequency",
+            "scheduled_only",
+            "open_to_checkins"
+          ],
+          "interruption_tolerance": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "interaction_ritual_preference": [
+            "avoid_repeated_greeting",
+            "warm_opening_ok"
+          ]
+        },
+        "consumers": [
+          "planning_maintain_relation_intent",
+          "reflection_relation_updates",
+          "proactive_candidate_selection",
+          "proactive_delivery_guard",
+          "expression_interaction_ritual"
+        ],
+        "historical_backfill_entrypoint": "scripts/run_communication_boundary_backfill_once.py"
+      },
+      "anti_spam_contract": {
+        "delivery_guard_recent_outbound_limit_default": 2,
+        "delivery_guard_unanswered_limit_default": 1,
+        "attention_gate_recent_outbound_limit_default": 3,
+        "attention_gate_unanswered_limit_default": 2,
+        "cadence_cooldown_seconds": 1800
+      },
+      "production_baseline_ready": true,
+      "production_baseline_state": "external_scheduler_target_owner",
+      "production_baseline_hint": "external_scheduler_must_emit_scheduler_proactive_tick_events"
+    },
+    "external_owner_policy": {
+      "policy_owner": "external_scheduler_cadence_policy",
+      "target_execution_mode": "externalized",
+      "selected_execution_mode": "externalized",
+      "maintenance_cadence_target_owner": "external_scheduler",
+      "proactive_cadence_target_owner": "external_scheduler",
+      "maintenance_entrypoint_path": "scripts/run_maintenance_tick_once.py",
+      "proactive_entrypoint_path": "scripts/run_proactive_tick_once.py",
+      "app_local_fallback_owner": "in_process_scheduler",
+      "cutover_proof_owner": "external_scheduler_cutover_proof_policy",
+      "maintenance_run_evidence": {
+        "cadence_kind": "maintenance",
+        "entrypoint_path": "scripts/run_maintenance_tick_once.py",
+        "last_run_at": "2026-05-24T16:28:33.257774Z",
+        "last_run_age_seconds": 3525,
+        "stale_after_seconds": 7200,
+        "evidence_state": "recent_external_run_evidence",
+        "recent_success": true,
+        "last_summary": {
+          "executed": true,
+          "reason": "external_scheduler_owner",
+          "trigger": "external_scheduler_tick",
+          "entrypoint_owner": "external_scheduler",
+          "idempotency_baseline": "single_tick_summary_per_invocation",
+          "pending": 54,
+          "processing": 0,
+          "retryable_failed": 0,
+          "exhausted_failed": 0,
+          "stuck_processing": 0,
+          "due_planned_work": 0,
+          "proposal_handoffs_created": 0,
+          "foreground_events_emitted": 0,
+          "foreground_delivery_successes": 0,
+          "foreground_delivery_blocked": 0,
+          "foreground_failures": 0,
+          "delivery_delayed": 0,
+          "delivery_skipped": 0,
+          "recurrence_advanced": 0
+        }
+      },
+      "proactive_run_evidence": {
+        "cadence_kind": "proactive",
+        "entrypoint_path": "scripts/run_proactive_tick_once.py",
+        "last_run_at": "2026-05-24T16:59:21.628885Z",
+        "last_run_age_seconds": 1676,
+        "stale_after_seconds": 3600,
+        "evidence_state": "recent_external_run_evidence",
+        "recent_success": true,
+        "last_summary": {
+          "executed": true,
+          "reason": "external_scheduler_owner",
+          "trigger": "external_scheduler_tick",
+          "observer_state": "empty_noop",
+          "observer_reason": "no_due_or_actionable_work",
+          "due_planned_work": 0,
+          "proposal_handoffs_created": 0,
+          "candidates_considered": 0,
+          "events_emitted": 0,
+          "messages_delivered": 0,
+          "delivery_blocked": 0,
+          "failures": 0,
+          "delivery_delayed": 0,
+          "delivery_skipped": 0,
+          "recurrence_advanced": 0,
+          "passive_active_evidence": [],
+          "passive_active_evidence_count": 0,
+          "planned_action_observer": {
+            "policy_owner": "planned_action_observer_policy",
+            "target_execution_model": "passive_scan_before_conscious_foreground",
+            "selected_scheduler_execution_mode": "externalized",
+            "supported_states": [
+              "empty_noop",
+              "due_planned_work",
+              "actionable_proposal",
+              "blocked_by_policy",
+              "observer_unavailable"
+            ],
+            "last_observer_state": "empty_noop",
+            "last_observer_reason": "no_due_or_actionable_work",
+            "empty_result_behavior": "no_foreground_event",
+            "foreground_trigger_policy": "only_due_planned_work_or_actionable_proposal",
+            "due_planned_work_count": 0,
+            "actionable_proposal_count": 0,
+            "foreground_events_emitted": 0,
+            "noop_supported": true,
+            "raw_payload_exposure": "counts_only"
+          },
+          "entrypoint_owner": "external_scheduler",
+          "idempotency_baseline": "single_tick_observer_admission_per_invocation"
+        }
+      },
+      "duplicate_protection_posture": {
+        "state": "single_owner_boundary_clear",
+        "scheduler_running": false,
+        "maintenance_entrypoint_idempotency_baseline": "single_tick_summary_per_invocation",
+        "proactive_entrypoint_idempotency_baseline": "single_tick_candidate_evaluation_per_invocation",
+        "rollback_owner_when_missing_proof": "in_process_scheduler"
+      },
+      "cutover_proof_ready": true,
+      "cutover_proof_state": "external_scheduler_cutover_proven",
+      "cutover_proof_hint": "external_scheduler_cutover_proven",
+      "production_baseline_ready": true,
+      "production_baseline_state": "external_scheduler_baseline_aligned",
+      "production_baseline_hint": "external_scheduler_owns_cadence"
+    }
+  },
+  "proactive": {
+    "policy_owner": "proactive_runtime_policy",
+    "enabled": true,
+    "selected_execution_mode": "externalized",
+    "selected_cadence_owner": "external_scheduler",
+    "delivery_channel_baseline": "telegram_direct_message",
+    "delivery_target_baseline": "recent_telegram_chat_or_numeric_user_id_fallback",
+    "candidate_selection_baseline": "observer_admitted_due_planned_work_or_actionable_proposal",
+    "planned_action_observer": {
+      "policy_owner": "planned_action_observer_policy",
+      "target_execution_model": "passive_scan_before_conscious_foreground",
+      "selected_scheduler_execution_mode": "externalized",
+      "supported_states": [
+        "empty_noop",
+        "due_planned_work",
+        "actionable_proposal",
+        "blocked_by_policy",
+        "observer_unavailable"
+      ],
+      "last_observer_state": "empty_noop",
+      "last_observer_reason": "no_due_or_actionable_work",
+      "empty_result_behavior": "no_foreground_event",
+      "foreground_trigger_policy": "only_due_planned_work_or_actionable_proposal",
+      "due_planned_work_count": 0,
+      "actionable_proposal_count": 0,
+      "foreground_events_emitted": 0,
+      "noop_supported": true,
+      "raw_payload_exposure": "counts_only"
+    },
+    "communication_boundary_contract": {
+      "policy_owner": "communication_boundary_relation_policy",
+      "relation_source": "aion_relation",
+      "minimum_confidence": 0.68,
+      "relation_types": {
+        "contact_cadence_preference": [
+          "on_demand",
+          "low_frequency",
+          "scheduled_only",
+          "open_to_checkins"
+        ],
+        "interruption_tolerance": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "interaction_ritual_preference": [
+          "avoid_repeated_greeting",
+          "warm_opening_ok"
+        ]
+      },
+      "consumers": [
+        "planning_maintain_relation_intent",
+        "reflection_relation_updates",
+        "proactive_candidate_selection",
+        "proactive_delivery_guard",
+        "expression_interaction_ritual"
+      ],
+      "historical_backfill_entrypoint": "scripts/run_communication_boundary_backfill_once.py"
+    },
+    "anti_spam_contract": {
+      "delivery_guard_recent_outbound_limit_default": 2,
+      "delivery_guard_unanswered_limit_default": 1,
+      "attention_gate_recent_outbound_limit_default": 3,
+      "attention_gate_unanswered_limit_default": 2,
+      "cadence_cooldown_seconds": 1800
+    },
+    "production_baseline_ready": true,
+    "production_baseline_state": "external_scheduler_target_owner",
+    "production_baseline_hint": "external_scheduler_must_emit_scheduler_proactive_tick_events",
+    "scheduler_tick_summary": {
+      "executed": true,
+      "reason": "external_scheduler_owner",
+      "trigger": "external_scheduler_tick",
+      "observer_state": "empty_noop",
+      "observer_reason": "no_due_or_actionable_work",
+      "due_planned_work": 0,
+      "proposal_handoffs_created": 0,
+      "candidates_considered": 0,
+      "events_emitted": 0,
+      "messages_delivered": 0,
+      "delivery_blocked": 0,
+      "failures": 0,
+      "delivery_delayed": 0,
+      "delivery_skipped": 0,
+      "recurrence_advanced": 0,
+      "passive_active_evidence": [],
+      "passive_active_evidence_count": 0,
+      "planned_action_observer": {
+        "policy_owner": "planned_action_observer_policy",
+        "target_execution_model": "passive_scan_before_conscious_foreground",
+        "selected_scheduler_execution_mode": "externalized",
+        "supported_states": [
+          "empty_noop",
+          "due_planned_work",
+          "actionable_proposal",
+          "blocked_by_policy",
+          "observer_unavailable"
+        ],
+        "last_observer_state": "empty_noop",
+        "last_observer_reason": "no_due_or_actionable_work",
+        "empty_result_behavior": "no_foreground_event",
+        "foreground_trigger_policy": "only_due_planned_work_or_actionable_proposal",
+        "due_planned_work_count": 0,
+        "actionable_proposal_count": 0,
+        "foreground_events_emitted": 0,
+        "noop_supported": true,
+        "raw_payload_exposure": "counts_only"
+      },
+      "entrypoint_owner": "external_scheduler",
+      "idempotency_baseline": "single_tick_observer_admission_per_invocation"
+    },
+    "last_tick_at": "2026-05-24T16:59:21.628885Z"
+  },
+  "role_skill": {
+    "policy_owner": "role_skill_boundary_policy",
+    "role_selection_owner": "role_selection_policy",
+    "skill_selection_owner": "skill_registry",
+    "skill_execution_boundary": "metadata_only_capability_hints",
+    "action_skill_execution_allowed": false,
+    "planning_carries_selected_skills": true,
+    "selected_skill_count": 0,
+    "planned_skill_count": 0,
+    "current_role_name": "",
+    "work_partner_role_available": true,
+    "work_partner_role_state": "available",
+    "work_partner_role_boundary": "same_personality_role_not_separate_persona",
+    "work_partner_scope": "work_organization_and_decision_support",
+    "work_partner_skill_mix": [
+      "structured_reasoning",
+      "execution_planning",
+      "connector_boundary_review"
+    ],
+    "work_partner_tool_families": [
+      "task_system",
+      "knowledge_search",
+      "web_browser",
+      "calendar",
+      "cloud_drive"
+    ],
+    "work_partner_mutation_boundary": "respect_existing_confirmation_and_opt_in_policies",
+    "production_baseline_state": "metadata_only_boundary_stable",
+    "production_baseline_hint": "skills_inform_role_and_plan_but_do_not_execute_side_effects"
+  },
+  "attention": {
+    "attention_policy_owner": "durable_attention_inbox_policy",
+    "healthy": true,
+    "coordination_mode": "durable_inbox",
+    "turn_state_owner": "durable_attention_inbox",
+    "durable_inbox_expected": true,
+    "persistence_owner": "durable_attention_contract_store",
+    "parity_state": "durable_attention_contract_store_active",
+    "deployment_readiness": {
+      "baseline_coordination_mode": "in_process",
+      "selected_coordination_mode": "durable_inbox",
+      "ready": true,
+      "blocking_signals": [],
+      "turn_state_owner": "durable_attention_inbox",
+      "durable_inbox_expected": true,
+      "persistence_owner": "durable_attention_contract_store",
+      "parity_state": "durable_attention_contract_store_active",
+      "contract_store_state": "repository_backed_contract_store_active",
+      "store_available": true,
+      "stale_cleanup_candidates": 0,
+      "answered_cleanup_candidates": 1
+    },
+    "timing_policy": {
+      "production_baseline": {
+        "burst_window_ms": 120,
+        "answered_ttl_seconds": 5.0,
+        "stale_turn_seconds": 30.0
+      },
+      "current": {
+        "burst_window_ms": 120,
+        "answered_ttl_seconds": 5.0,
+        "stale_turn_seconds": 30.0
+      },
+      "alignment_state": "aligned_with_production_baseline",
+      "alignment_hint": "production_attention_timing_baseline_selected",
+      "deviations": []
+    },
+    "burst_window_ms": 120,
+    "answered_ttl_seconds": 5.0,
+    "stale_turn_seconds": 30.0,
+    "pending": 0,
+    "claimed": 0,
+    "answered": 0,
+    "active_turns": 0,
+    "stale_cleanup_candidates": 0,
+    "answered_cleanup_candidates": 1,
+    "contract_store_mode": "repository_backed",
+    "cleanup_owner": "attention_boundary"
+  },
+  "reflection": {
+    "healthy": true,
+    "runtime_mode": "deferred",
+    "deployment_readiness": {
+      "baseline_runtime_mode": "in_process",
+      "selected_runtime_mode": "deferred",
+      "ready": true,
+      "blocking_signals": []
+    },
+    "topology": {
+      "runtime_mode": "deferred",
+      "enqueue_owner": "runtime_followup",
+      "queue_backend": "durable_postgres_queue",
+      "queue_drain_owner": "external_driver",
+      "retry_owner": "durable_queue",
+      "external_driver_expected": true,
+      "worker_running": false,
+      "runtime_enqueue_dispatch": false,
+      "runtime_enqueue_reason": "deferred_runtime",
+      "scheduler_tick_dispatch": true,
+      "scheduler_tick_reason": "deferred_runtime",
+      "max_attempts": 3,
+      "retry_backoff_seconds": [
+        5,
+        30,
+        120
+      ],
+      "stuck_processing_seconds": 180
+    },
+    "external_driver_policy": {
+      "policy_owner": "deferred_reflection_external_worker",
+      "baseline_runtime_mode": "deferred",
+      "selected_runtime_mode": "deferred",
+      "selected_scheduler_execution_mode": "externalized",
+      "queue_drain_owner_target": "external_driver",
+      "entrypoint_kind": "python_script",
+      "entrypoint_path": "scripts/run_reflection_queue_once.py",
+      "wrapper_paths": [
+        "scripts/run_reflection_queue_once.ps1",
+        "scripts/run_reflection_queue_once.sh"
+      ],
+      "app_worker_running": false,
+      "production_baseline_ready": true,
+      "production_baseline_state": "external_driver_baseline_aligned",
+      "production_baseline_hint": "external_driver_baseline_active"
+    },
+    "supervision": {
+      "policy_owner": "deferred_reflection_supervision_policy",
+      "target_runtime_mode": "deferred",
+      "target_queue_drain_owner": "external_driver",
+      "target_scheduler_execution_mode": "externalized",
+      "retry_owner": "durable_queue",
+      "recovery_entrypoint_path": "scripts/run_reflection_queue_once.py",
+      "selected_runtime_mode": "deferred",
+      "selected_scheduler_execution_mode": "externalized",
+      "app_worker_running": false,
+      "queue_health_state": "active_backlog_under_supervision",
+      "pending_count": 56,
+      "processing_count": 0,
+      "retryable_failed_count": 0,
+      "stuck_processing_count": 0,
+      "exhausted_failed_count": 0,
+      "blocking_signals": [],
+      "recovery_actions": [],
+      "production_supervision_ready": true,
+      "production_supervision_state": "deferred_supervision_active_backlog",
+      "production_supervision_hint": "external_supervision_active_with_recoverable_backlog"
+    },
+    "worker": {
+      "running": false,
+      "queue_size": 0,
+      "queue_capacity": 100,
+      "queued_task_count": 0,
+      "queued_task_ids": [],
+      "max_attempts": 3,
+      "retry_backoff_seconds": [
+        5,
+        30,
+        120
+      ],
+      "stuck_processing_seconds": 180,
+      "adaptive_output_summary": {}
+    },
+    "adaptive_outputs": {},
+    "tasks": {
+      "total": 313,
+      "pending": 56,
+      "processing": 0,
+      "completed": 257,
+      "failed": 0,
+      "retryable_failed": 0,
+      "exhausted_failed": 0,
+      "stuck_processing": 0
+    }
+  }
+}

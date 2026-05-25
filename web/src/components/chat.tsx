@@ -210,34 +210,34 @@ export function ChatCognitiveBelt({
   return (
     <div className="aion-chat-cognitive-belt" aria-label="Conversation context">
       {items.map((item) => (
-        <article
+        <section
           key={item.key}
-          className={`aion-chat-belt-card aion-chat-belt-card-${item.tone}`}
+          className={`aion-chat-belt-item aion-chat-belt-item-${item.tone}`}
         >
-          <div className="aion-chat-belt-card-head">
-            <p className="aion-chat-belt-eyebrow">{item.eyebrow}</p>
-            <span className="aion-chat-belt-meta">{item.meta}</span>
+          <div className="aion-chat-belt-item-head">
+            <p className="aion-chat-belt-item-label">{item.eyebrow}</p>
+            <span className="aion-chat-belt-item-meta">{item.meta}</span>
           </div>
-          <h3 className="aion-chat-belt-title">{item.title}</h3>
+          <p className="aion-chat-belt-item-title">{item.title}</p>
           <p
-            className={`aion-chat-belt-body ${
-              item.bodyLines?.length ? "aion-chat-belt-body-lines" : ""
+            className={`aion-chat-belt-item-body ${
+              item.bodyLines?.length ? "aion-chat-belt-item-body-lines" : ""
             }`}
           >
             {item.bodyLines?.length
               ? item.bodyLines.map((line) => (
-                  <span key={line} className="aion-chat-belt-body-line">
+                  <span key={line} className="aion-chat-belt-item-body-line">
                     {line}
                   </span>
                 ))
               : item.body}
           </p>
           {item.key === "goal" ? (
-            <div className="aion-chat-belt-progress" aria-hidden="true">
+            <div className="aion-chat-belt-item-progress" aria-hidden="true">
               <span style={{ width: goalProgress }} />
             </div>
           ) : null}
-        </article>
+        </section>
       ))}
     </div>
   );
@@ -316,11 +316,13 @@ export function ChatComposerShell({
   pendingConfirmationCompleteLabel,
   pendingConfirmationState,
   pendingConfirmationFeedback,
-  addIcon,
-  voiceIcon,
+  attachments,
+  attachIcon,
   sendIcon,
   onQuickAction,
   onConfirmPendingConfirmation,
+  onAttachFiles,
+  onRemoveAttachment,
   onTextChange,
   onSubmit,
 }: {
@@ -338,11 +340,13 @@ export function ChatComposerShell({
   pendingConfirmationCompleteLabel: string;
   pendingConfirmationState: PendingConnectorConfirmationState;
   pendingConfirmationFeedback: string | null;
-  addIcon: ReactNode;
-  voiceIcon: ReactNode;
+  attachments: Array<{ id: string; name: string; sizeLabel: string }>;
+  attachIcon: ReactNode;
   sendIcon: ReactNode;
   onQuickAction: (value: string) => void;
   onConfirmPendingConfirmation: () => void;
+  onAttachFiles: (files: FileList | null) => void;
+  onRemoveAttachment: (attachmentId: string) => void;
   onTextChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
@@ -412,20 +416,37 @@ export function ChatComposerShell({
         </section>
       ) : null}
       <form className="aion-chat-composer" onSubmit={onSubmit}>
-        <div className="aion-chat-mode-tabs" aria-label="Conversation mode">
-          {["Ask", "Plan", "Reflect", "Execute"].map((mode, index) => (
-            <span
-              key={mode}
-              className={`aion-chat-mode-tab ${index === 0 ? "aion-chat-mode-tab-active" : ""}`}
-            >
-              {mode}
-            </span>
-          ))}
-        </div>
+        {attachments.length > 0 ? (
+          <div className="aion-chat-attachment-row" aria-label="Attached files">
+            {attachments.map((attachment) => (
+              <span key={attachment.id} className="aion-chat-attachment-chip">
+                <span className="aion-chat-attachment-chip-name">{attachment.name}</span>
+                <span className="aion-chat-attachment-chip-size">{attachment.sizeLabel}</span>
+                <button
+                  aria-label={`Remove ${attachment.name}`}
+                  className="aion-chat-attachment-chip-remove"
+                  type="button"
+                  onClick={() => onRemoveAttachment(attachment.id)}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        ) : null}
         <div className="aion-chat-composer-primary">
-          <button className="aion-chat-icon-button" type="button" aria-label="Add context">
-            {addIcon}
-          </button>
+          <label className="aion-chat-icon-button aion-chat-attach-button" aria-label="Add files">
+            {attachIcon}
+            <input
+              className="aion-chat-file-input"
+              type="file"
+              multiple
+              onChange={(event) => {
+                onAttachFiles(event.target.files);
+                event.currentTarget.value = "";
+              }}
+            />
+          </label>
           <div className="aion-chat-input-stack">
             <textarea
               aria-label={placeholder}
@@ -435,9 +456,6 @@ export function ChatComposerShell({
               onChange={(event) => onTextChange(event.target.value)}
             />
           </div>
-          <button className="aion-chat-icon-button hidden sm:inline-flex" type="button" aria-label="Voice input">
-            {voiceIcon}
-          </button>
           <button
             aria-label={sendLabel}
             className="aion-chat-send"

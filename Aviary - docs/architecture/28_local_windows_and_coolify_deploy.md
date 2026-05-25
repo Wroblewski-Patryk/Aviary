@@ -1,0 +1,229 @@
+# Local Windows + Debian 12 (Coolify) Deployment Guide
+
+## Purpose
+
+This guide prepares AION for:
+- local development on Windows
+- deployment on VPS Debian 12 with Coolify
+
+No GitHub Actions or paid GitHub features are required.
+
+---
+
+## 1) Local Setup on Windows
+
+### Prerequisites
+
+- Python 3.11+
+- Docker Desktop
+
+### Setup
+
+Run in project root:
+
+```powershell
+.\backend\scripts\setup_windows.ps1
+```
+
+Then edit `.env`:
+
+```env
+APP_ENV=development
+APP_PORT=8000
+LOG_LEVEL=INFO
+
+DATABASE_URL=postgresql+asyncpg://aion:aion@db:5432/aion
+
+OPENAI_API_KEY=...
+OPENAI_MODEL=gpt-4o-mini
+
+TELEGRAM_BOT_TOKEN=...
+TELEGRAM_WEBHOOK_SECRET=your_random_secret
+```
+
+You can generate and set secret automatically:
+
+```powershell
+.\backend\scripts\generate_telegram_webhook_secret.ps1 -UpdateEnv
+```
+
+### Run tests
+
+```powershell
+.\.venv\Scripts\python -m pytest -q
+```
+
+### Run app + DB
+
+```powershell
+docker compose up --build
+```
+
+Health:
+
+```powershell
+Invoke-RestMethod http://localhost:8000/health
+```
+
+Repeatable smoke:
+
+```powershell
+.\backend\scripts\run_release_smoke.ps1 -BaseUrl "http://localhost:8000"
+```
+
+---
+
+## 2) Test OpenAI + Telegram Locally
+
+If `OPENAI_API_KEY` is set, response generation uses OpenAI Responses API.
+If key is missing, the app falls back to echo response.
+
+To test Telegram webhook locally, expose `http://localhost:8000` using a tunnel (for example `cloudflared` or `ngrok`) and call:
+
+```powershell
+.\backend\scripts\set_telegram_webhook.ps1 -WebhookUrl "https://YOUR_PUBLIC_URL/event" -SecretToken "your_random_secret"
+```
+
+Then send a message to your bot in Telegram.
+
+---
+
+## 3) Deploy on Debian 12 with Coolify
+
+### A) VPS prerequisites
+
+- Debian 12 VPS
+- Coolify installed
+- domain/subdomain pointing to VPS
+
+### B) Create application in Coolify
+
+1. Create new resource from repository.
+2. Use Compose file: `docker-compose.coolify.yml`.
+3. Set environment variables in Coolify:
+   - `OPENAI_API_KEY`
+   - `OPENAI_MODEL` (optional, default `gpt-4o-mini`)
+   - `TELEGRAM_BOT_TOKEN`
+   - `TELEGRAM_WEBHOOK_SECRET`
+   - `DATABASE_URL` (optional if using bundled db service)
+   - keep `STARTUP_SCHEMA_MODE=migrate` unless a later approved exception is
+     explicitly documented
+4. Expose application port `8000` through Coolify domain.
+5. Deploy.
+
+Repository-driven Coolify deploys now include a one-shot `migrate` service in
+`docker-compose.coolify.yml`. On each deploy, Coolify should:
+
+1. wait for PostgreSQL health
+2. run `python -m alembic -c /app/backend/alembic.ini upgrade head`
+3. start `app`, `maintenance_cadence`, and `proactive_cadence` only after the
+   migration container exits successfully
+
+If a deploy fails before the app becomes healthy, inspect the `migrate`
+service logs first because schema drift now blocks the runtime by design.
+
+### C) Set production Telegram webhook
+
+Generate production secret on Debian:
+
+```bash
+./backend/scripts/generate_telegram_webhook_secret.sh 32 .env true
+```
+
+After deploy:
+
+```bash
+./backend/scripts/set_telegram_webhook.sh "https://YOUR_DOMAIN/event" "https://YOUR_DOMAIN" "your_random_secret"
+```
+
+Or call endpoint directly:
+
+```bash
+curl -X POST "https://YOUR_DOMAIN/telegram/set-webhook" \
+  -H "Content-Type: application/json" \
+  -d '{"webhook_url":"https://YOUR_DOMAIN/event","secret_token":"your_random_secret"}'
+```
+
+### D) Manual deploy fallback when GitHub auto-deploy is unreliable
+
+If GitHub webhook delivery is not working reliably yet, you can trigger the configured Coolify webhook manually from the repo:
+
+Windows PowerShell:
+
+```powershell
+.\backend\scripts\trigger_coolify_deploy_webhook.ps1 `
+  -WebhookUrl "https://YOUR_COOLIFY_DOMAIN/webhooks/source/github/events/manual" `
+  -WebhookSecret "YOUR_WEBHOOK_SECRET"
+```
+
+Debian / bash:
+
+```bash
+./backend/scripts/trigger_coolify_deploy_webhook.sh \
+  "https://YOUR_COOLIFY_DOMAIN/webhooks/source/github/events/manual" \
+  "YOUR_WEBHOOK_SECRET"
+```
+
+Both helpers infer repository and commit data from local git when possible and send a GitHub-style `push` event payload to Coolify.
+
+### E) Post-deploy smoke verification
+
+After a deploy, run:
+
+```powershell
+.\backend\scripts\run_release_smoke.ps1 -BaseUrl "https://YOUR_DOMAIN"
+```
+
+Release smoke now includes a small bounded `/health` retry budget for transient
+deploy-time `503` responses. Keep the defaults unless you are diagnosing a
+slower-than-normal edge case:
+
+```powershell
+.\backend\scripts\run_release_smoke.ps1 `
+  -BaseUrl "https://YOUR_DOMAIN" `
+  -HealthRetryMaxAttempts 3 `
+  -HealthRetryDelaySeconds 5
+```
+
+If Coolify source automation has started but deploy parity has not yet reached
+the latest pushed commit, use the same smoke script in bounded wait mode:
+
+```powershell
+.\backend\scripts\run_release_smoke.ps1 `
+  -BaseUrl "https://YOUR_DOMAIN" `
+  -WaitForDeployParity `
+  -DeployParityMaxWaitSeconds 120 `
+  -DeployParityPollSeconds 15
+```
+
+Operator verification order for the repo-driven Coolify baseline:
+
+1. confirm the `migrate` service finished successfully in Coolify
+2. confirm the `app` service turns healthy
+3. run release smoke against the public domain
+4. when the app is healthy but runtime build revision still trails the pushed
+   commit, rerun release smoke with `-WaitForDeployParity` before escalating to
+   deployment-trigger drift
+5. only then investigate route-level regressions
+
+Optional UTF-8 verification:
+
+```powershell
+.\backend\scripts\run_release_smoke.ps1 `
+  -BaseUrl "https://YOUR_DOMAIN" `
+  -Text "zażółć gęślą jaźń"
+```
+
+Optional debug payload check:
+
+```powershell
+.\backend\scripts\run_release_smoke.ps1 -BaseUrl "https://YOUR_DOMAIN" -IncludeDebug
+```
+
+---
+
+## 4) Operational Notes
+
+- In production, `OPENAI_API_KEY` and `TELEGRAM_BOT_TOKEN` are required.
+- Telegram webhook requests are validated by `X-Telegram-Bot-Api-Secret-Token` when `TELEGRAM_WEBHOOK_SECRET` is set.
+- No GitHub automation is required; deployment is handled by Coolify directly from the repo.

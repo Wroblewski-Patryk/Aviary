@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-05-24T18:52:08.866921+00:00",
+  "overall_status": "PASSED",
+  "steps": [
+    {
+      "id": "graph_tests_fast",
+      "ok": true,
+      "exit_code": 0,
+      "stdout_tail": [
+        "........................................                                 [100%]",
+        "40 passed, 1 deselected in 2.60s"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "gap_gate_zero",
+      "ok": true,
+      "exit_code": 0,
+      "stdout_tail": [
+        "{",
+        "  \"include_auto\": false,",
+        "  \"gap_mode\": \"strict\",",
+        "  \"items\": []",
+        "}"
+      ],
+      "stderr_tail": []
+    }
+  ]
+}

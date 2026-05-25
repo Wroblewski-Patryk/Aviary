@@ -123,7 +123,7 @@ export function DashboardGuidanceList({
   items: Array<{
     title: string;
     body: string;
-    action: string;
+    action?: string;
     targetRoute?: string;
   }>;
   onSelect?: (targetRoute: string) => void;
@@ -140,13 +140,15 @@ export function DashboardGuidanceList({
             <p className="aion-dashboard-guidance-row-title">{card.title}</p>
             <p className="aion-dashboard-guidance-row-body">{card.body}</p>
           </div>
-          <button
-            className="aion-dashboard-mini-action aion-dashboard-mini-action-quiet"
-            type="button"
-            onClick={card.targetRoute ? () => onSelect?.(card.targetRoute ?? "") : undefined}
-          >
-            {card.action}
-          </button>
+          {card.action && card.targetRoute ? (
+            <button
+              className="aion-dashboard-mini-action aion-dashboard-mini-action-quiet"
+              type="button"
+              onClick={() => onSelect?.(card.targetRoute ?? "")}
+            >
+              {card.action}
+            </button>
+          ) : null}
         </article>
       ))}
     </div>

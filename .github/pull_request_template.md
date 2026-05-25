@@ -12,6 +12,20 @@
 - Results:
   -
 
+## Architecture Graph / Evidence Map
+
+- [ ] Graph registry updated if this changed a feature, route, component, API, service, test, workflow, prompt, agent, config, migration, or doc contract.
+- [ ] Function chain updated if this changed user-visible execution flow.
+- [ ] Evidence row added or refreshed for implementation, test, behavior, connection, or documentation proof.
+- [ ] Research/theory claim updated if this change makes or changes a neuroscience/cognitive-science claim.
+- [ ] Generated graph artifacts refreshed when graph CSVs or graph scripts changed.
+- [ ] Fast graph gate run for graph-relevant changes.
+
+Graph commands run:
+  -
+Graph results:
+  -
+
 ## Manual Smoke
 
 - [ ] `GET /health` checked if runtime wiring or deployment changed

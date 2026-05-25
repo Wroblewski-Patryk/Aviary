@@ -99,8 +99,10 @@ Then send a message to your bot in Telegram.
 ### B) Create application in Coolify
 
 1. Create new resource from repository.
-2. Use Compose file: `docker-compose.coolify.yml`.
-3. Set environment variables in Coolify:
+2. If the app/resource is not visible, first switch the active Coolify team and
+   verify the resource list again (team context can hide resources).
+3. Use Compose file: `docker-compose.coolify.yml`.
+4. Set environment variables in Coolify:
    - `OPENAI_API_KEY`
    - `OPENAI_MODEL` (optional, default `gpt-4o-mini`)
    - `TELEGRAM_BOT_TOKEN`
@@ -108,8 +110,8 @@ Then send a message to your bot in Telegram.
    - `DATABASE_URL` (optional if using bundled db service)
    - keep `STARTUP_SCHEMA_MODE=migrate` unless a later approved exception is
      explicitly documented
-4. Expose application port `8000` through Coolify domain.
-5. Deploy.
+5. Expose application port `8000` through Coolify domain.
+6. Deploy.
 
 Repository-driven Coolify deploys now include a one-shot `migrate` service in
 `docker-compose.coolify.yml`. On each deploy, Coolify should:
@@ -227,3 +229,4 @@ Optional debug payload check:
 - In production, `OPENAI_API_KEY` and `TELEGRAM_BOT_TOKEN` are required.
 - Telegram webhook requests are validated by `X-Telegram-Bot-Api-Secret-Token` when `TELEGRAM_WEBHOOK_SECRET` is set.
 - No GitHub automation is required; deployment is handled by Coolify directly from the repo.
+- Do not introduce paid GitHub extension dependencies into deploy/release flow.

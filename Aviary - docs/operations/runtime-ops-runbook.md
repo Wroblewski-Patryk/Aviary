@@ -1,0 +1,2072 @@
+# Runtime Ops Runbook
+
+## Scope
+
+This runbook covers the currently implemented AION MVP service, not the full long-term architecture described in the numbered docs.
+
+## Current Production Host Baseline
+
+- canonical first-party production host:
+  - `https://aviary.luckysparrow.ch`
+- deploy shape remains same-origin:
+  - the same host serves the web shell plus backend routes such as `/app`,
+    `/health`, and `/event`
+- no separate API subdomain is part of the approved baseline for this repo
+- Telegram webhook target should therefore remain:
+  - `https://aviary.luckysparrow.ch/event`
+
+## Service Responsibilities
+
+- accept incoming events through FastAPI
+- normalize incoming payloads
+- run the in-process orchestration pipeline
+- persist short-term episode memory in PostgreSQL
+- optionally send Telegram replies
+- optionally generate replies with OpenAI
+
+## Health And Readiness
+
+- App health endpoint:
+  - `GET /health`
+- Docker compose stack includes health checks for Postgres and, in the Coolify variant, the app container.
+- Repository-driven Coolify production deploys must keep the `db` service on a
+  pgvector-capable PostgreSQL image once semantic-vector migrations are part of
+  Alembic `head`; a plain `postgres` image can boot but will fail migration and
+  foreground turn handling later.
+- Repository-driven Coolify production deploys now also keep one explicit
+  migration owner in `docker-compose.coolify.yml`:
+  - service: `migrate`
+  - command:
+    `python -m alembic -c /app/backend/alembic.ini upgrade head`
+  - long-lived services (`app`, `maintenance_cadence`, `proactive_cadence`)
+    must wait for that one-shot service to complete successfully before
+    startup.
+
+`GET /health` now includes a `runtime_policy` object with non-secret active
+runtime flags (for example `startup_schema_mode`, `event_debug_enabled`, and
+`event_debug_source`) plus debug-route posture markers
+(`event_debug_token_required`, `production_debug_token_required`,
+`event_debug_admin_policy_owner`, `event_debug_admin_ingress_target_path`,
+`event_debug_admin_posture_state`,
+`event_debug_shared_ingress_retirement_target`,
+`event_debug_shared_ingress_retirement_cutover_posture`,
+`event_debug_shared_ingress_retirement_gate_checklist`,
+`event_debug_shared_ingress_retirement_gate_state`,
+`event_debug_shared_ingress_retirement_ready`,
+`event_debug_shared_ingress_retirement_blockers`,
+`event_debug_query_compat_enabled`, `event_debug_query_compat_source`,
+`event_debug_query_compat_telemetry`,
+`event_debug_query_compat_allow_rate`,
+`event_debug_query_compat_block_rate`,
+`event_debug_query_compat_recommendation`,
+`event_debug_query_compat_sunset_ready`,
+`event_debug_query_compat_sunset_reason`,
+`event_debug_query_compat_recent_attempts_total`,
+`event_debug_query_compat_recent_allow_rate`,
+`event_debug_query_compat_recent_block_rate`,
+`event_debug_query_compat_recent_state`,
+`event_debug_query_compat_stale_after_seconds`,
+`event_debug_query_compat_last_attempt_age_seconds`,
+`event_debug_query_compat_last_attempt_state`,
+`event_debug_query_compat_activity_state`,
+`event_debug_query_compat_activity_hint`, `debug_access_posture`,
+`debug_token_policy_hint`,
+`startup_schema_compatibility_posture`,
+`startup_schema_compatibility_sunset_ready`,
+`startup_schema_compatibility_sunset_reason`,
+`event_debug_shared_ingress_sunset_ready`,
+`event_debug_shared_ingress_sunset_reason`,
+`compatibility_sunset_ready`, and
+`compatibility_sunset_blockers`) plus
+strict-rollout readiness signals
+(`production_policy_mismatches`, `production_policy_mismatch_count`,
+`strict_startup_blocked`, and `strict_rollout_ready`) plus rollout guidance
+signals (`recommended_production_policy_enforcement`, `strict_rollout_hint`),
+so operators can verify active policy posture, detect strict-mode startup
+risks, assess strict-rollout readiness, and track compatibility-route sunset
+readiness during incident triage and release smoke.
+`GET /health.release_readiness` now also exposes a compact release gate
+snapshot (`ready`, `violations`) derived from those runtime-policy fields so
+smoke scripts can fail fast on deployment drift.
+Observed compat attempts now always keep sunset recommendation in
+`migrate_clients_before_disabling_compat` until clients are moved away from
+`POST /event?debug=true`.
+Compat activity posture fields now distinguish disabled/no-traffic/stale-history
+vs recent traffic so migration windows can separate historical noise from active
+compat dependency.
+
+Incident-evidence bundle export:
+
+- default helper:
+  - `python backend/scripts/export_incident_evidence_bundle.py --base-url <url>`
+- when `/internal/event/debug` returns the expected disabled-debug `403`, the
+  helper now falls back to a strict-mode health-derived export
+- strict-mode export uses `/health` policy surfaces only and writes the same
+  bundle files:
+  - `manifest.json`
+  - `incident_evidence.json`
+  - `health_snapshot.json`
+  - optional `behavior_validation_report.json`
+- strict-mode export does not include full `debug` or `system_debug` payloads
+- use `--disable-health-only-fallback` when an operator intentionally wants the
+  previous fail-fast behavior
+- verify a generated bundle with:
+  - `.\backend\scripts\run_release_smoke.ps1 -BaseUrl "<url>" -IncidentEvidenceBundlePath "<bundle-dir>"`
+
+`GET /health` also includes a `scheduler` object with cadence posture
+(`execution_mode`, cadence owners, dispatch/readiness posture, interval
+settings), latest reflection/maintenance tick summaries, and
+`external_owner_policy` for the target external cadence baseline.
+In the current Coolify production baseline, cadence ownership is already
+externalized; use `/health.scheduler.external_owner_policy` as the source of
+truth instead of inferring ownership from whether the app container itself is
+running.
+That same production baseline should now be treated as release truth, not as a
+remaining rollout target.
+
+`GET /health` now also includes a `proactive` object with live proactive
+cadence posture:
+
+- shared policy owner and selected cadence owner
+- delivery-target and planned-action observer admission baselines
+- anti-spam contract defaults (cooldown, recent outbound threshold,
+  unanswered threshold)
+- latest proactive tick summary, planned-action observer state, and last tick
+  timestamp
+- planned-action observer policy owner, `empty_result_behavior`, due-work count,
+  and counts-only passive/active evidence for skipped, blocked, delayed, or
+  failed observer-admitted work
+- live enabled state plus production baseline readiness and state
+  (`enabled=true`,
+  `production_baseline_state=external_scheduler_target_owner` in Coolify
+  production today)
+
+Use `/health.proactive` together with `/health.scheduler.last_proactive_summary`
+when triaging why proactive outreach is quiet, blocked, or actively delivering.
+An `empty_noop` observer state means cadence found no due/actionable work and
+should not have started a conscious foreground run.
+Release smoke fails if `/health.proactive.planned_action_observer` or exported
+incident evidence loses the `planned_action_observer_policy` posture.
+`/health.proactive.communication_boundary_contract` exposes the relation-owned
+communication-boundary policy used by planning, reflection, proactive
+candidate selection, proactive delivery guardrails, and expression ritual
+handling.
+
+Behavior-feedback learning triage:
+
+- use runtime `system_debug.behavior_feedback` to inspect what the current turn
+  interpreted before assuming durable learning occurred
+- durable communication-preference changes should be visible as relation writes
+  from typed planning/action or as background reflection relation updates, not
+  as expression-owned state mutation
+- if the assistant keeps greeting repeatedly after corrective feedback, inspect:
+  - `system_debug.behavior_feedback`
+  - plan intents for `maintain_relation`
+  - action relation updates for `interaction_ritual_preference`
+  - later `ExpressionOutput.self_review_notes` for
+    `removed_repeated_greeting`
+- if repeated softer feedback should accumulate, inspect episodic payload
+  `behavior_feedback` and reflection relation updates with source
+  `background_reflection_behavior_feedback`
+- unclear or low-confidence behavior feedback should remain descriptive-only;
+  relation mutation after unclear feedback is a release blocker
+
+Bounded action-loop triage:
+
+- use runtime `system_debug.action_result.action_loop` first when inspecting a
+  tool-backed turn
+- `completion_state=satisfied` means the bounded action loop reached its
+  approved turn goal within policy
+- `completion_state=needs_confirmation` means action stopped before mutation
+  and a confirmation path must be used before any provider-side write
+- `completion_state=blocked`, `needs_clarification`, or `step_limit` means the
+  operator should inspect `blockers`, `selected_skill_ids`, and `used_tools`
+  before assuming a provider outage
+- use `system_debug.action_result.observations` for per-step proof after the
+  summary; observations must remain bounded and keep
+  `raw_payload_included=false`
+- `confirmation_required` is the expected blocker for safe ClickUp mutation
+  stops, while `clickup_client_not_ready` indicates provider readiness/config
+  rather than user confirmation state
+
+Communication-boundary historical backfill:
+
+- purpose:
+  - promote existing user-authored episodic instructions such as "do not
+    message me every 30 minutes" or "do not greet me every message" into the
+    same relation-owned communication-boundary truth used by new turns
+- dry run:
+  - `python scripts/run_communication_boundary_backfill_once.py --dry-run --limit 500`
+- write run:
+  - `python scripts/run_communication_boundary_backfill_once.py --limit 500`
+- optional user-scoped run:
+  - `python scripts/run_communication_boundary_backfill_once.py --user-id <user_id> --limit 500`
+- expected output:
+  - JSON with `scanned_events`, `matched_events`, `relations_upserted`,
+    `users_affected`, and relation type/value summaries
+- ownership:
+  - the script is a bounded ops/backfill entrypoint
+  - it writes only through `MemoryRepository.upsert_relation`
+  - it does not create a new memory store or bypass the action/reflection
+    relation model
+
+Transcript-truth triage rule for proactive incidents:
+
+- if you see scheduler cadence firing but no user-visible outreach should have
+  happened, inspect transcript truth before assuming the user was messaged
+- `/app/chat/history` should now hide scheduler-owned internal prompt text such
+  as `time check-in follow up`
+- visible scheduler-originated transcript output should appear only as
+  assistant delivery that the conscious path actually sent
+- if repeated outreach still appears after silence, inspect:
+  - `recent_outbound_count`
+  - `unanswered_proactive_count`
+  - the latest scheduler-owned episodic rows for `assistant_visibility` and
+    `proactive_state_update`
+
+Canonical multi-channel operator rule:
+
+- the authenticated app transcript is the source-of-truth conversation history
+- linked-channel messages such as Telegram should be understandable as mirrors
+  of that canonical history, not separate chat systems
+- when verifying a linked-channel incident, confirm both:
+  - canonical transcript truth through `/app/chat/history`
+  - transport execution truth through `conversation_channels.telegram`
+- segmented Telegram delivery is acceptable when transport limits require it,
+  as long as the canonical app reply remains complete and the Telegram
+  segments preserve the same meaning in order
+
+`GET /health` now also includes a `role_skill` object with the current
+role-versus-skill maturity baseline:
+
+- shared policy owner
+- metadata-only execution boundary
+- whether planning carries selected skills forward
+- explicit confirmation that action cannot execute selected skills directly
+
+`GET /health` now also includes an `attention` object with burst-turn assembly
+posture (`coordination_mode`, owner/readiness semantics, timing windows) and
+live turn counters (`pending`, `claimed`, `answered`) to support burst-message
+triage and owner-mode rollout verification.
+`GET /health.attention` also exposes durable contract-store posture through
+`persistence_owner`, `parity_state`, `contract_store_mode`,
+`deployment_readiness.contract_store_state`, `stale_cleanup_candidates`, and
+`answered_cleanup_candidates`, so operators can distinguish in-memory owner
+mode from repository-backed durable inbox behavior and cleanup pressure.
+`GET /health.attention.timing_policy` now also exposes the production timing
+baseline (`120ms` burst window, `5s` answered TTL, `30s` stale cleanup) plus
+alignment posture for the currently selected config values.
+
+Durable-attention production cutover gate:
+
+- target owner:
+  - `ATTENTION_COORDINATION_MODE=durable_inbox`
+- required green posture before and after the switch:
+  - `/health.attention.deployment_readiness.ready=true`
+  - `/health.attention.deployment_readiness.blocking_signals=[]`
+  - `/health.attention.contract_store_mode=repository_backed_durable_inbox`
+  - `/health.runtime_topology.attention_switch.production_default_change_ready=true`
+  - `/health.conversation_channels.telegram.round_trip_ready=true`
+- canonical proof path:
+  - production `GET /health`
+  - exported `incident_evidence.policy_posture["attention"]`
+  - exported `incident_evidence.policy_posture["runtime_topology.attention_switch"]`
+  - release smoke
+- current production baseline:
+  - `/health.attention.coordination_mode=durable_inbox`
+  - `/health.attention.contract_store_mode=repository_backed`
+  - `/health.attention.deployment_readiness.contract_store_state=repository_backed_contract_store_active`
+  - `/health.runtime_topology.attention_switch.selected_mode=durable_inbox`
+- rollback posture:
+  - revert production to `ATTENTION_COORDINATION_MODE=in_process` if durable
+    cutover shows burst-claim drift, cleanup drift, duplicate replies, or
+    reply-order regressions
+
+`GET /health` now also includes an `affective` object for live affective-turn
+triage:
+
+- heuristic affective-input ownership posture from perception
+- assessment rollout posture and fallback visibility for the current runtime
+
+When investigating empathy/support behavior drift, pair `/health.affective`
+with runtime `system_debug.adaptive_state.affective_input_policy` and
+`system_debug.adaptive_state.affective_resolution` so you can distinguish
+heuristic input, policy-disabled fallback, classifier-unavailable fallback,
+and final affective outcome.
+
+`GET /health` now also includes `conversation_channels.telegram` for
+conversation-reliability triage:
+
+- `policy_owner=telegram_conversation_reliability_telemetry`
+- `round_trip_ready`
+- `round_trip_state` (`provider_backed_ready|missing_bot_token`)
+- `bot_token_configured`
+- `webhook_secret_configured`
+- ingress counters:
+  - `ingress_attempts`
+  - `ingress_rejections`
+  - `ingress_queued`
+  - `ingress_processed`
+  - `ingress_runtime_failures`
+- delivery counters:
+  - `delivery_attempts`
+  - `delivery_successes`
+  - `delivery_failures`
+- `last_ingress` and `last_delivery`
+
+Use this surface first when Telegram appears silent in production. It tells
+you whether the webhook reached the service, whether the secret was rejected,
+whether the turn was coalesced into a queue, and whether outbound delivery
+ever ran.
+
+For first-party `web` triage, treat the browser tools screen as a thin client
+over backend-owned truth rather than an independent source of readiness.
+When a deploy or incident touches tools/channels visibility, confirm:
+
+- the deployed SPA shell routes still resolve to the same web build revision:
+  - `/`
+  - `/chat`
+  - `/settings`
+  - `/tools`
+  - `/personality`
+
+- the authenticated backend contract:
+  - `GET /app/tools/overview`
+- the bounded user-preference mutation path:
+  - `PATCH /app/tools/preferences`
+- the Telegram identity-linking entrypoint:
+  - `POST /app/tools/telegram/link/start`
+
+Expected operator posture:
+
+- integral capabilities (`internal_chat`, `web_search`, `web_browser`) should
+  remain visible as always-on product posture, not user-configured providers
+- provider-backed tools should distinguish:
+  - provider readiness
+  - user-requested enablement
+  - effective enabled state
+- Telegram should distinguish:
+  - provider configured but not linked
+  - pending confirmation after link-code generation
+  - fully linked after Telegram-side `/link CODE` confirmation
+- browser UI must not claim Telegram or other connectors are usable when
+  backend truth still reports missing provider config, missing user enablement,
+  or missing link confirmation
+
+If `last_ingress.state=runtime_failed` and the reason shows a runtime
+exception before any delivery attempt, treat the incident as a foreground
+pipeline failure rather than a Telegram transport outage. For PostgreSQL
+deploys with semantic vectors enabled, verify that the runtime image includes
+the Python `pgvector` package; startup now blocks on missing `pgvector`
+binding to prevent `/health` from looking healthy while `/event` still fails.
+
+For no-UI `v1` life-assistant triage, pair Telegram reliability with workflow
+posture:
+
+- use `/health.conversation_channels.telegram` first to confirm round-trip
+  viability before treating reminder silence as planning drift
+- use `/health.proactive` and the latest proactive tick summary to distinguish
+  observer `empty_noop`, due planned-work admission, attention-gate deferral,
+  anti-spam throttling, and normal proactive delivery
+- when a release or incident touches reminder capture, daily planning, or
+  follow-up behavior, attach behavior-validation evidence that covers the
+  bounded `v1` workflow (`T13.1`) alongside incident evidence instead of
+  relying on live `/health` alone
+- when a release or incident touches communication-boundary or behavior
+  feedback learning, attach evidence for:
+  - `T21.1` behavior feedback becoming relation truth and changing later
+    expression
+  - `T21.2` repeated weaker behavior-feedback candidates consolidating through
+    reflection
+  - `T21.3` unclear behavior feedback remaining descriptive-only
+  - runtime `system_debug.behavior_feedback`
+  - relation update source/evidence count when durable mutation occurs
+- when a release or incident touches time-aware planned work posture, attach
+  evidence for:
+  - `T19.1` due planned-work delivery through the normal foreground runtime
+  - `T19.2` recurring planned-work reevaluation plus advancement after
+    foreground delivery
+  - `/health.v1_readiness.time_aware_planned_work_gate_state`
+  - `incident_evidence.policy_posture["v1_readiness"]`
+- when a release or incident touches search, browser, or ClickUp tool usage,
+  attach behavior-validation evidence for:
+  - `T14.1` analyst-driven DuckDuckGo search
+  - `T14.2` analyst-driven generic HTTP page read
+  - `T14.3` executor-aligned ClickUp task update
+  - `GET /health.connectors.web_knowledge_tools.website_reading_workflow`
+  - `incident_evidence.policy_posture["connectors.web_knowledge_tools"]`
+  - `health_snapshot.json.connectors.web_knowledge_tools` inside the exported
+    incident-evidence bundle
+- when a release or incident touches backend work-partner behavior, attach
+  behavior-validation evidence for:
+  - `T15.1` work-partner organization with bounded search plus ClickUp update
+  - `T15.2` work-partner decision support with bounded page-read browsing
+- when a release or incident touches organizer-tool readiness, attach evidence
+  for:
+  - `T16.1` work-partner ClickUp task listing
+  - `T16.2` work-partner Google Calendar availability reads
+  - `T16.3` work-partner Google Drive metadata listing
+  - `GET /health.connectors.organizer_tool_stack`
+  - `incident_evidence.policy_posture["connectors.organizer_tool_stack"]`
+  - `health_snapshot.json.connectors.organizer_tool_stack` inside the exported
+    incident-evidence bundle
+  - `docs/operations/organizer-provider-activation-runbook.md` when provider
+    credentials are being activated or triaged
+- when a release or incident touches tool-grounded learning from external
+  reads, attach evidence for:
+  - `T17.1` bounded search knowledge recall
+  - `T17.2` organizer-tool snapshot recall
+  - `/health.learned_state.tool_grounded_learning`
+  - `incident_evidence.policy_posture["learned_state"].tool_grounded_learning`
+  - internal `GET /internal/state/inspect?user_id=...` knowledge-summary
+    fields:
+    - `tool_grounded_conclusion_count`
+    - `tool_grounded_conclusion_kinds`
+
+During triage, treat missing tool-grounded evidence as a release-surface
+regression, not as an optional operator convenience. The bounded contract is:
+
+- action owns capture from approved external reads
+- memory owns semantic persistence
+- raw provider payloads stay out of durable learned state
+- follow-up turns may reuse recalled conclusions without silently re-running
+  provider reads
+
+For memory-consolidation triage, check both the episodic/vector path and the
+semantic conclusion path:
+
+- reflection should write `memory_topic_summary` only after repeated
+  non-generic recent memory topics
+- `aion_conclusion.kind=memory_topic_summary` remains stable, user-scoped, and
+  semantic by repository layer defaults
+- multiple durable buckets use `scope_type=topic` and
+  `scope_key=topic:<slug>` rather than dynamic conclusion kinds
+- if semantic source embeddings are enabled, the conclusion can materialize a
+  `source_kind=semantic` embedding through the existing conclusion write path
+- later runtime context should expose it as `Long-term memory summary`, not
+  only as a stored database row
+
+`GET /health` now also includes a fuller `capability_catalog` surface for
+operator and future UI/admin inspection.
+
+Use it to distinguish three different truths that should not be flattened into
+one "capability" claim:
+
+- described:
+  - durable role presets and durable skill records
+- selected:
+  - current-turn role and selected skill metadata
+- authorized:
+  - which tool families or operations are actually allowed under connector
+    permission gates and provider-readiness posture
+
+When triaging catalog drift:
+
+- start with `/health.capability_catalog.capability_record_truth_model`
+- inspect `/health.capability_catalog.role_posture` for described role presets
+  and runtime-owned selection posture
+- inspect `/health.capability_catalog.skill_catalog_posture` for
+  metadata-only skill posture and current-turn selection surfaces
+- inspect `/health.capability_catalog.tool_and_connector_posture` for:
+  - public read operations authorized without opt-in
+  - organizer reads that remain opt-in-bound
+  - organizer mutations that remain confirmation-gated
+- use internal `GET /internal/state/inspect?user_id=...` when the operator
+  needs the same catalog with user-scoped authorization posture
+
+Treat any release where capability-catalog evidence suggests that described
+skill metadata has become executable authority, or that organizer mutations
+are no longer confirmation-gated, as a boundary regression rather than a UX
+problem.
+
+`GET /health` now also includes a `memory_retrieval` object with semantic
+retrieval posture:
+
+- `semantic_vector_enabled`
+- `semantic_retrieval_mode` (`hybrid_vector_lexical|lexical_only`)
+- `semantic_embedding_execution_class`
+  (`deterministic_baseline|local_provider_owned|provider_owned_openai_api|fallback_to_deterministic`)
+- `semantic_embedding_production_baseline`
+- `semantic_embedding_production_baseline_state`
+- `semantic_embedding_production_baseline_hint`
+- `semantic_embedding_provider_ready`
+- `semantic_embedding_posture` (`ready|fallback_deterministic`)
+- `semantic_embedding_provider_requested`
+- `semantic_embedding_provider_effective`
+- `semantic_embedding_provider_hint`
+- `semantic_embedding_provider_ownership_state`
+- `semantic_embedding_provider_ownership_hint`
+- `semantic_embedding_provider_ownership_enforcement`
+- `semantic_embedding_provider_ownership_enforcement_state`
+- `semantic_embedding_provider_ownership_enforcement_hint`
+- `semantic_embedding_owner_strategy_state`
+- `semantic_embedding_owner_strategy_hint`
+- `semantic_embedding_owner_strategy_recommendation`
+- `semantic_embedding_model_requested`
+- `semantic_embedding_model_effective`
+- `semantic_embedding_model_governance_state`
+- `semantic_embedding_model_governance_hint`
+- `semantic_embedding_model_governance_enforcement`
+- `semantic_embedding_model_governance_enforcement_state`
+- `semantic_embedding_model_governance_enforcement_hint`
+- `semantic_embedding_strict_rollout_violations`
+- `semantic_embedding_strict_rollout_violation_count`
+- `semantic_embedding_strict_rollout_ready`
+- `semantic_embedding_strict_rollout_state`
+- `semantic_embedding_strict_rollout_hint`
+- `semantic_embedding_strict_rollout_recommendation`
+- `semantic_embedding_recommended_provider_ownership_enforcement`
+- `semantic_embedding_recommended_model_governance_enforcement`
+- `semantic_embedding_provider_ownership_enforcement_alignment`
+- `semantic_embedding_model_governance_enforcement_alignment`
+- `semantic_embedding_enforcement_alignment_state`
+- `semantic_embedding_enforcement_alignment_hint`
+- `semantic_embedding_dimensions`
+- `semantic_embedding_warning_state`
+- `semantic_embedding_warning_hint`
+- `semantic_embedding_source_kinds`
+- `semantic_embedding_source_coverage_state`
+- `semantic_embedding_source_coverage_hint`
+- `semantic_embedding_source_rollout_state`
+- `semantic_embedding_source_rollout_hint`
+- `semantic_embedding_source_rollout_recommendation`
+- `semantic_embedding_source_rollout_order`
+- `semantic_embedding_source_rollout_enabled_sources`
+- `semantic_embedding_source_rollout_missing_sources`
+- `semantic_embedding_source_rollout_next_source_kind`
+- `semantic_embedding_source_rollout_completion_state`
+- `semantic_embedding_source_rollout_phase_index`
+- `semantic_embedding_source_rollout_phase_total`
+- `semantic_embedding_source_rollout_progress_percent`
+- `semantic_embedding_source_rollout_enforcement`
+- `semantic_embedding_source_rollout_enforcement_state`
+- `semantic_embedding_source_rollout_enforcement_hint`
+- `semantic_embedding_recommended_source_rollout_enforcement`
+- `semantic_embedding_source_rollout_enforcement_alignment`
+- `semantic_embedding_source_rollout_enforcement_alignment_state`
+- `semantic_embedding_source_rollout_enforcement_alignment_hint`
+- `semantic_embedding_refresh_mode`
+- `semantic_embedding_refresh_interval_seconds`
+- `semantic_embedding_refresh_state`
+- `semantic_embedding_refresh_hint`
+- `semantic_embedding_refresh_cadence_state`
+- `semantic_embedding_refresh_cadence_hint`
+- `semantic_embedding_recommended_refresh_mode`
+- `semantic_embedding_refresh_alignment_state`
+- `semantic_embedding_refresh_alignment_hint`
+- `retrieval_lifecycle_policy_owner`
+- `retrieval_lifecycle_target_provider_baseline`
+- `retrieval_lifecycle_transition_provider_baseline`
+- `retrieval_lifecycle_steady_state_refresh_owner`
+- `retrieval_lifecycle_source_rollout_baseline`
+- `retrieval_lifecycle_relation_source_posture`
+- `retrieval_lifecycle_fallback_retirement_posture`
+- `retrieval_lifecycle_provider_drift_state`
+- `retrieval_lifecycle_provider_drift_hint`
+- `retrieval_lifecycle_alignment_state`
+- `retrieval_lifecycle_alignment_hint`
+- `retrieval_lifecycle_pending_gaps`
+
+When semantic vectors are enabled and `EMBEDDING_PROVIDER=openai` is requested
+without `OPENAI_API_KEY`, startup emits `embedding_strategy_warning` with
+requested/effective provider-model posture, explicit
+`openai_api_key_missing_fallback_deterministic` hint, and the same
+provider-ownership / owner-strategy diagnostics visible in `/health`.
+
+Operator interpretation for retrieval production baseline:
+
+- `semantic_embedding_production_baseline=openai_api_embeddings` is the target
+  steady-state owner for production retrieval
+- `semantic_embedding_production_baseline_state=aligned_openai_provider_owned`
+  means OpenAI provider-owned execution is active and aligned
+- `semantic_embedding_production_baseline_state=requested_openai_fallback_active`
+  means production baseline was requested but runtime is still falling back
+  because OpenAI credentials are missing
+- `semantic_embedding_production_baseline_state=local_transition_provider_owned`
+  means `local_hybrid` is active as a local transition path, not the final
+  production owner
+- `semantic_embedding_production_baseline_state=deterministic_compatibility_baseline`
+  means runtime is still on the explicit compatibility fallback posture
+
+Operator interpretation for retrieval lifecycle closure:
+
+- `retrieval_lifecycle_policy_owner=retrieval_lifecycle_policy` is the shared
+  source of truth for target provider owner, transition owner, steady-state
+  refresh owner, source-rollout completion baseline, and fallback retirement
+  posture
+- `retrieval_lifecycle_target_provider_baseline=openai_api_embeddings` remains
+  the target steady-state provider owner, while
+  `retrieval_lifecycle_transition_provider_baseline=local_hybrid` records the
+  bounded local transition path
+- `retrieval_lifecycle_source_rollout_baseline=semantic_and_affective_sources_enabled`
+  means semantic plus affective families are the foreground rollout completion
+  baseline; relation remains an explicit optional follow-on family reflected by
+  `retrieval_lifecycle_relation_source_posture`
+- treat `retrieval_lifecycle_relation_source_posture=optional_follow_on_family`
+  as the intended steady-state posture, not as a rollout gap by itself
+- `retrieval_lifecycle_relation_source_policy_owner=relation_source_retrieval_policy`
+  means runtime is using the explicit optional-family governance owner rather
+  than leaving relation-source posture as an inferred side effect
+- `retrieval_lifecycle_relation_source_state=optional_family_not_enabled` means
+  the semantic+affective foreground baseline is complete and relation remains
+  intentionally disabled
+- `retrieval_lifecycle_relation_source_state=optional_family_enabled` means
+  relation embeddings are enabled, but still do not redefine steady-state
+  rollout completion
+- `retrieval_lifecycle_relation_source_state=enabled_ahead_of_baseline` means
+  relation was turned on before semantic+affective baseline completion and
+  should be treated as a bounded governance warning, not as baseline readiness
+- `retrieval_lifecycle_provider_drift_state=aligned_target_provider` means the
+  effective provider owner matches the selected steady-state lifecycle target
+- `retrieval_lifecycle_provider_drift_state=transition_provider_active` means
+  runtime is still intentionally on `local_hybrid`
+- `retrieval_lifecycle_provider_drift_state=compatibility_fallback_active`
+  means runtime is still on deterministic compatibility fallback
+- `retrieval_lifecycle_alignment_state=lifecycle_gaps_present` means rollout is
+  not yet at the intended steady-state baseline and exact blockers are listed
+  in `retrieval_lifecycle_pending_gaps`
+- treat `provider_baseline_not_aligned`,
+  `foreground_source_rollout_incomplete`, and
+  `refresh_owner_not_aligned` in `retrieval_lifecycle_pending_gaps` as rollout
+  blockers when deciding whether retrieval is actually at its intended
+  lifecycle baseline
+- current production-ready retrieval baseline should read as:
+  - `semantic_embedding_provider_requested=openai`
+  - `semantic_embedding_provider_effective=openai`
+  - `semantic_embedding_model_requested=text-embedding-3-small`
+  - `semantic_embedding_model_effective=text-embedding-3-small`
+  - `semantic_embedding_execution_class=provider_owned_openai_api`
+  - `semantic_embedding_production_baseline_state=aligned_openai_provider_owned`
+  - `retrieval_lifecycle_provider_drift_state=aligned_target_provider`
+  - `retrieval_lifecycle_alignment_state=aligned_with_defined_lifecycle_baseline`
+  - `retrieval_lifecycle_pending_gaps=[]`
+- release smoke, exported `incident_evidence`, and incident-evidence bundles now
+  fail on retrieval drift for this baseline instead of leaving the decision to
+  manual operator interpretation
+
+When provider-ownership fallback is active and
+`EMBEDDING_PROVIDER_OWNERSHIP_ENFORCEMENT=strict`, startup emits
+`embedding_strategy_block` and fails fast until effective provider ownership is
+aligned.
+
+When semantic vectors are enabled with `EMBEDDING_PROVIDER=deterministic` and a
+non-baseline model name is requested, startup emits
+`embedding_model_governance_warning` to indicate deterministic embedding
+behavior remains fixed even when model label changes.
+
+When deterministic custom-model-name governance posture is active and
+`EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT=strict`, startup emits
+`embedding_model_governance_block` and fails fast until model governance
+posture is aligned.
+
+When semantic vectors are enabled but embedding source coverage excludes both
+`semantic` and `affective`, startup emits `embedding_source_coverage_warning`
+so operators can see that vector retrieval path is configured without
+high-signal vector source families, with explicit source-rollout diagnostics
+for next-step guidance.
+
+When vectors are enabled and source rollout still has a pending next source
+kind, startup emits `embedding_source_rollout_hint` with rollout completion
+state, next source kind, enabled/missing source sets, and rollout progress.
+
+When vectors are enabled, source rollout is still pending, and
+`EMBEDDING_SOURCE_ROLLOUT_ENFORCEMENT=warn`, startup emits
+`embedding_source_rollout_warning` to keep pending rollout posture visible,
+including recommendation/alignment diagnostics.
+
+When vectors are enabled, source rollout is still pending, and
+`EMBEDDING_SOURCE_ROLLOUT_ENFORCEMENT=strict`, startup emits
+`embedding_source_rollout_block` and fails fast until source rollout is
+complete, including recommendation/alignment diagnostics.
+
+Startup now also emits `embedding_source_rollout_enforcement_hint` to expose
+current enforcement vs recommended rollout posture
+(`aligned|below_recommendation|above_recommendation`).
+
+When semantic vectors are enabled and `EMBEDDING_REFRESH_MODE=manual`, startup
+also emits `embedding_refresh_warning` so operators can confirm that a separate
+manual refresh process exists for embedding updates.
+
+Startup now also emits `embedding_refresh_hint` when refresh mode is not
+aligned with rollout recommendation posture (for example manual override before
+mature rollout, or on-write posture before recommended manual mode after full
+source rollout).
+
+Startup now also emits `embedding_strategy_hint` with strict-rollout readiness,
+recommendations, and enforcement-alignment posture so operators can decide
+whether to keep `warn`, switch to `strict`, or normalize mixed enforcement
+settings before rollout.
+
+On startup, production now emits an explicit warning when
+`EVENT_DEBUG_ENABLED=true`. Treat this warning as a release-hardening signal:
+disable debug payload exposure in production unless there is a short-lived,
+intentional incident-debug window.
+
+When production debug payload exposure is enabled without `EVENT_DEBUG_TOKEN`
+and `PRODUCTION_DEBUG_TOKEN_REQUIRED=true`, startup emits a warning
+recommending token configuration for debug access hardening.
+
+When production debug payload exposure is enabled with
+`PRODUCTION_DEBUG_TOKEN_REQUIRED=false`, startup also emits a warning so
+relaxed debug-token hardening posture is explicit to operators.
+
+When production debug payload exposure is enabled and compatibility
+`POST /event?debug=true` route is also explicitly enabled
+(`EVENT_DEBUG_QUERY_COMPAT_ENABLED=true`), startup emits a warning to keep
+compatibility-surface hardening visible.
+
+On startup, production also emits an explicit warning when
+`STARTUP_SCHEMA_MODE=create_tables`. Treat this as a temporary compatibility
+path warning: production should normally run migration-first startup mode.
+
+Migration-first schema parity baseline:
+
+- treat Alembic head as the bootstrap owner for the full live runtime schema,
+  including `aion_attention_turn` and `aion_subconscious_proposal`
+- when schema-affecting slices land, require both migration evidence and a
+  fresh migration-parity regression before treating docs/runtime inventory as
+  release truth
+
+`PRODUCTION_POLICY_ENFORCEMENT` controls whether these production-policy
+mismatches are warning-only (`warn`) or startup-blocking (`strict`).
+Runtime default is now environment-aware: production defaults to `strict`,
+non-production defaults to `warn`, and explicit config keeps override ownership.
+Current debug-related mismatch examples include
+`event_debug_enabled=true`, `event_debug_query_compat_enabled=true`, and
+`event_debug_token_missing=true`.
+
+## Target Production Baseline (PRJ-296)
+
+Target release posture for production is:
+
+- `STARTUP_SCHEMA_MODE=migrate`
+- `PRODUCTION_POLICY_ENFORCEMENT=strict`
+- `EVENT_DEBUG_ENABLED=false`
+- `EVENT_DEBUG_QUERY_COMPAT_ENABLED=false`
+- `PRODUCTION_DEBUG_TOKEN_REQUIRED=true`
+
+If an incident requires temporary production debug exposure, keep
+`EVENT_DEBUG_TOKEN` configured, keep
+`PRODUCTION_DEBUG_TOKEN_REQUIRED=true`, and disable debug exposure immediately
+after the incident window.
+
+Operator release gate:
+
+- verify `/health.release_readiness.ready=true`
+- verify `/health.runtime_policy.production_policy_mismatches` is empty
+- verify `/health.runtime_policy.strict_startup_blocked=false`
+- verify `/health.runtime_policy.event_debug_query_compat_enabled=false`
+- verify `/health.runtime_policy.startup_schema_compatibility_sunset_ready=true`
+- verify `/health.runtime_policy.event_debug_shared_ingress_sunset_ready=true`
+- verify `/health.runtime_policy.compatibility_sunset_ready=true`
+
+## Internal Debug Ingress Boundary (PRJ-307)
+
+Target posture:
+
+- public API endpoint keeps compact user-facing behavior (`POST /event`)
+- full runtime debug payload access is served through a dedicated internal/admin
+  ingress boundary
+- shared public API endpoint is not the long-term owner of debug payload ingress
+
+Current transitional posture:
+
+- `POST /internal/event/debug` is now the primary internal debug ingress
+- `/health.runtime_policy.event_debug_admin_*` is the canonical machine-visible
+  source for that dedicated-admin target posture
+- shared `POST /event/debug` still runs on the shared API service endpoint
+  behind runtime policy gates and is treated as compatibility surface
+- shared ingress mode is explicitly configurable via
+  `EVENT_DEBUG_SHARED_INGRESS_MODE=compatibility|break_glass_only`
+- compatibility `POST /event?debug=true` remains deprecated and should stay
+  disabled in production baseline
+
+Ownership boundary:
+
+1. Runtime/API owner:
+   - debug payload schema and policy telemetry semantics
+     (`debug_access_posture`, compat telemetry, strict mismatch previews)
+2. Ops/Release owner:
+   - ingress routing, network/auth restrictions, and release/rollback evidence
+     for dedicated internal debug ingress
+
+Migration guardrails:
+
+1. keep `EVENT_DEBUG_ENABLED=false` in production baseline unless a temporary
+   incident-debug window is explicitly approved
+2. when temporary production debug is enabled, require
+   `EVENT_DEBUG_TOKEN` + `PRODUCTION_DEBUG_TOKEN_REQUIRED=true` and record an
+   explicit rollback/expiry window
+3. before retiring shared-endpoint debug in production, verify dedicated
+   internal ingress is operator-reachable and release evidence no longer depends
+   on `POST /event/debug` from public endpoint paths
+4. treat `/health.runtime_policy.event_debug_shared_ingress_retirement_blockers`
+   as the live checklist for any remaining shared compat dependence before
+   tightening or removing public debug compatibility surfaces
+
+## `create_tables` Compatibility Removal Guardrails (PRJ-306)
+
+Before removing `STARTUP_SCHEMA_MODE=create_tables` support from runtime code,
+all of these must be true:
+
+1. production and pre-production operate migration-only (`STARTUP_SCHEMA_MODE=migrate`)
+2. no active runbook/rollback path depends on `create_tables`
+3. release gates remain green for consecutive release windows, including:
+   - `/health.runtime_policy.production_policy_mismatches` stays empty for
+     startup-schema posture
+   - release smoke passes without compatibility bootstrap fallback
+4. migration smoke (`alembic upgrade` + startup + release smoke) is the only
+   approved bootstrap path in release evidence
+5. migration smoke must reach the full live model set, including durable
+   attention and subconscious proposal tables, without relying on
+   `create_tables`
+
+Removal rollout order:
+
+1. freeze new compatibility usage (allow only local/test exceptions)
+2. remove compatibility startup branch from runtime code
+3. remove compatibility-only docs/config references and obsolete tests
+
+## Deployment And Release Path (PRJ-298/PRJ-299)
+
+Primary deployment path:
+
+1. push `main`
+2. allow configured Coolify source automation/webhook to trigger deployment
+3. verify target commit is running before declaring release complete
+
+Repo-driven Coolify deployment-automation baseline (`PRJ-597`):
+
+1. canonical production app:
+   - project `icmgqml9uw3slzch9m9ok23z`
+   - environment `qxooi9coxat272krzjx221fv`
+   - application `jr1oehwlzl8tcn3h8gh2vvih`
+2. intended primary automation path:
+   - push `main`
+   - Coolify source automation should enqueue a deployment for that canonical
+     app without requiring a manual webhook click
+   - operator verifies the target commit in Coolify deployment history before
+     release smoke
+   - the canonical production app must stay connected to the GitHub App source
+     `vps-luckysparrow`; `Public GitHub` on that app is deployment drift, not
+     an acceptable primary-source variant
+   - after a repository rename, verify both the local git remote and the
+     Coolify source repository path; the current canonical repository is
+     `Wroblewski-Patryk/Aviary`
+   - `Personality` is the former repository/product-shell name; production
+     deploy truth must not drift back to `Wroblewski-Patryk/Personality`
+   - for Docker Compose deployments, keep the compose file pointing at the
+     application-owned placeholder `${APP_BUILD_REVISION:-unknown}` instead of
+     referencing `SOURCE_COMMIT` directly
+   - in Coolify UI, set `APP_BUILD_REVISION=$SOURCE_COMMIT` as a runtime
+     variable for the canonical app; if `SOURCE_COMMIT=unknown` appears as a
+     user-managed variable, delete it because it shadows Coolify's predefined
+     commit variable
+3. canonical production proof path:
+   - Coolify deployment history for the canonical app shows the pushed commit
+   - public production `GET /health` is green
+   - release smoke passes against the production URL
+4. bounded fallback posture:
+   - if source automation is delayed or absent, trigger the existing deploy
+     webhook helper first
+   - if webhook trigger is unavailable, use the Coolify UI redeploy for that
+     same canonical app
+   - fallback does not replace the repo-driven baseline; it is the explicit
+     recovery path when automation proof is missing
+5. machine-visible provenance baseline (`PRJ-598`):
+   - `/health.deployment.deployment_automation_policy_owner` must be
+     `coolify_repo_deploy_automation`
+   - `/health.deployment.deployment_automation_baseline.primary_trigger_mode`
+     must stay `source_automation`
+   - `/health.deployment.deployment_automation_baseline.fallback_trigger_modes`
+     must stay `webhook_manual_fallback|ui_manual_fallback`
+   - `/health.deployment.canonical_coolify_app.application_id` is the machine-
+     readable identity for the canonical production app
+   - webhook evidence artifacts
+     (`kind=coolify_deploy_webhook_evidence`) must include
+     `policy_owner`, `trigger_mode`, `trigger_class`, and
+     `canonical_coolify_app`
+   - release smoke now fails fast when any of those provenance fields are
+     missing, which is the intended signal that production is still on an
+     older deploy or that evidence is ambiguous
+
+Explicit fallback path (when automation is delayed or missing):
+
+0. if the canonical app is not visible where expected, verify the active
+   Coolify team scope before assuming deploy automation is broken
+1. trigger Coolify deploy webhook manually:
+   - Windows: `.\backend\scripts\trigger_coolify_deploy_webhook.ps1`
+   - Debian/bash: `./backend/scripts/trigger_coolify_deploy_webhook.sh`
+   - optional evidence capture:
+     - Windows:
+       `.\backend\scripts\trigger_coolify_deploy_webhook.ps1 -EvidencePath artifacts/deploy/coolify-webhook.json`
+     - Debian/bash:
+       `./backend/scripts/trigger_coolify_deploy_webhook.sh "<webhook_url>" "<webhook_secret>" "" "main" "" "" "codex" artifacts/deploy/coolify-webhook.json`
+2. if webhook trigger is unavailable, run Coolify UI redeploy for the same app
+3. verify target commit is running before release smoke
+
+Release smoke ownership:
+
+- before release smoke or tagging, run the read-only release-reality audit to
+  compare local Git, `origin/main`, production backend revision, production web
+  revision, release readiness, and v1 gate state:
+  - Windows:
+    `.\backend\scripts\audit_release_reality.ps1 -BaseUrl "https://aviary.luckysparrow.ch"`
+  - Python:
+    `Push-Location .\backend; ..\.venv\Scripts\python .\scripts\audit_release_reality.py --base-url "https://aviary.luckysparrow.ch"; Pop-Location`
+  - expected release-marker verdict:
+    - `GO_FOR_SELECTED_SHA`
+  - any `HOLD_*` verdict means do not tag and do not claim the selected SHA is
+    deployed
+- release operator (Ops/Release owner of the deploy) runs:
+  - Windows: `.\backend\scripts\run_release_smoke.ps1 -BaseUrl "<deployment_url>"`
+  - Debian/bash: `./backend/scripts/run_release_smoke.sh "<deployment_url>"`
+- when deployment-trigger evidence was captured, release smoke can verify it
+  before the HTTP smoke roundtrip:
+  - Windows:
+    `.\backend\scripts\run_release_smoke.ps1 -BaseUrl "<deployment_url>" -DeploymentEvidencePath artifacts/deploy/coolify-webhook.json`
+  - Debian/bash:
+    `./backend/scripts/run_release_smoke.sh "<deployment_url>" "" "manual-smoke" "false" artifacts/deploy/coolify-webhook.json`
+- deployment evidence verification remains optional so existing smoke posture
+  stays backward-compatible when no evidence artifact is available.
+- when deployment evidence is supplied, treat `trigger_class=manual_fallback`
+  as bounded recovery posture, not as proof that source automation is healthy;
+  the primary proof still comes from Coolify deploy history for the canonical
+  app.
+- smoke now fails fast when `/health.release_readiness.ready=false`
+  (or when fallback policy-gate checks detect drift on older runtimes).
+- smoke now also fails fast when
+  `/health.reflection.deployment_readiness.ready=false`
+  (or when fallback reflection handoff/task-health checks detect deployment
+  readiness blockers on older runtimes).
+- when deployment evidence is provided, smoke also fails fast if the artifact
+  kind is wrong, the webhook response was unsuccessful, or the artifact age
+  exceeds the selected max-age window.
+- smoke now also fails fast when compatibility-sunset evidence fields are
+  missing or internally inconsistent, and includes the verified
+  migration-bootstrap/shared-debug-ingress posture in the JSON summary.
+- release is not considered complete until smoke passes (`GET /health` plus
+  `POST /event` roundtrip).
+- release-readiness now also requires behavior-validation evidence for the
+  living-system baseline:
+  - operator evidence mode (local/manual):
+    - Windows: `.\backend\scripts\run_behavior_validation.ps1 -GateMode operator`
+    - Debian/bash: `./backend/scripts/run_behavior_validation.sh --gate-mode operator`
+  - CI gate mode (fail-fast on gate violations):
+    - Windows:
+      `.\backend\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactPath artifacts/behavior_validation/report.json`
+    - Debian/bash:
+      `./backend/scripts/run_behavior_validation.sh --gate-mode ci --artifact-path artifacts/behavior_validation/report.json`
+  - CI split-stage mode (evaluate pre-generated artifact only):
+    - Windows:
+      `.\backend\scripts\run_behavior_validation.ps1 -GateMode ci -ArtifactInputPath artifacts/behavior_validation/report.json -ArtifactPath artifacts/behavior_validation/report.gate.json`
+    - Debian/bash:
+      `./backend/scripts/run_behavior_validation.sh --gate-mode ci --artifact-input-path artifacts/behavior_validation/report.json --artifact-path artifacts/behavior_validation/report.gate.json`
+  - required focus: internal `system_debug` surface plus scenario checks for
+    memory influence, multi-session continuity, failure-mode stability,
+    connector execution posture, proactive cadence posture, metadata-only
+    role/skill boundary, deferred reflection expectations, and
+    `relation_source_policy` posture versus `/health.memory_retrieval`.
+  - artifact contract now includes explicit
+    `artifact_schema_version` + `gate_reason_taxonomy_version`, and gate output
+    includes `violation_context` for deterministic machine parsing.
+
+Rollback posture:
+
+1. if release smoke fails, stop rollout and keep previous known-good release as
+   active baseline
+2. redeploy previous known-good commit via Coolify (webhook or UI fallback)
+3. rerun release smoke against restored deployment URL
+
+## Required Environment Variables
+
+- `DATABASE_URL`
+- `APP_ENV`
+- `APP_PORT`
+- `LOG_LEVEL`
+
+Production-only required in practice:
+
+- `OPENAI_API_KEY`
+- `TELEGRAM_BOT_TOKEN`
+
+Required for the first live provider-backed connector path:
+
+- `CLICKUP_API_TOKEN`
+- `CLICKUP_LIST_ID`
+
+Next bounded connector-read baseline selected for implementation:
+
+- `calendar:read_availability`
+- provider hint target: `google_calendar`
+- expected operator posture after implementation:
+  - `policy_only` when no adapter is present yet
+  - `credentials_missing` when adapter lands without provider credentials
+  - `provider_backed_ready` when the selected provider path is configured
+- safe output contract stays bounded to availability evidence, not raw event
+  payloads
+- current live bounded path is now
+  `calendar.google_calendar_read_availability` in
+  `/health.connectors.execution_baseline`
+- treat `state=credentials_missing` as configuration drift only for the bounded
+  calendar read adapter, not as permission to widen other calendar operations
+- treat `state=provider_backed_ready` as permission for action to execute only
+  explicit `read_only` availability intents; create/update/cancel operations
+  remain policy-only unless separately approved
+
+Current bounded cloud-drive metadata-read baseline:
+
+- `cloud_drive:list_files`
+- provider hint target: `google_drive`
+- current live bounded path is now `cloud_drive.google_drive_list_files` in
+  `/health.connectors.execution_baseline`
+- expected operator posture:
+  - `credentials_missing` when runtime lacks provider credentials for bounded
+    metadata-read execution
+  - `provider_backed_ready` when the selected provider path is configured
+- safe output contract must stay metadata-only:
+  - bounded file-name preview
+  - provider file id
+  - mime type or provider file kind
+  - modified-time or recency note
+  - optional truncation or next-page note
+- document body content, downloads, and write semantics remain out of scope
+  for this lane
+- treat `state=credentials_missing` as configuration drift only for the
+  bounded Google Drive metadata adapter, not as permission to widen other
+  cloud-drive operations
+- treat `state=provider_backed_ready` as permission for action to execute only
+  explicit `read_only` `list_files` typed intents through the Google Drive
+  metadata adapter
+
+Recommended when Telegram webhooks are enabled:
+
+- `TELEGRAM_WEBHOOK_SECRET`
+- `EVENT_DEBUG_ENABLED` to control whether debug payload routes
+  (`POST /internal/event/debug`, shared `POST /event/debug`, and compatibility
+  `POST /event?debug=true`) can expose full internal runtime payloads
+  (production default is disabled unless explicitly enabled)
+- `EVENT_DEBUG_TOKEN` (optional) to require `X-AION-Debug-Token` for
+  debug payload route access
+- `EVENT_DEBUG_SHARED_INGRESS_MODE` (optional, default `compatibility`) to
+  control shared endpoint posture (`compatibility|break_glass_only`) for
+  `POST /event/debug`
+- `EVENT_DEBUG_QUERY_COMPAT_ENABLED` (optional) to explicitly enable or disable
+  compatibility `POST /event?debug=true` route (production default is disabled)
+- `EVENT_DEBUG_QUERY_COMPAT_RECENT_WINDOW` (optional, default `20`) to control
+  rolling-window size used by compat-route trend telemetry
+- `EVENT_DEBUG_QUERY_COMPAT_STALE_AFTER_SECONDS` (optional, default `86400`)
+  to control stale-age threshold used by compat-route freshness telemetry
+- `SEMANTIC_VECTOR_ENABLED` (optional, default `true`) to toggle semantic
+  vector retrieval/persistence posture (`true` for hybrid vector+lexical,
+  `false` for lexical-only)
+- `EMBEDDING_PROVIDER` (optional, default `deterministic`) to declare requested
+  embedding provider posture (`deterministic|local_hybrid|openai`)
+- `EMBEDDING_MODEL` (optional, default `deterministic-v1`) to configure
+  requested embedding model posture
+- `EMBEDDING_DIMENSIONS` (optional, default `32`) to control embedding/query
+  vector dimensions
+- `EMBEDDING_SOURCE_KINDS` (optional, default
+  `episodic,semantic,affective`) to control which memory families persist
+  embedding records (`episodic|semantic|affective|relation`). Coolify
+  production now defaults this to `episodic,semantic,affective,relation` so
+  optional relation vector hits can be reloaded through the existing
+  relation/adaptive runtime path; override to `episodic,semantic,affective`
+  to roll that optional family back without disabling the baseline.
+- `EMBEDDING_REFRESH_MODE` (optional, default `on_write`) to define embedding
+  refresh ownership posture (`on_write|manual`)
+- `EMBEDDING_REFRESH_INTERVAL_SECONDS` (optional, default `21600`) to declare
+  expected embedding refresh cadence interval in seconds (must be at least
+  `60`)
+- `EMBEDDING_PROVIDER_OWNERSHIP_ENFORCEMENT` (`warn|strict`, default `warn`)
+  to decide whether provider-ownership fallback remains warning-only or blocks
+  startup
+- `EMBEDDING_MODEL_GOVERNANCE_ENFORCEMENT` (`warn|strict`, default `warn`) to
+  decide whether deterministic custom-model-name governance posture remains
+  warning-only or blocks startup
+- `EMBEDDING_SOURCE_ROLLOUT_ENFORCEMENT` (`warn|strict`, default `warn`) to
+  decide whether pending source-rollout posture remains warning-only or blocks
+  startup
+- production retrieval rollout baseline (`PRJ-476`):
+  - provider owner target is OpenAI API embeddings when `OPENAI_API_KEY` is
+    configured
+  - `local_hybrid` remains a local transition path
+  - deterministic remains the explicit compatibility fallback baseline
+  - refresh owner baseline is `on_write` during rollout (`manual` only as
+    explicit operator override)
+  - family rollout order is `episodic+semantic`, then `affective`, then
+    `relation`
+- `PRODUCTION_DEBUG_TOKEN_REQUIRED` (`true|false`, default `true`) to require
+  a configured debug token for production debug payload access when debug
+  exposure is enabled
+- `PRODUCTION_POLICY_ENFORCEMENT` (`warn|strict`) to decide whether production
+  policy mismatches remain warning-only or block startup
+  (default: `strict` in production, `warn` outside production)
+- `SCHEDULER_EXECUTION_MODE` (`in_process|externalized`) to define maintenance
+  and proactive cadence owner posture
+- `ATTENTION_BURST_WINDOW_MS` (optional) to tune burst-message coalescing
+  latency and aggregation behavior
+- `ATTENTION_ANSWERED_TTL_SECONDS` and `ATTENTION_STALE_TURN_SECONDS` (optional)
+  to tune in-memory turn lifecycle cleanup behavior
+- `ATTENTION_COORDINATION_MODE` (`in_process|durable_inbox`) to define
+  turn-assembly owner posture and rollout expectation
+
+## Common Operator Flows
+
+## Reflection Topology Posture
+
+Current reflection runtime topology is explicit and mode-aware:
+
+- `REFLECTION_RUNTIME_MODE=in_process`:
+  app-local worker can dispatch queued reflection tasks immediately
+- `REFLECTION_RUNTIME_MODE=deferred`:
+  foreground still enqueues tasks durably, while dispatch is expected from an
+  external scheduler/worker driver
+
+Current external-driver operating baseline (PRJ-480..PRJ-483):
+
+- `REFLECTION_RUNTIME_MODE=deferred` is now the explicit target production
+  posture for externalized reflection dispatch ownership
+- the canonical queue-drain entrypoint is
+  `scripts/run_reflection_queue_once.py`
+- operator wrappers are:
+  - Windows: `.\backend\scripts\run_reflection_queue_once.ps1`
+  - Debian/bash: `./backend/scripts/run_reflection_queue_once.sh`
+- app-local `in_process` worker remains compatibility posture for local or
+  transitional environments, not the target external-worker baseline
+- current Coolify production baseline now defaults
+  `REFLECTION_RUNTIME_MODE=deferred`, while scheduler cadence ownership remains
+  a separate transitional lane until the external scheduler cutover work is
+  completed
+
+Deferred readiness criteria (all required before production-default switch):
+
+1. external dispatcher ownership is explicit in runbook/release ownership
+2. `/health.reflection.topology.external_driver_expected=true` and
+   `queue_drain_owner=external_driver`
+3. deferred queue posture is stable (`pending` backlog does not show recurring
+   growth; `stuck_processing=0`; `exhausted_failed=0` during release windows)
+4. mode-consistent handoff is visible in scheduler/runtime logs
+   (`scheduler_tick_dispatch=false` with external dispatch expectation)
+5. release smoke + rollback procedures include reflection deployment readiness
+   checks for the selected mode
+
+Operator checks:
+
+- verify `/health.reflection` queue snapshot and worker-running posture
+- verify `/health.reflection.deployment_readiness`:
+  - `ready`
+  - `blocking_signals`
+  - `baseline_runtime_mode`
+  - `selected_runtime_mode`
+- verify `/health.reflection.topology` handoff posture:
+  - `queue_drain_owner`
+  - `external_driver_expected`
+  - `runtime_enqueue_dispatch` / `runtime_enqueue_reason`
+  - `scheduler_tick_dispatch` / `scheduler_tick_reason`
+  - retry guardrails (`max_attempts`, `retry_backoff_seconds`)
+- verify `/health.reflection.external_driver_policy`:
+  - `policy_owner=deferred_reflection_external_worker`
+  - `entrypoint_path=scripts/run_reflection_queue_once.py`
+  - `production_baseline_ready`
+  - `production_baseline_state`
+  - `production_baseline_hint`
+- verify `/health.reflection.supervision`:
+  - `policy_owner=deferred_reflection_supervision_policy`
+  - `queue_health_state`
+  - `production_supervision_ready`
+  - `production_supervision_state`
+  - `blocking_signals`
+  - `recovery_actions`
+- verify `/health.scheduler` owner posture:
+  - `execution_mode`
+  - `maintenance_cadence_owner` / `proactive_cadence_owner`
+  - `cadence_execution.selected_execution_mode`
+  - `cadence_execution.maintenance_tick_dispatch` /
+    `cadence_execution.maintenance_tick_reason`
+  - `cadence_execution.proactive_tick_dispatch` /
+    `cadence_execution.proactive_tick_reason`
+  - `cadence_execution.ready` / `cadence_execution.blocking_signals`
+  - `external_owner_policy.policy_owner=external_scheduler_cadence_policy`
+  - `external_owner_policy.target_execution_mode=externalized`
+  - `external_owner_policy.maintenance_entrypoint_path=scripts/run_maintenance_tick_once.py`
+  - `external_owner_policy.proactive_entrypoint_path=scripts/run_proactive_tick_once.py`
+  - `external_owner_policy.production_baseline_ready`
+- treat growing pending queue in deferred mode as external-dispatch signal
+  rather than foreground failure
+- treat `queue_health_state=active_backlog_under_supervision` as a recoverable
+  backlog posture, not an immediate release failure by itself
+- treat `queue_health_state=recovery_required` or any non-empty
+  `blocking_signals` as the operator signal that reflection durability needs
+  intervention before deferred mode can be treated as healthy release posture
+- use the external driver entrypoint for one-shot drain checks:
+  - Windows: `.\backend\scripts\run_reflection_queue_once.ps1 -Limit 10`
+  - Debian/bash: `./backend/scripts/run_reflection_queue_once.sh 10`
+- verify `aion.scheduler` `scheduler_reflection_tick` logs include
+  `runtime_mode`, `queue_drain_owner`, and `retry_owner` for worker-mode
+  triage
+
+Regression anchors:
+
+- `tests/test_api_routes.py` pins `/health.reflection.topology` handoff fields
+- `tests/test_scheduler_worker.py` pins scheduler worker-mode log posture
+- `tests/test_reflection_worker.py` pins exhausted-retry skip behavior in
+  drain-once processing
+
+Ownership invariants:
+
+- enqueue remains foreground-follow-up owned (`memory_persist` then
+  `reflection_enqueue`)
+- retry/backoff semantics remain queue-owned across runtime modes
+- reflection execution must not block foreground response completion
+
+## Scheduler Cadence Ownership Boundary (PRJ-308)
+
+Target posture:
+
+- long-term production cadence ownership for maintenance/proactive wakeups moves
+  to a dedicated external scheduler owner
+- app-local scheduler cadence remains transitional and fallback-oriented during
+  rollout or incident recovery
+- the canonical production entrypoints for that owner are
+  `scripts/run_maintenance_tick_once.py` and
+  `scripts/run_proactive_tick_once.py`; wrapper scripts are convenience layers
+  only
+
+Ownership boundaries:
+
+1. Runtime owner:
+   - scheduler event normalization contract
+   - guardrail checks and conscious execution boundaries for scheduled events
+2. Scheduler owner:
+   - cadence triggering, retries/backoff, and runtime wakeup delivery posture
+   - production availability/on-call ownership for scheduler path
+
+Rollout guardrails before production cadence externalization:
+
+1. explicit runbook ownership and rollback steps for external scheduler path
+2. idempotent scheduler-event contract checks validated in regression and smoke
+   evidence
+3. release smoke coverage verifies selected cadence owner path and alerting
+   visibility
+
+Cutover proof baseline for treating the external scheduler as the real owner:
+
+1. `external_owner_policy.selected_execution_mode=externalized`
+2. recent successful maintenance tick evidence from the canonical external
+   entrypoint
+3. recent successful proactive tick evidence from the canonical external
+   entrypoint
+4. bounded duplicate-protection or idempotency evidence for both cadence
+   entrypoints
+5. explicit stale-or-missing evidence posture visible in health or release
+   evidence
+6. rollback posture that keeps app-local scheduler ownership as the explicit
+   recovery baseline when any proof item is missing
+
+These proof items are now machine-visible through
+`/health.scheduler.external_owner_policy`:
+
+- `maintenance_run_evidence`
+- `proactive_run_evidence`
+- `duplicate_protection_posture`
+- `cutover_proof_ready`
+
+Interpretation:
+
+- `selected_execution_mode=externalized` plus `cutover_proof_ready=false`
+  means the repo is targeting external ownership but has not yet proven
+  cutover readiness
+- `cutover_proof_ready=true` means recent run evidence and bounded
+  duplicate-protection posture are both present for the current cadence
+- on Coolify, cadence sidecars must retry quickly after non-zero startup exits
+  because `python -m alembic upgrade head` still runs after containers start;
+  otherwise a migration-race failure can delay fresh cadence evidence by the
+  full normal interval
+  baseline
+- release smoke now validates that those proof fields exist and use recognized
+  states
+- behavior-validation gate logic now validates the same proof surface from
+  exported `incident_evidence`
+
+## Post-Reflection Hardening Baseline (PRJ-309)
+
+Post-reflection hardening decisions are synchronized through `PRJ-309`:
+
+- migration-first startup remains the production target and `create_tables`
+  compatibility removal guardrails stay explicit
+- internal debug ingress target boundary is defined and shared-endpoint debug
+  posture is treated as transitional
+- scheduler cadence ownership target is explicit (external long-term owner,
+  app-local transitional fallback)
+- release smoke now checks `/health.scheduler.external_owner_policy` for the
+  same target owner, entrypoint paths, and baseline readiness that startup
+  logs expose
+- attention owner posture is explicit (`in_process|durable_inbox`) with
+  readiness blockers surfaced in `/health.attention.deployment_readiness`
+
+Next execution lane after this sync:
+
+- runtime behavior validation architecture and scenarios (`PRJ-310..PRJ-317`)
+  extend release confidence from subsystem health checks to
+  memory/continuity/failure behavior evidence
+
+### Start Local Stack
+
+```powershell
+docker compose up --build
+```
+
+### Run Repeatable Manual Smoke
+
+Windows PowerShell:
+
+```powershell
+.\backend\scripts\run_release_smoke.ps1 -BaseUrl "http://localhost:8000"
+```
+
+Windows PowerShell with UTF-8 payload check:
+
+```powershell
+.\backend\scripts\run_release_smoke.ps1 `
+  -BaseUrl "http://localhost:8000" `
+  -Text "zażółć gęślą jaźń"
+```
+
+Debian / bash:
+
+```bash
+./backend/scripts/run_release_smoke.sh "http://localhost:8000"
+```
+
+Optional debug payload:
+
+```powershell
+.\backend\scripts\run_release_smoke.ps1 -BaseUrl "http://localhost:8000" -IncludeDebug
+```
+
+With `-IncludeDebug`, release smoke now also validates exported
+`incident_evidence` directly and records its schema version, stage count, and
+policy-surface coverage in the smoke summary. It also records the proactive
+planned-action observer policy owner and latest observer state from live
+`/health`, debug `incident_evidence`, and incident-evidence bundle validation
+so passive/active trigger drift is release-visible.
+
+For dedicated debug-ingress retirement, `-IncludeDebug` now also proves:
+
+- dedicated-admin target path remains `/internal/event/debug`
+- shared debug posture remains `break_glass_only`
+- query compatibility remains disabled in incident evidence
+- rollback exception is explicit as either
+  `shared_debug_break_glass_only` or `shared_debug_disabled`
+- Telegram conversation posture is present in exported incident evidence under
+  `policy_posture["conversation_channels.telegram"]`
+
+## Incident Evidence Bundle Baseline
+
+Operator-ready incident evidence should be captured as one bounded bundle:
+
+- `manifest.json`
+- `incident_evidence.json`
+- `health_snapshot.json`
+- optional `behavior_validation_report.json`
+
+Release evidence archive ownership is defined in
+`docs/planning/v1-release-evidence-archive-standard.md`. Use that standard to
+decide which generated bundle directories stay local, which committed docs hold
+the durable release decision, and when archive pointers must be refreshed.
+
+Recommended artifact root:
+
+- `artifacts/incident_evidence/<captured_at_utc>_<trace_id_or_event_id>/`
+
+Current source-of-truth mapping:
+
+- `incident_evidence.json` comes from debug-mode runtime output
+- `health_snapshot.json` comes from `GET /health`
+- `behavior_validation_report.json` is attached only when validation was run
+  for the same investigation window
+- the canonical collection helper is
+  `scripts/export_incident_evidence_bundle.py`
+
+Retention baseline:
+
+- keep the latest successful release bundle
+- keep the latest failing release or incident bundle
+- keep active incident bundles until incident closure plus rollback review
+
+Canonical helper flow:
+
+```powershell
+.\.venv\Scripts\python .\backend\scripts\export_incident_evidence_bundle.py `
+  --base-url "http://localhost:8000"
+```
+
+Optional attachment flow when behavior validation already exists:
+
+```powershell
+.\.venv\Scripts\python .\backend\scripts\export_incident_evidence_bundle.py `
+  --base-url "http://localhost:8000" `
+  --behavior-validation-report-path "artifacts/behavior_validation/report.json"
+```
+
+Bundle verification through release smoke:
+
+```powershell
+.\backend\scripts\run_release_smoke.ps1 `
+  -BaseUrl "http://localhost:8000" `
+  -IncidentEvidenceBundlePath "artifacts/incident_evidence/<captured_at_utc>_<trace_id_or_event_id>"
+```
+
+Bundle verification now also checks the same dedicated-admin debug posture
+from `incident_evidence.json`, so retirement proof does not depend only on the
+live `/health.runtime_policy` snapshot.
+Bundle verification now also checks Telegram conversation posture from
+`incident_evidence.json`, so `v1` conversation reliability does not depend
+only on live `/health` during release or incident review.
+Bundle verification now also checks learned-state inspection posture from
+`incident_evidence.json`, so future UI and admin inspection readiness do not
+depend only on live `/health.learned_state` during release or incident review.
+Bundle verification now also checks the bounded capability-catalog contract
+from `health_snapshot.json`, so future UI/bootstrap work does not depend only
+on a live `/health.capability_catalog` call during incident or release review.
+Bundle verification now also checks durable-attention posture from
+`incident_evidence.json`, so release and incident review do not depend only on
+the public `/health` snapshot for attention-owner proof.
+
+When repo-driven Coolify source automation is expected to converge on the
+latest pushed commit but release smoke still shows an older
+`runtime_build_revision`, use bounded wait mode before declaring trigger drift:
+
+```powershell
+.\backend\scripts\run_release_smoke.ps1 `
+  -BaseUrl "https://YOUR_DOMAIN" `
+  -WaitForDeployParity `
+  -DeployParityMaxWaitSeconds 120 `
+  -DeployParityPollSeconds 15
+```
+
+Wait mode is operator opt-in. Default smoke remains immediate-fail on parity
+drift so final release proof does not silently absorb stale deployments.
+
+Release smoke now also keeps a small bounded retry budget for `/health`
+transport failures during deploy convergence. Treat repeated `503` after the
+retry budget as a real availability problem; treat one brief `503` followed by
+green smoke as normal transient convergence rather than as deploy failure.
+
+When public production returns repeated `503 Service Unavailable` with body
+`no available server`, the reverse proxy has no healthy app backend. After the
+release-smoke retry budget is exhausted, use this operator checklist before
+changing code:
+
+1. Confirm the canonical Coolify app and team scope:
+   - application: `jr1oehwlzl8tcn3h8gh2vvih`
+   - repository: `Wroblewski-Patryk/Aviary`
+   - branch: `main`
+2. Check Coolify deployment history for the selected pushed SHA.
+3. Inspect the latest deployment logs in this order:
+   - `db` health
+   - one-shot `migrate` exit code
+   - `app` container startup and `/health` healthcheck
+   - `maintenance_cadence` and `proactive_cadence` after `migrate`
+4. If `migrate` failed, treat it as schema/dependency ownership first.
+5. If `app` failed while local `docker-compose.coolify.yml` smoke passes,
+   compare Coolify environment overrides against the repo compose defaults,
+   especially `DATABASE_URL`, `STARTUP_SCHEMA_MODE`, `APP_BUILD_REVISION`,
+   `APP_ENV`, and provider secret presence.
+6. Restore availability through the approved path:
+   - source automation redeploy for the selected SHA
+   - approved webhook fallback with evidence
+   - Coolify UI redeploy for the same canonical app when webhook is unavailable
+7. Rerun production release smoke with deploy parity before moving any marker.
+
+Optional debug payload with token:
+
+```powershell
+curl -X POST "http://localhost:8000/internal/event/debug" `
+  -H "Content-Type: application/json" `
+  -H "X-AION-Debug-Token: <token>" `
+  -d "{\"text\":\"debug check\"}"
+```
+
+Shared compatibility debug payload in break-glass mode:
+
+```powershell
+curl -X POST "http://localhost:8000/event/debug" `
+  -H "Content-Type: application/json" `
+  -H "X-AION-Debug-Break-Glass: true" `
+  -H "X-AION-Debug-Token: <token>" `
+  -d "{\"text\":\"debug check\"}"
+```
+
+Compatibility debug payload with token:
+
+```powershell
+curl -X POST "http://localhost:8000/event?debug=true" `
+  -H "Content-Type: application/json" `
+  -H "X-AION-Debug-Token: <token>" `
+  -d "{\"text\":\"debug check\"}"
+```
+
+When compat route is accepted, response includes compatibility/deprecation
+headers that point to `POST /internal/event/debug` as the preferred internal
+path.
+
+Production default posture now treats shared `POST /event/debug` as
+break-glass-only when no explicit override is configured; use
+`POST /internal/event/debug` as the normal operator ingress.
+
+Shared debug retirement gate baseline:
+
+- cutover posture:
+  `dedicated_internal_admin_route_primary_shared_routes_break_glass_then_remove`
+- required checklist:
+  - `normal_operator_debug_uses_dedicated_internal_admin_route`
+  - `shared_event_debug_route_is_break_glass_only_or_disabled`
+  - `query_debug_compatibility_route_disabled`
+  - `release_smoke_green_for_dedicated_admin_debug_path`
+  - `rollback_notes_cover_shared_debug_break_glass_reenablement`
+- treat `event_debug_shared_ingress_retirement_gate_state` as the compact
+  machine-visible summary:
+  - `shared_debug_compatibility_retirement_blocked`: shared route or query
+    compat is still active in normal flows
+  - `shared_debug_break_glass_retirement_gate_ready`: runtime is at
+    break-glass-only posture and ready for the next enforcement/removal step
+  - `shared_debug_disabled_retirement_gate_satisfied`: debug payload is off, so
+    no shared ingress remains to retire operationally
+- treat incident-evidence posture as the release-proof companion to those
+  `/health.runtime_policy` fields:
+  - release smoke must stay green for live debug `incident_evidence`
+  - bundle verification must stay green for `incident_evidence.json`
+  - behavior-validation CI gate must stay green when incident evidence is
+    attached to the same release or incident investigation
+
+### Run Health Check
+
+```powershell
+curl http://localhost:8000/health
+```
+
+For repo-driven Coolify deploys, use this startup-order checklist before
+treating a failed release as an app bug:
+
+1. verify `db` is healthy
+2. verify the one-shot `migrate` service exited successfully
+3. verify `app` becomes healthy on `/health`
+4. verify `maintenance_cadence` and `proactive_cadence` started only after the
+   migration owner succeeded
+
+If `migrate` fails, treat the deploy as a schema-ownership failure first, not
+as a foreground-runtime regression.
+
+### Coolify Webhook Fallback Readiness
+
+Primary production deployment should still come from Coolify source
+automation. Use the webhook fallback only as an approved manual recovery path
+when source automation does not converge for the selected SHA.
+
+Readiness check:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python .\scripts\check_coolify_fallback_readiness.py --print-json
+Pop-Location
+```
+
+The check is read-only. It does not trigger a deploy and it redacts the
+webhook secret. It verifies:
+
+- `COOLIFY_DEPLOY_WEBHOOK_URL` or `--webhook-url`
+- `COOLIFY_DEPLOY_WEBHOOK_SECRET` or `--webhook-secret`
+- HTTPS webhook URL shape
+- repository and branch
+- before/after SHA shape
+- canonical Coolify app metadata from deployment policy
+
+When the report is `ready=true`, run the actual fallback trigger with an
+evidence file:
+
+```powershell
+.\backend\scripts\trigger_coolify_deploy_webhook.ps1 `
+  -WebhookUrl "<coolify_webhook_url>" `
+  -WebhookSecret "<coolify_webhook_secret>" `
+  -Repository "Wroblewski-Patryk/Aviary" `
+  -Branch "main" `
+  -BeforeSha "<before_sha>" `
+  -AfterSha "<after_sha>" `
+  -EvidencePath "artifacts/deploy/coolify-webhook.json"
+```
+
+Then rerun production release smoke with deploy parity. The generated
+`artifacts/deploy/coolify-webhook.json` file remains local unless an operator
+explicitly selects a sanitized artifact for archival.
+
+### Release Go/No-Go Wrapper
+
+Use the wrapper when an operator needs one command that composes the release
+reality audit with the release-smoke posture:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python .\scripts\run_release_go_no_go.py `
+  --base-url https://aviary.luckysparrow.ch `
+  --enforce-local-head-parity
+Pop-Location
+```
+
+For monitoring the already deployed current `v1.0.1` marker while local `main`
+has moved ahead, use:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python .\scripts\run_release_go_no_go.py `
+  --base-url https://aviary.luckysparrow.ch `
+  --selected-tag v1.0.1 `
+  --monitor-mode
+Pop-Location
+```
+
+The second form uses the release reality audit for the selected tag. It does
+not run local-HEAD-bound release smoke when the selected tag differs from local
+`HEAD`, unless `--enforce-local-head-parity` is explicitly passed.
+
+Important health surfaces for current release checks:
+
+- `runtime_policy.startup_schema_removal_window`
+- `runtime_policy.event_debug_shared_ingress_enforcement_window`
+- `observability`
+  - shared export policy owner
+  - `export_artifact_available`
+  - `incident_export_ready`
+- `affective`
+  - heuristic-input ownership baseline
+  - assessment rollout/fallback posture for live empathy triage
+- `runtime_topology`
+- `role_skill`
+  - shared role/skill policy owner
+  - metadata-only execution boundary
+  - planning carry-forward posture and action-side execution denial
+- `learned_state`
+  - shared learned-state inspection policy owner
+  - canonical internal inspection path for future UI or admin callers
+  - bounded section contract for `identity_state`, `learned_knowledge`,
+    `role_skill_state`, and `planning_state`
+  - pair it with internal `GET /internal/state/inspect?user_id=...` when you
+    need bounded snapshots of identity state, learned knowledge, role/skill
+    metadata, and planning state
+  - the richer bounded growth summaries now live in:
+    - `identity_state.preference_summary`
+    - `learned_knowledge.knowledge_summary`
+    - `learned_knowledge.reflection_growth_summary`
+    - `role_skill_state.selection_visibility_summary`
+    - `planning_state.continuity_summary`
+  - release smoke and incident-evidence bundle validation now fail if the
+    learned-state posture loses any of those bounded contract sections
+- `capability_catalog`
+  - shared backend capability-catalog owner for future UI or admin callers
+  - one bounded aggregation of:
+    - role posture
+    - metadata-only skill catalog posture
+    - organizer and web-knowledge tool posture
+    - learned-state linkage
+  - use it when you need one backend-owned capability view without rebuilding
+    truth from multiple `/health` subtrees on the client side
+  - pair it with internal `GET /internal/state/inspect?user_id=...` when you
+    need the same catalog plus selection-visibility details from backend
+    inspection
+- `api_readiness`
+  - shared backend API-readiness owner for later `v2` UI callers
+  - canonical health surfaces for learned-state, role-skill, connectors, and
+    `v1` readiness
+  - canonical current-turn debug path and internal inspection path so future UI
+    bootstrap does not guess where backend truth lives
+- `proactive`
+  - shared proactive policy owner and selected cadence owner
+  - delivery-target baseline and candidate-selection baseline
+  - anti-spam threshold snapshot plus latest proactive tick summary
+  - enabled state plus production baseline readiness and state
+- `planning_governance`
+  - inferred goal/task growth posture
+  - fixed proposal-decision baseline
+- `memory_retrieval.semantic_embedding_execution_class`
+  - whether retrieval is currently running as deterministic baseline,
+    local provider-owned execution, OpenAI provider-owned execution, or
+    provider-requested fallback
+  - pair it with
+    `memory_retrieval.semantic_embedding_production_baseline_state` to tell
+    whether runtime is aligned with the target OpenAI production owner,
+    still on a local transition path, or still on compatibility fallback
+- `memory_retrieval.retrieval_lifecycle_alignment_state`
+  - whether retrieval is actually aligned with the selected steady-state
+    lifecycle baseline
+  - treat `lifecycle_gaps_present` as the high-signal summary field for
+    rollout blockers before reading deeper embedding diagnostics
+- `memory_retrieval.retrieval_lifecycle_pending_gaps`
+  - exact lifecycle blockers across provider owner, refresh owner, and
+    foreground source-rollout completion
+- `connectors`
+  - connector authorization matrix
+  - capability-proposal posture for not-yet-authorized expansion
+  - `execution_baseline` shows whether the current live provider-backed
+    task-system paths are configured
+  - `web_knowledge_tools` shows the selected provider-backed search/browser
+    posture, the fallback posture, and the metadata-only skill boundary for
+    those action-owned tool families
+  - `task_system.clickup_create_task.state=credentials_missing` means the repo
+    is still in policy-only posture for task creation at runtime
+  - `task_system.clickup_create_task.state=provider_backed_ready` means action
+    has a provider-backed create adapter available, but action may execute it
+    only when the matching connector permission gate is explicitly confirmed
+    with `allowed=true`
+  - `task_system.clickup_list_tasks.state=credentials_missing` means the repo
+    is still policy-only for provider-backed task reads at runtime
+  - `task_system.clickup_list_tasks.state=provider_backed_ready` means action
+    may execute a bounded ClickUp task read from explicit `read_only` typed
+    intents without widening planning or context ownership
+  - `task_system.read_capable_live_paths` versus
+    `task_system.mutation_live_paths` shows which live surfaces already exist
+    under the task-system family
+  - `task_system.clickup_update_task.state=credentials_missing` means the
+    bounded ClickUp update path exists but runtime lacks provider credentials
+    for mutation execution
+- `task_system.clickup_update_task.state=provider_backed_ready` means action
+  has a provider-backed update adapter available. Normal planner-emitted
+  update requests should first perform read-only `list_tasks` candidate triage
+  and stop with a `confirmation_required` observation; provider mutation is
+  allowed only when the matching connector permission gate is explicitly
+  confirmed with `allowed=true`.
+- `/health.connectors.organizer_tool_stack` is the shared operator surface for
+  the frozen first production organizer stack:
+  - `approved_operations`
+  - `read_only_operations`
+  - `confirmation_required_operations`
+  - `user_opt_in_required_operations`
+  - `daily_use_workflows`
+  - `daily_use_ready_workflow_count`
+  - `daily_use_total_workflow_count`
+  - `daily_use_ready_workflows`
+  - `daily_use_blocked_workflows`
+  - `daily_use_state`
+  - `daily_use_hint`
+  - `activation_snapshot`
+    - use this as the primary operator onboarding view for production
+      credential activation
+    - `provider_activation_state=provider_activation_incomplete` means the
+      frozen organizer baseline is live in contract terms but still missing one
+      or more provider credentials
+    - `provider_activation_state=all_providers_ready_for_operator_acceptance`
+      means all three providers are configured and the stack is ready for
+      operator acceptance checks
+    - `provider_requirements.*.missing_settings` tells you which secrets or
+      identifiers are missing per provider
+    - `provider_requirements.*.next_action` and top-level `next_actions` are
+      the canonical follow-up instructions to clear activation gaps
+  - `ready_operations`
+  - `credential_gap_operations`
+  - `readiness_state`
+  Treat this snapshot as the acceptance source of truth instead of inferring
+  readiness from individual provider blocks.
+- `/health.v1_readiness.organizer_daily_use_*` and
+  `/health.v1_readiness.extension_gate_states.organizer_daily_use` must stay
+  in parity with the same organizer-tool stack snapshot; treat drift between
+  those surfaces as a release-blocking regression rather than as a docs-only
+  mismatch.
+- `/health.v1_readiness.final_acceptance_gate_states` must stay limited to the
+  approved core no-UI `v1` bundle and must not silently pull organizer
+  extension posture back into the final blocker set.
+- `/health.conversation_channels.telegram` is also the canonical operator
+  surface for Telegram delivery adaptation:
+  - `delivery_adaptation_policy_owner` should remain
+    `telegram_delivery_channel_adaptation`
+  - `delivery_segmentation_state` should remain
+    `bounded_transport_segmentation`
+  - `delivery_formatting_state` should remain
+    `supported_markdown_to_html_with_plain_text_fallback`
+  - `last_delivery.segment_count` and `last_delivery.formatting_state` are the
+    fast operator clues for whether the latest outbound Telegram reply stayed
+    plain text, used HTML normalization, or was split into multiple parts
+  Treat drift between `/health`, release smoke, and exported incident evidence
+  for these fields as a release-blocking regression.
+- `/health.v1_readiness.time_aware_planned_work_*` is the compact operator
+  surface for core no-UI `v1` planned-work posture:
+  - `time_aware_planned_work_policy_owner`
+  - `time_aware_planned_work_delivery_path`
+  - `time_aware_planned_work_recurrence_owner`
+  - `time_aware_planned_work_gate_state`
+  Treat drift between those fields and exported
+  `incident_evidence.policy_posture["v1_readiness"]` as a release-blocking
+  regression rather than as optional observability polish.
+- `calendar.google_calendar_read_availability.state=credentials_missing`
+  means the bounded calendar live-read adapter exists but runtime lacks
+  credentials for provider-backed execution
+  - `calendar.google_calendar_read_availability.state=provider_backed_ready`
+    means action may execute only bounded `read_availability` typed intents
+    through the Google Calendar adapter
+  - `calendar.other_operations` should remain policy-only after this slice
+  - `cloud_drive.google_drive_list_files.state=credentials_missing` means the
+    bounded cloud-drive metadata adapter exists but runtime lacks provider
+    credentials for execution
+  - `cloud_drive.google_drive_list_files.state=provider_backed_ready` means
+    action may execute only bounded `list_files` typed intents through the
+    Google Drive metadata adapter
+  - `cloud_drive.other_operations` should remain policy-only after this slice
+ - production credential-activation baseline for the frozen organizer stack:
+   - ClickUp:
+     - requires `CLICKUP_API_TOKEN`
+     - requires `CLICKUP_LIST_ID`
+     - `list_tasks` remains `read_only` and opt-in gated
+     - `create_task` and `update_task` remain confirmation-bound mutations;
+       unconfirmed requests must be visible as `confirmation_required` action
+       observations, not provider mutations
+   - Google Calendar:
+     - requires `GOOGLE_CALENDAR_ACCESS_TOKEN`
+     - requires `GOOGLE_CALENDAR_CALENDAR_ID`
+     - requires `GOOGLE_CALENDAR_TIMEZONE`
+     - only bounded `read_availability` is eligible for provider-backed
+       execution in this lane
+   - Google Drive:
+     - requires `GOOGLE_DRIVE_ACCESS_TOKEN`
+     - requires `GOOGLE_DRIVE_FOLDER_ID`
+     - only bounded metadata `list_files` is eligible for provider-backed
+       execution in this lane
+ - partial provider readiness is valid bounded posture, but treat full
+   organizer-stack activation as incomplete until `/health.connectors.organizer_tool_stack`
+   no longer reports credential-gap operations for the frozen stack
+  - `knowledge_search.search_web.state=provider_backed_ready` means the
+    DuckDuckGo HTML adapter is live and action may execute bounded web-search
+    intents without extra credentials
+  - `knowledge_search.suggest_search.state=planning_only_allowed` remains the
+    non-executing suggestion posture for the same tool family
+  - `web_browser.read_page.state=provider_backed_ready` means the generic HTTP
+    page-read adapter is live and action may execute bounded page-read intents
+  - `web_browser.suggest_page_review.state=planning_only_allowed` remains the
+    non-executing suggestion posture for browser guidance
+- `role_skill`
+  - metadata-only skill boundary owner
+  - selected and planned skill counts
+  - current role name when runtime debug is available
+  - `work_partner_role_state=selected|available` for the backend
+    work-partner orchestration role
+  - `work_partner_tool_families` and `work_partner_mutation_boundary` show
+    that work-partner still respects connector opt-in and confirmation rules
+- `identity.adaptive_governance`
+  - bounded authority model for role horizon, affective rollout,
+    preferences, theta, and multilingual/profile posture
+- `deployment`
+  - hosting baseline selection
+  - deployment-trigger SLO posture consumed by release smoke
+
+### Send Manual Event
+
+```powershell
+curl -X POST http://localhost:8000/event `
+  -H "Content-Type: application/json" `
+  -d "{\"text\":\"hello AION\"}"
+```
+
+For multi-user API traffic, prefer sending `X-AION-User-Id` (or explicit
+`meta.user_id` in payload) so profile and memory signals stay user-scoped
+instead of defaulting to shared `anonymous` state.
+
+Use the smoke helper when you want a repeatable operator check instead of crafting requests manually.
+
+### Runtime Data Reset And Cleanup
+
+Destructive reset posture now has two explicit, separate operator-safe paths:
+
+- authenticated self-service reset for one user:
+  - backend route: `POST /app/me/reset-data`
+  - product surface: account settings in the first-party web shell
+- operator-owned runtime cleanup:
+  - script: `backend/scripts/run_user_data_cleanup.py`
+  - wrappers:
+    - `backend/scripts/run_user_data_cleanup.ps1`
+    - `backend/scripts/run_user_data_cleanup.sh`
+
+Current destructive boundary:
+
+- preserved:
+  - auth account identity
+  - profile state
+  - `display_name`
+  - `preferred_language`
+  - `ui_language`
+  - linked integrations and linked channels
+  - user-managed operational preferences:
+    - `proactive_opt_in`
+    - `telegram_enabled`
+    - `clickup_enabled`
+    - `google_calendar_enabled`
+    - `google_drive_enabled`
+- cleared:
+  - episodic memory
+  - semantic embeddings
+  - non-preserved conclusions
+  - relations
+  - theta
+  - goals, tasks, planned work, progress, and milestones
+  - attention turns
+  - reflection tasks
+  - subconscious proposals
+- auth-session posture:
+  - all auth sessions are revoked, including the current session
+
+Use the single-user operator path when an authenticated self-service reset is
+not possible or when support must intervene for one account:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python .\scripts\run_user_data_cleanup.py `
+  --mode single_user_runtime_reset `
+  --user-id "<user_id>" `
+  --confirm-user-id "<user_id>"
+Pop-Location
+```
+
+Use the bounded runtime-only production cleanup path only for operator-owned
+environment resets that must preserve auth accounts and profile state:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python .\scripts\run_user_data_cleanup.py `
+  --mode runtime_only_preserve_auth `
+  --confirm-runtime-cleanup
+Pop-Location
+```
+
+Guardrails:
+
+- do not expose the production cleanup path through product UI
+- do not treat runtime reset as account deletion
+- do not run destructive cleanup without the required explicit confirmation flag
+- after any successful reset, expect the next user action to be a fresh login
+- when investigating a "lost memory" report, confirm first whether a
+  self-service or operator reset was executed, because the post-reset product
+  state intentionally preserves shell settings while removing runtime continuity
+
+### Configure Telegram Webhook
+
+Use the helper script or call:
+
+`POST /telegram/set-webhook`
+
+with a webhook URL and optional secret token.
+
+### Run Telegram Mode Smoke (Webhook + Temporary Listen Probe)
+
+Use the dedicated smoke helper to validate both Telegram delivery modes:
+
+- webhook mode visibility (`getWebhookInfo`)
+- temporary listen diagnostics (`deleteWebhook -> getUpdates`)
+- webhook restore (`setWebhook`)
+
+Windows PowerShell:
+
+```powershell
+.\backend\scripts\run_telegram_mode_smoke.ps1 `
+  -ExpectedWebhookUrl "https://aviary.luckysparrow.ch/event" `
+  -RestoreWebhookUrl "https://aviary.luckysparrow.ch/event" `
+  -SecretToken "<telegram_webhook_secret>" `
+  -RequiredChatId "<chat_id>"
+```
+
+Debian / bash:
+
+```bash
+./backend/scripts/run_telegram_mode_smoke.sh \
+  --expected-webhook-url "https://aviary.luckysparrow.ch/event" \
+  --restore-webhook-url "https://aviary.luckysparrow.ch/event" \
+  --secret-token "<telegram_webhook_secret>" \
+  --required-chat-id "<chat_id>"
+```
+
+Preconditions checklist (required for reliable Telegram delivery triage):
+
+1. Bot-start handshake is complete in target chat (`/start` was sent to the bot).
+2. `chat_id` is known and passed as `RequiredChatId` (or `--required-chat-id`) for strict validation.
+3. Bot token is configured (`TELEGRAM_BOT_TOKEN`) before running the smoke helper.
+4. If webhook secret validation is enabled, pass the same secret used by runtime webhook ingress.
+
+## Known Operational Limits
+
+- there is no background queue or worker isolation yet
+- reflection now has an explicit external-driver queue-drain entrypoint, but
+  worker supervision and recovery posture are now bounded by explicit
+  supervision policy and release evidence
+- startup now defaults to migration-first schema ownership; `create_tables()` remains only as a compatibility path behind `STARTUP_SCHEMA_MODE=create_tables`
+- runtime now has exportable JSON incident evidence plus a canonical bundle
+  helper, but there is still no external observability stack with dashboards
+  or centralized trace storage
+- proactive cadence ownership is externalized in production today, and bounded
+  opt-in proactive outreach is also enabled in production under the shared
+  `proactive_runtime_policy` baseline
+- reflection queue drain ownership is also externalized in production today;
+  local in-process reflection and scheduler cadence are compatibility/local-dev
+  postures rather than current Coolify production truth
+
+## Incident Triage Shortlist
+
+If a request path fails:
+
+1. check whether the app booted with valid env vars
+2. verify Postgres health and connection string
+3. confirm whether OpenAI fallback behavior is acceptable for the failing scenario
+4. for Telegram issues, verify webhook secret, bot token, and `chat_id` presence
+5. inspect `/health.conversation_channels.telegram`:
+   - rejected ingress means secret mismatch or malformed webhook path
+   - queued ingress means burst coalescing/turn ownership is active
+   - missing bot token means delivery cannot be provider-backed
+   - delivery failures expose whether the problem is missing `chat_id`,
+     Telegram API failure, or transport exception
+6. inspect structured logs for `event_id`, `trace_id`, and action status
+
+## Coolify 503 Recovery Notes
+
+When public production returns `503 Service Unavailable` with body
+`no available server`, use the existing Coolify application as the recovery
+surface before changing repository code:
+
+1. Switch to `Root Team` if the canonical Aviary project is not visible.
+2. Open project `icmgqml9uw3slzch9m9ok23z`, environment
+   `qxooi9coxat272krzjx221fv`, application `jr1oehwlzl8tcn3h8gh2vvih`.
+3. Confirm the application is `aviary (localhost)` and inspect `Deployments`
+   and `Logs`.
+4. If the latest deployment imported the correct selected SHA but the app is
+   `Exited`, use the existing UI `Deploy` action as the approved manual
+   fallback.
+5. After a successful terminal deployment, verify:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python .\scripts\audit_release_reality.py `
+  --base-url https://aviary.luckysparrow.ch `
+  --selected-sha 3b46ed3878a8560c3adb147fcadf064818ccc322
+.\scripts\run_release_smoke.ps1 `
+  -BaseUrl "https://aviary.luckysparrow.ch" `
+  -WaitForDeployParity
+Pop-Location
+```
+
+PRJ-1128 recovery evidence: manual Coolify UI deployment for commit `3b46ed3`
+succeeded in `01m 37s`; public `/health` returned HTTP `200`; backend and web
+revisions both matched
+`3b46ed3878a8560c3adb147fcadf064818ccc322`; release smoke passed.
+
+PRJ-1131 marker evidence: annotated tag `v1.0.1` now marks selected SHA
+`3b46ed3878a8560c3adb147fcadf064818ccc322`; selected-tag go/no-go returned
+`GO`.
+
+PRJ-1132 automation reliability posture:
+
+- current `v1.0.1` release parity is green
+- source automation did not converge for the selected SHA during the bounded
+  PRJ-1125 deploy-parity wait
+- webhook fallback readiness is currently `blocked` without operator-provided
+  `COOLIFY_DEPLOY_WEBHOOK_URL` and `COOLIFY_DEPLOY_WEBHOOK_SECRET`
+- future selected candidates should prove Coolify source automation through
+  deployment history, or capture webhook fallback evidence before release smoke
+  if source automation is delayed
+
+Do not store Coolify credentials in repository files. Keep UI fallback usage
+as an operator exception and create separate evidence if source/webhook
+automation reliability needs improvement.

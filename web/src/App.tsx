@@ -38,7 +38,7 @@ import {
   type ResolvedUiLanguageCode,
   type UiLanguageCode,
 } from "./lib/settings-formatting";
-import { ChevronDownIcon, CloseIcon, MicrophoneIcon, PlusIcon, SendArrowIcon } from "./components/app-icons";
+import { ChevronDownIcon, CloseIcon, PaperclipIcon, SendArrowIcon } from "./components/app-icons";
 import {
   ChatCognitiveBelt,
   ChatComposerShell,
@@ -56,7 +56,6 @@ import {
   DashboardGuidanceList,
   DashboardMemoryBarChart,
   DashboardProgressList,
-  DashboardReflectionList,
   DashboardRecentActivityList,
   DashboardSignalColumn,
 } from "./components/dashboard";
@@ -122,10 +121,30 @@ import { navigate, navigatePublicEntry, normalizeRoute, type RoutePath } from ".
 
 type AuthMode = "login" | "register";
 const BUILD_REVISION = String(import.meta.env.VITE_APP_BUILD_REVISION ?? "dev");
-const CANONICAL_PERSONA_FIGURE_SRC = "/aviary-persona-figure-canonical-reference-v1.png";
-const DASHBOARD_HERO_ART_SRC = "/aviary-dashboard-hero-canonical-reference-v4.png";
+const CANONICAL_PERSONA_FIGURE_SRC = "/aion-personality-figure-reference-v1.png";
+const DASHBOARD_HERO_ART_SRC = "/aion-dashboard-hero-atmosphere-reference-v1.png";
 const LANDING_HERO_ART_SRC = "/aviary-landing-hero-canonical-reference-v1.png";
 const RESET_DATA_CONFIRMATION_TEXT = "RESET MY DATA";
+const MAX_CHAT_ATTACHMENT_SIZE_BYTES = 2 * 1024 * 1024;
+const MAX_CHAT_ATTACHMENT_COUNT = 4;
+
+type ChatComposerAttachment = {
+  id: string;
+  name: string;
+  size: number;
+  sizeLabel: string;
+  content: string;
+};
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+  if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} KB`;
+  }
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 const UI_COPY = {
   en: {
@@ -1787,6 +1806,7 @@ export default function App() {
   const [sendingMessage, setSendingMessage] = useState(false);
   const [localTranscriptItems, setLocalTranscriptItems] = useState<AppChatHistoryEntry[]>([]);
   const [chatText, setChatText] = useState("");
+  const [chatAttachments, setChatAttachments] = useState<ChatComposerAttachment[]>([]);
   const [pendingConnectorConfirmation, setPendingConnectorConfirmation] =
     useState<AppPendingConnectorConfirmation | null>(null);
   const [connectorConfirmationBusy, setConnectorConfirmationBusy] = useState(false);
@@ -2328,32 +2348,24 @@ export default function App() {
       body: stringValue(planningSummary?.active_goal_count, "0") === "0"
         ? "Shape one meaningful goal to give the day a stronger center."
         : "Your active goals are ready for a focused work block.",
-      action: "Focus",
-      targetRoute: "/chat" as RoutePath,
     },
     {
       title: "Build momentum",
       body: latestUserMessage
         ? `Stay close to your latest thread: ${truncateText(latestUserMessage, 72)}`
         : "The next message can become the anchor for a clearer plan.",
-      action: "View goal",
-      targetRoute: "/goals" as RoutePath,
     },
     {
       title: "Reflect and integrate",
       body: stringValue(knowledgeSummary?.affective_conclusion_count, "0") === "0"
         ? "A short reflection can start your first layer of deeper learning."
         : "Recent reflections are ready to inform the next response.",
-      action: "Reflect",
-      targetRoute: "/reflections" as RoutePath,
     },
     {
       title: "Connection opportunity",
       body: recentChannelsLabel === copy.common.noData
         ? "Link another surface when you want continuity outside the web shell."
         : `Continuity is already alive across: ${recentChannelsLabel}.`,
-      action: "See context",
-      targetRoute: "/memory" as RoutePath,
     },
   ];
   const dashboardCognitiveSteps = [
@@ -2397,12 +2409,6 @@ export default function App() {
     { label: "Task", height: scaledMetricSize(activeTaskCount, dashboardRuntimeMax, 12) },
     { label: "Tool", height: scaledMetricSize(numberValue(toolsOverview?.summary.provider_ready_count), dashboardRuntimeMax, 12) },
   ];
-  const dashboardReflectionRows = [
-    { title: `${semanticConclusionCount} reusable semantic conclusions`, tag: "Memory" },
-    { title: `${affectiveConclusionCount} affective conclusions`, tag: "Reflection" },
-    { title: `${learnedPreferenceCount} learned preferences`, tag: "Identity" },
-    { title: `${relationCount} learned relations`, tag: "Context" },
-  ];
   const dashboardCurrentPhase = {
     title: activeDashboardStep.title,
     body:
@@ -2437,16 +2443,26 @@ export default function App() {
       body: "The pen and luminous slate frame the next move before it becomes action or message delivery.",
     },
   ];
+  const dashboardSystemHarmonyValue = (() => {
+    const readinessPoints =
+      (activeGoalCount > 0 ? 25 : 0) +
+      (activeTaskCount > 0 ? 25 : 0) +
+      (semanticConclusionCount > 0 ? 25 : 0) +
+      (numberValue(toolsOverview?.summary.provider_ready_count) > 0 ? 25 : 0);
+    return `${Math.max(20, readinessPoints)}%`;
+  })();
+  const dashboardSystemHarmonyLabel =
+    activeGoalCount + activeTaskCount + semanticConclusionCount > 0 ? "Active" : "Idle";
   const dashboardSystemHarmony = {
-    value: "92%",
-    label: "Optimal",
-    body: "All systems are aligned and in harmony.",
+    value: dashboardSystemHarmonyValue,
+    label: dashboardSystemHarmonyLabel,
+    body: `${activeGoalCount} goals, ${activeTaskCount} tasks, ${semanticConclusionCount} memory conclusions.`,
   };
   const dashboardBalanceRows = [
-    { label: "Conscious", value: "High" },
-    { label: "Creative", value: "Energized" },
-    { label: "Subconscious", value: "Strong" },
-    { label: "Emotional", value: "Balanced" },
+    { label: "Conscious", value: `${activeGoalCount} goals` },
+    { label: "Creative", value: `${pendingProposalCount} proposals` },
+    { label: "Subconscious", value: `${semanticConclusionCount} memory` },
+    { label: "Emotional", value: `${affectiveConclusionCount} insights` },
   ];
   const personalityLayers = [
     {
@@ -3578,9 +3594,66 @@ export default function App() {
     }
   }
 
+  async function handleAttachChatFiles(files: FileList | null) {
+    if (!files || files.length === 0) {
+      return;
+    }
+
+    const availableSlots = Math.max(0, MAX_CHAT_ATTACHMENT_COUNT - chatAttachments.length);
+    const selected = Array.from(files).slice(0, availableSlots);
+    if (selected.length === 0) {
+      setError(`You can attach up to ${MAX_CHAT_ATTACHMENT_COUNT} files per message.`);
+      return;
+    }
+
+    const validFiles = selected.filter((file) => file.size <= MAX_CHAT_ATTACHMENT_SIZE_BYTES);
+    if (validFiles.length < selected.length) {
+      setError("Some files were skipped because they are larger than 2 MB.");
+    } else {
+      setError(null);
+    }
+
+    const loaded = await Promise.all(
+      validFiles.map(async (file) => {
+        let content = "";
+        try {
+          content = await file.text();
+        } catch {
+          content = "";
+        }
+        const trimmed = content.trim();
+        return {
+          id: `${file.name}:${file.size}:${Date.now()}:${Math.random().toString(36).slice(2)}`,
+          name: file.name,
+          size: file.size,
+          sizeLabel: formatFileSize(file.size),
+          content: trimmed.slice(0, 8000),
+        } satisfies ChatComposerAttachment;
+      }),
+    );
+
+    setChatAttachments((current) => [...current, ...loaded]);
+  }
+
+  function handleRemoveChatAttachment(attachmentId: string) {
+    setChatAttachments((current) => current.filter((attachment) => attachment.id !== attachmentId));
+  }
+
   async function handleSendMessage(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const text = chatText.trim();
+    const baseText = chatText.trim();
+    const attachmentsBlock =
+      chatAttachments.length === 0
+        ? ""
+        : `\n\nAttached files:\n${chatAttachments
+            .map((attachment, index) => {
+              const contentSection = attachment.content
+                ? `\nContent preview:\n${attachment.content}`
+                : "\nContent preview: unavailable";
+              return `${index + 1}. ${attachment.name} (${attachment.sizeLabel})${contentSection}`;
+            })
+            .join("\n\n")}`;
+    const text = `${baseText}${attachmentsBlock}`.trim();
     if (!text) {
       return;
     }
@@ -3607,6 +3680,7 @@ export default function App() {
     setConnectorConfirmationFeedback(null);
     setConnectorConfirmationFeedbackState("idle");
     setChatText("");
+    setChatAttachments([]);
 
     try {
       const reply = await api.sendChatMessage(text);
@@ -4206,14 +4280,11 @@ export default function App() {
                     <p className="text-[11px] uppercase tracking-[0.2em] text-base-800">Current phase</p>
                     <p className="mt-3 font-display text-[2rem] leading-tight text-base-900">{dashboardCurrentPhase.title}</p>
                     <p className="mt-3 text-sm leading-7 text-base-800">{dashboardCurrentPhase.body}</p>
-                    <button className="aion-dashboard-action-button mt-5" type="button" onClick={() => changeRoute("/reflections")}>
-                      View full flow
-                    </button>
                   </aside>
                 </div>
               </section>
 
-              <section className="aion-dashboard-lower-grid aion-dashboard-lower-grid-condensed grid gap-3 xl:grid-cols-[minmax(0,1.04fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_minmax(0,0.9fr)]">
+              <section className="aion-dashboard-lower-grid aion-dashboard-lower-grid-condensed grid gap-3 xl:grid-cols-[minmax(0,1.08fr)_minmax(0,0.9fr)_minmax(0,0.9fr)]">
                 <article className="aion-panel-soft aion-dashboard-card aion-dashboard-card-primary">
                   <div className="flex items-center justify-between gap-3">
                     <div>
@@ -4234,9 +4305,6 @@ export default function App() {
                   <p className="mt-3 text-sm leading-7 text-base-800">
                     Building a coherent next step from your active conversation, memory, and planning posture.
                   </p>
-                  <button className="aion-dashboard-action-button mt-5" type="button" onClick={() => changeRoute("/chat")}>
-                    Enter focus
-                  </button>
                 </article>
 
                 <article className="aion-panel-soft aion-dashboard-card aion-dashboard-card-memory">
@@ -4255,11 +4323,6 @@ export default function App() {
                   <DashboardMemoryBarChart items={dashboardMemoryBars} />
                 </article>
 
-                <article className="aion-panel-soft aion-dashboard-card aion-dashboard-card-reflection">
-                  <p className="text-sm uppercase tracking-[0.2em] text-base-800">Reflection highlights</p>
-                  <h3 className="mt-2 font-display text-2xl text-base-900">What is becoming clearer</h3>
-                  <DashboardReflectionList items={dashboardReflectionRows} />
-                </article>
               </section>
                 </div>
 
@@ -4267,13 +4330,7 @@ export default function App() {
                   <section className="aion-dashboard-guidance-panel">
                     <p className="text-sm uppercase tracking-[0.22em] text-base-800">Insights and guidance</p>
                     <h3 className="mt-2 font-display text-2xl text-base-900">Curated for you</h3>
-                    <DashboardGuidanceList
-                      items={dashboardGuidanceCards}
-                      onSelect={(targetRoute) => changeRoute(targetRoute as RoutePath)}
-                    />
-                    <button className="aion-dashboard-action-button aion-dashboard-guidance-cta" type="button" onClick={() => changeRoute("/insights")}>
-                      View all insights
-                    </button>
+                    <DashboardGuidanceList items={dashboardGuidanceCards} />
                   </section>
 
                   <section className="aion-dashboard-recent-panel aion-dashboard-recent-panel-compact">
@@ -4330,9 +4387,6 @@ export default function App() {
                         <p className="mt-3 max-w-md text-sm leading-7 text-base-800">
                           Goals, memory, and reflection now hold together in one calmer path.
                         </p>
-                        <button className="aion-dashboard-action-button mt-5" type="button" onClick={() => changeRoute("/insights")}>
-                          See full report
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -4353,7 +4407,7 @@ export default function App() {
                 />
 
                 <ChatCognitiveBelt
-                  items={chatCognitiveBelt}
+                  items={chatCognitiveBelt.slice(0, 4)}
                   goalProgress={chatGoalCard.progress}
                 />
 
@@ -4415,13 +4469,17 @@ export default function App() {
                         pendingConfirmationCompleteLabel={copy.chat.confirmationComplete}
                         pendingConfirmationState={connectorConfirmationFeedbackState}
                         pendingConfirmationFeedback={connectorConfirmationFeedback}
-                        addIcon={<PlusIcon />}
-                        voiceIcon={<MicrophoneIcon />}
+                        attachments={chatAttachments}
+                        attachIcon={<PaperclipIcon />}
                         sendIcon={<SendArrowIcon />}
                         onQuickAction={setChatText}
                         onConfirmPendingConfirmation={() => {
                           void handleConfirmPendingConnectorAction();
                         }}
+                        onAttachFiles={(files) => {
+                          void handleAttachChatFiles(files);
+                        }}
+                        onRemoveAttachment={handleRemoveChatAttachment}
                         onTextChange={setChatText}
                         onSubmit={(event) => {
                           void handleSendMessage(event);

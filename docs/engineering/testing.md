@@ -55,6 +55,34 @@ window. It checks `/`, `/login`, and every current authenticated route in
 `web/src/routes.ts`. Use it after route-shell changes and before splitting
 route ownership out of `web/src/App.tsx`.
 
+Architecture graph fast gate:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python -m pytest -q tests/test_architecture_graph_generator.py -m "not slow"
+Pop-Location
+```
+
+Architecture graph heavy gate:
+
+```powershell
+Push-Location .\backend
+..\.venv\Scripts\python -m pytest -q tests/test_architecture_graph_generator.py
+Pop-Location
+```
+
+`.github/workflows/architecture-graph.yml` runs the graph inventory and graph
+generators, checks that generated architecture artifacts are committed, and
+runs the fast gate for graph-relevant PR/push changes. It also enforces
+curated graph zero-gap posture by failing when
+`query_architecture_graph.py --gaps --format json --fail-on-gaps` returns
+non-empty `items`.
+The workflow also uploads the JSON audit artifact on every run
+(`architecture-gaps-fast` or `architecture-gaps-heavy`) so hosted proof can be
+attached to release or handoff evidence.
+The heavy gate is
+available as a manual workflow dispatch for release-level graph confidence.
+
 Behavior-validation command (system-debug + scenario harness baseline):
 
 ```powershell

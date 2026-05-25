@@ -1,0 +1,235 @@
+erDiagram
+  aion_attention_turn {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    VARCHAR_96 conversation_key "IDX"
+    VARCHAR_64 turn_id "IDX"
+    VARCHAR_24 status "IDX"
+    INTEGER source_count
+    TEXT assembled_text
+    VARCHAR_24 owner_mode
+    JSON messages_json
+    JSON event_ids_json
+    JSON update_keys_json
+    DATETIME updated_at
+    DATETIME created_at
+  }
+  aion_auth_session {
+    VARCHAR_64 id "PK"
+    VARCHAR_64 user_id "IDX"
+    VARCHAR_128 session_token_hash "IDX"
+    DATETIME expires_at "IDX"
+    DATETIME revoked_at "IDX"
+    DATETIME last_seen_at
+    VARCHAR_256 user_agent
+    VARCHAR_64 ip_address
+    DATETIME created_at
+  }
+  aion_auth_user {
+    VARCHAR_64 id "PK"
+    VARCHAR_320 email "IDX"
+    TEXT password_hash
+    VARCHAR_120 display_name
+    INTEGER is_active
+    DATETIME last_login_at
+    DATETIME updated_at
+    DATETIME created_at
+  }
+  aion_conclusion {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    VARCHAR_32 kind "IDX"
+    VARCHAR_16 scope_type "IDX"
+    VARCHAR_64 scope_key "IDX"
+    VARCHAR_128 content
+    FLOAT confidence
+    VARCHAR_32 source
+    VARCHAR_64 supporting_event_id
+    DATETIME updated_at
+    DATETIME created_at
+  }
+  aion_goal {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    VARCHAR_160 name
+    TEXT description
+    VARCHAR_16 priority "IDX"
+    VARCHAR_24 status "IDX"
+    VARCHAR_24 goal_type
+    DATETIME created_at
+    DATETIME updated_at
+  }
+  aion_goal_milestone {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    INTEGER goal_id "IDX"
+    VARCHAR_160 name
+    VARCHAR_32 phase "IDX"
+    VARCHAR_24 status "IDX"
+    VARCHAR_64 source_event_id
+    DATETIME created_at
+    DATETIME updated_at
+  }
+  aion_goal_milestone_history {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    INTEGER goal_id "IDX"
+    VARCHAR_160 milestone_name
+    VARCHAR_32 phase "IDX"
+    VARCHAR_32 risk_level "IDX"
+    VARCHAR_64 completion_criteria
+    VARCHAR_64 source_event_id
+    DATETIME created_at
+  }
+  aion_goal_progress {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    INTEGER goal_id "IDX"
+    FLOAT score
+    VARCHAR_32 execution_state
+    VARCHAR_32 progress_trend
+    VARCHAR_64 source_event_id
+    DATETIME created_at
+  }
+  aion_memory {
+    INTEGER id "PK"
+    VARCHAR_64 event_id "IDX"
+    VARCHAR_64 trace_id "IDX"
+    VARCHAR_32 source
+    VARCHAR_64 user_id "IDX"
+    DATETIME event_timestamp
+    TEXT summary
+    JSON payload
+    FLOAT importance
+    DATETIME created_at
+  }
+  aion_planned_work_item {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    INTEGER goal_id "IDX"
+    INTEGER task_id "IDX"
+    VARCHAR_24 kind "IDX"
+    VARCHAR_220 summary
+    VARCHAR_24 status "IDX"
+    DATETIME not_before "IDX"
+    DATETIME preferred_at "IDX"
+    DATETIME expires_at "IDX"
+    VARCHAR_16 recurrence_mode
+    VARCHAR_120 recurrence_rule
+    VARCHAR_16 delivery_channel
+    INTEGER requires_foreground_execution
+    VARCHAR_32 quiet_hours_policy
+    VARCHAR_32 provenance
+    VARCHAR_64 source_event_id "IDX"
+    DATETIME last_evaluated_at
+    DATETIME updated_at
+    DATETIME created_at
+  }
+  aion_profile {
+    VARCHAR_64 user_id "PK"
+    VARCHAR_8 preferred_language
+    VARCHAR_16 ui_language
+    VARCHAR_16 utc_offset
+    FLOAT language_confidence
+    VARCHAR_32 language_source
+    VARCHAR_64 telegram_chat_id
+    VARCHAR_64 telegram_user_id
+    VARCHAR_32 telegram_link_code "IDX"
+    DATETIME telegram_link_code_issued_at
+    DATETIME telegram_linked_at
+    DATETIME updated_at
+    DATETIME created_at
+  }
+  aion_reflection_task {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    VARCHAR_64 event_id "IDX"
+    VARCHAR_24 status "IDX"
+    INTEGER attempts
+    TEXT last_error
+    DATETIME updated_at
+    DATETIME created_at
+  }
+  aion_relation {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    VARCHAR_32 relation_type "IDX"
+    VARCHAR_128 relation_value
+    FLOAT confidence
+    VARCHAR_32 source
+    VARCHAR_16 scope_type "IDX"
+    VARCHAR_64 scope_key "IDX"
+    VARCHAR_64 supporting_event_id
+    INTEGER evidence_count
+    FLOAT decay_rate
+    DATETIME last_observed_at
+    DATETIME updated_at
+    DATETIME created_at
+  }
+  aion_scheduler_cadence_evidence {
+    INTEGER id "PK"
+    VARCHAR_24 cadence_kind "IDX"
+    VARCHAR_32 execution_owner
+    VARCHAR_24 execution_mode
+    JSON summary_json
+    DATETIME last_run_at
+    DATETIME updated_at
+    DATETIME created_at
+  }
+  aion_semantic_embedding {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    VARCHAR_24 source_kind "IDX"
+    VARCHAR_96 source_id "IDX"
+    VARCHAR_64 source_event_id "IDX"
+    VARCHAR_16 scope_type "IDX"
+    VARCHAR_64 scope_key "IDX"
+    TEXT content
+    JSON embedding
+    VARCHAR_64 embedding_model
+    INTEGER embedding_dimensions
+    JSON metadata_json
+    DATETIME updated_at
+    DATETIME created_at
+  }
+  aion_subconscious_proposal {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    VARCHAR_32 proposal_type "IDX"
+    TEXT summary
+    JSON payload
+    FLOAT confidence
+    VARCHAR_64 source_event_id "IDX"
+    VARCHAR_24 status "IDX"
+    TEXT decision_reason
+    VARCHAR_16 research_policy
+    JSON allowed_tools_json
+    DATETIME decided_at
+    DATETIME updated_at
+    DATETIME created_at
+  }
+  aion_task {
+    INTEGER id "PK"
+    VARCHAR_64 user_id "IDX"
+    INTEGER goal_id "IDX"
+    VARCHAR_160 name
+    TEXT description
+    VARCHAR_16 priority "IDX"
+    VARCHAR_24 status "IDX"
+    DATETIME created_at
+    DATETIME updated_at
+  }
+  aion_theta {
+    VARCHAR_64 user_id "PK"
+    FLOAT support_bias
+    FLOAT analysis_bias
+    FLOAT execution_bias
+    DATETIME updated_at
+    DATETIME created_at
+  }
+  %% Logical application-level links, not inspected ForeignKey constraints:
+  %% aion_auth_session.user_id -> aion_auth_user.id
+  %% aion_profile.user_id -> user identity
+  %% user_id columns scope most runtime tables to one user
+  %% aion_task.goal_id -> aion_goal.id when present
+  %% source_event_id/supporting_event_id/event_id fields link back to runtime events
