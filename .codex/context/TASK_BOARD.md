@@ -2,6 +2,19 @@
 
 Last updated: 2026-05-28
 
+## Known State Refresh (2026-05-28)
+
+- `LUC-517` is DONE:
+  - `.codex/tasks/LUC-517-known-state-architecture-baseline-refresh.md`
+- objective:
+  - refresh known-state evidence and architecture baseline for Personality repository
+- current result:
+  - baseline refresh confirms canonical state files, prior baseline packet, and architecture export pack presence
+  - minimal runtime surface counts captured in this heartbeat: backend route decorators `19`, backend test files `123`, migration files `12`
+- validation:
+  - manual source-of-truth and artifact presence verification complete
+  - no runtime/code path changed in this checkpoint
+
 ## Takeover Baseline (2026-05-28)
 
 - `LUC-260` is IN_PROGRESS:

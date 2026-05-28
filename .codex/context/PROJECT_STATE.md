@@ -6,6 +6,17 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-28: `LUC-517` known-state and architecture baseline refresh is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-517-known-state-architecture-baseline-refresh.md`
+  - result:
+    - refreshed baseline evidence for canonical state files and architecture export artifacts
+    - confirmed runtime-surface counts in this heartbeat: route decorators `19`, backend test files `123`, migration files `12`
+    - linked checkpoint to prior baseline packet `LUC-420`
+  - validation:
+    - manual verification of source-of-truth files and `docs/graphs` artifact presence
+    - no runtime/code changes in this checkpoint; tests not applicable
+
 - 2026-05-28: `LUC-446` (Architecture awareness export parity pack for `LUC-260`) is `DONE`:
   - task:
     - `.codex/tasks/LUC-260-L2-architecture-awareness-export-pack.md`

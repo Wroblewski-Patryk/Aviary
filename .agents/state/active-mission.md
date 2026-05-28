@@ -1,6 +1,20 @@
 # Active Mission Packet
 
-Last updated: 2026-05-25
+Last updated: 2026-05-28
+
+## Mission Update
+
+- 2026-05-28: `LUC-517` known-state and architecture baseline refresh completed as a verification-only checkpoint.
+- Evidence packet:
+  - `.codex/tasks/LUC-517-known-state-architecture-baseline-refresh.md`
+- Source-of-truth sync:
+  - `.codex/context/TASK_BOARD.md`
+  - `.codex/context/PROJECT_STATE.md`
+- Heartbeat proof snapshot:
+  - backend route decorators: `19`
+  - backend test files: `123`
+  - migration files: `12`
+  - architecture export files present in `docs/graphs`: `6`
 
 Use this file as the first operational router for `pracuj dalej`, `rob dalej`,
 `kontynuuj`, `next`, and similar continuation nudges. Keep it short enough that
