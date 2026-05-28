@@ -1,10 +1,21 @@
 # PROJECT_STATE
 
-Last updated: 2026-05-25
+Last updated: 2026-05-28
 
 Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
+
+- 2026-05-28: `LUC-420` known-state and architecture baseline checkpoint was captured:
+  - task:
+    - `.codex/tasks/LUC-420-known-state-architecture-baseline.md`
+  - result:
+    - documented canonical state + architecture evidence inventory for current repository truth
+    - expanded baseline with stack/runtime/deploy/test inventory and capability status map
+    - linked API endpoint inventory, web route inventory, and migration/deployment evidence
+  - validation:
+    - manual verification of canonical state files, architecture docs, and mission router presence
+    - no runtime/code changes in this checkpoint; tests not applicable
 
 - 2026-05-25: `PRJ-1338` continued the backend-capability-to-final-personality-UI mission with provider setup guidance in Tools:
   - task:

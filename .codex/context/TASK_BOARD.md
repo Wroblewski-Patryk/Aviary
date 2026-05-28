@@ -1,8 +1,19 @@
 # TASK_BOARD
 
-Last updated: 2026-05-25
+Last updated: 2026-05-28
 
 ## Project Status Dashboard (2026-05-24)
+
+- `LUC-420` is DONE:
+  - `.codex/tasks/LUC-420-known-state-architecture-baseline.md`
+- objective:
+  - collect known-state evidence and architecture baseline for Personality repository
+- current result:
+  - baseline evidence packet now includes stack/runtime/deploy/test inventory and capability status map with source-linked evidence
+  - API endpoint inventory, route inventory, migration chain, and compose runtime surfaces are explicitly recorded
+- validation:
+  - manual canonical-file and architecture-baseline verification complete
+  - no code/runtime path changed in this checkpoint
 
 - `PRJ-1338` is DONE:
   - `.codex/tasks/PRJ-1338-provider-setup-guidance.md`
