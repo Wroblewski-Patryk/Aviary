@@ -6,6 +6,19 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-28: `LUC-260` takeover audit baseline checkpoint was opened and checkpointed:
+  - task:
+    - `.codex/tasks/LUC-260-full-takeover-audit-and-operating-baseline.md`
+  - result:
+    - created explicit takeover baseline packet for Personality/Aviary preparation lane
+    - prepared explicit child-lane delegation packet in `.codex/tasks/LUC-260-child-lane-briefs.md`
+    - captured known-state map for canonical state files, mission router, backend/frontend runtime surfaces, endpoint and test inventory
+    - added operating-model compatibility check with explicit missing-equivalent artifacts
+    - added takeover gap register and activation specialist lane map
+  - validation:
+    - manual verification of source-of-truth files and repository path-existence scan completed
+    - no runtime/code path changed in this checkpoint; tests not applicable
+
 - 2026-05-28: `LUC-420` known-state and architecture baseline checkpoint was captured:
   - task:
     - `.codex/tasks/LUC-420-known-state-architecture-baseline.md`

@@ -2,6 +2,24 @@
 
 Last updated: 2026-05-28
 
+## Takeover Baseline (2026-05-28)
+
+- `LUC-260` is IN_PROGRESS:
+  - `.codex/tasks/LUC-260-full-takeover-audit-and-operating-baseline.md`
+- objective:
+  - establish full takeover audit baseline for Personality/Aviary under preparation-only role constraints
+- current result:
+  - explicit takeover baseline task packet now exists with known-state map, operating-model parity check, and gap register
+  - child-lane delegation briefs are now prepared in `.codex/tasks/LUC-260-child-lane-briefs.md`
+  - specialist lanes were identified for activation phase: Product Docs, Architecture, QA/Test, Ops/Release
+  - parity gaps were recorded as missing equivalents for shared operating-model artifacts (`docs/documentation-overview.md`, `docs/graphs/*` architecture-awareness exports, and `docs/status/architecture-awareness-report.md`)
+- validation:
+  - manual source-of-truth verification complete for state files, mission router, next-steps ledger, task inventory, and path-existence scan
+  - no runtime/code path changes in this checkpoint; tests not applicable
+- residual:
+  - close parity gaps via specialist child issues before marking takeover baseline `DONE`
+  - reduce large mission/history context to a focused takeover-preparation packet in the next checkpoint
+
 ## Project Status Dashboard (2026-05-24)
 
 - `LUC-420` is DONE:

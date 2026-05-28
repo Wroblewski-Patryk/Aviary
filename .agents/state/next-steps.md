@@ -4,6 +4,16 @@ Last updated: 2026-05-25
 
 ## NOW
 
+1. Continue from `LUC-260` full takeover audit baseline:
+   - latest task:
+     `.codex/tasks/LUC-260-full-takeover-audit-and-operating-baseline.md`
+   - latest result:
+     takeover-preparation baseline now includes known-state map, operating-model parity scan, and gap register with activation lanes
+   - proof:
+     source-of-truth/state scan complete; role-scope guardrails applied; missing-equivalent artifacts explicitly listed
+   - next smallest useful choice:
+     create specialist child issues for parity gaps (`docs/documentation-overview.md`, `docs/graphs/*` architecture-awareness exports, `docs/status/architecture-awareness-report.md`) and then fold outputs into one takeover readiness packet
+
 1. Continue from `PRJ-1338` provider setup guidance:
    - latest task:
      `.codex/tasks/PRJ-1338-provider-setup-guidance.md`
