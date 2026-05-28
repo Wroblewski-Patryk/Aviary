@@ -1,6 +1,6 @@
 # Documentation Map
 
-Updated: YYYY-MM-DD
+Updated: 2026-05-28
 
 This is the main entrypoint for current project documentation.
 
@@ -12,6 +12,7 @@ audits, proof artifacts, release packets, and raw generated outputs belong in
 
 | Need | Go to |
 | --- | --- |
+| Fast baseline orientation for docs ownership and takeover parity status | `docs/documentation-overview.md` |
 | Product intent, scope, roadmap, user value, limits | `docs/maps/product-map.md` |
 | Durable decisions and ADRs | `docs/decisions/README.md` |
 | System shape, contracts, modules, architecture truth | `docs/maps/architecture-map.md` |

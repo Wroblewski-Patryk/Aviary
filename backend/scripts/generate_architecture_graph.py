@@ -364,6 +364,10 @@ def write_node_pages(root: Path, registry: Registry) -> None:
     nodes_dir = root / "docs" / "architecture" / "nodes"
     nodes_dir.mkdir(parents=True, exist_ok=True)
     known = {row["id"] for row in registry.nodes}
+    expected_filenames = {f"{slug(row['id'])}.md" for row in registry.nodes}
+    for stale_path in nodes_dir.glob("*.md"):
+        if stale_path.name not in expected_filenames:
+            stale_path.unlink()
     outgoing, incoming = relation_maps(registry.relations)
     evidence_by_node = evidence_map(registry.evidence)
     chains_by_node = chain_map(registry.chains)

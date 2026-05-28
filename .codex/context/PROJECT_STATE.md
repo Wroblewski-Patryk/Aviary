@@ -6,6 +6,60 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-28: `LUC-446` (Architecture awareness export parity pack for `LUC-260`) is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-260-L2-architecture-awareness-export-pack.md`
+  - result:
+    - generated compatibility export pack under `docs/graphs/` from the canonical architecture graph source
+    - created `docs/status/architecture-awareness-report.md` with explicit missing-link unknowns
+    - preserved no-runtime-change boundary (documentation/graph artifacts only)
+  - validation:
+    - `Push-Location backend; ..\.venv\Scripts\python scripts/build_architecture_awareness_pack.py; Pop-Location` -> PASS
+
+- 2026-05-28: `LUC-447` (Minimum takeover proof gate evidence for `LUC-260`) is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-260-L3-takeover-proof-gate-minimum.md`
+  - result:
+    - QA found architecture graph artifact parity drift during the backend primary gate
+    - generator cleanup now removes stale `docs/architecture/nodes/*.md` pages before regeneration
+    - canonical architecture graph artifacts and node pages were regenerated
+  - validation:
+    - initial backend primary gate: `2 failed, 1152 passed`
+    - focused graph parity rerun after cleanup: `2 passed`
+    - full backend gate rerun: `1154 passed`
+
+- 2026-05-28: `LUC-445` (Product Docs parity baseline for `LUC-260`) is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-260-L1-product-docs-parity-baseline.md`
+  - result:
+    - created canonical parity artifact `docs/documentation-overview.md`
+    - linked the new entry from `docs/documentation-map.md`
+    - folded parity closure note into parent `LUC-260` packet
+  - validation:
+    - documentation/state-only checkpoint; no runtime code changed
+
+- 2026-05-28: `LUC-448` (Ops/Release lane for `LUC-260`) is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-260-L4-ops-release-baseline-readiness-note.md`
+  - result:
+    - verified documentation-only ops/release baseline note for takeover packet
+    - confirmed canonical release/readiness entrypoints from `DEPLOYMENT_GATE.md` and `Aviary - docs/operations/runtime-ops-runbook.md`
+    - confirmed rollback/smoke reference path via runtime ops runbook and rollback runbook artifacts
+    - recorded residual risk that `Aviary - docs/operations/environment-matrix.md` remains template-like and not fully populated
+  - validation:
+    - documentation cross-check only; no deploy/runtime mutation performed
+
+- 2026-05-28: `LUC-260` moved from lane planning to executable delegation:
+  - child task packets created and delegated as Paperclip issues:
+    - `LUC-445` -> `.codex/tasks/LUC-260-L1-product-docs-parity-baseline.md`
+    - `LUC-446` -> `.codex/tasks/LUC-260-L2-architecture-awareness-export-pack.md`
+    - `LUC-447` -> `.codex/tasks/LUC-260-L3-takeover-proof-gate-minimum.md`
+    - `LUC-448` -> `.codex/tasks/LUC-260-L4-ops-release-baseline-readiness-note.md`
+  - disposition:
+    - parent `LUC-260` is `BLOCKED` by `LUC-445..LUC-448` with automatic wake on blocker resolution
+  - validation:
+    - documentation/state-only checkpoint; no runtime code changed
+
 - 2026-05-28: `LUC-260` takeover audit baseline checkpoint was opened and checkpointed:
   - task:
     - `.codex/tasks/LUC-260-full-takeover-audit-and-operating-baseline.md`
@@ -17791,4 +17845,3 @@ the same project.
   - validation after this pass:
     - `Push-Location .\web; npm run build; Pop-Location`
     - result: passed
-

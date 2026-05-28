@@ -6,19 +6,52 @@ Last updated: 2026-05-28
 
 - `LUC-260` is IN_PROGRESS:
   - `.codex/tasks/LUC-260-full-takeover-audit-and-operating-baseline.md`
+- `LUC-445` is DONE:
+  - `.codex/tasks/LUC-260-L1-product-docs-parity-baseline.md`
+- `LUC-446` is DONE:
+  - `.codex/tasks/LUC-260-L2-architecture-awareness-export-pack.md`
+- `LUC-447` is DONE:
+  - `.codex/tasks/LUC-260-L3-takeover-proof-gate-minimum.md`
 - objective:
   - establish full takeover audit baseline for Personality/Aviary under preparation-only role constraints
 - current result:
+  - docs parity lane `LUC-445` closed:
+    - created `docs/documentation-overview.md`
+    - linked the canonical entry from `docs/documentation-map.md`
   - explicit takeover baseline task packet now exists with known-state map, operating-model parity check, and gap register
   - child-lane delegation briefs are now prepared in `.codex/tasks/LUC-260-child-lane-briefs.md`
+  - child issues are now materialized as executable task packets and first-class Paperclip issues:
+    - `LUC-445` -> `.codex/tasks/LUC-260-L1-product-docs-parity-baseline.md`
+    - `LUC-446` -> `.codex/tasks/LUC-260-L2-architecture-awareness-export-pack.md`
+    - `LUC-447` -> `.codex/tasks/LUC-260-L3-takeover-proof-gate-minimum.md`
+    - `LUC-448` -> `.codex/tasks/LUC-260-L4-ops-release-baseline-readiness-note.md`
+  - `LUC-448` lane status:
+    - `DONE` (verification-stage ops/release baseline note completed)
+    - canonical deploy/readiness/smoke/rollback reference path confirmed from existing runbooks and gates
+    - residual risk captured: `Aviary - docs/operations/environment-matrix.md` remains template-like and requires follow-up population
   - specialist lanes were identified for activation phase: Product Docs, Architecture, QA/Test, Ops/Release
-  - parity gaps were recorded as missing equivalents for shared operating-model artifacts (`docs/documentation-overview.md`, `docs/graphs/*` architecture-awareness exports, and `docs/status/architecture-awareness-report.md`)
+  - architecture parity lane `LUC-446` closed:
+    - generated `docs/graphs/architecture-awareness.json`
+    - generated `docs/graphs/architecture-awareness.csv`
+    - generated `docs/graphs/architecture-graph.md`
+    - generated `docs/graphs/architecture-graph.mmd`
+    - generated `docs/graphs/function-journey-index.json`
+    - generated `docs/graphs/user-action-index.json`
+    - generated `docs/status/architecture-awareness-report.md` with explicit missing-link unknowns
+  - takeover proof-gate lane `LUC-447` executed:
+    - backend primary gate initially failed: `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; Pop-Location` -> `2 failed, 1152 passed`
+    - architecture graph generator cleanup removed stale node pages and regenerated canonical graph artifacts
+    - focused graph parity rerun passed: `2 passed`
+    - backend primary gate rerun passed: `1154 passed`
+    - focused web smoke passed: `Push-Location .\web; npm run smoke:routes; Pop-Location` -> `route_count=14`, `status=ok`
+    - health/release-readiness path passed:
+      `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py -k "release_smoke"; Pop-Location` -> `41 passed`
 - validation:
   - manual source-of-truth verification complete for state files, mission router, next-steps ledger, task inventory, and path-existence scan
-  - no runtime/code path changes in this checkpoint; tests not applicable
+  - targeted takeover proof gate executed with replayable command evidence
+  - full backend gate is green after graph artifact sync
 - residual:
-  - close parity gaps via specialist child issues before marking takeover baseline `DONE`
-  - reduce large mission/history context to a focused takeover-preparation packet in the next checkpoint
+  - close parent `LUC-260` with final integration verdict after Paperclip board sync
 
 ## Project Status Dashboard (2026-05-24)
 
