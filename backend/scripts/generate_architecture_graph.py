@@ -5,7 +5,7 @@ import json
 import re
 from collections import Counter, defaultdict
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 
@@ -178,7 +178,34 @@ class Registry:
 
 
 def repo_root() -> Path:
-    return Path(__file__).resolve().parents[2]
+    return Path(__file__).resolve().parents[2].resolve()
+
+
+def canonical_generated_at(registry: Registry) -> str:
+    """Return a stable graph timestamp derived from registry evidence."""
+    candidates: list[str] = []
+    for row in registry.nodes:
+        candidates.append(row.get("last_verified_at", ""))
+    for row in registry.chains:
+        candidates.append(row.get("last_verified_at", ""))
+    for row in registry.evidence:
+        candidates.append(row.get("last_verified_at", ""))
+    for row in registry.research_sources:
+        candidates.append(row.get("last_reviewed_at", ""))
+    for row in registry.theory_claims:
+        candidates.append(row.get("last_reviewed_at", ""))
+
+    valid: list[str] = []
+    for stamp in candidates:
+        value = (stamp or "").strip()
+        if not value:
+            continue
+        try:
+            datetime.strptime(value, "%Y-%m-%d")
+        except ValueError:
+            continue
+        valid.append(value)
+    return max(valid) if valid else date.today().isoformat()
 
 
 def read_csv(path: Path, required_columns: list[str]) -> list[dict[str, str]]:
@@ -572,7 +599,7 @@ def write_graph_exports(root: Path, registry: Registry) -> None:
     graph_dir = root / "docs" / "architecture" / "graphs"
     graph_dir.mkdir(parents=True, exist_ok=True)
     graph = {
-        "generated_at": date.today().isoformat(),
+        "generated_at": canonical_generated_at(registry),
         "nodes": registry.nodes,
         "relations": registry.relations,
         "chains": registry.chains,

@@ -38,9 +38,9 @@ related agents can evolve Aviary / AION without drifting away from the current
 Python runtime, contracts, docs, deployment reality, or product-shell UX
 direction.
 
-The product is called Aviary. The folder is still named `Personality` because
-the repository folder has not been renamed yet. Treat `Aviary` and
-`Personality` as the same project in this workspace.
+The product and repository root are canonicalized as `Aviary`
+(`C:/Personal/Projekty/Aplikacje/Aviary`). Legacy `Personality` references are
+historical aliases only.
 
 ## Canonical Context
 

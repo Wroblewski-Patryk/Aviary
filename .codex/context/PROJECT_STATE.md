@@ -2,9 +2,9 @@
 
 Last updated: 2026-05-29
 
-Project alias: the product is called Aviary. The repository folder remains
-`Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
-the same project.
+Project alias: the product and repository root are both canonicalized as
+`Aviary` (`C:/Personal/Projekty/Aplikacje/Aviary`). Historical references to
+`Personality` are legacy naming only.
 
 - 2026-05-29: `LUC-726` source-control closure for `LUC-420` dirty state is `DONE`:
   - task:

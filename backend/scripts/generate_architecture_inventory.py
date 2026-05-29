@@ -101,11 +101,11 @@ class Inventory:
 
 
 def repo_root() -> Path:
-    return Path(__file__).resolve().parents[2]
+    return Path(__file__).resolve().parents[2].resolve()
 
 
 def norm(path: Path) -> str:
-    return path.as_posix()
+    return Path(path).as_posix().replace("//", "/")
 
 
 def slug(value: str, max_length: int = 72) -> str:
