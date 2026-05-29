@@ -64,3 +64,12 @@ Classify whether the dirty files belong to one coherent issue lane and close the
 - commit: recorded in git history for this heartbeat.
 - push: not needed in this lane.
 - deploy impact: none.
+
+## Post-Comment Verification (2026-05-29)
+- wake source: local-board comment `2769cc02-1c09-4eec-92a6-d874dc150048` requesting sidecar-only local source-control closure evidence for `LUC-420`.
+- `git status --short`: clean worktree (no residual dirty state).
+- `git show --name-status --oneline 2840b99fc0c09fa40df2355171567680ef24f5e4`: confirms single closure commit with docs/state/evidence scope only.
+- targeted redaction scan over commit file list:
+  - command: `rg -n "(-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|AIza[0-9A-Za-z\\-_]{35}|sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16})" <commit-files>`
+  - result: no matches.
+- disposition: keep `LUC-726` as `DONE`; no follow-up closure action required in this lane.
