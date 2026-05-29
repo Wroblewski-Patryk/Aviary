@@ -2,6 +2,77 @@
 
 Last updated: 2026-05-29
 
+## Source Control Closure (2026-05-29)
+
+- `LUC-726` is DONE:
+  - `.codex/tasks/LUC-726-source-control-closure-for-luc-420-dirty-state.md`
+- objective:
+  - classify and close local dirty state linked to known-state baseline continuity
+- current result:
+  - dirty files were classified as one coherent docs/state lane (`LUC-691`..`LUC-694`) extending `LUC-420` baseline continuity
+  - no unrelated-change, secret, merge-conflict, or generated-churn blocker was found
+  - dirty state was closed via one source-control closure commit
+- validation:
+  - `git status --short` + `git diff --stat` + targeted `git diff` classification review completed
+  - post-closure `git status --short` returns clean worktree
+
+## Known-State Minimal Regression Proof (2026-05-29)
+
+- `LUC-693` is DONE:
+  - `.codex/tasks/LUC-693-minimal-regression-proof-set-known-state-closure.md`
+- objective:
+  - deliver a minimal, repeatable QA regression proof set for known-state closure
+- current result:
+  - backend release-smoke regression pack PASS: `41 passed, 23 deselected`
+  - web route smoke PASS with `route_count=14`, `status=ok`
+  - known-state baseline counts reconfirmed: route decorators `19`, backend test files `123`, migration files `12`
+- validation:
+  - command-level regression evidence captured in the task packet
+  - no runtime/code path changed in this checkpoint
+
+## Known-State Baseline And Lane Map Reconciliation (2026-05-29)
+
+- LUC-691 is DONE:
+  - .codex/tasks/LUC-691-known-state-baseline-and-lane-map-reconciliation.md
+- objective:
+  - reconcile PM known-state baseline continuity and preparation lane ownership for Personality/Aviary
+- current result:
+  - baseline continuity explicitly linked: LUC-420 -> LUC-517 -> LUC-580
+  - preparation lane map refreshed with Coordinator active and specialist lanes deferred to future child issues
+  - state router sync completed across active mission, next steps, task board, and project state
+- validation:
+  - source-of-truth review and state-file reconciliation completed
+  - no runtime/code path changed in this checkpoint
+
+## Known State Refresh (2026-05-29)
+- `LUC-692` is DONE:
+  - `.codex/tasks/LUC-692-architecture-awareness-baseline-proof-and-drift-check.md`
+- objective:
+  - produce architecture-awareness baseline proof and minimal drift check for Personality/Aviary
+- current result:
+  - canonical architecture export pack re-verified in `docs/graphs`
+  - minimal runtime surface counts confirmed in this heartbeat: backend route decorators `19`, backend test files `123`, migration files `12`
+  - SHA256 fingerprints captured for all six architecture export artifacts to anchor future drift comparison
+  - drift classification completed:
+    - expected variance: curated `api_route` count (`6`) vs full decorator surface (`19`)
+    - doc drift: architecture-awareness report noise from transient `.playwright-cli/page-*.yml` link-gap rows
+- validation:
+  - manual source-of-truth and architecture artifact presence verification complete
+  - no runtime/code path changed in this checkpoint
+
+## Evidence Ledger Sync (2026-05-29)
+
+- `LUC-694` is DONE:
+  - `.codex/tasks/LUC-694-evidence-ledger-sync-after-baseline-refresh.md`
+- objective:
+  - synchronize evidence/state ledgers after the `LUC-580` baseline refresh
+- current result:
+  - docs-memory ledgers now reference the latest known-state baseline and aligned dates
+  - synchronized files: module confidence, requirements verification, system health, risk register, regression log, next steps, active mission, task board, and project state
+- validation:
+  - manual cross-file evidence consistency check complete
+  - no runtime/code path changed in this checkpoint
+
 ## Known State Refresh (2026-05-29)
 
 - `LUC-580` is DONE:
@@ -26056,3 +26127,5 @@ Fresh Dashboard Compaction Pass (2026-04-28)
   - dashboard screenshot proof for total route height and flagship hierarchy
   - chat screenshot proof for transcript-first balance
   - personality screenshot proof for embodied-map calmness
+
+

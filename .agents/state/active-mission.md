@@ -4,6 +4,56 @@ Last updated: 2026-05-29
 
 ## Mission Update
 
+- 2026-05-29: `LUC-693` minimal regression proof set for known-state closure completed as a QA verification checkpoint.
+- Evidence packet:
+  - `.codex/tasks/LUC-693-minimal-regression-proof-set-known-state-closure.md`
+- Source-of-truth sync:
+  - `.codex/context/TASK_BOARD.md`
+  - `.codex/context/PROJECT_STATE.md`
+- Heartbeat proof snapshot:
+  - backend release-smoke regression pack: `41 passed, 23 deselected`
+  - web route smoke: `route_count=14`, `status=ok`
+  - backend route decorators: `19`
+  - backend test files: `123`
+  - migration files: `12`
+
+- 2026-05-29: `LUC-692` architecture-awareness baseline proof and drift check completed as a CTO verification checkpoint.
+- Evidence packet:
+  - `.codex/tasks/LUC-692-architecture-awareness-baseline-proof-and-drift-check.md`
+- Source-of-truth sync:
+  - `.codex/context/TASK_BOARD.md`
+  - `.codex/context/PROJECT_STATE.md`
+- Heartbeat proof snapshot:
+  - backend route decorators: `19`
+  - backend test files: `123`
+  - migration files: `12`
+  - architecture export files present in `docs/graphs`: `6`
+  - architecture export SHA256 fingerprints captured for drift anchoring
+  - drift classification finalized: one actionable doc drift (`.playwright-cli` report noise), remaining mismatches marked as expected variance
+
+- 2026-05-29: `LUC-691` PM known-state baseline and lane-map reconciliation completed as a preparation-only checkpoint.
+- Evidence packet:
+  - `.codex/tasks/LUC-691-known-state-baseline-and-lane-map-reconciliation.md`
+- Source-of-truth sync:
+  - `.codex/context/TASK_BOARD.md`
+  - `.codex/context/PROJECT_STATE.md`
+  - `.agents/state/next-steps.md`
+- Heartbeat output:
+  - baseline continuity confirmed: `LUC-420` -> `LUC-517` -> `LUC-580`
+  - preparation lane map refreshed (Coordinator active; specialist lanes deferred to future child issues)
+- 2026-05-29: `LUC-694` evidence-ledger synchronization completed as a docs-memory verification checkpoint.
+- Evidence packet:
+  - `.codex/tasks/LUC-694-evidence-ledger-sync-after-baseline-refresh.md`
+- Source-of-truth sync:
+  - `.codex/context/TASK_BOARD.md`
+  - `.codex/context/PROJECT_STATE.md`
+  - `.agents/state/module-confidence-ledger.md`
+  - `.agents/state/requirements-verification-matrix.md`
+  - `.agents/state/system-health.md`
+  - `.agents/state/risk-register.md`
+  - `.agents/state/regression-log.md`
+  - `.agents/state/next-steps.md`
+
 - 2026-05-29: `LUC-580` known-state and architecture baseline evidence collection completed as a verification-only checkpoint.
 - Evidence packet:
   - `.codex/tasks/LUC-580-known-state-architecture-baseline.md`
@@ -33,8 +83,20 @@ Use this file as the first operational router for `pracuj dalej`, `rob dalej`,
 a fresh coordinator can choose the next checkpoint without rereading the whole
 repository history.
 
-## Current Mission
+## Current Mission Override (Preparation Mode)
 
+- Mission ID: LUC-691-preparation-baseline-reconciliation
+- Status: CHECKPOINTED
+- Selected objective: keep Personality/Aviary in preparation mode with reconciled known-state baseline and explicit lane ownership.
+- Active lane now:
+  - Coordinator/PM: complete (baseline reconciliation and state sync done in `LUC-691`).
+- Deferred lanes (require future child issues):
+  - Product/Requirements
+  - Architecture
+  - QA/Test
+  - Ops/Release
+
+## Current Mission
 - Mission ID: PRJ-1331-backend-capability-to-final-personality-ui
 - Status: CHECKPOINTED
 - Selected objective: map backend capabilities into a magical, truthful, final-feeling UI, starting with the Personality route as the user's core identity surface.
@@ -3227,4 +3289,6 @@ Historical note:
 | 2026-05-22 | Mission opened | Multi-lane coordinator mission created after user asked to finish v1 with agents. | Active mission packet; QA/Release and UX read-only lanes delegated. | Create task contract and run/record parent gate. |
 | 2026-05-22 | Lane integration | QA confirmed no selected-scope blockers and UX identified Dashboard lower-row density as the smallest polish slice. | Subagent lane reports; PRJ-1230 task contract. | Patch the focused web slice and harden route-smoke fallback. |
 | 2026-05-22 | Parent validation | COMPLETED: selected-scope v1 remains locally verified for this branch. | `git diff --check` PASS with LF/CRLF warnings only; backend `1105 passed`; web build/responsive/navigation/account/route smoke PASS; architecture dashboard `11/11`; screenshot review; cleanup no leftovers. | Promote only after explicit production deploy target/parity smoke. |
+
+
 

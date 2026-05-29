@@ -1,6 +1,6 @@
 # Documentation Map
 
-Updated: 2026-05-28
+Updated: 2026-05-29
 
 This is the main entrypoint for current project documentation.
 
@@ -26,6 +26,7 @@ audits, proof artifacts, release packets, and raw generated outputs belong in
 | Situation | Start With | Then Check | Close By Updating |
 | --- | --- | --- | --- |
 | New coordinator chat or continuation | `docs/maps/agent-work-map.md` | `.agents/state/active-mission.md`, `.codex/context/TASK_BOARD.md`, `.agents/state/next-steps.md` | active mission, task board, project state |
+| Known-state baseline refresh or docs-memory reconciliation | `.codex/tasks/LUC-580-known-state-architecture-baseline.md` | `.codex/tasks/LUC-694-evidence-ledger-sync-after-baseline-refresh.md`, `.agents/state/module-confidence-ledger.md`, `.agents/state/requirements-verification-matrix.md`, `.agents/state/system-health.md` | task board, project state, docs-memory ledgers, status artifact |
 | Product or scope question | `docs/maps/product-map.md` | `docs/planning/open-decisions.md`, idea ledger, current focus | product docs or open decisions |
 | New idea or feature concept | `docs/planning/idea-to-function-chain-playbook.md` | pipelines, architecture graph, module docs | idea ledger, chain registry, next task |
 | Architecture or ownership change | `docs/maps/architecture-map.md` | architecture docs, module registry, graph records | architecture, module docs, graph CSVs |

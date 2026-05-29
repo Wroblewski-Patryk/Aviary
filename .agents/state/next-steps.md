@@ -1,8 +1,18 @@
 # Next Steps
 
-Last updated: 2026-05-25
+Last updated: 2026-05-29
 
 ## NOW
+
+1. Continue from `LUC-691` baseline/lane-map reconciliation:
+   - latest task:
+     `.codex/tasks/LUC-691-known-state-baseline-and-lane-map-reconciliation.md`
+   - latest result:
+     known-state continuity is reconciled for `LUC-420` -> `LUC-517` -> `LUC-580` and preparation lane ownership is explicit
+   - proof:
+     state sync across `.agents/state/active-mission.md`, `.agents/state/next-steps.md`, `.codex/context/TASK_BOARD.md`, and `.codex/context/PROJECT_STATE.md`
+   - next smallest useful choice:
+     open the first deferred child lane (Product/Requirements, Architecture, QA/Test, or Ops/Release) as a bounded preparation issue with explicit proof contract
 
 1. Continue from `LUC-260` full takeover audit baseline:
    - latest task:
@@ -2110,4 +2120,6 @@ Last updated: 2026-05-25
   unresolved.
 - Keep this file synchronized with `.codex/context/TASK_BOARD.md` and
   `docs/planning/mvp-next-commits.md`.
+
+
 

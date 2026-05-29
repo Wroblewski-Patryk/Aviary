@@ -6,6 +6,63 @@ Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
 
+- 2026-05-29: `LUC-726` source-control closure for `LUC-420` dirty state is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-726-source-control-closure-for-luc-420-dirty-state.md`
+  - result:
+    - classified local dirty files as one coherent docs/state packet from `LUC-691`..`LUC-694` linked to `LUC-420` baseline continuity
+    - found no blocker class (no unrelated conflict, no secrets/local env leakage risk, no merge conflict, no generated churn ambiguity)
+    - closed dirty state with one source-control closure commit
+  - validation:
+    - `git status --short` + `git diff --stat` + targeted `git diff` classification review
+    - post-commit `git status --short` clean
+
+- 2026-05-29: `LUC-693` minimal regression proof set for known-state closure is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-693-minimal-regression-proof-set-known-state-closure.md`
+  - result:
+    - minimal backend regression proof PASS via release-smoke deployment-script pack (`41 passed, 23 deselected`)
+    - minimal web regression proof PASS via route smoke (`route_count=14`, `status=ok`)
+    - known-state baseline signals reconfirmed in the same checkpoint: route decorators `19`, backend test files `123`, migration files `12`
+  - validation:
+    - replayable command evidence captured in task packet
+    - no runtime/code changes in this checkpoint
+
+- 2026-05-29: `LUC-691` PM baseline/lane-map reconciliation is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-691-known-state-baseline-and-lane-map-reconciliation.md`
+  - result:
+    - reconciled preparation-mode known-state continuity across `LUC-420`, `LUC-517`, and `LUC-580`
+    - refreshed preparation lane ownership (Coordinator active; Product/Architecture/QA/Ops deferred to future child issues)
+    - synchronized PM router files: active mission, next steps, task board, and project state
+  - validation:
+    - manual source-of-truth reconciliation completed
+    - no runtime/code changes in this checkpoint; tests not applicable
+- 2026-05-29: `LUC-692` architecture-awareness baseline proof and drift check is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-692-architecture-awareness-baseline-proof-and-drift-check.md`
+  - result:
+    - re-verified canonical architecture export pack presence in `docs/graphs`
+    - confirmed baseline surface counts in this heartbeat: route decorators `19`, backend test files `123`, migration files `12`
+    - captured SHA256 fingerprints for all six architecture export artifacts as drift anchors
+    - no drift detected in minimal signals versus prior known-state checkpoints (`LUC-580`, `LUC-517`)
+    - completed mismatch classification:
+      - expected variance: curated architecture `api_route` inventory (`6`) vs full route decorator surface (`19`)
+      - doc drift: transient `.playwright-cli/page-*.yml` files inflate missing-link rows in `docs/status/architecture-awareness-report.md`
+  - validation:
+    - manual verification of source-of-truth files and architecture artifact presence
+    - no runtime/code changes in this checkpoint; tests not applicable
+
+- 2026-05-29: `LUC-694` evidence-ledger synchronization checkpoint is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-694-evidence-ledger-sync-after-baseline-refresh.md`
+  - result:
+    - synchronized evidence/state ledgers after `LUC-580` baseline refresh
+    - aligned stale `Last updated` dates and added baseline-truth references in key memory ledgers
+  - validation:
+    - manual cross-ledger consistency verification completed
+    - no runtime/code changes in this checkpoint; tests not applicable
+
 - 2026-05-29: `LUC-580` known-state and architecture baseline checkpoint is `DONE`:
   - task:
     - `.codex/tasks/LUC-580-known-state-architecture-baseline.md`
@@ -17867,3 +17924,4 @@ the same project.
   - validation after this pass:
     - `Push-Location .\web; npm run build; Pop-Location`
     - result: passed
+

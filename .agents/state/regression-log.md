@@ -1,6 +1,6 @@
 # Regression Log
 
-Last updated: 2026-05-12
+Last updated: 2026-05-29
 
 ## Active Regressions
 
@@ -15,6 +15,7 @@ closure.
 
 | ID | Severity | Surface | Fixed by | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
+| stale-baseline-ledger-sync | P1 | docs memory / evidence ledgers | LUC-694 | Manual cross-ledger sync check across task board, project state, active mission, module confidence, requirements, health, risk, regression, and next-steps files after `LUC-580`. | Closed stale-ledger drift after baseline refresh by synchronizing dates and checkpoint references on 2026-05-29. |
 | stale-detailed-loop-plan-evidence | P2 | planning docs | PRJ-919 | stale blocker wording scan in `docs/planning/skill-guided-bounded-action-loop-plan.md` -> no matches. | Detailed plan now includes confirmation controls, browser proof, route smoke, and full gate evidence through `PRJ-822`. |
 | missing-action-loop-summary-contract | P2 | runtime debug/action contract | PRJ-924 | focused action executor and runtime pipeline tests -> `2 passed` each. | `ActionResult.action_loop` now exposes bounded policy owner, step count, selected skills, used tools, completion state, blockers, and raw-payload posture. |
 | post-action-loop-summary-backend-confidence | P2 | backend confidence | PRJ-925 | escalated full backend pytest -> `1074 passed`. | Sandboxed first run failed only on pytest basetemp `PermissionError`; no application regression was found. |

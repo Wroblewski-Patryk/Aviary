@@ -1,6 +1,6 @@
 # Documentation Overview
 
-Updated: 2026-05-28
+Updated: 2026-05-29
 
 This file is the docs-parity baseline entry for the Personality (Aviary)
 repository. It provides one stable index for current documentation ownership,
@@ -27,11 +27,8 @@ scope, and residual gaps during the `LUC-260` takeover preparation mission.
 
 ## Residual Unknowns And Open Parity Gaps
 
-- `docs/graphs/architecture-awareness.json` and related graph export pack:
-  missing (owned by `LUC-446` architecture lane).
-- `docs/status/architecture-awareness-report.md` equivalent:
-  missing (owned by `LUC-446` architecture lane).
-- takeover proof command shortlist:
-  pending (owned by `LUC-447` QA/Test lane).
-- ops/release baseline readiness note:
-  pending (owned by `LUC-448` Ops/Release lane).
+- `LUC-446`, `LUC-447`, and `LUC-448` baseline lanes are now closed and their
+  artifacts are present.
+- `LUC-580` baseline refresh is closed with known-state evidence.
+- `LUC-694` synchronized docs-memory ledgers to keep baseline references
+  aligned across `.codex/context/*` and `.agents/state/*`.
