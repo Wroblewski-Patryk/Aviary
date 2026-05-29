@@ -1,10 +1,21 @@
 # PROJECT_STATE
 
-Last updated: 2026-05-28
+Last updated: 2026-05-29
 
 Project alias: the product is called Aviary. The repository folder remains
 `Personality` until the folder is renamed. Treat `Aviary` and `Personality` as
 the same project.
+
+- 2026-05-29: `LUC-580` known-state and architecture baseline checkpoint is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-580-known-state-architecture-baseline.md`
+  - result:
+    - refreshed known-state evidence for canonical state files and architecture export artifacts
+    - re-verified runtime surface counts in this heartbeat: route decorators `19`, backend test files `123`, migration files `12`
+    - linked checkpoint to prior baseline packets `LUC-420` and `LUC-517`
+  - validation:
+    - manual verification of source-of-truth files and `docs/graphs` artifact presence
+    - no runtime/code changes in this checkpoint; tests not applicable
 
 - 2026-05-28: `LUC-517` known-state and architecture baseline refresh is `DONE`:
   - task:

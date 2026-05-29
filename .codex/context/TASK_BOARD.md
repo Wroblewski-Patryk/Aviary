@@ -1,6 +1,19 @@
 # TASK_BOARD
 
-Last updated: 2026-05-28
+Last updated: 2026-05-29
+
+## Known State Refresh (2026-05-29)
+
+- `LUC-580` is DONE:
+  - `.codex/tasks/LUC-580-known-state-architecture-baseline.md`
+- objective:
+  - collect refreshed known-state evidence and architecture baseline for Personality repository
+- current result:
+  - canonical state files, prior baseline packets, and architecture export pack were re-verified from repository truth
+  - minimal runtime surface counts captured in this heartbeat: backend route decorators `19`, backend test files `123`, migration files `12`
+- validation:
+  - manual source-of-truth and artifact presence verification complete
+  - no runtime/code path changed in this checkpoint
 
 ## Known State Refresh (2026-05-28)
 
