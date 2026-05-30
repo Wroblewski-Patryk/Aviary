@@ -76,3 +76,9 @@ Confirm whether the dirty state still exists, classify ownership and closure sta
 ## Result Report
 - summary: `LUC-954` objective is complete. Local dirty state tied to `LUC-935`/`LUC-939`/`LUC-950` is already closed and current worktree is clean.
 - final disposition recommendation: `done`.
+
+## Heartbeat Recheck (2026-05-31)
+- wake reason handled: `source_scoped_recovery_action`
+- `git status --short`: clean (no entries)
+- `git rev-parse --short HEAD`: `9ece2730`
+- disposition: remains `DONE`; no additional source-control closure action required in this heartbeat

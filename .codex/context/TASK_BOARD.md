@@ -15,6 +15,10 @@ Last updated: 2026-05-31
   - no closure commit required in this heartbeat
 - validation:
   - `git status --short` + `git diff --stat` + branch/head capture via `git rev-parse`
+  - heartbeat recheck:
+    - `git status --short` clean
+    - `HEAD` recheck: `9ece2730`
+    - no new dirty-state payload detected
 
 ## Source Control Closure (2026-05-29)
 

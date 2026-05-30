@@ -13,11 +13,13 @@ Project alias: the product and repository root are both canonicalized as
     - local worktree already clean on `main` (`762d35e8c1998448bd8a0ec66ad0d7a8ca698162`)
     - no dirty/staged/untracked files found in this heartbeat
     - no blocker class present; no closure commit required
+    - heartbeat recheck confirmed the closure remains valid on `HEAD` `9ece2730`
   - validation:
     - `git status --short`
     - `git diff --stat`
     - `git rev-parse --abbrev-ref HEAD`
     - `git rev-parse HEAD`
+    - heartbeat recheck: `git status --short`, `git rev-parse --short HEAD`
 
 - 2026-05-30: `LUC-798` canonical project-root identity reconciliation is `DONE`:
   - result:
