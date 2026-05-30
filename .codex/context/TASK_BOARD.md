@@ -4,6 +4,36 @@ Last updated: 2026-05-31
 
 ## Source Control Closure (2026-05-31)
 
+- `LUC-958` is DONE:
+  - `.codex/tasks/LUC-958-source-control-closure-for-luc-943.md`
+  - objective:
+    - classify and close local dirty state for `LUC-943`
+  - current result:
+    - dirty files classified as one coherent `LUC-943` packet (tests + task/context docs)
+    - no blocker class detected (no unrelated overlap, no merge conflict, no secret/leak risk, no generated churn ambiguity)
+    - packet closed with one commit in this heartbeat
+  - validation:
+    - `git status --porcelain=v1`
+    - `git diff --stat`
+    - `git diff --name-only`
+    - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "set_webhook_uses_request_secret_or_settings_default or set_webhook_prefers_explicit_request_secret_over_settings_default or app_connector_confirmation_executes_confirmed_replay_through_action or app_connector_confirmation_returns_blocked_when_confirmed_replay_execution_fails"; Pop-Location`
+    - result: `4 passed, 130 deselected in 3.81s`
+
+## Integration Endpoint Contract Tests (2026-05-31)
+
+- `LUC-943` is DONE:
+  - `.codex/tasks/LUC-943-integration-endpoint-contract-tests-p1.md`
+  - objective:
+    - add focused integration endpoint contract tests for P1 gaps
+  - current result:
+    - `/app/connectors/confirm` now has explicit contract proof for `confirmation_replay_blocked` when confirmed replay execution fails
+    - `/telegram/set-webhook` now has explicit contract proof that request `secret_token` takes precedence over settings fallback
+  - validation:
+    - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "set_webhook_uses_request_secret_or_settings_default or set_webhook_prefers_explicit_request_secret_over_settings_default or app_connector_confirmation_executes_confirmed_replay_through_action or app_connector_confirmation_returns_blocked_when_confirmed_replay_execution_fails"; Pop-Location`
+    - result: `4 passed, 130 deselected in 12.14s`
+
+## Source Control Closure (2026-05-31)
+
 - `LUC-955` is DONE:
   - `.codex/tasks/LUC-955-source-control-closure-for-luc-942.md`
 - objective:

@@ -6,6 +6,30 @@ Project alias: the product and repository root are both canonicalized as
 `Aviary` (`C:/Personal/Projekty/Aplikacje/Aviary`). Historical references to
 `Personality` are legacy naming only.
 
+- 2026-05-31: `LUC-958` source-control closure sidecar for `LUC-943` is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-958-source-control-closure-for-luc-943.md`
+  - result:
+    - local dirty state classified as one coherent `LUC-943` packet (tests + task/context docs)
+    - no blocker class found (no unrelated overlap, no merge conflict, no secret/leak risk, no generated churn ambiguity)
+    - packet closed with one commit in this heartbeat
+  - validation:
+    - `git status --porcelain=v1`
+    - `git diff --stat`
+    - `git diff --name-only`
+    - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "set_webhook_uses_request_secret_or_settings_default or set_webhook_prefers_explicit_request_secret_over_settings_default or app_connector_confirmation_executes_confirmed_replay_through_action or app_connector_confirmation_returns_blocked_when_confirmed_replay_execution_fails"; Pop-Location`
+    - result: `4 passed, 130 deselected in 3.81s`
+
+- 2026-05-31: `LUC-943` integration endpoint contract tests (`P1`) are `DONE`:
+  - task:
+    - `.codex/tasks/LUC-943-integration-endpoint-contract-tests-p1.md`
+  - result:
+    - added focused API contract coverage for integration confirmation blocked replay outcome on `/app/connectors/confirm`
+    - added explicit secret precedence contract coverage for `/telegram/set-webhook` (request `secret_token` overrides settings fallback)
+  - validation:
+    - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "set_webhook_uses_request_secret_or_settings_default or set_webhook_prefers_explicit_request_secret_over_settings_default or app_connector_confirmation_executes_confirmed_replay_through_action or app_connector_confirmation_returns_blocked_when_confirmed_replay_execution_fails"; Pop-Location`
+    - result: `4 passed, 130 deselected in 12.14s`
+
 - 2026-05-31: `LUC-955` source-control closure for `LUC-942` is `DONE`:
   - task:
     - `.codex/tasks/LUC-955-source-control-closure-for-luc-942.md`

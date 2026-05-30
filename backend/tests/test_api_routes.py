@@ -5050,6 +5050,27 @@ def test_set_webhook_uses_request_secret_or_settings_default() -> None:
     ]
 
 
+def test_set_webhook_prefers_explicit_request_secret_over_settings_default() -> None:
+    client, _, telegram_client = _client(secret="fallback-secret")
+
+    response = client.post(
+        "/telegram/set-webhook",
+        json={
+            "webhook_url": "https://personality.luckysparrow.ch/event",
+            "secret_token": "request-secret",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"ok": True, "result": True}
+    assert telegram_client.calls == [
+        {
+            "webhook_url": "https://personality.luckysparrow.ch/event",
+            "secret_token": "request-secret",
+        }
+    ]
+
+
 def test_app_auth_register_sets_session_cookie_and_returns_user_snapshot() -> None:
     client, _, _ = _client()
 
@@ -6104,6 +6125,47 @@ def test_app_connector_confirmation_executes_confirmed_replay_through_action() -
         {"operation": "list_tasks", "limit": "10"},
         {"operation": "update_task", "task_id": "clk_1", "status": "complete"},
     ]
+
+
+def test_app_connector_confirmation_returns_blocked_when_confirmed_replay_execution_fails() -> None:
+    class FailingActionExecutor:
+        async def execute(self, plan, delivery):
+            return ActionResult(
+                status="fail",
+                actions=["clickup_update_task"],
+                notes="ClickUp execution blocked: provider client is not ready.",
+            )
+
+    client, runtime, _ = _client()
+    repository = client.app.state.memory_repository
+    runtime.action_executor = FailingActionExecutor()
+    register_response = client.post(
+        "/app/auth/register",
+        json={
+            "email": "user@example.com",
+            "password": "super-secret-123",
+        },
+    )
+    user_id = register_response.json()["user"]["id"]
+    _append_pending_confirmation_memory(
+        repository,
+        user_id=user_id,
+        include_replay_snapshot=True,
+    )
+
+    response = client.post(
+        "/app/connectors/confirm",
+        json=_pending_confirmation_submission_payload(),
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "blocked"
+    assert body["reason"] == "confirmation_replay_blocked"
+    assert body["execution_allowed"] is True
+    assert body["action_status"] == "fail"
+    assert body["actions"] == ["clickup_update_task"]
+    assert "provider client is not ready" in body["notes"]
 
 
 def test_app_connector_confirmation_rejects_replay_snapshot_drift() -> None:

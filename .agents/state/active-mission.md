@@ -4,6 +4,17 @@ Last updated: 2026-05-31
 
 ## Mission Update
 
+- 2026-05-31: `LUC-958` source-control closure sidecar for `LUC-943` completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-958-source-control-closure-for-luc-943.md`
+- Source-of-truth sync:
+  - `.codex/context/TASK_BOARD.md`
+  - `.codex/context/PROJECT_STATE.md`
+- Heartbeat proof snapshot:
+  - `LUC-943` dirty packet classified as one coherent tests + docs/state set
+  - narrow route-contract verification rerun passed (`4 passed, 130 deselected`)
+  - closure commit created in this heartbeat
+
 - 2026-05-31: `LUC-955` source-control closure for `LUC-942` completed.
 - Evidence packet:
   - `.codex/tasks/LUC-955-source-control-closure-for-luc-942.md`
