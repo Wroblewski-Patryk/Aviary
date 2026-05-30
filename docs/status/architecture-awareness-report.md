@@ -1,132 +1,141 @@
 # Architecture Awareness Report
 
-Generated: 2026-05-29T21:49:36.836Z
-Project: Aviary
+Generated: 2026-05-30T22:14:11.106665+00:00
+Project: Personality
 Root: C:/Personal/Projekty/Aplikacje/Aviary
 
 ## Counts By Type
 
 | Type | Count |
 | --- | ---: |
-| agent | 52 |
-| api_endpoint | 20 |
-| component | 16 |
-| document | 11343 |
-| feature | 55 |
-| function | 830 |
-| migration | 27 |
-| model | 298 |
-| module | 21 |
-| project | 1 |
-| route | 130 |
-| test | 59 |
+| agent | 6 |
+| api_file | 4 |
+| api_route | 6 |
+| backend_file | 111 |
+| class | 241 |
+| component | 148 |
+| component_file | 9 |
+| config | 46 |
+| data_file | 20 |
+| documentation | 1110 |
+| event | 1 |
+| feature | 10 |
+| file | 65 |
+| frontend_file | 14 |
+| function | 2862 |
+| mobile_file | 23 |
+| model | 2 |
+| page | 4 |
+| prompt | 1 |
+| script | 2 |
+| service | 3 |
+| test | 68 |
+| ui_element | 735 |
+| workflow | 3 |
 
 ## Counts By Status
 
 | Status | Count |
 | --- | ---: |
-| blocked | 1 |
-| deprecated | 3 |
-| implemented | 12788 |
-| in_progress | 1 |
-| tested | 59 |
+| implemented | 4275 |
+| verified | 1219 |
 
 ## Health Signals
 
-- Implementation entities without inferred tests: 921
-- Implementation entities without inferred docs: 519
-- Entities without owner attribution: 0
-- Disconnected entities: 0
+- Implementation entities without inferred tests: 4275
+- Implementation entities without inferred docs: 4275
+- Entities without relation links: 1213
+- Function journey rows: 11
+- User action rows: 893
 
 ## Top Missing Test Links
 
-- api_endpoint: POST /app/auth/login (backend/app/api/routes.py#/app/auth/login)
-- api_endpoint: POST /app/auth/logout (backend/app/api/routes.py#/app/auth/logout)
-- api_endpoint: POST /app/auth/register (backend/app/api/routes.py#/app/auth/register)
-- api_endpoint: GET /app/chat/history (backend/app/api/routes.py#/app/chat/history)
-- api_endpoint: POST /app/chat/message (backend/app/api/routes.py#/app/chat/message)
-- api_endpoint: POST /app/connectors/confirm (backend/app/api/routes.py#/app/connectors/confirm)
-- api_endpoint: GET /app/me (backend/app/api/routes.py#/app/me)
-- api_endpoint: POST /app/me/reset-data (backend/app/api/routes.py#/app/me/reset-data)
-- api_endpoint: PATCH /app/me/settings (backend/app/api/routes.py#/app/me/settings)
-- api_endpoint: GET /app/personality/overview (backend/app/api/routes.py#/app/personality/overview)
-- api_endpoint: GET /app/tools/overview (backend/app/api/routes.py#/app/tools/overview)
-- api_endpoint: PATCH /app/tools/preferences (backend/app/api/routes.py#/app/tools/preferences)
-- api_endpoint: POST /app/tools/telegram/link/start (backend/app/api/routes.py#/app/tools/telegram/link/start)
-- api_endpoint: POST /event (backend/app/api/routes.py#/event)
-- api_endpoint: POST /event/debug (backend/app/api/routes.py#/event/debug)
-- api_endpoint: GET /health (backend/app/api/routes.py#/health)
-- api_endpoint: GET /internal/state/inspect (backend/app/api/routes.py#/internal/state/inspect)
-- api_endpoint: POST /telegram/set-webhook (backend/app/api/routes.py#/telegram/set-webhook)
-- api_endpoint: GET / (backend/app/main.py#/)
-- api_endpoint: GET /{frontend_path:path} (backend/app/main.py#/{frontend_path:path})
-- component: chat-screen.tsx (mobile/src/ui/chat-screen.tsx)
-- component: home-screen.tsx (mobile/src/ui/home-screen.tsx)
-- component: personality-screen.tsx (mobile/src/ui/personality-screen.tsx)
-- component: primitives.tsx (mobile/src/ui/primitives.tsx)
-- component: settings-screen.tsx (mobile/src/ui/settings-screen.tsx)
-- component: tools-screen.tsx (mobile/src/ui/tools-screen.tsx)
-- component: App.tsx (web/src/App.tsx)
-- component: app-icons.tsx (web/src/components/app-icons.tsx)
-- component: chat.tsx (web/src/components/chat.tsx)
-- component: dashboard.tsx (web/src/components/dashboard.tsx)
-- component: personality.tsx (web/src/components/personality.tsx)
-- component: public-shell.tsx (web/src/components/public-shell.tsx)
-- component: settings.tsx (web/src/components/settings.tsx)
-- component: shared.tsx (web/src/components/shared.tsx)
-- component: shell.tsx (web/src/components/shell.tsx)
-- component: tools.tsx (web/src/components/tools.tsx)
-- feature: audit_architecture_implementation_map.py (backend/scripts/audit_architecture_implementation_map.py)
-- feature: audit_release_reality.py (backend/scripts/audit_release_reality.py)
-- feature: build_architecture_awareness_pack.py (backend/scripts/build_architecture_awareness_pack.py)
-- feature: build_architecture_graph_hosted_evidence_packet.py (backend/scripts/build_architecture_graph_hosted_evidence_packet.py)
+- config: architecture-graph.yml (.github/workflows/architecture-graph.yml)
+- config: page-2026-04-15T20-44-25-347Z.yml (.playwright-cli/page-2026-04-15T20-44-25-347Z.yml)
+- config: page-2026-04-15T20-44-46-172Z.yml (.playwright-cli/page-2026-04-15T20-44-46-172Z.yml)
+- config: page-2026-04-15T20-44-59-639Z.yml (.playwright-cli/page-2026-04-15T20-44-59-639Z.yml)
+- config: page-2026-04-15T20-45-28-282Z.yml (.playwright-cli/page-2026-04-15T20-45-28-282Z.yml)
+- config: page-2026-04-15T20-45-50-133Z.yml (.playwright-cli/page-2026-04-15T20-45-50-133Z.yml)
+- config: page-2026-04-15T20-46-04-677Z.yml (.playwright-cli/page-2026-04-15T20-46-04-677Z.yml)
+- config: page-2026-04-15T20-46-21-330Z.yml (.playwright-cli/page-2026-04-15T20-46-21-330Z.yml)
+- config: page-2026-04-15T20-46-40-337Z.yml (.playwright-cli/page-2026-04-15T20-46-40-337Z.yml)
+- config: page-2026-04-15T20-46-57-571Z.yml (.playwright-cli/page-2026-04-15T20-46-57-571Z.yml)
+- config: page-2026-04-15T20-47-15-058Z.yml (.playwright-cli/page-2026-04-15T20-47-15-058Z.yml)
+- config: page-2026-04-15T20-47-36-166Z.yml (.playwright-cli/page-2026-04-15T20-47-36-166Z.yml)
+- config: page-2026-04-15T20-48-28-321Z.yml (.playwright-cli/page-2026-04-15T20-48-28-321Z.yml)
+- config: page-2026-04-15T20-48-42-079Z.yml (.playwright-cli/page-2026-04-15T20-48-42-079Z.yml)
+- config: page-2026-04-15T20-53-08-945Z.yml (.playwright-cli/page-2026-04-15T20-53-08-945Z.yml)
+- config: page-2026-04-15T20-53-17-733Z.yml (.playwright-cli/page-2026-04-15T20-53-17-733Z.yml)
+- config: page-2026-04-15T20-53-32-053Z.yml (.playwright-cli/page-2026-04-15T20-53-32-053Z.yml)
+- config: page-2026-04-15T20-53-49-407Z.yml (.playwright-cli/page-2026-04-15T20-53-49-407Z.yml)
+- config: page-2026-04-15T20-59-47-745Z.yml (.playwright-cli/page-2026-04-15T20-59-47-745Z.yml)
+- config: page-2026-04-15T21-00-13-902Z.yml (.playwright-cli/page-2026-04-15T21-00-13-902Z.yml)
+- config: page-2026-04-15T21-00-52-690Z.yml (.playwright-cli/page-2026-04-15T21-00-52-690Z.yml)
+- config: page-2026-04-15T21-01-06-365Z.yml (.playwright-cli/page-2026-04-15T21-01-06-365Z.yml)
+- config: page-2026-04-15T21-01-17-645Z.yml (.playwright-cli/page-2026-04-15T21-01-17-645Z.yml)
+- config: page-2026-04-15T21-01-37-282Z.yml (.playwright-cli/page-2026-04-15T21-01-37-282Z.yml)
+- config: page-2026-04-15T21-01-54-855Z.yml (.playwright-cli/page-2026-04-15T21-01-54-855Z.yml)
+- config: page-2026-04-15T21-02-10-679Z.yml (.playwright-cli/page-2026-04-15T21-02-10-679Z.yml)
+- config: page-2026-04-15T21-02-19-568Z.yml (.playwright-cli/page-2026-04-15T21-02-19-568Z.yml)
+- config: page-2026-04-15T21-02-55-893Z.yml (.playwright-cli/page-2026-04-15T21-02-55-893Z.yml)
+- config: page-2026-04-15T21-03-38-638Z.yml (.playwright-cli/page-2026-04-15T21-03-38-638Z.yml)
+- config: page-2026-04-15T21-06-30-601Z.yml (.playwright-cli/page-2026-04-15T21-06-30-601Z.yml)
+- config: page-2026-04-15T21-06-58-044Z.yml (.playwright-cli/page-2026-04-15T21-06-58-044Z.yml)
+- config: page-2026-04-15T21-07-13-831Z.yml (.playwright-cli/page-2026-04-15T21-07-13-831Z.yml)
+- config: page-2026-04-15T21-07-33-964Z.yml (.playwright-cli/page-2026-04-15T21-07-33-964Z.yml)
+- config: page-2026-04-15T21-07-47-990Z.yml (.playwright-cli/page-2026-04-15T21-07-47-990Z.yml)
+- config: page-2026-04-15T21-08-01-514Z.yml (.playwright-cli/page-2026-04-15T21-08-01-514Z.yml)
+- config: page-2026-04-15T21-08-17-705Z.yml (.playwright-cli/page-2026-04-15T21-08-17-705Z.yml)
+- config: page-2026-04-15T21-29-42-720Z.yml (.playwright-cli/page-2026-04-15T21-29-42-720Z.yml)
+- config: page-2026-04-15T21-30-17-426Z.yml (.playwright-cli/page-2026-04-15T21-30-17-426Z.yml)
+- config: page-2026-04-15T21-30-24-877Z.yml (.playwright-cli/page-2026-04-15T21-30-24-877Z.yml)
+- backend_file: __init__.py (backend/app/__init__.py)
 
 ## Top Missing Doc Links
 
-- api_endpoint: POST /app/auth/login (backend/app/api/routes.py#/app/auth/login)
-- api_endpoint: POST /app/auth/logout (backend/app/api/routes.py#/app/auth/logout)
-- api_endpoint: POST /app/auth/register (backend/app/api/routes.py#/app/auth/register)
-- api_endpoint: GET /app/chat/history (backend/app/api/routes.py#/app/chat/history)
-- api_endpoint: POST /app/chat/message (backend/app/api/routes.py#/app/chat/message)
-- api_endpoint: POST /app/connectors/confirm (backend/app/api/routes.py#/app/connectors/confirm)
-- api_endpoint: GET /app/me (backend/app/api/routes.py#/app/me)
-- api_endpoint: POST /app/me/reset-data (backend/app/api/routes.py#/app/me/reset-data)
-- api_endpoint: PATCH /app/me/settings (backend/app/api/routes.py#/app/me/settings)
-- api_endpoint: GET /app/personality/overview (backend/app/api/routes.py#/app/personality/overview)
-- api_endpoint: GET /app/tools/overview (backend/app/api/routes.py#/app/tools/overview)
-- api_endpoint: PATCH /app/tools/preferences (backend/app/api/routes.py#/app/tools/preferences)
-- api_endpoint: POST /app/tools/telegram/link/start (backend/app/api/routes.py#/app/tools/telegram/link/start)
-- api_endpoint: POST /event (backend/app/api/routes.py#/event)
-- api_endpoint: POST /event/debug (backend/app/api/routes.py#/event/debug)
-- api_endpoint: GET /health (backend/app/api/routes.py#/health)
-- api_endpoint: GET /internal/state/inspect (backend/app/api/routes.py#/internal/state/inspect)
-- api_endpoint: POST /telegram/set-webhook (backend/app/api/routes.py#/telegram/set-webhook)
-- api_endpoint: GET / (backend/app/main.py#/)
-- api_endpoint: GET /{frontend_path:path} (backend/app/main.py#/{frontend_path:path})
-- component: chat-screen.tsx (mobile/src/ui/chat-screen.tsx)
-- component: home-screen.tsx (mobile/src/ui/home-screen.tsx)
-- component: personality-screen.tsx (mobile/src/ui/personality-screen.tsx)
-- component: primitives.tsx (mobile/src/ui/primitives.tsx)
-- component: settings-screen.tsx (mobile/src/ui/settings-screen.tsx)
-- component: tools-screen.tsx (mobile/src/ui/tools-screen.tsx)
-- component: App.tsx (web/src/App.tsx)
-- component: app-icons.tsx (web/src/components/app-icons.tsx)
-- component: chat.tsx (web/src/components/chat.tsx)
-- component: dashboard.tsx (web/src/components/dashboard.tsx)
-- component: personality.tsx (web/src/components/personality.tsx)
-- component: public-shell.tsx (web/src/components/public-shell.tsx)
-- component: settings.tsx (web/src/components/settings.tsx)
-- component: shared.tsx (web/src/components/shared.tsx)
-- component: shell.tsx (web/src/components/shell.tsx)
-- component: tools.tsx (web/src/components/tools.tsx)
-- feature: audit_architecture_implementation_map.py (backend/scripts/audit_architecture_implementation_map.py)
-- feature: audit_release_reality.py (backend/scripts/audit_release_reality.py)
-- feature: build_architecture_awareness_pack.py (backend/scripts/build_architecture_awareness_pack.py)
-- feature: build_architecture_graph_hosted_evidence_packet.py (backend/scripts/build_architecture_graph_hosted_evidence_packet.py)
+- config: architecture-graph.yml (.github/workflows/architecture-graph.yml)
+- config: page-2026-04-15T20-44-25-347Z.yml (.playwright-cli/page-2026-04-15T20-44-25-347Z.yml)
+- config: page-2026-04-15T20-44-46-172Z.yml (.playwright-cli/page-2026-04-15T20-44-46-172Z.yml)
+- config: page-2026-04-15T20-44-59-639Z.yml (.playwright-cli/page-2026-04-15T20-44-59-639Z.yml)
+- config: page-2026-04-15T20-45-28-282Z.yml (.playwright-cli/page-2026-04-15T20-45-28-282Z.yml)
+- config: page-2026-04-15T20-45-50-133Z.yml (.playwright-cli/page-2026-04-15T20-45-50-133Z.yml)
+- config: page-2026-04-15T20-46-04-677Z.yml (.playwright-cli/page-2026-04-15T20-46-04-677Z.yml)
+- config: page-2026-04-15T20-46-21-330Z.yml (.playwright-cli/page-2026-04-15T20-46-21-330Z.yml)
+- config: page-2026-04-15T20-46-40-337Z.yml (.playwright-cli/page-2026-04-15T20-46-40-337Z.yml)
+- config: page-2026-04-15T20-46-57-571Z.yml (.playwright-cli/page-2026-04-15T20-46-57-571Z.yml)
+- config: page-2026-04-15T20-47-15-058Z.yml (.playwright-cli/page-2026-04-15T20-47-15-058Z.yml)
+- config: page-2026-04-15T20-47-36-166Z.yml (.playwright-cli/page-2026-04-15T20-47-36-166Z.yml)
+- config: page-2026-04-15T20-48-28-321Z.yml (.playwright-cli/page-2026-04-15T20-48-28-321Z.yml)
+- config: page-2026-04-15T20-48-42-079Z.yml (.playwright-cli/page-2026-04-15T20-48-42-079Z.yml)
+- config: page-2026-04-15T20-53-08-945Z.yml (.playwright-cli/page-2026-04-15T20-53-08-945Z.yml)
+- config: page-2026-04-15T20-53-17-733Z.yml (.playwright-cli/page-2026-04-15T20-53-17-733Z.yml)
+- config: page-2026-04-15T20-53-32-053Z.yml (.playwright-cli/page-2026-04-15T20-53-32-053Z.yml)
+- config: page-2026-04-15T20-53-49-407Z.yml (.playwright-cli/page-2026-04-15T20-53-49-407Z.yml)
+- config: page-2026-04-15T20-59-47-745Z.yml (.playwright-cli/page-2026-04-15T20-59-47-745Z.yml)
+- config: page-2026-04-15T21-00-13-902Z.yml (.playwright-cli/page-2026-04-15T21-00-13-902Z.yml)
+- config: page-2026-04-15T21-00-52-690Z.yml (.playwright-cli/page-2026-04-15T21-00-52-690Z.yml)
+- config: page-2026-04-15T21-01-06-365Z.yml (.playwright-cli/page-2026-04-15T21-01-06-365Z.yml)
+- config: page-2026-04-15T21-01-17-645Z.yml (.playwright-cli/page-2026-04-15T21-01-17-645Z.yml)
+- config: page-2026-04-15T21-01-37-282Z.yml (.playwright-cli/page-2026-04-15T21-01-37-282Z.yml)
+- config: page-2026-04-15T21-01-54-855Z.yml (.playwright-cli/page-2026-04-15T21-01-54-855Z.yml)
+- config: page-2026-04-15T21-02-10-679Z.yml (.playwright-cli/page-2026-04-15T21-02-10-679Z.yml)
+- config: page-2026-04-15T21-02-19-568Z.yml (.playwright-cli/page-2026-04-15T21-02-19-568Z.yml)
+- config: page-2026-04-15T21-02-55-893Z.yml (.playwright-cli/page-2026-04-15T21-02-55-893Z.yml)
+- config: page-2026-04-15T21-03-38-638Z.yml (.playwright-cli/page-2026-04-15T21-03-38-638Z.yml)
+- config: page-2026-04-15T21-06-30-601Z.yml (.playwright-cli/page-2026-04-15T21-06-30-601Z.yml)
+- config: page-2026-04-15T21-06-58-044Z.yml (.playwright-cli/page-2026-04-15T21-06-58-044Z.yml)
+- config: page-2026-04-15T21-07-13-831Z.yml (.playwright-cli/page-2026-04-15T21-07-13-831Z.yml)
+- config: page-2026-04-15T21-07-33-964Z.yml (.playwright-cli/page-2026-04-15T21-07-33-964Z.yml)
+- config: page-2026-04-15T21-07-47-990Z.yml (.playwright-cli/page-2026-04-15T21-07-47-990Z.yml)
+- config: page-2026-04-15T21-08-01-514Z.yml (.playwright-cli/page-2026-04-15T21-08-01-514Z.yml)
+- config: page-2026-04-15T21-08-17-705Z.yml (.playwright-cli/page-2026-04-15T21-08-17-705Z.yml)
+- config: page-2026-04-15T21-29-42-720Z.yml (.playwright-cli/page-2026-04-15T21-29-42-720Z.yml)
+- config: page-2026-04-15T21-30-17-426Z.yml (.playwright-cli/page-2026-04-15T21-30-17-426Z.yml)
+- config: page-2026-04-15T21-30-24-877Z.yml (.playwright-cli/page-2026-04-15T21-30-24-877Z.yml)
+- backend_file: __init__.py (backend/app/__init__.py)
 
 ## Notes
 
-- This is an inferred baseline. CTO/Docs Memory must promote or correct important relations.
-- Override input: `C:/Personal/Projekty/Aplikacje/Aviary/docs/architecture/scanner-overrides.json` (entity entries: 0, relation entries: 0).
-- Override summary: excluded files 0, entity overrides 0, relation overrides 0, critical entities tagged 0.
-- `verified` still requires fresh command/browser/deploy evidence, not only file presence.
+- This is a parity export derived from the canonical registry graph under `docs/architecture/graphs`.
+- Missing link rows are explicit unknowns; they are not treated as verified behavior.
+- `verified` claims still require fresh runtime/test evidence from task-level gates.

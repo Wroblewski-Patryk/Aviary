@@ -1,6 +1,6 @@
 # Architecture Research Map
 
-Generated: 2026-05-30
+Generated: 2026-05-31
 
 Research evidence is not runtime proof. It records whether a code-level cognitive or neuroscience-inspired claim has literature support, scope, and limitations.
 
