@@ -1,11 +1,12 @@
 # System Health
 
-Last updated: 2026-05-29
+Last updated: 2026-05-30
 
 ## Latest Runtime Validation
 
 | Area | Check | Result | Evidence |
 | --- | --- | --- | --- |
+| Canonical project-root identity reconciliation | Docs-memory canonical alias/root map is aligned and stale duplicate docs surface is explicitly classified | PASS | `LUC-798`; canonical root `C:/Personal/Projekty/Aplikacje/Aviary` and alias `Aviary` now pinned in `docs/documentation-map.md` + `docs/documentation-overview.md`; `Personality` marked legacy-only; duplicate `Aviary - docs/` classified as non-canonical archival surface only |
 | Evidence ledger synchronization | Canonical docs-memory ledgers are aligned to the latest known-state baseline refresh | PASS | `LUC-694`; `.codex/tasks/LUC-694-evidence-ledger-sync-after-baseline-refresh.md`; ledgers synchronized with `LUC-580` across task board, project state, active mission, module confidence, requirements matrix, risk register, regression log, and next-steps |
 | Provider setup guidance | Tools provider cards render backend-derived setup guidance without credential leaks or frontend execution authority | PASS | `PRJ-1338`; `node --check scripts\tools-directory-characterization.mjs` PASS; `node --check scripts\route-smoke.mjs` PASS; `npm run build` PASS; `npm run test:tools-directory` PASS via Edge with `setupGuideCount=4`, `integralSetupGuideCount=0`, `hasSetupBoundary=true`, provider setup copy present, Telegram pending state present, and `leaksEnvNames=false`; strict route-smoke `/tools,/integrations` desktop/tablet/mobile PASS with `route_count=14`, `status=ok`, `screenshot_count=6`, `failed_count=0`; `/tools` desktop/tablet/mobile `setupGuideCount=4` and `leakedCredentialNames=false`; account proof PASS with `panel_visible=true` |
 | Connector confirmation consent copy | Chat and Tools render backend-owned connector confirmation and Telegram pending-link states as human-readable UI without faking execution or history | PASS | `PRJ-1337`; connector confirmation syntax checks PASS; Tools characterization syntax check PASS; `npm run build` PASS; `npm run test:connector-confirmation-render` PASS; `npm run test:connector-confirmation-browser` PASS with friendly `ClickUp / Update task` and raw-title exclusion; `npm run test:tools-directory` PASS including `telegram_link_pending`; strict route-smoke `/chat,/tools,/integrations` desktop/tablet/mobile PASS with `route_count=14`, `status=ok`, `screenshot_count=9`, `failed_count=0`; account proof PASS with `panel_visible=true`; Browser live-dev auth gate check found no console errors or framework overlay |

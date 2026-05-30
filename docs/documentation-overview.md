@@ -1,14 +1,19 @@
 # Documentation Overview
 
-Updated: 2026-05-29
+Updated: 2026-05-30
 
-This file is the docs-parity baseline entry for the Personality (Aviary)
-repository. It provides one stable index for current documentation ownership,
+This file is the docs-parity baseline entry for the Aviary repository. It
+provides one stable index for current documentation ownership,
 scope, and residual gaps during the `LUC-260` takeover preparation mission.
 
 ## Project Scope And Status
 
-- Project alias: `Aviary` (repository folder name remains `Personality`)
+- Canonical project root: `C:/Personal/Projekty/Aplikacje/Aviary`
+- Canonical project alias: `Aviary`
+- Legacy alias: `Personality` (allowed only when historical evidence requires it)
+- Duplicate docs surface: `Aviary - docs/` inside the repo is a non-canonical
+  copied vault. Treat it as archival reference only; current-truth updates must
+  land under canonical `docs/`.
 - Current takeover parent: `LUC-260` (`IN_PROGRESS`, blocked by child lanes)
 - This file closes docs parity artifact gap `LUC260-G2` only for the
   `docs/documentation-overview.md` requirement.

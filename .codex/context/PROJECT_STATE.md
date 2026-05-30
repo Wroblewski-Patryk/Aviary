@@ -1,10 +1,24 @@
 # PROJECT_STATE
 
-Last updated: 2026-05-29
+Last updated: 2026-05-30
 
 Project alias: the product and repository root are both canonicalized as
 `Aviary` (`C:/Personal/Projekty/Aplikacje/Aviary`). Historical references to
 `Personality` are legacy naming only.
+
+- 2026-05-30: `LUC-798` canonical project-root identity reconciliation is `DONE`:
+  - result:
+    - canonical root identity is explicit in docs-memory sources as `C:/Personal/Projekty/Aplikacje/Aviary`
+    - alias policy clarified: `Aviary` canonical, `Personality` legacy-only
+    - duplicate `Aviary - docs/` classified as non-canonical archival reference only
+  - updated docs/state anchors:
+    - `docs/documentation-map.md`
+    - `docs/documentation-overview.md`
+    - `.codex/context/PROJECT_STATE.md`
+    - `.agents/state/system-health.md`
+  - validation:
+    - targeted content scan for root/alias drift and duplicate docs classification
+    - no runtime/code changes in this checkpoint; tests not applicable
 
 - 2026-05-29: `LUC-726` source-control closure for `LUC-420` dirty state is `DONE`:
   - task:

@@ -1,12 +1,19 @@
 # Documentation Map
 
-Updated: 2026-05-29
+Updated: 2026-05-30
 
 This is the main entrypoint for current project documentation.
 
 Use it to find the current source of truth. Historical task files, old plans,
 audits, proof artifacts, release packets, and raw generated outputs belong in
 `history/`, not in canonical `docs/`.
+
+Canonical project-root identity:
+- Root: `C:/Personal/Projekty/Aplikacje/Aviary`
+- Alias: `Aviary`
+- Legacy alias: `Personality` (historical references only)
+- Non-canonical duplicate: `Aviary - docs/` (archival reference only; do not
+  treat as current docs source)
 
 ## Choose A Map
 
