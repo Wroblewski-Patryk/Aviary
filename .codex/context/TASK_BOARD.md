@@ -4,6 +4,37 @@ Last updated: 2026-05-31
 
 ## Source Control Closure (2026-05-31)
 
+- `LUC-955` is DONE:
+  - `.codex/tasks/LUC-955-source-control-closure-for-luc-942.md`
+- objective:
+  - classify and close local dirty state for `LUC-942`
+- current result:
+  - dirty packet classified as one coherent docs/state evidence set tied to `LUC-942`
+  - closure commit created for the full packet
+  - no conflict/secrets/generated-churn blocker class detected
+- validation:
+  - `git status --porcelain=v1`
+  - targeted `git diff` on the 5-file `LUC-942` packet
+  - post-commit `git status --porcelain=v1` clean
+
+## Core Chat API Workflow Verification (2026-05-31)
+
+- `LUC-942` is DONE:
+  - `.codex/tasks/LUC-942-qa-verify-core-chat-api-workflow-p0.md`
+- objective:
+  - verify P0 core authenticated chat API workflow for history and message endpoints
+- current result:
+  - focused backend chat API workflow pack PASS
+  - covered `/app/chat/history` and `/app/chat/message` behavior via route tests
+- validation:
+  - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "app_chat_history or app_chat_message"; Pop-Location`
+  - result: `9 passed, 123 deselected in 16.03s`
+  - deterministic fixture/history assertion rerun:
+    - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "test_app_chat_history_returns_recent_transcript_messages_for_authenticated_user or test_app_chat_history_returns_latest_ten_messages_in_chronological_order or test_app_chat_history_merges_linked_telegram_and_app_turns_for_authenticated_user or test_app_chat_message_runs_runtime_under_authenticated_user"; Pop-Location`
+    - result: `4 passed, 128 deselected in 6.39s`
+
+## Source Control Closure (2026-05-31)
+
 - `LUC-954` is DONE:
   - `.codex/tasks/LUC-954-source-control-closure-for-luc-935-luc-939-luc-950.md`
 - objective:

@@ -6,6 +6,32 @@ Project alias: the product and repository root are both canonicalized as
 `Aviary` (`C:/Personal/Projekty/Aplikacje/Aviary`). Historical references to
 `Personality` are legacy naming only.
 
+- 2026-05-31: `LUC-955` source-control closure for `LUC-942` is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-955-source-control-closure-for-luc-942.md`
+  - result:
+    - local dirty state from `LUC-942` classified as one coherent docs/state evidence packet
+    - packet closed with one docs-only commit in this heartbeat
+    - no blocker class found (no unrelated conflict, no merge conflict, no secret/leak risk)
+  - validation:
+    - `git status --porcelain=v1`
+    - targeted `git diff` for `LUC-942` packet files
+    - post-commit `git status --porcelain=v1` clean
+
+- 2026-05-31: `LUC-942` core chat API workflow verification is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-942-qa-verify-core-chat-api-workflow-p0.md`
+  - result:
+    - core authenticated app chat API workflow is verified for this heartbeat scope
+    - covered route behavior for `/app/chat/history` and `/app/chat/message`
+    - no runtime or implementation changes were required
+  - validation:
+    - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "app_chat_history or app_chat_message"; Pop-Location`
+    - result: `9 passed, 123 deselected in 16.03s`
+    - deterministic fixture/history assertion rerun:
+      - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "test_app_chat_history_returns_recent_transcript_messages_for_authenticated_user or test_app_chat_history_returns_latest_ten_messages_in_chronological_order or test_app_chat_history_merges_linked_telegram_and_app_turns_for_authenticated_user or test_app_chat_message_runs_runtime_under_authenticated_user"; Pop-Location`
+      - result: `4 passed, 128 deselected in 6.39s`
+
 - 2026-05-31: `LUC-954` source-control closure sidecar for `LUC-935-LUC-939-LUC-950` is `DONE`:
   - task:
     - `.codex/tasks/LUC-954-source-control-closure-for-luc-935-luc-939-luc-950.md`
