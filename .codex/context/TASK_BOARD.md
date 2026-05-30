@@ -1,6 +1,20 @@
 # TASK_BOARD
 
-Last updated: 2026-05-29
+Last updated: 2026-05-31
+
+## Source Control Closure (2026-05-31)
+
+- `LUC-954` is DONE:
+  - `.codex/tasks/LUC-954-source-control-closure-for-luc-935-luc-939-luc-950.md`
+- objective:
+  - classify and close local dirty state for `LUC-935-LUC-939-LUC-950` sidecar lane
+- current result:
+  - local git worktree already clean on `main` at `762d35e8c1998448bd8a0ec66ad0d7a8ca698162`
+  - no dirty files, staged files, or untracked files found
+  - no blocker class detected (no unrelated conflict, no secret/leak risk, no generated churn ambiguity, no merge conflict)
+  - no closure commit required in this heartbeat
+- validation:
+  - `git status --short` + `git diff --stat` + branch/head capture via `git rev-parse`
 
 ## Source Control Closure (2026-05-29)
 

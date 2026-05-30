@@ -1,10 +1,23 @@
 # PROJECT_STATE
 
-Last updated: 2026-05-30
+Last updated: 2026-05-31
 
 Project alias: the product and repository root are both canonicalized as
 `Aviary` (`C:/Personal/Projekty/Aplikacje/Aviary`). Historical references to
 `Personality` are legacy naming only.
+
+- 2026-05-31: `LUC-954` source-control closure sidecar for `LUC-935-LUC-939-LUC-950` is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-954-source-control-closure-for-luc-935-luc-939-luc-950.md`
+  - result:
+    - local worktree already clean on `main` (`762d35e8c1998448bd8a0ec66ad0d7a8ca698162`)
+    - no dirty/staged/untracked files found in this heartbeat
+    - no blocker class present; no closure commit required
+  - validation:
+    - `git status --short`
+    - `git diff --stat`
+    - `git rev-parse --abbrev-ref HEAD`
+    - `git rev-parse HEAD`
 
 - 2026-05-30: `LUC-798` canonical project-root identity reconciliation is `DONE`:
   - result:
