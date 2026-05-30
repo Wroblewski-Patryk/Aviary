@@ -49,6 +49,6 @@ Classify the local dirty state for LUC-943, verify it is coherent and safe to cl
 
 ## Result Report
 - Status: `DONE`
-- Commit: `pending during authoring` (resolved in closure step)
+- Commit: `1db52515` (`test: close LUC-943 contract evidence and source-control lane`)
 - Push status: `not needed`
 - Deploy impact: `none`
