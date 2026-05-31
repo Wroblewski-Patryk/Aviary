@@ -77,3 +77,14 @@ outcome.
   - `none`
 - Residual risk:
   - low; accidental wide staging risk remains generally possible on large docs trees, mitigated by scoped staging.
+
+## Handoff Confirmation (2026-05-31)
+- Heartbeat disposition:
+  - `done` (issue already closed in source-control scope; no further dirty state detected).
+- Re-validation:
+  - `git status --short` -> clean worktree.
+  - source-of-truth references remain aligned for `LUC-1136` (`TASK_BOARD`, `PROJECT_STATE`, `active-mission`).
+- Final evidence commit on closure packet:
+  - `17aaa1a6` (`docs: finalize LUC-1136 closure evidence`)
+- Source-control decision for this wake:
+  - `no-commit` (no new scoped changes required beyond this handoff confirmation update).
