@@ -1,6 +1,6 @@
 # Responsibility Learning
 
-Last updated: 2026-05-29
+Last updated: 2026-05-31
 
 Use this ledger when coordinator/subagent work exposes a missing lane, unclear
 owner, bad split, missing evidence, or missing context. Gaps here must change
@@ -13,6 +13,7 @@ the next similar mission brief, lane registry, docs, or task plan.
 | RLG-003 | 2026-05-23 | PRJ-1240 | missing_context | The user requested agent coordination and provided a read-only implementation-lane brief, but the current runtime exposed no spawn-agent tool after discovery. | `tool_search` for multi-agent/spawn-agent returned no tools; coordinator ran the lane model serially and recorded the limitation. | Future continuation briefs should explicitly say when subagent runtime is unavailable and proceed with serial lanes rather than implying hidden delegation. | `.codex/tasks/PRJ-1240-flagship-coherence-pass.md` | open |
 | RLG-004 | 2026-05-28 | LUC-420 | unclear_owner | Assigned issue scope (`Personality`) conflicts with loaded LuckySparrow role/pilot scope (`Portfolio Director` with `Soar`-only pilot governance), so execution authority is ambiguous. | `shared/00-current-pilot.md`; `roles/portfolio-director.md`; wake payload for `LUC-420`. | Future wake assignment should include explicit scope-exception marker or route Personality issues to an agent whose role owns Personality execution. | `.codex/tasks/LUC-420-known-state-architecture-baseline.md` | closed |
 | RLG-005 | 2026-05-29 | LUC-694 | unclear_owner | Recovery wake routed a Personality docs-memory synchronization checkpoint to `Portfolio Director`, even though that role is governance-only and pilot-scoped to `Soar`; lane ownership conflicted with execution scope. | LuckySparrow role files: `roles/portfolio-director.md`, `metadata.md`, `shared/00-current-pilot.md`; wake payload for `LUC-694`. | Add assignment guard in wake routing: when project scope is not `Soar`, do not assign to `Portfolio Director` unless `scope-exception` is explicit and bounded to portfolio-governance output. | `.agents/state/responsibility-learning.md` (this row); `LUC-694` heartbeat recovery note | closed |
+| RLG-006 | 2026-05-31 | LUC-993 | missing_lane | Child issue `LUC-993` existed on the board, but the corresponding `.codex/tasks` packet had not been created, so lane evidence could not be integrated durably. | `LUC-976` child-lane list referenced `LUC-993`; `.codex/tasks` had no `LUC-993*` file before this heartbeat. | Add a lane-creation checklist item for future delegated children: issue id must map to a task packet path before lane execution starts. | `.codex/tasks/LUC-993-luc-976-l4-ops-and-release-readiness-baseline.md` | closed |
 
 ## Gap Types
 

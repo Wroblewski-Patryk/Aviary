@@ -1,6 +1,6 @@
 # Documentation Map
 
-Updated: 2026-05-30
+Updated: 2026-05-31
 
 This is the main entrypoint for current project documentation.
 
@@ -19,7 +19,7 @@ Canonical project-root identity:
 
 | Need | Go to |
 | --- | --- |
-| Fast baseline orientation for docs ownership and takeover parity status | `docs/documentation-overview.md` |
+| Fast baseline orientation for docs ownership and `LUC-976` takeover parity status | `docs/documentation-overview.md` |
 | Product intent, scope, roadmap, user value, limits | `docs/maps/product-map.md` |
 | Durable decisions and ADRs | `docs/decisions/README.md` |
 | System shape, contracts, modules, architecture truth | `docs/maps/architecture-map.md` |

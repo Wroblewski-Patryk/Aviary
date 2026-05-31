@@ -2,6 +2,158 @@
 
 Last updated: 2026-05-31
 
+## Source-Control Closure (2026-05-31)
+
+- `LUC-1021` is DONE:
+  - `.codex/tasks/LUC-1021-source-control-closure-luc-945-976-990-994.md`
+  - objective:
+    - classify and close one local dirty packet spanning `LUC-945`, `LUC-976`, and child lanes `LUC-990..LUC-994`
+  - current result:
+    - dirty packet classified as coherent docs/state/tasks + `LUC-945` smoke-script/test set
+    - focused verification rerun passed (`2 passed`)
+    - source-control closure commit created for the complete packet
+  - validation:
+    - `git status --porcelain=v1`
+    - `git diff --stat`
+    - `git diff --name-only`
+    - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_nonprod_entry_health_smoke_script.py; Pop-Location`
+
+## Public-Entry + Internal Health Smoke Guard (2026-05-31)
+
+- LUC-945 is BLOCKED:
+  - .codex/tasks/LUC-945-qa-ops-public-entry-internal-health-smoke-guard-p2.md
+  - objective:
+    - add a replayable smoke guard that covers public-entry route and internal health readiness in one QA+Ops lane
+  - current result:
+    - coordinator packet created with explicit QA/Test and Ops/Release ownership plus proof contract
+    - implementation is delegated and blocked pending 11 Innovations Director assignment/activation decision
+  - unblock owner/action:
+    - owner: 11 Innovations Director
+    - action: assign specialist child lanes (QA/Test + Ops/Release) for implementation and verification
+
+## Documentation Status And Root-Index Refresh (2026-05-31)
+
+- `LUC-994` is DONE:
+  - `.codex/tasks/LUC-994-luc-976-l5-documentation-status-and-root-index-refresh.md`
+  - objective:
+    - close `LUC-976` child lane `L5` by synchronizing docs-memory and root-index pointers
+  - current result:
+    - missing `LUC-994` lane packet created
+    - canonical docs index pointers refreshed (`docs/documentation-map.md`, `docs/documentation-overview.md`)
+    - context routers aligned for `LUC-994` closure and `LUC-976` parent integration path
+    - portfolio root index timestamp refreshed via canonical index script
+  - validation:
+    - docs/state cross-file sync check across:
+      - `docs/documentation-map.md`
+      - `docs/documentation-overview.md`
+      - `.codex/context/TASK_BOARD.md`
+      - `.codex/context/PROJECT_STATE.md`
+      - `.agents/state/active-mission.md`
+      - `.agents/state/next-steps.md`
+    - `C:\Personal\Projekty\Aplikacje\scripts\update-applications-index.ps1` -> updated `APPLICATIONS_INDEX.md` and `APPLICATIONS_INDEX.csv`
+    - docs/state-only checkpoint; runtime tests not required
+
+## Runtime Smoke And Regression Evidence Baseline (2026-05-31)
+
+- `LUC-992` is DONE:
+  - `.codex/tasks/LUC-992-luc-976-l3-runtime-smoke-and-regression-evidence-baseline.md`
+  - objective:
+    - close `LUC-976` child lane `L3` with fresh runtime smoke/regression baseline evidence
+  - current result:
+    - backend release-smoke subset PASS (`41 passed, 23 deselected`)
+    - backend full primary regression gate PASS (`1156 passed`)
+    - web build PASS
+    - frontend route smoke screenshot gate PASS (`route_count=14`, `status=ok`, `viewport_count=2`, `screenshot_count=16`, `failed_count=0`)
+    - lane packet refreshed with replayable command evidence and explicit scope boundary
+  - validation:
+    - `Push-Location backend; ..\.venv\Scripts\python -m pytest -q tests/test_deployment_trigger_scripts.py -k "release_smoke"; $code=$LASTEXITCODE; Pop-Location; exit $code`
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+    - `Push-Location web; npm run build; $code=$LASTEXITCODE; Pop-Location; exit $code`
+    - `Push-Location web; node scripts/route-smoke.mjs --report ../.codex/artifacts/luc992-runtime-smoke-regression-baseline/report.json --screenshots ../.codex/artifacts/luc992-runtime-smoke-regression-baseline/screenshots --screenshot-routes /,/login,/dashboard,/chat,/personality,/tools,/integrations,/settings --viewports desktop,mobile --fail-on-ui-findings; $code=$LASTEXITCODE; Pop-Location; exit $code`
+
+## Ops And Release Readiness Baseline (2026-05-31)
+
+- `LUC-993` is DONE:
+  - `.codex/tasks/LUC-993-luc-976-l4-ops-and-release-readiness-baseline.md`
+  - objective:
+    - close `LUC-976` child lane `L4` with a preparation-only ops/release baseline snapshot
+  - current result:
+    - missing `LUC-993` task packet was created and linked to canonical ops/release references
+    - deploy/readiness contract confirmed from `DEPLOYMENT_GATE.md`
+    - smoke/proof and rollback reference path confirmed from `docs/operations/runtime-ops-runbook.md`
+    - release evidence truth index confirmed in `docs/operations/release-evidence-index.md`
+    - residual risk captured: `docs/operations/environment-matrix.md` still contains template marker (`Last updated: YYYY-MM-DD`)
+    - unblock actions are now explicit in the lane packet for:
+      - `LUC993-R1` (populate environment matrix with owner/date/evidence rows)
+      - `LUC993-R2` (run fresh production smoke and sync latest release-evidence pointer)
+  - validation:
+    - `Test-Path docs/operations/runtime-ops-runbook.md` -> `True`
+    - `Test-Path docs/operations/release-evidence-index.md` -> `True`
+    - `Test-Path DEPLOYMENT_GATE.md` -> `True`
+    - `Test-Path docs/operations/environment-matrix.md` -> `True`
+    - `(Get-Content docs/operations/environment-matrix.md | Select-String -Pattern 'Last updated: YYYY-MM-DD' -SimpleMatch).Count` -> `1`
+
+## Lane Governance Recovery (2026-05-31)
+
+- run `093f3fb2-2ffa-4b11-9a11-550004ee2cae` ended as `cancelled` due to agent pause
+- reconciliation result:
+  - this cancellation is operational only and does not invalidate architecture-lane evidence
+  - `LUC-990` remains `DONE`
+  - `LUC-991` remains `DONE`
+
+## Architecture Graph And Traceability Audit (2026-05-31)
+
+- `LUC-990` is DONE:
+  - `.codex/tasks/LUC-990-luc-976-l1-architecture-graph-and-traceability-audit.md`
+  - objective:
+    - re-verify architecture-awareness export freshness and curated traceability gap posture for Aviary takeover baseline lane `L1`
+  - current result:
+    - architecture-awareness pack regenerated (`entities=5494`, `chains=11`, `actions=893`)
+    - strict curated gap query returned empty items (`items=[]`)
+    - architecture coverage report refreshed with `curated_gap_nodes=0`, `all_gap_nodes=5433`
+    - drift classification recorded with explicit known-noise row for transient `.playwright-cli` link inflation
+  - validation:
+    - `Push-Location backend; ..\.venv\Scripts\python scripts/build_architecture_awareness_pack.py; Pop-Location`
+    - `Push-Location backend; ..\.venv\Scripts\python scripts/query_architecture_graph.py --gaps --format json --limit 20; Pop-Location`
+    - `Push-Location backend; ..\.venv\Scripts\python scripts/report_architecture_coverage.py; Pop-Location`
+
+## Product And Capability Roadmap Audit (2026-05-31)
+
+- `LUC-991` is DONE:
+  - `.codex/tasks/LUC-991-product-and-capability-roadmap-audit.md`
+  - objective:
+    - deliver Product Docs takeover-preparation audit for implemented vs planned capability roadmap truth
+  - current result:
+    - product/capability roadmap audit packet now exists under `LUC-976` child lanes
+    - capability posture classified with explicit states and evidence links
+    - bounded gap register captured for roadmap readability and active/deferred separation
+  - validation:
+    - docs/state evidence scan:
+      - `docs/overview.md`
+      - `docs/README.md`
+      - `docs/planning/open-decisions.md`
+      - `docs/planning/next-iteration-plan.md`
+      - `.agents/state/delivery-map.md`
+      - `.agents/state/next-steps.md`
+    - docs/state-only checkpoint; runtime tests not required
+
+## Takeover Baseline Refresh (2026-05-31)
+
+- `LUC-976` is IN_PROGRESS:
+  - `.codex/tasks/LUC-976-full-takeover-audit-and-operating-baseline.md`
+  - objective:
+    - refresh the Aviary takeover operating baseline as a preparation-only PM checkpoint
+  - current result:
+    - dedicated `LUC-976` task contract created with known-state snapshot, gap register, and delegated-lane map
+    - baseline counts refreshed for this heartbeat: backend tests `123`, route decorators `19`
+    - activation lanes restated for Product Docs, Architecture, QA/Test, and Ops/Release under current issue lineage
+  - validation:
+    - `(Get-ChildItem backend\\tests -File -Recurse).Count` -> `123`
+    - `(Get-Content backend\\app\\api\\routes.py | Select-String -Pattern "@router\\.(get|post|put|delete|patch)\\(").Count` -> `19`
+    - docs/state-only checkpoint; runtime tests not required in this slice
+  - residual:
+    - child lanes are now created as `LUC-990`..`LUC-994` and await execution by owning specialist lanes
+
 ## Web/Mobile Critical UI Smoke Coverage (2026-05-31)
 
 - `LUC-944` is DONE:
@@ -26221,5 +26373,6 @@ Fresh Dashboard Compaction Pass (2026-04-28)
   - dashboard screenshot proof for total route height and flagship hierarchy
   - chat screenshot proof for transcript-first balance
   - personality screenshot proof for embodied-map calmness
+
 
 

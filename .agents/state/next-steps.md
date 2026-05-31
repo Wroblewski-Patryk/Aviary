@@ -2,7 +2,81 @@
 
 Last updated: 2026-05-31
 
+1. `LUC-1021` source-control closure is done:
+   - task:
+     `.codex/tasks/LUC-1021-source-control-closure-luc-945-976-990-994.md`
+   - latest result:
+     one coherent dirty packet for `LUC-945`, `LUC-976`, and child lanes `LUC-990..LUC-994` was classified and closed with a single commit
+   - proof:
+     focused test pack PASS (2 passed in 1.11s)
+   - next smallest useful choice:
+     continue from parent integration lane (`LUC-976`) or unblock assignment gate for `LUC-945`
+
+1. LUC-945 smoke guard is done:
+   - task:
+     .codex/tasks/LUC-945-qa-ops-public-entry-internal-health-smoke-guard-p2.md
+   - latest result:
+     non-prod smoke guard now verifies /health, /internal/state/inspect, /event, /event/debug, /, and frontend catch-all path
+   - proof:
+     focused test pack PASS (2 passed in 1.13s)
+   - next smallest useful choice:
+     optionally wire this guard into a wider release/non-prod wrapper command
+
+1. LUC-945 public-entry + internal health smoke guard is blocked:
+   - task:
+     .codex/tasks/LUC-945-qa-ops-public-entry-internal-health-smoke-guard-p2.md
+   - latest result:
+     PM created delegated QA/Test + Ops/Release implementation contract for a replayable smoke guard
+   - unblock owner/action:
+     11 Innovations Director must assign specialist child lanes for implementation and proof
+   - next smallest useful choice:
+     once assigned, run the delegated smoke commands and attach evidence in the same lane packet
+
 ## NOW
+
+1. `LUC-994` documentation status and root-index refresh is done:
+   - task:
+     `.codex/tasks/LUC-994-luc-976-l5-documentation-status-and-root-index-refresh.md`
+   - latest result:
+     docs-memory lane packet is now present and docs/context/root-index pointers are synchronized for `LUC-976-L5`
+   - next smallest useful choice:
+     integrate `LUC-990..LUC-994` outputs into parent `LUC-976` closure packet
+
+1. `LUC-992` runtime smoke/regression baseline is done:
+   - task:
+     `.codex/tasks/LUC-992-luc-976-l3-runtime-smoke-and-regression-evidence-baseline.md`
+   - latest result:
+     backend release-smoke subset passed (`41 passed, 23 deselected`), backend full primary regression gate passed (`1156 passed`), and frontend route smoke passed (`route_count=14`, `status=ok`)
+   - next smallest useful choice:
+     integrate `LUC-990..LUC-994` into parent `LUC-976` closure
+
+1. `LUC-993` ops/release baseline lane is done:
+   - task:
+     `.codex/tasks/LUC-993-luc-976-l4-ops-and-release-readiness-baseline.md`
+   - latest result:
+     canonical deploy/readiness/smoke references are captured for `LUC-976-L4`, with explicit residual risk on the template-like environment matrix
+   - next smallest useful choice:
+     integrate all `LUC-990..LUC-994` outputs into parent `LUC-976`
+
+1. `LUC-991` product and capability roadmap audit is done:
+   - task:
+     `.codex/tasks/LUC-991-product-and-capability-roadmap-audit.md`
+   - latest result:
+     product/capability takeover roadmap posture is now audited with explicit implemented/planned/deferred/blocked status boundaries
+   - proof:
+     docs/state evidence matrix and bounded gap register in the `LUC-991` packet
+   - next smallest useful choice:
+     continue sibling `LUC-976` lanes (`LUC-990`, `LUC-992`, `LUC-993`, `LUC-994`) and integrate all outputs into parent closure
+
+1. Continue from `LUC-976` takeover baseline refresh:
+   - latest task:
+     `.codex/tasks/LUC-976-full-takeover-audit-and-operating-baseline.md`
+   - latest result:
+     current issue-lineage takeover packet is now in place with refreshed known-state and gap register
+   - proof:
+     backend test file count `123`; backend route decorator count `19`; context sync in `TASK_BOARD` and `PROJECT_STATE`
+   - next smallest useful choice:
+     execute and close child lanes `LUC-990`..`LUC-994`, then integrate outputs back into parent `LUC-976`
 
 1. `LUC-944` critical web/mobile UI smoke coverage is done:
    - task:
@@ -2128,6 +2202,8 @@ Last updated: 2026-05-31
   unresolved.
 - Keep this file synchronized with `.codex/context/TASK_BOARD.md` and
   `docs/planning/mvp-next-commits.md`.
+
+
 
 
 

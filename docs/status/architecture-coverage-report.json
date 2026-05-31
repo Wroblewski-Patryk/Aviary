@@ -1,21 +1,22 @@
 {
   "kind": "architecture_coverage_report",
-  "generated_at": "2026-05-24T18:31:25.091324+00:00",
-  "graph_path": "C:\\Personal\\Projekty\\Aplikacje\\Personality\\docs\\architecture\\graphs\\architecture-graph.json",
+  "generated_at": "2026-05-31T02:58:18.800884+00:00",
+  "graph_path": "C:\\Personal\\Projekty\\Aplikacje\\Aviary\\docs\\architecture\\graphs\\architecture-graph.json",
+  "all_gap_mode": "strict",
   "summary": {
-    "total_nodes": 5361,
+    "total_nodes": 5494,
     "curated_nodes": 61,
-    "auto_nodes": 5300,
-    "auto_share_percent": 98.86,
-    "curated_share_percent": 1.14,
+    "auto_nodes": 5433,
+    "auto_share_percent": 98.89,
+    "curated_share_percent": 1.11,
     "status_counts": {
-      "implemented": 4229,
-      "verified": 1132
+      "implemented": 4275,
+      "verified": 1219
     },
     "verification_counts": {
-      "documentation_evidence": 1018,
-      "implementation_evidence": 4229,
-      "test_evidence": 53,
+      "documentation_evidence": 1101,
+      "implementation_evidence": 4275,
+      "test_evidence": 57,
       "verified": 61
     },
     "status_counts_curated": {
@@ -25,13 +26,13 @@
       "verified": 61
     },
     "status_counts_auto": {
-      "implemented": 4229,
-      "verified": 1071
+      "implemented": 4275,
+      "verified": 1158
     },
     "verification_counts_auto": {
-      "documentation_evidence": 1018,
-      "implementation_evidence": 4229,
-      "test_evidence": 53
+      "documentation_evidence": 1101,
+      "implementation_evidence": 4275,
+      "test_evidence": 57
     },
     "by_type": {
       "agent": 6,
@@ -43,33 +44,33 @@
       "component_file": 9,
       "config": 46,
       "data_file": 20,
-      "documentation": 1027,
+      "documentation": 1110,
       "event": 1,
       "feature": 10,
-      "file": 57,
+      "file": 65,
       "frontend_file": 14,
-      "function": 2824,
+      "function": 2862,
       "mobile_file": 23,
       "model": 2,
       "page": 4,
       "prompt": 1,
       "script": 2,
       "service": 3,
-      "test": 64,
+      "test": 68,
       "ui_element": 735,
       "workflow": 3
     },
     "by_layer": {
       "api": 10,
-      "backend": 2242,
+      "backend": 2288,
       "config": 46,
       "cross_layer": 8,
       "database": 23,
-      "docs": 1029,
+      "docs": 1112,
       "frontend": 1924,
       "ops": 3,
       "runtime": 1,
-      "test": 64,
+      "test": 68,
       "web": 11
     },
     "by_module": {
@@ -78,12 +79,12 @@
       "agents": 6,
       "api": 1,
       "architecture": 8,
-      "backend": 2323,
+      "backend": 2373,
       "chat": 3,
       "data": 2,
       "docker-compose.coolify.yml": 1,
       "docker-compose.yml": 1,
-      "docs": 1018,
+      "docs": 1101,
       "frontend": 1,
       "github": 1,
       "integrations": 2,
@@ -107,31 +108,31 @@
     "gap_map_by_node": {}
   },
   "all_gap_summary": {
-    "gap_node_count": 5300,
+    "gap_node_count": 5433,
     "gap_patterns_top": [
       {
         "gap": "docs_related is empty",
-        "count": 5300
+        "count": 5433
       },
       {
         "gap": "no evidence rows",
-        "count": 5300
+        "count": 5433
       },
       {
         "gap": "tests_related is empty",
-        "count": 5300
+        "count": 5433
       },
       {
         "gap": "node status is implemented",
-        "count": 4229
+        "count": 4275
       },
       {
         "gap": "verification status is implementation_evidence",
-        "count": 4229
+        "count": 4275
       },
       {
         "gap": "verification status is documentation_evidence",
-        "count": 1018
+        "count": 1101
       },
       {
         "gap": "no function chains include this node",
@@ -139,7 +140,7 @@
       },
       {
         "gap": "verification status is test_evidence",
-        "count": 53
+        "count": 57
       }
     ],
     "gap_nodes_by_type": {
@@ -150,17 +151,17 @@
       "component_file": 9,
       "config": 46,
       "data_file": 20,
-      "documentation": 1018,
-      "file": 57,
+      "documentation": 1101,
+      "file": 65,
       "frontend_file": 14,
-      "function": 2824,
+      "function": 2862,
       "mobile_file": 23,
-      "test": 53,
+      "test": 57,
       "ui_element": 733
     },
     "gap_nodes_by_risk": {
-      "low": 3044,
-      "medium": 2256
+      "low": 3131,
+      "medium": 2302
     },
     "example_gap_nodes_by_type": {
       "api_file": [
@@ -256,13 +257,13 @@
         "FILE-BACKEND-SCRIPTS-AUDIT-ARCHITECTURE-IMPLEMENTATION-MAP-PY-536734FE",
         "FILE-BACKEND-SCRIPTS-AUDIT-RELEASE-REALITY-PS1-75E96A3B",
         "FILE-BACKEND-SCRIPTS-AUDIT-RELEASE-REALITY-PY-AB65E430",
+        "FILE-BACKEND-SCRIPTS-BUILD-ARCHITECTURE-GRAPH-HOSTED-EVIDENCE-PACKET-BEA52CEB",
         "FILE-BACKEND-SCRIPTS-CHECK-COOLIFY-FALLBACK-READINESS-PS1-069FF148",
         "FILE-BACKEND-SCRIPTS-CHECK-COOLIFY-FALLBACK-READINESS-PY-EB221146",
         "FILE-BACKEND-SCRIPTS-CHECK-WEB-API-OPENAPI-SYNC-PY-E1466D3E",
         "FILE-BACKEND-SCRIPTS-EXPORT-DATA-MODEL-REFERENCE-PY-03A00070",
         "FILE-BACKEND-SCRIPTS-EXPORT-INCIDENT-EVIDENCE-BUNDLE-PY-6E609ADC",
-        "FILE-BACKEND-SCRIPTS-EXPORT-OPENAPI-SCHEMA-PY-F7DE53BF",
-        "FILE-BACKEND-SCRIPTS-GENERATE-ARCHITECTURE-GRAPH-PY-5EF4EDBE"
+        "FILE-BACKEND-SCRIPTS-EXPORT-OPENAPI-SCHEMA-PY-F7DE53BF"
       ],
       "frontend_file": [
         "FILE-WEB-SRC-APP-TSX-32C2B18B",
@@ -309,8 +310,8 @@
         "FILE-BACKEND-TESTS-TEST-AFFECTIVE-CONTRACT-PY-FFD9BBE2",
         "FILE-BACKEND-TESTS-TEST-AI-RED-TEAM-SCENARIOS-SCRIPT-PY-F8C57364",
         "FILE-BACKEND-TESTS-TEST-API-ROUTES-PY-3C61BF86",
-        "FILE-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-GENERATOR-PY-B08FF7F4",
-        "FILE-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-QUERY-PY-0D89869E"
+        "FILE-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-CI-POLICY-PY-71A65301",
+        "FILE-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-GENERATOR-PY-B08FF7F4"
       ],
       "ui_element": [
         "CSS-WEB-SRC-INDEX-CSS-AION-APP-RAIL-91A556A9",
@@ -7189,6 +7190,13 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "FILE-BACKEND-SCRIPTS-BUILD-ARCHITECTURE-GRAPH-HOSTED-EVIDENCE-PACKET-BEA52CEB": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "FILE-BACKEND-SCRIPTS-CHECK-COOLIFY-FALLBACK-READINESS-PS1-069FF148": [
         "node status is implemented",
         "verification status is implementation_evidence",
@@ -7273,7 +7281,28 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "FILE-BACKEND-SCRIPTS-REPORT-ARCHITECTURE-COVERAGE-PY-F7D7EF56": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "FILE-BACKEND-SCRIPTS-RUN-AI-RED-TEAM-SCENARIOS-PY-3FC472A4": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-BACKEND-SCRIPTS-RUN-ARCHITECTURE-GRAPH-HOSTED-PROOF-INTAKE-PY-CCAFA714": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-BACKEND-SCRIPTS-RUN-ARCHITECTURE-GRAPH-LOCAL-RELEASE-GATE-PY-726C1B50": [
         "node status is implemented",
         "verification status is implementation_evidence",
         "tests_related is empty",
@@ -7358,6 +7387,20 @@
         "no evidence rows"
       ],
       "FILE-BACKEND-SCRIPTS-RUN-PROACTIVE-TICK-ONCE-SH-E0C1E362": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-BACKEND-SCRIPTS-RUN-PRODUCTION-RELEASE-EVIDENCE-CAPTURE-PS1-94291BE0": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-BACKEND-SCRIPTS-RUN-PRODUCTION-RELEASE-PROOF-CYCLE-PS1-D9431595": [
         "node status is implemented",
         "verification status is implementation_evidence",
         "tests_related is empty",
@@ -7469,6 +7512,13 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "FILE-BACKEND-SCRIPTS-SYNC-RELEASE-EVIDENCE-INDEX-FROM-LATEST-SUMMARY-9F1024DF": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "FILE-BACKEND-SCRIPTS-TRIGGER-COOLIFY-DEPLOY-WEBHOOK-PS1-2260B244": [
         "node status is implemented",
         "verification status is implementation_evidence",
@@ -7484,6 +7534,13 @@
         "no evidence rows"
       ],
       "FILE-BACKEND-SCRIPTS-TRIGGER-COOLIFY-DEPLOY-WEBHOOK-SH-2470F1C7": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-BACKEND-SCRIPTS-VERIFY-ARCHITECTURE-GAP-ARTIFACT-PY-F274C7D4": [
         "node status is implemented",
         "verification status is implementation_evidence",
         "tests_related is empty",
@@ -13272,6 +13329,34 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "PYFUNC-BACKEND-SCRIPTS-BUILD-ARCHITECTURE-GRAPH-HOSTED-EVIDENCE-PACKET-158C2C49": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-BUILD-ARCHITECTURE-GRAPH-HOSTED-EVIDENCE-PACKET-2B30E921": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-BUILD-ARCHITECTURE-GRAPH-HOSTED-EVIDENCE-PACKET-555D06E2": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-BUILD-ARCHITECTURE-GRAPH-HOSTED-EVIDENCE-PACKET-8B4CDC79": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "PYFUNC-BACKEND-SCRIPTS-CHECK-COOLIFY-FALLBACK-READINESS-PY-BUILD-READI-BE1321D7": [
         "node status is implemented",
         "verification status is implementation_evidence",
@@ -14007,6 +14092,55 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "PYFUNC-BACKEND-SCRIPTS-REPORT-ARCHITECTURE-COVERAGE-PY-BUILD-REPORT-53A8588D": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-REPORT-ARCHITECTURE-COVERAGE-PY-GAP-SUMMARY-000B39C0": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-REPORT-ARCHITECTURE-COVERAGE-PY-MAIN-548B58E2": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-REPORT-ARCHITECTURE-COVERAGE-PY-PARSE-ARGS-AA205AA4": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-REPORT-ARCHITECTURE-COVERAGE-PY-RENDER-MARKDOWN-592F037F": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-REPORT-ARCHITECTURE-COVERAGE-PY-REPO-ROOT-569170DE": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-REPORT-ARCHITECTURE-COVERAGE-PY-SUMMARIZE-CD4D5686": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "PYFUNC-BACKEND-SCRIPTS-RUN-AI-RED-TEAM-SCENARIOS-PY-EVALUATE-REPLIES-5DD9FE24": [
         "node status is implemented",
         "verification status is implementation_evidence",
@@ -14071,6 +14205,48 @@
         "no evidence rows"
       ],
       "PYFUNC-BACKEND-SCRIPTS-RUN-AI-RED-TEAM-SCENARIOS-PY-UTC-NOW-9396020A": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-RUN-ARCHITECTURE-GRAPH-HOSTED-PROOF-INTAKE-PY-M-CF2C1F00": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-RUN-ARCHITECTURE-GRAPH-HOSTED-PROOF-INTAKE-PY-P-84500933": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-RUN-ARCHITECTURE-GRAPH-HOSTED-PROOF-INTAKE-PY-R-70A77DA1": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-RUN-ARCHITECTURE-GRAPH-HOSTED-PROOF-INTAKE-PY-R-B581646F": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-RUN-ARCHITECTURE-GRAPH-LOCAL-RELEASE-GATE-PY-MA-D41A9437": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-RUN-ARCHITECTURE-GRAPH-LOCAL-RELEASE-GATE-PY-RU-43BAA8CB": [
         "node status is implemented",
         "verification status is implementation_evidence",
         "tests_related is empty",
@@ -14322,6 +14498,41 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "PYFUNC-BACKEND-SCRIPTS-SYNC-RELEASE-EVIDENCE-INDEX-FROM-LATEST-SUMMARY-532E63B2": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-SYNC-RELEASE-EVIDENCE-INDEX-FROM-LATEST-SUMMARY-5C703CFC": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-SYNC-RELEASE-EVIDENCE-INDEX-FROM-LATEST-SUMMARY-A840B633": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-SYNC-RELEASE-EVIDENCE-INDEX-FROM-LATEST-SUMMARY-B76D046F": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-SYNC-RELEASE-EVIDENCE-INDEX-FROM-LATEST-SUMMARY-D5B45BAA": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "PYFUNC-BACKEND-SCRIPTS-TRIGGER-COOLIFY-DEPLOY-WEBHOOK-PY-BUILD-PAYLOAD-F34C6F6C": [
         "node status is implemented",
         "verification status is implementation_evidence",
@@ -14386,6 +14597,27 @@
         "no evidence rows"
       ],
       "PYFUNC-BACKEND-SCRIPTS-TRIGGER-COOLIFY-DEPLOY-WEBHOOK-PY-UTC-NOW-ISO-775AA4AE": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-VERIFY-ARCHITECTURE-GAP-ARTIFACT-PY-MAIN-A2B5DCB2": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-VERIFY-ARCHITECTURE-GAP-ARTIFACT-PY-PARSE-ARGS-19A337F3": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-SCRIPTS-VERIFY-ARCHITECTURE-GAP-ARTIFACT-PY-RUN-F6E06EF5": [
         "node status is implemented",
         "verification status is implementation_evidence",
         "tests_related is empty",
@@ -16009,6 +16241,20 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-CI-POLICY-PY-TEST-ARCHITE-4B0F6471": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-CI-POLICY-PY-TEST-ARCHITE-51DFB0A2": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-GENERATOR-PY-LOAD-GRAPH-M-ED96BEC1": [
         "node status is implemented",
         "verification status is implementation_evidence",
@@ -16128,6 +16374,20 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-QUERY-PY-TEST-CLI-FAIL-ON-1B34C904": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-QUERY-PY-TEST-CLI-FAIL-ON-EF505F5D": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-QUERY-PY-TEST-CLI-GAP-REP-C2261E3E": [
         "node status is implemented",
         "verification status is implementation_evidence",
@@ -16150,6 +16410,13 @@
         "no evidence rows"
       ],
       "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-QUERY-PY-TEST-CURRENT-GRA-025A073A": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-QUERY-PY-TEST-CURRENT-GRA-0ECA5D40": [
         "node status is implemented",
         "verification status is implementation_evidence",
         "tests_related is empty",
@@ -16185,13 +16452,6 @@
         "no evidence rows"
       ],
       "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-QUERY-PY-TEST-CURRENT-GRA-691A95AA": [
-        "node status is implemented",
-        "verification status is implementation_evidence",
-        "tests_related is empty",
-        "docs_related is empty",
-        "no evidence rows"
-      ],
-      "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-QUERY-PY-TEST-CURRENT-GRA-7929B970": [
         "node status is implemented",
         "verification status is implementation_evidence",
         "tests_related is empty",
@@ -16262,6 +16522,13 @@
         "no evidence rows"
       ],
       "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-QUERY-PY-TEST-GAP-REPORT-577BA02E": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-QUERY-PY-TEST-OPERATIONAL-19EC0B2A": [
         "node status is implemented",
         "verification status is implementation_evidence",
         "tests_related is empty",
@@ -16437,6 +16704,27 @@
         "no evidence rows"
       ],
       "PYFUNC-BACKEND-TESTS-TEST-BEHAVIOR-VALIDATION-SCRIPT-PY-VALID-V1-READI-B3181D94": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-TESTS-TEST-BUILD-ARCHITECTURE-GRAPH-HOSTED-EVIDENCE-PAC-30B29BFE": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-TESTS-TEST-BUILD-ARCHITECTURE-GRAPH-HOSTED-EVIDENCE-PAC-6F1A6093": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-TESTS-TEST-BUILD-ARCHITECTURE-GRAPH-HOSTED-EVIDENCE-PAC-A94FA608": [
         "node status is implemented",
         "verification status is implementation_evidence",
         "tests_related is empty",
@@ -21406,6 +21694,27 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "PYFUNC-BACKEND-TESTS-TEST-RUN-ARCHITECTURE-GRAPH-HOSTED-PROOF-INTAKE-P-12937B81": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-TESTS-TEST-RUN-ARCHITECTURE-GRAPH-HOSTED-PROOF-INTAKE-P-8794D909": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-TESTS-TEST-RUN-ARCHITECTURE-GRAPH-HOSTED-PROOF-INTAKE-P-BEB0A0D4": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "PYFUNC-BACKEND-TESTS-TEST-RUNTIME-PIPELINE-PY-BEHAVIOR-EVENT-71451F5B": [
         "node status is implemented",
         "verification status is implementation_evidence",
@@ -22653,6 +22962,20 @@
         "no evidence rows"
       ],
       "PYFUNC-BACKEND-TESTS-TEST-TELEGRAM-CLIENT-PY-TEST-TELEGRAM-CLIENT-OMIT-DF0A7D3E": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-TESTS-TEST-VERIFY-ARCHITECTURE-GAP-ARTIFACT-PY-TEST-VER-3E0DBE6B": [
+        "node status is implemented",
+        "verification status is implementation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "PYFUNC-BACKEND-TESTS-TEST-VERIFY-ARCHITECTURE-GAP-ARTIFACT-PY-TEST-VER-7392BD2E": [
         "node status is implemented",
         "verification status is implementation_evidence",
         "tests_related is empty",
@@ -31102,6 +31425,12 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "FILE-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-CI-POLICY-PY-71A65301": [
+        "verification status is test_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "FILE-BACKEND-TESTS-TEST-ARCHITECTURE-GRAPH-GENERATOR-PY-B08FF7F4": [
         "verification status is test_evidence",
         "tests_related is empty",
@@ -31115,6 +31444,12 @@
         "no evidence rows"
       ],
       "FILE-BACKEND-TESTS-TEST-BEHAVIOR-VALIDATION-SCRIPT-PY-CE379915": [
+        "verification status is test_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-BACKEND-TESTS-TEST-BUILD-ARCHITECTURE-GRAPH-HOSTED-EVIDENCE-PAC-2937690E": [
         "verification status is test_evidence",
         "tests_related is empty",
         "docs_related is empty",
@@ -31318,6 +31653,12 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "FILE-BACKEND-TESTS-TEST-RUN-ARCHITECTURE-GRAPH-HOSTED-PROOF-INTAKE-P-EA54A529": [
+        "verification status is test_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "FILE-BACKEND-TESTS-TEST-RUNTIME-PIPELINE-PY-30E425C2": [
         "verification status is test_evidence",
         "tests_related is empty",
@@ -31355,6 +31696,12 @@
         "no evidence rows"
       ],
       "FILE-BACKEND-TESTS-TEST-TELEGRAM-CLIENT-PY-40611F22": [
+        "verification status is test_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-BACKEND-TESTS-TEST-VERIFY-ARCHITECTURE-GAP-ARTIFACT-PY-E56F1AAC": [
         "verification status is test_evidence",
         "tests_related is empty",
         "docs_related is empty",
@@ -33233,6 +33580,156 @@
         "no evidence rows"
       ],
       "FILE-CODEX-TASKS-PRJ-1298-TELEGRAM-FEATURE-PROOF-GAP-CLOSURE-MD-1D1382A8": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1299-GLOBAL-GAP-AUDIT-ZERO-STATE-CLOSURE-MD-FF7F0732": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1300-ARCHITECTURE-GAP-ZERO-GATE-IN-CI-MD-77416D0F": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1301-GAP-AUDIT-CLI-FAIL-ON-GAPS-HARDENING-MD-FB2534C5": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1302-GRAPH-CI-GAP-ARTIFACT-PROOFING-MD-9E8296E2": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1303-GRAPH-CI-POLICY-REGRESSION-TEST-MD-4E2046B4": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1304-ARCHITECTURE-GRAPH-HOSTED-PROOF-CHECKLIST-ECB44D78": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1305-HOSTED-GAP-ARTIFACT-VERIFIER-SCRIPT-MD-16C8A4E1": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1306-HOSTED-EVIDENCE-PACKET-BUILDER-MD-5FE77B87": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1307-HOSTED-EVIDENCE-ARTIFACT-POLICY-REGRESSION-D61D53ED": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1308-LOCAL-RELEASE-GATE-REPORT-AUTOMATION-MD-E2873328": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1309-COOLIFY-FIRST-DEPLOYMENT-POLICY-AND-TEAM-C-EE3FD228": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1310-PRODUCTION-INCIDENT-EVIDENCE-BUNDLE-AND-RE-C58C456F": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1311-SINGLE-COMMAND-PRODUCTION-RELEASE-EVIDENCE-496D0B49": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1312-RELEASE-EVIDENCE-INDEX-LIVE-PROOF-SYNC-MD-3BEF58F5": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1313-RELEASE-INDEX-AUTO-SYNC-SCRIPT-MD-A0B016C4": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1314-SINGLE-COMMAND-PRODUCTION-RELEASE-PROOF-CY-CDB1C271": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1315-HOSTED-PROOF-INTAKE-SINGLE-COMMAND-MD-42F1156B": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1316-HOSTED-PROOF-INTAKE-REGRESSION-TESTS-MD-E41C0C0A": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1317-NO-BILLING-BLOCKER-RELEASE-GATE-NORMALIZAT-6005D11E": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1318-CANONICAL-NO-PAID-GITHUB-GATES-FINAL-VERIF-4C0BA260": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1319-MISSION-HISTORY-NONBLOCKING-HOSTED-PROOF-A-583D1BDB": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1320-ARCHITECTURE-GRAPH-RELEASE-READINESS-HOSTE-7FA78C19": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1321-FINAL-CONSISTENCY-SWEEP-NO-PAID-GITHUB-BAS-DE818CA7": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1322-POST-PUSH-PRODUCTION-CLOSURE-PROOF-MD-4093917D": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-CODEX-TASKS-PRJ-1323-ARCHITECTURE-COVERAGE-REPORT-BASELINE-MD-F0BCD1D7": [
         "verification status is documentation_evidence",
         "tests_related is empty",
         "docs_related is empty",
@@ -36400,6 +36897,12 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "FILE-DOCS-OPERATIONS-ARCHITECTURE-GRAPH-HOSTED-PROOF-CHECKLIST-MD-D882161A": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "FILE-DOCS-OPERATIONS-ARCHITECTURE-IMPLEMENTATION-AUDIT-2026-05-10-MD-1D3A0485": [
         "verification status is documentation_evidence",
         "tests_related is empty",
@@ -36874,7 +37377,349 @@
         "docs_related is empty",
         "no evidence rows"
       ],
+      "FILE-DOCS-STATUS-20260524T172450Z-INCIDENT-BUNDLE-20260524T172450Z-H-671017AD": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172450Z-INCIDENT-BUNDLE-20260524T172450Z-I-E7CEF9C4": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172450Z-INCIDENT-BUNDLE-20260524T172450Z-M-4CDC12AF": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172656Z-PRODUCTION-RELEASE-EVIDENCE-202605-5196465D": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172656Z-PRODUCTION-RELEASE-EVIDENCE-202605-D4F08193": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172656Z-PRODUCTION-RELEASE-EVIDENCE-202605-F26D413D": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172704Z-PRODUCTION-RELEASE-EVIDENCE-202605-2C8E6AFA": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172704Z-PRODUCTION-RELEASE-EVIDENCE-202605-2E016CDF": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172704Z-PRODUCTION-RELEASE-EVIDENCE-202605-35EC2AA5": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172717Z-PRODUCTION-RELEASE-EVIDENCE-202605-9ABF40D5": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172717Z-PRODUCTION-RELEASE-EVIDENCE-202605-C19A21E0": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172717Z-PRODUCTION-RELEASE-EVIDENCE-202605-F91FAD2C": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172730Z-PRODUCTION-RELEASE-EVIDENCE-202605-32F1818D": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172730Z-PRODUCTION-RELEASE-EVIDENCE-202605-9B74EF90": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T172730Z-PRODUCTION-RELEASE-EVIDENCE-202605-CF1718E7": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T173208Z-PRODUCTION-RELEASE-EVIDENCE-202605-181011E7": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T173208Z-PRODUCTION-RELEASE-EVIDENCE-202605-21AE85EE": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T173208Z-PRODUCTION-RELEASE-EVIDENCE-202605-B38727A5": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T175856Z-PRODUCTION-RELEASE-EVIDENCE-202605-19E47E1B": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T175856Z-PRODUCTION-RELEASE-EVIDENCE-202605-79059FBB": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T175856Z-PRODUCTION-RELEASE-EVIDENCE-202605-DDF51AB8": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T181242Z-PRODUCTION-RELEASE-EVIDENCE-202605-1AEB5649": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T181242Z-PRODUCTION-RELEASE-EVIDENCE-202605-D19D4D0D": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T181242Z-PRODUCTION-RELEASE-EVIDENCE-202605-EEBD6F61": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T181534Z-PRODUCTION-RELEASE-EVIDENCE-202605-65C09121": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T181534Z-PRODUCTION-RELEASE-EVIDENCE-202605-DAD18587": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T181534Z-PRODUCTION-RELEASE-EVIDENCE-202605-DD5F58D8": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T181933Z-PRODUCTION-RELEASE-EVIDENCE-202605-7A4BBB4F": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T181933Z-PRODUCTION-RELEASE-EVIDENCE-202605-81BB83DA": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-20260524T181933Z-PRODUCTION-RELEASE-EVIDENCE-202605-8883F624": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-COVERAGE-REPORT-JSON-F3B840C2": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-COVERAGE-REPORT-MD-EDFF94D5": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-COVERAGE-REPORT-OPERATIONAL-JSON-FBF98613": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-COVERAGE-REPORT-OPERATIONAL-MD-871AC768": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-CURATION-BATCH-1-TEMPLATE-CSV-CDFFEFB4": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-CURATION-QUEUE-PRIORITY-CSV-345D9ACB": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-GAPS-ALL-20260524-JSON-86A6A598": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-GAPS-ALL-FULL-JSON-B7891B4D": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-GAPS-ALL-OPERATIONAL-JSON-60F44CF2": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-GAPS-CURATED-20260524-JSON-4EE49F19": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-GRAPH-LOCAL-RELEASE-GATE-JSON-866BC327": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-ARCHITECTURE-GRAPH-RELEASE-READINESS-MD-C80B57F6": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
       "FILE-DOCS-STATUS-ARCHITECTURE-MAP-STATUS-MD-17EB8660": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-PRJ1315-HOSTED-INTAKE-FIXTURE-ARCHITECTURE-GAPS-FAS-ADD928C9": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-PRJ1315-HOSTED-INTAKE-FIXTURE-ARCHITECTURE-GAPS-HEA-0DE01B83": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-PRJ1315-HOSTED-INTAKE-PACKET-ARCHITECTURE-GRAPH-HOS-0B250BDC": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-PRJ1315-HOSTED-INTAKE-PACKET-ARCHITECTURE-GRAPH-HOS-D2E49FED": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-PRODUCTION-RELEASE-EVIDENCE-SUMMARY-20260524T172730-F0401200": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-PRODUCTION-RELEASE-EVIDENCE-SUMMARY-20260524T173208-D4B3A4E2": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-PRODUCTION-RELEASE-EVIDENCE-SUMMARY-20260524T175856-024B63AA": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-PRODUCTION-RELEASE-EVIDENCE-SUMMARY-20260524T181534-E8BBC097": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-PRODUCTION-RELEASE-EVIDENCE-SUMMARY-20260524T181933-BD51BCAA": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-RELEASE-SMOKE-20260524T172730Z-JSON-3178A649": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-RELEASE-SMOKE-20260524T173208Z-JSON-3CDAC508": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-RELEASE-SMOKE-20260524T175856Z-JSON-1EF57DFA": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-RELEASE-SMOKE-20260524T181534Z-JSON-55CEBBDA": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-RELEASE-SMOKE-20260524T181933Z-JSON-B6A524B6": [
+        "verification status is documentation_evidence",
+        "tests_related is empty",
+        "docs_related is empty",
+        "no evidence rows"
+      ],
+      "FILE-DOCS-STATUS-RELEASE-SMOKE-PRJ1310-JSON-66A46D6D": [
         "verification status is documentation_evidence",
         "tests_related is empty",
         "docs_related is empty",

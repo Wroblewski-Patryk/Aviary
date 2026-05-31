@@ -1,10 +1,10 @@
 # Documentation Overview
 
-Updated: 2026-05-30
+Updated: 2026-05-31
 
 This file is the docs-parity baseline entry for the Aviary repository. It
 provides one stable index for current documentation ownership,
-scope, and residual gaps during the `LUC-260` takeover preparation mission.
+scope, and residual gaps during the `LUC-976` takeover preparation mission.
 
 ## Project Scope And Status
 
@@ -14,9 +14,10 @@ scope, and residual gaps during the `LUC-260` takeover preparation mission.
 - Duplicate docs surface: `Aviary - docs/` inside the repo is a non-canonical
   copied vault. Treat it as archival reference only; current-truth updates must
   land under canonical `docs/`.
-- Current takeover parent: `LUC-260` (`IN_PROGRESS`, blocked by child lanes)
-- This file closes docs parity artifact gap `LUC260-G2` only for the
-  `docs/documentation-overview.md` requirement.
+- Current takeover parent: `LUC-976` (`IN_PROGRESS`, pending parent integration)
+- Current docs-memory lane: `LUC-994` (`DONE`)
+- This file is the canonical docs-memory snapshot used by the `LUC-976-L5`
+  documentation status and root-index refresh lane.
 
 ## Canonical Documentation Entrypoints
 
@@ -32,8 +33,7 @@ scope, and residual gaps during the `LUC-260` takeover preparation mission.
 
 ## Residual Unknowns And Open Parity Gaps
 
-- `LUC-446`, `LUC-447`, and `LUC-448` baseline lanes are now closed and their
-  artifacts are present.
-- `LUC-580` baseline refresh is closed with known-state evidence.
-- `LUC-694` synchronized docs-memory ledgers to keep baseline references
-  aligned across `.codex/context/*` and `.agents/state/*`.
+- `LUC-990`, `LUC-991`, `LUC-992`, `LUC-993`, and `LUC-994` child lanes are
+  closed with task packets under `.codex/tasks/`.
+- parent `LUC-976` remains open until all child-lane outputs are integrated
+  into one final closure packet.

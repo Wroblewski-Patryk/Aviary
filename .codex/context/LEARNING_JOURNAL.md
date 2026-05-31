@@ -36,6 +36,26 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-31 - Route-smoke validation may leave a headless shell process
+- Context:
+  - `LUC-992` executed `web/scripts/route-smoke.mjs` with screenshot capture
+    for takeover QA evidence.
+- Symptom:
+  - a `chrome-headless-shell` process remained after command completion.
+- Root cause:
+  - Playwright/Chromium teardown did not fully exit in this run.
+- Guardrail:
+  - after every browser-driven validation, run
+    `Get-Process chrome-headless-shell -ErrorAction SilentlyContinue` and
+    terminate only task-owned leftovers before closing the checkpoint.
+- Preferred pattern:
+  - include process cleanup evidence in the same heartbeat summary.
+- Avoid:
+  - ending QA/browser lanes with orphaned browser processes.
+- Evidence:
+  - detected process id `2468`, then force-terminated via
+    `Stop-Process -Id 2468 -Force`.
+
 ### 2026-05-31 - Parallel smoke launch can race before build artifacts exist
 - Context:
   - LUC-944 executed web build and critical-route smoke in the same heartbeat.
