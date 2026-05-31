@@ -4,6 +4,22 @@ Last updated: 2026-05-31
 
 ## Mission Update
 
+- 2026-05-31: `LUC-1136` source-control closure for `LUC-795` completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1136-source-control-closure-for-luc-795.md`
+- Heartbeat output:
+  - classified local dirty set as one coherent `LUC-795` docs/state packet
+  - closed packet via local source-control closure commit
+  - deploy impact `none`, push `not needed`
+
+- 2026-05-31: `LUC-795` known-state parent integration completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-795-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+- Heartbeat output:
+  - integrated child-lane evidence delta from `LUC-796`, `LUC-797`, and `LUC-798`
+  - closed parent lane as preparation-only with no runtime/deploy mutation
+  - confirmed next repair-lane continuation remains delegated from `LUC-1063` lane map (A-D)
+
 - 2026-05-31: `LUC-1071` source-control closure sidecar for `LUC-1063` completed.
 - Evidence packet:
   - `.codex/tasks/LUC-1071-source-control-closure-luc-1063.md`

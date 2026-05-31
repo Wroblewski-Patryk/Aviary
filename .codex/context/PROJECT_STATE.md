@@ -2,6 +2,33 @@
 
 Last updated: 2026-05-31
 
+- 2026-05-31: `LUC-1136` source-control closure sidecar for `LUC-795` is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-1136-source-control-closure-for-luc-795.md`
+  - result:
+    - local dirty state was classified as one coherent `LUC-795` docs/state packet
+    - no blocker class detected (no conflict, no secret-bearing artifact, no unrelated overlap)
+    - packet closed with one local source-control closure commit
+  - validation:
+    - `git status --short`
+    - `git diff --name-only`
+    - scoped `git diff` coherence review for source-of-truth routers
+    - post-closure `git status --short` clean check
+
+- 2026-05-31: `LUC-795` known-state refresh parent integration is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-795-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+  - result:
+    - consolidated child-lane evidence delta from:
+      - `LUC-796` (user-facing flow proof refresh)
+      - `LUC-797` (NOW queue curation closure after dependency `LUC-1132`)
+      - `LUC-798` (canonical project-root identity reconciliation)
+    - confirmed preparation-only closure posture for the parent lane with no runtime/deploy mutation
+    - preserved next specialist repair-lane map from latest baseline (`LUC-1063` lanes A-D)
+  - validation:
+    - documentation/state integration review across task packet, task board, and mission router
+    - docs/state-only checkpoint; runtime tests not required
+
 - 2026-05-31: `LUC-1134` source-control closure sidecar for `LUC-420` is `DONE`:
   - task:
     - `.codex/tasks/LUC-1134-source-control-closure-for-luc-420.md`

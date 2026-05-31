@@ -2,6 +2,39 @@
 
 Last updated: 2026-05-31
 
+## Source-Control Closure (2026-05-31)
+
+- `LUC-1136` is DONE:
+  - `.codex/tasks/LUC-1136-source-control-closure-for-luc-795.md`
+  - objective:
+    - classify and close local dirty state for `LUC-795`
+  - current result:
+    - dirty packet classified as one coherent `LUC-795` docs/state output set
+    - no blocker class detected (no merge conflict, no secret-bearing file, no unrelated overlap)
+    - packet closed with one local source-control closure commit
+  - validation:
+    - `git status --short`
+    - `git diff --name-only`
+    - scoped `git diff` review for state router files
+    - post-closure `git status --short` clean check
+
+## Known-State Parent Integration (2026-05-31)
+
+- `LUC-795` is DONE:
+  - `.codex/tasks/LUC-795-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+  - objective:
+    - integrate known-state child-lane evidence delta and set the next repair-lane posture
+  - current result:
+    - child-lane evidence integrated:
+      - `LUC-796` flow proof refresh remains green for this checkpoint
+      - `LUC-797` NOW queue curation closure reconciled after dependency `LUC-1132` completion
+      - `LUC-798` canonical root/alias reconciliation preserved (`Aviary` canonical, `Personality` legacy-only)
+    - parent lane closed as preparation-only with no runtime/deploy mutation
+    - continuation lanes remain explicitly delegated from latest baseline (`LUC-1063` lanes A-D)
+  - validation:
+    - cross-file state sync and child-evidence integration review
+    - docs/state-only checkpoint; runtime tests not required
+
 ## Known-State Baseline Refresh (2026-05-31)
 
 - `LUC-1063` is DONE:
