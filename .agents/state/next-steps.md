@@ -1,8 +1,16 @@
 # Next Steps
 
-Last updated: 2026-05-29
+Last updated: 2026-05-31
 
 ## NOW
+
+1. `LUC-944` critical web/mobile UI smoke coverage is done:
+   - task:
+     `.codex/tasks/LUC-944-qa-build-web-mobile-critical-ui-smoke-coverage-p1.md`
+   - latest result:
+     web build and bounded critical-route desktop/mobile smoke pack passed with artifacts
+   - next smallest useful choice:
+     rerun the same smoke pack only when the critical route manifest or shell layout changes
 
 1. Continue from `LUC-691` baseline/lane-map reconciliation:
    - latest task:

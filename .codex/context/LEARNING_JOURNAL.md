@@ -36,6 +36,25 @@ fixes for this repository.
 
 ## Entries
 
+### 2026-05-31 - Parallel smoke launch can race before build artifacts exist
+- Context:
+  - LUC-944 executed web build and critical-route smoke in the same heartbeat.
+- Symptom:
+  - The first smoke attempt failed with `ENOENT ... web/dist/index.html`.
+- Root cause:
+  - Smoke started before the build finished when commands were launched in
+    parallel, so static `dist` artifacts were not yet available.
+- Guardrail:
+  - For static `dist`-based route smoke, run build first and smoke second in
+    strict sequence.
+- Preferred pattern:
+  - Execute `npm run build`, confirm success, then run `node scripts/route-smoke.mjs`.
+- Avoid:
+  - Parallelizing build and smoke when smoke directly reads `web/dist`.
+- Evidence:
+  - LUC-944 first smoke run failed with ENOENT, sequential rerun passed with
+    `status=ok`, `screenshot_count=16`, `failed_count=0`.
+
 ### 2026-05-25 - Default Chrome CDP characterization can hang on Windows
 - Context:
   - PRJ-1338 extended Tools directory browser characterization for provider

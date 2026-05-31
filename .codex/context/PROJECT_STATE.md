@@ -6,6 +6,20 @@ Project alias: the product and repository root are both canonicalized as
 `Aviary` (`C:/Personal/Projekty/Aplikacje/Aviary`). Historical references to
 `Personality` are legacy naming only.
 
+- 2026-05-31: `LUC-944` P1 web/mobile critical UI smoke coverage is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-944-qa-build-web-mobile-critical-ui-smoke-coverage-p1.md`
+  - result:
+    - critical route smoke coverage executed for `/, /login, /dashboard, /chat, /personality, /tools, /integrations, /settings` on desktop/mobile viewports
+    - route smoke report PASS with `status=ok`, `route_count=14`
+    - screenshot gate PASS with `viewport_count=2`, `screenshot_count=16`, `failed_count=0`
+    - artifacts captured under `.codex/artifacts/luc944-web-mobile-critical-ui-smoke/`
+  - validation:
+    - `Push-Location web; npm run build; $exit=$LASTEXITCODE; Pop-Location; exit $exit` -> PASS
+    - first smoke attempt failed when run in parallel before build completion (`ENOENT ... web/dist/index.html`)
+    - sequential smoke rerun PASS:
+      `Push-Location web; node scripts/route-smoke.mjs --report ../.codex/artifacts/luc944-web-mobile-critical-ui-smoke/report.json --screenshots ../.codex/artifacts/luc944-web-mobile-critical-ui-smoke/screenshots --screenshot-routes /,/login,/dashboard,/chat,/personality,/tools,/integrations,/settings --viewports desktop,mobile --fail-on-ui-findings; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+
 - 2026-05-31: `LUC-958` source-control closure sidecar for `LUC-943` is `DONE`:
   - task:
     - `.codex/tasks/LUC-958-source-control-closure-for-luc-943.md`

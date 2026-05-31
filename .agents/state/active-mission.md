@@ -4,6 +4,14 @@ Last updated: 2026-05-31
 
 ## Mission Update
 
+- 2026-05-31: `LUC-944` critical web/mobile UI smoke coverage lane completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-944-qa-build-web-mobile-critical-ui-smoke-coverage-p1.md`
+- Heartbeat output:
+  - executed web build plus critical-route desktop/mobile smoke evidence pack
+  - smoke report: `status=ok`, `route_count=14`, `ui_audit.screenshot_count=16`, `ui_audit.failed_count=0`
+  - artifact path: `.codex/artifacts/luc944-web-mobile-critical-ui-smoke/`
+
 - 2026-05-31: `LUC-958` source-control closure sidecar for `LUC-943` completed.
 - Evidence packet:
   - `.codex/tasks/LUC-958-source-control-closure-for-luc-943.md`

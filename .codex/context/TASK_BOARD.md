@@ -2,6 +2,21 @@
 
 Last updated: 2026-05-31
 
+## Web/Mobile Critical UI Smoke Coverage (2026-05-31)
+
+- `LUC-944` is DONE:
+  - `.codex/tasks/LUC-944-qa-build-web-mobile-critical-ui-smoke-coverage-p1.md`
+  - objective:
+    - execute bounded P1 QA smoke coverage for critical web/mobile UI routes with replayable screenshot/report artifacts
+  - current result:
+    - web build PASS
+    - critical route smoke PASS with `status=ok`, `route_count=14`
+    - screenshot gate PASS with `viewport_count=2`, `screenshot_count=16`, `failed_count=0`
+    - artifacts stored under `.codex/artifacts/luc944-web-mobile-critical-ui-smoke/`
+  - validation:
+    - `Push-Location web; npm run build; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+    - `Push-Location web; node scripts/route-smoke.mjs --report ../.codex/artifacts/luc944-web-mobile-critical-ui-smoke/report.json --screenshots ../.codex/artifacts/luc944-web-mobile-critical-ui-smoke/screenshots --screenshot-routes /,/login,/dashboard,/chat,/personality,/tools,/integrations,/settings --viewports desktop,mobile --fail-on-ui-findings; $exit=$LASTEXITCODE; Pop-Location; exit $exit`
+
 ## Source Control Closure (2026-05-31)
 
 - `LUC-958` is DONE:
