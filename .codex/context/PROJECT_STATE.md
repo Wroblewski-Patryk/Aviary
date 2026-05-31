@@ -2,6 +2,49 @@
 
 Last updated: 2026-05-31
 
+- 2026-05-31: `LUC-1071` source-control closure sidecar for `LUC-1063` is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-1071-source-control-closure-luc-1063.md`
+  - result:
+    - current local dirty packet was classified as coherent `LUC-1063` evidence output:
+      - context/state synchronization files
+      - architecture-awareness regenerated exports/reports
+      - `LUC-1063` lane task evidence file
+    - no runtime code mutation files or secret-bearing local artifacts were detected in the dirty set
+    - source-control closure executed in this lane:
+      - commit: `completed` (single docs/state/evidence packet)
+      - push: `not needed`
+      - deploy impact: `none`
+  - validation:
+    - `git status --short`
+    - `git status --branch`
+    - `rg -n "LUC-1063" .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .agents/state/active-mission.md .agents/state/next-steps.md`
+
+- 2026-05-31: `LUC-1063` known-state evidence collection and architecture baseline is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-1063-known-state-evidence-collection-and-architecture-baseline.md`
+  - result:
+    - canonical context/state files and architecture export pack were re-verified
+    - minimal baseline surfaces refreshed for this issue lineage:
+      - backend route decorators: `19`
+      - backend test files: `125`
+      - migration files: `12`
+    - drift note recorded: backend test inventory differs from previous known-state baselines (`123` -> `125`)
+    - wake follow-up executed: architecture-awareness outputs were regenerated and mapped into concrete delegated repair lanes
+    - delegated repair-lane candidates:
+      - Lane A: docs-tree canonicalization + scanner override curation (CTO Architect + Docs Memory Lead)
+      - Lane B: backend API missing-link verification closure (Backend + QA)
+      - Lane C: web/mobile component verification closure (Frontend + QA)
+      - Lane D: architecture export reproducibility guard (Architecture Specialist)
+  - validation:
+    - `(Get-ChildItem backend/tests -Recurse -File | Measure-Object).Count` -> `125`
+    - `(Get-Content backend/app/api/routes.py | Select-String -Pattern "@router\\.(get|post|put|delete|patch)\\(").Count` -> `19`
+    - `(Get-ChildItem backend/migrations/versions -File | Measure-Object).Count` -> `12`
+    - `Get-ChildItem docs/graphs -File | Select-Object -ExpandProperty Name` -> canonical six-file export pack present
+    - `node scripts/build-architecture-awareness-index.mjs --project Aviary --root C:\Personal\Projekty\Aplikacje\Aviary` -> refreshed `docs/graphs/*` and `docs/status/*` architecture outputs
+  - scope boundary:
+    - verification-only preparation checkpoint; no runtime or deploy mutation
+
 - 2026-05-31: `LUC-1021` source-control closure is `DONE`:
   - task:
     - `.codex/tasks/LUC-1021-source-control-closure-luc-945-976-990-994.md`

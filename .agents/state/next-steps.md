@@ -2,6 +2,28 @@
 
 Last updated: 2026-05-31
 
+1. `LUC-1063` known-state and architecture baseline is done:
+   - task:
+     `.codex/tasks/LUC-1063-known-state-evidence-collection-and-architecture-baseline.md`
+   - latest result:
+     refreshed canonical known-state and architecture export evidence for Aviary preparation lane
+   - proof:
+     backend test files `125`; backend route decorators `19`; migration files `12`; canonical `docs/graphs` export pack present
+   - delegated lanes prepared:
+     Lane A docs-tree canonicalization + override curation; Lane B backend API missing-link verification; Lane C web/mobile component verification; Lane D architecture export reproducibility guard
+   - next smallest useful choice:
+     open child issues for Lanes A-D from `.codex/tasks/LUC-1063-known-state-evidence-collection-and-architecture-baseline.md` and route owners via 11 Innovations Director
+
+1. `LUC-1071` source-control closure sidecar for `LUC-1063` is done:
+   - task:
+     `.codex/tasks/LUC-1071-source-control-closure-luc-1063.md`
+   - latest result:
+     local dirty state is classified as one coherent `LUC-1063` docs/state/architecture-export packet with no runtime code or secret-bearing artifacts in scope
+   - proof:
+     `git status --short`, `git status --branch`, and cross-file `LUC-1063` traceability grep
+   - next smallest useful choice:
+     source-control owner can convert this packet into one scoped commit and attach SHA evidence to the protected target lane
+
 1. `LUC-1021` source-control closure is done:
    - task:
      `.codex/tasks/LUC-1021-source-control-closure-luc-945-976-990-994.md`

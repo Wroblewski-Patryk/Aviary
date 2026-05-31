@@ -4,6 +4,22 @@ Last updated: 2026-05-31
 
 ## Mission Update
 
+- 2026-05-31: `LUC-1071` source-control closure sidecar for `LUC-1063` completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1071-source-control-closure-luc-1063.md`
+- Heartbeat output:
+  - classified current local dirty set as one coherent `LUC-1063` docs/state/architecture-export packet
+  - recorded sidecar closure posture: commit not executed in PM lane, push not needed, deploy impact none
+
+- 2026-05-31: `LUC-1063` known-state baseline refresh completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1063-known-state-evidence-collection-and-architecture-baseline.md`
+- Heartbeat output:
+  - refreshed preparation baseline for canonical state + architecture exports
+  - confirmed current minimal surfaces: route decorators `19`, backend tests `125`, migrations `12`
+  - recorded baseline drift from prior test-file count (`123` -> `125`)
+  - executed wake follow-up architecture refresh and derived delegated repair lanes (A-D) for docs curation, API verification, UI verification, and export reproducibility
+
 - 2026-05-31: `LUC-944` critical web/mobile UI smoke coverage lane completed.
 - Evidence packet:
   - `.codex/tasks/LUC-944-qa-build-web-mobile-critical-ui-smoke-coverage-p1.md`

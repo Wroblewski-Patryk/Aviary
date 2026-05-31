@@ -2,7 +2,43 @@
 
 Last updated: 2026-05-31
 
+## Known-State Baseline Refresh (2026-05-31)
+
+- `LUC-1063` is DONE:
+  - `.codex/tasks/LUC-1063-known-state-evidence-collection-and-architecture-baseline.md`
+  - objective:
+    - refresh Aviary known-state evidence and architecture baseline for current issue lineage
+  - current result:
+    - canonical state and architecture export sources re-verified
+    - baseline runtime surfaces refreshed: route decorators `19`, backend test files `125`, migration files `12`
+    - baseline drift captured: backend test inventory changed from prior `123` to `125`
+    - wake follow-up completed: architecture-awareness export regenerated and converted into concrete child-lane-ready repair map (A-D)
+  - validation:
+    - `(Get-ChildItem backend/tests -Recurse -File | Measure-Object).Count` -> `125`
+    - `(Get-Content backend/app/api/routes.py | Select-String -Pattern "@router\\.(get|post|put|delete|patch)\\(").Count` -> `19`
+    - `(Get-ChildItem backend/migrations/versions -File | Measure-Object).Count` -> `12`
+    - `Get-ChildItem docs/graphs -File | Select-Object -ExpandProperty Name` -> canonical six-file export pack present
+    - `node scripts/build-architecture-awareness-index.mjs --project Aviary --root C:\Personal\Projekty\Aplikacje\Aviary` -> refreshed architecture exports and reports
+  - delegated-next lanes:
+    - Lane A: docs-tree canonicalization and scanner override curation (CTO Architect + Docs Memory Lead)
+    - Lane B: backend API missing-link verification closure (Backend + QA)
+    - Lane C: web/mobile component behavior verification closure (Frontend + QA)
+    - Lane D: architecture export reproducibility guard (Architecture Specialist)
+
 ## Source-Control Closure (2026-05-31)
+
+- `LUC-1071` is DONE:
+  - `.codex/tasks/LUC-1071-source-control-closure-luc-1063.md`
+  - objective:
+    - classify and close local dirty state for `LUC-1063` as a sidecar lane under protected-gate dependency
+  - current result:
+    - dirty state classified as one coherent docs/state/architecture-export packet from `LUC-1063`
+    - no runtime code paths or secret-bearing files detected in the dirty set
+    - closure packet committed locally in one source-control-closure commit; push `not needed`, deploy impact `none`
+  - validation:
+    - `git status --short`
+    - `git status --branch`
+    - `rg -n "LUC-1063" .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .agents/state/active-mission.md .agents/state/next-steps.md`
 
 - `LUC-1021` is DONE:
   - `.codex/tasks/LUC-1021-source-control-closure-luc-945-976-990-994.md`
