@@ -21,3 +21,12 @@ pytest-cache-files-*/
 artifacts/
 mobile/.expo-web-export/
 web/debug.log
+
+# Local Obsidian runtime/plugin state
+docs/.obsidian/plugins/
+docs/.obsidian/themes/
+docs/.obsidian/community-plugins.json
+docs/.obsidian/hotkeys.json
+docs/.obsidian/templates.json
+docs/.obsidian/types.json
+docs/.obsidian/workspace.json
