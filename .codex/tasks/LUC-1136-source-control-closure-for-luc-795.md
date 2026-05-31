@@ -70,7 +70,7 @@ outcome.
   - `.codex/context/PROJECT_STATE.md`
   - `.agents/state/active-mission.md`
 - Commit:
-  - `not committed yet` (captured before closure action in this file; finalized in issue closure evidence)
+  - `c5bf8f25a5fbc59f13dda930691e7e9384c13c9b` (`chore: close dirty state for LUC-795`)
 - Push status:
   - `not needed`
 - Deploy impact:
