@@ -57,3 +57,4 @@ close it with one source-control closure commit.
 - Commit: `f76498fa` (`chore: close dirty state for luc-945 and luc-976 child lanes`)
 - Push status: `not needed`
 - Deploy impact: `none`
+- Final disposition: `done` (sidecar closure complete; target issue remains separately dependency-gated)
