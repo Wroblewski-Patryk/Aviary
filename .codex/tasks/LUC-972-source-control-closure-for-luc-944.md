@@ -52,3 +52,11 @@ Classify current dirty state, confirm ownership/safety boundary, and preserve th
 - Push status: `not needed`.
 - Deploy impact: `none`.
 - Residual risk: low; if hidden unrelated edits existed outside inspected files, they were not observed in current porcelain output.
+
+## Heartbeat Addendum (2026-05-31)
+- Wake reason handled: board bookkeeping comment (`live-run janitor synced issue status to in_progress`).
+- Acknowledgement outcome: comment is operational only; no new product/runtime/deploy mutation requested.
+- Fresh verification:
+  - `git rev-parse --short HEAD` -> `e43fc680` (same closure commit).
+  - `git status --short` -> clean worktree (no residual dirty paths for `LUC-944`/`LUC-972`).
+- Disposition recommendation: `LUC-972` should be set to `done` because source-control closure objective is already satisfied and remains stable after re-check.
