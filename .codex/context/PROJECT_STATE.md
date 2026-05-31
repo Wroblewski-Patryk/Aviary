@@ -2,6 +2,33 @@
 
 Last updated: 2026-05-31
 
+- 2026-05-31: `LUC-1140` source-control closure sidecar for `LUC-937`/`LUC-1139` is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-1140-source-control-closure-for-luc-937-luc-1139.md`
+  - result:
+    - dirty packet classified as one coherent `LUC-1139` docs/state/task output set
+    - dependency posture unchanged: `LUC-937` remains blocked by policy + missing fresh gate evidence
+    - local source-control closure lane completed for the packet with no runtime/deploy mutation
+  - validation:
+    - `git status --short`
+    - `git status -sb`
+    - `git branch --show-current`
+    - `git rev-parse --short HEAD`
+    - `rg -n "LUC-1140|LUC-1139" .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .agents/state/active-mission.md`
+
+- 2026-05-31: `LUC-1139` blocked-triage lane is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-1139-blocked-triage-classify-luc-937-next-legal-action.md`
+  - result:
+    - dependency `LUC-937` classified as `blocked_by_policy_and_missing_fresh_gate_evidence`
+    - next legal action set with named unblock owner/action:
+      - owner: `11 Innovations Director`
+      - action: approve/activate fresh one-owner execution lane or supersede with a current child issue carrying proof gates
+    - scope remained delivery-lead triage only; no feature implementation
+  - validation:
+    - `rg -n "LUC-937|LUC-1139" .codex/context/TASK_BOARD.md .codex/context/PROJECT_STATE.md .agents/state/active-mission.md .agents/state/known-issues.md`
+    - `rg -n "LUC-937" docs/status/LUC-950-source-control-closure-2026-05-31.md`
+
 - 2026-05-31: `LUC-1136` source-control closure sidecar for `LUC-795` is `DONE`:
   - task:
     - `.codex/tasks/LUC-1136-source-control-closure-for-luc-795.md`

@@ -4,6 +4,22 @@ Last updated: 2026-05-31
 
 ## Mission Update
 
+- 2026-05-31: `LUC-1140` source-control closure sidecar for `LUC-937`/`LUC-1139` completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1140-source-control-closure-for-luc-937-luc-1139.md`
+- Heartbeat output:
+  - classified current local dirty set as one coherent `LUC-1139` docs/state/task packet
+  - preserved blocked dependency posture (`LUC-937` remains blocked by policy + missing fresh gate evidence)
+  - completed local source-control closure lane with deploy impact `none` and push `not needed`
+
+- 2026-05-31: `LUC-1139` blocked-triage for `LUC-937` completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1139-blocked-triage-classify-luc-937-next-legal-action.md`
+- Heartbeat output:
+  - classified `LUC-937` as `blocked_by_policy_and_missing_fresh_gate_evidence`
+  - recorded next legal action with unblock owner `11 Innovations Director`
+  - kept lane within Engineering Delivery Lead scope (triage/decomposition only)
+
 - 2026-05-31: `LUC-1136` source-control closure for `LUC-795` completed.
 - Evidence packet:
   - `.codex/tasks/LUC-1136-source-control-closure-for-luc-795.md`
