@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-06-03T05:36:07.450Z",
+  "generated_at": "2026-06-03T05:49:10.369Z",
   "project": {
     "name": "Aviary",
     "root": "C:/Personal/Projekty/Aplikacje/Aviary"
   },
   "counts": {
-    "entities": 18649,
-    "relations": 30166,
+    "entities": 18644,
+    "relations": 30156,
     "by_type": {
       "agent": 52,
       "api_endpoint": 20,
       "component": 16,
-      "document": 11359,
+      "document": 11354,
       "feature": 64,
       "function": 6428,
       "migration": 27,
@@ -23,8 +23,8 @@
     },
     "by_status": {
       "blocked": 1,
-      "deprecated": 4,
-      "implemented": 18583,
+      "deprecated": 2,
+      "implemented": 18580,
       "in_progress": 1,
       "tested": 60
     }

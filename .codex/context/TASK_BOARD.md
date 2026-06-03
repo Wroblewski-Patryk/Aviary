@@ -1,5 +1,126 @@
 # TASK_BOARD
 
+## LUC-1720 Source Control Closure For 2026-06-03 Dirty Docs/State Packet (2026-06-03)
+
+- `LUC-1720` is DONE for source-control closure:
+  - `.codex/tasks/LUC-1720-source-control-closure-2026-06-03-dirty-docs-state-packet.md`
+  - objective:
+    - classify and close the local dirty docs/state/context/task/generated-architecture packet from `LUC-1687`, `LUC-1688`, `LUC-1689`, and `LUC-1690`
+  - current result:
+    - dirty set classified as coherent Aviary preparation evidence
+    - included state/context summaries, four prior task packets, one closure task packet, and generated architecture/status artifacts
+    - found no runtime code, migration/database artifact, local env/log/screenshot artifact, deploy mutation, provider credential access, production mutation, or secret-bearing file in scope
+  - validation:
+    - `git status --short`
+    - `git diff --stat`
+    - `git diff --name-only`
+    - `git ls-files --others --exclude-standard`
+    - narrowed sensitive-pattern scan on human-authored packet files
+    - `git diff --check`
+  - source-control disposition:
+    - local closure commit created; SHA recorded in the Paperclip issue closure comment
+    - push `not needed`
+    - deploy impact `none`
+
+## LUC-1687 Architecture Exporter Timeout Triage And Reproducibility Guard (2026-06-03)
+
+- `LUC-1687` is DONE for Architecture/CTO exporter reproducibility closure:
+  - `.codex/tasks/LUC-1687-architecture-exporter-timeout-triage-and-reproducibility-guard.md`
+  - objective:
+    - reproduce or bound the Aviary architecture-awareness refresh timeout and define a deterministic invocation guard
+  - current result:
+    - reproduced the canonical Softwarehouse exporter run timing out after `224.843s`
+    - identified self-indexing of generated graph/status output files as the bounded guard target
+    - updated `C:/Personal/Projekty/Aplikacje/Paperclip_Softwarehouse/scripts/build-architecture-awareness-index.mjs` to exclude exactly the exporter-generated output filenames from scanner input
+    - reran the canonical command successfully:
+      - `node scripts/build-architecture-awareness-index.mjs --project Aviary --root C:\Personal\Projekty\Aplikacje\Aviary`
+      - result: exit code `0` in `167.028s`
+    - refreshed architecture artifact snapshot:
+      - `docs/graphs/architecture-health.json` `generated_at=2026-06-03T05:49:10.369Z`
+      - entities `18644`
+      - relations `30156`
+      - implementation without inferred tests `6528`
+      - implementation entities without task links `701`
+      - verified without proof `0`
+  - validation:
+    - pre-guard bounded run timed out after `224.843s`
+    - guarded exporter rerun passed in `167.028s`
+    - `node --check scripts/build-architecture-awareness-index.mjs` -> passed
+    - architecture-health/task-synchronization snapshot read
+  - boundary:
+    - no feature implementation, deploy, restart, protected smoke, database mutation, provider credential access, or secret access
+  - residual:
+    - task-link inference still reports `implementation entities without task links=701`; route any deeper inference repair separately if required
+
+## LUC-1689 Chat And Personality Proof-Link Closure (2026-06-03)
+
+- `LUC-1689` is DONE for Backend/API preparation evidence closure:
+  - `.codex/tasks/LUC-1689-chat-and-personality-proof-link-closure.md`
+  - objective:
+    - close or justify chat and personality proof-link signals without implementation or deploy mutation
+  - current result:
+    - mapped curated graph nodes `API-APP-CHAT-MESSAGE`, `EVENT-APP-CHAT-TURN`, `API-PERSONALITY-OVERVIEW`, and `PAGE-PERSONALITY` to existing evidence rows and fresh no-gap queries
+    - mapped generated route nodes for `/app/chat/history`, `/app/chat/message`, and `/app/personality/overview` to exact backend tests
+    - verified focused backend API proof:
+      - `10 passed, 124 deselected in 6.37s`
+    - verified focused graph no-gap proof:
+      - `2 passed, 24 deselected in 0.18s`
+    - verified targeted graph queries:
+      - all four target nodes reported `Gaps: none`
+    - verified frontend characterization/smoke:
+      - `npm run test:chat-transcript` PASS
+      - `npm run smoke:routes` PASS, exit code 0
+  - residual:
+    - generated task synchronization still reports broad implementation entities without task links; this remains an exporter/task-link inference gap owned by `LUC-1687`, not a newly found chat/personality behavior gap
+    - production account memory smoke, screenshot parity, and native binary/media upload remain separate scopes
+  - boundary:
+    - preparation-only checkpoint; no implementation, deploy, restart, protected smoke, credential, provider, schema, or production account mutation
+
+## LUC-1690 Tools And Integrations Proof-Link Closure (2026-06-03)
+
+- `LUC-1690` is DONE for Backend/API preparation evidence closure:
+  - `.codex/tasks/LUC-1690-tools-and-integrations-proof-link-closure.md`
+  - objective:
+    - close or justify Tools, Integrations, connector confirmation, and provider setup guidance proof-link signals without implementation or provider mutation
+  - current result:
+    - mapped generated route nodes for `/app/connectors/confirm`, `/app/tools/overview`, `/app/tools/preferences`, `/app/tools/telegram/link/start`, and `/telegram/set-webhook` to exact existing backend tests
+    - verified focused backend API proof:
+      - `19 passed, 115 deselected`
+    - verified connector confirmation render characterization:
+      - `pending`, `submitting`, `success`, and `error` cases returned `status=ok`
+    - recorded current Tools directory browser characterization as blocked locally:
+      - default Chrome run failed with `Runtime.evaluate` / `Error: Uncaught`
+      - Edge rerun timed out after `126s`
+      - validation-owned runner processes and temp Chrome profile were cleaned up
+    - live provider credential activation remains deferred/external
+  - residual:
+    - generated task synchronization still lists the cluster under implementation entities without task links; this remains an exporter/task-link inference gap owned by `LUC-1687`, not a newly found backend behavior gap
+  - boundary:
+    - preparation-only checkpoint; no implementation, deploy, restart, protected smoke, provider credential access, or provider mutation
+
+## LUC-1688 Auth And Identity Proof-Link Closure (2026-06-03)
+
+- `LUC-1688` is DONE for Backend/API preparation evidence closure:
+  - `.codex/tasks/LUC-1688-auth-and-identity-proof-link-closure.md`
+  - objective:
+    - close or justify auth/identity API endpoint proof-link signals without implementation or deploy mutation
+  - current result:
+    - identified six endpoint nodes currently counted by generated missing task-link/proof signals:
+      - `api_endpoint:post-app-auth-login:76d98c26f6`
+      - `api_endpoint:post-app-auth-logout:9b4f32b9b4`
+      - `api_endpoint:post-app-auth-register:89c05aefab`
+      - `api_endpoint:get-app-me:c08ef3da1c`
+      - `api_endpoint:post-app-me-reset-data:319d689ec9`
+      - `api_endpoint:patch-app-me-settings:1e8c081c3b`
+    - mapped the nodes to existing route tests in `backend/tests/test_api_routes.py`
+    - recorded manual evidence overlay in `docs/status/task-synchronization-report.md` and `docs/graphs/architecture-health.json`
+  - validation:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "app_auth or app_me or app_login_logout or app_patch_settings or app_reset_data"; Pop-Location` -> `9 passed, 125 deselected in 48.00s`
+  - boundary:
+    - preparation-only checkpoint; no implementation, deploy, restart, protected smoke, push, database mutation, or secret access
+  - residual gap:
+    - generated exporter/task-link inference still lists these endpoint nodes until architecture-lane repair; behavior proof is current and green
+
 ## LUC-1675 Known-State Checkpoint (2026-06-03)
 
 - `LUC-1675` is DONE for PM preparation evidence collection:

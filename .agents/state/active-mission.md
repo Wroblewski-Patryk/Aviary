@@ -2,9 +2,48 @@
 
 Last updated: 2026-06-03
 
+- 2026-06-03: `LUC-1687` architecture exporter timeout triage and reproducibility guard completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1687-architecture-exporter-timeout-triage-and-reproducibility-guard.md`
+- Heartbeat output:
+  - reproduced canonical Softwarehouse exporter timeout after `224.843s`
+  - added deterministic guard in `C:/Personal/Projekty/Aplikacje/Paperclip_Softwarehouse/scripts/build-architecture-awareness-index.mjs` so scanner input skips exactly the exporter-generated graph/status output files
+  - reran canonical exporter successfully: exit code `0` in `167.028s`
+  - refreshed architecture artifacts with `docs/graphs/architecture-health.json` `generated_at=2026-06-03T05:49:10.369Z`
+  - current architecture signals after refresh: `entities=18644`, `relations=30156`, `implementation_without_tests=6528`, `implementation entities without task links=701`, `verified_without_proof=0`
+  - no feature/deploy/runtime/provider mutation
+
 - 2026-06-03: `LUC-1675` known-state checkpoint completed in Aviary PM preparation scope.
 - Evidence packet:
   - `.codex/tasks/LUC-1675-known-state-evidence-collection-and-architecture-baseline.md`
+- 2026-06-03: `LUC-1689` chat/personality proof-link closure completed in Backend/API preparation scope.
+- Evidence packet:
+  - `.codex/tasks/LUC-1689-chat-and-personality-proof-link-closure.md`
+- Heartbeat output:
+  - mapped app-chat and Personality route/API/event nodes to existing graph evidence, backend tests, chat transcript characterization, and route smoke evidence
+  - verified focused backend route pack: `10 passed, 124 deselected in 6.37s`
+  - verified focused graph no-gap pack: `2 passed, 24 deselected in 0.18s`
+  - targeted graph queries for `API-APP-CHAT-MESSAGE`, `EVENT-APP-CHAT-TURN`, `API-PERSONALITY-OVERVIEW`, and `PAGE-PERSONALITY` all reported `Gaps: none`
+  - verified web chat transcript characterization and route smoke; cleanup check found no remaining validation-owned headless browser process
+  - kept residual task-link signal as exporter inference owned by `LUC-1687`; no implementation/deploy mutation
+- 2026-06-03: `LUC-1690` tools/integrations proof-link closure completed in Backend/API preparation scope.
+- Evidence packet:
+  - `.codex/tasks/LUC-1690-tools-and-integrations-proof-link-closure.md`
+- Heartbeat output:
+  - mapped Tools/Integrations route nodes to exact backend tests and existing frontend characterization evidence
+  - verified focused backend route pack: `19 passed, 115 deselected`
+  - verified connector confirmation render characterization for pending/submitting/success/error cases
+  - recorded current Tools directory browser characterization as blocked by local Chrome/CDP runner (`Runtime.evaluate` failure, Edge rerun timeout), with validation-owned process cleanup completed
+  - kept live provider credential activation external/deferred and recorded remaining task-link signal as exporter inference owned by `LUC-1687`
+  - no implementation/deploy/provider mutation
+- 2026-06-03: `LUC-1688` auth/identity proof-link closure completed in Backend/API preparation scope.
+- Evidence packet:
+  - `.codex/tasks/LUC-1688-auth-and-identity-proof-link-closure.md`
+- Heartbeat output:
+  - identified six auth/identity endpoint nodes still counted by generated missing task-link/proof signals
+  - mapped each node to existing backend route tests for register, login/logout, `/app/me`, settings patch, reset-data guard/flow, session revocation, cross-user isolation, and active session-cookie switching
+  - reran focused backend proof: `9 passed, 125 deselected in 48.00s`
+  - recorded residual as exporter/task-link inference gap owned by architecture lane `LUC-1687`, not a behavior gap
 - Heartbeat output:
   - refreshed known-state baseline remained stable (`routes=19`, `tests=125`, `migrations=12`) and added docs file count (`docs=5948`)
   - confirmed architecture artifacts are present/readable with health `generated_at=2026-06-01T11:09:40.020Z`

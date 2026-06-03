@@ -1,5 +1,99 @@
 # PROJECT_STATE
 
+# Project State Update - LUC-1720 Source Control Closure (2026-06-03)
+
+- `LUC-1720` completed source-control closure for the 2026-06-03 dirty Aviary docs/state/context/task/generated-architecture evidence packet.
+- Packet classification:
+  - coherent preparation evidence from `LUC-1687`, `LUC-1688`, `LUC-1689`, and `LUC-1690`
+  - included state/context ledgers, task packets, and generated architecture/status artifacts
+  - no runtime code, migration/database artifact, local env/log/screenshot artifact, deploy command, push, provider credential access, production mutation, or secret-bearing file was in scope
+- Validation:
+  - `git status --short`
+  - `git diff --stat`
+  - `git diff --name-only`
+  - `git ls-files --others --exclude-standard`
+  - narrowed sensitive-pattern scan on human-authored packet files
+  - `git diff --check`
+- Source-control disposition:
+  - local closure commit created; commit SHA recorded in the Paperclip issue closure comment
+  - push `not needed`
+  - deploy impact `none`
+- Evidence packet:
+  - `.codex/tasks/LUC-1720-source-control-closure-2026-06-03-dirty-docs-state-packet.md`
+
+# Project State Update - LUC-1689 Chat And Personality Proof-Link Closure (2026-06-03)
+
+- `LUC-1689` completed a Backend/API verification-only closure for chat and personality proof links.
+- Preparation boundary preserved:
+  - no implementation changes
+  - no deploy/restart/protected smoke
+  - no schema, credential, provider, or production account memory mutation
+- Fresh evidence:
+  - focused backend route proof passed:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "app_chat_history or app_chat_message or app_personality_overview"; Pop-Location`
+    - result: `10 passed, 124 deselected in 6.37s`
+  - focused graph no-gap proof passed:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_architecture_graph_query.py -k "app_chat_api_and_event_have_no_gaps or personality_overview_direct_proof_nodes_have_no_gaps"; Pop-Location`
+    - result: `2 passed, 24 deselected in 0.18s`
+  - targeted graph queries for `API-APP-CHAT-MESSAGE`, `EVENT-APP-CHAT-TURN`, `API-PERSONALITY-OVERVIEW`, and `PAGE-PERSONALITY` all reported `Gaps: none`
+  - `Push-Location .\web; npm run test:chat-transcript; Pop-Location` passed with empty/full/send cases
+  - `Push-Location .\web; npm run smoke:routes; Pop-Location` passed with exit code 0
+- Evidence packet:
+  - `.codex/tasks/LUC-1689-chat-and-personality-proof-link-closure.md`
+- Residual:
+  - generated task-link reports still include broad implementation entities without task links; this remains exporter/task-link inference owned by `LUC-1687`
+  - production account memory smoke, screenshot parity, and native binary/media upload remain separate scopes
+
+# Project State Update - LUC-1687 Architecture Exporter Guard (2026-06-03)
+
+- `LUC-1687` completed the architecture exporter timeout triage and reproducibility guard.
+- Preparation boundary preserved:
+  - no feature implementation
+  - no deploy/restart/protected smoke
+  - no database mutation
+  - no provider credential access or secret access
+- Fresh evidence:
+  - pre-guard canonical exporter run from `C:\Personal\Projekty\Aplikacje\Paperclip_Softwarehouse` timed out after `224.843s`
+  - Softwarehouse exporter now skips exactly its own generated graph/status output files during scanner input collection
+  - guarded canonical exporter rerun passed:
+    - `node scripts/build-architecture-awareness-index.mjs --project Aviary --root C:\Personal\Projekty\Aplikacje\Aviary`
+    - result: exit code `0` in `167.028s`
+  - syntax check passed:
+    - `node --check scripts/build-architecture-awareness-index.mjs`
+  - refreshed architecture artifact snapshot:
+    - `docs/graphs/architecture-health.json` `generated_at=2026-06-03T05:49:10.369Z`
+    - entities `18644`
+    - relations `30156`
+    - implementation without inferred tests `6528`
+    - implementation entities without task links `701`
+    - verified without proof `0`
+- Evidence packet:
+  - `.codex/tasks/LUC-1687-architecture-exporter-timeout-triage-and-reproducibility-guard.md`
+- Residual:
+  - generated task-link inference still reports `implementation entities without task links=701`; this remains a narrower inference/proof-link improvement if the project chooses to pursue it
+
+# Project State Update - LUC-1690 Tools And Integrations Proof-Link Closure (2026-06-03)
+
+- `LUC-1690` completed a Backend/API verification-only closure for Tools and Integrations proof links.
+- Preparation boundary preserved:
+  - no implementation changes
+  - no deploy/restart/protected smoke
+  - no provider credential access or provider mutation
+- Fresh evidence:
+  - focused backend route proof passed:
+    - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "app_tools or app_connector_confirmation or telegram_link or set_webhook"; Pop-Location`
+    - result: `19 passed, 115 deselected`
+  - connector confirmation render characterization passed for pending/submitting/success/error states
+  - Tools directory browser characterization did not refresh in this heartbeat:
+    - Chrome run failed with `Runtime.evaluate` / `Error: Uncaught`
+    - Edge rerun timed out after `126s`
+    - validation-owned process/profile cleanup completed
+- Evidence packet:
+  - `.codex/tasks/LUC-1690-tools-and-integrations-proof-link-closure.md`
+- Residual:
+  - current task-link report still lists the cluster under implementation entities without task links; this is recorded as exporter/task-link inference owned by `LUC-1687`
+  - live Telegram/ClickUp/Google Calendar/Google Drive provider activation remains deferred/external
+
 Last updated: 2026-06-03
 
 - 2026-06-03: `LUC-1675` known-state evidence collection and architecture baseline is `DONE` for PM preparation scope:
@@ -18476,3 +18570,21 @@ Project alias: the product and repository root are both canonicalized as
     - `node scripts/build-architecture-awareness-index.mjs --project Aviary --root C:\Personal\Projekty\Aplikacje\Aviary` (timed out in both bounded runs)
     - `Get-Content docs/status/architecture-awareness-report.md` (latest available generated report inspected)
     - docs/state synchronization checkpoint only
+# Project State Update - LUC-1688 Auth And Identity Proof-Link Closure (2026-06-03)
+
+- `LUC-1688` completed a Backend/API verification-only closure for auth and identity proof links.
+- Covered endpoint nodes:
+  - `api_endpoint:post-app-auth-login:76d98c26f6`
+  - `api_endpoint:post-app-auth-logout:9b4f32b9b4`
+  - `api_endpoint:post-app-auth-register:89c05aefab`
+  - `api_endpoint:get-app-me:c08ef3da1c`
+  - `api_endpoint:post-app-me-reset-data:319d689ec9`
+  - `api_endpoint:patch-app-me-settings:1e8c081c3b`
+- Evidence packet:
+  - `.codex/tasks/LUC-1688-auth-and-identity-proof-link-closure.md`
+- Validation:
+  - `Push-Location .\backend; ..\.venv\Scripts\python -m pytest -q tests/test_api_routes.py -k "app_auth or app_me or app_login_logout or app_patch_settings or app_reset_data"; Pop-Location` -> `9 passed, 125 deselected in 48.00s`
+- Boundary:
+  - no behavior, deploy, database, secret, protected-smoke, or frontend mutation.
+- Residual:
+  - generated task-link inference still reports these endpoints until exporter/link-inference repair; behavior proof is current.

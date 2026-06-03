@@ -1,5 +1,12 @@
 # LEARNING_JOURNAL
 
+## 2026-06-03 - Browser characterization timeout cleanup must be explicit
+
+- Context: `LUC-1690` reran `web/scripts/tools-directory-characterization.mjs`; the default Chrome run failed inside `Runtime.evaluate`, and an Edge rerun timed out after `126s`.
+- Pitfall: a timed-out browser characterization can leave `node scripts/tools-directory-characterization.mjs` and a temp-profile Chrome process alive with `--user-data-dir=%TEMP%\aion-tools-directory-*`.
+- Rule: after any failed or timed-out browser characterization, inspect exact command lines for the script name and temp profile before cleanup; stop only validation-owned processes and remove only the matching temp profile directories.
+- Cleanup evidence: `LUC-1690` stopped validation-owned runner processes for `tools-directory-characterization.mjs` / `aion-tools-directory-bb8pag`; no remaining process matched `tools-directory-characterization.mjs`, `aion-tools-directory-bb8pag`, or `aion-tools-directory-cHmGpz`.
+
 ## 2026-05-23 - Mobile callout restoration can inherit opposing anchors
 
 - Context: `PRJ-1234` restored the mobile Personality `learned knowledge`

@@ -9,12 +9,17 @@ Last updated: 2026-06-03
      stable baseline reconfirmed (`routes=19`, `tests=125`, `migrations=12`, `docs=5948`)
    - architecture status:
      latest readable health `generated_at=2026-06-01T11:09:40.020Z`; `entities=18649`; `relations=30166`; `implementation_without_tests=6528`; `implementation entities without task links=701`; `verified_without_proof=0`
-   - blocker proof:
-     `node scripts/build-architecture-awareness-index.mjs --project Aviary --root C:\Personal\Projekty\Aplikacje\Aviary` from `C:\Personal\Projekty\Aplikacje\Paperclip_Softwarehouse` timed out after `184s`
+   - exporter closure:
+     `LUC-1687` reproduced timeout after `224.843s`, added a guard in the Softwarehouse exporter to skip exactly its own generated graph/status outputs, and reran successfully in `167.028s`
+   - refreshed architecture status:
+     `docs/graphs/architecture-health.json` generated `2026-06-03T05:49:10.369Z`; `entities=18644`; `relations=30156`; `implementation_without_tests=6528`; `implementation entities without task links=701`; `verified_without_proof=0`
    - source-control closure:
      `LUC-1691` completed the local docs/state/generated-evidence packet closure; commit SHA is recorded in the Paperclip issue closure comment
    - next smallest useful choice:
-     `LUC-1687` exporter reproducibility/time-budget guard first, then `LUC-1688..LUC-1690` proof-link closure lanes
+     `LUC-1687` remains the owner for any deeper exporter/task-link inference follow-up; `LUC-1688`, `LUC-1689`, and `LUC-1690` proof-link evidence closures are complete
+   - latest specialist closures:
+     `LUC-1689` completed Chat/Personality proof-link evidence mapping with backend focused proof `10 passed, 124 deselected`, graph no-gap proof `2 passed, 24 deselected`, chat transcript characterization PASS, and route smoke PASS; residual exporter/task-link inference remains owned by `LUC-1687`
+     `LUC-1690` completed Tools/Integrations proof-link evidence mapping with backend focused proof `19 passed, 115 deselected`; current Tools directory browser characterization is blocked by local Chrome/CDP runner and live provider activation remains deferred
 
 Last updated: 2026-06-01
 

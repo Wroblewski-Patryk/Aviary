@@ -1,6 +1,6 @@
 # Architecture Awareness Report
 
-Generated: 2026-06-03T05:36:07.450Z
+Generated: 2026-06-03T05:49:10.369Z
 Project: Aviary
 Root: C:/Personal/Projekty/Aplikacje/Aviary
 
@@ -11,7 +11,7 @@ Root: C:/Personal/Projekty/Aplikacje/Aviary
 | agent | 52 |
 | api_endpoint | 20 |
 | component | 16 |
-| document | 11359 |
+| document | 11354 |
 | feature | 64 |
 | function | 6428 |
 | migration | 27 |
@@ -26,8 +26,8 @@ Root: C:/Personal/Projekty/Aplikacje/Aviary
 | Status | Count |
 | --- | ---: |
 | blocked | 1 |
-| deprecated | 4 |
-| implemented | 18583 |
+| deprecated | 2 |
+| implemented | 18580 |
 | in_progress | 1 |
 | tested | 60 |
 
