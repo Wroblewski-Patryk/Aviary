@@ -1,6 +1,60 @@
 # Next Steps
 
-Last updated: 2026-05-31
+Last updated: 2026-06-03
+
+1. `LUC-1675` known-state checkpoint is complete for PM preparation scope:
+   - task:
+     `.codex/tasks/LUC-1675-known-state-evidence-collection-and-architecture-baseline.md`
+   - latest result:
+     stable baseline reconfirmed (`routes=19`, `tests=125`, `migrations=12`, `docs=5948`)
+   - architecture status:
+     latest readable health `generated_at=2026-06-01T11:09:40.020Z`; `entities=18649`; `relations=30166`; `implementation_without_tests=6528`; `implementation entities without task links=701`; `verified_without_proof=0`
+   - blocker proof:
+     `node scripts/build-architecture-awareness-index.mjs --project Aviary --root C:\Personal\Projekty\Aplikacje\Aviary` from `C:\Personal\Projekty\Aplikacje\Paperclip_Softwarehouse` timed out after `184s`
+   - source-control closure:
+     `LUC-1691` completed the local docs/state/generated-evidence packet closure; commit SHA is recorded in the Paperclip issue closure comment
+   - next smallest useful choice:
+     `LUC-1687` exporter reproducibility/time-budget guard first, then `LUC-1688..LUC-1690` proof-link closure lanes
+
+Last updated: 2026-06-01
+
+1. `LUC-1280` known-state checkpoint is complete:
+   - task:
+     `.codex/tasks/LUC-1280-known-state-evidence-collection-and-architecture-baseline.md`
+   - latest result:
+     stable baseline reconfirmed (`routes=19`, `tests=125`, `migrations=12`) with fresh architecture artifact timestamps from `2026-06-01`
+   - proof:
+     `docs/graphs/architecture-health.json`, `docs/graphs/architecture-proof-register.csv`, `docs/status/task-synchronization-report.md`
+   - next smallest useful choice:
+     route `LUC-1205-A` first to Architecture Specialist for exporter reproducibility/time-budget guard, then continue `LUC-1205-B..D`
+
+1. `LUC-1280` wake follow-up (`82095cd3-c2ad-4fce-8c36-56093fd69ef3`) is complete:
+   - latest result:
+     additional architecture status artifacts are fresh and open gap remains unchanged (`implementation entities without task links=701`)
+   - blocker proof:
+     `node scripts/build-architecture-awareness-index.mjs --project Aviary --root C:\Personal\Projekty\Aplikacje\Aviary` from `C:\Personal\Projekty\Aplikacje\Paperclip_Softwarehouse` timed out after `244s`
+   - concrete next repair lanes:
+     `LUC-1205-A` Architecture Specialist, then `LUC-1205-B..D` (Backend/API + Frontend/QA proof-link closure lanes)
+
+1. `LUC-1205` wake follow-up is complete with blocker reaffirmed:
+   - task:
+     `.codex/tasks/LUC-1205-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+   - latest result:
+     evidence delta reconfirmed with stable baseline (`routes=19`, `tests=125`, `migrations=12`) and unchanged link gap (`implementation entities without task links=701`)
+   - blocker proof:
+     exporter retry from `C:\Personal\Projekty\Aplikacje\Paperclip_Softwarehouse` timed out after `1204s`
+   - next smallest useful choice:
+     route `LUC-1205-A` to Architecture Specialist for bounded runtime triage and deterministic invocation guard
+
+1. `LUC-1205` known-state refresh evidence delta and next repair lanes is done:
+   - task:
+     `.codex/tasks/LUC-1205-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+   - latest result:
+     refreshed preparation-only evidence delta with stable baseline (`routes=19`, `tests=125`, `migrations=12`) and unchanged missing-link signal (`implementation entities without task links=701`)
+   - proof:
+     architecture and task-link snapshot from `docs/graphs/architecture-health.json`, `docs/graphs/architecture-proof-register.csv`, and `docs/status/task-synchronization-report.md`
+   - next smallest useful choice:
+     route `LUC-1205-A..D` to specialists through 11 Innovations Director, starting with exporter reproducibility (`LUC-1205-A`)
 
 1. `LUC-1063` known-state and architecture baseline is done:
    - task:
@@ -164,3 +218,31 @@ Last updated: 2026-05-31
 
 
 
+
+4. `LUC-1170` wake-checkpoint follow-up lanes are now explicit and ready for director routing:
+   - owner:
+     11 Innovations Director (routing), specialists per lane
+   - status:
+     ready_for_routing
+   - evidence packet:
+     `.codex/tasks/LUC-1170-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+   - lanes:
+     - `LUC-1170-A` architecture exporter timeout triage (Architecture Specialist)
+     - `LUC-1170-B` auth+identity proof-link closure (Backend + QA)
+     - `LUC-1170-C` chat+personality proof-link closure (Backend + QA)
+     - `LUC-1170-D` tools/integrations proof-link closure (Backend + QA)
+   - next smallest useful choice:
+     create child issues with owner+proof contracts for A-D and keep PM lane in preparation mode
+
+5. `LUC-1170` child execution packets are now materialized and ready to run:
+   - owner:
+     11 Innovations Director (routing), specialists per packet
+   - status:
+     ready_for_assignment
+   - packets:
+     - `.codex/tasks/LUC-1170-A-architecture-exporter-timeout-triage-and-reproducibility-guard.md`
+     - `.codex/tasks/LUC-1170-B-auth-identity-proof-link-closure.md`
+     - `.codex/tasks/LUC-1170-C-chat-personality-proof-link-closure.md`
+     - `.codex/tasks/LUC-1170-D-tools-integrations-proof-link-closure.md`
+   - next smallest useful choice:
+     assign each packet to its owner and execute with proof attached in the same lane file

@@ -1,6 +1,211 @@
 # PROJECT_STATE
 
-Last updated: 2026-05-31
+Last updated: 2026-06-03
+
+- 2026-06-03: `LUC-1675` known-state evidence collection and architecture baseline is `DONE` for PM preparation scope:
+  - task:
+    - `.codex/tasks/LUC-1675-known-state-evidence-collection-and-architecture-baseline.md`
+  - result:
+    - refreshed stable baseline:
+      - backend route decorators `19`
+      - backend test files `125`
+      - migration files `12`
+      - docs files `5948`
+    - architecture artifacts are present/readable but not freshly regenerated in this heartbeat:
+      - `docs/graphs/architecture-health.json` `generated_at=2026-06-01T11:09:40.020Z`
+      - entities `18649`
+      - relations `30166`
+      - implementation without inferred tests `6528`
+      - verified without proof `0`
+      - implementation entities without task links `701`
+    - required architecture refresh attempt from Softwarehouse runner timed out:
+      - `node scripts/build-architecture-awareness-index.mjs --project Aviary --root C:\Personal\Projekty\Aplikacje\Aviary` -> timeout after `184s`
+  - validation:
+    - `(Get-Content backend/app/api/routes.py | Select-String -Pattern '@router\.(get|post|put|delete|patch)\(').Count` -> `19`
+    - `(Get-ChildItem backend/tests -Recurse -File | Measure-Object).Count` -> `125`
+    - `(Get-ChildItem backend/migrations/versions -File | Measure-Object).Count` -> `12`
+    - `(Get-ChildItem docs -Recurse -File | Measure-Object).Count` -> `5948`
+    - architecture/status artifact reads from `docs/graphs/architecture-health.json`, `docs/status/task-synchronization-report.md`, and architecture status reports
+  - scope boundary:
+    - preparation-only checkpoint; no runtime, deploy, restart, protected smoke, push, database mutation, or secret access
+  - continuation:
+    - `LUC-1687`: route architecture exporter reproducibility first
+    - `LUC-1688`: route auth/identity proof-link closure
+    - `LUC-1689`: route chat/personality proof-link closure
+    - `LUC-1690`: route tools/integrations proof-link closure
+    - `LUC-1691`: source-control closure sidecar complete; commit SHA recorded in the Paperclip issue closure comment
+
+- 2026-06-03: `LUC-1691` source-control closure for the `LUC-1675` known-state packet is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-1691-source-control-closure-for-luc-1675-known-state-packet.md`
+  - result:
+    - classified current dirty set as one coherent Aviary preparation docs/state/generated-evidence packet
+    - preserved same-lineage known-state task packets from `LUC-1170`, `LUC-1183`, `LUC-1205`, `LUC-1280`, and `LUC-1675`
+    - preserved generated architecture/status evidence under `docs/graphs` and `docs/status`
+    - found no runtime code, credential/local env file, log artifact, database dump, screenshot, deploy mutation, or production action in scope
+  - validation:
+    - `git status --short`
+    - `git diff --stat`
+    - `git diff --name-only`
+    - `git ls-files --others --exclude-standard`
+    - `git diff --check`
+  - source-control disposition:
+    - local closure commit created; commit SHA recorded in Paperclip issue closure comment
+    - push `not needed`
+    - deploy impact `none`
+
+Last updated: 2026-06-01
+
+- 2026-06-01: `LUC-1280` wake-status reconciliation checkpoint:
+  - external wake metadata exposed status drift (`blocked`) versus canonical repo truth (`DONE`)
+  - reconciliation action kept `LUC-1280` closed in preparation lane and preserved delegated continuation path `LUC-1205-A..D`
+  - scope boundary:
+    - no implementation, deploy, restart, credential, or runtime mutation
+
+- 2026-06-01: `LUC-1280` known-state evidence collection and architecture baseline is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-1280-known-state-evidence-collection-and-architecture-baseline.md`
+  - result:
+    - refreshed stable baseline:
+      - backend route decorators `19`
+      - backend test files `125`
+      - migration files `12`
+    - architecture-awareness freshness confirmed:
+      - `docs/graphs/architecture-health.json` generated `2026-06-01T00:13:21.144Z`
+      - `docs/graphs/architecture-proof-register.csv` last write `2026-06-01 02:37:54`
+      - `docs/status/task-synchronization-report.md` last write `2026-06-01 02:40:57`
+    - open architecture/task-link signal unchanged:
+      - implementation entities without task links `701`
+  - validation:
+    - `(Get-Content backend/app/api/routes.py | Select-String -Pattern "@router\\.(get|post|put|delete|patch)\\(").Count` -> `19`
+    - `(Get-ChildItem backend/tests -Recurse -File | Measure-Object).Count` -> `125`
+    - `(Get-ChildItem backend/migrations/versions -File | Measure-Object).Count` -> `12`
+    - artifact snapshot read of `architecture-health.json`, `architecture-proof-register.csv`, and `task-synchronization-report.md`
+  - scope boundary:
+    - preparation-only checkpoint; no runtime/deploy mutation
+  - wake follow-up:
+    - comment `82095cd3-c2ad-4fce-8c36-56093fd69ef3` acknowledged and executed as concrete evidence checkpoint
+    - additional architecture status artifacts confirmed fresh:
+      - `docs/status/architecture-dependency-report.md` last write `2026-06-01 02:40:32`
+      - `docs/status/architecture-ownership-report.md` last write `2026-06-01 02:40:32`
+    - required architecture-awareness refresh attempt from Softwarehouse runner timed out:
+      - `node scripts/build-architecture-awareness-index.mjs --project Aviary --root C:\Personal\Projekty\Aplikacje\Aviary` -> timeout `244s`
+    - continuation remains delegated as concrete repair lanes:
+      - `LUC-1205-A` exporter reproducibility/runtime guard
+      - `LUC-1205-B` auth/identity proof-link closure
+      - `LUC-1205-C` chat/personality proof-link closure
+      - `LUC-1205-D` tools/integrations proof-link closure
+  - inventory closure:
+    - task packet now includes a compact known-state inventory covering stack/apps/runtime scripts/tests/deploy hints/docs/history/generated artifacts/legacy auxiliary folders
+
+- 2026-06-01: `LUC-1205` wake follow-up executed (comment `77e3c9ca-ce20-41ee-856c-b8297147f7b0`):
+  - evidence delta refreshed with unchanged core baseline:
+    - route decorators `19`
+    - backend test files `125`
+    - migration files `12`
+  - architecture/task-link evidence remains stable:
+    - `docs/graphs/architecture-health.json` generated `2026-05-31T22:41:51.998Z`
+    - `docs/graphs/architecture-proof-register.csv` lines `18650`, last write `2026-06-01 00:53:05`
+    - `docs/status/task-synchronization-report.md`: implementation entities without task links `701`
+  - exporter reproducibility retry failed again:
+    - `Paperclip_Softwarehouse/scripts/build-architecture-awareness-index.mjs --project Aviary --root ...` timed out after `1204s`
+  - disposition:
+    - known-state refresh evidence is durable
+    - exporter reproducibility remains blocked and routed to `LUC-1205-A` owner lane
+
+- 2026-06-01: `LUC-1205` known-state refresh evidence delta and next repair lanes is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-1205-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+  - result:
+    - refreshed evidence delta against `LUC-1183` with stable local baseline:
+      - backend route decorators `19`
+      - backend test files `125`
+      - migration files `12`
+    - confirmed architecture baseline artifacts remain fresh:
+      - `docs/graphs/architecture-health.json` generated `2026-05-31T22:41:51.998Z`
+      - `docs/graphs/architecture-proof-register.csv` lines `18650` and last write `2026-06-01 00:53:05`
+      - `docs/status/task-synchronization-report.md` unchanged signal:
+        - tasks without architecture links `0`
+        - implementation entities without task links `701`
+        - verified entities without proof evidence `0`
+    - converted continuation into concrete repair lanes `LUC-1205-A..D` (exporter reproducibility + auth + chat/personality + tools/integrations proof-link closure)
+  - validation:
+    - `(Get-ChildItem backend/tests -Recurse -File | Measure-Object).Count` -> `125`
+    - `(Get-Content backend/app/api/routes.py | Select-String -Pattern "@router\\.(get|post|put|delete|patch)\\(").Count` -> `19`
+    - `(Get-ChildItem backend/migrations/versions -File | Measure-Object).Count` -> `12`
+    - architecture/task-link snapshot read from `docs/graphs/architecture-health.json`, `docs/graphs/architecture-proof-register.csv`, and `docs/status/task-synchronization-report.md`
+  - scope boundary:
+    - preparation-only checkpoint; no runtime/deploy mutation
+
+- 2026-06-01: `LUC-1183` heartbeat continuation evidence refreshed:
+  - latest wake comment triaged as bookkeeping-only (status sync), no scope mutation
+  - architecture exporter refresh attempts:
+    - `Aviary/scripts/build-architecture-awareness-index.mjs` -> missing module in Aviary repo
+    - `Paperclip_Softwarehouse/scripts/build-architecture-awareness-index.mjs --project Aviary --root ...` -> exceeded local timeout budget (184s, 604s)
+  - canonical artifact snapshot confirmed:
+    - `docs/graphs/architecture-health.json` `generated_at=2026-05-31T22:38:38.314Z`
+    - entities `18649`, relations `30166`
+    - implementation without tests `6528`, missing docs `0`, missing owners `0`, disconnected `0`
+    - `docs/graphs/architecture-proof-register.csv` rows `18649`, last write `2026-06-01T00:47:42`
+    - `docs/status/task-synchronization-report.md`: implementation without task links `701`
+  - impact:
+    - known-state baseline remains fresh and evidence-backed
+    - exporter reproducibility remains open and already routed as dedicated repair lane (`LUC-1183-A` / `LUC-1170-A`)
+
+- 2026-06-01: `LUC-1183` known-state evidence collection and architecture baseline is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-1183-known-state-evidence-collection-and-architecture-baseline.md`
+  - result:
+    - local evidence baseline refreshed:
+      - backend route decorators `19`
+      - backend test files `125`
+      - migration files `12`
+    - architecture baseline freshness re-anchored from generated artifacts:
+      - `docs/graphs/architecture-awareness.json` (2026-05-31 23:51:24)
+      - `docs/status/architecture-awareness-report.md` (2026-05-31 23:53:55)
+    - architecture health snapshot captured for next repair routing:
+      - implementation entities without inferred tests `200`
+      - implementation entities without inferred docs `200`
+      - disconnected entities `0`
+      - entities without owner attribution `0`
+    - findings converted into concrete next repair lanes (`LUC-1183-A..D`)
+  - validation:
+    - `(Get-ChildItem backend/tests -Recurse -File | Measure-Object).Count` -> `125`
+    - `(Get-Content backend/app/api/routes.py | Select-String -Pattern "@router\\.(get|post|put|delete|patch)\\(").Count` -> `19`
+    - `(Get-ChildItem backend/migrations/versions -File | Measure-Object).Count` -> `12`
+    - graph/status artifact timestamp inspection under `docs/graphs` and `docs/status`
+  - scope boundary:
+    - preparation-only checkpoint; no runtime/deploy mutation
+
+- 2026-05-31: `LUC-1170` continuation moved from lane proposal to concrete child task packets:
+  - parent task:
+    - `.codex/tasks/LUC-1170-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+  - child packets created:
+    - `.codex/tasks/LUC-1170-A-architecture-exporter-timeout-triage-and-reproducibility-guard.md`
+    - `.codex/tasks/LUC-1170-B-auth-identity-proof-link-closure.md`
+    - `.codex/tasks/LUC-1170-C-chat-personality-proof-link-closure.md`
+    - `.codex/tasks/LUC-1170-D-tools-integrations-proof-link-closure.md`
+  - result:
+    - wake now has executable owner-scoped follow-up artifacts (not notes-only)
+    - PM parent lane is `done`; specialist execution is handed off for `LUC-1170-A..D`
+
+- 2026-05-31: `LUC-1170` known-state refresh parent integration is `DONE`:
+  - task:
+    - `.codex/tasks/LUC-1170-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+  - result:
+    - integrated evidence delta since prior parent closure (`LUC-795`) using:
+      - `LUC-1139` blocked-triage output for dependency `LUC-937`
+      - `LUC-1140` sidecar source-control closure output
+    - confirmed legal continuation posture remains preparation-only:
+      - delegated repair continuity from `LUC-1063` lanes A-D
+      - blocked dependency remains explicit (`LUC-937` policy + fresh gate evidence)
+  - validation:
+    - source-of-truth cross-sync review:
+      - `.codex/context/TASK_BOARD.md`
+      - `.codex/context/PROJECT_STATE.md`
+      - `.agents/state/active-mission.md`
+      - `.codex/tasks/LUC-1170-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+    - docs/state-only checkpoint; runtime tests not required
 
 - 2026-05-31: `LUC-1140` source-control closure sidecar for `LUC-937`/`LUC-1139` is `DONE`:
   - task:
@@ -18259,3 +18464,15 @@ Project alias: the product and repository root are both canonicalized as
     - result: passed
 
 
+
+- 2026-05-31: `LUC-1170` wake checkpoint (`issue comment 1a5f9059-76cb-4219-92ef-002c5e9c55d0`) is `DONE` in PM preparation scope:
+  - task:
+    - `.codex/tasks/LUC-1170-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+  - result:
+    - architecture-awareness refresh command from Paperclip toolchain timed out twice (`126s`, `604s`) and is now explicit blocker evidence
+    - latest available architecture health report still shows high-impact missing proof-link cluster for auth/chat/personality/tools endpoints
+    - concrete owner-scoped next legal repair lanes recorded: `LUC-1170-A..D`
+  - validation:
+    - `node scripts/build-architecture-awareness-index.mjs --project Aviary --root C:\Personal\Projekty\Aplikacje\Aviary` (timed out in both bounded runs)
+    - `Get-Content docs/status/architecture-awareness-report.md` (latest available generated report inspected)
+    - docs/state synchronization checkpoint only

@@ -1,8 +1,107 @@
 # Active Mission Packet
 
-Last updated: 2026-05-31
+Last updated: 2026-06-03
+
+- 2026-06-03: `LUC-1675` known-state checkpoint completed in Aviary PM preparation scope.
+- Evidence packet:
+  - `.codex/tasks/LUC-1675-known-state-evidence-collection-and-architecture-baseline.md`
+- Heartbeat output:
+  - refreshed known-state baseline remained stable (`routes=19`, `tests=125`, `migrations=12`) and added docs file count (`docs=5948`)
+  - confirmed architecture artifacts are present/readable with health `generated_at=2026-06-01T11:09:40.020Z`
+  - recorded top signals (`implementation_without_tests=6528`, `implementation entities without task links=701`, `verified_without_proof=0`)
+  - required Softwarehouse architecture-awareness refresh attempt timed out after `184s`
+  - continuation delegated to child issues:
+    - `LUC-1687` exporter reproducibility/time-budget guard
+    - `LUC-1688` auth/identity proof-link closure
+    - `LUC-1689` chat/personality proof-link closure
+    - `LUC-1690` tools/integrations proof-link closure
+  - `LUC-1691` source-control sidecar closed the local docs/state/generated-evidence packet; commit SHA is recorded in the Paperclip issue closure comment
+  - no implementation/deploy mutation
+
+Last updated: 2026-06-01
+
+- 2026-06-01: `LUC-1280` wake follow-up checkpoint completed (comment `82095cd3-c2ad-4fce-8c36-56093fd69ef3`).
+- Evidence packet:
+  - `.codex/tasks/LUC-1280-known-state-evidence-collection-and-architecture-baseline.md`
+- Heartbeat output:
+  - refreshed known-state baseline remained stable (`routes=19`, `tests=125`, `migrations=12`)
+  - confirmed additional architecture status artifacts freshness (`architecture-dependency-report.md`, `architecture-ownership-report.md`)
+  - required Softwarehouse architecture-awareness refresh attempt timed out after `244s`
+  - continuation remains delegated to concrete repair lanes `LUC-1205-A..D`
+
+- 2026-06-01: `LUC-1280` known-state checkpoint completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1280-known-state-evidence-collection-and-architecture-baseline.md`
+- Heartbeat output:
+  - refreshed stable baseline (`routes=19`, `tests=125`, `migrations=12`)
+  - confirmed fresh architecture artifacts on `2026-06-01`
+  - reconfirmed unchanged open signal (`implementation entities without task links=701`)
+  - preserved preparation-only boundary and specialist continuation lanes
+
+- 2026-06-01: `LUC-1205` wake follow-up checkpoint completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1205-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+- Heartbeat output:
+  - acknowledged wake comment `77e3c9ca-ce20-41ee-856c-b8297147f7b0` and executed concrete local evidence refresh
+  - reconfirmed stable baseline (`routes=19`, `tests=125`, `migrations=12`) and unchanged task-link gap (`implementation entities without task links=701`)
+  - retried architecture index builder from `Paperclip_Softwarehouse`; run timed out after `1204s`
+  - preserved preparation-only boundary and left continuation in owner-scoped lane `LUC-1205-A`
+
+- 2026-06-01: `LUC-1205` final disposition checkpoint: `done`.
+- Closure reason:
+  - known-state evidence delta refreshed and recorded
+  - repair-lane continuation re-materialized as owner-scoped `LUC-1205-A..D`
+  - preparation-only boundary preserved (no runtime/deploy mutation)
+
+- 2026-06-01: `LUC-1205` known-state refresh checkpoint completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1205-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+- Heartbeat output:
+  - captured fresh baseline counts (routes/tests/migrations) with no drift vs prior checkpoint
+  - re-anchored architecture/task-link health signals from latest generated artifacts
+  - converted remaining gap into concrete next lanes for architecture exporter reproducibility and API proof-link closure
+
+- 2026-06-01: `LUC-1183` final disposition checkpoint: `done`.
+- Closure reason:
+  - required known-state evidence collection completed and recorded
+  - required architecture/status artifacts read and linked
+  - architecture refresh execution attempted from both expected entrypoints; non-refresh cause explicitly documented (missing local script + bounded timeout from Softwarehouse runner)
+  - follow-up specialist lanes already materialized for remaining repair scope (`LUC-1183-A..D` / `LUC-1170-A..D`)
+- Deploy/runtime impact:
+  - none (preparation-only lane)
+
+- 2026-06-01: `LUC-1183` known-state wake checkpoint completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1183-known-state-evidence-collection-and-architecture-baseline.md`
+- Heartbeat output:
+  - acknowledged board wake for local evidence collection and lane conversion
+  - refreshed baseline counts: route decorators `19`, backend tests `125`, migrations `12`
+  - re-anchored architecture freshness from generated `docs/graphs` and `docs/status` artifacts
+  - converted findings into owner-scoped repair lanes `LUC-1183-A..D`
+  - kept preparation-only boundary (no implementation/deploy/restart/protected-smoke mutation)
+
+- 2026-05-31: `LUC-1170` wake continuation materialized into executable child packets.
+- Evidence packet:
+  - `.codex/tasks/LUC-1170-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+- Child packets created:
+  - `.codex/tasks/LUC-1170-A-architecture-exporter-timeout-triage-and-reproducibility-guard.md`
+  - `.codex/tasks/LUC-1170-B-auth-identity-proof-link-closure.md`
+  - `.codex/tasks/LUC-1170-C-chat-personality-proof-link-closure.md`
+  - `.codex/tasks/LUC-1170-D-tools-integrations-proof-link-closure.md`
+- Continuation owner/action:
+  - `11 Innovations Director` to route and activate specialist execution lanes
 
 ## Mission Update
+
+- 2026-05-31: `LUC-1170` known-state refresh parent integration completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1170-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+- Heartbeat output:
+  - integrated evidence delta from `LUC-1139` blocked-triage and `LUC-1140` sidecar closure
+  - preserved preparation-only continuation posture for Aviary
+  - confirmed next legal repair posture:
+    - delegated continuity remains from `LUC-1063` lanes A-D
+    - dependency `LUC-937` remains explicitly blocked by policy and missing fresh gate evidence
 
 - 2026-05-31: `LUC-1140` source-control closure sidecar for `LUC-937`/`LUC-1139` completed.
 - Evidence packet:
@@ -3379,3 +3478,12 @@ Historical note:
 
 
 
+
+- 2026-05-31: wake-comment continuation checkpoint for `LUC-1170` completed.
+- Evidence packet:
+  - `.codex/tasks/LUC-1170-known-state-refresh-evidence-delta-and-next-repair-lanes.md`
+- Heartbeat output:
+  - acknowledged board wake requiring concrete legal repair issues
+  - captured fresh blocker: architecture index builder timeout (`126s`, `604s`)
+  - produced owner-scoped follow-up lanes `LUC-1170-A..D` covering exporter reproducibility and user-facing API proof-link closure
+  - preserved preparation-only boundary (no implementation/deploy mutation)
