@@ -157,15 +157,20 @@ export function DashboardGuidanceList({
 
 export function DashboardRecentActivityList({
   items,
+  emptyLabel,
 }: {
   items: Array<{
     key: string;
     title: string;
     when: string;
   }>;
+  emptyLabel: string;
 }) {
   return (
     <div className="grid gap-2.5">
+      {items.length === 0 ? (
+        <p className="text-sm text-base-800">{emptyLabel}</p>
+      ) : null}
       {items.map((item) => (
         <article key={item.key} className="aion-dashboard-recent-row">
           <span className="aion-dashboard-recent-token" aria-hidden="true" />

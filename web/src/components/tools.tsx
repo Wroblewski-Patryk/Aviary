@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { AppTelegramLinkStartResponse, AppToolGroup, AppToolItem } from "../lib/api";
+import type { ToolFormattingCopy } from "../lib/tool-formatting";
 import {
   formatToolLinkState,
   formatToolAction,
@@ -14,7 +15,7 @@ export type ToolsSummaryCardItem = {
   note: string;
 };
 
-export type ToolsDirectoryLabels = {
+export type ToolsDirectoryLabels = ToolFormattingCopy & {
   groupCount: string;
   itemSingularSuffix: string;
   itemsSuffix: string;

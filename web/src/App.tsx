@@ -3199,7 +3199,7 @@ export default function App() {
     {
       label: copy.goals.focus,
       value: `${activeGoalCount}`,
-      detail: copy.goals.dailyRhythmTitle ?? copy.goals.focusFallback,
+      detail: copy.goals.dailyRhythmTitle,
     },
   ];
   const goalsCount = stringValue(planningSummary?.active_goal_count, "0");
@@ -3658,7 +3658,6 @@ export default function App() {
   const personalityRecentActivity = recentActivityRows(
     overview,
     resolvedUiLanguage,
-    copy.common.recentActivity,
     copy.common.unknownTime,
   );
   const publicNavLabels = {
@@ -4693,7 +4692,10 @@ export default function App() {
                         View all
                       </button>
                     </div>
-                    <DashboardRecentActivityList items={personalityRecentActivity.slice(0, 4)} />
+                    <DashboardRecentActivityList
+                      items={personalityRecentActivity.slice(0, 4)}
+                      emptyLabel={copy.common.noData}
+                    />
                   </section>
 
                   <section className="aion-dashboard-side-story aion-dashboard-side-story-lead aion-dashboard-guidance-intention">
@@ -4912,6 +4914,7 @@ export default function App() {
                     <ModuleActivityList
                       routeKey="memory"
                       items={personalityRecentActivity.slice(0, 4)}
+                      emptyLabel={copy.common.noData}
                     />
                   </section>
                 </aside>
@@ -4967,6 +4970,7 @@ export default function App() {
                     <ModuleActivityList
                       routeKey="reflections"
                       items={personalityRecentActivity.slice(0, 4)}
+                      emptyLabel={copy.common.noData}
                     />
                   </section>
                 </aside>

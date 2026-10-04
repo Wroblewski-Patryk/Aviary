@@ -37,20 +37,14 @@ export function stringValue(value: unknown, fallback = "not set") {
 export function recentActivityRows(
   overview: { recent_activity?: unknown } | null,
   locale: string,
-  fallbackRows: Array<{ title: string; when: string }>,
   unknownTime: string,
 ): RecentActivityDisplayItem[] {
-  const fallback = fallbackRows.map((item, index) => ({
-    key: `fallback-${index}-${item.title}`,
-    title: item.title,
-    when: item.when,
-  }));
   const rawActivity = overview?.recent_activity;
   if (!Array.isArray(rawActivity)) {
-    return fallback;
+    return [];
   }
 
-  const rows = rawActivity.flatMap((item, index) => {
+  return rawActivity.flatMap((item, index) => {
     if (!item || typeof item !== "object") {
       return [];
     }
@@ -69,8 +63,6 @@ export function recentActivityRows(
       },
     ];
   });
-
-  return rows.length > 0 ? rows : fallback;
 }
 
 export function summaryLines(sectionKey: string, payload: unknown): string[] {

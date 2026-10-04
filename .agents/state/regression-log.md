@@ -1,12 +1,12 @@
 # Regression Log
 
-Last updated: 2026-05-29
+Last updated: 2026-10-04
 
 ## Active Regressions
 
 | ID | Severity | Surface | Detected by | Symptom | Canonical contract | Status | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| none | - | - | - | No active regression recorded in this slice. | - | - | - |
+| truthful-recent-activity-fallback | P1 | web Dashboard / Memory / Reflections | Governed recent-activity repair | Missing, empty, or wholly invalid activity can display invented demonstration events. | Actual valid backend events or localized `common.noData`; no demonstration fallback. | implemented, not verified | Fixed Worker must run `node --experimental-strip-types --test -- web/scripts/recent-activity.test.ts`, create the exact local candidate commit, and obtain independent exact-commit review. |
 
 ## Fixed Regressions
 
@@ -67,3 +67,10 @@ closure.
 | windows-pytest-basetemp-permission | P2 | local validation environment | Pytest setup errors creating `.codex/tmp/...` basetemp | Sandbox can produce false-negative full-suite errors on Windows temp-directory creation. | Rerun the same gate outside sandbox or with a safe temp path before classifying as app regression. |
 | architecture-audit-evidence-gaps | P1 | architecture completion | `ARCH-PROACTIVE-001`, `ARCH-DEPLOY-AUTO-001` | Several architecture areas are implemented or documented but need more precise target/candidate evidence before claiming 100%. | Prefer evidence tasks before feature work when the scope trigger exists; do not turn target-sample rows into local feature work. |
 | mobile-native-device-proof | P1 | native mobile validation | Expo Go or simulator validation is requested | Local web-export preview is verified, but native device behavior still needs a device or emulator because `adb` is unavailable in this environment. | Run Expo Go/simulator proof when Android tooling or a physical device is available; keep local preview evidence separate from production native-readiness claims. |
+
+## 2026-10-04 Truthful Recent Activity Evidence
+
+- Actual local check: `web/node_modules/.bin/tsc -p web/tsconfig.app.json --noEmit --incremental false --pretty false` completed with exit code `0` and no diagnostics (invoked from `web` as `./node_modules/.bin/tsc ...`).
+- Actual local check: `git diff --check` completed with exit code `0`.
+- Not run in this executor: an executable pre-fix red test or the configured `node --experimental-strip-types --test -- web/scripts/recent-activity.test.ts`; `ROOST_TEST_DEPENDENCY_ROOT` was confirmed unset at `2026-10-04 06:05:49 +0200`, and the fixed Worker owns the sealed-toolkit run.
+- Not performed in this executor: local commit, dependency digest receipt, and independent exact-commit review. Those remain fixed Worker/reviewer gates; no pass or commit is claimed here.

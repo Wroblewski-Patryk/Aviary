@@ -145,6 +145,7 @@ export function ModuleStatRow({
 export function ModuleActivityList({
   routeKey,
   items,
+  emptyLabel,
 }: {
   routeKey: string;
   items: Array<{
@@ -152,9 +153,13 @@ export function ModuleActivityList({
     title: ReactNode;
     when: ReactNode;
   }>;
+  emptyLabel: ReactNode;
 }) {
   return (
     <div className="mt-4 grid gap-3">
+      {items.length === 0 ? (
+        <p className="text-sm text-base-800">{emptyLabel}</p>
+      ) : null}
       {items.map((item) => (
         <article key={item.key} className={`aion-${routeKey}-activity-row`}>
           <span className={`aion-${routeKey}-activity-dot`} aria-hidden="true" />
