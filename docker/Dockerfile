@@ -31,6 +31,7 @@ RUN pip install --upgrade pip \
     && pip install --no-cache-dir -e /app/backend
 
 COPY backend /app/backend
+RUN python -m unittest discover -s tests -p test_async_runtime_dependency_contract.py -v
 COPY docker /app/docker
 COPY --from=web-build /app/web/dist /app/web/dist
 
